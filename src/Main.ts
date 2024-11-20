@@ -69,7 +69,7 @@ import "Main/utilities.js";
 import "@minecraft/math.js";
 import "GlobalDecorators";
 export const mainmetaimport = import.meta
-export const editorStickMenuOpeningAsyncCancelActionNumbers = {} as {[id: string]: number}
+export const editorStickMenuOpeningAsyncCancelActionNumbers = {} as {[id: string]: number};
 import *  as transformrecipes from "Assets/constants/transformrecipes";
 globalThis.modules.assets.constants.transformrecipes=transformrecipes
 import *  as errors from "Main/errors";
