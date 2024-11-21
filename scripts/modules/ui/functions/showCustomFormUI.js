@@ -1,0 +1,45 @@
+import { Player, world } from "@minecraft/server";
+import { getUICustomForm } from "Main";
+import { forceShow } from "modules/ui/functions/forceShow";
+import { customFormDataTypes } from "./customFormDataTypes";
+export function showCustomFormUI(UIId, player) {
+    let customUI = getUICustomForm("customUIElement:" + UIId, "customUICode:" + UIId);
+    let form12345678 = new customFormDataTypes[Number(String(world.getDynamicProperty("customUI:" + UIId)).split("|")[0])]();
+    eval(`form12345678.title(${String(world.getDynamicProperty("customUI:" + UIId))
+        .split("|")
+        .slice(1)
+        .join("|")})`);
+    customUI.optionElements.forEach((v, i) => {
+        try {
+            eval("form12345678." +
+                v.code
+                    .replaceAll(", )", ")")
+                    .replaceAll(", )", ")")
+                    .replaceAll(", )", ")")
+                    .replaceAll(", )", ")")
+                    .replaceAll(", )", ")")
+                    .replaceAll(", )", ")"));
+        }
+        catch (e) {
+            console.error(e, e.stack);
+        }
+    }); /*
+form12.title({rawtext: [{text: "hi"}]})*/
+    let rb;
+    forceShow(form12345678, player).then((r) => {
+        try {
+            rb = r;
+            eval(customUI.code);
+        }
+        catch (e) {
+            console.error(e, e.stack);
+        }
+    });
+    return {
+        form: form12345678,
+        customUI: customUI,
+        optionElements: customUI.optionElements,
+        formResponse: rb,
+    };
+}
+//# sourceMappingURL=showCustomFormUI.js.map

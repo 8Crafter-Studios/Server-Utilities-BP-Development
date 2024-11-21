@@ -1,6 +1,6 @@
 import { Block, BlockPermutation, ChatSendBeforeEvent, Dimension, EntityInventoryComponent, ItemStack, Player, Entity, ContainerSlot, EntityEquippableComponent, type DimensionLocation, type Vector3, type Vector2, GameMode, type RawMessage, type MusicOptions, type PlayerSoundOptions, type EntityApplyDamageOptions, type EntityApplyDamageByProjectileOptions, MolangVariableMap, type BlockRaycastOptions, type EntityComponentTypeMap, EffectType, type EntityRaycastOptions, type EntityQueryOptions, type PlayAnimationOptions, type TeleportOptions, type BlockRaycastHit, type BlockComponentTypeMap, PlayerCursorInventoryComponent, type VectorXZ, type VectorYZ } from "@minecraft/server";
 import { WorldPosition, type RotationLocation } from "./coordinates";
-import { PlayerNotifications } from "./ui.js";
+import { PlayerNotifications } from "../init/classes/PlayerNotifications";
 import * as mcServer from "@minecraft/server";
 import * as cmds from "./commands";
 import { MoneySystem } from "../ExtraFeatures/money";

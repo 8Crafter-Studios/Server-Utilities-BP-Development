@@ -1,9 +1,12 @@
 import { Player, world, Entity, ItemLockMode, ItemStack, ItemEnchantableComponent, ItemDurabilityComponent, ItemCooldownComponent, type Enchantment, PotionEffectType } from "@minecraft/server";
 import { ActionFormData, ActionFormResponse } from "@minecraft/server-ui";
 import { executeCommandPlayerW } from "Main/commands";
-import { forceShow, worldBorderSettingsDimensionSelector, settings, extraFeaturesSettings } from "Main/ui";
+import { forceShow } from "modules/ui/functions/forceShow";
+import { settings } from "modules/ui/functions/settings";
+import { extraFeaturesSettings } from "modules/ui/functions/extraFeaturesSettings";
+import { worldBorderSettingsDimensionSelector } from "modules/ui/functions/worldBorderSettingsDimensionSelector";
 import { config } from "Main";
-import { showMessage } from "Main/utilities";
+import { showMessage } from "modules/utilities/functions/showMessage";
 import { ServerShopManager } from "./server_shop";
 import { PlayerShopManager } from "./player_shop";
 

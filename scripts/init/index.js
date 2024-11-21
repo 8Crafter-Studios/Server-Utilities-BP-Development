@@ -1,2 +1,2 @@
-import './functions/colorizeJSONString.class';
+import './functions/colorizeJSONString';
 //# sourceMappingURL=index.js.map

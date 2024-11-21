@@ -44,60 +44,6 @@ import mcMath from "@minecraft/math.js";
 import colorCore, { Color } from "color-core";
 import Decimal from "decimal.js";
 import * as semver from "semver";
-namespace mcServera mcServer;
-export interface modulesMap {
-    mcServer: mcServer,
-    mcServerUi,
-    GameTest,/*
-    mcServerAdmin,
-    mcDebugUtilities,
-    mcCommon,
-    mcVanillaData,*/
-    main,
-    /**
-     * This is an alias of {@link modules.assets.constants.transformrecipes}
-     */
-    transformrecipes,
-    coords,
-    cmds,
-    bans,
-    uis,
-    playersave,
-    spawnprot,
-    mcMath,
-    colorCore,
-    Decimal,
-    semver,
-    ["@minecraft/server"]: mcServer,
-    ["@minecraft/server-ui"]: mcServerUi,
-    ["@minecraft/server-gametest"]: GameTest,/*
-    ["@minecraft/common"]: mcCommon,
-    ["@minecraft/server-admin"]: mcServerAdmin,
-    ["@minecraft/server-net"]: mcServerNet 
-    ["@minecraft/debug-utilities"]: mcDebugUtilities 
-    ["@minecraft/vanilla-data"]: mcVanillaData,*/
-    ["@minecraft/math"]: mcMath,
-    chat,
-    cmdutils,
-    cmdslist,
-    cmdsdocs,
-    utils,
-    errors,
-    shopmain,
-    servershop,
-    playershop,
-    moneysystem,
-    assets: {
-        classes: {
-            JSONB,
-        },
-        constants: {
-            charMaps: await import("Assets/constants/charMaps"),
-            structuremappings,
-            transformrecipes,
-        }
-    }
-}
 export const modulesMap = {
     mcServer: mcServer,
     mcServerUi,
@@ -158,12 +104,5 @@ declare global {
         var tempSavedVariables: any[]
         var crashEnabled: boolean
     }
-    namespace modules {
-        var a: 1
-    }
-    var mcServera: typeof mcServer
 }
-type a = typeof modulesMap.mcServer;
-let b: mcServera.BlockFillOptions;
-let c: mcServer.BlockFillOptions
 import 'Main';

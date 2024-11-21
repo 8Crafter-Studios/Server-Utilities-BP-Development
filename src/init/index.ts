@@ -1,1 +1,1 @@
-import './functions/colorizeJSONString.class'
+import './functions/colorizeJSONString'

@@ -3,7 +3,7 @@ import Decimal from "decimal.js";
 import { MoneySystem } from "ExtraFeatures/money";
 import type { executeCommandPlayerW } from "Main/commands";
 import type { RotationLocation } from "Main/coordinates";
-import type { PlayerNotifications } from "Main/ui";
+import type { PlayerNotifications } from "init/classes/PlayerNotifications";
 declare global {
     interface String {
         escapeCharacters(js?: boolean, unicode?: boolean, nullchar?: number, uri?: boolean, quotes?: boolean, general?: boolean, colon?: boolean, x?: boolean, s?: boolean): string;

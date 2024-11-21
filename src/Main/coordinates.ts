@@ -24,7 +24,7 @@ import mcMath from "@minecraft/math.js";
 import { vTStr } from "Main/commands";
 import type { BirchStandingSignStates } from "@minecraft/vanilla-data";
 import { targetSelectorAllListC, targetSelectorAllListE } from "./command_utilities";
-import { shuffle } from "./utilities";
+import { shuffle } from "../modules/utilities/functions/shuffle";
 import { NoSelectorMatchesError } from "./errors";
 mcServer
 mcServerUi/*

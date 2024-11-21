@@ -1,7 +1,8 @@
 import { BlockVolume, CompoundBlockVolume, Player, type Vector3, system, world, Entity } from "@minecraft/server";
 import { ActionFormData, ModalFormData, ActionFormResponse, ModalFormResponse } from "@minecraft/server-ui";
 import { config, dimensions, format_version } from "Main";
-import { forceShow, mainMenu } from "./ui";
+import { forceShow } from "modules/ui/functions/forceShow";
+import { mainMenu } from "../modules/ui/functions/mainMenu";
 import { listoftransformrecipes } from "Assets/constants/transformrecipes";
 import * as GameTest from "@minecraft/server-gametest";
 import * as mcServer from "@minecraft/server";

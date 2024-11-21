@@ -81,7 +81,34 @@ import { commands_format_version, chatCommands, evaluateParameters, evaluatePara
 import { ban, ban_format_version } from "Main/ban";
 import { player_save_format_version, savedPlayer } from "Main/player_save.js";
 import { editAreas, noPistonExtensionAreas, noBlockBreakAreas, noBlockInteractAreas, noBlockPlaceAreas, noExplosionAreas, noInteractAreas, protectedAreas, testIsWithinRanges, getAreas, spawnProtectionTypeList, spawn_protection_format_version, convertToCompoundBlockVolume, getType, editAreasMainMenu } from "Main/spawn_protection.js";
-import { customElementTypeIds, customFormListSelectionMenu, editCustomFormUI, forceShow, showCustomFormUI, addNewCustomFormUI, customElementTypes, customFormDataTypeIds, customFormDataTypes, customFormUIEditor, customFormUIEditorCode, ui_format_version, settings, personalSettings, editorStickB, editorStickMenuB, mainMenu, globalSettings, evalAutoScriptSettings, editorStickMenuC, inventoryController, editorStickC, playerController, entityController, scriptEvalRunWindow, editorStick, managePlayers, terminal, PlayerNotifications } from "Main/ui.js";
+import { PlayerNotifications } from "init/classes/PlayerNotifications";
+import { showCustomFormUI } from "modules/ui/functions/showCustomFormUI";
+import { customFormUIEditor } from "modules/ui/functions/customFormUIEditor";
+import { customFormUIEditorCode } from "modules/ui/functions/customFormUIEditorCode";
+import { addNewCustomFormUI } from "modules/ui/functions/addNewCustomFormUI";
+import { customFormListSelectionMenu } from "modules/ui/functions/customFormListSelectionMenu";
+import { mainMenu } from "modules/ui/functions/mainMenu";
+import { settings } from "modules/ui/functions/settings";
+import { globalSettings } from "modules/ui/functions/globalSettings";
+import { personalSettings } from "modules/ui/functions/personalSettings";
+import { evalAutoScriptSettings } from "modules/ui/functions/evalAutoScriptSettings";
+import { scriptEvalRunWindow } from "modules/ui/functions/scriptEvalRunWindow";
+import { terminal } from "modules/ui/functions/terminal";
+import { playerController } from "modules/ui/functions/playerController";
+import { inventoryController } from "modules/ui/functions/inventoryController";
+import { entityController } from "modules/ui/functions/entityController";
+import { editorStick } from "modules/ui/functions/editorStick";
+import { editorStickMenuB } from "modules/ui/functions/editorStickMenuB";
+import { editorStickMenuC } from "modules/ui/functions/editorStickMenuC";
+import { editorStickB } from "modules/ui/functions/editorStickB";
+import { editorStickC } from "modules/ui/functions/editorStickC";
+import { managePlayers } from "modules/ui/functions/managePlayers";
+import { editCustomFormUI } from "modules/ui/functions/editCustomFormUI";
+import { ui_format_version } from "modules/ui/functions/ui_format_version";
+import { customElementTypeIds } from "modules/ui/functions/customElementTypeIds";
+import { customElementTypes } from "modules/ui/functions/customElementTypes";
+import { customFormDataTypeIds } from "modules/ui/functions/customFormDataTypeIds";
+import { customFormDataTypes } from "modules/ui/functions/customFormDataTypes";
 import * as main from "Main";
 globalThis.modules.main = main;
 import * as coords from "Main/coordinates";
@@ -119,14 +146,15 @@ import { disableWatchdog } from "@minecraft/debug-utilities";*/
 import { listoftransformrecipes } from "Assets/constants/transformrecipes";
 import { chatMessage, patternColors, patternColorsMap, patternFunctionList, evaluateChatColorType, chatSend } from "Main/chat";
 import { targetSelectorAllListE, targetSelectorB, targetSelectorAllListC, clearContainer } from "Main/command_utilities";
-import { customModulo } from "Main/utilities";
+import { customModulo } from "modules/utilities/functions/customModulo";
 import { TimeoutError } from "Main/errors.js";
-mcServer;
-mcServerUi; /*
+import { forceShow } from "modules/ui/functions/forceShow";
+const mcServer = modules.mcServer;
+const mcServerUi = modules.mcServerUi; /*
 mcServerAdmin*/ /*
 mcDebugUtilities*/ /*
 mcCommon*/
-GameTest; /*
+const GameTest = modules.GameTest; /*
 mcVanillaData*/
 main;
 transformrecipes;
@@ -136,6 +164,7 @@ bans;
 uis;
 playersave;
 spawnprot;
+mcServer;
 SimulatedPlayer;
 Test;
 mcMath;

@@ -3,8 +3,15 @@ import { ActionFormData, ActionFormResponse, MessageFormData, ModalFormData } fr
 import { config, getPathInObject } from "Main";
 import { containerToContainerSlotArray, containerToItemStackArray } from "Main/command_utilities";
 import { command, executeCommandPlayerW } from "Main/commands";
-import { forceShow, itemSelector, settings, worldBorderSettingsDimensionSelector } from "Main/ui";
-import { getStringFromDynamicProperties, getSuperUniqueID, saveStringToDynamicProperties, showActions, showMessage } from "Main/utilities";
+import { forceShow } from "modules/ui/functions/forceShow";
+import { settings } from "modules/ui/functions/settings";
+import { worldBorderSettingsDimensionSelector } from "modules/ui/functions/worldBorderSettingsDimensionSelector";
+import { itemSelector } from "modules/ui/functions/itemSelector";
+import { getSuperUniqueID } from "modules/utilities/functions/getSuperUniqueID";
+import { showActions } from "modules/utilities/functions/showActions";
+import { showMessage } from "modules/utilities/functions/showMessage";
+import { getStringFromDynamicProperties } from "modules/utilities/functions/getStringFromDynamicProperties";
+import { saveStringToDynamicProperties } from "modules/utilities/functions/saveStringToDynamicProperties";
 import { type SellableShopElement, type BuyableShopElement, type ShopItem, type SellableShopItem, type ShopElement, mainShopSystemSettings, type ShopPage } from "./shop_main";
 import { Vector } from "Main/coordinates";
 import { MoneySystem } from "./money";

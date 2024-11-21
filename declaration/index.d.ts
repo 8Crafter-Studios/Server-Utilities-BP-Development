@@ -19,6 +19,8 @@ import * as servershop from "ExtraFeatures/server_shop";
 import * as playershop from "ExtraFeatures/player_shop";
 import * as moneysystem from "ExtraFeatures/money";
 import * as structuremappings from "Assets/constants/structure_mappings";
+import * as transformrecipes from "Assets/constants/transformrecipes";
+import * as errors from "Main/errors";
 import mcMath from "@minecraft/math.js";
 import colorCore from "color-core";
 import Decimal from "decimal.js";
@@ -31,7 +33,7 @@ export declare const modulesMap: {
     /**
      * This is an alias of {@link modules.assets.constants.transformrecipes}
      */
-    transformrecipes: any;
+    transformrecipes: typeof transformrecipes;
     coords: typeof coords;
     cmds: typeof cmds;
     bans: typeof bans;
@@ -51,7 +53,7 @@ export declare const modulesMap: {
     cmdslist: typeof cmdslist;
     cmdsdocs: typeof cmdsdocs;
     utils: typeof utils;
-    errors: any;
+    errors: typeof errors;
     shopmain: typeof shopmain;
     servershop: typeof servershop;
     playershop: typeof playershop;
@@ -63,7 +65,7 @@ export declare const modulesMap: {
         constants: {
             charMaps: typeof import("Assets/constants/charMaps");
             structuremappings: typeof structuremappings;
-            transformrecipes: any;
+            transformrecipes: typeof transformrecipes;
         };
     };
 };

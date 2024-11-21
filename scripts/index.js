@@ -36,12 +36,16 @@ import * as servershop from "ExtraFeatures/server_shop";
 import * as playershop from "ExtraFeatures/player_shop";
 import * as moneysystem from "ExtraFeatures/money";
 import * as structuremappings from "Assets/constants/structure_mappings";
+import * as transformrecipes from "Assets/constants/transformrecipes";
+globalThis.modules.assets.constants.transformrecipes = transformrecipes;
+import * as errors from "Main/errors";
+globalThis.modules.errors = errors;
 import mcMath from "@minecraft/math.js";
 import colorCore, { Color } from "color-core";
 import Decimal from "decimal.js";
 import * as semver from "semver";
 export const modulesMap = {
-    mcServer,
+    mcServer: mcServer,
     mcServerUi,
     GameTest,
     main,
