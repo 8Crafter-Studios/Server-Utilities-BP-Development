@@ -1,0 +1,230 @@
+import { Vector3Utils } from "@minecraft/math";
+import { Dimension, Entity, Block, type Vector3, type Vector2, DimensionType, Player, world, type DimensionLocation } from "@minecraft/server";
+import { targetSelectorAllListE, targetSelectorAllListC } from "Main/command_utilities";
+import type { RotationLocation } from "Main/coordinates";
+import { anglesToDirectionVectorDeg } from "../functions/anglesToDirectionVectorDeg";
+import { coordinates } from "../functions/coordinates";
+import { facingPoint } from "../functions/facingPoint";
+
+export class WorldPosition {
+    x: number;
+    y: number;
+    z: number;
+    rotx: number;
+    roty: number;
+    dimension?: Dimension;
+    entity?: Entity;
+    block?: Block;
+    sendErrorsTo?: any;
+    constructor(location: Vector3, rotation: Vector2, dimension?: DimensionType | Dimension | string, entity?: Entity | Player, block?: Block, sendErrorsTo?: any) {
+        this.location = location;
+        this.rotation = rotation;
+        if (dimension == undefined) { } else { this.dimension = world.getDimension((dimension as DimensionType)?.typeId ?? (dimension as Dimension)?.id ?? (dimension as string)); };
+        this.entity = entity as Entity;
+        this.block = block;
+        this.sendErrorsTo = sendErrorsTo; /*
+        if(dimension.constructor.name == DimensionType.constructor.name){this.dimension = world.getDimension((dimension as DimensionType)?.typeId)}else{this.dimension = world.getDimension((dimension as Dimension)?.id)}; */
+
+    }
+    get location() {
+        return { x: this.x, y: this.y, z: this.z };
+    }
+    get locationstring() {
+        return this.x + " " + this.y + " " + this.z;
+    }
+    get rotation() {
+        return { x: this.rotx, y: this.roty };
+    }
+    get rotationstring() {
+        return this.rotx + " " + this.roty;
+    }
+    get locationrotation(): RotationLocation {
+        return { x: this.x, y: this.y, z: this.z, rotX: this.rotx, rotY: this.roty };
+    }
+    get directionvector() {
+        return anglesToDirectionVectorDeg(this.rotx, this.roty) as Vector3;
+    }
+    set location(location: Vector3) {
+        this.x = location.x;
+        this.y = location.y;
+        this.z = location.z;
+    }
+    set rotation(rotation: Vector2) {
+        this.rotx = rotation.x;
+        this.roty = rotation.y;
+    }
+    positioned(coordinateText: string) {
+        this.location = coordinates(coordinateText, this.location, this.rotation);
+        return this as WorldPosition;
+    }
+    in(dimension?: DimensionType | Dimension | string) {
+        if (dimension == undefined) { this.dimension = undefined; } else { this.dimension = world.getDimension((dimension as DimensionType)?.typeId ?? (dimension as Dimension)?.id ?? (dimension as string)); };
+        return this as WorldPosition;
+    }
+    rotated(x: number | string, y: number | string) {
+        if (x.toString().startsWith("~")) { this.rotx = (((this.rotx + Number(x.toString().slice(1) ?? "0") + 180) % 360) - 180); } else { this.rotx = Number(x.toString() ?? "0"); };
+        if (y.toString().startsWith("~")) { this.roty = (((this.roty + Number(y.toString().slice(1) ?? "0") + 90) % 180) - 90); } else { this.roty = Number(y.toString() ?? "0"); };
+        return this as WorldPosition;
+    }
+    at(target: string | Entity[] | Player[]) {
+        let worldpositionlist: WorldPosition[] = [];
+        if (target.constructor.name == "Array") {
+            let entities = target as Entity[];
+            if (entities.length == 0) { throw (new NoSelectorMatchesError("No targets matched selector")); };
+            worldpositionlist = entities.map(entity => new WorldPosition(entity?.location ?? this.location, tryget(() => entity?.getRotation()) ?? this.rotation, entity.dimension ?? this.dimension, this.entity, this.block, this.sendErrorsTo));
+        } else {
+            if (this.entity == undefined) {
+                let entities = targetSelectorAllListE(target as string, this.x + " " + this.y + " " + this.z);
+                if (entities.length == 0) { throw (new NoSelectorMatchesError("No targets matched selector")); };
+                worldpositionlist = entities.map(entity => new WorldPosition(entity?.location ?? this.location, tryget(() => entity?.getRotation()) ?? this.rotation, entity.dimension ?? this.dimension, this.entity, this.block, this.sendErrorsTo));
+            } else {
+                let entities = targetSelectorAllListC(target as string, "", this.x + " " + this.y + " " + this.z, this.entity);
+                if (entities.length == 0) { throw (new NoSelectorMatchesError("No targets matched selector")); };
+                worldpositionlist = entities.map(entity => new WorldPosition(entity?.location ?? this.location, tryget(() => entity?.getRotation()) ?? this.rotation, entity.dimension ?? this.dimension, this.entity, this.block, this.sendErrorsTo));
+            }
+        }
+        return worldpositionlist as WorldPosition[];
+    }
+    setSendErrorsTo(target: string | Entity[] | Player[]) {
+        if (target.constructor.name == "Array") {
+            let entities = target as Entity[];
+            if (entities.length == 0) { throw (new NoSelectorMatchesError("No targets matched selector")); };
+            this.sendErrorsTo = entities.length == 1 ? entities[0] : entities;
+        } else {
+            if (this.entity == undefined) {
+                let entities = targetSelectorAllListE(target as string, this.x + " " + this.y + " " + this.z);
+                if (entities.length == 0) { throw (new NoSelectorMatchesError("No targets matched selector")); };
+                this.sendErrorsTo = entities.length == 1 ? entities[0] : entities;
+            } else {
+                let entities = targetSelectorAllListC(target as string, "", this.x + " " + this.y + " " + this.z, this.entity);
+                if (entities.length == 0) { throw (new NoSelectorMatchesError("No targets matched selector")); };
+                this.sendErrorsTo = entities.length == 1 ? entities[0] : entities;
+            }
+        }
+        return this as WorldPosition;
+    }
+    clearSendErrorsTo() {
+        this.sendErrorsTo = null;
+        return this as WorldPosition;
+    }
+    resetSendErrorsTo() {
+        this.sendErrorsTo = undefined;
+        return this as WorldPosition;
+    }
+    as(target: string | Entity[] | Player[]) {
+        let entitylist: Entity[] = [];
+        if (target.constructor.name == "Array") { entitylist = target as Entity[]; } else {
+            if (this.entity == undefined) { this.entity = targetSelectorAllListE(target as string, this.x + " " + this.y + " " + this.z)[0]; } else { entitylist = targetSelectorAllListC(target as string, "", this.x + " " + this.y + " " + this.z, this.entity); }
+        }
+        return entitylist.map(v => new WorldPosition(this.location, this.rotation, this.dimension, v, this.block, this.sendErrorsTo)) as WorldPosition[];
+    }
+    asblock(block: DimensionLocation | Block) {
+        if (block.constructor.name == "Block") { this.block = (block as Block); } else { this.block = block.dimension.getBlock(block as DimensionLocation); };
+        return this as WorldPosition;
+    }
+    matchrotation(target: string | Entity[] | Player[]) {
+        let worldpositionlist: WorldPosition[] = [];
+        if (target.constructor.name == "Array") {
+            let entities = target as Entity[];
+            if (entities.length == 0) { throw (new NoSelectorMatchesError("No targets matched selector")); };
+            worldpositionlist = entities.map(entity => new WorldPosition(this.location, tryget(() => entity?.getRotation()) ?? this.rotation, this.dimension, this.entity, this.block, this.sendErrorsTo));
+        } else {
+            if (this.entity == undefined) {
+                let entities = targetSelectorAllListE(target as string, this.x + " " + this.y + " " + this.z);
+                if (entities.length == 0) { throw (new NoSelectorMatchesError("No targets matched selector")); };
+                worldpositionlist = entities.map(entity => new WorldPosition(this.location, tryget(() => entity?.getRotation()) ?? this.rotation, this.dimension, this.entity, this.block, this.sendErrorsTo));
+            } else {
+                let entities = targetSelectorAllListC(target as string, "", this.x + " " + this.y + " " + this.z, this.entity);
+                if (entities.length == 0) { throw (new NoSelectorMatchesError("No targets matched selector")); };
+                worldpositionlist = entities.map(entity => new WorldPosition(this.location, tryget(() => entity?.getRotation()) ?? this.rotation, this.dimension, this.entity, this.block, this.sendErrorsTo));
+            }
+        }
+        return worldpositionlist as WorldPosition[];
+    }
+    matchlocation(target: string | Entity[] | Player[]) {
+        let worldpositionlist: WorldPosition[] = [];
+        if (target.constructor.name == "Array") {
+            let entities = target as Entity[];
+            if (entities.length == 0) { throw (new NoSelectorMatchesError("No targets matched selector")); };
+            worldpositionlist = entities.map(entity => new WorldPosition(entity?.location ?? this.location, this.rotation, this.dimension, this.entity, this.block, this.sendErrorsTo));
+        } else {
+            if (this.entity == undefined) {
+                let entities = targetSelectorAllListE(target as string, this.x + " " + this.y + " " + this.z);
+                if (entities.length == 0) { throw (new NoSelectorMatchesError("No targets matched selector")); };
+                worldpositionlist = entities.map(entity => new WorldPosition(entity?.location ?? this.location, this.rotation, this.dimension, this.entity, this.block, this.sendErrorsTo));
+            } else {
+                let entities = targetSelectorAllListC(target as string, "", this.x + " " + this.y + " " + this.z, this.entity);
+                if (entities.length == 0) { throw (new NoSelectorMatchesError("No targets matched selector")); };
+                worldpositionlist = entities.map(entity => new WorldPosition(entity?.location ?? this.location, this.rotation, this.dimension, this.entity, this.block, this.sendErrorsTo));
+            }
+        }
+        return worldpositionlist as WorldPosition[];
+    }
+    matchdimension(target: string | Entity[] | Player[]) {
+        let worldpositionlist: WorldPosition[] = [];
+        if (target.constructor.name == "Array") {
+            let entities = target as Entity[];
+            if (entities.length == 0) { throw (new NoSelectorMatchesError("No targets matched selector")); };
+            worldpositionlist = entities.map(entity => new WorldPosition(this.location, this.rotation, entity?.dimension ?? this.dimension, this.entity, this.block, this.sendErrorsTo));
+        } else {
+            if (this.entity == undefined) {
+                let entities = targetSelectorAllListE(target as string, this.x + " " + this.y + " " + this.z);
+                if (entities.length == 0) { throw (new NoSelectorMatchesError("No targets matched selector")); };
+                worldpositionlist = entities.map(entity => new WorldPosition(this.location, this.rotation, entity?.dimension ?? this.dimension, this.entity, this.block, this.sendErrorsTo));
+            } else {
+                let entities = targetSelectorAllListC(target as string, "", this.x + " " + this.y + " " + this.z, this.entity);
+                if (entities.length == 0) { throw (new NoSelectorMatchesError("No targets matched selector")); };
+                worldpositionlist = entities.map(entity => new WorldPosition(this.location, this.rotation, entity?.dimension ?? this.dimension, this.entity, this.block, this.sendErrorsTo));
+            }
+        }
+        return worldpositionlist as WorldPosition[];
+    }
+    anchored(anchor: string | "feet" | "eyes") {
+        if (this.entity != undefined) { if (anchor.toLowerCase().includes("feet")) { this.location = this.entity.location; }; if (anchor.toLowerCase().includes("eyes")) { this.location = this.entity.getHeadLocation(); }; };
+        return this as WorldPosition;
+    }
+    resetRotation() {
+        if (this.entity != undefined) { this.rotation = this.entity.getRotation(); };
+        return this as WorldPosition;
+    }
+    facing(location: Vector3) {
+        this.rotation = facingPoint(this.location, location).rot;
+        return this as WorldPosition;
+    }
+    facingEntity(target: string | Entity[] | Player[]) {
+        let worldpositionlist: WorldPosition[] = [];
+        if (target.constructor.name == "Array") {
+            let entities = target as Entity[];
+            if (entities.length == 0) { throw (new NoSelectorMatchesError("No targets matched selector")); };
+            worldpositionlist = entities.map(entity => new WorldPosition(this.location, facingPoint(this.location, entity.location).rot, this.dimension, this.entity, this.block, this.sendErrorsTo));
+        } else {
+            if (this.entity == undefined) {
+                let entities = targetSelectorAllListE(target as string, this.x + " " + this.y + " " + this.z);
+                if (entities.length == 0) { throw (new NoSelectorMatchesError("No targets matched selector")); };
+                worldpositionlist = entities.map(entity => new WorldPosition(this.location, facingPoint(this.location, entity.location).rot, this.dimension, this.entity, this.block, this.sendErrorsTo));
+            } else {
+                let entities = targetSelectorAllListC(target as string, "", this.x + " " + this.y + " " + this.z, this.entity);
+                if (entities.length == 0) { throw (new NoSelectorMatchesError("No targets matched selector")); };
+                worldpositionlist = entities.map(entity => new WorldPosition(this.location, facingPoint(this.location, entity.location).rot, this.dimension, this.entity, this.block, this.sendErrorsTo));
+            }
+        }
+        return worldpositionlist as WorldPosition[];
+    }
+    align(axis: string) {
+        if (axis.toLowerCase().includes("x")) { this.x = Math.round(this.x); };
+        if (axis.toLowerCase().includes("y")) { this.y = Math.round(this.y); };
+        if (axis.toLowerCase().includes("z")) { this.z = Math.round(this.z); };
+        return this as WorldPosition;
+    }
+    offset(offset: Vector3) {
+        this.location = Vector3Utils.add(this.location, offset);
+        return this as WorldPosition;
+    }
+    static fromentity(entity: Entity | Player) {
+        return new WorldPosition(entity?.location, entity?.getRotation(), entity?.dimension, entity, undefined, entity);
+    }
+    static fromblock(block: Block) {
+        const fdcb = [{ x: 90, y: 0 }, { x: -90, y: 0 }, { x: 0, y: 180 }, { x: 0, y: 0 }, { x: 0, y: 90 }, { x: 0, y: -90 }];
+        return new WorldPosition(block?.location, fdcb[Number(block?.permutation?.getState("facing_direction") ?? block?.permutation?.getState("minecraft:facing_direction") ?? 3) ?? 3] ?? { x: 0, y: 0 }, block?.dimension, undefined, block);
+    }
+}

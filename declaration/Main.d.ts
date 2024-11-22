@@ -31,7 +31,7 @@ export declare const editorStickMenuOpeningAsyncCancelActionNumbers: {
 import { Block, BlockPermutation, BlockType, Dimension, Entity, ItemStack, Player, MolangVariableMap, type Vector3, type DimensionLocation, ContainerSlot, StructureSaveMode } from "@minecraft/server";
 import { BlockMask } from "Main/commands";
 import { ban } from "Main/ban";
-import { savedPlayer } from "Main/player_save.js";
+import { savedPlayer } from "modules/player_save/classes/savedPlayer";
 import * as main from "Main";
 export declare function checkIfCompatibleEntityScaleIsActive(init?: boolean, maxWaitTicks?: number): Promise<false | `${bigint}.${bigint}.${bigint}` | `${bigint}.${bigint}.${bigint}+${string}` | `${bigint}.${bigint}.${bigint}-${string}` | `${bigint}.${bigint}.${bigint}-${string}+${string}`>;
 export declare function mainEval(x: string): any;

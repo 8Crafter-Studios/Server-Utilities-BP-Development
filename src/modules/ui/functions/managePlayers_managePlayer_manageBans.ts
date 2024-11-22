@@ -3,7 +3,7 @@ import { ActionFormData, ActionFormResponse, ModalFormData, ModalFormResponse, M
 import { format_version } from "Main";
 import { forceShow } from "modules/ui/functions/forceShow";
 import { ban, ban_format_version } from "../../../Main/ban";
-import type { savedPlayer } from "../../../Main/player_save";
+import type { savedPlayer } from "modules/player_save/classes/savedPlayer";
 
 export async function managePlayers_managePlayer_manageBans(
     sourceEntity: Entity,

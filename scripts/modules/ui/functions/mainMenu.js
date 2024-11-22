@@ -12,7 +12,7 @@ import { moderationSettings } from "./moderationSettings";
 import { nbtStructureLoader } from "./nbtStructureLoader";
 import { scriptEvalRunWindow } from "./scriptEvalRunWindow";
 import { settings } from "./settings";
-import { editAreasMainMenu } from "../../../Main/spawn_protection";
+import { editAreasMainMenu } from "modules/spawn_protection/functions/editAreasMainMenu";
 import { terminal } from "./terminal";
 import { customFormListSelectionMenu } from "./customFormListSelectionMenu";
 import { itemEditorTypeSelection } from "./itemEditorTypeSelection";

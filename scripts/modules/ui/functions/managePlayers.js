@@ -5,7 +5,7 @@ import { forceShow } from "modules/ui/functions/forceShow";
 import { ban, ban_format_version } from "../../../Main/ban";
 import { executeCommandPlayerW } from "../../../Main/commands";
 import { managePlayers_managePlayer } from "./managePlayers_managePlayer";
-import { savedPlayer } from "../../../Main/player_save";
+import { savedPlayer } from "modules/player_save/classes/savedPlayer";
 export async function managePlayers(sourceEntitya, pagen = 0, maxplayersperpage = config.ui.pages
     .maxPlayersPerManagePlayersPage ?? 10, search) {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW

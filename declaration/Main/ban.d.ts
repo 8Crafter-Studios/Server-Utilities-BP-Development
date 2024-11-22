@@ -1,6 +1,5 @@
 import { Player } from "@minecraft/server";
-import { savedPlayer, type savedPlayerData } from "./player_save.js";
-import * as bans from "./ban";
+import { savedPlayer, type savedPlayerData } from "../modules/player_save/classes/savedPlayer";
 export declare const ban_format_version = "1.2.0";
 export declare class ban {
     type: "name" | "id";
@@ -64,21 +63,21 @@ export declare class ban {
         ban_format_version?: string | number;
         banId?: string;
     } | ban): void;
-    static getBan(banId: string): bans.ban;
+    static getBan(banId: string): ban;
     static getBans(): {
-        idBans: bans.ban[];
-        nameBans: bans.ban[];
-        allBans: bans.ban[];
+        idBans: ban[];
+        nameBans: ban[];
+        allBans: ban[];
     };
     static getValidBans(): {
-        idBans: bans.ban[];
-        nameBans: bans.ban[];
-        allBans: bans.ban[];
+        idBans: ban[];
+        nameBans: ban[];
+        allBans: ban[];
     };
     static getExpiredBans(): {
-        idBans: bans.ban[];
-        nameBans: bans.ban[];
-        allBans: bans.ban[];
+        idBans: ban[];
+        nameBans: ban[];
+        allBans: ban[];
     };
     static testForBannedPlayer(player: Player | savedPlayer | savedPlayerData): boolean;
     static testForNameBannedPlayer(player: Player | savedPlayer | savedPlayerData): boolean;

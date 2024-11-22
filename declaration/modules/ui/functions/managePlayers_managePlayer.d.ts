@@ -1,5 +1,5 @@
 import { Entity } from "@minecraft/server";
-import type { savedPlayer } from "../../../Main/player_save";
+import type { savedPlayer } from "modules/player_save/classes/savedPlayer";
 /**
  *
  * @todo Split each of the cases in the switch function into separate functions.

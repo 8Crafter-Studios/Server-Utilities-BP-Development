@@ -2,7 +2,7 @@ import { ActionFormData, ActionFormResponse, ModalFormData, MessageFormData } fr
 import { dimensionse, dimensions, dimensionTypeDisplayFormattingE } from "Main";
 import { forceShow } from "modules/ui/functions/forceShow";
 import { HomeSystem, vTStr } from "../../../Main/commands";
-import { Vector } from "../../../Main/coordinates";
+import { Vector } from "init/classes/Vector";
 import { showMessage } from "modules/utilities/functions/showMessage";
 export async function managePlayers_managePlayer_manageHomes(sourceEntity, player) {
     let form6 = new ActionFormData();

@@ -3,8 +3,8 @@ import { ActionFormData, ActionFormResponse, ModalFormData, MessageFormData } fr
 import { dimensionse, dimensions, dimensionTypeDisplayFormattingE } from "Main";
 import { forceShow } from "modules/ui/functions/forceShow";
 import { HomeSystem, vTStr } from "../../../Main/commands";
-import { Vector } from "../../../Main/coordinates";
-import type { savedPlayer } from "../../../Main/player_save";
+import { Vector } from "init/classes/Vector";
+import type { savedPlayer } from "modules/player_save/classes/savedPlayer";
 import { showMessage } from "modules/utilities/functions/showMessage";
 
 export async function managePlayers_managePlayer_manageHomes(

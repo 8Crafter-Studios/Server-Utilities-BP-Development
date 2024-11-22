@@ -14,9 +14,9 @@ import { showMessage } from "modules/utilities/functions/showMessage";
 import { getStringFromDynamicProperties } from "modules/utilities/functions/getStringFromDynamicProperties";
 import { saveStringToDynamicProperties } from "modules/utilities/functions/saveStringToDynamicProperties";
 import { type PlayerShopElement, mainShopSystemSettings, type PlayerShopPage, type PlayerSavedShopItem, type PlayerSellableShopElement, type PlayerBuyableShopElement, type PlayerSellableShopItem, type PlayerSellableAdvancedShopItem } from "./shop_main";
-import { Vector } from "Main/coordinates";
+import { Vector } from "init/classes/Vector";
 import { MoneySystem } from "./money";
-import { StorageFullError } from "Main/errors";
+import { StorageFullError } from "modules/errors/classes/StorageFullError";
 import type { ServerShop, ServerShopManager, serverShopConfig } from "./server_shop"
 
 /**

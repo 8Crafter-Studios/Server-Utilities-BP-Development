@@ -3,7 +3,7 @@ import { ActionFormData, ActionFormResponse, MessageFormData, MessageFormRespons
 import { MoneySystem } from "ExtraFeatures/money";
 import { forceShow } from "modules/ui/functions/forceShow";
 import { ban } from "../../../Main/ban";
-import { Vector } from "../../../Main/coordinates";
+import { Vector } from "init/classes/Vector";
 import { managePlayers_managePlayer_manageBans } from "./managePlayers_managePlayer_manageBans";
 import { managePlayers_managePlayer_manageHomes } from "./managePlayers_managePlayer_manageHomes";
 import { EquipmentSlots } from "Main/command_utilities";

@@ -5,7 +5,7 @@ import type {
     Entity,
 } from "@minecraft/server";
 import { v3Multiply } from "Main";
-import { caretNotationC } from "../../../Main/coordinates";
+import { caretNotationC } from "modules/coordinates/functions/caretNotationC";
 import { VECTOR3_ZERO, VECTOR3_FORWARD } from "@minecraft/math";
 
 export function shootEntityB(

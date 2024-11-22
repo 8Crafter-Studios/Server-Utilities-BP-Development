@@ -4,7 +4,8 @@ import { ModalFormData, ModalFormResponse } from "@minecraft/server-ui";
 import { srun, dimensionTypeDisplayFormatting, dimensions } from "Main";
 import { forceShow } from "modules/ui/functions/forceShow";
 import { executeCommandPlayerW, generateNBTFileD } from "../../../Main/commands";
-import { chunkIndexToBoundingBox, getChunkIndex } from "Main/coordinates";
+import { chunkIndexToBoundingBox } from "modules/coordinates/functions/chunkIndexToBoundingBox";
+import { getChunkIndex } from "modules/coordinates/functions/getChunkIndex";
 
 export function mapArtGenerator(
     sourceEntitya: Entity | executeCommandPlayerW | Player

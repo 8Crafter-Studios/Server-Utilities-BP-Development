@@ -6,8 +6,10 @@ import { forceShow } from "./forceShow";
 import { showActions } from "modules/utilities/functions/showActions";
 import { showMessage } from "modules/utilities/functions/showMessage";
 import { startCheckingForBannedPlayers, stopCheckingForBannedPlayers } from "Main/ban";
-import { startPlayerDataAutoSave, stopPlayerDataAutoSave } from "Main/player_save";
-import { startProtectedAreasRefresher, stopProtectedAreasRefresher } from "Main/spawn_protection";
+import { stopPlayerDataAutoSave } from "modules/player_save/functions/stopPlayerDataAutoSave";
+import { startPlayerDataAutoSave } from "modules/player_save/functions/startPlayerDataAutoSave";
+import { stopProtectedAreasRefresher } from "modules/spawn_protection/functions/stopProtectedAreasRefresher";
+import { startProtectedAreasRefresher } from "modules/spawn_protection/functions/startProtectedAreasRefresher";
 
 export async function addonDebugUI(
     sourceEntitya: Entity | executeCommandPlayerW | Player

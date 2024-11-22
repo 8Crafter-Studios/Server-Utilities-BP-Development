@@ -78,11 +78,71 @@ globalThis.modules.errors=errors
 import { Block, BlockEvent, BlockPermutation, BlockStateType, BlockType/*, MinecraftBlockTypes*//*, Camera*/, Dimension, Entity, EntityInventoryComponent, type EntityRaycastHit, EntityScaleComponent, ItemDurabilityComponent, ItemLockMode, ItemStack, Player, PlayerIterator, ScriptEventCommandMessageAfterEventSignal, ScriptEventSource, WeatherType, world, BlockInventoryComponent/*, EntityEquipmentInventoryComponent*/, EntityComponent, /*PropertyRegistry, DynamicPropertiesDefinition, */EntityType, EntityTypes/*, MinecraftEntityTypes*/, EquipmentSlot, Container, type BlockRaycastHit, EntityEquippableComponent, BlockTypes, MolangVariableMap, type Vector3, Scoreboard, ScoreboardObjective, DimensionType, DimensionTypes, MinecraftDimensionTypes, EnchantmentType, EnchantmentTypes, type DefinitionModifier, BlockStates, BlockVolume, CompoundBlockVolume/*, BlockVolumeUtils*//*, BlockVolumeBaseZ*/, EntityBreathableComponent, EntityColorComponent, EntityFlyingSpeedComponent, EntityFrictionModifierComponent, EntityGroundOffsetComponent, EntityHealthComponent, EntityMarkVariantComponent, EntityPushThroughComponent, EntitySkinIdComponent, EntityTameableComponent, SignSide, type Vector2, ItemEnchantableComponent, type RawText, type RawMessage, DyeColor, type DimensionLocation, type Enchantment, GameMode, ContainerSlot, EntityProjectileComponent, BlockVolumeBase, System, CompoundBlockVolumeAction, EntityDamageCause, LocationInUnloadedChunkError, UnloadedChunksError, StructureSaveMode, LocationOutOfWorldBoundariesError } from "@minecraft/server";
 import { ActionFormData, ActionFormResponse, FormCancelationReason, MessageFormData, MessageFormResponse, ModalFormData, ModalFormResponse } from "@minecraft/server-ui";
 import { SimulatedPlayer, Test } from "@minecraft/server-gametest";
-import { LocalTeleportFunctions, coordinates, coordinatesB, evaluateCoordinates, anglesToDirectionVector, anglesToDirectionVectorDeg, caretNotationB, caretNotation, caretNotationC, caretNotationD, coordinatesC, coordinatesD, coordinatesE, coordinates_format_version, evaluateCoordinatesB, movePointInDirection, facingPoint, type ILocalTeleport, WorldPosition, rotate, rotate3d, generateCircleCoordinatesB, drawMinecraftCircle, drawMinecraftSphere, generateMinecraftSphere, generateHollowSphere, degradeArray, generateMinecraftTunnel, generateMinecraftSphereB, generateMinecraftSphereBG, generateMinecraftSphereBGIdGenerator, generateMinecraftSphereBGProgress, generateHollowSphereBG, generatorProgressIdGenerator, generatorProgress, generateMinecraftSemiSphereBG, generateDomeBG, generateMinecraftOvoidBG, generateMinecraftOvoidCG, generateSolidOvoid, generateSolidOvoidBG, generateSkygridBG, generateInverseSkygridBG, generateFillBG, generateWallsFillBG, generateHollowFillBG, generateOutlineFillBG, Vector, dirmap, diroffsetmap, diroffsetothersmap, generateMinecraftConeBG } from "Main/coordinates";
-import { commands_format_version, chatCommands, evaluateParameters, evaluateParametersOld, getPlayersWithTags, vTStr, getPlayersWithAnyOfTags, disconnectingPlayers, BlockPattern, testBlockForMatch, executeCommandPlayerW, BlockMask, testBlockForMatchToMask } from "Main/commands";
+import { LocalTeleportFunctions, type ILocalTeleport } from "Main/coordinates";
+import { coordinates_format_version } from "modules/coordinates/constants/coordinates_format_version";
+import { generatorProgress } from "modules/coordinates/constants/generatorProgress";
+import { generateMinecraftSphereBGProgress } from "modules/coordinates/constants/generateMinecraftSphereBGProgress";
+import { dirmap } from "modules/coordinates/functions/dirmap";
+import { diroffsetmap } from "modules/coordinates/functions/diroffsetmap";
+import { diroffsetothersmap } from "modules/coordinates/functions/diroffsetothersmap";
+import { facingPoint } from "modules/coordinates/functions/facingPoint";
+import { caretNotation } from "modules/coordinates/functions/caretNotation";
+import { caretNotationB } from "modules/coordinates/functions/caretNotationB";
+import { caretNotationC } from "modules/coordinates/functions/caretNotationC";
+import { caretNotationD } from "modules/coordinates/functions/caretNotationD";
+import { anglesToDirectionVector } from "modules/coordinates/functions/anglesToDirectionVector";
+import { anglesToDirectionVectorDeg } from "modules/coordinates/functions/anglesToDirectionVectorDeg";
+import { rotate } from "modules/coordinates/functions/rotate";
+import { rotate3d } from "modules/coordinates/functions/rotate3d";
+import { movePointInDirection } from "modules/coordinates/functions/movePointInDirection";
+import { evaluateCoordinates } from "modules/coordinates/functions/evaluateCoordinates";
+import { evaluateCoordinatesB } from "modules/coordinates/functions/evaluateCoordinatesB";
+import { coordinatesB } from "modules/coordinates/functions/coordinatesB";
+import { coordinates } from "modules/coordinates/functions/coordinates";
+import { coordinatesC } from "modules/coordinates/functions/coordinatesC";
+import { coordinatesD } from "modules/coordinates/functions/coordinatesD";
+import { coordinatesE } from "modules/coordinates/functions/coordinatesE";
+import { degradeArray } from "modules/coordinates/functions/degradeArray";
+import { generateCircleCoordinatesB } from "modules/coordinates/functions/generateCircleCoordinatesB";
+import { generateMinecraftOvoidBG } from "modules/coordinates/functions/generateMinecraftOvoidBG";
+import { generateMinecraftOvoidCG } from "modules/coordinates/functions/generateMinecraftOvoidCG";
+import { generateSolidOvoid } from "modules/coordinates/functions/generateSolidOvoid";
+import { generateSolidOvoidBG } from "modules/coordinates/functions/generateSolidOvoidBG";
+import { generateSkygridBG } from "modules/coordinates/functions/generateSkygridBG";
+import { generateInverseSkygridBG } from "modules/coordinates/functions/generateInverseSkygridBG";
+import { drawMinecraftCircle } from "modules/coordinates/functions/drawMinecraftCircle";
+import { generateMinecraftTunnel } from "modules/coordinates/functions/generateMinecraftTunnel";
+import { generateHollowSphere } from "modules/coordinates/functions/generateHollowSphere";
+import { generateHollowSphereBG } from "modules/coordinates/functions/generateHollowSphereBG";
+import { generateDomeBG } from "modules/coordinates/functions/generateDomeBG";
+import { generateFillBG } from "modules/coordinates/functions/generateFillBG";
+import { generateWallsFillBG } from "modules/coordinates/functions/generateWallsFillBG";
+import { generateHollowFillBG } from "modules/coordinates/functions/generateHollowFillBG";
+import { generateOutlineFillBG } from "modules/coordinates/functions/generateOutlineFillBG";
+import { generateMinecraftSphere } from "modules/coordinates/functions/generateMinecraftSphere";
+import { generateMinecraftSphereB } from "modules/coordinates/functions/generateMinecraftSphereB";
+import { generatorProgressIdGenerator } from "modules/coordinates/functions/generatorProgressIdGenerator";
+import { generateMinecraftSphereBGIdGenerator } from "modules/coordinates/functions/generateMinecraftSphereBGIdGenerator";
+import { generateMinecraftSphereBG } from "modules/coordinates/functions/generateMinecraftSphereBG";
+import { generateMinecraftConeBG } from "modules/coordinates/functions/generateMinecraftConeBG";
+import { generateMinecraftSemiSphereBG } from "modules/coordinates/functions/generateMinecraftSemiSphereBG";
+import { drawMinecraftSphere } from "modules/coordinates/functions/drawMinecraftSphere";
+import { WorldPosition } from "modules/coordinates/classes/WorldPosition";
+import { Vector } from "init/classes/Vector";
+import { chatCommands, evaluateParameters, evaluateParametersOld, getPlayersWithTags, vTStr, getPlayersWithAnyOfTags, BlockPattern, testBlockForMatch, executeCommandPlayerW, BlockMask, testBlockForMatchToMask } from "Main/commands";
+import { commands_format_version } from "modules/commands/constants/commands_format_version";
+import { disconnectingPlayers } from "modules/commands/constants/disconnectingPlayers";
 import { ban, ban_format_version } from "Main/ban";
-import { player_save_format_version, savedPlayer, type savedPlayerData, type savedItem } from "Main/player_save.js";
-import { editAreas, noPistonExtensionAreas, noBlockBreakAreas, noBlockInteractAreas, noBlockPlaceAreas, noExplosionAreas, noInteractAreas, protectedAreas, testIsWithinRanges, getAreas, spawnProtectionTypeList, spawn_protection_format_version, convertToCompoundBlockVolume, getType, editAreasMainMenu } from "Main/spawn_protection.js";
+import { player_save_format_version } from "modules/player_save/functions/player_save_format_version";
+import { savedPlayer, type savedPlayerData, type savedItem } from "modules/player_save/classes/savedPlayer";
+import { spawnProtectionTypeList } from "modules/spawn_protection/functions/spawnProtectionTypeList";
+import { spawn_protection_format_version } from "modules/spawn_protection/functions/spawn_protection_format_version";
+import { getType } from "modules/spawn_protection/functions/getType";
+import { editAreas } from "modules/spawn_protection/functions/editAreas";
+import { editAreasMainMenu } from "modules/spawn_protection/functions/editAreasMainMenu";
+import { convertToCompoundBlockVolume } from "modules/spawn_protection/functions/convertToCompoundBlockVolume";
+import { testIsWithinRanges } from "modules/spawn_protection/functions/testIsWithinRanges";
+import { getAreas } from "modules/spawn_protection/functions/getAreas";
 import { PlayerNotifications } from "init/classes/PlayerNotifications";
 import { showCustomFormUI } from "modules/ui/functions/showCustomFormUI";
 import { customFormUIEditor } from "modules/ui/functions/customFormUIEditor";
@@ -114,6 +174,7 @@ import { customFormDataTypes } from "modules/ui/functions/customFormDataTypes";
 import *  as main from "Main";
 globalThis.modules.main=main
 import *  as coords from "Main/coordinates";
+import * as roundVector3ToMiddleOfBlock from "modules/coordinates/functions/roundVector3ToMiddleOfBlock";
 globalThis.modules.coords=coords
 import *  as cmds from "Main/commands";
 globalThis.modules.cmds=cmds
@@ -149,8 +210,9 @@ import { listoftransformrecipes } from "Assets/constants/transformrecipes";
 import { chatMessage, patternColors, patternColorsMap, patternFunctionList, evaluateChatColorType, chatSend } from "Main/chat";
 import { targetSelectorAllListE, targetSelectorB, targetSelectorAllListC, clearContainer } from "Main/command_utilities";
 import { customModulo } from "modules/utilities/functions/customModulo";
-import { TimeoutError } from "Main/errors.js";
+import { TimeoutError } from "modules/errors/classes/TimeoutError";
 import { forceShow } from "modules/ui/functions/forceShow";
+import { protectedAreaVariables } from "init/variables/protectedAreaVariables";
 const mcServer = modules.mcServer
 const mcServerUi = modules.mcServerUi/*
 mcServerAdmin*//*
@@ -4991,7 +5053,7 @@ subscribedEvents.beforeExplosion = world.beforeEvents.explosion.subscribe(event 
     eval(String(world.getDynamicProperty("scriptEvalBeforeEventsExplosion")))*/
     try{getPlayersWithAnyOfTags(["getBeforeExplosionNotifications", "getExplosionNotificationsForSourceType:"+(event.source?.typeId??"none"), "getExplosionNotificationsForSourceId:"+(event.source?.id??"none")]).filter(p=>!p.hasTag("excludeBeforeExplosionNotificationsIn:"+event.dimension)&&(!!event.source?!p.hasTag("excludeBeforeExplosionNotificationsType:"+event.source?.typeId):true)&&((!!event.source&&(event.source?.isValid()??true))?!p.hasTag("excludeBeforeExplosionNotificationsBy:"+((event.source as Player)?.name??tryget(()=>event.source?.nameTag)))&&!p.hasTag("excludeBeforeExplosionNotificationsById:"+event.source?.id):!p.hasTag("excludeBeforeExplosionNotificationsWithNoSource"))).forEach(p=>{psend(p, `§r§f[§l§dServer§r§f]${(world.getDynamicProperty("serverNotificationSpacer")??"")}[§ebeforeExplosion§r]${!!event.source?"["+((event.source as Player)?.name??tryget(()=>event.source?.nameTag==""?undefined:event.source?.nameTag)??(event.source?.typeId+"<"+event.source?.id+">"))+"]":""} ${!!event.source?"Triggered explosion":"Explosion occured"} in ${dimensionTypeDisplayFormatting[event.dimension.id]}${event.getImpactedBlocks().length==0?"":" around "+vTStr((()=>{let value = mcMath.VECTOR3_ZERO; event.getImpactedBlocks().forEach(b=>{value=mcMath.Vector3Utils.add(value, b.location)}); return mcMath.Vector3Utils.scale(value, 1/event.getImpactedBlocks().length)})())}. `); let pn = new PlayerNotifications(p); srun(()=>p.playSound(pn.getBeforeExplosionNotificationsNotificationSound.soundId, {pitch: pn.getBeforeExplosionNotificationsNotificationSound.pitch, volume: pn.getBeforeExplosionNotificationsNotificationSound.volume}))})}catch(e){console.error(e, e.stack)}
     //world.getAllPlayers().filter((player) => ( player.hasTag("getExplosionEventNotifications"))).forEach((currentPlayer) => { currentPlayer.sendMessage("Location: [ " + event.source.location.x+", "+event.source.location.y+", "+event.source.location.z + " ], Dimension: " + event.dimension.id) });
-    if (!!!event.source?.location?false:(((testIsWithinRanges(noExplosionAreas.positive.filter(v=>v.dimension==dimensions.indexOf(event.dimension)), event.source.location) ?? false) == true) && ((testIsWithinRanges(noExplosionAreas.negative.filter(v=>v.dimension==dimensions.indexOf(event.dimension)), event.source.location) ?? false) == false))||(((testIsWithinRanges(protectedAreas.positive.filter(v=>v.dimension==dimensions.indexOf(event.dimension)), event.source.location) ?? false) == true) && ((testIsWithinRanges(protectedAreas.negative.filter(v=>v.dimension==dimensions.indexOf(event.dimension)), event.source.location) ?? false) == false))) {
+    if (!!!event.source?.location?false:(((testIsWithinRanges(protectedAreaVariables.noExplosionAreas.positive.filter(v=>v.dimension==dimensions.indexOf(event.dimension)), event.source.location) ?? false) == true) && ((testIsWithinRanges(protectedAreaVariables.noExplosionAreas.negative.filter(v=>v.dimension==dimensions.indexOf(event.dimension)), event.source.location) ?? false) == false))||(((testIsWithinRanges(protectedAreaVariables.protectedAreas.positive.filter(v=>v.dimension==dimensions.indexOf(event.dimension)), event.source.location) ?? false) == true) && ((testIsWithinRanges(protectedAreaVariables.protectedAreas.negative.filter(v=>v.dimension==dimensions.indexOf(event.dimension)), event.source.location) ?? false) == false))) {
         event.cancel = true/*
         console.warn(event.isExpanding);
         console.warn(event.block.x, event.block.y, event.block.z);
@@ -4999,7 +5061,7 @@ subscribedEvents.beforeExplosion = world.beforeEvents.explosion.subscribe(event 
         console.warn(event.dimension);*/
     }else{
     //console.warn("before set: "+JSONStringify(event.getImpactedBlocks(), true))
-        event.setImpactedBlocks(event.getImpactedBlocks().filter((blockselected)=>!((((testIsWithinRanges(noExplosionAreas.positive.filter(v=>v.dimension==dimensions.indexOf(event.dimension)), blockselected.location) ?? false) == true) && ((testIsWithinRanges(noExplosionAreas.negative.filter(v=>v.dimension==dimensions.indexOf(event.dimension)), blockselected.location) ?? false) == false))||(((testIsWithinRanges(protectedAreas.positive.filter(v=>v.dimension==dimensions.indexOf(event.dimension)), blockselected.location) ?? false) == true) && ((testIsWithinRanges(protectedAreas.negative.filter(v=>v.dimension==dimensions.indexOf(event.dimension)), blockselected.location) ?? false) == false)))))}
+        event.setImpactedBlocks(event.getImpactedBlocks().filter((blockselected)=>!((((testIsWithinRanges(protectedAreaVariables.noExplosionAreas.positive.filter(v=>v.dimension==dimensions.indexOf(event.dimension)), blockselected.location) ?? false) == true) && ((testIsWithinRanges(protectedAreaVariables.noExplosionAreas.negative.filter(v=>v.dimension==dimensions.indexOf(event.dimension)), blockselected.location) ?? false) == false))||(((testIsWithinRanges(protectedAreaVariables.protectedAreas.positive.filter(v=>v.dimension==dimensions.indexOf(event.dimension)), blockselected.location) ?? false) == true) && ((testIsWithinRanges(protectedAreaVariables.protectedAreas.negative.filter(v=>v.dimension==dimensions.indexOf(event.dimension)), blockselected.location) ?? false) == false)))))}
     //console.warn("after set: "+JSONStringify(event.getImpactedBlocks(), true))
 });
 
@@ -5075,7 +5137,7 @@ subscribedEvents.beforePlayerInteractWithBlock = world.beforeEvents.playerIntera
         }catch(e){console.error(e, e.stack)}
     };*/
     world.getAllPlayers().filter((player) => ( player.hasTag("getPlayerBlockInteractionEventNotifications"))).forEach((currentPlayer) => { currentPlayer.sendMessage("[beforeEvents.playerInteractWithBlock]Location: [ " + event.block.location.x+", "+event.block.location.y+", "+event.block.location.z + " ], Dimension: " + event.block.dimension.id + ", Block Type: " + (event.block?.typeId ?? "") + ", Item Type: " + (event.itemStack?.typeId ?? "") + ", Is First Event: " + event.isFirstEvent+ ", Player: " + event.player.name) });
-    if ((event.player.getDynamicProperty("canBypassProtectedAreas") != true && event.player.hasTag("canBypassProtectedAreas") != true)&& ((((testIsWithinRanges(noBlockInteractAreas.positive.filter(v=>v.dimension==dimensions.indexOf(event.block.dimension)), event.block.location) ?? false) == true) && ((testIsWithinRanges(noBlockInteractAreas.negative.filter(v=>v.dimension==dimensions.indexOf(event.block.dimension)), event.block.location) ?? false) == false))||(((testIsWithinRanges(noInteractAreas.positive.filter(v=>v.dimension==dimensions.indexOf(event.block.dimension)), event.block.location) ?? false) == true) && ((testIsWithinRanges(noInteractAreas.negative.filter(v=>v.dimension==dimensions.indexOf(event.block.dimension)), event.block.location) ?? false) == false)))) {
+    if ((event.player.getDynamicProperty("canBypassProtectedAreas") != true && event.player.hasTag("canBypassProtectedAreas") != true)&& ((((testIsWithinRanges(protectedAreaVariables.noBlockInteractAreas.positive.filter(v=>v.dimension==dimensions.indexOf(event.block.dimension)), event.block.location) ?? false) == true) && ((testIsWithinRanges(protectedAreaVariables.noBlockInteractAreas.negative.filter(v=>v.dimension==dimensions.indexOf(event.block.dimension)), event.block.location) ?? false) == false))||(((testIsWithinRanges(protectedAreaVariables.noInteractAreas.positive.filter(v=>v.dimension==dimensions.indexOf(event.block.dimension)), event.block.location) ?? false) == true) && ((testIsWithinRanges(protectedAreaVariables.noInteractAreas.negative.filter(v=>v.dimension==dimensions.indexOf(event.block.dimension)), event.block.location) ?? false) == false)))) {
       event.cancel = true
     }else{
         const borderSettings = Object.fromEntries(Object.entries(config.worldBorder[dimensionse[dimensionsd.indexOf(event.block.dimension.id as "minecraft:overworld" | "minecraft:nether" | "minecraft:the_end")]])) as typeof config.worldBorder.overworld
@@ -5162,7 +5224,7 @@ subscribedEvents.beforeItemUseOn = world.beforeEvents.itemUseOn.subscribe(event 
         }catch(e){console.error(e, e.stack)}
     };*/
     world.getAllPlayers().filter((player) => ( player.hasTag("getPlayerItemUseOnEventNotifications"))).forEach((currentPlayer) => { currentPlayer.sendMessage("[beforeEvents.itemUseOn]Location: [ " + event.block.location.x+", "+event.block.location.y+", "+event.block.location.z + " ], Dimension: " + event.block.dimension.id + ", Block Type: " + (event.block?.typeId ?? "") + ", Item Type: " + (event.itemStack?.typeId ?? "")+ ", Player: " + event.source.name) });
-    if ((event.source.getDynamicProperty("canBypassProtectedAreas") != true && event.source.hasTag("canBypassProtectedAreas") != true)&& ((((testIsWithinRanges(noBlockInteractAreas.positive.filter(v=>v.dimension==dimensions.indexOf(event.block.dimension)), event.block.location) ?? false) == true) && ((testIsWithinRanges(noBlockInteractAreas.negative.filter(v=>v.dimension==dimensions.indexOf(event.block.dimension)), event.block.location) ?? false) == false))||(((testIsWithinRanges(noInteractAreas.positive.filter(v=>v.dimension==dimensions.indexOf(event.block.dimension)), event.block.location) ?? false) == true) && ((testIsWithinRanges(noInteractAreas.negative.filter(v=>v.dimension==dimensions.indexOf(event.block.dimension)), event.block.location) ?? false) == false)))) {
+    if ((event.source.getDynamicProperty("canBypassProtectedAreas") != true && event.source.hasTag("canBypassProtectedAreas") != true)&& ((((testIsWithinRanges(protectedAreaVariables.noBlockInteractAreas.positive.filter(v=>v.dimension==dimensions.indexOf(event.block.dimension)), event.block.location) ?? false) == true) && ((testIsWithinRanges(protectedAreaVariables.noBlockInteractAreas.negative.filter(v=>v.dimension==dimensions.indexOf(event.block.dimension)), event.block.location) ?? false) == false))||(((testIsWithinRanges(protectedAreaVariables.noInteractAreas.positive.filter(v=>v.dimension==dimensions.indexOf(event.block.dimension)), event.block.location) ?? false) == true) && ((testIsWithinRanges(protectedAreaVariables.noInteractAreas.negative.filter(v=>v.dimension==dimensions.indexOf(event.block.dimension)), event.block.location) ?? false) == false)))) {
       event.cancel = true;
     }else{
         const borderSettings = Object.fromEntries(Object.entries(config.worldBorder[dimensionse[dimensionsd.indexOf(event.block.dimension.id as "minecraft:overworld" | "minecraft:nether" | "minecraft:the_end")]])) as typeof config.worldBorder.overworld;
@@ -5187,7 +5249,7 @@ subscribedEvents.beforePlayerBreakBlock = world.beforeEvents.playerBreakBlock.su
     event.cancel = true
     }; 
     world.getAllPlayers().filter((player) => ( player.hasTag("getPlayerBlockBreakingEventNotifications") )).forEach((currentPlayer) => { currentPlayer.sendMessage("[beforeEvents.playerBreakBlock]Location: [ " + event.block.location.x+", "+event.block.location.y+", "+event.block.location.z + " ], Dimension: " + event.block.dimension.id + ", Block Type: " + (event.block?.typeId ?? "")+ ", Player: " + event.player.name) });
-    if ((event.player.getDynamicProperty("canBypassProtectedAreas") != true && event.player.hasTag("canBypassProtectedAreas") != true)&& ((((testIsWithinRanges(noBlockBreakAreas.positive.filter(v=>v.dimension==dimensions.indexOf(event.dimension)), event.block.location) ?? false) == true) && ((testIsWithinRanges(noBlockBreakAreas.negative.filter(v=>v.dimension==dimensions.indexOf(event.dimension)), event.block.location) ?? false) == false))||(((testIsWithinRanges(protectedAreas.positive.filter(v=>v.dimension==dimensions.indexOf(event.dimension)), event.block.location) ?? false) == true) && ((testIsWithinRanges(protectedAreas.negative.filter(v=>v.dimension==dimensions.indexOf(event.dimension)), event.block.location) ?? false) == false)))) {
+    if ((event.player.getDynamicProperty("canBypassProtectedAreas") != true && event.player.hasTag("canBypassProtectedAreas") != true)&& ((((testIsWithinRanges(protectedAreaVariables.noBlockBreakAreas.positive.filter(v=>v.dimension==dimensions.indexOf(event.dimension)), event.block.location) ?? false) == true) && ((testIsWithinRanges(protectedAreaVariables.noBlockBreakAreas.negative.filter(v=>v.dimension==dimensions.indexOf(event.dimension)), event.block.location) ?? false) == false))||(((testIsWithinRanges(protectedAreaVariables.protectedAreas.positive.filter(v=>v.dimension==dimensions.indexOf(event.dimension)), event.block.location) ?? false) == true) && ((testIsWithinRanges(protectedAreaVariables.protectedAreas.negative.filter(v=>v.dimension==dimensions.indexOf(event.dimension)), event.block.location) ?? false) == false)))) {
       event.cancel = true
     }else{
         const borderSettings = Object.fromEntries(Object.entries(config.worldBorder[dimensionse[dimensionsd.indexOf(event.dimension.id as "minecraft:overworld" | "minecraft:nether" | "minecraft:the_end")]])) as typeof config.worldBorder.overworld
@@ -5205,7 +5267,7 @@ subscribedEvents.beforePlayerPlaceBlock = world.beforeEvents.playerPlaceBlock.su
     event.cancel = true
     }; */
     world.getAllPlayers().filter((player) => ( player.hasTag("getPlayerBlockPlacingEventNotifications"))).forEach((currentPlayer) => { currentPlayer.sendMessage("[beforeEvents.playerPlaceBlock]Location: [ " + event.block.location.x+", "+event.block.location.y+", "+event.block.location.z + " ], Dimension: " + event.block.dimension.id + ", Block Type: " + (event.block?.typeId ?? "")+ ", Player: " + event.player.name) });
-    if ((event.player.getDynamicProperty("canBypassProtectedAreas") != true && event.player.hasTag("canBypassProtectedAreas") != true)&& ((((testIsWithinRanges(noBlockPlaceAreas.positive.filter(v=>v.dimension==dimensions.indexOf(event.dimension)), event.block.location) ?? false) == true) && ((testIsWithinRanges(noBlockPlaceAreas.negative.filter(v=>v.dimension==dimensions.indexOf(event.dimension)), event.block.location) ?? false) == false))||(((testIsWithinRanges(protectedAreas.positive.filter(v=>v.dimension==dimensions.indexOf(event.dimension)), event.block.location) ?? false) == true) && ((testIsWithinRanges(protectedAreas.negative.filter(v=>v.dimension==dimensions.indexOf(event.dimension)), event.block.location) ?? false) == false)))) {
+    if ((event.player.getDynamicProperty("canBypassProtectedAreas") != true && event.player.hasTag("canBypassProtectedAreas") != true)&& ((((testIsWithinRanges(protectedAreaVariables.noBlockPlaceAreas.positive.filter(v=>v.dimension==dimensions.indexOf(event.dimension)), event.block.location) ?? false) == true) && ((testIsWithinRanges(protectedAreaVariables.noBlockPlaceAreas.negative.filter(v=>v.dimension==dimensions.indexOf(event.dimension)), event.block.location) ?? false) == false))||(((testIsWithinRanges(protectedAreaVariables.protectedAreas.positive.filter(v=>v.dimension==dimensions.indexOf(event.dimension)), event.block.location) ?? false) == true) && ((testIsWithinRanges(protectedAreaVariables.protectedAreas.negative.filter(v=>v.dimension==dimensions.indexOf(event.dimension)), event.block.location) ?? false) == false)))) {
       event.cancel = true
     }else{
         const borderSettings = Object.fromEntries(Object.entries(config.worldBorder[dimensionse[dimensionsd.indexOf(event.dimension.id as "minecraft:overworld" | "minecraft:nether" | "minecraft:the_end")]])) as typeof config.worldBorder.overworld
@@ -5660,7 +5722,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe(event => {
                 }else if(!!!event.itemStack.getDynamicProperty("pattern")){
                     event.source.sendMessage("§cError: Pattern for sphere generation is not defined on the item's dynamic properties.")
                 }else{
-                    const pos = coords.roundVector3ToMiddleOfBlock(loc)
+                    const pos = roundVector3ToMiddleOfBlock.roundVector3ToMiddleOfBlock(loc)
                     const blocktypes = BlockTypes.getAll()
                     //console.warn("a")
                     try{fillBlocksHSGB(pos, radius, event.source.dimension, (l, i)=>{const b = blockpattern.generateBlock(i); return b.type=="random"?BlockPermutation.resolve(blocktypes[Math.floor(blocktypes.length*Math.random())].id):BlockPermutation.resolve(b.type, b.states)}, {minMSBetweenYields: 2500}, true, 100)}catch(e){event.source.sendMessage("§c" + e + e.stack)}
@@ -5676,7 +5738,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe(event => {
                 }else if(!!!event.itemStack.getDynamicProperty("pattern")){
                     event.source.sendMessage("§cError: Pattern for sphere generation is not defined on the item's dynamic properties.")
                 }else{
-                    const pos = coords.roundVector3ToMiddleOfBlock(loc)
+                    const pos = roundVector3ToMiddleOfBlock.roundVector3ToMiddleOfBlock(loc)
                     const blocktypes = BlockTypes.getAll()
                     //console.warn("a")
                     try{fillBlocksHFGB({x: pos.x-radius, y: pos.y-radius, z: pos.z-radius}, {x: pos.x+radius, y: pos.y+radius, z: pos.z+radius}, event.source.dimension, (l, i)=>{const b = blockpattern.generateBlock(i); return b.type=="random"?BlockPermutation.resolve(blocktypes[Math.floor(blocktypes.length*Math.random())].id):BlockPermutation.resolve(b.type, b.states)}, {minMSBetweenYields: 2500}, true, 100)}catch(e){event.source.sendMessage("§c" + e + e.stack)}
@@ -5694,7 +5756,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe(event => {
                 }else if(!!!event.itemStack.getDynamicProperty("pattern")){
                     event.source.sendMessage("§cError: Pattern for sphere generation is not defined on the item's dynamic properties.")
                 }else{
-                    const pos = coords.roundVector3ToMiddleOfBlock(loc)
+                    const pos = roundVector3ToMiddleOfBlock.roundVector3ToMiddleOfBlock(loc)
                     const blocktypes = BlockTypes.getAll()
                     //console.warn("a")
                     try{fillBlocksHFGB(Vector.add(pos, Vector.scale(diroffsetothersmap(loca.face), -radius)), Vector.add(pos, Vector.scale(diroffsetothersmap(loca.face), radius)), event.source.dimension, (l, i)=>{const b = blockpattern.generateBlock(i); return b.type=="random"?BlockPermutation.resolve(blocktypes[Math.floor(blocktypes.length*Math.random())].id):BlockPermutation.resolve(b.type, b.states)}, {minMSBetweenYields: 2500}, true, 100)}catch(e){event.source.sendMessage("§c" + e + e.stack)}
@@ -5711,7 +5773,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe(event => {
                 }else if(!!!event.itemStack.getDynamicProperty("pattern")){
                     event.source.sendMessage("§cError: Pattern for sphere generation is not defined on the item's dynamic properties.")
                 }else{
-                    const pos = coords.roundVector3ToMiddleOfBlock(loc)
+                    const pos = roundVector3ToMiddleOfBlock.roundVector3ToMiddleOfBlock(loc)
                     const blocktypes = BlockTypes.getAll()
                     //console.warn("a")
                     try{fillBlocksHSGB(pos, radius, event.source.dimension, (l, i)=>{if(((Math.max(0.0001, Math.random()))<((Vector.distance(pos, l)/radius)*(decay/10)))||(tryget(()=>l.dimension.getBlock(l).isAir)??true)){return null}; const b = blockpattern.generateBlock(i); return b.type=="random"?BlockPermutation.resolve(blocktypes[Math.floor(blocktypes.length*Math.random())].id):BlockPermutation.resolve(b.type, b.states)}, {minMSBetweenYields: 2500}, true, 100)}catch(e){event.source.sendMessage("§c" + e + e.stack)}
@@ -5728,7 +5790,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe(event => {
                 }else if(!!!event.itemStack.getDynamicProperty("pattern")){
                     event.source.sendMessage("§cError: Pattern for sphere generation is not defined on the item's dynamic properties.")
                 }else{
-                    const pos = coords.roundVector3ToMiddleOfBlock(loc)
+                    const pos = roundVector3ToMiddleOfBlock.roundVector3ToMiddleOfBlock(loc)
                     const blocktypes = BlockTypes.getAll()
                     //console.warn("a")
                     try{fillBlocksHFGB({x: pos.x-radius, y: pos.y-radius, z: pos.z-radius}, {x: pos.x+radius, y: pos.y+radius, z: pos.z+radius}, event.source.dimension, (l, i)=>{if(((Math.max(0.0001, Math.random()))<((Vector.distance(pos, l)/radius)*(decay/10)))||(tryget(()=>l.dimension.getBlock(l).isAir)??true)){return null}; const b = blockpattern.generateBlock(i); return b.type=="random"?BlockPermutation.resolve(blocktypes[Math.floor(blocktypes.length*Math.random())].id):BlockPermutation.resolve(b.type, b.states)}, {minMSBetweenYields: 2500}, true, 100)}catch(e){event.source.sendMessage("§c" + e + e.stack)}
@@ -5747,7 +5809,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe(event => {
                 }else if(!!!event.itemStack.getDynamicProperty("pattern")){
                     event.source.sendMessage("§cError: Pattern for sphere generation is not defined on the item's dynamic properties.")
                 }else{
-                    const pos = coords.roundVector3ToMiddleOfBlock(loc)
+                    const pos = roundVector3ToMiddleOfBlock.roundVector3ToMiddleOfBlock(loc)
                     const blocktypes = BlockTypes.getAll()
                     //console.warn("a")
                     try{fillBlocksHFGB(Vector.add(pos, Vector.scale(diroffsetothersmap(loca.face), -radius)), Vector.add(pos, Vector.scale(diroffsetothersmap(loca.face), radius)), event.source.dimension, (l, i)=>{if(((Math.max(0.0001, Math.random()))<((Vector.distance(pos, l)/radius)*(decay/10)))||(tryget(()=>l.dimension.getBlock(l).isAir)??true)){return null}; const b = blockpattern.generateBlock(i); return b.type=="random"?BlockPermutation.resolve(blocktypes[Math.floor(blocktypes.length*Math.random())].id):BlockPermutation.resolve(b.type, b.states)}, {minMSBetweenYields: 2500}, true, 100)}catch(e){event.source.sendMessage("§c" + e + e.stack)}
@@ -5766,7 +5828,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe(event => {
                 }else if(!!!event.itemStack.getDynamicProperty("pattern")){
                     event.source.sendMessage("§cError: Pattern for sphere generation is not defined on the item's dynamic properties.")
                 }else{
-                    const pos = coords.roundVector3ToMiddleOfBlock(loc)
+                    const pos = roundVector3ToMiddleOfBlock.roundVector3ToMiddleOfBlock(loc)
                     const blocktypes = BlockTypes.getAll()
                     //console.warn("a")
                     try{fillBlocksHSGB(pos, radius, event.source.dimension, (l, i)=>{if(((Math.max(0.0001, Math.random()))<((Vector.distance(pos, l)/radius)*(decay/10)))||(tryget(()=>l.dimension.getBlock(l).isAir)??true)||(!(tryget(()=>l.dimension.getBlock(l)[locb]().isAir)??true))){return null}; const b = blockpattern.generateBlock(i); return b.type=="random"?BlockPermutation.resolve(blocktypes[Math.floor(blocktypes.length*Math.random())].id):BlockPermutation.resolve(b.type, b.states)}, {minMSBetweenYields: 2500}, true, 100)}catch(e){event.source.sendMessage("§c" + e + e.stack)}
@@ -5785,7 +5847,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe(event => {
                 }else if(!!!event.itemStack.getDynamicProperty("pattern")){
                     event.source.sendMessage("§cError: Pattern for sphere generation is not defined on the item's dynamic properties.")
                 }else{
-                    const pos = coords.roundVector3ToMiddleOfBlock(loc)
+                    const pos = roundVector3ToMiddleOfBlock.roundVector3ToMiddleOfBlock(loc)
                     //const cornerradius = Vector.distance(pos, {x: pos.x-radius, y: pos.y-radius, z: pos.z-radius})
                     const blocktypes = BlockTypes.getAll()
                     //console.warn("a")
@@ -5805,7 +5867,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe(event => {
                 }else if(!!!event.itemStack.getDynamicProperty("pattern")){
                     event.source.sendMessage("§cError: Pattern for sphere generation is not defined on the item's dynamic properties.")
                 }else{
-                    const pos = coords.roundVector3ToMiddleOfBlock(loc)
+                    const pos = roundVector3ToMiddleOfBlock.roundVector3ToMiddleOfBlock(loc)
                     //const cornerradius = Vector.distance(pos, {x: pos.x-radius, y: pos.y-radius, z: pos.z-radius})
                     const blocktypes = BlockTypes.getAll()
                     //console.warn("a")
@@ -5819,7 +5881,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe(event => {
                 if(!!!loc){
                     event.source.sendMessage("§cError: You must be facing a block.")
                 }else{
-                    const pos = coords.roundVector3ToMiddleOfBlock(loc)
+                    const pos = roundVector3ToMiddleOfBlock.roundVector3ToMiddleOfBlock(loc)
                     let froma = mcMath.Vector3Utils.subtract(pos, {x: radius, y: radius, z: radius})
                     let from = {x: froma.x, y: froma.y, z: froma.z}
                     let toa = mcMath.Vector3Utils.add(pos, {x: radius, y: radius, z: radius})
@@ -5835,7 +5897,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe(event => {
                 if(!!!loc){
                     event.source.sendMessage("§cError: You must be facing a block.")
                 }else{
-                    const pos = coords.roundVector3ToMiddleOfBlock(loc)
+                    const pos = roundVector3ToMiddleOfBlock.roundVector3ToMiddleOfBlock(loc)
                     let froma = mcMath.Vector3Utils.subtract(pos, {x: radius, y: radius, z: radius})
                     let from = {x: froma.x, y: froma.y, z: froma.z}
                     let toa = mcMath.Vector3Utils.add(pos, {x: radius, y: radius, z: radius})
@@ -5872,7 +5934,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe(event => {
                 if(!!!loc){
                     event.source.sendMessage("§cError: You must be facing a block.")
                 }else{
-                    const pos = coords.roundVector3ToMiddleOfBlock(loc)
+                    const pos = roundVector3ToMiddleOfBlock.roundVector3ToMiddleOfBlock(loc)
                     let froma = mcMath.Vector3Utils.subtract(pos, {x: radius, y: radius, z: radius})
                     let from = {x: froma.x, y: froma.y, z: froma.z}
                     let toa = mcMath.Vector3Utils.add(pos, {x: radius, y: radius, z: radius})
@@ -6044,7 +6106,7 @@ try{repeatingIntervals.rankNameTags_editorStickActionbar_artificialLagMS=system.
 
 try{system.runInterval( () => {
     try{noPistonExtensionAreas = convertToCompoundBlockVolume(String(world.getDynamicProperty("noPistonExtensionAreas") ?? "0, 0, 0, 0, 0, 0"))} catch(e){console.error(e, e.stack);}; 
-    try{noExplosionAreas = convertToCompoundBlockVolume(String(world.getDynamicProperty("noExplosionAreas") ?? "0, 0, 0, 0, 0, 0"))} catch(e){console.error(e, e.stack);}
+    try{protectedAreaVariables.noExplosionAreas = convertToCompoundBlockVolume(String(world.getDynamicProperty("protectedAreaVariables.noExplosionAreas") ?? "0, 0, 0, 0, 0, 0"))} catch(e){console.error(e, e.stack);}
     try{noInteractAreas = convertToCompoundBlockVolume(String(world.getDynamicProperty("noInteractAreas") ?? "0, 0, 0, 0, 0, 0"))} catch(e){console.error(e, e.stack);}
     try{noBlockInteractAreas = convertToCompoundBlockVolume(String(world.getDynamicProperty("noBlockInteractAreas") ?? "0, 0, 0, 0, 0, 0"))} catch(e){console.error(e, e.stack);}
     try{noBlockBreakAreas = convertToCompoundBlockVolume(String(world.getDynamicProperty("noBlockBreakAreas") ?? "0, 0, 0, 0, 0, 0"))} catch(e){console.error(e, e.stack);}
