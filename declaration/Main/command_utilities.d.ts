@@ -580,7 +580,7 @@ export declare const OtherEquipmentSlots: readonly [EquipmentSlot.Head, Equipmen
 export declare const JunkItemTypes: string[];
 export declare const OpItemTypes: string[];
 export declare const IllegalItemTypes: string[];
-export declare function parseSlot(slot: string, selectedSlotIndex?: number): number | EquipmentSlot | "cursor" | "~";
+export declare function parseSlot(slot: string, selectedSlotIndex?: number): number | EquipmentSlot | "~" | "cursor";
 export declare function getSlotFromParsedSlot(slot: "~" | "cursor" | EquipmentSlot | number, options?: {
     container?: Container;
     equipment?: EntityEquippableComponent;

@@ -1,5 +1,5 @@
 import { EquipmentSlot, type Enchantment, type Vector3, Dimension, type Vector2, type DimensionLocation, GameMode, MemoryTier, PlatformType, PlayerInputPermissions, world, Player, StructureSaveMode, ItemStack } from "@minecraft/server";
-import { format_version, config } from "Main";
+import { config } from "Main";
 import { ban } from "../../../Main/ban";
 import { EquipmentSlots } from "../../../Main/command_utilities";
 import { Vector } from "init/classes/Vector";

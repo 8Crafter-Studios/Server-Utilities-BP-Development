@@ -1,29 +1,4 @@
 import { type BlockFillOptions } from "@minecraft/server";
-export declare const format_version = "1.26.0-rc.3+BUILD.1";
-export declare const supported_minecraft_version = "1.21.4x";
-import "Assets/classes/JSONB";
-import "Global";
-import "BlockEventTests.js";
-import "ComponentTests.js";
-import "CommandTests.js";
-import "DebugTests.js";
-import "GameTestExtensions.js";
-import "SimulatedPlayerTests.js";
-import "ItemEnchantmentsTests.js";
-import "Main/commands_documentation.js";
-import "Main/commands.js";
-import "Main/coordinates.js";
-import "Main/ban.js";
-import "Main/ui.js";
-import "Main/player_save.js";
-import "Main/spawn_protection.js";
-import "Main/chat.js";
-import "Main/command_utilities.js";
-import "Main/commands_list.js";
-import "Main/errors.js";
-import "Main/utilities.js";
-import "@minecraft/math.js";
-import "GlobalDecorators";
 export declare const mainmetaimport: ImportMeta;
 export declare const editorStickMenuOpeningAsyncCancelActionNumbers: {
     [id: string]: number;
@@ -32,7 +7,6 @@ import { Block, BlockPermutation, BlockType, Dimension, Entity, ItemStack, Playe
 import { BlockMask } from "Main/commands";
 import { ban } from "Main/ban";
 import { savedPlayer } from "modules/player_save/classes/savedPlayer";
-import * as main from "Main";
 export declare function checkIfCompatibleEntityScaleIsActive(init?: boolean, maxWaitTicks?: number): Promise<false | `${bigint}.${bigint}.${bigint}` | `${bigint}.${bigint}.${bigint}+${string}` | `${bigint}.${bigint}.${bigint}-${string}` | `${bigint}.${bigint}.${bigint}-${string}+${string}`>;
 export declare function mainEval(x: string): any;
 export declare function indirectMainEval(x: string): any;
@@ -412,8 +386,8 @@ export declare class SemVerString {
         pre_release_version: string;
         build: string;
         type: string;
-    }): main.SemVerString;
-    static fromString(string: string): main.SemVerString;
+    }): SemVerString;
+    static fromString(string: string): SemVerString;
 }
 export declare function SemVerValidator(string: string): boolean;
 export declare function SemVerMatcher(string: string): RegExpMatchArray;
@@ -1248,12 +1222,12 @@ export declare class customFormUIElement {
     typeIndex: number;
     constructor(index: number, type: String, args: String[]);
 }
-export declare function strToCustomFormUIElement(string: string): main.customFormUIElement;
-export declare function arrayToElementList(ids: String[], array: String[]): main.customFormUIElement[];
+export declare function strToCustomFormUIElement(string: string): customFormUIElement;
+export declare function arrayToElementList(ids: String[], array: String[]): customFormUIElement[];
 export declare function getUICustomForm(optionsids: string, codeids: string): {
     optionPropertyIds: string[];
     optionPropertyValues: string[];
-    optionElements: main.customFormUIElement[];
+    optionElements: customFormUIElement[];
     codeIds: string[];
     codeValues: string[];
     code: string;

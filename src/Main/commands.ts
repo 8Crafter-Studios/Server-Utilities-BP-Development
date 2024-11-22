@@ -73,7 +73,6 @@ import {
     fillBlocksHHOG,
     fillBlocksHSGG,
     fillBlocksHISGG,
-    format_version,
     fillBlocksHFG,
     fillBlocksHWG,
     fillBlocksHHG,

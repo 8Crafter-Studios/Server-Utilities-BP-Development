@@ -1,5 +1,5 @@
 import { Player, system, world } from "@minecraft/server";
-import { format_version, config } from "../Main";
+import { config } from "../Main";
 import { savedPlayer, } from "../modules/player_save/classes/savedPlayer";
 export const ban_format_version = "1.2.0";
 export class ban {

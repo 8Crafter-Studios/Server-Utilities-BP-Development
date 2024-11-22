@@ -1,6 +1,6 @@
 import { Entity, Player, world } from "@minecraft/server";
 import { ActionFormData, ActionFormResponse, ModalFormData, ModalFormResponse, MessageFormData } from "@minecraft/server-ui";
-import { config, format_version } from "Main";
+import { config } from "Main";
 import { forceShow } from "modules/ui/functions/forceShow";
 import { ban, ban_format_version } from "../../../Main/ban";
 import { executeCommandPlayerW } from "../../../Main/commands";

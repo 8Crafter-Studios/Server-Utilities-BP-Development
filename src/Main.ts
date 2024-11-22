@@ -1,112 +1,20 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 import { system, type BlockFillOptions } from "@minecraft/server";
-globalThis.beforeScriptStartTick=system.currentTick;
-export const format_version = "1.26.0-rc.3+BUILD.1";
-export const supported_minecraft_version = "1.21.4x";
-globalThis.entity_scale_format_version=null;
-globalThis.multipleEntityScaleVersionsDetected=false;
-globalThis.modules={
-    assets: {
-        classes: {},
-        constants: {},
-    },
-} as any;
-import "Assets/classes/JSONB"
-import "Global"
-  
-/*
-import "AllayTests.js";
-import "APITests.js";*/
-import "BlockEventTests.js";/*
-import "BlockTests.js";*/
-import "ComponentTests.js";
-import "CommandTests.js";
-import "DebugTests.js";/*
-import "DispenserTests.js";
-import "DoorTests.js";
-import "DripstoneTests.js";
-import "DuplicationTests.js";
-import "EntityQueryTests.js";
-import "EntityTests.js";
-import "ExtensionTests.js";
-import "FireAvoidTests.js";
-import "FrogTests.js";*/
-import "GameTestExtensions.js";/*
-import "MinecartTests.js";
-import "MobTests.js";
-import "MultifaceTests.js";
-import "PathFindingTests.js";
-import "FlyingMachineTests.js";
-import "PistonTests.js";
-import "TntTests.js";
-import "WaterPathfindingTests.js";
-import "WardenTests.js";
-import "SmallMobTests.js";
-import "BigMobTests.js";
-import "RaycastingTests.js";
-import "RedstoneTests.js";*/
-import "SimulatedPlayerTests.js";/*
-import "RespawnAnchorTests.js";
-import "PlaceSeedsTests.js";
-import "ItemTests.js";*/
-import "ItemEnchantmentsTests.js";/*
-import "SculkTests.js";
-import "VibrationTests.js";
-import "EnchantmentTests.js";*//*
-import "Eval.js";*/
-import "Main/commands_documentation.js";
-import "Main/commands.js";
-import "Main/coordinates.js";
-import "Main/ban.js";
-import "Main/ui.js";
-import "Main/player_save.js";
-import "Main/spawn_protection.js";
-import "Main/chat.js";
-import "Main/command_utilities.js";
-import "Main/commands_list.js";
-import "Main/errors.js";
-import "Main/utilities.js";
-import "@minecraft/math.js";
-import "GlobalDecorators";
 export const mainmetaimport = import.meta
 export const editorStickMenuOpeningAsyncCancelActionNumbers = {} as {[id: string]: number};
-import *  as transformrecipes from "Assets/constants/transformrecipes";
-globalThis.modules.assets.constants.transformrecipes=transformrecipes
-import *  as errors from "Main/errors";
-globalThis.modules.errors=errors
 
-import { Block, BlockEvent, BlockPermutation, BlockStateType, BlockType/*, MinecraftBlockTypes*//*, Camera*/, Dimension, Entity, EntityInventoryComponent, type EntityRaycastHit, EntityScaleComponent, ItemDurabilityComponent, ItemLockMode, ItemStack, Player, PlayerIterator, ScriptEventCommandMessageAfterEventSignal, ScriptEventSource, WeatherType, world, BlockInventoryComponent/*, EntityEquipmentInventoryComponent*/, EntityComponent, /*PropertyRegistry, DynamicPropertiesDefinition, */EntityType, EntityTypes/*, MinecraftEntityTypes*/, EquipmentSlot, Container, type BlockRaycastHit, EntityEquippableComponent, BlockTypes, MolangVariableMap, type Vector3, Scoreboard, ScoreboardObjective, DimensionType, DimensionTypes, MinecraftDimensionTypes, EnchantmentType, EnchantmentTypes, type DefinitionModifier, BlockStates, BlockVolume, CompoundBlockVolume/*, BlockVolumeUtils*//*, BlockVolumeBaseZ*/, EntityBreathableComponent, EntityColorComponent, EntityFlyingSpeedComponent, EntityFrictionModifierComponent, EntityGroundOffsetComponent, EntityHealthComponent, EntityMarkVariantComponent, EntityPushThroughComponent, EntitySkinIdComponent, EntityTameableComponent, SignSide, type Vector2, ItemEnchantableComponent, type RawText, type RawMessage, DyeColor, type DimensionLocation, type Enchantment, GameMode, ContainerSlot, EntityProjectileComponent, BlockVolumeBase, System, CompoundBlockVolumeAction, EntityDamageCause, LocationInUnloadedChunkError, UnloadedChunksError, StructureSaveMode, LocationOutOfWorldBoundariesError } from "@minecraft/server";
-import { ActionFormData, ActionFormResponse, FormCancelationReason, MessageFormData, MessageFormResponse, ModalFormData, ModalFormResponse } from "@minecraft/server-ui";
-import { SimulatedPlayer, Test } from "@minecraft/server-gametest";
-import { LocalTeleportFunctions, type ILocalTeleport } from "Main/coordinates";
-import { coordinates_format_version } from "modules/coordinates/constants/coordinates_format_version";
+import { Block, BlockPermutation, BlockType/*, MinecraftBlockTypes*//*, Camera*/, Dimension, Entity, EntityInventoryComponent, type EntityRaycastHit, EntityScaleComponent, ItemDurabilityComponent, ItemLockMode, ItemStack, Player, ScriptEventSource, WeatherType, world, BlockInventoryComponent/*, EntityEquipmentInventoryComponent*/, EquipmentSlot, type BlockRaycastHit, EntityEquippableComponent, BlockTypes, MolangVariableMap, type Vector3, EnchantmentTypes, BlockStates, BlockVolume, CompoundBlockVolume/*, BlockVolumeUtils*//*, BlockVolumeBaseZ*/, EntityBreathableComponent, EntityColorComponent, EntityFlyingSpeedComponent, EntityFrictionModifierComponent, EntityGroundOffsetComponent, EntityHealthComponent, EntityMarkVariantComponent, EntityPushThroughComponent, EntitySkinIdComponent, EntityTameableComponent, SignSide, ItemEnchantableComponent, DyeColor, type DimensionLocation, ContainerSlot, EntityDamageCause, LocationInUnloadedChunkError, UnloadedChunksError, StructureSaveMode, LocationOutOfWorldBoundariesError } from "@minecraft/server";
+import { ActionFormData, ModalFormData, ModalFormResponse } from "@minecraft/server-ui";
 import { generatorProgress } from "modules/coordinates/constants/generatorProgress";
 import { generateMinecraftSphereBGProgress } from "modules/coordinates/constants/generateMinecraftSphereBGProgress";
 import { dirmap } from "modules/coordinates/functions/dirmap";
-import { diroffsetmap } from "modules/coordinates/functions/diroffsetmap";
 import { diroffsetothersmap } from "modules/coordinates/functions/diroffsetothersmap";
 import { facingPoint } from "modules/coordinates/functions/facingPoint";
-import { caretNotation } from "modules/coordinates/functions/caretNotation";
-import { caretNotationB } from "modules/coordinates/functions/caretNotationB";
-import { caretNotationC } from "modules/coordinates/functions/caretNotationC";
-import { caretNotationD } from "modules/coordinates/functions/caretNotationD";
-import { anglesToDirectionVector } from "modules/coordinates/functions/anglesToDirectionVector";
 import { anglesToDirectionVectorDeg } from "modules/coordinates/functions/anglesToDirectionVectorDeg";
-import { rotate } from "modules/coordinates/functions/rotate";
-import { rotate3d } from "modules/coordinates/functions/rotate3d";
-import { movePointInDirection } from "modules/coordinates/functions/movePointInDirection";
 import { evaluateCoordinates } from "modules/coordinates/functions/evaluateCoordinates";
-import { evaluateCoordinatesB } from "modules/coordinates/functions/evaluateCoordinatesB";
-import { coordinatesB } from "modules/coordinates/functions/coordinatesB";
 import { coordinates } from "modules/coordinates/functions/coordinates";
-import { coordinatesC } from "modules/coordinates/functions/coordinatesC";
-import { coordinatesD } from "modules/coordinates/functions/coordinatesD";
-import { coordinatesE } from "modules/coordinates/functions/coordinatesE";
 import { degradeArray } from "modules/coordinates/functions/degradeArray";
-import { generateCircleCoordinatesB } from "modules/coordinates/functions/generateCircleCoordinatesB";
-import { generateMinecraftOvoidBG } from "modules/coordinates/functions/generateMinecraftOvoidBG";
 import { generateMinecraftOvoidCG } from "modules/coordinates/functions/generateMinecraftOvoidCG";
-import { generateSolidOvoid } from "modules/coordinates/functions/generateSolidOvoid";
 import { generateSolidOvoidBG } from "modules/coordinates/functions/generateSolidOvoidBG";
 import { generateSkygridBG } from "modules/coordinates/functions/generateSkygridBG";
 import { generateInverseSkygridBG } from "modules/coordinates/functions/generateInverseSkygridBG";
@@ -119,122 +27,45 @@ import { generateFillBG } from "modules/coordinates/functions/generateFillBG";
 import { generateWallsFillBG } from "modules/coordinates/functions/generateWallsFillBG";
 import { generateHollowFillBG } from "modules/coordinates/functions/generateHollowFillBG";
 import { generateOutlineFillBG } from "modules/coordinates/functions/generateOutlineFillBG";
-import { generateMinecraftSphere } from "modules/coordinates/functions/generateMinecraftSphere";
 import { generateMinecraftSphereB } from "modules/coordinates/functions/generateMinecraftSphereB";
 import { generatorProgressIdGenerator } from "modules/coordinates/functions/generatorProgressIdGenerator";
 import { generateMinecraftSphereBGIdGenerator } from "modules/coordinates/functions/generateMinecraftSphereBGIdGenerator";
 import { generateMinecraftSphereBG } from "modules/coordinates/functions/generateMinecraftSphereBG";
 import { generateMinecraftConeBG } from "modules/coordinates/functions/generateMinecraftConeBG";
 import { generateMinecraftSemiSphereBG } from "modules/coordinates/functions/generateMinecraftSemiSphereBG";
-import { drawMinecraftSphere } from "modules/coordinates/functions/drawMinecraftSphere";
 import { WorldPosition } from "modules/coordinates/classes/WorldPosition";
 import { Vector } from "init/classes/Vector";
-import { chatCommands, evaluateParameters, evaluateParametersOld, getPlayersWithTags, vTStr, getPlayersWithAnyOfTags, BlockPattern, testBlockForMatch, executeCommandPlayerW, BlockMask, testBlockForMatchToMask } from "Main/commands";
-import { commands_format_version } from "modules/commands/constants/commands_format_version";
+import { chatCommands, getPlayersWithTags, vTStr, getPlayersWithAnyOfTags, BlockPattern, testBlockForMatch, executeCommandPlayerW, BlockMask, testBlockForMatchToMask } from "Main/commands";
 import { disconnectingPlayers } from "modules/commands/constants/disconnectingPlayers";
-import { ban, ban_format_version } from "Main/ban";
-import { player_save_format_version } from "modules/player_save/functions/player_save_format_version";
-import { savedPlayer, type savedPlayerData, type savedItem } from "modules/player_save/classes/savedPlayer";
-import { spawnProtectionTypeList } from "modules/spawn_protection/functions/spawnProtectionTypeList";
-import { spawn_protection_format_version } from "modules/spawn_protection/functions/spawn_protection_format_version";
-import { getType } from "modules/spawn_protection/functions/getType";
-import { editAreas } from "modules/spawn_protection/functions/editAreas";
-import { editAreasMainMenu } from "modules/spawn_protection/functions/editAreasMainMenu";
-import { convertToCompoundBlockVolume } from "modules/spawn_protection/functions/convertToCompoundBlockVolume";
+import { ban } from "Main/ban";
+import { savedPlayer } from "modules/player_save/classes/savedPlayer";
 import { testIsWithinRanges } from "modules/spawn_protection/functions/testIsWithinRanges";
-import { getAreas } from "modules/spawn_protection/functions/getAreas";
 import { PlayerNotifications } from "init/classes/PlayerNotifications";
 import { showCustomFormUI } from "modules/ui/functions/showCustomFormUI";
-import { customFormUIEditor } from "modules/ui/functions/customFormUIEditor";
-import { customFormUIEditorCode } from "modules/ui/functions/customFormUIEditorCode";
-import { addNewCustomFormUI } from "modules/ui/functions/addNewCustomFormUI";
 import { customFormListSelectionMenu } from "modules/ui/functions/customFormListSelectionMenu";
 import { mainMenu } from "modules/ui/functions/mainMenu";
 import { settings } from "modules/ui/functions/settings";
 import { globalSettings } from "modules/ui/functions/globalSettings";
 import { personalSettings } from "modules/ui/functions/personalSettings";
-import { evalAutoScriptSettings } from "modules/ui/functions/evalAutoScriptSettings";
-import { scriptEvalRunWindow } from "modules/ui/functions/scriptEvalRunWindow";
-import { terminal } from "modules/ui/functions/terminal";
-import { playerController } from "modules/ui/functions/playerController";
-import { inventoryController } from "modules/ui/functions/inventoryController";
-import { entityController } from "modules/ui/functions/entityController";
 import { editorStick } from "modules/ui/functions/editorStick";
 import { editorStickMenuB } from "modules/ui/functions/editorStickMenuB";
-import { editorStickMenuC } from "modules/ui/functions/editorStickMenuC";
 import { editorStickB } from "modules/ui/functions/editorStickB";
 import { editorStickC } from "modules/ui/functions/editorStickC";
-import { managePlayers } from "modules/ui/functions/managePlayers";
 import { editCustomFormUI } from "modules/ui/functions/editCustomFormUI";
-import { ui_format_version } from "modules/ui/functions/ui_format_version";
 import { customElementTypeIds } from "modules/ui/functions/customElementTypeIds";
-import { customElementTypes } from "modules/ui/functions/customElementTypes";
-import { customFormDataTypeIds } from "modules/ui/functions/customFormDataTypeIds";
-import { customFormDataTypes } from "modules/ui/functions/customFormDataTypes";
-import *  as main from "Main";
-globalThis.modules.main=main
-import *  as coords from "Main/coordinates";
 import * as roundVector3ToMiddleOfBlock from "modules/coordinates/functions/roundVector3ToMiddleOfBlock";
-globalThis.modules.coords=coords
-import *  as cmds from "Main/commands";
-globalThis.modules.cmds=cmds
-import *  as bans from "Main/ban";
-globalThis.modules.bans=bans
-import *  as uis from "Main/ui";
-globalThis.modules.uis=uis
-import *  as playersave from "Main/player_save";
-globalThis.modules.playersave=playersave
-import *  as spawnprot from "Main/spawn_protection";
-globalThis.modules.spawnprot=spawnprot
-import *  as chat from "Main/chat";
-globalThis.modules.chat=chat
 import *  as cmdutils from "Main/command_utilities";
-globalThis.modules.cmdutils=cmdutils
-import *  as cmdslist from "Main/commands_list";
-globalThis.modules.cmdslist=cmdslist
-import *  as cmdsdocs from "Main/commands_documentation";
-globalThis.modules.cmdsdocs=cmdsdocs
-import *  as utils from "Main/utilities";
-globalThis.modules.utils=utils as any
-import *  as shopmain from "ExtraFeatures/shop_main";
-import *  as servershop from "ExtraFeatures/server_shop";
-import *  as playershop from "ExtraFeatures/player_shop";
-import *  as moneysystem from "ExtraFeatures/money";
-import *  as structuremappings from "Assets/constants/structure_mappings";
 import mcMath from "@minecraft/math.js";
 import colorCore, { Color } from "color-core";
 import Decimal from "decimal.js";
 import * as semver from "semver";/*
 import { disableWatchdog } from "@minecraft/debug-utilities";*/
-import { listoftransformrecipes } from "Assets/constants/transformrecipes";
 import { chatMessage, patternColors, patternColorsMap, patternFunctionList, evaluateChatColorType, chatSend } from "Main/chat";
 import { targetSelectorAllListE, targetSelectorB, targetSelectorAllListC, clearContainer } from "Main/command_utilities";
 import { customModulo } from "modules/utilities/functions/customModulo";
 import { TimeoutError } from "modules/errors/classes/TimeoutError";
 import { forceShow } from "modules/ui/functions/forceShow";
 import { protectedAreaVariables } from "init/variables/protectedAreaVariables";
-const mcServer = modules.mcServer
-const mcServerUi = modules.mcServerUi/*
-mcServerAdmin*//*
-mcDebugUtilities*//*
-mcCommon*/
-const GameTest = modules.GameTest/*
-mcVanillaData*/
-main
-transformrecipes
-coords
-cmds
-bans
-uis
-playersave
-spawnprot
-mcServer
-SimulatedPlayer
-Test
-mcMath
-globalThis.scriptStartTick=system.currentTick
-globalThis.crashEnabled = false
-globalThis.tempSavedVariables = []
 export async function checkIfCompatibleEntityScaleIsActive(init: boolean = false, maxWaitTicks: number = 20){
     const promise1Result = await new Promise((resolve, reject)=>{
         overworld.runCommand(`/scriptevent andexsa:debugSticks${init?"Init":"Test"}Signal ${format_version}`);
@@ -308,7 +139,6 @@ subscribedEvents.beforeWatchdogTerminate = system.beforeEvents.watchdogTerminate
         }catch{};
     }
 });
-world.setDynamicProperty("format_version", format_version)
 try{
     eval(String(world.getDynamicProperty("evalEvents:scriptInitialize")))
 }catch(e){

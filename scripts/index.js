@@ -1,3 +1,10 @@
+import { system, world } from "@minecraft/server";
+globalThis.beforeScriptStartTick = system.currentTick;
+export const current_format_version = "1.26.0-rc.3+BUILD.1";
+globalThis.format_version = current_format_version;
+export const supported_minecraft_version = "1.21.4x";
+globalThis.entity_scale_format_version = null;
+globalThis.multipleEntityScaleVersionsDetected = false;
 import * as GameTest from "@minecraft/server-gametest";
 import * as mcServer from "@minecraft/server";
 import * as mcServerUi from "@minecraft/server-ui"; /*
@@ -6,6 +13,68 @@ import * as mcServerNet from "@minecraft/server-net";*/ /*
 import * as mcDebugUtilities from "@minecraft/debug-utilities";*/ /*
 import * as mcCommon from "@minecraft/common";*/ /*
 import * as mcVanillaData from "@minecraft/vanilla-data";*/
+globalThis.modules = {
+    assets: {
+        classes: {},
+        constants: {},
+    },
+};
+import "Assets/classes/JSONB";
+import "Global";
+/*
+import "AllayTests.js";
+import "APITests.js";*/
+import "BlockEventTests.js"; /*
+import "BlockTests.js";*/
+import "ComponentTests.js";
+import "CommandTests.js";
+import "DebugTests.js"; /*
+import "DispenserTests.js";
+import "DoorTests.js";
+import "DripstoneTests.js";
+import "DuplicationTests.js";
+import "EntityQueryTests.js";
+import "EntityTests.js";
+import "ExtensionTests.js";
+import "FireAvoidTests.js";
+import "FrogTests.js";*/
+import "GameTestExtensions.js"; /*
+import "MinecartTests.js";
+import "MobTests.js";
+import "MultifaceTests.js";
+import "PathFindingTests.js";
+import "FlyingMachineTests.js";
+import "PistonTests.js";
+import "TntTests.js";
+import "WaterPathfindingTests.js";
+import "WardenTests.js";
+import "SmallMobTests.js";
+import "BigMobTests.js";
+import "RaycastingTests.js";
+import "RedstoneTests.js";*/
+import "SimulatedPlayerTests.js"; /*
+import "RespawnAnchorTests.js";
+import "PlaceSeedsTests.js";
+import "ItemTests.js";*/
+import "ItemEnchantmentsTests.js"; /*
+import "SculkTests.js";
+import "VibrationTests.js";
+import "EnchantmentTests.js";*/ /*
+import "Eval.js";*/
+import "Main/commands_documentation.js";
+import "Main/commands.js";
+import "Main/coordinates.js";
+import "Main/ban.js";
+import "Main/ui.js";
+import "Main/player_save.js";
+import "Main/spawn_protection.js";
+import "Main/chat.js";
+import "Main/command_utilities.js";
+import "Main/commands_list.js";
+import "Main/errors.js";
+import "Main/utilities.js";
+import "@minecraft/math.js";
+import "GlobalDecorators";
 import 'init/index';
 import * as main from "Main";
 globalThis.modules.main = main;
@@ -61,6 +130,7 @@ export const modulesMap = {
     spawnprot,
     mcMath,
     colorCore,
+    Color,
     Decimal,
     semver,
     ["@minecraft/server"]: mcServer,
@@ -90,4 +160,8 @@ export const modulesMap = {
 };
 globalThis.modules = modulesMap;
 import 'Main';
+globalThis.scriptStartTick = system.currentTick;
+globalThis.crashEnabled = false;
+globalThis.tempSavedVariables = [];
+world.setDynamicProperty("format_version", format_version);
 //# sourceMappingURL=index.js.map

@@ -1,6 +1,31 @@
+export declare const current_format_version = "1.26.0-rc.3+BUILD.1";
+export declare const supported_minecraft_version = "1.21.4x";
 import * as GameTest from "@minecraft/server-gametest";
 import * as mcServer from "@minecraft/server";
 import * as mcServerUi from "@minecraft/server-ui";
+import "Assets/classes/JSONB";
+import "Global";
+import "BlockEventTests.js";
+import "ComponentTests.js";
+import "CommandTests.js";
+import "DebugTests.js";
+import "GameTestExtensions.js";
+import "SimulatedPlayerTests.js";
+import "ItemEnchantmentsTests.js";
+import "Main/commands_documentation.js";
+import "Main/commands.js";
+import "Main/coordinates.js";
+import "Main/ban.js";
+import "Main/ui.js";
+import "Main/player_save.js";
+import "Main/spawn_protection.js";
+import "Main/chat.js";
+import "Main/command_utilities.js";
+import "Main/commands_list.js";
+import "Main/errors.js";
+import "Main/utilities.js";
+import "@minecraft/math.js";
+import "GlobalDecorators";
 import 'init/index';
 import * as main from "Main";
 import * as coords from "Main/coordinates";
@@ -42,6 +67,7 @@ export declare const modulesMap: {
     spawnprot: typeof spawnprot;
     mcMath: typeof mcMath;
     colorCore: typeof colorCore;
+    Color: typeof colorCore.Color;
     Decimal: typeof Decimal;
     semver: typeof semver;
     "@minecraft/server": typeof mcServer;
@@ -74,6 +100,7 @@ declare global {
         var modules: typeof modulesMap;
         var tempSavedVariables: any[];
         var crashEnabled: boolean;
+        var format_version: typeof current_format_version;
     }
 }
 import 'Main';

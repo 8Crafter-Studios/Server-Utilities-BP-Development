@@ -1,5 +1,5 @@
 import { Player, system, world } from "@minecraft/server";
-import { format_version, config } from "../Main";
+import { config } from "../Main";
 import {
     savedPlayer,
     type savedPlayerData,
