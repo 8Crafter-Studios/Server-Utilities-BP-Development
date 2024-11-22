@@ -1,6 +1,6 @@
 import { v3Multiply } from "Main";
 import { caretNotationC } from "modules/coordinates/functions/caretNotationC";
-import { VECTOR3_ZERO, VECTOR3_FORWARD } from "@minecraft/math";
+import { VECTOR3_ZERO, VECTOR3_FORWARD } from "@minecraft/math.js";
 export function shootEntityB(entityType, location, rotation, power, setProjectileComponentPropertiesCallbackFn = (a) => { }) {
     let entity = location.dimension.spawnEntity(String(entityType), location);
     try {

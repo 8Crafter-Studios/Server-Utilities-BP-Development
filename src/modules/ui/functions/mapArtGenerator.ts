@@ -1,4 +1,4 @@
-import { Vector3Utils } from "@minecraft/math";
+import { Vector3Utils } from "@minecraft/math.js";
 import type { Entity, Player } from "@minecraft/server";
 import { ModalFormData, ModalFormResponse } from "@minecraft/server-ui";
 import { srun, dimensionTypeDisplayFormatting, dimensions } from "Main";

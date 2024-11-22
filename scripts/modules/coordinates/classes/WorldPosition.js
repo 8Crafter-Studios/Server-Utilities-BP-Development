@@ -1,4 +1,4 @@
-import { Vector3Utils } from "@minecraft/math";
+import { Vector3Utils } from "@minecraft/math.js";
 import { Dimension, Entity, Block, DimensionType, Player, world } from "@minecraft/server";
 import { targetSelectorAllListE, targetSelectorAllListC } from "Main/command_utilities";
 import { anglesToDirectionVectorDeg } from "../functions/anglesToDirectionVectorDeg";

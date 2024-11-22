@@ -1,4 +1,4 @@
-import { Vector3Utils } from "@minecraft/math";
+import { Vector3Utils } from "@minecraft/math.js";
 import { Dimension, Entity, Block, type Vector3, type Vector2, DimensionType, Player, world, type DimensionLocation } from "@minecraft/server";
 import { targetSelectorAllListE, targetSelectorAllListC } from "Main/command_utilities";
 import type { RotationLocation } from "Main/coordinates";

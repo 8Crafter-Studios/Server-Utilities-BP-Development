@@ -1,4 +1,4 @@
-import { Vector3Utils } from "@minecraft/math";
+import { Vector3Utils } from "@minecraft/math.js";
 import { Entity, Player, BlockPermutation, SignSide, ItemStack, DyeColor, BlockTypes } from "@minecraft/server";
 import { ModalFormData, ModalFormResponse } from "@minecraft/server-ui";
 import { forceShow } from "modules/ui/functions/forceShow";

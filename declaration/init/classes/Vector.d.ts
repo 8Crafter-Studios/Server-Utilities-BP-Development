@@ -1,4 +1,4 @@
-import { Vector3Builder, Vector3Utils } from "@minecraft/math";
+import { Vector3Builder, Vector3Utils } from "@minecraft/math.js";
 export declare class Vector extends Vector3Builder implements Vector3Utils {
     zero: import("@minecraft/server").Vector3;
     one: import("@minecraft/server").Vector3;
