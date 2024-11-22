@@ -1,4 +1,5 @@
-import type { command_formats_type_list, commandCategory } from "./commands";
+import type { command_formats_type_list } from "./command_formats_type_list";
+import type { commandCategory } from "./commandCategory";
 
 export const commands = [
     {

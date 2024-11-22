@@ -1,7 +1,7 @@
 import type { Entity, Player, ContainerSlot } from "@minecraft/server";
 import { ActionFormData, ActionFormResponse, ModalFormData, ModalFormResponse, MessageFormData } from "@minecraft/server-ui";
 import { forceShow } from "modules/ui/functions/forceShow";
-import { executeCommandPlayerW } from "../../../Main/commands";
+import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 
 export function itemDynamicPropertyEditor(
     sourceEntitya: Entity | executeCommandPlayerW | Player,

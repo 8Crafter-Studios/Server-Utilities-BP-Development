@@ -1,7 +1,8 @@
 import { Entity, Player, system, world } from "@minecraft/server";
 import { ModalFormData, ModalFormResponse } from "@minecraft/server-ui";
 import { forceShow } from "modules/ui/functions/forceShow";
-import { executeCommandPlayerW, chatCommands } from "../../../Main/commands";
+import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
+import { chatCommands } from "modules/commands/functions/chatCommands";
 
 export function chatCommandRunner(
     sourceEntitya: Entity | executeCommandPlayerW | Player

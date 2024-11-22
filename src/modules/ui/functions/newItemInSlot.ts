@@ -1,7 +1,7 @@
 import { Entity, Player, ContainerSlot, ItemStack } from "@minecraft/server";
 import { ModalFormData, ModalFormResponse, MessageFormData } from "@minecraft/server-ui";
 import { forceShow } from "modules/ui/functions/forceShow";
-import { executeCommandPlayerW } from "../../../Main/commands";
+import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 
 export function newItemInSlot(
     sourceEntitya: Entity | executeCommandPlayerW | Player,

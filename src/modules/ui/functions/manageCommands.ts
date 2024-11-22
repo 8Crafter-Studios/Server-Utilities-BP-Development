@@ -1,7 +1,9 @@
 import { Entity, Player, world } from "@minecraft/server";
 import { ActionFormData, ActionFormResponse, ModalFormData, ModalFormResponse, MessageFormData, MessageFormResponse } from "@minecraft/server-ui";
 import { forceShow } from "modules/ui/functions/forceShow";
-import { executeCommandPlayerW, command, commandSettings } from "../../../Main/commands";
+import { commandSettings } from "modules/commands/classes/commandSettings";
+import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
+import { command } from "Main/command";
 import { command_settings_format_version } from "modules/commands/constants/command_settings_format_version";
 import { commands_format_version } from "modules/commands/constants/commands_format_version";
 import { mainMenu } from "./mainMenu";

@@ -2,7 +2,7 @@ import { Vector3Utils } from "@minecraft/math.js";
 import { Entity, Player, BlockPermutation, SignSide, ItemStack, DyeColor, BlockTypes } from "@minecraft/server";
 import { ModalFormData, ModalFormResponse } from "@minecraft/server-ui";
 import { forceShow } from "modules/ui/functions/forceShow";
-import { executeCommandPlayerW } from "../../../Main/commands";
+import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 
 export function editorStickC(
     sourceEntitya: Entity | executeCommandPlayerW | Player,

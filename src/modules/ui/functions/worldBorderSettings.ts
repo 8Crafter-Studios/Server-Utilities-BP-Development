@@ -2,7 +2,7 @@ import type { Entity, Player } from "@minecraft/server";
 import { ModalFormData } from "@minecraft/server-ui";
 import { config, dimensionse } from "Main";
 import { forceShow } from "modules/ui/functions/forceShow";
-import { executeCommandPlayerW } from "../../../Main/commands";
+import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { worldBorderSettingsDimensionSelector } from "./worldBorderSettingsDimensionSelector";
 
 export function worldBorderSettings(

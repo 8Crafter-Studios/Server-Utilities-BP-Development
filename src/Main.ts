@@ -35,7 +35,15 @@ import { generateMinecraftConeBG } from "modules/coordinates/functions/generateM
 import { generateMinecraftSemiSphereBG } from "modules/coordinates/functions/generateMinecraftSemiSphereBG";
 import { WorldPosition } from "modules/coordinates/classes/WorldPosition";
 import { Vector } from "init/classes/Vector";
-import { chatCommands, getPlayersWithTags, vTStr, getPlayersWithAnyOfTags, BlockPattern, testBlockForMatch, executeCommandPlayerW, BlockMask, testBlockForMatchToMask } from "Main/commands";
+import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
+import { BlockPattern } from "modules/commands/classes/BlockPattern";
+import { BlockMask } from "modules/commands/classes/BlockMask";
+import { testBlockForMatch } from "modules/commands/functions/testBlockForMatch";
+import { testBlockForMatchToMask } from "modules/commands/functions/testBlockForMatchToMask";
+import { vTStr } from "modules/commands/functions/vTStr";
+import { getPlayersWithTags } from "modules/commands/functions/getPlayersWithTags";
+import { getPlayersWithAnyOfTags } from "modules/commands/functions/getPlayersWithAnyOfTags";
+import { chatCommands } from "modules/commands/functions/chatCommands";
 import { disconnectingPlayers } from "modules/commands/constants/disconnectingPlayers";
 import { ban } from "Main/ban";
 import { savedPlayer } from "modules/player_save/classes/savedPlayer";

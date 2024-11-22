@@ -34,11 +34,9 @@ import * as uis from "./ui";
 import * as playersave from "./player_save";
 import * as spawnprot from "./spawn_protection";
 import mcMath from "@minecraft/math.js";
-import {
-  getEntityById,
-  getPlayer,
-  type executeCommandPlayerW,
-} from "./commands";
+import { type executeCommandPlayerW } from "../modules/commands/classes/executeCommandPlayerW";
+import { getPlayer } from "../modules/commands/functions/getPlayer";
+import { getEntityById } from "../modules/commands/functions/getEntityById";
 export const cmdutilsmetaimport = import.meta;
 //globalThis.modules={main, coords, cmds, bans, uis, playersave, spawnprot, mcMath}
 mcServer;

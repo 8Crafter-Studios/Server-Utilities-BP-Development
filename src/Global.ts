@@ -2,7 +2,7 @@ import { system, Entity, type RawMessage, world, EntityInventoryComponent, Entit
 import { ActionFormData, MessageFormData, ModalFormData, type ActionFormResponse, type MessageFormResponse, type ModalFormResponse } from "@minecraft/server-ui";
 import Decimal from "decimal.js";
 import { MoneySystem } from "ExtraFeatures/money";
-import type { executeCommandPlayerW } from "Main/commands";
+import type { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import type { RotationLocation } from "Main/coordinates";
 import type { PlayerNotifications } from "init/classes/PlayerNotifications";
 declare global {

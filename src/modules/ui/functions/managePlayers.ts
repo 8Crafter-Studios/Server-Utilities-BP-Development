@@ -3,7 +3,7 @@ import { ActionFormData, ActionFormResponse, ModalFormData, ModalFormResponse, M
 import { config } from "Main";
 import { forceShow } from "modules/ui/functions/forceShow";
 import { ban, ban_format_version } from "../../../Main/ban";
-import { executeCommandPlayerW } from "../../../Main/commands";
+import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { managePlayers_managePlayer } from "./managePlayers_managePlayer";
 import { savedPlayer } from "modules/player_save/classes/savedPlayer";
 

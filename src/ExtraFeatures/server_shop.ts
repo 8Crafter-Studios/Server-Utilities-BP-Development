@@ -2,7 +2,8 @@ import { ItemLockMode, ItemStack, Player, world, Entity, StructureSaveMode } fro
 import { ActionFormData, ActionFormResponse, MessageFormData, ModalFormData } from "@minecraft/server-ui";
 import { config, getPathInObject } from "Main";
 import { containerToContainerSlotArray, containerToItemStackArray } from "Main/command_utilities";
-import { command, executeCommandPlayerW } from "Main/commands";
+import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
+import { command } from "Main/command";
 import { forceShow } from "modules/ui/functions/forceShow";
 import { settings } from "modules/ui/functions/settings";
 import { worldBorderSettingsDimensionSelector } from "modules/ui/functions/worldBorderSettingsDimensionSelector";

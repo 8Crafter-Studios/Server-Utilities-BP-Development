@@ -2,7 +2,7 @@ import { Entity, Player, world } from "@minecraft/server";
 import { ActionFormData, ActionFormResponse } from "@minecraft/server-ui";
 import { forceShow } from "modules/ui/functions/forceShow";
 import { antispamSettings } from "./antispamSettings";
-import { executeCommandPlayerW } from "../../../Main/commands";
+import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { manageBans } from "./manageBans";
 import { mainMenu } from "./mainMenu";
 

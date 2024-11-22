@@ -1,6 +1,6 @@
 import { Player, world, Entity, ItemLockMode, ItemStack, ItemEnchantableComponent, ItemDurabilityComponent, ItemCooldownComponent, type Enchantment, PotionEffectType } from "@minecraft/server";
 import { ActionFormData, ActionFormResponse } from "@minecraft/server-ui";
-import { executeCommandPlayerW } from "Main/commands";
+import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { forceShow } from "modules/ui/functions/forceShow";
 import { settings } from "modules/ui/functions/settings";
 import { extraFeaturesSettings } from "modules/ui/functions/extraFeaturesSettings";

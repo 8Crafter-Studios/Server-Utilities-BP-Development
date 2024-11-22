@@ -1,5 +1,5 @@
 import { type Vector3, CompoundBlockVolume, Dimension, type DimensionLocation, Entity, system } from "@minecraft/server";
-import { vTStr } from "../../../Main/commands";
+import { vTStr } from "modules/commands/functions/vTStr";
 import { generateTickingAreaFillCoordinates } from "./generateTickingAreaFillCoordinates";
 import { getDistance } from "./getDistance";
 

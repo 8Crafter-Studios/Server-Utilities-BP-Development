@@ -1,0 +1,60 @@
+import { world, Player } from "@minecraft/server";
+import { gwdp, swdp } from "Main";
+import type { extendedExecuteCommandPlayerW } from "Main/extendedExecuteCommandPlayerW";
+import { Home } from "./Home";
+
+export class HomeSystem {
+    constructor() { }
+    static home_format_version = "0.7.0-beta.72";
+    static getHomes(homeIds: string[]) {
+        let homes = [] as Home[];
+        homeIds.forEach((c) => homes.push(Home.get(c)));
+        return homes;
+    }
+    static getAllHomes() {
+        let homes = [] as Home[];
+        this.getHomeIds().forEach((c) => homes.push(Home.get(c)));
+        return homes;
+    }
+    static getHomeIds() {
+        return world
+            .getDynamicPropertyIds()
+            .filter((v) => v.startsWith("home:"));
+    }
+    static getHomeIdsForPlayer(
+        player: Player | extendedExecuteCommandPlayerW | string
+    ) {
+        return world
+            .getDynamicPropertyIds()
+            .filter((v) => v.startsWith("home:"))
+            .filter(
+                (v) => tryget(
+                    () => JSONParse(String(world.getDynamicProperty(v)))
+                        ?.ownerId
+                ) == (typeof player == "string" ? player : player.id)
+            );
+    }
+    static getHomesForPlayer(
+        player: Player | extendedExecuteCommandPlayerW | string
+    ) {
+        return this.getHomes(this.getHomeIdsForPlayer(player));
+    }
+    static testIfPlayerAtMaxHomes(
+        player: Player | extendedExecuteCommandPlayerW | string
+    ) {
+        return (
+            this.getHomeIdsForPlayer(player).length >= this.maxHomesPerPlayer
+        );
+    }
+    static get maxHomesPerPlayer() {
+        return gwdp("homeSystemSettings:maxHomesPerPlayer") == -1
+            ? Infinity
+            : Number(gwdp("homeSystemSettings:maxHomesPerPlayer") ?? Infinity);
+    }
+    static set maxHomesPerPlayer(maxHomes: number) {
+        swdp(
+            "homeSystemSettings:maxHomesPerPlayer",
+            maxHomes == Infinity ? -1 : maxHomes
+        );
+    }
+}

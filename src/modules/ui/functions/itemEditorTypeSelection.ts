@@ -1,7 +1,7 @@
 import type { Entity, Player, EquipmentSlot, ContainerSlot } from "@minecraft/server";
 import { ActionFormData, ActionFormResponse, MessageFormData } from "@minecraft/server-ui";
 import { forceShow } from "modules/ui/functions/forceShow";
-import { executeCommandPlayerW } from "../../../Main/commands";
+import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { itemCodePropertyEditor } from "./itemCodePropertyEditor";
 import { itemDynamicPropertyEditor } from "./itemDynamicPropertyEditor";
 import { itemEditor } from "./itemEditor";

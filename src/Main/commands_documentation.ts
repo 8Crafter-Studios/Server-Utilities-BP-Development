@@ -1,5 +1,6 @@
 import { Player, world, Entity } from "@minecraft/server";
-import { command, executeCommandPlayerW } from "./commands";
+import { executeCommandPlayerW } from "../modules/commands/classes/executeCommandPlayerW";
+import { command } from "../modules/commands/classes/command";
 
 export enum commanddescriptions {
 //"ban" = "Bans a player. ",

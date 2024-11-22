@@ -1,5 +1,5 @@
 import { CompoundBlockVolume, Dimension, type DimensionLocation, BlockVolume } from "@minecraft/server";
-import { vTStr } from "../../../Main/commands";
+import { vTStr } from "modules/commands/functions/vTStr";
 
 export function generateTickingAreaFillCoordinatesB(
     area: CompoundBlockVolume,

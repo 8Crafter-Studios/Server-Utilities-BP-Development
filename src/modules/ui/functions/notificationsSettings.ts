@@ -1,7 +1,7 @@
 import type { Entity, Player } from "@minecraft/server";
 import { ModalFormData, ModalFormResponse } from "@minecraft/server-ui";
 import { forceShow } from "modules/ui/functions/forceShow";
-import { executeCommandPlayerW } from "../../../Main/commands";
+import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { PlayerNotifications } from "init/classes/PlayerNotifications";
 import { settings } from "./settings";
 
