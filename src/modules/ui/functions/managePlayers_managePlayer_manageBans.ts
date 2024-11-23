@@ -1,7 +1,8 @@
 import { Entity, world, Player } from "@minecraft/server";
 import { ActionFormData, ActionFormResponse, ModalFormData, ModalFormResponse, MessageFormData } from "@minecraft/server-ui";
 import { forceShow } from "modules/ui/functions/forceShow";
-import { ban, ban_format_version } from "../../../Main/ban";
+import { ban_format_version } from "modules/ban/constants/ban_format_version";
+import { ban } from "modules/ban/classes/ban";
 import type { savedPlayer } from "modules/player_save/classes/savedPlayer";
 
 export async function managePlayers_managePlayer_manageBans(

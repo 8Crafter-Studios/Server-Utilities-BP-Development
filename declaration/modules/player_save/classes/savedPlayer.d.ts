@@ -1,5 +1,5 @@
 import { EquipmentSlot, type Enchantment, type Vector3, Dimension, type Vector2, type DimensionLocation, GameMode, MemoryTier, PlatformType, PlayerInputPermissions, Player, ItemStack } from "@minecraft/server";
-import { ban } from "../../../Main/ban";
+import { ban } from "modules/ban/classes/ban";
 export interface savedItem {
     id?: string;
     count: number;

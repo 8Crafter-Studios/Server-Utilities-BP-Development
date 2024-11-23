@@ -1,6 +1,6 @@
 import { Player, world } from "@minecraft/server";
 import type { ModalFormResponse, ActionFormResponse, MessageFormResponse } from "@minecraft/server-ui";
-import { getUICustomForm } from "Main";
+import { getUICustomForm } from "modules/main/functions/getUICustomForm";
 import { forceShow } from "modules/ui/functions/forceShow";
 import { customFormDataTypes } from "./customFormDataTypes";
 

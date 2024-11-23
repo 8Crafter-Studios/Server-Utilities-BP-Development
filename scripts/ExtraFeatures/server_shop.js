@@ -1,8 +1,11 @@
 import { ItemLockMode, ItemStack, Player, world, Entity, StructureSaveMode } from "@minecraft/server";
 import { ActionFormData, ActionFormResponse, MessageFormData, ModalFormData } from "@minecraft/server-ui";
-import { config, getPathInObject } from "Main";
-import { containerToContainerSlotArray, containerToItemStackArray } from "Main/command_utilities";
-import { command, executeCommandPlayerW } from "Main/commands";
+import { getPathInObject } from "modules/main/functions/getPathInObject";
+import { config } from "init/classes/config";
+import { containerToContainerSlotArray } from "modules/command_utilities/functions/containerToContainerSlotArray";
+import { containerToItemStackArray } from "modules/command_utilities/functions/containerToItemStackArray";
+import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
+import { command } from "Main/command";
 import { forceShow } from "modules/ui/functions/forceShow";
 import { settings } from "modules/ui/functions/settings";
 import { worldBorderSettingsDimensionSelector } from "modules/ui/functions/worldBorderSettingsDimensionSelector";
@@ -13,7 +16,6 @@ import { showMessage } from "modules/utilities/functions/showMessage";
 import { getStringFromDynamicProperties } from "modules/utilities/functions/getStringFromDynamicProperties";
 import { saveStringToDynamicProperties } from "modules/utilities/functions/saveStringToDynamicProperties";
 import { mainShopSystemSettings } from "./shop_main";
-import { Vector } from "init/classes/Vector";
 import { MoneySystem } from "./money";
 /**
  * @todo Convert the functions to async functions that return Promise<0|1>.

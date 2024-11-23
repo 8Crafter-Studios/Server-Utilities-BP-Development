@@ -1,7 +1,7 @@
 import { Player, type Vector3, Dimension, type Vector2, Block, Entity, type RawMessage, EntityInventoryComponent, EntityEquippableComponent, PlayerCursorInventoryComponent, ItemStack, EquipmentSlot, ContainerSlot, type VectorYZ, type VectorXZ, EffectType, type EntityEffectOptions, type MusicOptions, type PlayerSoundOptions, GameMode, type DimensionLocation, MolangVariableMap, type EntityApplyDamageByProjectileOptions, type EntityApplyDamageOptions, type BlockRaycastOptions, type EntityComponentTypeMap, type BlockComponentTypeMap, type EntityRaycastOptions, type EntityQueryOptions, type PlayAnimationOptions, type TeleportOptions } from "@minecraft/server";
 import { MoneySystem } from "ExtraFeatures/money";
 import { PlayerNotifications } from "init/classes/PlayerNotifications";
-import { config } from "Main";
+import { config } from "init/classes/config";
 import { chatCommands } from "modules/commands/functions/chatCommands";
 import { WorldPosition } from "modules/coordinates/classes/WorldPosition";
 import { anglesToDirectionVectorDeg } from "modules/coordinates/functions/anglesToDirectionVectorDeg";

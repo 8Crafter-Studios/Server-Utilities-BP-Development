@@ -1,7 +1,7 @@
 import { Entity, Player, ContainerSlot, ItemLockMode } from "@minecraft/server";
 import { ModalFormData, ModalFormResponse, MessageFormData } from "@minecraft/server-ui";
 import { forceShow } from "modules/ui/functions/forceShow";
-import { executeCommandPlayerW } from "../../../Main/commands";
+import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 export async function itemEditor(sourceEntitya, targetPlayer, item) {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW
         ? sourceEntitya.player

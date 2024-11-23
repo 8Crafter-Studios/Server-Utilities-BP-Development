@@ -1,11 +1,11 @@
-import { ItemLockMode, ItemStack, Player, world, Entity, StructureSaveMode, ItemType, InvalidStructureError } from "@minecraft/server";
+import { ItemStack, Player, world, Entity, StructureSaveMode, InvalidStructureError } from "@minecraft/server";
 import { ActionFormData, ActionFormResponse, MessageFormData, ModalFormData } from "@minecraft/server-ui";
-import { config, getPathInObject } from "Main";
-import { containerToContainerSlotArray, containerToItemStackArray } from "Main/command_utilities";
-import { command, executeCommandPlayerW } from "Main/commands";
+import { getPathInObject } from "modules/main/functions/getPathInObject";
+import { config } from "init/classes/config";
+import { containerToContainerSlotArray } from "modules/command_utilities/functions/containerToContainerSlotArray";
+import { containerToItemStackArray } from "modules/command_utilities/functions/containerToItemStackArray";
+import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { forceShow } from "modules/ui/functions/forceShow";
-import { settings } from "modules/ui/functions/settings";
-import { worldBorderSettingsDimensionSelector } from "modules/ui/functions/worldBorderSettingsDimensionSelector";
 import { onlinePlayerSelector } from "modules/ui/functions/onlinePlayerSelector";
 import { itemSelector } from "modules/ui/functions/itemSelector";
 import { getSuperUniqueID } from "modules/utilities/functions/getSuperUniqueID";
@@ -13,8 +13,7 @@ import { showActions } from "modules/utilities/functions/showActions";
 import { showMessage } from "modules/utilities/functions/showMessage";
 import { getStringFromDynamicProperties } from "modules/utilities/functions/getStringFromDynamicProperties";
 import { saveStringToDynamicProperties } from "modules/utilities/functions/saveStringToDynamicProperties";
-import { mainShopSystemSettings } from "./shop_main";
-import { Vector } from "init/classes/Vector";
+import {} from "./shop_main";
 import { MoneySystem } from "./money";
 import { StorageFullError } from "modules/errors/classes/StorageFullError";
 /**

@@ -1,5 +1,4 @@
 import { world, type Vector3, type StructureCreateOptions, StructureSaveMode, type StructurePlaceOptions } from "@minecraft/server";
-import { Vector } from "init/classes/Vector";
 import { dimensionsc } from "Main";
 import { splitArea } from "modules/coordinates/functions/splitArea";
 

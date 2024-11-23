@@ -1,7 +1,7 @@
 import { Entity, Player, world } from "@minecraft/server";
 import { ActionFormData, ActionFormResponse } from "@minecraft/server-ui";
 import { forceShow } from "modules/ui/functions/forceShow";
-import { executeCommandPlayerW } from "../../../Main/commands";
+import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { createExplosion } from "./createExplosion";
 import { editorStick } from "./editorStick";
 import { itemSelector } from "./itemSelector";

@@ -1,7 +1,7 @@
 import { Entity, Player, world, EntityInventoryComponent, EquipmentSlot, EntityEquippableComponent, ItemDurabilityComponent, ItemEnchantableComponent, ItemLockMode, ItemStack, BlockInventoryComponent } from "@minecraft/server";
 import { ModalFormData, ModalFormResponse } from "@minecraft/server-ui";
 import { forceShow } from "modules/ui/functions/forceShow";
-import { executeCommandPlayerW } from "../../../Main/commands";
+import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 export function inventoryController(sourceEntitya) {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW
         ? sourceEntitya.player

@@ -1,5 +1,5 @@
 import { Player, world } from "@minecraft/server";
-import { getUICustomForm } from "Main";
+import { getUICustomForm } from "modules/main/functions/getUICustomForm";
 import { forceShow } from "modules/ui/functions/forceShow";
 import { customFormDataTypes } from "./customFormDataTypes";
 export function showCustomFormUI(UIId, player) {

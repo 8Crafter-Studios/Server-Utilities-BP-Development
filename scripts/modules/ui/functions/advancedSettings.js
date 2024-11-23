@@ -1,6 +1,6 @@
 import { ActionFormData, ActionFormResponse } from "@minecraft/server-ui";
 import { forceShow } from "modules/ui/functions/forceShow";
-import { executeCommandPlayerW } from "../../../Main/commands";
+import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { addonDebugUI } from "./addonDebugUI";
 export async function advancedSettings(sourceEntitya) {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW

@@ -1,11 +1,12 @@
 import { Entity, Player, world, system } from "@minecraft/server";
 import { ActionFormData, ActionFormResponse } from "@minecraft/server-ui";
-import { config } from "Main";
-import { executeCommandPlayerW } from "../../../Main/commands";
+import { config } from "init/classes/config";
+import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { forceShow } from "./forceShow";
 import { showActions } from "modules/utilities/functions/showActions";
 import { showMessage } from "modules/utilities/functions/showMessage";
-import { startCheckingForBannedPlayers, stopCheckingForBannedPlayers } from "Main/ban";
+import { startCheckingForBannedPlayers } from "modules/ban/functions/checkingForBannedPlayers";
+import { stopCheckingForBannedPlayers } from "modules/ban/functions/stopCheckingForBannedPlayers";
 import { stopPlayerDataAutoSave } from "modules/player_save/functions/stopPlayerDataAutoSave";
 import { startPlayerDataAutoSave } from "modules/player_save/functions/startPlayerDataAutoSave";
 import { stopProtectedAreasRefresher } from "modules/spawn_protection/functions/stopProtectedAreasRefresher";

@@ -4,7 +4,6 @@ import { dimensionse, dimensions, dimensionTypeDisplayFormattingE } from "Main";
 import { forceShow } from "modules/ui/functions/forceShow";
 import { HomeSystem } from "modules/commands/classes/HomeSystem";
 import { vTStr } from "modules/commands/functions/vTStr";
-import { Vector } from "init/classes/Vector";
 import type { savedPlayer } from "modules/player_save/classes/savedPlayer";
 import { showMessage } from "modules/utilities/functions/showMessage";
 

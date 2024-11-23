@@ -2,12 +2,11 @@ import { Entity, Player, world } from "@minecraft/server";
 import { ActionFormData, ActionFormResponse, MessageFormData, MessageFormResponse, ModalFormData } from "@minecraft/server-ui";
 import { MoneySystem } from "ExtraFeatures/money";
 import { forceShow } from "modules/ui/functions/forceShow";
-import { ban } from "../../../Main/ban";
-import { Vector } from "init/classes/Vector";
+import { ban } from "modules/ban/classes/ban";
 import { managePlayers_managePlayer_manageBans } from "./managePlayers_managePlayer_manageBans";
 import { managePlayers_managePlayer_manageHomes } from "./managePlayers_managePlayer_manageHomes";
 import type { savedPlayer } from "modules/player_save/classes/savedPlayer";
-import { EquipmentSlots } from "Main/command_utilities";
+import { EquipmentSlots } from "modules/command_utilities/constants/EquipmentSlots";
 import { showMessage } from "modules/utilities/functions/showMessage";
 
 /**

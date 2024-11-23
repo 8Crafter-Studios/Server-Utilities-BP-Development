@@ -1,8 +1,8 @@
 import { ActionFormData, ActionFormResponse, ModalFormData, MessageFormData } from "@minecraft/server-ui";
 import { dimensionse, dimensions, dimensionTypeDisplayFormattingE } from "Main";
 import { forceShow } from "modules/ui/functions/forceShow";
-import { HomeSystem, vTStr } from "../../../Main/commands";
-import { Vector } from "init/classes/Vector";
+import { HomeSystem } from "modules/commands/classes/HomeSystem";
+import { vTStr } from "modules/commands/functions/vTStr";
 import { showMessage } from "modules/utilities/functions/showMessage";
 export async function managePlayers_managePlayer_manageHomes(sourceEntity, player) {
     let form6 = new ActionFormData();

@@ -1,5 +1,4 @@
 import { world, Dimension } from "@minecraft/server";
-import { Vector } from "init/classes/Vector";
 import { splitArea } from "modules/coordinates/functions/splitArea";
 export class blockClipboard {
     static get ids() {

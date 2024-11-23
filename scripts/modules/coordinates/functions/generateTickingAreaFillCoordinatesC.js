@@ -1,5 +1,5 @@
 import { CompoundBlockVolume, Dimension, Entity, system } from "@minecraft/server";
-import { vTStr } from "../../../Main/commands";
+import { vTStr } from "modules/commands/functions/vTStr";
 import { generateTickingAreaFillCoordinates } from "./generateTickingAreaFillCoordinates";
 import { getDistance } from "./getDistance";
 export async function generateTickingAreaFillCoordinatesC(center, area, dimension, spawnEntityCallback = (l, e, i) => {

@@ -1,6 +1,6 @@
 import type { Entity, Player } from "@minecraft/server";
 import { ModalFormData, ModalFormResponse } from "@minecraft/server-ui";
-import { srun, dimensionTypeDisplayFormatting, dimensions } from "Main";
+import { srun } from "init/functions/srun";
 import { forceShow } from "modules/ui/functions/forceShow";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { generateNBTFileD } from "modules/commands/functions/generateNBTFileD";

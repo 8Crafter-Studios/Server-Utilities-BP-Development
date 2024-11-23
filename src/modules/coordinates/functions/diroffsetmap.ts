@@ -1,5 +1,4 @@
 import type { Direction } from "@minecraft/server";
-import { Vector } from "init/classes/Vector";
 
 export function diroffsetmap(direction: Direction) {
     return {

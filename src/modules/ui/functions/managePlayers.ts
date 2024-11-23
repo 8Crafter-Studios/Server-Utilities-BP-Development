@@ -1,8 +1,9 @@
 import { Entity, Player, world } from "@minecraft/server";
 import { ActionFormData, ActionFormResponse, ModalFormData, ModalFormResponse, MessageFormData } from "@minecraft/server-ui";
-import { config } from "Main";
+import { config } from "init/classes/config";
 import { forceShow } from "modules/ui/functions/forceShow";
-import { ban, ban_format_version } from "../../../Main/ban";
+import { ban_format_version } from "modules/ban/constants/ban_format_version";
+import { ban } from "modules/ban/classes/ban";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { managePlayers_managePlayer } from "./managePlayers_managePlayer";
 import { savedPlayer } from "modules/player_save/classes/savedPlayer";

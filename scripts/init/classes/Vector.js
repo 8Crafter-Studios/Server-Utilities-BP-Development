@@ -1,5 +1,5 @@
 import { Vector3Builder, Vector3Utils, VECTOR3_ZERO, VECTOR3_ONE, VECTOR3_UP, VECTOR3_DOWN, VECTOR3_NORTH, VECTOR3_SOUTH, VECTOR3_EAST, VECTOR3_WEST, VECTOR3_RIGHT, VECTOR3_LEFT, VECTOR3_BACK, VECTOR3_FORWARD } from "@minecraft/math.js";
-export class Vector extends Vector3Builder {
+const VectorClass = class Vector extends Vector3Builder {
     zero = VECTOR3_ZERO;
     one = VECTOR3_ONE;
     up = VECTOR3_UP;
@@ -37,5 +37,11 @@ export class Vector extends Vector3Builder {
     static scale = Vector3Utils.scale;
     static slerp = Vector3Utils.slerp;
     static subtract = Vector3Utils.subtract;
-}
+};
+Object.defineProperty(globalThis, 'Vector', {
+    value: VectorClass,
+    enumerable: true,
+    configurable: true,
+    writable: false,
+});
 //# sourceMappingURL=Vector.js.map

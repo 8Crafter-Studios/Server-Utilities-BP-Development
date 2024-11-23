@@ -1,7 +1,7 @@
 import { type RawMessage, Player, Dimension } from "@minecraft/server";
 import Decimal from "decimal.js";
 import { MoneySystem } from "ExtraFeatures/money";
-import type { executeCommandPlayerW } from "Main/commands";
+import type { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import type { RotationLocation } from "Main/coordinates";
 import type { PlayerNotifications } from "init/classes/PlayerNotifications";
 declare global {
@@ -448,12 +448,191 @@ declare global {
         }): string;
     }
     class globalThis {
+        /**
+         * @remarks Maps the dimension IDs to lowercase names of the dimensions types that all include "The" before the dimension name.
+         * @property overworld: the overworld
+         * @property minecraft:overworld: the overworld
+         * @property nether: the nether
+         * @property minecraft:nether: the nether
+         * @property the_end: the end
+         * @property minecraft:the_end: the end
+         */
+        static get dimensionTypeDisplayFormatting(): {
+            "minecraft:overworld": "the overworld";
+            overworld: "the overworld";
+            "minecraft:nether": "the nether";
+            nether: "the nether";
+            "minecraft:the_end": "the end";
+            the_end: "the end";
+        };
+        /**
+         * @remarks Maps the dimension IDs to lowercase names of the dimensions types.
+         * @property overworld: overworld
+         * @property minecraft:overworld: overworld
+         * @property nether: nether
+         * @property minecraft:nether: nether
+         * @property the_end: the end
+         * @property minecraft:the_end: the end
+         */
+        static get dimensionTypeDisplayFormattingB(): {
+            "minecraft:overworld": "overworld";
+            overworld: "overworld";
+            "minecraft:nether": "nether";
+            nether: "nether";
+            "minecraft:the_end": "the end";
+            the_end: "the end";
+        };
+        /**
+         * @remarks Maps the dimension IDs to titlecase names of the dimensions types that all include "The" before the dimension name.
+         * @property overworld: The Overworld
+         * @property minecraft:overworld: The Overworld
+         * @property nether: The Nether
+         * @property minecraft:nether: The Nether
+         * @property the_end: The End
+         * @property minecraft:the_end: The End
+         */
+        static get dimensionTypeDisplayFormattingC(): {
+            "minecraft:overworld": "The Overworld";
+            overworld: "The Overworld";
+            "minecraft:nether": "The Nether";
+            nether: "The Nether";
+            "minecraft:the_end": "The End";
+            the_end: "The End";
+        };
+        /**
+         * @remarks Maps the dimension IDs to titlecase names of the dimensions types.
+         * @property overworld: Overworld
+         * @property minecraft:overworld: Overworld
+         * @property nether: Nether
+         * @property minecraft:nether: Nether
+         * @property the_end: The End
+         * @property minecraft:the_end: The End
+         */
+        static get dimensionTypeDisplayFormattingD(): {
+            "minecraft:overworld": "Overworld";
+            overworld: "Overworld";
+            "minecraft:nether": "Nether";
+            nether: "Nether";
+            "minecraft:the_end": "The End";
+            the_end: "The End";
+        };
+        /**
+         * @remarks Maps the dimension IDs to titlecase names of the dimensions types that have formatting codes.
+         * @property overworld: §aOverworld
+         * @property minecraft:overworld: §aOverworld
+         * @property nether: §cNether
+         * @property minecraft:nether: §cNether
+         * @property the_end: §dThe End
+         * @property minecraft:the_end: §dThe End
+         */
+        static get dimensionTypeDisplayFormattingE(): {
+            "minecraft:overworld": "§aOverworld";
+            overworld: "§aOverworld";
+            "minecraft:nether": "§cNether";
+            nether: "§cNether";
+            "minecraft:the_end": "§dThe End";
+            the_end: "§dThe End";
+        };
+        /**
+         * @remarks Maps the dimension IDs to their non-namespaces versions.
+         * @property overworld: overworld
+         * @property minecraft:overworld: overworld
+         * @property nether: nether
+         * @property minecraft:nether: nether
+         * @property the_end: the_end
+         * @property minecraft:the_end: the_end
+         */
+        static get dimensionTypeDisplayFormattingF(): {
+            "minecraft:overworld": "overworld";
+            overworld: "overworld";
+            "minecraft:nether": "nether";
+            nether: "nether";
+            "minecraft:the_end": "the_end";
+            the_end: "the_end";
+        };
+        /**
+         * @remarks An array containing all of the dimension objects.
+         * @property 0: Overworld
+         * @property 1: Nether
+         * @property 2: The End
+         */
+        static get dimensions(): [Dimension, Dimension, Dimension];
+        /**
+         * @remarks Maps the namespaced dimension IDs to the dimensions objects with the same IDs.
+         * @property minecraft:overworld: Overworld
+         * @property minecraft:nether: Nether
+         * @property minecraft:the_end: The End
+         */
+        static get dimensionsb(): {
+            "minecraft:overworld": Dimension;
+            "minecraft:nether": Dimension;
+            "minecraft:the_end": Dimension;
+        };
+        /**
+         * @remarks Maps the non-namespaced dimension IDs to the dimensions objects with the same IDs.
+         * @property overworld: Overworld
+         * @property nether: Nether
+         * @property the_end: The End
+         */
+        static get dimensionsc(): {
+            overworld: Dimension;
+            nether: Dimension;
+            the_end: Dimension;
+        };
+        /**
+         * @remarks An array containing all of the namespaced dimension IDs.
+         * ```typescript
+         * 0: "minecraft:overworld"
+         * 1: "minecraft:nether"
+         * 2: "minecraft:the_end"
+         * ```
+         */
+        static get dimensionsd(): [
+            "minecraft:overworld",
+            "minecraft:nether",
+            "minecraft:the_end"
+        ];
+        /**
+         * @remarks An array containing all of the non-namespaced dimension IDs.
+         * ```typescript
+         * 0: "overworld"
+         * 1: "nether"
+         * 2: "the_end"
+         * ```
+         */
+        static get dimensionse(): ["overworld", "nether", "the_end"];
+        /**
+         * @remarks Maps the dimension IDs to the dimensions objects with the same IDs.
+         * @property minecraft:overworld: Overworld
+         * @property minecraft:nether: Nether
+         * @property minecraft:the_end: The End
+         * @property overworld: Overworld
+         * @property nether: Nether
+         * @property the_end: The End
+         */
+        static get dimensionsf(): {
+            "minecraft:overworld": Dimension;
+            "minecraft:nether": Dimension;
+            "minecraft:the_end": Dimension;
+            overworld: Dimension;
+            nether: Dimension;
+            the_end: Dimension;
+        };
+        /**
+         * @remarks The overworld dimension object.
+         */
         static get overworld(): Dimension & {
             typeId: "minecraft:overworld";
         };
+        /**
+         * @remarks The nether dimension object.
+         */
         static get nether(): Dimension & {
             typeId: "minecraft:nether";
         };
+        /**
+         * @remarks The end dimension object.
+         */
         static get the_end(): Dimension & {
             typeId: "minecraft:the_end";
         };
@@ -461,6 +640,9 @@ declare global {
             [name: string]: Player;
         };
         static get stack(): Error["stack"];
+        /**
+         * @see {@link modules.Decimal}
+         */
         static get Decimal(): typeof Decimal;
         /**
          * @see {@link modules.colorCore.Color}
@@ -520,12 +702,12 @@ declare global {
          * printEveryMinute();
          * ```
          */
-        static get srun(): typeof modules.main.srun;
+        static get srun(): typeof import("init/functions/srun").srun;
         /**
          * A class containing the configuration information for the add-on.
          * @see {@link modules.main.config}
          */
-        static get config(): typeof modules.main.config;
+        static get config(): typeof import("init/classes/config").config;
     }
     interface Date {
         /**
@@ -592,7 +774,7 @@ declare global {
         readonly fileName: string;
     }
 }
-declare module '@minecraft/server' {
+declare module "@minecraft/server" {
     interface Entity {
         /**
          * Defines this entity's inventory properties.
@@ -730,7 +912,7 @@ declare module '@minecraft/server' {
         z: number;
     }
 }
-declare module '@minecraft/server-ui' {
+declare module "@minecraft/server-ui" {
     interface ModalFormData {
         /**
          * Forces a form to show even if the player has another form or menu open.

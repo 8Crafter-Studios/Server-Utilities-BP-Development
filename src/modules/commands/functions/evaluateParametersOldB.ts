@@ -1,7 +1,7 @@
 import type { Dimension } from "@minecraft/server";
 import { BlockPattern } from "modules/commands/classes/BlockPattern";
 import { getParametersFromString } from "modules/utilities/functions/getParametersFromString";
-import type { evaluateParametersParameter } from "../../../Main/commands";
+import type { evaluateParametersParameter } from "modules/commands/types/evaluateParametersParameter";
 import { extractSelectors } from "./extractSelectors";
 
 /**

@@ -3,7 +3,7 @@ import { BlockMask } from "modules/commands/classes/BlockMask";
 import { BlockPattern } from "modules/commands/classes/BlockPattern";
 import { parseBlockMatcherType } from "modules/commands/functions/parseBlockMatcherType";
 import { getParametersFromString } from "modules/utilities/functions/getParametersFromString";
-import type { evaluateParametersParameter } from "../../../Main/commands";
+import type { evaluateParametersParameter } from "modules/commands/types/evaluateParametersParameter";
 import { extractSelectors } from "./extractSelectors";
 
 

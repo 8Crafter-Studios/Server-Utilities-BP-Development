@@ -560,6 +560,7 @@ export class PlayerNotifications {
         );
     }
 }
+
 Object.defineProperties(Entity.prototype, {
     playerNotifications: {
         get: function playerNotifications(): PlayerNotifications {
@@ -595,3 +596,15 @@ export function customFormUIEditor(sourceEntity: Entity|Player){
     console.error(e, e.stack);
 });}*/
 
+Object.defineProperty(globalThis, 'PlayerNotifications', {
+    value: PlayerNotifications,
+    enumerable: true,
+    configurable: true,
+    writable: false,
+})
+
+declare global {
+    namespace globalThis {
+        const PlayerNotifications: typeof import("./PlayerNotifications").PlayerNotifications
+    }
+}

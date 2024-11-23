@@ -1,5 +1,4 @@
 import { world, type Vector3, Dimension, type StructureCreateOptions, type DimensionLocation, type StructurePlaceOptions } from "@minecraft/server";
-import { Vector } from "init/classes/Vector";
 import { splitArea } from "modules/coordinates/functions/splitArea";
 
 export class blockClipboard {

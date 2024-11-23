@@ -1,6 +1,8 @@
 import { Block, Entity, Player, type Vector2, type Vector3, type DimensionLocation, Dimension } from "@minecraft/server";
 import { getEntityById } from "modules/commands/functions/getEntityById";
-import { targetSelectorAllListC, targetSelectorAllListD, targetSelectorAllListE } from "../../../Main/command_utilities";
+import { targetSelectorAllListE } from "modules/command_utilities/functions/targetSelectorAllListE";
+import { targetSelectorAllListD } from "modules/command_utilities/functions/targetSelectorAllListD";
+import { targetSelectorAllListC } from "modules/command_utilities/functions/targetSelectorAllListC";
 
 
 export function evaluateSelectors(

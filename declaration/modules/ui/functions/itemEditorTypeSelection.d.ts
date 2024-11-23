@@ -1,5 +1,5 @@
 import type { Entity, Player, EquipmentSlot, ContainerSlot } from "@minecraft/server";
-import { executeCommandPlayerW } from "../../../Main/commands";
+import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 export declare function itemEditorTypeSelection(sourceEntitya: Entity | executeCommandPlayerW | Player, targetPlayer: Entity | Player, item: {
     slot: number | EquipmentSlot;
     item: ContainerSlot;

@@ -1,8 +1,7 @@
 import { EquipmentSlot, type Enchantment, type Vector3, Dimension, type Vector2, type DimensionLocation, GameMode, MemoryTier, PlatformType, PlayerInputPermissions, world, Player, StructureSaveMode, ItemStack } from "@minecraft/server";
-import { config } from "Main";
-import { ban } from "../../../Main/ban";
-import { EquipmentSlots } from "../../../Main/command_utilities";
-import { Vector } from "init/classes/Vector";
+import { config } from "init/classes/config";
+import { ban } from "modules/ban/classes/ban";
+import { EquipmentSlots } from "modules/command_utilities/constants/EquipmentSlots";
 import { player_save_format_version } from "modules/player_save/functions/player_save_format_version";
 
 export interface savedItem {

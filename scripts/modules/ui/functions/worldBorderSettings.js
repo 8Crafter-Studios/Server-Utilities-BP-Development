@@ -1,7 +1,7 @@
 import { ModalFormData } from "@minecraft/server-ui";
-import { config, dimensionse } from "Main";
+import { config } from "init/classes/config";
 import { forceShow } from "modules/ui/functions/forceShow";
-import { executeCommandPlayerW } from "../../../Main/commands";
+import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { worldBorderSettingsDimensionSelector } from "./worldBorderSettingsDimensionSelector";
 export function worldBorderSettings(sourceEntitya, dimension = 0) {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW

@@ -1,6 +1,7 @@
 import { Vector3Utils } from "@minecraft/math.js";
 import { Dimension, Entity, Block, DimensionType, Player, world } from "@minecraft/server";
-import { targetSelectorAllListE, targetSelectorAllListC } from "Main/command_utilities";
+import { targetSelectorAllListE } from "modules/command_utilities/functions/targetSelectorAllListE";
+import { targetSelectorAllListC } from "modules/command_utilities/functions/targetSelectorAllListC";
 import { anglesToDirectionVectorDeg } from "../functions/anglesToDirectionVectorDeg";
 import { coordinates } from "../functions/coordinates";
 import { facingPoint } from "../functions/facingPoint";

@@ -1,8 +1,8 @@
 import { Entity, Player, Dimension, world } from "@minecraft/server";
 import { ModalFormData, ModalFormResponse, MessageFormData } from "@minecraft/server-ui";
 import { forceShow } from "modules/ui/functions/forceShow";
-import { targetSelectorAllListC } from "../../../Main/command_utilities";
-import { executeCommandPlayerW } from "../../../Main/commands";
+import { targetSelectorAllListC } from "modules/command_utilities/functions/targetSelectorAllListC";
+import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 export function createExplosion(sourceEntitya, parameterDefaults) {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW
         ? sourceEntitya.player

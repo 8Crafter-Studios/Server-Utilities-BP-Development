@@ -319,4 +319,10 @@ export function customFormUIEditor(sourceEntity: Entity|Player){
 }).catch(e => {
     console.error(e, e.stack);
 });}*/
+Object.defineProperty(globalThis, 'PlayerNotifications', {
+    value: PlayerNotifications,
+    enumerable: true,
+    configurable: true,
+    writable: false,
+});
 //# sourceMappingURL=PlayerNotifications.js.map

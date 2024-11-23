@@ -1,7 +1,7 @@
 import { ActionFormData, ActionFormResponse } from "@minecraft/server-ui";
 import { mainShopSystemSettings } from "ExtraFeatures/shop_main";
 import { forceShow } from "modules/ui/functions/forceShow";
-import { executeCommandPlayerW } from "../../../Main/commands";
+import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { settings } from "./settings";
 import { worldBorderSettingsDimensionSelector } from "./worldBorderSettingsDimensionSelector";
 export function extraFeaturesSettings(sourceEntitya) {

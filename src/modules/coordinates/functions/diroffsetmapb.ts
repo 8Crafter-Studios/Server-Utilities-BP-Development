@@ -1,5 +1,3 @@
-import { Vector } from "init/classes/Vector";
-
 export function diroffsetmapb(direction: string) {
     return {
         up: Vector.up,

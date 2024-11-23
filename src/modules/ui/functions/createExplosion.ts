@@ -1,7 +1,7 @@
 import { Entity, Player, Dimension, type ExplosionOptions, world } from "@minecraft/server";
 import { ModalFormData, ModalFormResponse, MessageFormData } from "@minecraft/server-ui";
 import { forceShow } from "modules/ui/functions/forceShow";
-import { targetSelectorAllListC } from "../../../Main/command_utilities";
+import { targetSelectorAllListC } from "modules/command_utilities/functions/targetSelectorAllListC";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 
 export function createExplosion(

@@ -1,4 +1,4 @@
-import { commands } from "../../../Main/commands_list";
+import { commands } from "modules/commands_list/constants/commands";
 
 export function getAllBuiltInCommandsCategories() {
     let set = new Set() as Set<string>;

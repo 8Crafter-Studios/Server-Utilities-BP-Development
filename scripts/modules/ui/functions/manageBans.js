@@ -1,8 +1,9 @@
 import { Entity, Player, world } from "@minecraft/server";
 import { ActionFormData, ActionFormResponse, ModalFormData, ModalFormResponse, MessageFormData } from "@minecraft/server-ui";
 import { forceShow } from "modules/ui/functions/forceShow";
-import { ban, ban_format_version } from "../../../Main/ban";
-import { executeCommandPlayerW } from "../../../Main/commands";
+import { ban_format_version } from "modules/ban/constants/ban_format_version";
+import { ban } from "modules/ban/classes/ban";
+import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { mainMenu } from "./mainMenu";
 export function manageBans(sourceEntitya, backMenuFunction = mainMenu) {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW

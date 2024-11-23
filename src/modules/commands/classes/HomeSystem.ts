@@ -1,6 +1,7 @@
 import { world, Player } from "@minecraft/server";
-import { gwdp, swdp } from "Main";
-import type { extendedExecuteCommandPlayerW } from "Main/extendedExecuteCommandPlayerW";
+import { swdp } from "init/functions/swdp";
+import { gwdp } from "init/functions/gwdp";
+import type { extendedExecuteCommandPlayerW } from "modules/commands/types/extendedExecuteCommandPlayerW";
 import { Home } from "./Home";
 
 export class HomeSystem {

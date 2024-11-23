@@ -1,8 +1,8 @@
 import { Entity, Player, system, world } from "@minecraft/server";
 import { ModalFormData, ModalFormResponse } from "@minecraft/server-ui";
 import { forceShow } from "modules/ui/functions/forceShow";
-import { chatSend } from "../../../Main/chat";
-import { executeCommandPlayerW } from "../../../Main/commands";
+import { chatSend } from "modules/chat/functions/chatSend";
+import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 export function chatSendNoCensor(sourceEntitya) {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW
         ? sourceEntitya.player

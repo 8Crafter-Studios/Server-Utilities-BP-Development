@@ -1,6 +1,6 @@
 import { Entity, Player, world } from "@minecraft/server";
 import { ModalFormData } from "@minecraft/server-ui";
-import { executeCommandPlayerW } from "../../../Main/commands";
+import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { editorStickB } from "./editorStickB";
 export function editorStickMenuB(sourceEntitya) {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW

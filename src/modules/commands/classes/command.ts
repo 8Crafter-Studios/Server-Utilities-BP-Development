@@ -1,15 +1,15 @@
 import { world, Player, Entity, Dimension } from "@minecraft/server";
 import { tfsb } from "init/functions/tfsb";
-import { SemVerString } from "Main";
+import { SemVerString } from "modules/main/classes/SemVerString";
 import { commands_format_version } from "modules/commands/constants/commands_format_version";
-import { type command_formats_type_list } from "Main/command_formats_type_list";
-import { type evaluateParametersArgumentTypes } from "Main/evaluateParametersArgumentTypes";
-import { type commandCategory } from "Main/commandCategory";
+import { type command_formats_type_list } from "modules/commands/types/command_formats_type_list";
+import { type evaluateParametersArgumentTypes } from "modules/commands/types/evaluateParametersArgumentTypes";
+import { type commandCategory } from "modules/commands/types/commandCategory";
 import { evaluateParameters } from "modules/commands/functions/evaluateParameters";
 import { commandSettings } from "modules/commands/classes/commandSettings";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { sOSATSA } from "modules/commands/functions/sOSATSA";
-import { commands } from "../../../Main/commands_list";
+import { commands } from "modules/commands_list/constants/commands";
 
 export class command {
     type: "built-in" | "custom" | "unknown";

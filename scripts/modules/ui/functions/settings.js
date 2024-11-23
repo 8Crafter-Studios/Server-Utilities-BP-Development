@@ -3,7 +3,7 @@ import { ActionFormData, ActionFormResponse } from "@minecraft/server-ui";
 import { forceShow } from "modules/ui/functions/forceShow";
 import { advancedSettings } from "./advancedSettings";
 import { chatRanksSettings } from "./chatRanksSettings";
-import { executeCommandPlayerW } from "../../../Main/commands";
+import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { evalAutoScriptSettings } from "./evalAutoScriptSettings";
 import { extraFeaturesSettings } from "./extraFeaturesSettings";
 import { globalSettings } from "./globalSettings";

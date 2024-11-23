@@ -243,3 +243,8 @@ export declare class PlayerNotifications {
         volume?: number;
     });
 }
+declare global {
+    namespace globalThis {
+        const PlayerNotifications: typeof import("./PlayerNotifications").PlayerNotifications;
+    }
+}

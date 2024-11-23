@@ -1,8 +1,9 @@
 import { Entity, Player, world } from "@minecraft/server";
 import { ModalFormData, ModalFormResponse } from "@minecraft/server-ui";
-import { config, dimensionsd, dimensions } from "Main";
+import { dimensionsd, dimensions } from "Main";
+import { config } from "init/classes/config";
 import { forceShow } from "modules/ui/functions/forceShow";
-import { executeCommandPlayerW } from "../../../Main/commands";
+import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { settings } from "./settings";
 export function globalSettings(sourceEntitya) {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW

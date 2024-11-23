@@ -1,5 +1,81 @@
-import { Vector3Builder, Vector3Utils } from "@minecraft/math.js";
-export declare class Vector extends Vector3Builder implements Vector3Utils {
+import { Vector3Utils } from "@minecraft/math.js";
+declare const VectorClass: {
+    new (vec: import("@minecraft/server").Vector3, arg?: never, arg2?: never): {
+        zero: import("@minecraft/server").Vector3;
+        one: import("@minecraft/server").Vector3;
+        up: import("@minecraft/server").Vector3;
+        down: import("@minecraft/server").Vector3;
+        north: import("@minecraft/server").Vector3;
+        south: import("@minecraft/server").Vector3;
+        east: import("@minecraft/server").Vector3;
+        west: import("@minecraft/server").Vector3;
+        right: import("@minecraft/server").Vector3;
+        left: import("@minecraft/server").Vector3;
+        back: import("@minecraft/server").Vector3;
+        forward: import("@minecraft/server").Vector3;
+        x: number;
+        y: number;
+        z: number;
+        assign(vec: import("@minecraft/server").Vector3): any;
+        equals(v: import("@minecraft/server").Vector3): boolean;
+        add(v: import("@minecraft/server").Vector3): any;
+        subtract(v: import("@minecraft/server").Vector3): any;
+        scale(val: number): any;
+        dot(vec: import("@minecraft/server").Vector3): number;
+        cross(vec: import("@minecraft/server").Vector3): any;
+        magnitude(): number;
+        distance(vec: import("@minecraft/server").Vector3): number;
+        normalize(): any;
+        floor(): any;
+        toString(options?: {
+            decimals?: number;
+            delimiter?: string;
+        }): string;
+        clamp(limits: {
+            min?: Partial<import("@minecraft/server").Vector3>;
+            max?: Partial<import("@minecraft/server").Vector3>;
+        }): any;
+        lerp(vec: import("@minecraft/server").Vector3, t: number): any;
+        slerp(vec: import("@minecraft/server").Vector3, t: number): any;
+    };
+    new (x: number, y: number, z: number): {
+        zero: import("@minecraft/server").Vector3;
+        one: import("@minecraft/server").Vector3;
+        up: import("@minecraft/server").Vector3;
+        down: import("@minecraft/server").Vector3;
+        north: import("@minecraft/server").Vector3;
+        south: import("@minecraft/server").Vector3;
+        east: import("@minecraft/server").Vector3;
+        west: import("@minecraft/server").Vector3;
+        right: import("@minecraft/server").Vector3;
+        left: import("@minecraft/server").Vector3;
+        back: import("@minecraft/server").Vector3;
+        forward: import("@minecraft/server").Vector3;
+        x: number;
+        y: number;
+        z: number;
+        assign(vec: import("@minecraft/server").Vector3): any;
+        equals(v: import("@minecraft/server").Vector3): boolean;
+        add(v: import("@minecraft/server").Vector3): any;
+        subtract(v: import("@minecraft/server").Vector3): any;
+        scale(val: number): any;
+        dot(vec: import("@minecraft/server").Vector3): number;
+        cross(vec: import("@minecraft/server").Vector3): any;
+        magnitude(): number;
+        distance(vec: import("@minecraft/server").Vector3): number;
+        normalize(): any;
+        floor(): any;
+        toString(options?: {
+            decimals?: number;
+            delimiter?: string;
+        }): string;
+        clamp(limits: {
+            min?: Partial<import("@minecraft/server").Vector3>;
+            max?: Partial<import("@minecraft/server").Vector3>;
+        }): any;
+        lerp(vec: import("@minecraft/server").Vector3, t: number): any;
+        slerp(vec: import("@minecraft/server").Vector3, t: number): any;
+    };
     zero: import("@minecraft/server").Vector3;
     one: import("@minecraft/server").Vector3;
     up: import("@minecraft/server").Vector3;
@@ -12,29 +88,23 @@ export declare class Vector extends Vector3Builder implements Vector3Utils {
     left: import("@minecraft/server").Vector3;
     back: import("@minecraft/server").Vector3;
     forward: import("@minecraft/server").Vector3;
-    static zero: import("@minecraft/server").Vector3;
-    static one: import("@minecraft/server").Vector3;
-    static up: import("@minecraft/server").Vector3;
-    static down: import("@minecraft/server").Vector3;
-    static north: import("@minecraft/server").Vector3;
-    static south: import("@minecraft/server").Vector3;
-    static east: import("@minecraft/server").Vector3;
-    static west: import("@minecraft/server").Vector3;
-    static right: import("@minecraft/server").Vector3;
-    static left: import("@minecraft/server").Vector3;
-    static back: import("@minecraft/server").Vector3;
-    static forward: import("@minecraft/server").Vector3;
-    static add: typeof Vector3Utils.add;
-    static clamp: typeof Vector3Utils.clamp;
-    static cross: typeof Vector3Utils.cross;
-    static distance: typeof Vector3Utils.distance;
-    static dot: typeof Vector3Utils.dot;
-    static equals: typeof Vector3Utils.equals;
-    static floor: typeof Vector3Utils.floor;
-    static lerp: typeof Vector3Utils.lerp;
-    static magnitude: typeof Vector3Utils.magnitude;
-    static normalize: typeof Vector3Utils.normalize;
-    static scale: typeof Vector3Utils.scale;
-    static slerp: typeof Vector3Utils.slerp;
-    static subtract: typeof Vector3Utils.subtract;
+    add: typeof Vector3Utils.add;
+    clamp: typeof Vector3Utils.clamp;
+    cross: typeof Vector3Utils.cross;
+    distance: typeof Vector3Utils.distance;
+    dot: typeof Vector3Utils.dot;
+    equals: typeof Vector3Utils.equals;
+    floor: typeof Vector3Utils.floor;
+    lerp: typeof Vector3Utils.lerp;
+    magnitude: typeof Vector3Utils.magnitude;
+    normalize: typeof Vector3Utils.normalize;
+    scale: typeof Vector3Utils.scale;
+    slerp: typeof Vector3Utils.slerp;
+    subtract: typeof Vector3Utils.subtract;
+};
+declare global {
+    namespace globalThis {
+        const Vector: typeof VectorClass;
+    }
 }
+export {};

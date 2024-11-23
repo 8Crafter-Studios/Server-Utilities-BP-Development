@@ -1,5 +1,5 @@
 import { Player, Entity, ItemLockMode, ItemStack, ItemEnchantableComponent, ItemDurabilityComponent } from "@minecraft/server";
-import { executeCommandPlayerW } from "Main/commands";
+import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 export declare function mainShopSystemSettings(sourceEntitya: Entity | executeCommandPlayerW | Player): void;
 export type ShopElement = SellableShopElement | BuyableShopElement;
 export type PlayerShopElement = PlayerShopPage | PlayerSavedShopItem | PlayerSellableShopItem | PlayerSellableAdvancedShopItem;

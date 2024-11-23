@@ -1,7 +1,7 @@
 import { Entity, Player, world } from "@minecraft/server";
 import { ModalFormData, ModalFormResponse } from "@minecraft/server-ui";
 import { forceShow } from "modules/ui/functions/forceShow";
-import { executeCommandPlayerW } from "../../../Main/commands";
+import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { settings } from "./settings";
 export function evalAutoScriptSettings(sourceEntitya) {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW

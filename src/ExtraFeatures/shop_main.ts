@@ -5,7 +5,7 @@ import { forceShow } from "modules/ui/functions/forceShow";
 import { settings } from "modules/ui/functions/settings";
 import { extraFeaturesSettings } from "modules/ui/functions/extraFeaturesSettings";
 import { worldBorderSettingsDimensionSelector } from "modules/ui/functions/worldBorderSettingsDimensionSelector";
-import { config } from "Main";
+import { config } from "init/classes/config";
 import { showMessage } from "modules/utilities/functions/showMessage";
 import { ServerShopManager } from "./server_shop";
 import { PlayerShopManager } from "./player_shop";

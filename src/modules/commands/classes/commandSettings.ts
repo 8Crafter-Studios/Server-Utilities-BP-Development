@@ -1,8 +1,8 @@
 import { world } from "@minecraft/server";
 import { command, commandClass } from "modules/commands/classes/command";
 import { command_settings_format_version } from "modules/commands/constants/command_settings_format_version";
-import type { command_formats_type_list } from "Main/command_formats_type_list";
-import { commands } from "../../../Main/commands_list";
+import type { command_formats_type_list } from "modules/commands/types/command_formats_type_list";
+import { commands } from "modules/commands_list/constants/commands";
 
 export class commandSettings {
     type: "built-in" | "custom" | "unknown";

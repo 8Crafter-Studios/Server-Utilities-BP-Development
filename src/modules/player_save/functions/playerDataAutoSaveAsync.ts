@@ -1,5 +1,5 @@
 import { world, system } from "@minecraft/server";
-import { config } from "Main";
+import { config } from "init/classes/config";
 import { savedPlayer } from "modules/player_save/classes/savedPlayer";
 
 export async function playerDataAutoSaveAsync() {

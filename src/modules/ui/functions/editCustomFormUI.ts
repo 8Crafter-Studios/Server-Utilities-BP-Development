@@ -1,6 +1,6 @@
 import { world } from "@minecraft/server";
 import { ModalFormData } from "@minecraft/server-ui";
-import { getUICustomForm } from "Main";
+import { getUICustomForm } from "modules/main/functions/getUICustomForm";
 import { customElementTypeIds } from "./customElementTypeIds";
 import { customFormDataTypeIds } from "./customFormDataTypeIds";
 

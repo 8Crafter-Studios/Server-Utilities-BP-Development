@@ -1,6 +1,6 @@
 import { world, type Vector3, Dimension, type StructureCreateOptions, type StructurePlaceOptions } from "@minecraft/server";
-import { Vector } from "init/classes/Vector";
-import { config, dimensionsb } from "Main";
+import { dimensionsb } from "Main";
+import { config } from "init/classes/config";
 import { splitArea } from "modules/coordinates/functions/splitArea";
 
 export class undoClipboard {

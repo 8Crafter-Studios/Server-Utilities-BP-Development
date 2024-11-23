@@ -4,7 +4,7 @@ export declare class AreaBackup {
     constructor(id: string);
     get from(): Vector3;
     get to(): Vector3;
-    get dimension(): import("@minecraft/server").Dimension;
+    get dimension(): any;
     get backups(): number[];
     get backupStructureIds(): string[];
     saveIds(timestamp: number | string): string[];
@@ -13,12 +13,12 @@ export declare class AreaBackup {
         id: string;
         from: Vector3;
         to: Vector3;
-        dimension: import("@minecraft/server").Dimension;
+        dimension: any;
     };
     toJSONNoId(): {
         from: Vector3;
         to: Vector3;
-        dimension: import("@minecraft/server").Dimension;
+        dimension: any;
     };
     delete(): void;
     clear(): void;

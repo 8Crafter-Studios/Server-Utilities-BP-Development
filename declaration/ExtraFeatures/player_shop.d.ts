@@ -1,5 +1,5 @@
 import { Player, Entity } from "@minecraft/server";
-import { executeCommandPlayerW } from "Main/commands";
+import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { type PlayerShopPage, type PlayerSavedShopItem, type PlayerSellableShopElement, type PlayerBuyableShopElement, type PlayerSellableShopItem, type PlayerSellableAdvancedShopItem } from "./shop_main";
 /**
  *

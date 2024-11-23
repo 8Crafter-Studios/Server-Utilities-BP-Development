@@ -5,7 +5,7 @@ import type {
     EntityProjectileComponent,
     ProjectileShootOptions,
 } from "@minecraft/server";
-import { v3Multiply } from "Main";
+import { v3Multiply } from "modules/main/functions/v3Multiply";
 import { caretNotationC } from "modules/coordinates/functions/caretNotationC";
 import { VECTOR3_ZERO, VECTOR3_FORWARD } from "@minecraft/math.js";
 
