@@ -1,1 +1,1 @@
-export * from "modules/ban";
+export * from "modules/ban/index";

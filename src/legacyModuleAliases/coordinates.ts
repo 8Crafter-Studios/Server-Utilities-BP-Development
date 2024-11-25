@@ -1,1 +1,1 @@
-export * from "modules/coordinates";
+export * from "modules/coordinates/index";

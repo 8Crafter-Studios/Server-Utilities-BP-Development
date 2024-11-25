@@ -1,11 +1,5 @@
 import { system, world } from "@minecraft/server";
 
-globalThis.beforeScriptStartTick = system.currentTick;
-export const current_format_version = "1.27.0-preview.20+BUILD.1";
-globalThis.format_version = current_format_version
-export const supported_minecraft_version = "1.21.4x";
-globalThis.entity_scale_format_version = null;
-globalThis.multipleEntityScaleVersionsDetected = false;
 import * as GameTest from "@minecraft/server-gametest";
 import * as mcServer from "@minecraft/server";
 import * as mcServerUi from "@minecraft/server-ui";/*
@@ -14,63 +8,50 @@ import * as mcServerNet from "@minecraft/server-net";*//*
 import * as mcDebugUtilities from "@minecraft/debug-utilities";*//*
 import * as mcCommon from "@minecraft/common";*//*
 import * as mcVanillaData from "@minecraft/vanilla-data";*/
-globalThis.modules={
-    assets: {
-        classes: {},
-        constants: {},
-    },
-} as any;
-globalThis.subscribedEvents = {} as { [eventName: string]: Function };
-globalThis.repeatingIntervals = {} as { [intervalName: string]: number };
-globalThis.tempVariables = {};
-globalThis.editorStickMenuOpeningAsyncCancelActionNumbers = {} as {
-    [id: string]: number;
-};
-globalThis.crashEnabled = false
-globalThis.tempSavedVariables = []
+import "initializeMainGlobalVariables"
 import "Assets/classes/JSONB"
 import "Global"
 import 'init/index';
   
 /*
-import "AllayTests.js";
-import "APITests.js";*/
-import "BlockEventTests.js";/*
-import "BlockTests.js";*/
-import "ComponentTests.js";
-import "CommandTests.js";
-import "DebugTests.js";/*
-import "DispenserTests.js";
-import "DoorTests.js";
-import "DripstoneTests.js";
-import "DuplicationTests.js";
-import "EntityQueryTests.js";
-import "EntityTests.js";
-import "ExtensionTests.js";
-import "FireAvoidTests.js";
-import "FrogTests.js";*/
-import "GameTestExtensions.js";/*
-import "MinecartTests.js";
-import "MobTests.js";
-import "MultifaceTests.js";
-import "PathFindingTests.js";
-import "FlyingMachineTests.js";
-import "PistonTests.js";
-import "TntTests.js";
-import "WaterPathfindingTests.js";
-import "WardenTests.js";
-import "SmallMobTests.js";
-import "BigMobTests.js";
-import "RaycastingTests.js";
-import "RedstoneTests.js";*/
-import "SimulatedPlayerTests.js";/*
-import "RespawnAnchorTests.js";
-import "PlaceSeedsTests.js";
-import "ItemTests.js";*/
-import "ItemEnchantmentsTests.js";/*
-import "SculkTests.js";
-import "VibrationTests.js";
-import "EnchantmentTests.js";*//*
+import "GameTestScripts/AllayTests.js";
+import "GameTestScripts/APITests.js";*/
+import "GameTestScripts/BlockEventTests.js";/*
+import "GameTestScripts/BlockTests.js";*/
+import "GameTestScripts/ComponentTests.js";
+import "GameTestScripts/CommandTests.js";
+import "GameTestScripts/DebugTests.js";/*
+import "GameTestScripts/DispenserTests.js";
+import "GameTestScripts/DoorTests.js";
+import "GameTestScripts/DripstoneTests.js";
+import "GameTestScripts/DuplicationTests.js";
+import "GameTestScripts/EntityQueryTests.js";
+import "GameTestScripts/EntityTests.js";
+import "GameTestScripts/ExtensionTests.js";
+import "GameTestScripts/FireAvoidTests.js";
+import "GameTestScripts/FrogTests.js";*/
+import "GameTestScripts/GameTestExtensions.js";/*
+import "GameTestScripts/MinecartTests.js";
+import "GameTestScripts/MobTests.js";
+import "GameTestScripts/MultifaceTests.js";
+import "GameTestScripts/PathFindingTests.js";
+import "GameTestScripts/FlyingMachineTests.js";
+import "GameTestScripts/PistonTests.js";
+import "GameTestScripts/TntTests.js";
+import "GameTestScripts/WaterPathfindingTests.js";
+import "GameTestScripts/WardenTests.js";
+import "GameTestScripts/SmallMobTests.js";
+import "GameTestScripts/BigMobTests.js";
+import "GameTestScripts/RaycastingTests.js";
+import "GameTestScripts/RedstoneTests.js";*/
+import "GameTestScripts/SimulatedPlayerTests.js";/*
+import "GameTestScripts/RespawnAnchorTests.js";
+import "GameTestScripts/PlaceSeedsTests.js";
+import "GameTestScripts/ItemTests.js";*/
+import "GameTestScripts/ItemEnchantmentsTests.js";/*
+import "GameTestScripts/SculkTests.js";
+import "GameTestScripts/VibrationTests.js";
+import "GameTestScripts/EnchantmentTests.js";*//*
 import "Eval.js";*/
 import "legacyModuleAliases/commands_documentation.js";
 import "legacyModuleAliases/commands.js";
@@ -86,25 +67,25 @@ import "legacyModuleAliases/errors.js";
 import "legacyModuleAliases/utilities.js";
 import "@minecraft/math.js";
 import "GlobalDecorators";
-import *  as main from "legacyModuleAliases/Main";
-import *  as coords from "legacyModuleAliases/coordinates";
-import *  as cmds from "legacyModuleAliases/commands";
-import *  as bans from "legacyModuleAliases/ban";
-import *  as uis from "legacyModuleAliases/ui";
-import *  as playersave from "legacyModuleAliases/player_save";
-import *  as spawnprot from "legacyModuleAliases/spawn_protection";
-import *  as chat from "legacyModuleAliases/chat";
-import *  as cmdutils from "legacyModuleAliases/command_utilities";
-import *  as cmdslist from "legacyModuleAliases/commands_list";
-import *  as cmdsdocs from "legacyModuleAliases/commands_documentation";
-import *  as utils from "legacyModuleAliases/utilities";
-import *  as shopmain from "ExtraFeatures/shop_main";
-import *  as servershop from "ExtraFeatures/server_shop";
-import *  as playershop from "ExtraFeatures/player_shop";
-import *  as moneysystem from "ExtraFeatures/money";
-import *  as structuremappings from "Assets/constants/structure_mappings";
-import *  as transformrecipes from "Assets/constants/transformrecipes";
-import *  as errors from "Main/errors";
+import * as main from "legacyModuleAliases/Main";
+import * as coords from "legacyModuleAliases/coordinates";
+import * as cmds from "legacyModuleAliases/commands";
+import * as bans from "legacyModuleAliases/ban";
+import * as uis from "legacyModuleAliases/ui";
+import * as playersave from "legacyModuleAliases/player_save";
+import * as spawnprot from "legacyModuleAliases/spawn_protection";
+import * as chat from "legacyModuleAliases/chat";
+import * as cmdutils from "legacyModuleAliases/command_utilities";
+import * as cmdslist from "legacyModuleAliases/commands_list";
+import * as cmdsdocs from "legacyModuleAliases/commands_documentation";
+import * as utils from "legacyModuleAliases/utilities";
+import * as shopmain from "ExtraFeatures/shop_main";
+import * as servershop from "ExtraFeatures/server_shop";
+import * as playershop from "ExtraFeatures/player_shop";
+import * as moneysystem from "ExtraFeatures/money";
+import * as structuremappings from "Assets/constants/structure_mappings";
+import * as transformrecipes from "Assets/constants/transformrecipes";
+import * as errors from "legacyModuleAliases/errors";
 import mcMath from "@minecraft/math.js";
 import colorCore, { Color } from "color-core";
 import Decimal from "decimal.js";
@@ -167,27 +148,6 @@ globalThis.modules=modulesMap
 declare global {
     namespace globalThis {
         var modules: typeof modulesMap
-        var tempSavedVariables: any[]
-        var crashEnabled: boolean
-        var format_version: typeof current_format_version
-        var editorStickMenuOpeningAsyncCancelActionNumbers: {
-            [id: string]: number;
-        }
-        var beforeInitializeTick: number;
-        var initializeTick: number;
-        var beforeScriptStartTick: number;
-        var scriptStartTick: number;
-        var tempVariables: { [key: PropertyKey]: any };
-        var subscribedEvents: { [eventName: string]: Function };
-        var repeatingIntervals: {
-            worldBorderSystem?: number;
-            protectedAreasRefresher?: number;
-            bannedPlayersChecker?: number;
-            playerDataAutoSave?: number;
-            [intervalName: string]: number;
-        };
-        var entity_scale_format_version: string | null;
-        var multipleEntityScaleVersionsDetected: boolean;
     }
 }
 import 'Main';

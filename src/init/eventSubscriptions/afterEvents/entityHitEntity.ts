@@ -1,4 +1,4 @@
-import { Vector3Utils } from "@minecraft/math";
+import { Vector3Utils } from "@minecraft/math.js";
 import { world, Player } from "@minecraft/server";
 import { getPlayersWithTags } from "modules/commands/functions/getPlayersWithTags";
 import { vTStr } from "modules/commands/functions/vTStr";

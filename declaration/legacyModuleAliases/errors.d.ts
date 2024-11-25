@@ -1,1 +1,1 @@
-export * from "modules/errors";
+export * from "modules/errors/index";

@@ -1,4 +1,4 @@
-import { Vector3Utils } from "@minecraft/math";
+import { Vector3Utils } from "@minecraft/math.js";
 import { world, Player } from "@minecraft/server";
 
 subscribedEvents.beforePlayerInteractWithEntity =

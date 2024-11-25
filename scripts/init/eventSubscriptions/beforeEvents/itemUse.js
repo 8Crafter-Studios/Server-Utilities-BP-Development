@@ -1,4 +1,4 @@
-import { Vector3Utils } from "@minecraft/math";
+import { Vector3Utils } from "@minecraft/math.js";
 import { world, system, BlockTypes, BlockPermutation } from "@minecraft/server";
 import { ModalFormData } from "@minecraft/server-ui";
 import { BlockPattern } from "modules/commands/classes/BlockPattern";

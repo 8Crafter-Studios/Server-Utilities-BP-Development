@@ -134,11 +134,11 @@ import "./prototypeExtensions/Array";
 import "./prototypeExtensions/BigInt";
 import "./prototypeExtensions/Boolean";
 import "./prototypeExtensions/Date";
+import "./prototypeExtensions/Number";
 import "./prototypeExtensions/Entity";
 import "./prototypeExtensions/Error";
 import "./prototypeExtensions/MessageFormData";
 import "./prototypeExtensions/ModalFormData";
-import "./prototypeExtensions/Number";
 import "./prototypeExtensions/Player";
 import "./prototypeExtensions/String";
 import "./systems/ban_checker";
@@ -150,6 +150,7 @@ import { Color } from "color-core";
 import * as colorCore from "color-core";
 import { Decimal } from "decimal.js";
 import * as semver from "semver";
+import "modules/errors/index";
 /**
  * ```ts
 node -e "const fs=require('fs');
@@ -208,7 +209,6 @@ Object.defineProperties(globalThis, {
         },
         configurable: true,
         enumerable: true,
-        writable: false,
     }
 });
 //# sourceMappingURL=index.js.map

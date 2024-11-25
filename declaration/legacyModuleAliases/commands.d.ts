@@ -1,1 +1,1 @@
-export * from "modules/commands";
+export * from "modules/commands/index";

@@ -1,4 +1,4 @@
-import { Vector3Utils } from "@minecraft/math";
+import { Vector3Utils } from "@minecraft/math.js";
 import { world } from "@minecraft/server";
 import { srun } from "init/functions/srun";
 import { vTStr } from "modules/commands/functions/vTStr";

@@ -1,2 +1,2 @@
-export * from "modules/chat";
+export * from "modules/chat/index";
 //# sourceMappingURL=chat.js.map

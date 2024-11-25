@@ -1,1 +1,1 @@
-export * from "modules/ui";
+export * from "modules/ui/index";

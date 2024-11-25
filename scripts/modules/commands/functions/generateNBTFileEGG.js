@@ -1,4 +1,4 @@
-import { Vector3Utils } from "@minecraft/math";
+import { Vector3Utils } from "@minecraft/math.js";
 import { BlockPermutation } from "@minecraft/server";
 import { arryTV3 } from "./arryTV3";
 export function* generateNBTFileEGG(location, nbt) {

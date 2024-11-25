@@ -1,4 +1,4 @@
-import { Vector3Utils, VECTOR3_ONE, VECTOR3_FORWARD, VECTOR3_DOWN, VECTOR3_UP, VECTOR3_SOUTH, VECTOR3_NORTH, VECTOR3_EAST, VECTOR3_WEST } from "@minecraft/math";
+import { Vector3Utils, VECTOR3_ONE, VECTOR3_FORWARD, VECTOR3_DOWN, VECTOR3_UP, VECTOR3_SOUTH, VECTOR3_NORTH, VECTOR3_EAST, VECTOR3_WEST } from "@minecraft/math.js";
 import { Player, ChatSendBeforeEvent, world, EntityInventoryComponent, BlockInventoryComponent, system, ItemStack, EntityEquippableComponent, PlayerCursorInventoryComponent, EquipmentSlot, ItemLockMode, EnchantmentTypes, ContainerSlot, DimensionTypes, StructureSaveMode, StructureAnimationMode, StructureMirrorAxis, StructureRotation, BlockPermutation, BlockVolume, type Vector3, BlockTypes, Entity, Block, CompoundBlockVolume, ItemTypes, Dimension, EntityComponentTypes } from "@minecraft/server";
 import { uiManager } from "@minecraft/server-ui";
 import { listoftransformrecipes } from "Assets/constants/transformrecipes";

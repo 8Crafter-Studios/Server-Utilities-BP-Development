@@ -1,18 +1,17 @@
-export declare const current_format_version = "1.27.0-preview.20+BUILD.1";
-export declare const supported_minecraft_version = "1.21.4x";
 import * as GameTest from "@minecraft/server-gametest";
 import * as mcServer from "@minecraft/server";
 import * as mcServerUi from "@minecraft/server-ui";
+import "initializeMainGlobalVariables";
 import "Assets/classes/JSONB";
 import "Global";
 import 'init/index';
-import "BlockEventTests.js";
-import "ComponentTests.js";
-import "CommandTests.js";
-import "DebugTests.js";
-import "GameTestExtensions.js";
-import "SimulatedPlayerTests.js";
-import "ItemEnchantmentsTests.js";
+import "GameTestScripts/BlockEventTests.js";
+import "GameTestScripts/ComponentTests.js";
+import "GameTestScripts/CommandTests.js";
+import "GameTestScripts/DebugTests.js";
+import "GameTestScripts/GameTestExtensions.js";
+import "GameTestScripts/SimulatedPlayerTests.js";
+import "GameTestScripts/ItemEnchantmentsTests.js";
 import "legacyModuleAliases/commands_documentation.js";
 import "legacyModuleAliases/commands.js";
 import "legacyModuleAliases/coordinates.js";
@@ -45,7 +44,7 @@ import * as playershop from "ExtraFeatures/player_shop";
 import * as moneysystem from "ExtraFeatures/money";
 import * as structuremappings from "Assets/constants/structure_mappings";
 import * as transformrecipes from "Assets/constants/transformrecipes";
-import * as errors from "Main/errors";
+import * as errors from "legacyModuleAliases/errors";
 import mcMath from "@minecraft/math.js";
 import colorCore from "color-core";
 import Decimal from "decimal.js";
@@ -98,31 +97,6 @@ export declare const modulesMap: {
 declare global {
     namespace globalThis {
         var modules: typeof modulesMap;
-        var tempSavedVariables: any[];
-        var crashEnabled: boolean;
-        var format_version: typeof current_format_version;
-        var editorStickMenuOpeningAsyncCancelActionNumbers: {
-            [id: string]: number;
-        };
-        var beforeInitializeTick: number;
-        var initializeTick: number;
-        var beforeScriptStartTick: number;
-        var scriptStartTick: number;
-        var tempVariables: {
-            [key: PropertyKey]: any;
-        };
-        var subscribedEvents: {
-            [eventName: string]: Function;
-        };
-        var repeatingIntervals: {
-            worldBorderSystem?: number;
-            protectedAreasRefresher?: number;
-            bannedPlayersChecker?: number;
-            playerDataAutoSave?: number;
-            [intervalName: string]: number;
-        };
-        var entity_scale_format_version: string | null;
-        var multipleEntityScaleVersionsDetected: boolean;
     }
 }
 import 'Main';

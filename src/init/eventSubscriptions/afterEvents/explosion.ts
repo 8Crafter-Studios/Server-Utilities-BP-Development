@@ -1,4 +1,4 @@
-import { VECTOR3_ZERO, Vector3Utils } from "@minecraft/math";
+import { VECTOR3_ZERO, Vector3Utils } from "@minecraft/math.js";
 import { world, Player } from "@minecraft/server";
 import { srun } from "init/functions/srun";
 import { getPlayersWithAnyOfTags } from "modules/commands/functions/getPlayersWithAnyOfTags";

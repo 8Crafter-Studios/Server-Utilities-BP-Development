@@ -1,4 +1,4 @@
-import { Vector3Utils } from "@minecraft/math";
+import { Vector3Utils } from "@minecraft/math.js";
 import { system, world, ItemStack, EntityInventoryComponent, EnchantmentTypes, ItemEnchantableComponent, Player, Entity, EquipmentSlot, EntityEquippableComponent, ItemDurabilityComponent, ItemLockMode, BlockInventoryComponent, BlockPermutation, SignSide, DyeColor, BlockTypes, Block, type EntityRaycastHit, WeatherType, EntityMarkVariantComponent, EntityPushThroughComponent, EntityScaleComponent, EntitySkinIdComponent, EntityTameableComponent, EntityBreathableComponent, EntityColorComponent, EntityFlyingSpeedComponent, EntityFrictionModifierComponent, EntityGroundOffsetComponent, EntityHealthComponent, type BlockRaycastHit, type Vector3, ScriptEventSource, MolangVariableMap } from "@minecraft/server";
 import { ModalFormData, ActionFormData, ModalFormResponse } from "@minecraft/server-ui";
 import { chatMessage } from "modules/chat/functions/chatMessage";

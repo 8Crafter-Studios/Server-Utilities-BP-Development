@@ -1,1 +1,1 @@
-export * from "modules/command_utilities";
+export * from "modules/command_utilities/index";

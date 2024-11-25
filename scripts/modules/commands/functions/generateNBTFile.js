@@ -1,4 +1,4 @@
-import { Vector3Utils } from "@minecraft/math";
+import { Vector3Utils } from "@minecraft/math.js";
 import { BlockPermutation } from "@minecraft/server";
 export function generateNBTFile(location, nbt) {
     nbt.blocks.forEach((b) => tryrun(() => (location.dimension.setBlockType(Vector3Utils.add(location, {

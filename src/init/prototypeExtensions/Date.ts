@@ -1,4 +1,14 @@
+/**
+ * 
+ * This requires that {@link module:init/prototypeExtensions/Number} be imported first.
+ * @requires init/prototypeExtensions/Number
+ * @file
+ */
+const a = 1
 import { world } from "@minecraft/server";
+await (async()=>{if(!("toNumber" in Number.prototype)){
+    await import("./Number")
+}})()
 
 Object.defineProperties(Date.prototype, {
     timezone: {

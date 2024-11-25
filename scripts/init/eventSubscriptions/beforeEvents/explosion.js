@@ -1,4 +1,4 @@
-import { VECTOR3_ZERO, Vector3Utils } from "@minecraft/math";
+import { VECTOR3_ZERO, Vector3Utils } from "@minecraft/math.js";
 import { world, Player } from "@minecraft/server";
 import { protectedAreaVariables } from "init/variables/protectedAreaVariables";
 import { disconnectingPlayers } from "modules/commands/constants/disconnectingPlayers";
