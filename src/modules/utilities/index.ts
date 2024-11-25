@@ -1,7 +1,4 @@
-/**
- * @todo uncomment the exports when splitting is done
- */
-/* export * from "./functions/arrayify"
+export * from "./functions/arrayify"
 export * from "./functions/arrayModifier"
 export * from "./functions/arrayModifierOld"
 export * from "./functions/combineObjects"
@@ -39,6 +36,6 @@ export * from "./functions/shuffle"
 export * from "./functions/splitTextByMaxProperyLength"
 export * from "./functions/splitUpStringData"
 export * from "./functions/stringify"
-export * from "./functions/toBase" */
+export * from "./functions/toBase"
 export const exports_5603749806156139082470132985463298047098135609812364098 =
     undefined;

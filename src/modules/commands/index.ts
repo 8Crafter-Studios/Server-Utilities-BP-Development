@@ -1,7 +1,4 @@
-/**
- * @todo uncomment the exports when splitting is done
- */
-/* export * from "./classes/BlockMask"
+export * from "./classes/BlockMask"
 export * from "./classes/BlockPattern"
 export * from "./classes/chunkLandClaim"
 export * from "./classes/command"
@@ -91,6 +88,6 @@ export * from "./types/LowercaseLetter"
 export * from "./types/mergedExecuteCommandPlayer"
 export * from "./types/playerobject"
 export * from "./types/UppercaseLetter"
-export * from "./types/ZeroToNineCharacters" */
+export * from "./types/ZeroToNineCharacters"
 export const exports_5603749806156139082470132985463298047098135609812364098 =
     undefined;

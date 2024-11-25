@@ -1,7 +1,4 @@
-/**
- * @todo uncomment the exports when splitting is done
- */
-/* export * from "./functions/addNewCustomFormUI"
+export * from "./functions/addNewCustomFormUI"
 export * from "./functions/addonDebugUI"
 export * from "./functions/advancedSettings"
 export * from "./functions/antispamSettings"
@@ -72,6 +69,6 @@ export * from "./functions/tpaSettings"
 export * from "./functions/uiSettings"
 export * from "./functions/ui_format_version"
 export * from "./functions/worldBorderSettings"
-export * from "./functions/worldBorderSettingsDimensionSelector" */
+export * from "./functions/worldBorderSettingsDimensionSelector"
 export const exports_5603749806156139082470132985463298047098135609812364098 =
     undefined;

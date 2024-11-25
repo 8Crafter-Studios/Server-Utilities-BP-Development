@@ -1,7 +1,4 @@
-/**
- * @todo uncomment the exports when splitting is done
- */
-/* export * from "./constants/EquipmentSlots"
+export * from "./constants/EquipmentSlots"
 export * from "./constants/IllegalItemTypes"
 export * from "./constants/JunkItemTypes"
 export * from "./constants/OpItemTypes"
@@ -43,6 +40,6 @@ export * from "./functions/targetSelectorAllListB"
 export * from "./functions/targetSelectorAllListC"
 export * from "./functions/targetSelectorAllListD"
 export * from "./functions/targetSelectorAllListE"
-export * from "./functions/targetSelectorB" */
+export * from "./functions/targetSelectorB"
 export const exports_5603749806156139082470132985463298047098135609812364098 =
     undefined;

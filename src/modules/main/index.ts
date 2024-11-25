@@ -1,4 +1,4 @@
-/* export * from "./classes/customFormUIElement"
+export * from "./classes/customFormUIElement"
 export * from "./classes/interactable_blockb"
 export * from "./classes/SemVerString"
 export * from "./classes/worldPlayers"
@@ -63,6 +63,6 @@ export * from "./functions/scanForContainerBlocks"
 export * from "./functions/spawnBlockSurroundingParticle"
 export * from "./functions/spawnBlockSurroundingParticleForPlayer"
 export * from "./functions/strToCustomFormUIElement"
-export * from "./functions/v3Multiply" */
+export * from "./functions/v3Multiply"
 export const exports_5603749806156139082470132985463298047098135609812364098 =
     undefined;

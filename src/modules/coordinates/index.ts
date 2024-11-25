@@ -1,7 +1,4 @@
-/**
- * @todo uncomment the exports when splitting is done
- */
-/* export * from "./classes/AreaBackup"
+export * from "./classes/AreaBackup"
 export * from "./classes/AreaBackups"
 export * from "./classes/blockClipboard"
 export * from "./classes/undoClipboard"
@@ -105,6 +102,6 @@ export * from "./interfaces/DimensionRotationLocation"
 export * from "./interfaces/DimensionVolumeArea"
 export * from "./interfaces/RotationLocation"
 export * from "./interfaces/Vector4"
-export * from "./interfaces/Vector5" */
+export * from "./interfaces/Vector5"
 export const exports_5603749806156139082470132985463298047098135609812364098 =
     undefined;
