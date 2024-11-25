@@ -1,4 +1,1 @@
-/**
- * @todo switch this back to modules/utilities when splitting is done
- */
-export * from "modules/utilities/functions/HSLToRGB";
+export * from "modules/utilities";

@@ -62,6 +62,7 @@ import "./eventSubscriptions/beforeEvents/playerPlaceBlock"
 import "./eventSubscriptions/beforeEvents/watchdogTerminate"
 import "./eventSubscriptions/beforeEvents/weatherChange"
 import "./eventSubscriptions/beforeEvents/worldInitialize"
+import "./eventSubscriptions/events/scriptInitialize"
 import "./functions/asend"
 import "./functions/bcsend"
 import "./functions/breakpoint"
@@ -140,9 +141,15 @@ import "./prototypeExtensions/ModalFormData"
 import "./prototypeExtensions/Number"
 import "./prototypeExtensions/Player"
 import "./prototypeExtensions/String"
-import "./systems/index"
+import "./systems/ban_checker"
+import "./systems/player_data_auto_save"
+import "./systems/protected_areas_refresher"
 import "./types"
 import "./variables/protectedAreaVariables"
+import { Color } from "color-core"
+import * as colorCore from "color-core"
+import { Decimal } from "decimal.js"
+import * as semver from "semver"
 /**
  * ```ts
 node -e "const fs=require('fs');
@@ -164,3 +171,43 @@ function getFiles (dir, files_){
 console.log(getFiles('BP/src/init').filter(da=>da!='BP/src/init/index.ts').map(db=>'import \x22./'+db.slice('BP/src/init/'.length, -3)+'\x22').join('\n'))"
 ```
  */
+Object.defineProperties(globalThis, {
+    Color: {
+        value: Color,
+        configurable: true,
+        enumerable: true,
+        writable: false,
+    },
+    colorCore: {
+        value: colorCore,
+        configurable: true,
+        enumerable: true,
+        writable: false,
+    },
+    Decimal: {
+        value: Decimal,
+        configurable: true,
+        enumerable: true,
+        writable: false,
+    },
+    semver: {
+        value: semver,
+        configurable: true,
+        enumerable: true,
+        writable: false,
+    },
+    SemVer: {
+        value: semver.SemVer,
+        configurable: true,
+        enumerable: true,
+        writable: false,
+    },
+    stack: {
+        get: function stack() {
+            return new Error().stack;
+        },
+        configurable: true,
+        enumerable: true,
+        writable: false,
+    }
+});

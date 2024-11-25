@@ -1,5 +1,4 @@
 import { system } from "@minecraft/server";
-import { overworld } from "Main";
 export async function checkIfCompatibleEntityScaleIsActive(init = false, maxWaitTicks = 20) {
     const promise1Result = await new Promise((resolve, reject) => {
         overworld.runCommand(`/scriptevent andexsa:debugSticks${init ? "Init" : "Test"}Signal ${format_version}`);

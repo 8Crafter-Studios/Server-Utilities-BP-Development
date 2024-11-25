@@ -5,12 +5,9 @@ import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPl
 import { forceShow } from "./forceShow";
 import { showActions } from "modules/utilities/functions/showActions";
 import { showMessage } from "modules/utilities/functions/showMessage";
-import { startCheckingForBannedPlayers } from "modules/ban/functions/checkingForBannedPlayers";
-import { stopCheckingForBannedPlayers } from "modules/ban/functions/stopCheckingForBannedPlayers";
-import { stopPlayerDataAutoSave } from "modules/player_save/functions/stopPlayerDataAutoSave";
-import { startPlayerDataAutoSave } from "modules/player_save/functions/startPlayerDataAutoSave";
-import { stopProtectedAreasRefresher } from "modules/spawn_protection/functions/stopProtectedAreasRefresher";
-import { startProtectedAreasRefresher } from "modules/spawn_protection/functions/startProtectedAreasRefresher";
+import { startCheckingForBannedPlayers, stopCheckingForBannedPlayers } from "modules/ban/functions/checkingForBannedPlayers";
+import { startProtectedAreasRefresher, stopProtectedAreasRefresher } from "modules/spawn_protection/functions/protectedAreasRefresher";
+import { startPlayerDataAutoSave, stopPlayerDataAutoSave } from "modules/player_save/functions/playerDataAutoSave";
 export async function addonDebugUI(sourceEntitya) {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW
         ? sourceEntitya.player

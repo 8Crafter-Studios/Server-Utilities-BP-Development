@@ -2,7 +2,7 @@ import { Vector3Utils } from "@minecraft/math.js";
 import { Dimension, Entity, Block, type Vector3, type Vector2, DimensionType, Player, world, type DimensionLocation } from "@minecraft/server";
 import { targetSelectorAllListE } from "modules/command_utilities/functions/targetSelectorAllListE";
 import { targetSelectorAllListC } from "modules/command_utilities/functions/targetSelectorAllListC";
-import type { RotationLocation } from "Main/coordinates";
+import type { RotationLocation } from "modules/coordinates/interfaces/RotationLocation";
 import { anglesToDirectionVectorDeg } from "../functions/anglesToDirectionVectorDeg";
 import { coordinates } from "../functions/coordinates";
 import { facingPoint } from "../functions/facingPoint";

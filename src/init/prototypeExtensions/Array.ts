@@ -14,7 +14,8 @@ Object.defineProperty(Array.prototype, "forEachB", {
         }, thisArg);
     },
 });
-export const exports_5603749806156139082470132985463298047098135609812364098 = void undefined as void;
+export const exports_5603749806156139082470132985463298047098135609812364098 =
+    undefined;
 declare global {
     interface Array<T> {
         /**

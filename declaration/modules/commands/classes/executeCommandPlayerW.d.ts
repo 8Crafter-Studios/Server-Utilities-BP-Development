@@ -2,7 +2,7 @@ import { Player, type Vector3, Dimension, type Vector2, Block, Entity, type RawM
 import { MoneySystem } from "ExtraFeatures/money";
 import { PlayerNotifications } from "init/classes/PlayerNotifications";
 import { WorldPosition } from "modules/coordinates/classes/WorldPosition";
-import type { RotationLocation } from "../../../Main/coordinates";
+import type { RotationLocation } from "modules/coordinates/interfaces/RotationLocation";
 export declare class executeCommandPlayerW {
     player?: Player;
     sendErrorsTo?: Player | Console | Player[] | (() => Player | Player[] | Console) | null | undefined;

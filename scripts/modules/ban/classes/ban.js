@@ -1,5 +1,5 @@
 import { world, Player } from "@minecraft/server";
-import { ban_format_version } from "./ban";
+import { ban_format_version } from "../constants/ban_format_version";
 export class ban {
     type;
     playerName;

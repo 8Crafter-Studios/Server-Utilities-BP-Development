@@ -1,4 +1,4 @@
-import { world, StructureSaveMode, Dimension } from "@minecraft/server";
+import { world, StructureSaveMode, Dimension, } from "@minecraft/server";
 import { gwdp } from "init/functions/gwdp";
 /**
  * A class containing the configuration information for the add-on.

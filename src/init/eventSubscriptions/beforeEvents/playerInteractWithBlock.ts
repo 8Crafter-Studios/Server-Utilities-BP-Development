@@ -1,7 +1,6 @@
 import { world, ItemStack } from "@minecraft/server";
 import { srun } from "init/functions/srun";
 import { protectedAreaVariables } from "init/variables/protectedAreaVariables";
-import { editorStickMenuOpeningAsyncCancelActionNumbers } from "Main";
 import { rangeToIntArray } from "modules/command_utilities/functions/rangeToIntArray";
 import { interactable_blockb } from "modules/main/classes/interactable_blockb";
 import { debugAction } from "modules/main/functions/debugAction";

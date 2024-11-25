@@ -23,8 +23,14 @@ globalThis.modules={
 globalThis.subscribedEvents = {} as { [eventName: string]: Function };
 globalThis.repeatingIntervals = {} as { [intervalName: string]: number };
 globalThis.tempVariables = {};
+globalThis.editorStickMenuOpeningAsyncCancelActionNumbers = {} as {
+    [id: string]: number;
+};
+globalThis.crashEnabled = false
+globalThis.tempSavedVariables = []
 import "Assets/classes/JSONB"
 import "Global"
+import 'init/index';
   
 /*
 import "AllayTests.js";
@@ -66,45 +72,32 @@ import "SculkTests.js";
 import "VibrationTests.js";
 import "EnchantmentTests.js";*//*
 import "Eval.js";*/
-import "Main/commands_documentation.js";
-import "Main/commands.js";
-import "Main/coordinates.js";
-import "Main/ban.js";
-import "Main/ui.js";
-import "Main/player_save.js";
-import "Main/spawn_protection.js";
-import "Main/chat.js";
-import "Main/command_utilities.js";
-import "Main/commands_list.js";
-import "Main/errors.js";
-import "Main/utilities.js";
+import "legacyModuleAliases/commands_documentation.js";
+import "legacyModuleAliases/commands.js";
+import "legacyModuleAliases/coordinates.js";
+import "legacyModuleAliases/ban.js";
+import "legacyModuleAliases/ui.js";
+import "legacyModuleAliases/player_save.js";
+import "legacyModuleAliases/spawn_protection.js";
+import "legacyModuleAliases/chat.js";
+import "legacyModuleAliases/command_utilities.js";
+import "legacyModuleAliases/commands_list.js";
+import "legacyModuleAliases/errors.js";
+import "legacyModuleAliases/utilities.js";
 import "@minecraft/math.js";
 import "GlobalDecorators";
-import 'init/index';
-import *  as main from "Main";
-globalThis.modules.main=main
-import *  as coords from "Main/coordinates";
-globalThis.modules.coords=coords
-import *  as cmds from "Main/commands";
-globalThis.modules.cmds=cmds
-import *  as bans from "Main/ban";
-globalThis.modules.bans=bans
-import *  as uis from "Main/ui";
-globalThis.modules.uis=uis
-import *  as playersave from "Main/player_save";
-globalThis.modules.playersave=playersave
-import *  as spawnprot from "Main/spawn_protection";
-globalThis.modules.spawnprot=spawnprot
-import *  as chat from "Main/chat";
-globalThis.modules.chat=chat
-import *  as cmdutils from "Main/command_utilities";
-globalThis.modules.cmdutils=cmdutils
-import *  as cmdslist from "Main/commands_list";
-globalThis.modules.cmdslist=cmdslist
-import *  as cmdsdocs from "Main/commands_documentation";
-globalThis.modules.cmdsdocs=cmdsdocs
+import *  as main from "legacyModuleAliases/Main";
+import *  as coords from "legacyModuleAliases/coordinates";
+import *  as cmds from "legacyModuleAliases/commands";
+import *  as bans from "legacyModuleAliases/ban";
+import *  as uis from "legacyModuleAliases/ui";
+import *  as playersave from "legacyModuleAliases/player_save";
+import *  as spawnprot from "legacyModuleAliases/spawn_protection";
+import *  as chat from "legacyModuleAliases/chat";
+import *  as cmdutils from "legacyModuleAliases/command_utilities";
+import *  as cmdslist from "legacyModuleAliases/commands_list";
+import *  as cmdsdocs from "legacyModuleAliases/commands_documentation";
 import *  as utils from "legacyModuleAliases/utilities";
-globalThis.modules.utils=utils
 import *  as shopmain from "ExtraFeatures/shop_main";
 import *  as servershop from "ExtraFeatures/server_shop";
 import *  as playershop from "ExtraFeatures/player_shop";
@@ -179,10 +172,28 @@ declare global {
         var tempSavedVariables: any[]
         var crashEnabled: boolean
         var format_version: typeof current_format_version
+        var editorStickMenuOpeningAsyncCancelActionNumbers: {
+            [id: string]: number;
+        }
+        var beforeInitializeTick: number;
+        var initializeTick: number;
+        var beforeScriptStartTick: number;
+        var scriptStartTick: number;
+        var tempVariables: { [key: PropertyKey]: any };
+        var subscribedEvents: { [eventName: string]: Function };
+        var repeatingIntervals: {
+            worldBorderSystem?: number;
+            protectedAreasRefresher?: number;
+            bannedPlayersChecker?: number;
+            playerDataAutoSave?: number;
+            [intervalName: string]: number;
+        };
+        var entity_scale_format_version: string | null;
+        var multipleEntityScaleVersionsDetected: boolean;
     }
 }
 import 'Main';
+import { undoClipboard } from "modules/coordinates/classes/undoClipboard";
 globalThis.scriptStartTick=system.currentTick
-globalThis.crashEnabled = false
-globalThis.tempSavedVariables = []
 world.setDynamicProperty("format_version", format_version)
+system.runTimeout(() => undoClipboard.cullItemsMissingStructure(), 50);

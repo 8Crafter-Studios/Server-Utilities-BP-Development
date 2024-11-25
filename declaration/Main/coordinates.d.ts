@@ -1,4 +1,4 @@
-import { Dimension, type Vector3 } from "@minecraft/server";
+import { type Vector3 } from "@minecraft/server";
 export interface ILocalTeleport {
     sway_1: number;
     heave_2: number;
@@ -26,36 +26,3 @@ export declare const LocalTeleportFunctions: {
         z: number;
     };
 };
-export interface DimensionVolumeArea {
-    dimension: Dimension;
-    from: Vector3;
-    to: Vector3;
-}
-export interface Vector4 {
-    w: number;
-    x: number;
-    y: number;
-    z: number;
-}
-export interface Vector5 {
-    v: number;
-    w: number;
-    x: number;
-    y: number;
-    z: number;
-}
-export interface RotationLocation {
-    rotX: number;
-    rotY: number;
-    x: number;
-    y: number;
-    z: number;
-}
-export interface DimensionRotationLocation {
-    dimension: Dimension;
-    rotX: number;
-    rotY: number;
-    x: number;
-    y: number;
-    z: number;
-}

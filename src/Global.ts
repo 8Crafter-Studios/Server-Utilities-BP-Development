@@ -1,25 +1,10 @@
 import {
-    Entity,
     type RawMessage,
-    world,
-    EntityInventoryComponent,
-    EntityEquippableComponent,
-    PlayerCursorInventoryComponent,
-    ItemStack,
-    EquipmentSlot,
-    ContainerSlot,
     Player,
-    type Vector3,
-    type VectorXZ,
-    type Vector2,
-    type VectorYZ,
     Dimension,
 } from "@minecraft/server";
 import Decimal from "decimal.js";
-import { MoneySystem } from "ExtraFeatures/money";
 import type { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
-import type { RotationLocation } from "Main/coordinates";
-import type { PlayerNotifications } from "init/classes/PlayerNotifications";
 declare global {
     interface Object {
         hasOwnProperty(v: keyof this): boolean;
@@ -69,15 +54,10 @@ declare global {
      */
     class ParseError extends Error {}
     namespace globalThis {
-        var beforeInitializeTick: number;
-        var initializeTick: number;
-        var beforeScriptStartTick: number;
-        var scriptStartTick: number;
         class InternalError extends Error {}
         function tfsa(
             sdsa284f83kd_38pqnv_38_f_0_vmewd_19mvndifekod_f8ufv4m3ddm1c0nvh289cmfue8hd9mjf3: unknown
         ): unknown;
-        var tempVariables: { [key: PropertyKey]: any };
         function cullNull<T extends any[]>(array: T): any[];
         function cullUndefined<T extends any[]>(array: T): any[];
         function cullEmpty<T extends any[]>(array: T): any[];
@@ -318,16 +298,6 @@ declare global {
             objectToTest: object,
             base: object
         ): boolean;
-        var subscribedEvents: { [eventName: string]: Function };
-        var repeatingIntervals: {
-            worldBorderSystem?: number;
-            protectedAreasRefresher?: number;
-            bannedPlayersChecker?: number;
-            playerDataAutoSave?: number;
-            [intervalName: string]: number;
-        };
-        var entity_scale_format_version: string | null;
-        var multipleEntityScaleVersionsDetected: boolean;
         function twoWayModulo(number: number, modulo: number): number;
         function clamp24HoursTo12Hours(hours: number): number;
         /**
@@ -684,11 +654,6 @@ declare module "@minecraft/server" {
 }
 
 // §ess§gss§6ss§pss§ass§qss§2ss§4ss§5ss§dss§1ss§3ss§7ss§8ss§9ss§0ss§mss§nss§bss§sss§rss§fss§tss§uss§iss§hss§jss
-Object.defineProperty(globalThis, "stack", {
-    get: function stack() {
-        return new Error().stack;
-    },
-});
 
 
 

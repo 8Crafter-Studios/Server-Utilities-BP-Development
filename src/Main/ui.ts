@@ -6,4 +6,4 @@
 /**
  * The `import.meta` value for the `Main/ui` file.
  */
-export const uimetaimport = import.meta
+export const uimetaimport = import.meta;

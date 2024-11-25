@@ -1,5 +1,4 @@
 import { world, type Vector3, type StructureCreateOptions, StructureSaveMode, type StructurePlaceOptions } from "@minecraft/server";
-import { dimensionsc } from "Main";
 import { splitArea } from "modules/coordinates/functions/splitArea";
 
 export class AreaBackup {

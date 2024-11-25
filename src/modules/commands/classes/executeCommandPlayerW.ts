@@ -6,7 +6,7 @@ import { chatCommands } from "modules/commands/functions/chatCommands";
 import { WorldPosition } from "modules/coordinates/classes/WorldPosition";
 import { anglesToDirectionVectorDeg } from "modules/coordinates/functions/anglesToDirectionVectorDeg";
 import { getChunkIndexD } from "modules/coordinates/functions/getChunkIndexD";
-import type { RotationLocation } from "../../../Main/coordinates";
+import type { RotationLocation } from "modules/coordinates/interfaces/RotationLocation";
 
 export class executeCommandPlayerW {
     player?: Player;

@@ -1,0 +1,9 @@
+globalThis.twoWayModulo = function twoWayModulo(number, modulo) {
+    if (number < 0) {
+        return modulo + (number % modulo);
+    }
+    else {
+        return number % modulo;
+    }
+};
+//# sourceMappingURL=twoWayModulo.js.map

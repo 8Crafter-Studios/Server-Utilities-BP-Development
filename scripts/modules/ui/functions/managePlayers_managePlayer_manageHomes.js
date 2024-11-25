@@ -1,5 +1,4 @@
 import { ActionFormData, ActionFormResponse, ModalFormData, MessageFormData } from "@minecraft/server-ui";
-import { dimensionse, dimensions, dimensionTypeDisplayFormattingE } from "Main";
 import { forceShow } from "modules/ui/functions/forceShow";
 import { HomeSystem } from "modules/commands/classes/HomeSystem";
 import { vTStr } from "modules/commands/functions/vTStr";

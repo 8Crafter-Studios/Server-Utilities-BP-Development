@@ -1,197 +1,7 @@
 import { type RawMessage, Player, Dimension } from "@minecraft/server";
 import Decimal from "decimal.js";
-import { MoneySystem } from "ExtraFeatures/money";
 import type { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
-import type { RotationLocation } from "Main/coordinates";
-import type { PlayerNotifications } from "init/classes/PlayerNotifications";
 declare global {
-    interface String {
-        escapeCharacters(js?: boolean, unicode?: boolean, nullchar?: number, uri?: boolean, quotes?: boolean, general?: boolean, colon?: boolean, x?: boolean, s?: boolean): string;
-        escapeCharactersB(js?: boolean, unicode?: boolean, nullchar?: number, uri?: boolean, quotes?: boolean, general?: boolean, colon?: boolean, x?: boolean, s?: boolean): {
-            v: string;
-            e?: Error[];
-        };
-        /** Returns a number representation of an object. */
-        toNumber(): number | undefined;
-        /** Returns a bigint representation of an object. */
-        toBigInt(): bigint | undefined;
-        /** Returns a boolean representation of an object. */
-        toBoolean(): boolean;
-        /** The initial value of String.prototype.constructor is the standard built-in String constructor. */
-        constructor: Function;
-        /** Returns a date converted to a string using the current locale. */
-        toLocaleString(): string;
-        /**
-         * Determines whether an object has a property with the specified name.
-         * @param v A property name.
-         */
-        hasOwnProperty(v: PropertyKey): boolean;
-        hasOwnProperty(v: keyof this): boolean;
-        /**
-         * Determines whether an object exists in another object's prototype chain.
-         * @param v Another object whose prototype chain is to be checked.
-         */
-        isPrototypeOf(v: Object): boolean;
-        /**
-         * Determines whether a specified property is enumerable.
-         * @param v A property name.
-         */
-        propertyIsEnumerable(v: PropertyKey): boolean;
-        propertyIsEnumerable(v: keyof this): boolean;
-        __defineGetter__<P extends keyof this>(prop: P, func: () => any): undefined;
-        __defineSetter__<P extends keyof this>(prop: P, func: (val: any) => void): undefined;
-        __defineGetter__<P extends string>(prop: P, func: () => any): undefined;
-        __defineSetter__<P extends string>(prop: P, func: (val: any) => void): undefined;
-        __lookupGetter__<P extends keyof this>(prop: P): (() => this[P]) | undefined;
-        __lookupSetter__<P extends keyof this>(prop: P): ((val: this[P]) => void) | undefined;
-        get __proto__(): String;
-        set __proto__(prototype: Object | null);
-    }
-    interface Number {
-        /** Returns a number representation of an object. */
-        toNumber(): ReturnType<this["valueOf"]>;
-        /** Returns a bigint representation of an object. */
-        toBigInt(): bigint;
-        /** Returns a boolean representation of an object. */
-        toBoolean(): boolean;
-        toRomanNumerals(limits?: [min: number, max: number], valueFor0?: string): string;
-        /** Returns whether or not the number is NaN. */
-        isNaN(): boolean;
-        /** Returns whether or not the number is finite. */
-        isFinite(): boolean;
-        /** Returns whether or not the number is an integer. */
-        isInteger(): boolean;
-        /** Returns whether or not the number is a safe integer. */
-        isSafeInteger(): boolean;
-        /** Returns whether or not the number is even. */
-        isEven(): boolean;
-        /** Returns whether or not the number is odd. */
-        isOdd(): boolean;
-        /** Runs the Math.floor() function on the number. */
-        floor(): number;
-        /** Runs the Math.round() function on the number. */
-        round(): number;
-        /** Runs the Math.ceil() function on the number. */
-        ceil(): number;
-        /** The initial value of Number.prototype.constructor is the standard built-in Number constructor. */
-        constructor: Function;
-        /**
-         * Determines whether an object has a property with the specified name.
-         * @param v A property name.
-         */
-        hasOwnProperty(v: PropertyKey): boolean;
-        hasOwnProperty(v: keyof this): boolean;
-        /**
-         * Determines whether an object exists in another object's prototype chain.
-         * @param v Another object whose prototype chain is to be checked.
-         */
-        isPrototypeOf(v: Object): boolean;
-        /**
-         * Determines whether a specified property is enumerable.
-         * @param v A property name.
-         */
-        propertyIsEnumerable(v: PropertyKey): boolean;
-        propertyIsEnumerable(v: keyof this): boolean;
-        __defineGetter__<P extends keyof this>(prop: P, func: () => any): undefined;
-        __defineSetter__<P extends keyof this>(prop: P, func: (val: any) => void): undefined;
-        __defineGetter__<P extends string>(prop: P, func: () => any): undefined;
-        __defineSetter__<P extends string>(prop: P, func: (val: any) => void): undefined;
-        __lookupGetter__<P extends keyof this>(prop: P): (() => this[P]) | undefined;
-        __lookupSetter__<P extends keyof this>(prop: P): ((val: this[P]) => void) | undefined;
-        get __proto__(): Number;
-        set __proto__(prototype: Object | null);
-    }
-    interface BigInt {
-        /** Returns a number representation of an object. */
-        toNumber(): number;
-        /** Returns a bigint representation of an object. */
-        toBigInt(): ReturnType<this["valueOf"]>;
-        /** Returns a boolean representation of an object. */
-        toBoolean(): boolean;
-        toRomanNumerals(limits?: [min: bigint, max: bigint], valueFor0n?: string): string;
-        /** The initial value of Number.prototype.constructor is the standard built-in Number constructor. */
-        constructor: Function;
-        /**
-         * Determines whether an object has a property with the specified name.
-         * @param v A property name.
-         */
-        hasOwnProperty(v: PropertyKey): boolean;
-        hasOwnProperty(v: keyof this): boolean;
-        /**
-         * Determines whether an object exists in another object's prototype chain.
-         * @param v Another object whose prototype chain is to be checked.
-         */
-        isPrototypeOf(v: Object): boolean;
-        /**
-         * Determines whether a specified property is enumerable.
-         * @param v A property name.
-         */
-        propertyIsEnumerable(v: PropertyKey): boolean;
-        propertyIsEnumerable(v: keyof this): boolean;
-        __defineGetter__<P extends keyof this>(prop: P, func: () => any): undefined;
-        __defineSetter__<P extends keyof this>(prop: P, func: (val: any) => void): undefined;
-        __defineGetter__<P extends string>(prop: P, func: () => any): undefined;
-        __defineSetter__<P extends string>(prop: P, func: (val: any) => void): undefined;
-        __lookupGetter__<P extends keyof this>(prop: P): (() => this[P]) | undefined;
-        __lookupSetter__<P extends keyof this>(prop: P): ((val: this[P]) => void) | undefined;
-        get __proto__(): BigInt;
-        set __proto__(prototype: Object | null);
-    }
-    interface Array<T> {
-        /**
-         * Performs the specified action for each element in an array and will include the current index in any errors.
-         * @param callbackfn  A function that accepts up to three arguments. forEach calls the callbackfn function one time for each element in the array.
-         * @param thisArg  An object to which the this keyword can refer in the callbackfn function. If thisArg is omitted, undefined is used as the this value.
-         */
-        forEachB(callbackfn: (value: T, index: number, array: T[]) => void, thisArg?: any): void;
-    }
-    interface Boolean {
-        toFormattedString(): "§aTrue" | "§cFalse";
-        toFormattedStringB(): "§2True" | "§4False";
-        toFormattedStringED(): "§aEnabled" | "§cDisabled";
-        toFormattedStringEDB(): "§2Enabled" | "§4Disabled";
-        toFormattedStringIO(): "§aON" | "§cOFF";
-        toFormattedStringIOB(): "§2ON" | "§4OFF";
-        toFormattedStringIOL(): "§aOn" | "§cOff";
-        toFormattedStringIOLB(): "§2On" | "§4Off";
-        /** Returns a number representation of an object. */
-        toNumber(): 0 | 1;
-        /** Returns a number representation of an object. */
-        toBigInt(): 0n | 1n;
-        /** Returns a boolean representation of an object. */
-        toBoolean(): boolean;
-        /** The initial value of Boolean.prototype.constructor is the standard built-in Boolean constructor. */
-        constructor: Function;
-        /** Returns a string representation of an object. */
-        toString(): "true" | "false";
-        /** Returns a date converted to a string using the current locale. */
-        toLocaleString(): string;
-        /**
-         * Determines whether an object has a property with the specified name.
-         * @param v A property name.
-         */
-        hasOwnProperty(v: PropertyKey): boolean;
-        hasOwnProperty(v: keyof this): boolean;
-        /**
-         * Determines whether an object exists in another object's prototype chain.
-         * @param v Another object whose prototype chain is to be checked.
-         */
-        isPrototypeOf(v: Object): boolean;
-        /**
-         * Determines whether a specified property is enumerable.
-         * @param v A property name.
-         */
-        propertyIsEnumerable(v: PropertyKey): boolean;
-        propertyIsEnumerable(v: keyof this): boolean;
-        __defineGetter__<P extends keyof this>(prop: P, func: () => any): undefined;
-        __defineSetter__<P extends keyof this>(prop: P, func: (val: any) => void): undefined;
-        __defineGetter__<P extends string>(prop: P, func: () => any): undefined;
-        __defineSetter__<P extends string>(prop: P, func: (val: any) => void): undefined;
-        __lookupGetter__<P extends keyof this>(prop: P): (() => this[P]) | undefined;
-        __lookupSetter__<P extends keyof this>(prop: P): ((val: this[P]) => void) | undefined;
-        get __proto__(): Boolean;
-        set __proto__(prototype: Object | null);
-    }
     interface Object {
         hasOwnProperty(v: keyof this): boolean;
         propertyIsEnumerable(v: keyof this): boolean;
@@ -203,9 +13,6 @@ declare global {
         __lookupSetter__<P extends keyof this>(prop: P): ((val: this[P]) => this[P]) | undefined;
         get __proto__(): Object;
         set __proto__(prototype: Object | null);
-    }
-    interface Error {
-        stringify(): string;
     }
     class TimeoutError extends Error {
     }
@@ -235,16 +42,9 @@ declare global {
     class ParseError extends Error {
     }
     namespace globalThis {
-        var beforeInitializeTick: number;
-        var initializeTick: number;
-        var beforeScriptStartTick: number;
-        var scriptStartTick: number;
         class InternalError extends Error {
         }
         function tfsa(sdsa284f83kd_38pqnv_38_f_0_vmewd_19mvndifekod_f8ufv4m3ddm1c0nvh289cmfue8hd9mjf3: unknown): unknown;
-        var tempVariables: {
-            [key: PropertyKey]: any;
-        };
         function cullNull<T extends any[]>(array: T): any[];
         function cullUndefined<T extends any[]>(array: T): any[];
         function cullEmpty<T extends any[]>(array: T): any[];
@@ -378,18 +178,6 @@ declare global {
         function waitTicks(ticks?: number): Promise<void>;
         function testForObjectExtension(objectToTest: object, base: object): boolean;
         function testForObjectTypeExtension(objectToTest: object, base: object): boolean;
-        var subscribedEvents: {
-            [eventName: string]: Function;
-        };
-        var repeatingIntervals: {
-            worldBorderSystem?: number;
-            protectedAreasRefresher?: number;
-            bannedPlayersChecker?: number;
-            playerDataAutoSave?: number;
-            [intervalName: string]: number;
-        };
-        var entity_scale_format_version: string | null;
-        var multipleEntityScaleVersionsDetected: boolean;
         function twoWayModulo(number: number, modulo: number): number;
         function clamp24HoursTo12Hours(hours: number): number;
         /**
@@ -709,62 +497,6 @@ declare global {
          */
         static get config(): typeof import("init/classes/config").config;
     }
-    interface Date {
-        /**
-         * The timezone, specified as the hours offset from UTC.
-         * @since 1.26.0-preview.20+BUILD.2
-         * @version 1.0.0
-         */
-        timezone: number;
-        /**
-         * Sets the timezone property of this Date object.
-         * @since 1.26.0-preview.20+BUILD.2
-         * @version 1.0.0
-         */
-        toTimezone(timezone?: number | string | boolean | null | undefined): this;
-        /**
-         * Formats a date object to a time string formatted as 12:37:01 PM, or if includeMs is set to true, 12:37:01.572 PM.
-         * If includeTimeZoneOffset is set to true, then it will add the UTC hour offset to the end of the string, it is formatted like UTC+8 or UTC-7.
-         * @since 1.26.0-preview.20+BUILD.2
-         * @version 1.1.0
-         */
-        toTimezoneTime(timezone?: number | string | boolean | null | undefined, includeMs?: boolean, includeTimeZoneOffset?: boolean): string;
-        /**
-         * Formats a date object to a date time string formatted as 07/21/2024, 12:37:01 PM, or if includeMs is set to true, 07/21/2024, 12:37:01.572 PM.
-         * If includeTimeZoneOffset is set to true, then it will add the UTC hour offset to the end of the string, it is formatted like UTC+8 or UTC-7.
-         * @since 1.26.0-preview.20+BUILD.2
-         * @version 1.1.0
-         */
-        toTimezoneDateTime(timezone?: number | string | boolean | null | undefined, includeMs?: boolean, includeTimeZoneOffset?: boolean): string;
-        /**
-         * Formats a date object to a date string formatted as 07/21/2024.
-         * If includeTimeZoneOffset is set to true, then it will add the UTC hour offset to the end of the string, it is formatted like UTC+8 or UTC-7.
-         * @since 1.26.0-preview.20+BUILD.2
-         * @version 1.1.0
-         */
-        toTimezoneDate(timezone?: number | string | boolean | null | undefined, includeTimeZoneOffset?: boolean): string;
-        /**
-         * Formats a date object to a time string formatted as 12:37:01 PM, or if includeMs is set to true, 12:37:01.572 PM.
-         * If includeTimeZoneOffset is set to true, then it will add the UTC hour offset to the end of the string, it is formatted like UTC+8 or UTC-7.
-         * @since 1.26.0-preview.20+BUILD.2
-         * @version 1.2.1
-         */
-        formatTime(timeZoneOffset?: number, includeMs?: boolean, includeTimeZoneOffset?: boolean): string;
-        /**
-         * Formats a date object to a date time string formatted as 07/21/2024, 12:37:01 PM, or if includeMs is set to true, 07/21/2024, 12:37:01.572 PM.
-         * If includeTimeZoneOffset is set to true, then it will add the UTC hour offset to the end of the string, it is formatted like UTC+8 or UTC-7.
-         * @since 1.26.0-preview.20+BUILD.2
-         * @version 1.2.1
-         */
-        formatDateTime(timeZoneOffset?: number, includeMs?: boolean, includeTimeZoneOffset?: boolean): string;
-        /**
-         * Formats a date object to a date string formatted as 07/21/2024.
-         * If includeTimeZoneOffset is set to true, then it will add the UTC hour offset to the end of the string, it is formatted like UTC+8 or UTC-7.
-         * @since 1.26.0-preview.20+BUILD.2
-         * @version 1.1.0
-         */
-        formatDate(timeZoneOffset?: number, includeTimeZoneOffset?: boolean): string;
-    }
     interface Function {
         readonly lineNumber: number;
         readonly fileName: string;
@@ -775,172 +507,11 @@ declare global {
     }
 }
 declare module "@minecraft/server" {
-    interface Entity {
-        /**
-         * Defines this entity's inventory properties.
-         */
-        get inventory(): EntityInventoryComponent | undefined;
-        /**
-         * Provides access to a mob's equipment slots. This component
-         * exists for all mob entities.
-         * @example givePlayerElytra.ts
-         * ```typescript
-         * // Gives the player Elytra
-         * import { EquipmentSlot, ItemStack, Player, EntityComponentTypes } from '@minecraft/server';
-         * import { MinecraftItemTypes } from '@minecraft/vanilla-data';
-         *
-         * function giveEquipment(player: Player) {
-         *     const equipmentCompPlayer = player.getComponent(EntityComponentTypes.Equippable);
-         *     if (equipmentCompPlayer) {
-         *         equipmentCompPlayer.setEquipment(EquipmentSlot.Chest, new ItemStack(MinecraftItemTypes.Elytra));
-         *     }
-         * }
-         * ```
-         * @example givePlayerEquipment.ts
-         * ```typescript
-         * // Gives the player some equipment
-         * import { EquipmentSlot, ItemStack, Player, EntityComponentTypes } from '@minecraft/server';
-         * import { MinecraftItemTypes } from '@minecraft/vanilla-data';
-         *
-         * function giveEquipment(player: Player) {
-         *     const equipmentCompPlayer = player.getComponent(EntityComponentTypes.Equippable);
-         *     if (equipmentCompPlayer) {
-         *         equipmentCompPlayer.setEquipment(EquipmentSlot.Head, new ItemStack(MinecraftItemTypes.GoldenHelmet));
-         *         equipmentCompPlayer.setEquipment(EquipmentSlot.Chest, new ItemStack(MinecraftItemTypes.IronChestplate));
-         *         equipmentCompPlayer.setEquipment(EquipmentSlot.Legs, new ItemStack(MinecraftItemTypes.DiamondLeggings));
-         *         equipmentCompPlayer.setEquipment(EquipmentSlot.Feet, new ItemStack(MinecraftItemTypes.NetheriteBoots));
-         *         equipmentCompPlayer.setEquipment(EquipmentSlot.Mainhand, new ItemStack(MinecraftItemTypes.WoodenSword));
-         *         equipmentCompPlayer.setEquipment(EquipmentSlot.Offhand, new ItemStack(MinecraftItemTypes.Shield));
-         *     } else {
-         *         console.warn('No equipment component found on player');
-         *     }
-         * }
-         * ```
-         */
-        get equippable(): EntityEquippableComponent | undefined;
-        /**
-         * Represents the players cursor inventory. Used when moving
-         * items between between containers in the inventory UI. Not
-         * used with touch controls.
-         *
-         * Only works on players, on non-players it will return undefined.
-         *
-         * This returns the same value as `Entity.prototype.getComponent("cursor_inventory")`.
-         */
-        get cursorInventory(): PlayerCursorInventoryComponent | undefined;
-        get heldItem(): ItemStack | undefined;
-        get activeSlot(): ContainerSlot | undefined;
-        get moneySystem(): MoneySystem;
-        get playerNotifications(): PlayerNotifications;
-        get dimensionLocation(): DimensionLocation;
-        get locationstring(): `${number} ${number} ${number}`;
-        get rotationstring(): `${number} ${number}`;
-        get locationrotation(): RotationLocation;
-        get directionvector(): Vector3;
-        get xy(): Vector2;
-        get yz(): VectorYZ;
-        get xz(): VectorXZ;
-        get chunkIndex(): VectorXZ;
-        get x(): number;
-        get y(): number;
-        get z(): number;
-        get rotx(): number;
-        get roty(): number;
-        get timeZone(): number;
-        set timeZone(timezone: number | string | boolean | null | undefined);
-    }
-    interface Player {
-        /**
-         * Defines this entity's inventory properties.
-         */
-        get inventory(): EntityInventoryComponent;
-        /**
-         * Provides access to a mob's equipment slots. This component
-         * exists for all mob entities.
-         * @example givePlayerElytra.ts
-         * ```typescript
-         * // Gives the player Elytra
-         * import { EquipmentSlot, ItemStack, Player, EntityComponentTypes } from '@minecraft/server';
-         * import { MinecraftItemTypes } from '@minecraft/vanilla-data';
-         *
-         * function giveEquipment(player: Player) {
-         *     const equipmentCompPlayer = player.getComponent(EntityComponentTypes.Equippable);
-         *     if (equipmentCompPlayer) {
-         *         equipmentCompPlayer.setEquipment(EquipmentSlot.Chest, new ItemStack(MinecraftItemTypes.Elytra));
-         *     }
-         * }
-         * ```
-         * @example givePlayerEquipment.ts
-         * ```typescript
-         * // Gives the player some equipment
-         * import { EquipmentSlot, ItemStack, Player, EntityComponentTypes } from '@minecraft/server';
-         * import { MinecraftItemTypes } from '@minecraft/vanilla-data';
-         *
-         * function giveEquipment(player: Player) {
-         *     const equipmentCompPlayer = player.getComponent(EntityComponentTypes.Equippable);
-         *     if (equipmentCompPlayer) {
-         *         equipmentCompPlayer.setEquipment(EquipmentSlot.Head, new ItemStack(MinecraftItemTypes.GoldenHelmet));
-         *         equipmentCompPlayer.setEquipment(EquipmentSlot.Chest, new ItemStack(MinecraftItemTypes.IronChestplate));
-         *         equipmentCompPlayer.setEquipment(EquipmentSlot.Legs, new ItemStack(MinecraftItemTypes.DiamondLeggings));
-         *         equipmentCompPlayer.setEquipment(EquipmentSlot.Feet, new ItemStack(MinecraftItemTypes.NetheriteBoots));
-         *         equipmentCompPlayer.setEquipment(EquipmentSlot.Mainhand, new ItemStack(MinecraftItemTypes.WoodenSword));
-         *         equipmentCompPlayer.setEquipment(EquipmentSlot.Offhand, new ItemStack(MinecraftItemTypes.Shield));
-         *     } else {
-         *         console.warn('No equipment component found on player');
-         *     }
-         * }
-         * ```
-         */
-        get equippable(): EntityEquippableComponent;
-        /**
-         * Represents the players cursor inventory. Used when moving
-         * items between between containers in the inventory UI. Not
-         * used with touch controls.
-         *
-         * Only works on players, on non-players it will return undefined.
-         *
-         * This returns the same value as `Player.prototype.getComponent("cursor_inventory")`.
-         */
-        get cursorInventory(): PlayerCursorInventoryComponent;
-        get activeSlot(): ContainerSlot;
-    }
     interface ItemStack {
         hasComponent(componentId: keyof ItemComponentTypeMap): boolean;
     }
     interface VectorYZ {
         y: number;
         z: number;
-    }
-}
-declare module "@minecraft/server-ui" {
-    interface ModalFormData {
-        /**
-         * Forces a form to show even if the player has another form or menu open.
-         * If the player has another form or menu open then it will wait until they close it.
-         * @param {Player} player The player to show the form to
-         * @param {number} timeout The number of ticks before the function will give up and throw an error, it defaults to 9999
-         * @returns {ModalFormResponse|undefined} The response of the form
-         */
-        forceShow(player: Player, timeout?: number): Promise<ModalFormResponse>;
-    }
-    interface MessageFormData {
-        /**
-         * Forces a form to show even if the player has another form or menu open.
-         * If the player has another form or menu open then it will wait until they close it.
-         * @param {Player} player The player to show the form to
-         * @param {number} timeout The number of ticks before the function will give up and throw an error, it defaults to 9999
-         * @returns {MessageFormResponse|undefined} The response of the form
-         */
-        forceShow(player: Player, timeout?: number): Promise<MessageFormResponse>;
-    }
-    interface ActionFormData {
-        /**
-         * Forces a form to show even if the player has another form or menu open.
-         * If the player has another form or menu open then it will wait until they close it.
-         * @param {Player} player The player to show the form to
-         * @param {number} timeout The number of ticks before the function will give up and throw an error, it defaults to 9999
-         * @returns {ActionFormResponse|undefined} The response of the form
-         */
-        forceShow(player: Player, timeout?: number): Promise<ActionFormResponse>;
     }
 }

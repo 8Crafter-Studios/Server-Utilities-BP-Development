@@ -3,19 +3,15 @@ import { ActionFormData, ActionFormResponse, MessageFormData, ModalFormData } fr
 import { getPathInObject } from "modules/main/functions/getPathInObject";
 import { config } from "init/classes/config";
 import { containerToContainerSlotArray } from "modules/command_utilities/functions/containerToContainerSlotArray";
-import { containerToItemStackArray } from "modules/command_utilities/functions/containerToItemStackArray";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
-import { command } from "Main/command";
 import { forceShow } from "modules/ui/functions/forceShow";
-import { settings } from "modules/ui/functions/settings";
-import { worldBorderSettingsDimensionSelector } from "modules/ui/functions/worldBorderSettingsDimensionSelector";
 import { itemSelector } from "modules/ui/functions/itemSelector";
 import { getSuperUniqueID } from "modules/utilities/functions/getSuperUniqueID";
 import { showActions } from "modules/utilities/functions/showActions";
 import { showMessage } from "modules/utilities/functions/showMessage";
 import { getStringFromDynamicProperties } from "modules/utilities/functions/getStringFromDynamicProperties";
 import { saveStringToDynamicProperties } from "modules/utilities/functions/saveStringToDynamicProperties";
-import { mainShopSystemSettings } from "./shop_main";
+import {} from "./shop_main";
 import { MoneySystem } from "./money";
 /**
  * @todo Convert the functions to async functions that return Promise<0|1>.

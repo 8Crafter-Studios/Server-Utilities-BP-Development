@@ -1,5 +1,4 @@
 import { system } from "@minecraft/server";
-import { overworld } from "Main";
 
 export async function checkIfCompatibleEntityScaleIsActive(init: boolean = false, maxWaitTicks: number = 20) {
     const promise1Result = await new Promise((resolve, reject) => {

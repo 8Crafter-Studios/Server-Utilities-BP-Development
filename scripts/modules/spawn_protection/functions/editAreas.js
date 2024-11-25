@@ -1,6 +1,5 @@
 import { Player, world } from "@minecraft/server";
 import { ActionFormData, ModalFormData, ActionFormResponse, ModalFormResponse } from "@minecraft/server-ui";
-import { dimensions } from "Main";
 import { forceShow } from "modules/ui/functions/forceShow";
 import { editAreasMainMenu } from "./editAreasMainMenu";
 export function editAreas(player, prefix) {

@@ -1,23 +1,5 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 export const mainmetaimport = import.meta;
-export const editorStickMenuOpeningAsyncCancelActionNumbers = {} as {
-    [id: string]: number;
-};
-
-import {
-    world,
-} from "@minecraft/server";
-import { dirmap } from "modules/coordinates/functions/dirmap";
-import { diroffsetothersmap } from "modules/coordinates/functions/diroffsetothersmap";
-import { BlockPattern } from "modules/commands/classes/BlockPattern";
-import { roundVector3ToMiddleOfBlock } from "modules/coordinates/functions/roundVector3ToMiddleOfBlock";
-import colorCore, { Color } from "color-core";
-import Decimal from "decimal.js";
-import * as semver from "semver"; /*
-import { disableWatchdog } from "@minecraft/debug-utilities";*/
-import { fillBlocksHB } from "modules/main/functions/fillBlocksHB";
-import { fillBlocksHSGB } from "modules/main/functions/fillBlocksHSGB";
-import { fillBlocksHFGB } from "modules/main/functions/fillBlocksHFGB";
 // const a = ((a: `${bigint}.${bigint}.${bigint}${`-${string}`|""}${`+${string}`|""}`)=>{})("1.1.1-preview.20+BUILD.1");
 export function mainEval(x: string) {
     return eval(x);
@@ -30,12 +12,6 @@ export function mainRun(x: (...args: any[]) => any, ...args: any[]) {
 }
 /*
 disableWatchdog(Boolean(world.getDynamicProperty("andexdbSettings:disableWatchdog")??(!((world.getDynamicProperty("andexdbSettings:allowWatchdogTerminationCrash")??false))??false)??true)??true);  */
-try {
-    eval(String(world.getDynamicProperty("evalEvents:scriptInitialize")));
-} catch (e) {
-    console.error(e, e.stack);
-}
-
 /*let sourceEntity = Entity.prototype*/ /*
 targetSelectorAllListD("@e[c=2]", `${player.location.x} ${player.location.y} ${player.location.z}`, player.dimension).find((e)=>(player != e.getComponent("projectile").owner))*/ /*
 targetSelectorAllListD("@e[c=2]", `${sourceEntity.location.x} ${sourceEntity.location.y} ${sourceEntity.location.z}`, sourceEntity.dimension).find((e)=>(sourceEntity.getComponent("projectile").owner != e)).location*/ /*
@@ -116,38 +92,6 @@ world.beforeEvents.dataDrivenEntityTriggerEvent.subscribe(event => {
       }
   });*/ //removed in minecraft 1.20.60 >:(
 
-Object.defineProperties(globalThis, {
-    Color: {
-        value: Color,
-        configurable: true,
-        enumerable: true,
-        writable: false,
-    },
-    colorCore: {
-        value: colorCore,
-        configurable: true,
-        enumerable: true,
-        writable: false,
-    },
-    Decimal: {
-        value: Decimal,
-        configurable: true,
-        enumerable: true,
-        writable: false,
-    },
-    semver: {
-        value: semver,
-        configurable: true,
-        enumerable: true,
-        writable: false,
-    },
-    SemVer: {
-        value: semver.SemVer,
-        configurable: true,
-        enumerable: true,
-        writable: false,
-    },
-});
 /*
 world.beforeEvents.itemDefinitionEvent.subscribe(event => {
 try{eval(String(world.getDynamicProperty("evalBeforeEvents:itemDefinitionEvent")))}catch(e){console.error(e, e.stack); world.getAllPlayers().forEach((currentplayer)=>{if(currentplayer.hasTag("itemDefinitionEventBeforeEventDebugErrors")){currentplayer.sendMessage(e + e.stack)}})}

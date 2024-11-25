@@ -1,13 +1,6 @@
 import {
-    Dimension,
     type Vector3,
-    Entity,
-    system,
-    type VectorXZ,
 } from "@minecraft/server";
-import { getChunkIndexD } from "../modules/coordinates/functions/getChunkIndexD";
-import { anglesToDirectionVectorDeg } from "../modules/coordinates/functions/anglesToDirectionVectorDeg";
-import { undoClipboard } from "../modules/coordinates/classes/undoClipboard";
 
 // LocalTeleport (Caret Notation ^^^)
 export interface ILocalTeleport {
@@ -52,7 +45,7 @@ export const LocalTeleportFunctions = {
         return LocalTeleportFunctions.norm(a, s);
     },
 };
-Object.defineProperty(String.prototype, "localTeleport", {
+/* Object.defineProperty(String.prototype, "localTeleport", {
     value: function (localTeleport: ILocalTeleport) {
         const { sway_1, heave_2, surge_3 } = localTeleport;
         const { location } = this;
@@ -70,57 +63,7 @@ Object.defineProperty(String.prototype, "localTeleport", {
 
         this.teleport(newPosition);
     },
-});
-Object.defineProperties(Entity.prototype, {
-    directionvector: {
-        get: function directionvector() {
-            return anglesToDirectionVectorDeg(this.rotx, this.roty) as Vector3;
-        },
-        configurable: true,
-        enumerable: true,
-    },
-    chunkIndex: {
-        get: function chunkIndex(): VectorXZ {
-            return getChunkIndexD(this.xz);
-        },
-        configurable: true,
-        enumerable: true,
-    },
-});
-system.runTimeout(() => undoClipboard.cullItemsMissingStructure(), 50);
-export interface DimensionVolumeArea {
-    dimension: Dimension;
-    from: Vector3;
-    to: Vector3;
-}
-export interface Vector4 {
-    w: number;
-    x: number;
-    y: number;
-    z: number;
-}
-export interface Vector5 {
-    v: number;
-    w: number;
-    x: number;
-    y: number;
-    z: number;
-}
-export interface RotationLocation {
-    rotX: number;
-    rotY: number;
-    x: number;
-    y: number;
-    z: number;
-}
-export interface DimensionRotationLocation {
-    dimension: Dimension;
-    rotX: number;
-    rotY: number;
-    x: number;
-    y: number;
-    z: number;
-}
+}); */
  /*
 
 Entity.prototype.localTeleport = function (localTeleport: ILocalTeleport) { 

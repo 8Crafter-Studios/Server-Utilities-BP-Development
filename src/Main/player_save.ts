@@ -1,3 +1,9 @@
-import { startPlayerDataAutoSave } from "../modules/player_save/functions/startPlayerDataAutoSave";
+/**
+ * @deprecated
+ * @file The old `Main/player_save` file.
+ */
 
-startPlayerDataAutoSave();
+/**
+ * The `import.meta` value for the `Main/player_save` file.
+ */
+export const playersavemetaimport = import.meta;

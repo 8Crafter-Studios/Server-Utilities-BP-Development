@@ -1,5 +1,5 @@
 import { world } from "@minecraft/server";
-import type { ban } from "modules/ban/classes/ban";
+import { ban } from "modules/ban/classes/ban";
 
 subscribedEvents.afterPlayerJoin = world.afterEvents.playerJoin.subscribe(
     (event) => {

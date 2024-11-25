@@ -3,12 +3,12 @@ import { ActionFormData, ActionFormResponse, ModalFormData, ModalFormResponse, M
 import { forceShow } from "modules/ui/functions/forceShow";
 import { commandSettings } from "modules/commands/classes/commandSettings";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
-import { command } from "Main/command";
 import { command_settings_format_version } from "modules/commands/constants/command_settings_format_version";
 import { commands_format_version } from "modules/commands/constants/commands_format_version";
 import { mainMenu } from "./mainMenu";
 import { commandCategories } from "./commandCategories";
 import { commandCategoriesDisplay } from "./commandCategoriesDisplay";
+import { command } from "modules/commands/classes/command";
 
 export function manageCommands(
     sourceEntitya: Entity | executeCommandPlayerW | Player

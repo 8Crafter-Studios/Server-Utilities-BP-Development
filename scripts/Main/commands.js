@@ -1,5 +1,3 @@
-import { ExpireError } from "../modules/errors/classes/ExpireError";
-import { TimeoutError } from "../modules/errors/classes/TimeoutError";
 export const cmdsmetaimport = import.meta;
 //globalThis.modules={main, coords, cmds, bans, uis, playersave, spawnprot, mcMath}
 export function cmdsEval(x, eventData, bypassChatInputRequests, runreturn, returnBeforeChatSend, returnBeforeChatCommandsOrChatSend, event, player, sendToPlayers, newMessage, switchTest, switchTestB, commanda) {

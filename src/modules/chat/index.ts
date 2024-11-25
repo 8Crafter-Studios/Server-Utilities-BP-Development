@@ -1,0 +1,15 @@
+/**
+ * @todo uncomment the exports when splitting is done
+ */
+/* export * from "./constants/currentlyRequestedChatInput"
+export * from "./constants/patternColors"
+export * from "./constants/patternColorsMap"
+export * from "./constants/patternFunctionList"
+export * from "./constants/patternList"
+export * from "./functions/chatMessage"
+export * from "./functions/chatSend"
+export * from "./functions/evaluateChatColorType"
+export * from "./functions/requestChatInput"
+export * from "./functions/requestConditionalChatInput" */
+export const exports_5603749806156139082470132985463298047098135609812364098 =
+    undefined;

@@ -1,7 +1,9 @@
-import { Entity, EntityInventoryComponent, EntityEquippableComponent, PlayerCursorInventoryComponent, ItemStack, EquipmentSlot, ContainerSlot, type Vector2, type VectorYZ, type VectorXZ } from "@minecraft/server";
+import { Entity, EntityInventoryComponent, EntityEquippableComponent, PlayerCursorInventoryComponent, ItemStack, EquipmentSlot, ContainerSlot, type Vector2, type VectorYZ, type VectorXZ, type Vector3 } from "@minecraft/server";
 import { MoneySystem } from "ExtraFeatures/money";
-import type { RotationLocation } from "Main/coordinates";
+import type { RotationLocation } from "modules/coordinates/interfaces/RotationLocation";
 import type { PlayerNotifications } from "init/classes/PlayerNotifications";
+import { anglesToDirectionVectorDeg } from "modules/coordinates/functions/anglesToDirectionVectorDeg";
+import { getChunkIndexD } from "modules/coordinates/functions/getChunkIndexD";
 
 Object.defineProperties(Entity.prototype, {
     inventory: {
@@ -175,8 +177,23 @@ Object.defineProperties(Entity.prototype, {
         configurable: true,
         enumerable: true,
     },
+    directionvector: {
+        get: function directionvector() {
+            return anglesToDirectionVectorDeg(this.rotx, this.roty) as Vector3;
+        },
+        configurable: true,
+        enumerable: true,
+    },
+    chunkIndex: {
+        get: function chunkIndex(): VectorXZ {
+            return getChunkIndexD(this.xz);
+        },
+        configurable: true,
+        enumerable: true,
+    },
 });
-export const exports_5603749806156139082470132985463298047098135609812364098 = void undefined as void;
+export const exports_5603749806156139082470132985463298047098135609812364098 =
+    undefined;
 declare module "@minecraft/server" {
     interface Entity {
         /*

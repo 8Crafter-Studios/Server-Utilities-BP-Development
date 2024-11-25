@@ -7,7 +7,6 @@ import { PlayerShopManager, PlayerShop } from "ExtraFeatures/player_shop";
 import { LinkedServerShopCommands, ServerShopManager, ServerShop } from "ExtraFeatures/server_shop";
 import { mainShopSystemSettings } from "ExtraFeatures/shop_main";
 import { PlayerNotifications } from "init/classes/PlayerNotifications";
-import { HSLToRGB } from "legacyModuleAliases/utilities";
 import { fillBlocksCG } from "modules/main/functions/fillBlocksCG";
 import { fillBlocksC } from "modules/main/functions/fillBlocksC";
 import { fillBlocksHWFGB } from "modules/main/functions/fillBlocksHWFGB";
@@ -134,6 +133,7 @@ import { getCommandHelpPage } from "modules/commands_documentation/functions/get
 import { helpCommandChatCommandsList } from "modules/commands_documentation/constants/helpCommandChatCommandsList";
 import { commands } from "modules/commands_list/constants/commands";
 import { ban } from "modules/ban/classes/ban";
+import { HSLToRGB } from "modules/utilities/functions/HSLToRGB";
 
 export function chatCommands(params: {
     returnBeforeChatSend: boolean | undefined;

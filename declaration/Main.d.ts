@@ -1,20 +1,7 @@
 export declare const mainmetaimport: ImportMeta;
-export declare const editorStickMenuOpeningAsyncCancelActionNumbers: {
-    [id: string]: number;
-};
 export declare function mainEval(x: string): any;
 export declare function indirectMainEval(x: string): any;
 export declare function mainRun(x: (...args: any[]) => any, ...args: any[]): any;
-export type Mutable<T> = {
-    -readonly [P in keyof T]: T[P];
-};
-export type MutableRequired<T> = {
-    -readonly [P in keyof T]-?: T[P];
-};
-export type ReadonlyPartial<T> = {
-    +readonly [P in keyof T]+?: T[P];
-};
-export type test1a = [name: number, id: `ID:${number}`, hi: "text"];
 export type FillOptions1 = {
     /**
      * @remarks The type of the block mask to match.

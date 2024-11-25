@@ -1,0 +1,1 @@
+{"version":3,"file":"twoWayModulo.js","sourceRoot":"","sources":["../../../src/init/functions/twoWayModulo.ts"],"names":[],"mappings":"AAAA,UAAU,CAAC,YAAY,GAAG,SAAS,YAAY,CAC3C,MAAc,EACd,MAAc;IAEd,IAAI,MAAM,GAAG,CAAC,EAAE;QACZ,OAAO,MAAM,GAAG,CAAC,MAAM,GAAG,MAAM,CAAC,CAAC;KACrC;SAAM;QACH,OAAO,MAAM,GAAG,MAAM,CAAC;KAC1B;AACL,CAAC,CAAC"}

@@ -1,7 +1,4 @@
-import { Dimension, Entity, system, } from "@minecraft/server";
-import { getChunkIndexD } from "../modules/coordinates/functions/getChunkIndexD";
-import { anglesToDirectionVectorDeg } from "../modules/coordinates/functions/anglesToDirectionVectorDeg";
-import { undoClipboard } from "../modules/coordinates/classes/undoClipboard";
+import {} from "@minecraft/server";
 export const LocalTeleportFunctions = {
     norm: ({ x, y, z }, s) => {
         const l = Math.hypot(x, y, z);
@@ -33,39 +30,25 @@ export const LocalTeleportFunctions = {
         return LocalTeleportFunctions.norm(a, s);
     },
 };
-Object.defineProperty(String.prototype, "localTeleport", {
-    value: function (localTeleport) {
+/* Object.defineProperty(String.prototype, "localTeleport", {
+    value: function (localTeleport: ILocalTeleport) {
         const { sway_1, heave_2, surge_3 } = localTeleport;
         const { location } = this;
         const viewDirection = this.getViewDirection();
+
         const xx = LocalTeleportFunctions.xa(viewDirection, sway_1);
         const yy = LocalTeleportFunctions.ya(viewDirection, heave_2);
         const zz = LocalTeleportFunctions.za(viewDirection, surge_3);
+
         const newPosition = {
             x: location.x + xx.x + yy.x + zz.x,
             y: location.y + xx.y + yy.y + zz.y,
             z: location.z + xx.z + yy.z + zz.z,
         };
+
         this.teleport(newPosition);
     },
-});
-Object.defineProperties(Entity.prototype, {
-    directionvector: {
-        get: function directionvector() {
-            return anglesToDirectionVectorDeg(this.rotx, this.roty);
-        },
-        configurable: true,
-        enumerable: true,
-    },
-    chunkIndex: {
-        get: function chunkIndex() {
-            return getChunkIndexD(this.xz);
-        },
-        configurable: true,
-        enumerable: true,
-    },
-});
-system.runTimeout(() => undoClipboard.cullItemsMissingStructure(), 50);
+}); */
 /*
 
 Entity.prototype.localTeleport = function (localTeleport: ILocalTeleport) {

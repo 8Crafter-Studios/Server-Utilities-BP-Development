@@ -12,7 +12,7 @@ export let bannedPlayersCheckerIntervalID: number | null = null;
 export function startCheckingForBannedPlayers(): void {
     if (bannedPlayersCheckerIntervalID != null) {
         stopCheckingForBannedPlayers();
-    } // this prevents multiple instances of the banned players checked running simultaneously.
+    } // this prevents multiple instances of the banned players checker running simultaneously.
     bannedPlayersCheckerIntervalID = system.runInterval(() => {
         if (
             world.getDynamicProperty("andexdbSettings:banEnabled") ??

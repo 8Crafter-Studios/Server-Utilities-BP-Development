@@ -1,5 +1,5 @@
 import { Dimension, Entity, Block, type Vector3, type Vector2, DimensionType, Player, type DimensionLocation } from "@minecraft/server";
-import type { RotationLocation } from "Main/coordinates";
+import type { RotationLocation } from "modules/coordinates/interfaces/RotationLocation";
 export declare class WorldPosition {
     x: number;
     y: number;

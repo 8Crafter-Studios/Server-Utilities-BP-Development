@@ -1,7 +1,6 @@
 import { Vector3Utils } from "@minecraft/math";
 import { world, system, BlockTypes, BlockPermutation } from "@minecraft/server";
 import { ModalFormData } from "@minecraft/server-ui";
-import { editorStickMenuOpeningAsyncCancelActionNumbers } from "Main";
 import { BlockPattern } from "modules/commands/classes/BlockPattern";
 import { vTStr } from "modules/commands/functions/vTStr";
 import { dirmap } from "modules/coordinates/functions/dirmap";
