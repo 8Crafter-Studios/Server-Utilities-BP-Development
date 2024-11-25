@@ -1,4 +1,9 @@
-import { world, StructureSaveMode, type DimensionLocation, Dimension } from "@minecraft/server";
+import {
+    world,
+    StructureSaveMode,
+    type DimensionLocation,
+    Dimension,
+} from "@minecraft/server";
 import { gwdp } from "init/functions/gwdp";
 
 /**
@@ -15,7 +20,7 @@ export class config {
     static get chatCommandsEnabled() {
         return Boolean(
             world.getDynamicProperty("andexdbSettings:chatCommandsEnabled") ??
-            true
+                true
         );
     }
     static set chatCommandsEnabled(enabled: boolean | undefined) {
@@ -27,7 +32,7 @@ export class config {
     static get chatCommandPrefix() {
         return String(
             world.getDynamicProperty("andexdbSettings:chatCommandPrefix") ??
-            "\\"
+                "\\"
         );
     }
     static set chatCommandPrefix(prefix: string | undefined) {
@@ -59,10 +64,10 @@ export class config {
         )
             ? 3
             : Number(
-                world.getDynamicProperty(
-                    "andexdbSettings:invalidChatCommandAction"
-                ) ?? 3
-            );
+                  world.getDynamicProperty(
+                      "andexdbSettings:invalidChatCommandAction"
+                  ) ?? 3
+              );
     }
     static set invalidChatCommandAction(
         invalidChatCommandAction: number | undefined
@@ -75,7 +80,7 @@ export class config {
     static get undoClipboardMode() {
         return String(
             world.getDynamicProperty("andexdbSettings:undoClipboardMode") ??
-            StructureSaveMode.Memory
+                StructureSaveMode.Memory
         ) as StructureSaveMode;
     }
     static set undoClipboardMode(
@@ -87,13 +92,14 @@ export class config {
         );
     }
     static get spawnCommandLocation() {
-        const v = tryget(() => JSON.parse(
-            String(
-                world.getDynamicProperty(
-                    "andexdbSettings:spawnCommandLocation"
-                ) ?? '{x: null, y: null, z: null, dimension: "overworld"}'
+        const v = tryget(() =>
+            JSON.parse(
+                String(
+                    world.getDynamicProperty(
+                        "andexdbSettings:spawnCommandLocation"
+                    ) ?? '{x: null, y: null, z: null, dimension: "overworld"}'
+                )
             )
-        )
         ) ?? { x: null, y: null, z: null, dimension: "overworld" };
         return (
             tryget(() => ({
@@ -102,14 +108,16 @@ export class config {
                 z: v.z,
                 dimension: dimensionsb[String(v.dimension)] ?? overworld,
             })) ??
-            ({ x: null, y: null, z: null, dimension: overworld } as DimensionLocation |
-            { x: null; y: null; z: null; dimension: Dimension; })
+            ({ x: null, y: null, z: null, dimension: overworld } as
+                | DimensionLocation
+                | { x: null; y: null; z: null; dimension: Dimension })
         );
     }
     static set spawnCommandLocation(
-        spawnCommandLocation: DimensionLocation |
-        { x: null; y: null; z: null; dimension: Dimension; } |
-            undefined
+        spawnCommandLocation:
+            | DimensionLocation
+            | { x: null; y: null; z: null; dimension: Dimension }
+            | undefined
     ) {
         world.setDynamicProperty(
             "andexdbSettings:spawnCommandLocation",
@@ -140,20 +148,22 @@ export class config {
                     },
                     get from() {
                         return (
-                            tryget(() => JSON.parse(
-                                String(
-                                    world.getDynamicProperty(
-                                        "andexdbWorldBorderSettings:overworld.from"
-                                    ) ?? "{x: -29999984, z: -29999984}"
+                            tryget(() =>
+                                JSON.parse(
+                                    String(
+                                        world.getDynamicProperty(
+                                            "andexdbWorldBorderSettings:overworld.from"
+                                        ) ?? "{x: -29999984, z: -29999984}"
+                                    )
                                 )
-                            )
                             ) ?? { x: -29999984, z: -29999984 }
                         );
                     },
                     set from(
-                        from: { x: number; z: number; } |
-                        { x: null; z: null; } |
-                            undefined
+                        from:
+                            | { x: number; z: number }
+                            | { x: null; z: null }
+                            | undefined
                     ) {
                         world.setDynamicProperty(
                             "andexdbWorldBorderSettings:overworld.from",
@@ -164,20 +174,22 @@ export class config {
                     },
                     get to() {
                         return (
-                            tryget(() => JSON.parse(
-                                String(
-                                    world.getDynamicProperty(
-                                        "andexdbWorldBorderSettings:overworld.to"
-                                    ) ?? "{x: 29999984, z: 29999984}"
+                            tryget(() =>
+                                JSON.parse(
+                                    String(
+                                        world.getDynamicProperty(
+                                            "andexdbWorldBorderSettings:overworld.to"
+                                        ) ?? "{x: 29999984, z: 29999984}"
+                                    )
                                 )
-                            )
                             ) ?? { x: 29999984, z: 29999984 }
                         );
                     },
                     set to(
-                        to: { x: number; z: number; } |
-                        { x: null; z: null; } |
-                            undefined
+                        to:
+                            | { x: number; z: number }
+                            | { x: null; z: null }
+                            | undefined
                     ) {
                         world.setDynamicProperty(
                             "andexdbWorldBorderSettings:overworld.to",
@@ -244,8 +256,9 @@ export class config {
                         );
                     },
                     set preventWorldInteractionOutsideBorder(
-                        preventWorldInteractionOutsideBorder: boolean |
-                            undefined
+                        preventWorldInteractionOutsideBorder:
+                            | boolean
+                            | undefined
                     ) {
                         world.setDynamicProperty(
                             "andexdbWorldBorderSettings:overworld.preventWorldInteractionOutsideBorder",
@@ -304,8 +317,9 @@ export class config {
                      * @todo
                      */
                     set showActionbarWarningWhenOutsideBorder(
-                        showActionbarWarningWhenOutsideBorder: boolean |
-                            undefined
+                        showActionbarWarningWhenOutsideBorder:
+                            | boolean
+                            | undefined
                     ) {
                         world.setDynamicProperty(
                             "andexdbWorldBorderSettings:overworld.showActionbarWarningWhenOutsideBorder",
@@ -320,8 +334,9 @@ export class config {
                         );
                     },
                     set showRedScreenOutlineWhenOutsideBorder(
-                        showRedScreenOutlineWhenOutsideBorder: boolean |
-                            undefined
+                        showRedScreenOutlineWhenOutsideBorder:
+                            | boolean
+                            | undefined
                     ) {
                         world.setDynamicProperty(
                             "andexdbWorldBorderSettings:overworld.showRedScreenOutlineWhenOutsideBorder",
@@ -396,20 +411,22 @@ export class config {
                     },
                     get from() {
                         return (
-                            tryget(() => JSON.parse(
-                                String(
-                                    world.getDynamicProperty(
-                                        "andexdbWorldBorderSettings:nether.from"
-                                    ) ?? "{x: -29999984, z: -29999984}"
+                            tryget(() =>
+                                JSON.parse(
+                                    String(
+                                        world.getDynamicProperty(
+                                            "andexdbWorldBorderSettings:nether.from"
+                                        ) ?? "{x: -29999984, z: -29999984}"
+                                    )
                                 )
-                            )
                             ) ?? { x: -29999984, z: -29999984 }
                         );
                     },
                     set from(
-                        from: { x: number; z: number; } |
-                        { x: null; z: null; } |
-                            undefined
+                        from:
+                            | { x: number; z: number }
+                            | { x: null; z: null }
+                            | undefined
                     ) {
                         world.setDynamicProperty(
                             "andexdbWorldBorderSettings:nether.from",
@@ -420,20 +437,22 @@ export class config {
                     },
                     get to() {
                         return (
-                            tryget(() => JSON.parse(
-                                String(
-                                    world.getDynamicProperty(
-                                        "andexdbWorldBorderSettings:nether.to"
-                                    ) ?? "{x: 29999984, z: 29999984}"
+                            tryget(() =>
+                                JSON.parse(
+                                    String(
+                                        world.getDynamicProperty(
+                                            "andexdbWorldBorderSettings:nether.to"
+                                        ) ?? "{x: 29999984, z: 29999984}"
+                                    )
                                 )
-                            )
                             ) ?? { x: 29999984, z: 29999984 }
                         );
                     },
                     set to(
-                        to: { x: number; z: number; } |
-                        { x: null; z: null; } |
-                            undefined
+                        to:
+                            | { x: number; z: number }
+                            | { x: null; z: null }
+                            | undefined
                     ) {
                         world.setDynamicProperty(
                             "andexdbWorldBorderSettings:nether.to",
@@ -500,8 +519,9 @@ export class config {
                         );
                     },
                     set preventWorldInteractionOutsideBorder(
-                        preventWorldInteractionOutsideBorder: boolean |
-                            undefined
+                        preventWorldInteractionOutsideBorder:
+                            | boolean
+                            | undefined
                     ) {
                         world.setDynamicProperty(
                             "andexdbWorldBorderSettings:nether.preventWorldInteractionOutsideBorder",
@@ -556,8 +576,9 @@ export class config {
                      * @todo
                      */
                     set showActionbarWarningWhenOutsideBorder(
-                        showActionbarWarningWhenOutsideBorder: boolean |
-                            undefined
+                        showActionbarWarningWhenOutsideBorder:
+                            | boolean
+                            | undefined
                     ) {
                         world.setDynamicProperty(
                             "andexdbWorldBorderSettings:nether.showActionbarWarningWhenOutsideBorder",
@@ -572,8 +593,9 @@ export class config {
                         );
                     },
                     set showRedScreenOutlineWhenOutsideBorder(
-                        showRedScreenOutlineWhenOutsideBorder: boolean |
-                            undefined
+                        showRedScreenOutlineWhenOutsideBorder:
+                            | boolean
+                            | undefined
                     ) {
                         world.setDynamicProperty(
                             "andexdbWorldBorderSettings:nether.showRedScreenOutlineWhenOutsideBorder",
@@ -648,20 +670,22 @@ export class config {
                     },
                     get from() {
                         return (
-                            tryget(() => JSON.parse(
-                                String(
-                                    world.getDynamicProperty(
-                                        "andexdbWorldBorderSettings:the_end.from"
-                                    ) ?? "{x: -29999984, z: -29999984}"
+                            tryget(() =>
+                                JSON.parse(
+                                    String(
+                                        world.getDynamicProperty(
+                                            "andexdbWorldBorderSettings:the_end.from"
+                                        ) ?? "{x: -29999984, z: -29999984}"
+                                    )
                                 )
-                            )
                             ) ?? { x: -29999984, z: -29999984 }
                         );
                     },
                     set from(
-                        from: { x: number; z: number; } |
-                        { x: null; z: null; } |
-                            undefined
+                        from:
+                            | { x: number; z: number }
+                            | { x: null; z: null }
+                            | undefined
                     ) {
                         world.setDynamicProperty(
                             "andexdbWorldBorderSettings:the_end.from",
@@ -672,20 +696,22 @@ export class config {
                     },
                     get to() {
                         return (
-                            tryget(() => JSON.parse(
-                                String(
-                                    world.getDynamicProperty(
-                                        "andexdbWorldBorderSettings:the_end.to"
-                                    ) ?? "{x: 29999984, z: 29999984}"
+                            tryget(() =>
+                                JSON.parse(
+                                    String(
+                                        world.getDynamicProperty(
+                                            "andexdbWorldBorderSettings:the_end.to"
+                                        ) ?? "{x: 29999984, z: 29999984}"
+                                    )
                                 )
-                            )
                             ) ?? { x: 29999984, z: 29999984 }
                         );
                     },
                     set to(
-                        to: { x: number; z: number; } |
-                        { x: null; z: null; } |
-                            undefined
+                        to:
+                            | { x: number; z: number }
+                            | { x: null; z: null }
+                            | undefined
                     ) {
                         world.setDynamicProperty(
                             "andexdbWorldBorderSettings:the_end.to",
@@ -752,8 +778,9 @@ export class config {
                         );
                     },
                     set preventWorldInteractionOutsideBorder(
-                        preventWorldInteractionOutsideBorder: boolean |
-                            undefined
+                        preventWorldInteractionOutsideBorder:
+                            | boolean
+                            | undefined
                     ) {
                         world.setDynamicProperty(
                             "andexdbWorldBorderSettings:the_end.preventWorldInteractionOutsideBorder",
@@ -808,8 +835,9 @@ export class config {
                      * @todo
                      */
                     set showActionbarWarningWhenOutsideBorder(
-                        showActionbarWarningWhenOutsideBorder: boolean |
-                            undefined
+                        showActionbarWarningWhenOutsideBorder:
+                            | boolean
+                            | undefined
                     ) {
                         world.setDynamicProperty(
                             "andexdbWorldBorderSettings:the_end.showActionbarWarningWhenOutsideBorder",
@@ -824,8 +852,9 @@ export class config {
                         );
                     },
                     set showRedScreenOutlineWhenOutsideBorder(
-                        showRedScreenOutlineWhenOutsideBorder: boolean |
-                            undefined
+                        showRedScreenOutlineWhenOutsideBorder:
+                            | boolean
+                            | undefined
                     ) {
                         world.setDynamicProperty(
                             "andexdbWorldBorderSettings:the_end.showRedScreenOutlineWhenOutsideBorder",
@@ -1023,10 +1052,10 @@ export class config {
                 ) == -1
                     ? Infinity
                     : Number(
-                        world.getDynamicProperty(
-                            "homeSystemSettings:maxHomesPerPlayer"
-                        ) ?? Infinity
-                    );
+                          world.getDynamicProperty(
+                              "homeSystemSettings:maxHomesPerPlayer"
+                          ) ?? Infinity
+                      );
             },
             set maxHomesPerPlayer(maxHomes: number | undefined) {
                 world.setDynamicProperty(
@@ -1043,10 +1072,10 @@ export class config {
                     world.getDynamicProperty(
                         "tpaSystemSettings:tpaSystemEnabled"
                     ) ??
-                    world.getDynamicProperty(
-                        "rtpSystemSettings:rtpSystemEnabled"
-                    ) ??
-                    false
+                        world.getDynamicProperty(
+                            "rtpSystemSettings:rtpSystemEnabled"
+                        ) ??
+                        false
                 );
             },
             set tpaSystemEnabled(enabled: boolean | undefined) {
@@ -1068,10 +1097,10 @@ export class config {
                 )
                     ? 60
                     : Number(
-                        world.getDynamicProperty(
-                            "tpaSystemSettings:timeoutDuration"
-                        ) ?? 60
-                    );
+                          world.getDynamicProperty(
+                              "tpaSystemSettings:timeoutDuration"
+                          ) ?? 60
+                      );
             },
             set timeoutDuration(timeoutDuration: number | undefined) {
                 world.setDynamicProperty(
@@ -1116,7 +1145,7 @@ export class config {
             get rankMode() {
                 return String(
                     world.getDynamicProperty("andexdbSettings:rankMode") ??
-                    "custom_simple"
+                        "custom_simple"
                 );
             },
             set rankMode(rankMode: string | undefined) {
@@ -1223,7 +1252,7 @@ export class config {
                     world.getDynamicProperty(
                         "andexdbSettings:messageTemplateString"
                     ) ??
-                    '§r${timestampenabled?`[${timestamp}]`:""}${ranks}§r${(ranks!="")?" ":""}<${name}§r> ${message}'
+                        '§r${timestampenabled?`[${timestamp}]`:""}${ranks}§r${(ranks!="")?" ":""}<${name}§r> ${message}'
                 );
             },
             set messageTemplateString(
@@ -1232,7 +1261,7 @@ export class config {
                 world.setDynamicProperty(
                     "andexdbSettings:messageTemplateString",
                     messageTemplateString ??
-                    '§r${timestampenabled?`[${timestamp}]`:""}${ranks}§r${(ranks!="")?" ":""}<${name}§r> ${message}'
+                        '§r${timestampenabled?`[${timestamp}]`:""}${ranks}§r${(ranks!="")?" ":""}<${name}§r> ${message}'
                 );
             },
             get defaultRankTemplateString() {
@@ -1395,13 +1424,14 @@ export class config {
                 );
             },
             set restartAntiSpamMuteTimerUponAttemptedMessageSendDuringMute(
-                restartAntiSpamMuteTimerUponAttemptedMessageSendDuringMute: boolean |
-                    undefined
+                restartAntiSpamMuteTimerUponAttemptedMessageSendDuringMute:
+                    | boolean
+                    | undefined
             ) {
                 world.setDynamicProperty(
                     "antispamSettings:restartAntiSpamMuteTimerUponAttemptedMessageSendDuringMute",
                     restartAntiSpamMuteTimerUponAttemptedMessageSendDuringMute ??
-                    false
+                        false
                 );
             },
             get waitTimeAfterAntispamActivation() {
@@ -1414,10 +1444,10 @@ export class config {
                 )
                     ? 60
                     : Number(
-                        world.getDynamicProperty(
-                            "antispamSettings:waitTimeAfterAntispamActivation"
-                        ) ?? 60
-                    );
+                          world.getDynamicProperty(
+                              "antispamSettings:waitTimeAfterAntispamActivation"
+                          ) ?? 60
+                      );
             },
             set waitTimeAfterAntispamActivation(
                 waitTimeInSeconds: number | undefined
@@ -1437,10 +1467,10 @@ export class config {
                 )
                     ? 5
                     : Number(
-                        world.getDynamicProperty(
-                            "antispamSettings:maxTimeBewteenMessagesToTriggerAntiSpam"
-                        ) ?? 5
-                    );
+                          world.getDynamicProperty(
+                              "antispamSettings:maxTimeBewteenMessagesToTriggerAntiSpam"
+                          ) ?? 5
+                      );
             },
             set maxTimeBewteenMessagesToTriggerAntiSpam(
                 maxTimeInSeconds: number | undefined
@@ -1460,10 +1490,10 @@ export class config {
                 )
                     ? 4
                     : Number(
-                        gwdp(
-                            "antispamSettings:antispamTriggerMessageCount"
-                        ) ?? 4
-                    );
+                          gwdp(
+                              "antispamSettings:antispamTriggerMessageCount"
+                          ) ?? 4
+                      );
             },
             set antispamTriggerMessageCount(messageCount: number | undefined) {
                 world.setDynamicProperty(
@@ -1584,10 +1614,10 @@ export class config {
                 )
                     ? 0
                     : Number(
-                        world.getDynamicProperty(
-                            "andexdbSettings:timeZone"
-                        ) ?? 0
-                    );
+                          world.getDynamicProperty(
+                              "andexdbSettings:timeZone"
+                          ) ?? 0
+                      );
             },
             set timeZone(timeZone: number | undefined) {
                 world.setDynamicProperty(
@@ -1610,9 +1640,9 @@ export class config {
                     Number.isNaN(Number(playerDataRefreshRate))
                         ? 5
                         : Math.min(
-                            1000,
-                            Math.max(1, Number(playerDataRefreshRate ?? 20))
-                        )
+                              1000,
+                              Math.max(1, Number(playerDataRefreshRate ?? 20))
+                          )
                 );
             },
             get protectedAreasRefreshRate() {
@@ -1630,12 +1660,12 @@ export class config {
                     Number.isNaN(Number(protectedAreasRefreshRate))
                         ? 200
                         : Math.min(
-                            1000000,
-                            Math.max(
-                                1,
-                                Number(protectedAreasRefreshRate ?? 200)
-                            )
-                        )
+                              1000000,
+                              Math.max(
+                                  1,
+                                  Number(protectedAreasRefreshRate ?? 200)
+                              )
+                          )
                 );
             },
             get bannedPlayersRefreshRate() {
@@ -1653,18 +1683,18 @@ export class config {
                     Number.isNaN(Number(bannedPlayersRefreshRate))
                         ? 20
                         : Math.min(
-                            1000,
-                            Math.max(
-                                1,
-                                Number(bannedPlayersRefreshRate ?? 20)
-                            )
-                        )
+                              1000,
+                              Math.max(
+                                  1,
+                                  Number(bannedPlayersRefreshRate ?? 20)
+                              )
+                          )
                 );
             },
             get debugMode() {
                 return Boolean(
                     world.getDynamicProperty("andexdbSettings:debugMode") ??
-                    false
+                        false
                 );
             },
             set debugMode(debugMode: boolean | undefined) {
@@ -1702,13 +1732,14 @@ export class config {
                 );
             },
             set hideWatchdogTerminationCrashEnabledWarningsOnStartup(
-                hideWatchdogTerminationCrashEnabledWarningsOnStartup: boolean |
-                    undefined
+                hideWatchdogTerminationCrashEnabledWarningsOnStartup:
+                    | boolean
+                    | undefined
             ) {
                 world.setDynamicProperty(
                     "andexdbSettings:hideWatchdogTerminationCrashEnabledWarningsOnStartup",
                     hideWatchdogTerminationCrashEnabledWarningsOnStartup ??
-                    false
+                        false
                 );
             },
             /**
@@ -1756,8 +1787,9 @@ export class config {
                 );
             },
             set spreadPlayerInventoryDataSavesOverMultipleTicks(
-                spreadPlayerInventoryDataSavesOverMultipleTicks: boolean |
-                    undefined
+                spreadPlayerInventoryDataSavesOverMultipleTicks:
+                    | boolean
+                    | undefined
             ) {
                 world.setDynamicProperty(
                     "andexdbSettings:spreadPlayerInventoryDataSavesOverMultipleTicks",
@@ -1833,17 +1865,18 @@ export class config {
         return Object.fromEntries(
             Object.getOwnPropertyNames(config)
                 .filter(
-                    (n) => ![
-                        "constructor",
-                        "toString",
-                        "toLocaleString",
-                        "valueOf",
-                        "hasOwnProperty",
-                        "name",
-                        "prototype",
-                        "reset",
-                        "length",
-                    ].includes(n)
+                    (n) =>
+                        ![
+                            "constructor",
+                            "toString",
+                            "toLocaleString",
+                            "valueOf",
+                            "hasOwnProperty",
+                            "name",
+                            "prototype",
+                            "reset",
+                            "length",
+                        ].includes(n)
                 )
                 .map((n) => [n, config[n]])
         );

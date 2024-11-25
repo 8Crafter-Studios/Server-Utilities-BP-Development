@@ -7,3 +7,12 @@ export function sedp(
 ) {
     return entity.setDynamicProperty(propertyId, newValue);
 }
+Object.defineProperty(globalThis, 'sedp', {
+    value: sedp,
+    configurable: true,
+    enumerable: true,
+    writable: false,
+})
+declare global {
+    const sedp: typeof import('./sedp').sedp;
+}

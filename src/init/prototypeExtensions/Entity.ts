@@ -1,0 +1,257 @@
+import { Entity, EntityInventoryComponent, EntityEquippableComponent, PlayerCursorInventoryComponent, ItemStack, EquipmentSlot, ContainerSlot, type Vector2, type VectorYZ, type VectorXZ } from "@minecraft/server";
+import { MoneySystem } from "ExtraFeatures/money";
+import type { RotationLocation } from "Main/coordinates";
+import type { PlayerNotifications } from "init/classes/PlayerNotifications";
+
+Object.defineProperties(Entity.prototype, {
+    inventory: {
+        get: function inventory(): EntityInventoryComponent | undefined {
+            return (this as Entity).getComponent("inventory");
+        },
+        configurable: true,
+        enumerable: true,
+    },
+    equippable: {
+        get: function equippable(): EntityEquippableComponent | undefined {
+            return (this as Entity).getComponent("equippable");
+        },
+        configurable: true,
+        enumerable: true,
+    },
+    cursorInventory: {
+        get: function cursorInventory():
+            | PlayerCursorInventoryComponent
+            | undefined {
+            return (this as Entity).getComponent("cursor_inventory");
+        },
+        configurable: true,
+        enumerable: true,
+    },
+    heldItem: {
+        get: function heldItem(): ItemStack | undefined {
+            if (!!!(this as Entity).getComponent("equippable")) {
+                return undefined;
+            } else {
+                return (this as Entity)
+                    .getComponent("equippable")
+                    .getEquipment(EquipmentSlot.Mainhand);
+            }
+        },
+        configurable: true,
+        enumerable: true,
+    },
+    activeSlot: {
+        get: function activeSlot(): ContainerSlot | undefined {
+            if (!!!(this as Entity).getComponent("equippable")) {
+                return undefined;
+            } else {
+                return (this as Entity)
+                    .getComponent("equippable")
+                    .getEquipmentSlot(EquipmentSlot.Mainhand);
+            }
+        },
+        configurable: true,
+        enumerable: true,
+    },
+    moneySystem: {
+        get: function moneySystem(): MoneySystem {
+            return MoneySystem.get(this as Entity);
+        },
+        configurable: true,
+        enumerable: true,
+    },
+    dimensionLocation: {
+        get: function dimensionLocation() {
+            return {
+                x: this.x,
+                y: this.y,
+                z: this.z,
+                dimension: this.dimension,
+            };
+        },
+        configurable: true,
+        enumerable: true,
+    },
+    locationstring: {
+        get: function locationstring() {
+            return this.x + " " + this.y + " " + this.z;
+        },
+        configurable: true,
+        enumerable: true,
+    },
+    rotationstring: {
+        get: function rotationstring() {
+            return this.rotx + " " + this.roty;
+        },
+        configurable: true,
+        enumerable: true,
+    },
+    locationrotation: {
+        get: function locationrotation(): RotationLocation {
+            return {
+                x: this.x,
+                y: this.y,
+                z: this.z,
+                rotX: this.rotx,
+                rotY: this.roty,
+            };
+        },
+        configurable: true,
+        enumerable: true,
+    },
+    xy: {
+        get: function xy(): Vector2 {
+            return { x: this.x, y: this.y };
+        },
+        configurable: true,
+        enumerable: true,
+    },
+    yz: {
+        get: function yz(): VectorYZ {
+            return { y: this.y, z: this.z };
+        },
+        configurable: true,
+        enumerable: true,
+    },
+    xz: {
+        get: function xz(): VectorXZ {
+            return { x: this.x, z: this.z };
+        },
+        configurable: true,
+        enumerable: true,
+    },
+    x: {
+        get: function x() {
+            return this.location.x;
+        },
+        configurable: true,
+        enumerable: true,
+    },
+    y: {
+        get: function y() {
+            return this.location.y;
+        },
+        configurable: true,
+        enumerable: true,
+    },
+    z: {
+        get: function z() {
+            return this.location.z;
+        },
+        configurable: true,
+        enumerable: true,
+    },
+    rotx: {
+        get: function rotx() {
+            return this.getRotation().x;
+        },
+        configurable: true,
+        enumerable: true,
+    },
+    roty: {
+        get: function roty() {
+            return this.getRotation().y;
+        },
+        configurable: true,
+        enumerable: true,
+    },
+    timeZone: {
+        get: function timeZone() {
+            return (
+                this.getDynamicProperty("andexdbPersonalSettings:timeZone") ??
+                config.system.timeZone
+            )
+                .toString()
+                .toNumber();
+        },
+        set: function timeZone(
+            timezone: number | string | boolean | null | undefined
+        ) {
+            this.setDynamicProperty(
+                "andexdbPersonalSettings:timeZone",
+                !!timezone ? timezone.toString() : undefined
+            );
+        },
+        configurable: true,
+        enumerable: true,
+    },
+});
+export const exports_5603749806156139082470132985463298047098135609812364098 = void undefined as void;
+declare module "@minecraft/server" {
+    interface Entity {
+        /*
+        id: `${number}`*/
+        /**
+         * Defines this entity's inventory properties.
+         */
+        get inventory(): EntityInventoryComponent | undefined;
+        /**
+         * Provides access to a mob's equipment slots. This component
+         * exists for all mob entities.
+         * @example givePlayerElytra.ts
+         * ```typescript
+         * // Gives the player Elytra
+         * import { EquipmentSlot, ItemStack, Player, EntityComponentTypes } from '@minecraft/server';
+         * import { MinecraftItemTypes } from '@minecraft/vanilla-data';
+         *
+         * function giveEquipment(player: Player) {
+         *     const equipmentCompPlayer = player.getComponent(EntityComponentTypes.Equippable);
+         *     if (equipmentCompPlayer) {
+         *         equipmentCompPlayer.setEquipment(EquipmentSlot.Chest, new ItemStack(MinecraftItemTypes.Elytra));
+         *     }
+         * }
+         * ```
+         * @example givePlayerEquipment.ts
+         * ```typescript
+         * // Gives the player some equipment
+         * import { EquipmentSlot, ItemStack, Player, EntityComponentTypes } from '@minecraft/server';
+         * import { MinecraftItemTypes } from '@minecraft/vanilla-data';
+         *
+         * function giveEquipment(player: Player) {
+         *     const equipmentCompPlayer = player.getComponent(EntityComponentTypes.Equippable);
+         *     if (equipmentCompPlayer) {
+         *         equipmentCompPlayer.setEquipment(EquipmentSlot.Head, new ItemStack(MinecraftItemTypes.GoldenHelmet));
+         *         equipmentCompPlayer.setEquipment(EquipmentSlot.Chest, new ItemStack(MinecraftItemTypes.IronChestplate));
+         *         equipmentCompPlayer.setEquipment(EquipmentSlot.Legs, new ItemStack(MinecraftItemTypes.DiamondLeggings));
+         *         equipmentCompPlayer.setEquipment(EquipmentSlot.Feet, new ItemStack(MinecraftItemTypes.NetheriteBoots));
+         *         equipmentCompPlayer.setEquipment(EquipmentSlot.Mainhand, new ItemStack(MinecraftItemTypes.WoodenSword));
+         *         equipmentCompPlayer.setEquipment(EquipmentSlot.Offhand, new ItemStack(MinecraftItemTypes.Shield));
+         *     } else {
+         *         console.warn('No equipment component found on player');
+         *     }
+         * }
+         * ```
+         */
+        get equippable(): EntityEquippableComponent | undefined;
+        /**
+         * Represents the players cursor inventory. Used when moving
+         * items between between containers in the inventory UI. Not
+         * used with touch controls.
+         *
+         * Only works on players, on non-players it will return undefined.
+         *
+         * This returns the same value as `Entity.prototype.getComponent("cursor_inventory")`.
+         */
+        get cursorInventory(): PlayerCursorInventoryComponent | undefined;
+        get heldItem(): ItemStack | undefined;
+        get activeSlot(): ContainerSlot | undefined;
+        get moneySystem(): MoneySystem;
+        get playerNotifications(): PlayerNotifications;
+        get dimensionLocation(): DimensionLocation;
+        get locationstring(): `${number} ${number} ${number}`;
+        get rotationstring(): `${number} ${number}`;
+        get locationrotation(): RotationLocation;
+        get directionvector(): Vector3;
+        get xy(): Vector2;
+        get yz(): VectorYZ;
+        get xz(): VectorXZ;
+        get chunkIndex(): VectorXZ;
+        get x(): number;
+        get y(): number;
+        get z(): number;
+        get rotx(): number;
+        get roty(): number;
+        get timeZone(): number;
+        set timeZone(timezone: number | string | boolean | null | undefined);
+    }
+}

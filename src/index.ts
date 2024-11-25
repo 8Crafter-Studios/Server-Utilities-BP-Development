@@ -1,7 +1,7 @@
 import { system, world } from "@minecraft/server";
 
 globalThis.beforeScriptStartTick = system.currentTick;
-export const current_format_version = "1.26.0-rc.3+BUILD.1";
+export const current_format_version = "1.27.0-preview.20+BUILD.1";
 globalThis.format_version = current_format_version
 export const supported_minecraft_version = "1.21.4x";
 globalThis.entity_scale_format_version = null;
@@ -20,6 +20,9 @@ globalThis.modules={
         constants: {},
     },
 } as any;
+globalThis.subscribedEvents = {} as { [eventName: string]: Function };
+globalThis.repeatingIntervals = {} as { [intervalName: string]: number };
+globalThis.tempVariables = {};
 import "Assets/classes/JSONB"
 import "Global"
   

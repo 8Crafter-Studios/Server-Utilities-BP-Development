@@ -8,3 +8,12 @@ export function sidp(
 ) {
     return item.setDynamicProperty(propertyId, newValue);
 }
+Object.defineProperty(globalThis, 'sidp', {
+    value: sidp,
+    configurable: true,
+    enumerable: true,
+    writable: false,
+})
+declare global {
+    const sidp: typeof import('./sidp').sidp;
+}

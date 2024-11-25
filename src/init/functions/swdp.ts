@@ -6,3 +6,12 @@ export function swdp(
 ) {
     return world.setDynamicProperty(propertyId, newValue);
 }
+Object.defineProperty(globalThis, 'swdp', {
+    value: swdp,
+    configurable: true,
+    enumerable: true,
+    writable: false,
+})
+declare global {
+    const swdp: typeof import('./swdp').swdp;
+}
