@@ -20,4 +20,4 @@ export function getCommandHelpPageForModBayCommandsDocumentation(commandName) {
             ? ""
             : "\nVersion: " + cmd.command_version}`.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replace(!cmd.commandName.startsWith("\\") ? "\\" + cmd.commandName : cmd.commandName, "<h3>" + (!cmd.commandName.startsWith("\\") ? "\\" + cmd.commandName : cmd.commandName) + "</h3>").replaceAll(/(?<!\<\/h3\>)\n(?!\<h3\>)/g, "</p>\n<p>").replaceAll(/(?<=\<\/h3\>)\n(?!\<h3\>)/g, "\n<p>").replaceAll(/(?<!\<\/h3\>)\n(?=\<h3\>)/g, "</p>\n") + "</p>";
 }
-//# sourceMappingURL=getCommandHelpPageForModBayCommandsDocumentation.js.map
+//# sourceMappingURL=CMDHelpMB.js.map
