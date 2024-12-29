@@ -2,25 +2,25 @@ import { system, world } from "@minecraft/server";
 
 import * as GameTest from "@minecraft/server-gametest";
 import * as mcServer from "@minecraft/server";
-import * as mcServerUi from "@minecraft/server-ui";/*
-import * as mcServerAdmin from "@minecraft/server-admin";*//*
-import * as mcServerNet from "@minecraft/server-net";*//*
-import * as mcDebugUtilities from "@minecraft/debug-utilities";*//*
-import * as mcCommon from "@minecraft/common";*//*
+import * as mcServerUi from "@minecraft/server-ui"; /*
+import * as mcServerAdmin from "@minecraft/server-admin";*/ /*
+import * as mcServerNet from "@minecraft/server-net";*/ /*
+import * as mcDebugUtilities from "@minecraft/debug-utilities";*/ /*
+import * as mcCommon from "@minecraft/common";*/ /*
 import * as mcVanillaData from "@minecraft/vanilla-data";*/
-import "initializeMainGlobalVariables"
-import "Assets/classes/JSONB"
-import "Global"
-import 'init/index';
-  
+import "initializeMainGlobalVariables";
+import "Assets/classes/JSONB";
+import "Global";
+import "init/index.js";
+
 /*
 import "GameTestScripts/AllayTests.js";
 import "GameTestScripts/APITests.js";*/
-import "GameTestScripts/BlockEventTests.js";/*
+import "GameTestScripts/BlockEventTests.js"; /*
 import "GameTestScripts/BlockTests.js";*/
 import "GameTestScripts/ComponentTests.js";
 import "GameTestScripts/CommandTests.js";
-import "GameTestScripts/DebugTests.js";/*
+import "GameTestScripts/DebugTests.js"; /*
 import "GameTestScripts/DispenserTests.js";
 import "GameTestScripts/DoorTests.js";
 import "GameTestScripts/DripstoneTests.js";
@@ -30,7 +30,7 @@ import "GameTestScripts/EntityTests.js";
 import "GameTestScripts/ExtensionTests.js";
 import "GameTestScripts/FireAvoidTests.js";
 import "GameTestScripts/FrogTests.js";*/
-import "GameTestScripts/GameTestExtensions.js";/*
+import "GameTestScripts/GameTestExtensions.js"; /*
 import "GameTestScripts/MinecartTests.js";
 import "GameTestScripts/MobTests.js";
 import "GameTestScripts/MultifaceTests.js";
@@ -44,14 +44,14 @@ import "GameTestScripts/SmallMobTests.js";
 import "GameTestScripts/BigMobTests.js";
 import "GameTestScripts/RaycastingTests.js";
 import "GameTestScripts/RedstoneTests.js";*/
-import "GameTestScripts/SimulatedPlayerTests.js";/*
+import "GameTestScripts/SimulatedPlayerTests.js"; /*
 import "GameTestScripts/RespawnAnchorTests.js";
 import "GameTestScripts/PlaceSeedsTests.js";
 import "GameTestScripts/ItemTests.js";*/
-import "GameTestScripts/ItemEnchantmentsTests.js";/*
+import "GameTestScripts/ItemEnchantmentsTests.js"; /*
 import "GameTestScripts/SculkTests.js";
 import "GameTestScripts/VibrationTests.js";
-import "GameTestScripts/EnchantmentTests.js";*//*
+import "GameTestScripts/EnchantmentTests.js";*/ /*
 import "Eval.js";*/
 import "legacyModuleAliases/commands_documentation.js";
 import "legacyModuleAliases/commands.js";
@@ -93,11 +93,11 @@ import * as semver from "semver";
 export const modulesMap = {
     mcServer: mcServer,
     mcServerUi,
-    GameTest,/*
+    GameTest /*
     mcServerAdmin,
     mcDebugUtilities,
     mcCommon,
-    mcVanillaData,*/
+    mcVanillaData,*/,
     main,
     /**
      * This is an alias of {@link modules.assets.constants.transformrecipes}
@@ -116,12 +116,12 @@ export const modulesMap = {
     semver,
     ["@minecraft/server"]: mcServer,
     ["@minecraft/server-ui"]: mcServerUi,
-    ["@minecraft/server-gametest"]: GameTest,/*
+    ["@minecraft/server-gametest"]: GameTest /*
     ["@minecraft/common"]: mcCommon,
     ["@minecraft/server-admin"]: mcServerAdmin,
     ["@minecraft/server-net"]: mcServerNet 
     ["@minecraft/debug-utilities"]: mcDebugUtilities 
-    ["@minecraft/vanilla-data"]: mcVanillaData,*/
+    ["@minecraft/vanilla-data"]: mcVanillaData,*/,
     ["@minecraft/math"]: mcMath,
     chat,
     cmdutils,
@@ -141,17 +141,36 @@ export const modulesMap = {
             charMaps: await import("Assets/constants/charMaps"),
             structuremappings,
             transformrecipes,
-        }
-    }
-}
-globalThis.modules=modulesMap
+        },
+    },
+};
+globalThis.modules = modulesMap;
 declare global {
     namespace globalThis {
-        var modules: typeof modulesMap
+        var modules: typeof modulesMap;
     }
 }
-import 'Main';
+import "Main";
 import { undoClipboard } from "modules/coordinates/classes/undoClipboard";
-globalThis.scriptStartTick=system.currentTick
-world.setDynamicProperty("format_version", format_version)
+globalThis.scriptStartTick = system.currentTick;
+world.setDynamicProperty("format_version", format_version);
 system.runTimeout(() => undoClipboard.cullItemsMissingStructure(), 50);
+// ${se}srun(async()=>console.log(JSON.stringify(Object.fromEntries((await import("directoryTree")).scripts.filter(s=>!!s.match(/^BP\/scripts\/modules\/[^\/]+\/.+\/[^\/]+\.js$/)).map(s=>[s, 0])), undefined, 4)))
+// ${se}srun(async()=>console.log("{"+(await import("directoryTree")).scripts.filter(s=>!!s.match(/^BP\/scripts\/modules\/[^\/]+\/.+\/[^\/]+\.js$/)).map(v=>`\n    ${JSON.stringify(v)}: typeof import("./${JSON.stringify(v.slice(11, -3)).slice(1)})`)+"\n}"))
+/*
+${se}srun(async()=>{console.log(JSON.stringify(Object.fromEntries(await [
+    "ban",
+    "chat",
+    "command_utilities",
+    "commands",
+    "commands_documentation",
+    "commands_list",
+    "coordinates",
+    "errors",
+    "main",
+    "player_save",
+    "spawn_protection",
+    "ui",
+    "utilities",
+].mapAsync(async v=>[v, (await import("directoryTree")).optionalModuleObjectImportFilePaths.filter(f=>f.startsWith(`BP/scripts/modules/${v}/`))])), undefined, 4))})
+*/

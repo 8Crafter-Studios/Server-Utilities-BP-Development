@@ -38,6 +38,7 @@ export function manageCommands(sourceEntitya) {
             default:
                 let category = commandCategories[r.selection];
                 let categoryDisplay = commandCategories[r.selection];
+                // pbsend(player, command.getCustomCommands().find((v) => v.commandName == "tpmenu").settings);
                 let commandsListB = category == "all"
                     ? commandsList
                     : category == "built-in"
@@ -584,18 +585,18 @@ export function manageCommands(sourceEntitya) {
                                         let form6 = new ModalFormData();
                                         form6.title(`Command Settings for ${commandsItem.type} ${commandsItem.commandName}`);
                                         form6.textField("Required Tags", "JSON", JSONStringify(commandsItem
-                                            .settings
-                                            .requiredTags ?? [
+                                            ?.settings
+                                            ?.requiredTags ?? [
                                             "canUseChatCommands",
                                         ]));
                                         form6.slider("Required Permission Level", 0, 15, 1, Number(commandsItem
-                                            .settings
-                                            .requiredPermissionLevel ??
+                                            ?.settings
+                                            ?.requiredPermissionLevel ??
                                             0));
                                         form6.toggle("Requires OP", commandsItem.settings
-                                            .requiresOp);
+                                            ?.requiresOp ?? false);
                                         form6.toggle("Enabled", commandsItem.settings
-                                            .enabled);
+                                            ?.enabled ?? true);
                                         form6.submitButton("Save");
                                         forceShow(form6, sourceEntity)
                                             .then((ha) => {

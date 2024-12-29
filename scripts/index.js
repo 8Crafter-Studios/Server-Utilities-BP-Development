@@ -10,7 +10,7 @@ import * as mcVanillaData from "@minecraft/vanilla-data";*/
 import "initializeMainGlobalVariables";
 import "Assets/classes/JSONB";
 import "Global";
-import 'init/index';
+import "init/index.js";
 /*
 import "GameTestScripts/AllayTests.js";
 import "GameTestScripts/APITests.js";*/
@@ -91,7 +91,11 @@ import * as semver from "semver";
 export const modulesMap = {
     mcServer: mcServer,
     mcServerUi,
-    GameTest,
+    GameTest /*
+    mcServerAdmin,
+    mcDebugUtilities,
+    mcCommon,
+    mcVanillaData,*/,
     main,
     /**
      * This is an alias of {@link modules.assets.constants.transformrecipes}
@@ -110,7 +114,12 @@ export const modulesMap = {
     semver,
     ["@minecraft/server"]: mcServer,
     ["@minecraft/server-ui"]: mcServerUi,
-    ["@minecraft/server-gametest"]: GameTest,
+    ["@minecraft/server-gametest"]: GameTest /*
+    ["@minecraft/common"]: mcCommon,
+    ["@minecraft/server-admin"]: mcServerAdmin,
+    ["@minecraft/server-net"]: mcServerNet
+    ["@minecraft/debug-utilities"]: mcDebugUtilities
+    ["@minecraft/vanilla-data"]: mcVanillaData,*/,
     ["@minecraft/math"]: mcMath,
     chat,
     cmdutils,
@@ -130,13 +139,32 @@ export const modulesMap = {
             charMaps: await import("Assets/constants/charMaps"),
             structuremappings,
             transformrecipes,
-        }
-    }
+        },
+    },
 };
 globalThis.modules = modulesMap;
-import 'Main';
+import "Main";
 import { undoClipboard } from "modules/coordinates/classes/undoClipboard";
 globalThis.scriptStartTick = system.currentTick;
 world.setDynamicProperty("format_version", format_version);
 system.runTimeout(() => undoClipboard.cullItemsMissingStructure(), 50);
+// ${se}srun(async()=>console.log(JSON.stringify(Object.fromEntries((await import("directoryTree")).scripts.filter(s=>!!s.match(/^BP\/scripts\/modules\/[^\/]+\/.+\/[^\/]+\.js$/)).map(s=>[s, 0])), undefined, 4)))
+// ${se}srun(async()=>console.log("{"+(await import("directoryTree")).scripts.filter(s=>!!s.match(/^BP\/scripts\/modules\/[^\/]+\/.+\/[^\/]+\.js$/)).map(v=>`\n    ${JSON.stringify(v)}: typeof import("./${JSON.stringify(v.slice(11, -3)).slice(1)})`)+"\n}"))
+/*
+${se}srun(async()=>{console.log(JSON.stringify(Object.fromEntries(await [
+    "ban",
+    "chat",
+    "command_utilities",
+    "commands",
+    "commands_documentation",
+    "commands_list",
+    "coordinates",
+    "errors",
+    "main",
+    "player_save",
+    "spawn_protection",
+    "ui",
+    "utilities",
+].mapAsync(async v=>[v, (await import("directoryTree")).optionalModuleObjectImportFilePaths.filter(f=>f.startsWith(`BP/scripts/modules/${v}/`))])), undefined, 4))})
+*/
 //# sourceMappingURL=index.js.map

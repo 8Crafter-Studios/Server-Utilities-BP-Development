@@ -4,14 +4,14 @@ import { command_settings_format_version } from "modules/commands/constants/comm
 import type { command_formats_type_list } from "modules/commands/types/command_formats_type_list";
 import { commands } from "modules/commands_list/constants/commands";
 
-export class commandSettings {
-    type: "built-in" | "custom" | "unknown";
+export class commandSettings<T extends "built-in" | "custom" | "unknown" = "unknown"> {
+    type: T;
     commandName: string;
     customCommandId?: string;
     commandSettingsId: string;
-    command?: command;
-    defaultSettings?: {
-        type: "built-in" | "custom" | "unknown";
+    command?: command<T>;
+    defaultSettings?: T extends "built-in" | "unknown" ? {
+        type: T;
         requiredTags: string[];
         formatting_code: string;
         commandName: string;
@@ -24,13 +24,28 @@ export class commandSettings {
         functional?: boolean;
         hidden?: boolean;
         enabled?: boolean;
+    } : {
+        type: T;
+        requiredTags: string[];
+        formatting_code?: any;
+        commandName: string;
+        escregexp?: any;
+        formats?: any;
+        command_version: string;
+        description?: any;
+        commandSettingsId: string;
+        deprecated?: any;
+        functional?: any;
+        hidden?: any;
+        enabled?: any;
     };
-    constructor(commandSettingsId: string, command?: command) {
-        this.type = commandSettingsId.startsWith("built-inCommandSettings:")
+    #unsaved_props = {};
+    constructor(commandSettingsId: string, command?: command<T>) {
+        this.type = (commandSettingsId.startsWith("built-inCommandSettings:")
             ? "built-in"
             : commandSettingsId.startsWith("customCommandSettings:")
                 ? "custom"
-                : "unknown";
+                : "unknown") as T;
         this.commandName = commandSettingsId.startsWith(
             "built-inCommandSettings:"
         )
@@ -56,8 +71,18 @@ export class commandSettings {
         this.command = command;
         this.defaultSettings =
             this.type == "built-in" || this.type == "unknown"
-                ? commands.find((v) => v.commandName == this.commandName)
-                : undefined;
+                ? commands.find((v) => v.commandName == this.commandName) as unknown as typeof this.defaultSettings
+                : {
+                    type: "custom",
+                    requiredTags: ["canUseChatCommands"],
+                    commandName: this.commandName,
+                    customCommandId: this.customCommandId,
+                    commandSettingsId: this.commandSettingsId,
+                    enabled: true,
+                    requiredPermissionLevel: 0,
+                    requiresOp: false,
+                    settings_version: this.settings_version,
+                } as unknown as typeof this.defaultSettings;
     }
     get parsed() {
         return JSONParse(
@@ -72,16 +97,16 @@ export class commandSettings {
         );
     }
     set enabled(enabled) {
-        this.enabled = enabled;
+        this.save({enabled});
     }
     get requiredTags() {
         return (
             (this?.parsed?.requiredTags as string[]) ??
-            this.defaultSettings.requiredTags ?? ["canUseChatCommands"]
+            this?.defaultSettings?.requiredTags ?? ["canUseChatCommands"]
         );
     }
     set requiredTags(requiredTags) {
-        this.requiredTags = requiredTags;
+        this.save({requiredTags});
     }
     get requiredPermissionLevel() {
         return (this?.parsed?.requiredPermissionLevel as string | number) ?? 0;
@@ -89,13 +114,13 @@ export class commandSettings {
     set requiredPermissionLevel(
         requiredPermissionLevel: string | number | undefined
     ) {
-        this.requiredPermissionLevel = requiredPermissionLevel;
+        this.save({requiredPermissionLevel});
     }
     get requiresOp() {
         return (this?.parsed?.requiresOp as boolean) ?? false;
     }
     set requiresOp(requiresOp) {
-        this.requiresOp = requiresOp;
+        this.save({requiresOp});
     } /*
     get description(){return this?.parsed?.description ?? true}*/
 

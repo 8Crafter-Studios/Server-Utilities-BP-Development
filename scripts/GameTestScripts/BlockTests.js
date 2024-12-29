@@ -8,11 +8,11 @@ const FALLING_SAND_TEMPLATE_NAME = "BlockTests:falling_sand_template";
 const FALLING_SAND_STARTUP_TICKS = 1;
 const FALLING_SAND_TIMEOUT_TICKS = 20;
 const BLOCKS_THAT_POP_SAND = [
-    ["woodenSlab", "air"],
+    ["woodenSlab", "air"], //replace missing oakSlab() with woodenSlab()
     ["chest", "stone"],
     ["rail", "stone"],
     ["stoneButton", "stone"],
-    ["woodenPressurePlate", "stone"],
+    ["woodenPressurePlate", "stone"], //replace missing OakPressurePlate() with woodenPressurePlate()
     ["torch", "stone"],
     ["soulSand", "air"],
 ];
@@ -23,7 +23,7 @@ const BLOCKS_REPLACED_BY_SAND = [
 ];
 const BLOCKS_THAT_SUPPORT_SAND = [
     BlockTypes.get("stone"),
-    BlockTypes.get("fence"),
+    BlockTypes.get("fence"), //replace missing oakFence() with fence()
     BlockTypes.get("oak_stairs"),
     BlockTypes.get("scaffolding"),
 ];

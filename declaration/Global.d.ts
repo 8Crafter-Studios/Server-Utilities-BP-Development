@@ -496,6 +496,11 @@ declare global {
          * @see {@link modules.main.config}
          */
         static get config(): typeof import("init/classes/config").config;
+        /**
+         * A class containing configuration detailing which functions, classes, and constants from the modules to import into their respective properties on the global modules object.
+         * @see {@link modules.main.moduleImportsConfig}
+         */
+        static get moduleImportsConfig(): typeof import("init/classes/moduleImportsConfig").moduleImportsConfig;
     }
     interface Function {
         readonly lineNumber: number;

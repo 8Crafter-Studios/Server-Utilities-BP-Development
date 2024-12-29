@@ -9,12 +9,13 @@ export class commandSettings {
     commandSettingsId;
     command;
     defaultSettings;
+    #unsaved_props = {};
     constructor(commandSettingsId, command) {
-        this.type = commandSettingsId.startsWith("built-inCommandSettings:")
+        this.type = (commandSettingsId.startsWith("built-inCommandSettings:")
             ? "built-in"
             : commandSettingsId.startsWith("customCommandSettings:")
                 ? "custom"
-                : "unknown";
+                : "unknown");
         this.commandName = commandSettingsId.startsWith("built-inCommandSettings:")
             ? commandSettingsId.slice(24)
             : commandSettingsId.startsWith("customCommandSettings:")
@@ -36,7 +37,17 @@ export class commandSettings {
         this.defaultSettings =
             this.type == "built-in" || this.type == "unknown"
                 ? commands.find((v) => v.commandName == this.commandName)
-                : undefined;
+                : {
+                    type: "custom",
+                    requiredTags: ["canUseChatCommands"],
+                    commandName: this.commandName,
+                    customCommandId: this.customCommandId,
+                    commandSettingsId: this.commandSettingsId,
+                    enabled: true,
+                    requiredPermissionLevel: 0,
+                    requiresOp: false,
+                    settings_version: this.settings_version,
+                };
     }
     get parsed() {
         return JSONParse(String(world.getDynamicProperty(this.commandSettingsId)));
@@ -47,26 +58,26 @@ export class commandSettings {
             true);
     }
     set enabled(enabled) {
-        this.enabled = enabled;
+        this.save({ enabled });
     }
     get requiredTags() {
         return (this?.parsed?.requiredTags ??
-            this.defaultSettings.requiredTags ?? ["canUseChatCommands"]);
+            this?.defaultSettings?.requiredTags ?? ["canUseChatCommands"]);
     }
     set requiredTags(requiredTags) {
-        this.requiredTags = requiredTags;
+        this.save({ requiredTags });
     }
     get requiredPermissionLevel() {
         return this?.parsed?.requiredPermissionLevel ?? 0;
     }
     set requiredPermissionLevel(requiredPermissionLevel) {
-        this.requiredPermissionLevel = requiredPermissionLevel;
+        this.save({ requiredPermissionLevel });
     }
     get requiresOp() {
         return this?.parsed?.requiresOp ?? false;
     }
     set requiresOp(requiresOp) {
-        this.requiresOp = requiresOp;
+        this.save({ requiresOp });
     } /*
     get description(){return this?.parsed?.description ?? true}*/
     get settings_version() {

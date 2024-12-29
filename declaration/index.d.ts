@@ -4,7 +4,7 @@ import * as mcServerUi from "@minecraft/server-ui";
 import "initializeMainGlobalVariables";
 import "Assets/classes/JSONB";
 import "Global";
-import 'init/index';
+import "init/index.js";
 import "GameTestScripts/BlockEventTests.js";
 import "GameTestScripts/ComponentTests.js";
 import "GameTestScripts/CommandTests.js";
@@ -99,4 +99,4 @@ declare global {
         var modules: typeof modulesMap;
     }
 }
-import 'Main';
+import "Main";

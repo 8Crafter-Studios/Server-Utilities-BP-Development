@@ -336,9 +336,9 @@ GameTest.register("RedstoneTests", "observer_clock_bedrock", (test) => observerC
 GameTest.register("RedstoneTests", "repeater_delay_lines", (test) => {
     const inputPos = new BlockLocationIterator(0, 2, 0);
     const linesPos = [
-        [new BlockLocationIterator(4, 2, 1), new BlockLocationIterator(4, 2, 2), new BlockLocationIterator(4, 2, 3), new BlockLocationIterator(4, 2, 4)],
-        [new BlockLocationIterator(3, 2, 1), new BlockLocationIterator(3, 2, 2), new BlockLocationIterator(3, 2, 3), new BlockLocationIterator(3, 2, 4)],
-        [new BlockLocationIterator(2, 2, 1), new BlockLocationIterator(2, 2, 2), new BlockLocationIterator(2, 2, 3), new BlockLocationIterator(2, 2, 4)],
+        [new BlockLocationIterator(4, 2, 1), new BlockLocationIterator(4, 2, 2), new BlockLocationIterator(4, 2, 3), new BlockLocationIterator(4, 2, 4)], //4-tick delay
+        [new BlockLocationIterator(3, 2, 1), new BlockLocationIterator(3, 2, 2), new BlockLocationIterator(3, 2, 3), new BlockLocationIterator(3, 2, 4)], //3-tick delay
+        [new BlockLocationIterator(2, 2, 1), new BlockLocationIterator(2, 2, 2), new BlockLocationIterator(2, 2, 3), new BlockLocationIterator(2, 2, 4)], //2-tick delay
         [new BlockLocationIterator(1, 2, 1), new BlockLocationIterator(1, 2, 2), new BlockLocationIterator(1, 2, 3), new BlockLocationIterator(1, 2, 4)], //1-tick delay
     ];
     const states = [
@@ -397,9 +397,9 @@ GameTest.register("RedstoneTests", "repeater_delay_lines", (test) => {
 GameTest.register("RedstoneTests", "repeater_delay_lines_bedrock", (test) => {
     const inputPos = new BlockLocationIterator(0, 2, 0);
     const linesPos = [
-        [new BlockLocationIterator(4, 2, 1), new BlockLocationIterator(4, 2, 2), new BlockLocationIterator(4, 2, 3), new BlockLocationIterator(4, 2, 4)],
-        [new BlockLocationIterator(3, 2, 1), new BlockLocationIterator(3, 2, 2), new BlockLocationIterator(3, 2, 3), new BlockLocationIterator(3, 2, 4)],
-        [new BlockLocationIterator(2, 2, 1), new BlockLocationIterator(2, 2, 2), new BlockLocationIterator(2, 2, 3), new BlockLocationIterator(2, 2, 4)],
+        [new BlockLocationIterator(4, 2, 1), new BlockLocationIterator(4, 2, 2), new BlockLocationIterator(4, 2, 3), new BlockLocationIterator(4, 2, 4)], //4-tick delay
+        [new BlockLocationIterator(3, 2, 1), new BlockLocationIterator(3, 2, 2), new BlockLocationIterator(3, 2, 3), new BlockLocationIterator(3, 2, 4)], //3-tick delay
+        [new BlockLocationIterator(2, 2, 1), new BlockLocationIterator(2, 2, 2), new BlockLocationIterator(2, 2, 3), new BlockLocationIterator(2, 2, 4)], //2-tick delay
         [new BlockLocationIterator(1, 2, 1), new BlockLocationIterator(1, 2, 2), new BlockLocationIterator(1, 2, 3), new BlockLocationIterator(1, 2, 4)], //1-tick delay
     ];
     const states = [

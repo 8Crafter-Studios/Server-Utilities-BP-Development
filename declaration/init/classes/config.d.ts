@@ -27,176 +27,176 @@ export declare class config {
     } | undefined);
     static get worldBorder(): {
         readonly overworld: {
-            enabled: boolean;
+            enabled: boolean | undefined;
             from: {
                 x: number;
                 z: number;
             } | {
                 x: null;
                 z: null;
-            };
+            } | undefined;
             to: {
                 x: number;
                 z: number;
             } | {
                 x: null;
                 z: null;
-            };
-            mode: number;
-            damage: number;
-            knockbackH: number;
-            knockbackV: number;
-            preventWorldInteractionOutsideBorder: boolean;
-            tintIntensity: number;
+            } | undefined;
+            mode: number | undefined;
+            damage: number | undefined;
+            knockbackH: number | undefined;
+            knockbackV: number | undefined;
+            preventWorldInteractionOutsideBorder: boolean | undefined;
+            tintIntensity: number | undefined;
             /**
              * d
              * @todo
              */
-            warnPlayersInChat: boolean;
+            warnPlayersInChat: boolean | undefined;
             /**
              * b
              * @todo
              */
-            showActionbarWarningWhenOutsideBorder: boolean;
-            showRedScreenOutlineWhenOutsideBorder: boolean;
-            showBorderParticles: boolean;
+            showActionbarWarningWhenOutsideBorder: boolean | undefined;
+            showRedScreenOutlineWhenOutsideBorder: boolean | undefined;
+            showBorderParticles: boolean | undefined;
             /**
              * @deprecated
              */
-            useShadersCompatibleBorderParticles: boolean;
-            buffer: number;
+            useShadersCompatibleBorderParticles: boolean | undefined;
+            buffer: number | undefined;
         };
         readonly nether: {
-            enabled: boolean;
+            enabled: boolean | undefined;
             from: {
                 x: number;
                 z: number;
             } | {
                 x: null;
                 z: null;
-            };
+            } | undefined;
             to: {
                 x: number;
                 z: number;
             } | {
                 x: null;
                 z: null;
-            };
-            mode: number;
-            damage: number;
-            knockbackH: number;
-            knockbackV: number;
-            preventWorldInteractionOutsideBorder: boolean;
-            tintIntensity: number;
+            } | undefined;
+            mode: number | undefined;
+            damage: number | undefined;
+            knockbackH: number | undefined;
+            knockbackV: number | undefined;
+            preventWorldInteractionOutsideBorder: boolean | undefined;
+            tintIntensity: number | undefined;
             /**
              * @todo
              */
-            warnPlayersInChat: boolean;
+            warnPlayersInChat: boolean | undefined;
             /**
              * @todo
              */
-            showActionbarWarningWhenOutsideBorder: boolean;
-            showRedScreenOutlineWhenOutsideBorder: boolean;
-            showBorderParticles: boolean;
+            showActionbarWarningWhenOutsideBorder: boolean | undefined;
+            showRedScreenOutlineWhenOutsideBorder: boolean | undefined;
+            showBorderParticles: boolean | undefined;
             /**
              * @deprecated
              */
-            useShadersCompatibleBorderParticles: boolean;
-            buffer: number;
+            useShadersCompatibleBorderParticles: boolean | undefined;
+            buffer: number | undefined;
         };
         readonly the_end: {
-            enabled: boolean;
+            enabled: boolean | undefined;
             from: {
                 x: number;
                 z: number;
             } | {
                 x: null;
                 z: null;
-            };
+            } | undefined;
             to: {
                 x: number;
                 z: number;
             } | {
                 x: null;
                 z: null;
-            };
-            mode: number;
-            damage: number;
-            knockbackH: number;
-            knockbackV: number;
-            preventWorldInteractionOutsideBorder: boolean;
-            tintIntensity: number;
+            } | undefined;
+            mode: number | undefined;
+            damage: number | undefined;
+            knockbackH: number | undefined;
+            knockbackV: number | undefined;
+            preventWorldInteractionOutsideBorder: boolean | undefined;
+            tintIntensity: number | undefined;
             /**
              * @todo
              */
-            warnPlayersInChat: boolean;
+            warnPlayersInChat: boolean | undefined;
             /**
              * @todo
              */
-            showActionbarWarningWhenOutsideBorder: boolean;
-            showRedScreenOutlineWhenOutsideBorder: boolean;
-            showBorderParticles: boolean;
+            showActionbarWarningWhenOutsideBorder: boolean | undefined;
+            showRedScreenOutlineWhenOutsideBorder: boolean | undefined;
+            showBorderParticles: boolean | undefined;
             /**
              * @deprecated
              */
-            useShadersCompatibleBorderParticles: boolean;
-            buffer: number;
+            useShadersCompatibleBorderParticles: boolean | undefined;
+            buffer: number | undefined;
         };
     };
     static get shopSystem(): {
         readonly server: {
-            enabled: boolean;
+            enabled: boolean | undefined;
         };
         readonly player: {
-            enabled: boolean;
-            maxShopsPerPlayer: number;
-            allowSellingLockInSlotItems: boolean;
-            allowSellingLockInInventoryItems: boolean;
-            allowSellingKeepOnDeathItems: boolean;
+            enabled: boolean | undefined;
+            maxShopsPerPlayer: number | undefined;
+            allowSellingLockInSlotItems: boolean | undefined;
+            allowSellingLockInInventoryItems: boolean | undefined;
+            allowSellingKeepOnDeathItems: boolean | undefined;
         };
         readonly sign: {
-            enabled: boolean;
+            enabled: boolean | undefined;
         };
     };
     static get homeSystem(): {
-        homeSystemEnabled: boolean;
-        maxHomesPerPlayer: number;
+        homeSystemEnabled: boolean | undefined;
+        maxHomesPerPlayer: number | undefined;
     };
     static get tpaSystem(): {
-        tpaSystemEnabled: boolean;
+        tpaSystemEnabled: boolean | undefined;
         /**
          * The number of seconds after a teleport request is sent before it will time out.
          */
-        timeoutDuration: number;
+        timeoutDuration: number | undefined;
     };
     static get chatRanks(): {
-        chatDisplayTimeStamp: boolean;
-        showRanksOnPlayerNameTags: boolean;
-        rankMode: string;
-        rankDisplayPrefix: string;
-        rankDisplaySuffix: string;
-        nameDisplayPrefix: string;
-        nameDisplaySuffix: string;
-        chatNameAndMessageSeparator: string;
-        rankDisplaySeparator: string;
-        rankTemplateString: string;
-        messageTemplateString: string;
-        defaultRankTemplateString: string;
-        defaultMessageFormatting: string;
-        defaultNameFormatting: string;
-        defaultSeparatorFormatting: string;
-        disableCustomChatMessages: boolean;
-        allowCustomChatMessagesMuting: boolean;
-        autoEscapeChatMessages: boolean;
-        autoURIEscapeChatMessages: boolean;
-        allowChatEscapeCodes: boolean;
+        chatDisplayTimeStamp: boolean | undefined;
+        showRanksOnPlayerNameTags: boolean | undefined;
+        rankMode: string | undefined;
+        rankDisplayPrefix: string | undefined;
+        rankDisplaySuffix: string | undefined;
+        nameDisplayPrefix: string | undefined;
+        nameDisplaySuffix: string | undefined;
+        chatNameAndMessageSeparator: string | undefined;
+        rankDisplaySeparator: string | undefined;
+        rankTemplateString: string | undefined;
+        messageTemplateString: string | undefined;
+        defaultRankTemplateString: string | undefined;
+        defaultMessageFormatting: string | undefined;
+        defaultNameFormatting: string | undefined;
+        defaultSeparatorFormatting: string | undefined;
+        disableCustomChatMessages: boolean | undefined;
+        allowCustomChatMessagesMuting: boolean | undefined;
+        autoEscapeChatMessages: boolean | undefined;
+        autoURIEscapeChatMessages: boolean | undefined;
+        allowChatEscapeCodes: boolean | undefined;
     };
     static get antiSpamSystem(): {
-        antispamEnabled: boolean;
-        restartAntiSpamMuteTimerUponAttemptedMessageSendDuringMute: boolean;
-        waitTimeAfterAntispamActivation: number;
-        maxTimeBewteenMessagesToTriggerAntiSpam: number;
-        antispamTriggerMessageCount: number;
+        antispamEnabled: boolean | undefined;
+        restartAntiSpamMuteTimerUponAttemptedMessageSendDuringMute: boolean | undefined;
+        waitTimeAfterAntispamActivation: number | undefined;
+        maxTimeBewteenMessagesToTriggerAntiSpam: number | undefined;
+        antispamTriggerMessageCount: number | undefined;
     };
     static get ui(): {
         readonly main: {};
@@ -204,35 +204,35 @@ export declare class config {
             /**
              * Moved from {@link config} to {@link config.ui.pages} in version 1.23.0-preview.20+BUILD.1 on 10/04/2024 at 3:10:37 PM PDT.
              */
-            maxPlayersPerManagePlayersPage: number;
+            maxPlayersPerManagePlayersPage: number | undefined;
             /**
              * Moved from {@link config} to {@link config.ui.pages} in version 1.23.0-preview.20+BUILD.1 on 10/04/2024 at 3:10:37 PM PDT.
              */
-            maxBansPerManageBansPage: number;
+            maxBansPerManageBansPage: number | undefined;
             /**
              * Moved from {@link config} to {@link config.ui.pages} in version 1.23.0-preview.20+BUILD.1 on 10/04/2024 at 3:10:37 PM PDT.
              */
-            maxHomesPerManageHomesPage: number;
+            maxHomesPerManageHomesPage: number | undefined;
         };
         readonly other: {
-            useStarWarsReference404Page: boolean;
+            useStarWarsReference404Page: boolean | undefined;
         };
     };
     static get system(): {
-        artificialLagMS: number;
-        timeZone: number;
-        playerDataRefreshRate: number;
-        protectedAreasRefreshRate: number;
-        bannedPlayersRefreshRate: number;
-        debugMode: boolean;
+        artificialLagMS: number | undefined;
+        timeZone: number | undefined;
+        playerDataRefreshRate: number | undefined;
+        protectedAreasRefreshRate: number | undefined;
+        bannedPlayersRefreshRate: number | undefined;
+        debugMode: boolean | undefined;
         /**
          * It is reccommended to leave this set to false.
          */
-        allowWatchdogTerminationCrash: boolean;
+        allowWatchdogTerminationCrash: boolean | undefined;
         /**
          * It is reccommended to leave this set to false.
          */
-        hideWatchdogTerminationCrashEnabledWarningsOnStartup: boolean;
+        hideWatchdogTerminationCrashEnabledWarningsOnStartup: boolean | undefined;
         /**
          * It is reccommended to leave this set to false.
          * @default false
@@ -240,13 +240,13 @@ export declare class config {
          * also
          * false
          */
-        useLegacyPlayerInventoryDataSaveSystem: boolean;
-        playerInventoryDataSaveSystemEnabled: boolean;
-        spreadPlayerInventoryDataSavesOverMultipleTicks: boolean;
-        showEntityScaleNotFoundConsoleLog: boolean;
-        showEntityScaleFoundConsoleLog: boolean;
-        showEntityScaleNotFoundChatLog: boolean;
-        showEntityScaleFoundChatLog: boolean;
+        useLegacyPlayerInventoryDataSaveSystem: boolean | undefined;
+        playerInventoryDataSaveSystemEnabled: boolean | undefined;
+        spreadPlayerInventoryDataSavesOverMultipleTicks: boolean | undefined;
+        showEntityScaleNotFoundConsoleLog: boolean | undefined;
+        showEntityScaleFoundConsoleLog: boolean | undefined;
+        showEntityScaleNotFoundChatLog: boolean | undefined;
+        showEntityScaleFoundChatLog: boolean | undefined;
     };
     static reset(): void;
     static toJSON(): {

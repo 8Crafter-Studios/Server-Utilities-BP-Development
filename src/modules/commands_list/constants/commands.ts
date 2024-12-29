@@ -6722,4 +6722,4 @@ export const commands = [
         hidden: false,
         enabled: true
     }
-] as { type: "built-in" | "custom" | "unknown"; requiredTags: string[]; formatting_code: string; commandName: string; escregexp: { v: string; f?: string; }; formats: command_formats_type_list; command_version: string; description: string; commandSettingsId: string; aliases?: { commandName: string; escregexp?: { v?: string; f?: string; }; }[]; category?: commandCategory | (commandCategory)[]; deprecated?: boolean; functional?: boolean; hidden?: boolean; enabled?: boolean; }[];
+] as { type: "built-in"; requiredTags: string[]; formatting_code: string; commandName: string; escregexp: { v: string; f?: string; }; formats: command_formats_type_list; command_version: string; description: string; commandSettingsId: string; aliases?: { commandName: string; escregexp?: { v?: string; f?: string; }; }[]; category?: commandCategory | (commandCategory)[]; deprecated?: boolean; functional?: boolean; hidden?: boolean; enabled?: boolean; }[];

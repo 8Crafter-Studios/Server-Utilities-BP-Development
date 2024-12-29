@@ -16,17 +16,17 @@ declare const VectorClass: {
         x: number;
         y: number;
         z: number;
-        assign(vec: import("@minecraft/server").Vector3): any;
+        assign(vec: import("@minecraft/server").Vector3): /*elided*/ any;
         equals(v: import("@minecraft/server").Vector3): boolean;
-        add(v: import("@minecraft/server").Vector3): any;
-        subtract(v: import("@minecraft/server").Vector3): any;
-        scale(val: number): any;
+        add(v: import("@minecraft/server").Vector3): /*elided*/ any;
+        subtract(v: import("@minecraft/server").Vector3): /*elided*/ any;
+        scale(val: number): /*elided*/ any;
         dot(vec: import("@minecraft/server").Vector3): number;
-        cross(vec: import("@minecraft/server").Vector3): any;
+        cross(vec: import("@minecraft/server").Vector3): /*elided*/ any;
         magnitude(): number;
         distance(vec: import("@minecraft/server").Vector3): number;
-        normalize(): any;
-        floor(): any;
+        normalize(): /*elided*/ any;
+        floor(): /*elided*/ any;
         toString(options?: {
             decimals?: number;
             delimiter?: string;
@@ -34,9 +34,9 @@ declare const VectorClass: {
         clamp(limits: {
             min?: Partial<import("@minecraft/server").Vector3>;
             max?: Partial<import("@minecraft/server").Vector3>;
-        }): any;
-        lerp(vec: import("@minecraft/server").Vector3, t: number): any;
-        slerp(vec: import("@minecraft/server").Vector3, t: number): any;
+        }): /*elided*/ any;
+        lerp(vec: import("@minecraft/server").Vector3, t: number): /*elided*/ any;
+        slerp(vec: import("@minecraft/server").Vector3, t: number): /*elided*/ any;
     };
     new (x: number, y: number, z: number): {
         zero: import("@minecraft/server").Vector3;
@@ -54,17 +54,17 @@ declare const VectorClass: {
         x: number;
         y: number;
         z: number;
-        assign(vec: import("@minecraft/server").Vector3): any;
+        assign(vec: import("@minecraft/server").Vector3): /*elided*/ any;
         equals(v: import("@minecraft/server").Vector3): boolean;
-        add(v: import("@minecraft/server").Vector3): any;
-        subtract(v: import("@minecraft/server").Vector3): any;
-        scale(val: number): any;
+        add(v: import("@minecraft/server").Vector3): /*elided*/ any;
+        subtract(v: import("@minecraft/server").Vector3): /*elided*/ any;
+        scale(val: number): /*elided*/ any;
         dot(vec: import("@minecraft/server").Vector3): number;
-        cross(vec: import("@minecraft/server").Vector3): any;
+        cross(vec: import("@minecraft/server").Vector3): /*elided*/ any;
         magnitude(): number;
         distance(vec: import("@minecraft/server").Vector3): number;
-        normalize(): any;
-        floor(): any;
+        normalize(): /*elided*/ any;
+        floor(): /*elided*/ any;
         toString(options?: {
             decimals?: number;
             delimiter?: string;
@@ -72,9 +72,9 @@ declare const VectorClass: {
         clamp(limits: {
             min?: Partial<import("@minecraft/server").Vector3>;
             max?: Partial<import("@minecraft/server").Vector3>;
-        }): any;
-        lerp(vec: import("@minecraft/server").Vector3, t: number): any;
-        slerp(vec: import("@minecraft/server").Vector3, t: number): any;
+        }): /*elided*/ any;
+        lerp(vec: import("@minecraft/server").Vector3, t: number): /*elided*/ any;
+        slerp(vec: import("@minecraft/server").Vector3, t: number): /*elided*/ any;
     };
     zero: import("@minecraft/server").Vector3;
     one: import("@minecraft/server").Vector3;

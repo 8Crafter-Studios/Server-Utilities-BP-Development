@@ -1,0 +1,373 @@
+import { Entity, Player } from "@minecraft/server";
+import {
+    ActionFormData,
+    ActionFormResponse,
+    MessageFormData,
+} from "@minecraft/server-ui";
+import { forceShow } from "modules/ui/functions/forceShow";
+import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
+import {
+    moduleNamesForModuleImportsConfigList,
+    moduleNamesForModuleImportsConfigListDisplay,
+} from "init/classes/moduleImportsConfig";
+import type { optionalModuleObjectImportFilePaths } from "directoryTree";
+
+// ${se}srun(async()=>{try{(await import("modules/ui/functions/editModuleImportsConfig.js")).editModuleImportsConfig(player)}catch(e){console.error(e, e.stack)}})
+
+/**
+ * Edits the module imports configuration by presenting an action form to the user.
+ * The user can change the full override, select a module to edit, go back, or close the form.
+ *
+ * @param sourceEntitya - The source entity which can be an {@linkcode Entity}, {@linkcode executeCommandPlayerW}, or {@linkcode Player}.
+ * @returns A promise that resolves to:
+ * - `0` if the form is closed,
+ * - `1` if the form is canceled or the user goes back,
+ * - `-2` if an error occurs.
+ */
+export async function editModuleImportsConfig(
+    sourceEntitya: Entity | executeCommandPlayerW | Player
+): Promise<0 | 1 | -2> {
+    const sourceEntity =
+        sourceEntitya instanceof executeCommandPlayerW
+            ? sourceEntitya.player
+            : sourceEntitya;
+    let form = new ActionFormData();
+    form.title("Edit Module Imports Config");
+    form.button("Change Full Override\n" + moduleImportsConfig.override);
+    moduleNamesForModuleImportsConfigListDisplay.forEach((p) => {
+        form.button(p.name, p.icon);
+    });
+    form.button("Back");
+    form.button("Close");
+    return await forceShow(form, sourceEntity as Player)
+        .then(async (ra) => {
+            let r = ra as ActionFormResponse;
+            if (r.canceled) {
+                return 1;
+            }
+            switch (r.selection) {
+                case 0:
+                    let overrideForm = new ActionFormData();
+                    overrideForm.title("Select Override Option");
+                    moduleImportsConfig.overrideOptions.forEach((option) => {
+                        overrideForm.button(
+                            moduleImportsConfig.override == option
+                                ? option + "\n§aSelected"
+                                : option
+                        );
+                    });
+                    return await forceShow(
+                        overrideForm,
+                        sourceEntity as Player
+                    ).then(async (response): Promise<0 | 1 | -2> => {
+                        if (response.canceled) {
+                            return await editModuleImportsConfig(sourceEntity);
+                        }
+                        moduleImportsConfig.override =
+                            moduleImportsConfig.overrideOptions[
+                                response.selection
+                            ];
+                        return await editModuleImportsConfig(sourceEntity);
+                    });
+                case moduleNamesForModuleImportsConfigListDisplay.length + 1:
+                    return 1;
+                case moduleNamesForModuleImportsConfigListDisplay.length + 2:
+                    return 0;
+                default:
+                    let result = await editModuleImportsConfig_module(
+                        sourceEntity,
+                        moduleNamesForModuleImportsConfigList[r.selection - 1]
+                    );
+                    if (result == 1) {
+                        return await editModuleImportsConfig(sourceEntity);
+                    } else {
+                        return result;
+                    }
+            }
+        })
+        .catch(async (e) => {
+            let formError = new MessageFormData();
+            formError.body(e + " " + e.stack);
+            formError.title("Error");
+            formError.button1("Done");
+            return await forceShow(formError, sourceEntity as Player).then(
+                () => {
+                    return -2;
+                }
+            );
+        });
+}
+
+/**
+ * Edits the module imports configuration for a given module.
+ *
+ * @param sourceEntitya - The source entity which can be an {@linkcode Entity}, {@linkcode executeCommandPlayerW}, or {@linkcode Player}.
+ * @param module - The module name from the list of module names for module imports configuration.
+ * @returns A promise that resolves to:
+ * - `0` if the form is closed,
+ * - `1` if the form is canceled or the "Back" button is pressed,
+ * - `-2` if an error occurs.
+ */
+export async function editModuleImportsConfig_module(
+    sourceEntitya: Entity | executeCommandPlayerW | Player,
+    module: (typeof moduleNamesForModuleImportsConfigList)[number]
+): Promise<0 | 1 | -2> {
+    const sourceEntity =
+        sourceEntitya instanceof executeCommandPlayerW
+            ? sourceEntitya.player
+            : sourceEntitya;
+    const items = Object.entries(moduleImportsConfig.toJSON_module(module)) as [
+        (typeof optionalModuleObjectImportFilePaths)[number],
+        0 | 1
+    ][];
+    const itemsB = [...new Set(items.map(item=>item[0].split("/")[4]))]
+    let form = new ActionFormData();
+    form.title("Edit Module Imports Config: " + module);
+    form.button(
+        "Change Module Override\n" + moduleImportsConfig.moduleOverrides[module]
+    );
+    itemsB.forEach((item)=>{
+        form.button(
+            item + "\n" + (items.filter(i=>i[0].split("/")[4]==item).every(i=>i[1]==1) ? "§aAll Enabled" : "§cSome Disabled")
+        );
+    })
+    form.button("Back");
+    form.button("Close");
+    return await forceShow(form, sourceEntity as Player)
+        .then(async (ra) => {
+            let r = ra as ActionFormResponse;
+            if (r.canceled) {
+                return 1;
+            }
+            switch (r.selection) {
+                case 0:
+                    let overrideForm = new ActionFormData();
+                    overrideForm.title("Select Override Option");
+                    moduleImportsConfig.overrideOptions.forEach((option) => {
+                        overrideForm.button(
+                            moduleImportsConfig.moduleOverrides[module] ==
+                                option
+                                ? option + "\n§aSelected"
+                                : option
+                        );
+                    });
+                    return await forceShow(
+                        overrideForm,
+                        sourceEntity as Player
+                    ).then(async (response): Promise<0 | 1 | -2> => {
+                        if (response.canceled) {
+                            return await editModuleImportsConfig_module(
+                                sourceEntity,
+                                module
+                            );
+                        }
+                        moduleImportsConfig.moduleOverrides[module] =
+                            moduleImportsConfig.overrideOptions[
+                                response.selection
+                            ];
+                        return await editModuleImportsConfig_module(
+                            sourceEntity,
+                            module
+                        );
+                    });
+                case items.length + 1:
+                    return 1;
+                case items.length + 2:
+                    return 0;
+                default:
+                    let result = await editModuleImportsConfig_module_folder(
+                        sourceEntity,
+                        module,
+                        itemsB[r.selection - 1][0]
+                    );
+                    if (result == 1) {
+                        return await editModuleImportsConfig_module(
+                            sourceEntity,
+                            module
+                        );
+                    } else {
+                        return result;
+                    }
+            }
+        })
+        .catch(async (e) => {
+            let formError = new MessageFormData();
+            formError.body(e + " " + e.stack);
+            formError.title("Error");
+            formError.button1("Done");
+            return await forceShow(formError, sourceEntity as Player).then(
+                () => {
+                    return -2;
+                }
+            );
+        });
+}
+
+/**
+ * Edits the module imports configuration for a given module.
+ *
+ * @param sourceEntitya - The source entity which can be an {@linkcode Entity}, {@linkcode executeCommandPlayerW}, or {@linkcode Player}.
+ * @param module - The module name from the list of module names for module imports configuration.
+ * @returns A promise that resolves to:
+ * - `0` if the form is closed,
+ * - `1` if the form is canceled or the "Back" button is pressed,
+ * - `-2` if an error occurs.
+ */
+export async function editModuleImportsConfig_module_folder(
+    sourceEntitya: Entity | executeCommandPlayerW | Player,
+    module: (typeof moduleNamesForModuleImportsConfigList)[number],
+    folder: string
+): Promise<0 | 1 | -2> {
+    const sourceEntity =
+        sourceEntitya instanceof executeCommandPlayerW
+            ? sourceEntitya.player
+            : sourceEntitya;
+    const items = Object.entries(moduleImportsConfig.toJSON_module(module)).filter(v=>v[0].split("/")[4]==folder) as [
+        (typeof optionalModuleObjectImportFilePaths)[number],
+        0 | 1
+    ][];
+    let form = new ActionFormData();
+    form.title("Edit Module Imports Config: " + module);
+    form.button(
+        "Change Module Override\n" + moduleImportsConfig.moduleOverrides[module]
+    );
+    items.forEach((item)=>{
+        form.button(
+            item[0].split("/").slice(4).join("/").slice(-30) + "\n" + (item[1] == 1 ? "§aEnabled" : "§cDisabled")
+        );
+    })
+    form.button("Back");
+    form.button("Close");
+    return await forceShow(form, sourceEntity as Player)
+        .then(async (ra) => {
+            let r = ra as ActionFormResponse;
+            if (r.canceled) {
+                return 1;
+            }
+            switch (r.selection) {
+                case 0:
+                    let overrideForm = new ActionFormData();
+                    overrideForm.title("Select Override Option");
+                    moduleImportsConfig.overrideOptions.forEach((option) => {
+                        overrideForm.button(
+                            moduleImportsConfig.moduleOverrides[module] ==
+                                option
+                                ? option + "\n§aSelected"
+                                : option
+                        );
+                    });
+                    return await forceShow(
+                        overrideForm,
+                        sourceEntity as Player
+                    ).then(async (response): Promise<0 | 1 | -2> => {
+                        if (response.canceled) {
+                            return await editModuleImportsConfig_module(
+                                sourceEntity,
+                                module
+                            );
+                        }
+                        moduleImportsConfig.moduleOverrides[module] =
+                            moduleImportsConfig.overrideOptions[
+                                response.selection
+                            ];
+                        return await editModuleImportsConfig_module(
+                            sourceEntity,
+                            module
+                        );
+                    });
+                case items.length + 1:
+                    return 1;
+                case items.length + 2:
+                    return 0;
+                default:
+                    let result = await editModuleImportsConfig_module_item(
+                        sourceEntity,
+                        module,
+                        items[r.selection - 1][0]
+                    );
+                    if (result == 1) {
+                        return await editModuleImportsConfig_module(
+                            sourceEntity,
+                            module
+                        );
+                    } else {
+                        return result;
+                    }
+            }
+        })
+        .catch(async (e) => {
+            let formError = new MessageFormData();
+            formError.body(e + " " + e.stack);
+            formError.title("Error");
+            formError.button1("Done");
+            return await forceShow(formError, sourceEntity as Player).then(
+                () => {
+                    return -2;
+                }
+            );
+        });
+}
+
+/**
+ * Edits the module imports configuration for a specific module item.
+ *
+ * @param sourceEntitya - The source entity which can be an {@linkcode Entity}, {@linkcode executeCommandPlayerW}, or {@linkcode Player}.
+ * @param module - The module name from the list of module names for module imports configuration.
+ * @param item - The item path from the list of optional module object import file paths.
+ * @returns A promise that resolves to:
+ * - `0` if the form was closed,
+ * - `1` if the configuration was successfully edited or the form was canceled,
+ * - `-2` if an error occurred or an invalid selection was made.
+ */
+export async function editModuleImportsConfig_module_item(
+    sourceEntitya: Entity | executeCommandPlayerW | Player,
+    module: (typeof moduleNamesForModuleImportsConfigList)[number],
+    item: (typeof optionalModuleObjectImportFilePaths)[number]
+): Promise<0 | 1 | -2> {
+    const sourceEntity =
+        sourceEntitya instanceof executeCommandPlayerW
+            ? sourceEntitya.player
+            : sourceEntitya;
+    const configJSON = moduleImportsConfig.toJSON();
+    let form = new ActionFormData();
+    form.title("Edit Module Imports Config: " + module + "." + item);
+    form.body(`Module: ${module}
+Path: ${item}
+Status: ${configJSON[item] == 1 ? "Enabled" : "Disabled"}
+Deprecated: ${moduleImportsConfig.isFileDeprecated(item as any)}`);
+    form.button(configJSON[item] == 1 ? "Disable" : "Enable");
+    form.button("Back");
+    form.button("Close");
+    return await forceShow(form, sourceEntity as Player)
+        .then(async (ra) => {
+            let r = ra as ActionFormResponse;
+            if (r.canceled) {
+                return 1;
+            }
+            switch (r.selection) {
+                case 0:
+                    configJSON[item] = (1 - configJSON[item]) as 0 | 1;
+                    moduleImportsConfig.setJSON(configJSON);
+                    return 1;
+                case 1:
+                    return 1;
+                case 2:
+                    return 0;
+                default:
+                    const error = new InternalError("Invalid selection");
+                    console.error(error, error.stack);
+                    return -2;
+            }
+        })
+        .catch(async (e) => {
+            let formError = new MessageFormData();
+            formError.body(e + " " + e.stack);
+            formError.title("Error");
+            formError.button1("Done");
+            return await forceShow(formError, sourceEntity as Player).then(
+                () => {
+                    return -2;
+                }
+            );
+        });
+}

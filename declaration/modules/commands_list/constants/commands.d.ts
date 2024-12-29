@@ -1,7 +1,7 @@
 import type { command_formats_type_list } from "modules/commands/types/command_formats_type_list";
 import type { commandCategory } from "modules/commands/types/commandCategory";
 export declare const commands: {
-    type: "built-in" | "custom" | "unknown";
+    type: "built-in";
     requiredTags: string[];
     formatting_code: string;
     commandName: string;

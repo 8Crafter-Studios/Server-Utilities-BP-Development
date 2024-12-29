@@ -1,10 +1,11 @@
 {
   "name": "debug-sticks",
-  "version": "1.14.0-beta.976",
+  "version": "1.28.0-preview.20+BUILD.1",
   "description": "",
   "main": "scripts/Main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "compile": "tsc"
   },
   "hintConfig": {
     "hints": {

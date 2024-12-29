@@ -1,4 +1,4 @@
-export declare const current_format_version = "1.27.0-preview.20+BUILD.1";
+export declare const current_format_version = "1.28.0-preview.20+BUILD.1";
 export declare const current_supported_minecraft_version = "1.21.4x";
 declare global {
     namespace globalThis {

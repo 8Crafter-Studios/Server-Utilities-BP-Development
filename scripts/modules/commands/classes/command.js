@@ -348,6 +348,14 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
             console.error(e, e.stack);
         }
     }
+    /* static getDefaultCommandsOfCategory(
+        category: commandCategory,
+        noSort?: boolean
+    ): command<"built-in">[];
+    static getDefaultCommandsOfCategory(
+        category: string,
+        noSort?: boolean
+    ): command<"built-in">[]; */
     static getDefaultCommandsOfCategory(category, noSort = false) {
         try {
             if (noSort) {

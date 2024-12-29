@@ -22,7 +22,7 @@ export function manageCommands(
     //defaultCommands.forEach((p)=>{form.button(`${p.formatting_code+p.commandName}\n${p.type+": "+(p.settings.enabled?"enabled":"disabled")+"; "+p.command_version}`/*, "textures/ui/online"*/)});
     let customCommands = command.getCustomCommands();
     //customCommands.forEach((p)=>{form.button(`${p.formatting_code+p.commandName}\n${p.type+": "+(p.settings.enabled?"enabled":"disabled")+"; "+p.command_version}`/*, "textures/ui/online"*/)});
-    let commandsList = defaultCommands.concat(customCommands);
+    let commandsList = (defaultCommands as unknown as command<"built-in" | "custom">[]).concat(customCommands);
     //form.button("Add Custom Command");
     commandCategoriesDisplay.forEach((p) => {
         form.button(p.name, p.icon);
@@ -41,13 +41,14 @@ export function manageCommands(
                 default:
                     let category = commandCategories[r.selection];
                     let categoryDisplay = commandCategories[r.selection];
+                    // pbsend(player, command.getCustomCommands().find((v) => v.commandName == "tpmenu").settings);
                     let commandsListB = category == "all"
                         ? commandsList
                         : category == "built-in"
                             ? defaultCommands
                             : category == "custom"
                                 ? customCommands
-                                : command.getDefaultCommandsOfCategory(category);
+                                : command.getDefaultCommandsOfCategory(category as any);
                     let formB = new ActionFormData();
                     form.title(`Manage ${categoryDisplay}§r Commands`);
                     commandsListB.forEach((p) => {
@@ -997,8 +998,8 @@ export function manageCommands(
                                                         "JSON",
                                                         JSONStringify(
                                                             commandsItem
-                                                                .settings
-                                                                .requiredTags ?? [
+                                                                ?.settings
+                                                                ?.requiredTags ?? [
                                                                 "canUseChatCommands",
                                                             ]
                                                         )
@@ -1010,20 +1011,20 @@ export function manageCommands(
                                                         1,
                                                         Number(
                                                             commandsItem
-                                                                .settings
-                                                                .requiredPermissionLevel ??
+                                                                ?.settings
+                                                                ?.requiredPermissionLevel ??
                                                             0
                                                         )
                                                     );
                                                     form6.toggle(
                                                         "Requires OP",
                                                         commandsItem.settings
-                                                            .requiresOp
+                                                            ?.requiresOp ?? false
                                                     );
                                                     form6.toggle(
                                                         "Enabled",
                                                         commandsItem.settings
-                                                            .enabled
+                                                            ?.enabled ?? true
                                                     );
                                                     form6.submitButton("Save");
                                                     forceShow(

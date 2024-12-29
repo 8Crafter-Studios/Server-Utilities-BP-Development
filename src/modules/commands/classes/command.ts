@@ -11,8 +11,8 @@ import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPl
 import { sOSATSA } from "modules/commands/functions/sOSATSA";
 import { commands } from "modules/commands_list/constants/commands";
 
-export class command {
-    type: "built-in" | "custom" | "unknown";
+export class command<T extends "built-in" | "custom" | "unknown" = "unknown"> {
+    type: T;
     commandName: string;
     currentCommandName: string;
     parameters?: {
@@ -132,7 +132,7 @@ export class command {
     categories?: string[];
     constructor(
         command: {
-            type: "built-in" | "custom" | "unknown";
+            type: T;
             formatting_code?: string;
             category?: string | string[];
             customCommandParametersList?: evaluateParametersArgumentTypes[];
@@ -150,9 +150,9 @@ export class command {
             format_version?: string | number;
             commands_format_version?: string | number;
         } |
-            command
+            command<T>
     ) {
-        this.type = command.type ?? "unknown";
+        this.type = command.type ?? "unknown" as T;
         let commandtest = undefined;
         try {
             commandtest =
@@ -589,14 +589,14 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
             console.error(e, e.stack);
         }
     }
-    static getDefaultCommandsOfCategory(
+    /* static getDefaultCommandsOfCategory(
         category: commandCategory,
         noSort?: boolean
-    ): command[];
+    ): command<"built-in">[];
     static getDefaultCommandsOfCategory(
         category: string,
         noSort?: boolean
-    ): command[];
+    ): command<"built-in">[]; */
     static getDefaultCommandsOfCategory(
         category: commandCategory,
         noSort: boolean = false

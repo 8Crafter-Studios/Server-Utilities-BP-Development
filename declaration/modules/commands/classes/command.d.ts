@@ -4,8 +4,8 @@ import { type evaluateParametersArgumentTypes } from "modules/commands/types/eva
 import { type commandCategory } from "modules/commands/types/commandCategory";
 import { commandSettings } from "modules/commands/classes/commandSettings";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
-export declare class command {
-    type: "built-in" | "custom" | "unknown";
+export declare class command<T extends "built-in" | "custom" | "unknown" = "unknown"> {
+    type: T;
     commandName: string;
     currentCommandName: string;
     parameters?: {
@@ -51,7 +51,7 @@ export declare class command {
     category?: string | string[];
     categories?: string[];
     constructor(command: {
-        type: "built-in" | "custom" | "unknown";
+        type: T;
         formatting_code?: string;
         category?: string | string[];
         customCommandParametersList?: evaluateParametersArgumentTypes[];
@@ -71,10 +71,10 @@ export declare class command {
         formats?: command_formats_type_list;
         format_version?: string | number;
         commands_format_version?: string | number;
-    } | command);
-    get isHidden(): boolean;
-    get isDeprecated(): boolean;
-    get isFunctional(): boolean;
+    } | command<T>);
+    get isHidden(): any;
+    get isDeprecated(): any;
+    get isFunctional(): any;
     get releaseStage(): string;
     get regexp(): RegExp;
     get currentregexp(): RegExp;
@@ -87,15 +87,15 @@ export declare class command {
         regexp: RegExp;
         aliasTo?: string;
     }[];
-    get settings(): commandSettings;
+    get settings(): commandSettings<T>;
     get code(): string[];
     save(): string;
     remove(): void;
     testCanPlayerUseCommand(player: Player | executeCommandPlayerW | Entity): boolean;
     run(commandstring: string, executor: Player | executeCommandPlayerW | Entity | Dimension, player?: Player | executeCommandPlayerW, event?: Object): void;
-    static get(commandName: string, type?: "built-in" | "custom" | "unknown"): command;
+    static get(commandName: string, type?: "built-in" | "custom" | "unknown"): command<"built-in"> | command<"custom"> | command<"unknown">;
     static findBuiltIn(commandString: string, returnCommandInsteadOfAlias?: boolean): {
-        type: "custom" | "unknown" | "built-in";
+        type: "built-in";
         requiredTags: string[];
         formatting_code: string;
         commandName: string;
@@ -114,7 +114,7 @@ export declare class command {
                 f?: string;
             };
         }[];
-        category?: commandCategory | commandCategory[];
+        category?: commandCategory | (commandCategory)[];
         deprecated?: boolean;
         functional?: boolean;
         hidden?: boolean;
@@ -131,7 +131,7 @@ export declare class command {
             aliasTo?: string;
         };
         aliasTo: {
-            type: "custom" | "unknown" | "built-in";
+            type: "built-in";
             requiredTags: string[];
             formatting_code: string;
             commandName: string;
@@ -150,16 +150,15 @@ export declare class command {
                     f?: string;
                 };
             }[];
-            category?: commandCategory | commandCategory[];
+            category?: commandCategory | (commandCategory)[];
             deprecated?: boolean;
             functional?: boolean;
             hidden?: boolean;
             enabled?: boolean;
         };
     };
-    static getDefaultCommands(noSort?: boolean): command[];
-    static getDefaultCommandsOfCategory(category: commandCategory, noSort?: boolean): command[];
-    static getDefaultCommandsOfCategory(category: string, noSort?: boolean): command[];
+    static getDefaultCommands(noSort?: boolean): command<"built-in">[];
+    static getDefaultCommandsOfCategory(category: commandCategory, noSort?: boolean): command<"built-in">[];
     static getCommandAliases(): {
         [k: string]: {
             commandName: string;
@@ -171,7 +170,7 @@ export declare class command {
             aliasTo?: string;
         }[];
     };
-    static getCustomCommands(noSort?: boolean): command[];
+    static getCustomCommands(noSort?: boolean): command<"custom">[];
     static get defaultPrefix(): string;
     static get dp(): string;
 }
