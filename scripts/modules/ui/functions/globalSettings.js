@@ -38,8 +38,7 @@ export function globalSettings(sourceEntitya) {
     ]).join(" "));
     form2.dropdown("§l§fspawnCommandDimension§r§f\nThe dimension to teleport players when they use the \\spawn command, it is a list of coordinates separated by spaces, the default is overworld", ["§aOverworld", "§cNether", "§dThe End"], dimensionsd.indexOf(config.spawnCommandLocation.dimension.id));
     form2.dropdown("§l§finvalidChatCommandAction§r§f\nWhat to do when a chat command is typed that does not exist, or that the player does not have permission to use. ", ["Do Nothing", "Send Message", "Cancel Message", "Warn Player"], Number(world.getDynamicProperty("andexdbSettings:invalidChatCommandAction") ?? 3));
-    form2.toggle("§l§fchatCommandsEnbaled§r§f\nSets whether or not to enable the chat commands, default is true", Boolean(world.getDynamicProperty("andexdbSettings:chatCommandsEnbaled") ??
-        true)); /*
+    form2.toggle("§l§fchatCommandsEnbaled§r§f\nSets whether or not to enable the chat commands, default is true", config.chatCommandsEnabled); /*
     form2.toggle("§l§fautoEscapeChatMessages§r§f\nEvaluates escape codes in the chat automatically, default is false", Boolean(world.getDynamicProperty("andexdbSettings:autoEscapeChatMessages") ?? false));
     form2.toggle("§l§fautoURIEscapeChatMessages§r§f\nSets whether or not to automatically escape URI % escape codes, default is false", Boolean(world.getDynamicProperty("andexdbSettings:autoURIEscapeChatMessages") ?? false));
     form2.toggle("§l§fallowChatEscapeCodes§r§f\nSets whether or not to allow for escape codes in chat, default is true", Boolean(world.getDynamicProperty("andexdbSettings:allowChatEscapeCodes") ?? true));
@@ -91,7 +90,7 @@ world.setDynamicProperty("andexdbSettings:chatNameAndMessageSeparator", chatName
                 : Number(spawnCommandLocation.split(" ")[1]),
             dimension: dimensions[spawnCommandDimension],
         };
-        world.setDynamicProperty("andexdbSettings:chatCommandsEnbaled", chatCommandsEnbaled); /*
+        config.chatCommandsEnabled = chatCommandsEnbaled; /*
 world.setDynamicProperty("andexdbSettings:disableCustomChatMessages", disableCustomChatMessages)*/
         world.setDynamicProperty("andexdbSettings:invalidChatCommandAction", invalidChatCommandAction); /*
 world.setDynamicProperty("andexdbSettings:allowCustomChatMessagesMuting", allowCustomChatMessagesMuting)

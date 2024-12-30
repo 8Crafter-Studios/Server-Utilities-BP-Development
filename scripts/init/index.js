@@ -1,4 +1,5 @@
 import "./classes/config";
+import "./classes/moduleImportsConfig";
 import "./classes/PlayerNotifications";
 import "./classes/Vector";
 import "./constants/dimensions";
@@ -125,6 +126,7 @@ import "./functions/tryrun";
 import "./functions/twoWayModulo";
 import "./functions/waitTick";
 import "./functions/waitTicks";
+import "./globals/globalMCImports";
 import "./intervals/debugSticksCooldownCounter";
 import "./intervals/everyTickAutoEval";
 import "./intervals/rankNameTags_editorStickActionbar_artificialLagMS";

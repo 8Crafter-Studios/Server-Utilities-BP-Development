@@ -105,10 +105,7 @@ export function globalSettings(
     );
     form2.toggle(
         "§l§fchatCommandsEnbaled§r§f\nSets whether or not to enable the chat commands, default is true",
-        Boolean(
-            world.getDynamicProperty("andexdbSettings:chatCommandsEnbaled") ??
-            true
-        )
+        config.chatCommandsEnabled
     ); /*
     form2.toggle("§l§fautoEscapeChatMessages§r§f\nEvaluates escape codes in the chat automatically, default is false", Boolean(world.getDynamicProperty("andexdbSettings:autoEscapeChatMessages") ?? false));
     form2.toggle("§l§fautoURIEscapeChatMessages§r§f\nSets whether or not to automatically escape URI % escape codes, default is false", Boolean(world.getDynamicProperty("andexdbSettings:autoURIEscapeChatMessages") ?? false));
@@ -220,10 +217,7 @@ export function globalSettings(
                     ),
                 dimension: dimensions[spawnCommandDimension as number],
             };
-            world.setDynamicProperty(
-                "andexdbSettings:chatCommandsEnbaled",
-                chatCommandsEnbaled
-            ); /*
+            config.chatCommandsEnabled = chatCommandsEnbaled as boolean ; /*
     world.setDynamicProperty("andexdbSettings:disableCustomChatMessages", disableCustomChatMessages)*/
 
             world.setDynamicProperty(

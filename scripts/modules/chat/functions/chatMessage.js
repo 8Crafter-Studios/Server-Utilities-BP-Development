@@ -1,7 +1,6 @@
 import { ChatSendBeforeEvent, world } from "@minecraft/server";
 import { LinkedServerShopCommands } from "ExtraFeatures/server_shop";
 import { PlayerNotifications } from "init/classes/PlayerNotifications";
-import { config } from "init/classes/config";
 import { srun } from "init/functions/srun";
 import { currentlyRequestedChatInput } from "modules/chat/constants/currentlyRequestedChatInput";
 import { command } from "modules/commands/classes/command";
@@ -10,13 +9,30 @@ import { commands } from "modules/commands_list/constants/commands";
 import { chatSend } from "./chatSend";
 import { cmdsEval } from "../../../Main/commands";
 export function chatMessage(eventData, bypassChatInputRequests = false) {
-    if (!bypassChatInputRequests && Object.keys(currentlyRequestedChatInput[eventData.sender.id]?.anyInput ?? {}).length != 0) {
-        currentlyRequestedChatInput[eventData.sender.id].anyInput[Object.keys(currentlyRequestedChatInput[eventData.sender.id]?.anyInput ?? {}).sort((a, b) => currentlyRequestedChatInput[eventData.sender.id].anyInput[a].time - currentlyRequestedChatInput[eventData.sender.id].anyInput[b].time)[0]].input = eventData.message;
+    if (!bypassChatInputRequests &&
+        Object.keys(currentlyRequestedChatInput[eventData.sender.id]?.anyInput ?? {}).length != 0) {
+        currentlyRequestedChatInput[eventData.sender.id].anyInput[Object.keys(currentlyRequestedChatInput[eventData.sender.id]?.anyInput ?? {}).sort((a, b) => currentlyRequestedChatInput[eventData.sender.id].anyInput[a]
+            .time -
+            currentlyRequestedChatInput[eventData.sender.id].anyInput[b]
+                .time)[0]].input = eventData.message;
         eventData.cancel = true;
         return;
     }
-    if (!bypassChatInputRequests && Object.keys(currentlyRequestedChatInput[eventData.sender.id]?.conditionalInput ?? {}).filter(r => !!currentlyRequestedChatInput[eventData.sender.id].conditionalInput[r].conditions ? currentlyRequestedChatInput[eventData.sender.id].conditionalInput[r].conditions(eventData.sender, eventData.message, eventData) : true).length != 0) {
-        currentlyRequestedChatInput[eventData.sender.id].conditionalInput[Object.keys(currentlyRequestedChatInput[eventData.sender.id]?.conditionalInput ?? {}).filter(r => !!currentlyRequestedChatInput[eventData.sender.id].conditionalInput[r].conditions ? currentlyRequestedChatInput[eventData.sender.id].conditionalInput[r].conditions(eventData.sender, eventData.message, eventData) : true).sort((a, b) => currentlyRequestedChatInput[eventData.sender.id].conditionalInput[a].time - currentlyRequestedChatInput[eventData.sender.id].conditionalInput[b].time)[0]].input = eventData.message;
+    if (!bypassChatInputRequests &&
+        Object.keys(currentlyRequestedChatInput[eventData.sender.id]
+            ?.conditionalInput ?? {}).filter((r) => !!currentlyRequestedChatInput[eventData.sender.id].conditionalInput[r].conditions
+            ? currentlyRequestedChatInput[eventData.sender.id].conditionalInput[r].conditions(eventData.sender, eventData.message, eventData)
+            : true).length != 0) {
+        currentlyRequestedChatInput[eventData.sender.id].conditionalInput[Object.keys(currentlyRequestedChatInput[eventData.sender.id]
+            ?.conditionalInput ?? {})
+            .filter((r) => !!currentlyRequestedChatInput[eventData.sender.id]
+            .conditionalInput[r].conditions
+            ? currentlyRequestedChatInput[eventData.sender.id].conditionalInput[r].conditions(eventData.sender, eventData.message, eventData)
+            : true)
+            .sort((a, b) => currentlyRequestedChatInput[eventData.sender.id]
+            .conditionalInput[a].time -
+            currentlyRequestedChatInput[eventData.sender.id]
+                .conditionalInput[b].time)[0]].input = eventData.message;
         eventData.cancel = true;
         return;
     }
@@ -34,15 +50,21 @@ export function chatMessage(eventData, bypassChatInputRequests = false) {
     }
     catch (e) {
         console.error(e, e.stack);
-        world.getAllPlayers().forEach((currentplayer) => { if (currentplayer.hasTag("chatSendBeforeEventDebugErrors")) {
-            currentplayer.sendMessage((e + " " + e.stack));
-        } });
+        world.getAllPlayers().forEach((currentplayer) => {
+            if (currentplayer.hasTag("chatSendBeforeEventDebugErrors")) {
+                currentplayer.sendMessage(e + " " + e.stack);
+            }
+        });
     }
     ///scriptevent andexdb:scriptEval world.setDynamicProperty("evalBeforeEvents:chatSend", `if(!(event.message.includes("${se}")&&player.hasTag("canUseScriptEval"))&&!player.hasTag("canBypassAntiSpam")){if(!!globalThis["lastChatMessage"+player.id]){if(globalThis["lastChatMessage"+player.id]==event.message&&((Date.now()-(globalThis["lastChatTime"+player.id]??0))<10000)){globalThis["msgAmountOfSpam"+player.id]=(globalThis["msgAmountOfSpam"+player.id]??0)+1; if(globalThis["msgAmountOfSpam"+player.id]\>\=4){returnBeforeChatCommandsOrChatSend=true; returnBeforeChatSend=true; runreturn=true; event.cancel=true; player.sendMessage("§cStop Spamming")}}else{globalThis["lastChatMessage"+player.id]=event.message; globalThis["msgAmountOfSpam"+player.id]=0}}else{globalThis["lastChatMessage"+player.id]=event.message}; globalThis["lastChatTime"+player.id]=Date.now(); }`)
     ///scriptevent andexdb:scriptEval world.setDynamicProperty("evalBeforeEvents:chatSend", `if(!player.hasTag("canBypassAntiSpam")){if(!!globalThis["lastChatMessage"+player.id]){if(globalThis["lastChatMessage"+player.id]==event.message&&((Date.now()-(globalThis["lastChatTime"+player.id]??0))<10000)){globalThis["msgAmountOfSpam"+player.id]=(globalThis["msgAmountOfSpam"+player.id]??0)+1; if(globalThis["msgAmountOfSpam"+player.id]\>\=4){returnBeforeChatCommandsOrChatSend=true; returnBeforeChatSend=true; runreturn=true; event.cancel=true; player.sendMessage("§cStop Spamming")}}else{globalThis["lastChatMessage"+player.id]=event.message; globalThis["msgAmountOfSpam"+player.id]=0}}else{globalThis["lastChatMessage"+player.id]=event.message}; globalThis["lastChatTime"+player.id]=Date.now(); }`)
     let newMessage = eventData.message;
-    let switchTest = newMessage.slice(String(world.getDynamicProperty("andexdbSettings:chatCommandPrefix") ?? "\\").length).split(" ")[0];
-    let switchTestB = newMessage.slice(String(world.getDynamicProperty("andexdbSettings:chatCommandPrefix") ?? "\\").length);
+    let switchTest = newMessage
+        .slice(String(world.getDynamicProperty("andexdbSettings:chatCommandPrefix") ??
+        "\\").length)
+        .split(" ")[0];
+    let switchTestB = newMessage.slice(String(world.getDynamicProperty("andexdbSettings:chatCommandPrefix") ??
+        "\\").length);
     let commanda = undefined;
     if (newMessage.startsWith(config.chatCommandPrefix)) {
         commanda =
@@ -61,54 +83,95 @@ export function chatMessage(eventData, bypassChatInputRequests = false) {
                     .filter((cmd) => (cmd?.aliases ?? []).length != 0)
                     .find((v) => {
                     let cmd = command.get(v.commandName, "built-in");
-                    if (cmd.settings.enabled && !!cmd?.aliases?.find?.((vd) => !!switchTest.match(vd.regexp))) {
+                    if (cmd.settings.enabled &&
+                        !!cmd?.aliases?.find?.((vd) => !!switchTest.match(vd.regexp))) {
                         return cmd.testCanPlayerUseCommand(player);
                     }
                     else {
                         return false;
                     }
                 }) ??
-                (LinkedServerShopCommands.testCommandIsLinked(newMessage) ? { type: "server_shop" } : undefined) ??
+                (LinkedServerShopCommands.testCommandIsLinked(newMessage)
+                    ? { type: "server_shop" }
+                    : undefined) ??
                 command
                     .getCustomCommands()
                     .find((v) => (v.settings.enabled &&
-                    (v.customCommandPrefix == undefined || v.customCommandPrefix == "") &&
+                    (v.customCommandPrefix == undefined ||
+                        v.customCommandPrefix == "") &&
                     !!switchTest.match(v.regexp)) ||
                     (v.customCommandPrefix != "" &&
                         !!v.customCommandPrefix &&
-                        newMessage.split(" ")[0].startsWith(v.customCommandPrefix) &&
-                        !!newMessage.split(" ")[0].slice(v.customCommandPrefix.length).match(v.regexp) &&
-                        (command.get(v.commandName, "custom").testCanPlayerUseCommand(player))));
+                        newMessage
+                            .split(" ")[0]
+                            .startsWith(v.customCommandPrefix) &&
+                        !!newMessage
+                            .split(" ")[0]
+                            .slice(v.customCommandPrefix.length)
+                            .match(v.regexp) &&
+                        command
+                            .get(v.commandName, "custom")
+                            .testCanPlayerUseCommand(player)));
     }
     else if (true) {
         commanda =
-            (LinkedServerShopCommands.testCommandIsLinked(newMessage) ? { type: "server_shop" } : undefined) ??
+            (LinkedServerShopCommands.testCommandIsLinked(newMessage)
+                ? { type: "server_shop" }
+                : undefined) ??
                 command
                     .getCustomCommands()
                     .find((v) => v.settings.enabled &&
                     v.customCommandPrefix != "" &&
                     !!v.customCommandPrefix &&
-                    newMessage.split(" ")[0].startsWith(v.customCommandPrefix) &&
-                    !!newMessage.split(" ")[0].slice(v.customCommandPrefix.length).match(v.regexp) &&
-                    (command.get(v.commandName, "custom").testCanPlayerUseCommand(player)));
+                    newMessage
+                        .split(" ")[0]
+                        .startsWith(v.customCommandPrefix) &&
+                    !!newMessage
+                        .split(" ")[0]
+                        .slice(v.customCommandPrefix.length)
+                        .match(v.regexp) &&
+                    command
+                        .get(v.commandName, "custom")
+                        .testCanPlayerUseCommand(player));
     } /*
     let commanda = commands.find(v=>(newMessage.startsWith(String(world.getDynamicProperty("andexdbSettings:chatCommandPrefix") ?? "\\"))&&(command.get(v.commandName, "built-in").settings.enabled&&!!switchTest.match(command.get(v.commandName, "built-in").regexp)))&&(command.get(v.commandName, "built-in").testCanPlayerUseCommand(player)))??command.getCustomCommands().find(v=>(v.settings.enabled&&((v.customCommandPrefix==undefined||v.customCommandPrefix=="")&&(!!switchTest.match(v.regexp))&&(command.get(v.commandName, "custom").testCanPlayerUseCommand(player)))||((v.customCommandPrefix!=""&&!!v.customCommandPrefix)&&newMessage.split(" ")[0].startsWith(v.customCommandPrefix)&&(!!newMessage.split(" ")[0].slice(v.customCommandPrefix.length).match(v.regexp))&&(command.get(v.commandName, "custom").testCanPlayerUseCommand(player)))))*/
     try {
-        world.getAllPlayers().filter((p) => (p.hasTag("getAllChatMessages"))).forEach((p) => { try {
-            p.sendMessage("§r§f[§l§dServer§r§f]" + (world.getDynamicProperty("chatMessageNotificationSpacer") ?? world.getDynamicProperty("serverNotificationSpacer") ?? "") + "[" + player.name + "]: " + newMessage);
-            let pn = new PlayerNotifications(p);
-            srun(() => p.playSound(pn.getAllChatMessagesNotificationSound.soundId, { pitch: pn.getAllChatMessagesNotificationSound.pitch, volume: pn.getAllChatMessagesNotificationSound.volume }));
-        }
-        catch { } });
+        world
+            .getAllPlayers()
+            .filter((p) => p.hasTag("getAllChatMessages"))
+            .forEach((p) => {
+            try {
+                p.sendMessage("§r§f[§l§dServer§r§f]" +
+                    (world.getDynamicProperty("chatMessageNotificationSpacer") ??
+                        world.getDynamicProperty("serverNotificationSpacer") ??
+                        "") +
+                    "[" +
+                    player.name +
+                    "]: " +
+                    newMessage);
+                let pn = new PlayerNotifications(p);
+                srun(() => p.playSound(pn.getAllChatMessagesNotificationSound.soundId, {
+                    pitch: pn.getAllChatMessagesNotificationSound
+                        .pitch,
+                    volume: pn.getAllChatMessagesNotificationSound
+                        .volume,
+                }));
+            }
+            catch { }
+        });
     }
     catch { }
-    if (world.getDynamicProperty("andexdbSettings:autoEscapeChatMessages") == true) {
+    if (world.getDynamicProperty("andexdbSettings:autoEscapeChatMessages") ==
+        true) {
         newMessage = newMessage.escapeCharacters(true);
     }
-    if (world.getDynamicProperty("andexdbSettings:autoURIEscapeChatMessages") == true) {
+    if (world.getDynamicProperty("andexdbSettings:autoURIEscapeChatMessages") ==
+        true) {
         newMessage = newMessage.escapeCharacters(false, false, 0, true);
     }
-    if (player.hasTag("canUseChatEscapeCodes") || world.getDynamicProperty("andexdbSettings:allowChatEscapeCodes") != false) {
+    if (player.hasTag("canUseChatEscapeCodes") ||
+        world.getDynamicProperty("andexdbSettings:allowChatEscapeCodes") !=
+            false) {
         if (newMessage.includes("${ea}")) {
             newMessage = newMessage.replace("${ea}", "");
             newMessage = newMessage.escapeCharacters(true);
@@ -150,7 +213,9 @@ export function chatMessage(eventData, bypassChatInputRequests = false) {
             newMessage = newMessage.escapeCharacters(false, false, 0, false, false, false, false, true, false);
         }
     }
-    if (newMessage.includes("${se}") && ((player.getDynamicProperty("canUseScriptEval") == true) || player.hasTag("canUseScriptEval") == true)) {
+    if (newMessage.includes("${se}") &&
+        (player.getDynamicProperty("canUseScriptEval") == true ||
+            player.hasTag("canUseScriptEval") == true)) {
         newMessage = newMessage.replace("${se}", "");
         try {
             cmdsEval(newMessage, eventData, bypassChatInputRequests, runreturn, returnBeforeChatSend, returnBeforeChatCommandsOrChatSend, event, player, sendToPlayers, newMessage, switchTest, switchTestB, commanda);
@@ -159,11 +224,12 @@ export function chatMessage(eventData, bypassChatInputRequests = false) {
             console.error(e, e.stack);
             eventData.sender.sendMessage(e + " " + e.stack);
         }
-        ;
         eventData.cancel = true;
         return;
     }
-    else if (newMessage.includes("${sel}") && ((player.getDynamicProperty("canUseScriptEval") == true) || player.hasTag("canUseScriptEval") == true)) {
+    else if (newMessage.includes("${sel}") &&
+        (player.getDynamicProperty("canUseScriptEval") == true ||
+            player.hasTag("canUseScriptEval") == true)) {
         newMessage = newMessage.replace("${sel}", "");
         try {
             eval(newMessage);
@@ -172,17 +238,20 @@ export function chatMessage(eventData, bypassChatInputRequests = false) {
             console.error(e, e.stack);
             eventData.sender.sendMessage(e + " " + e.stack);
         }
-        ;
         eventData.cancel = true;
         return;
     }
-    else if (newMessage.includes("${r}") && ((player.isOp() == true) || (player.getDynamicProperty("canUseCommands") == true))) {
+    else if (newMessage.includes("${r}") &&
+        (player.isOp() == true ||
+            player.getDynamicProperty("canUseCommands") == true)) {
         newMessage = newMessage.replace("${r}", "");
         eventData.cancel = true;
         player.runCommandAsync(newMessage);
         return;
     }
-    if (newMessage.includes("${scripteval}") && ((player.getDynamicProperty("canUseScriptEval") == true) || player.hasTag("canUseScriptEval") == true)) {
+    if (newMessage.includes("${scripteval}") &&
+        (player.getDynamicProperty("canUseScriptEval") == true ||
+            player.hasTag("canUseScriptEval") == true)) {
         newMessage = newMessage.replace("${scripteval}", "");
         try {
             cmdsEval(newMessage, eventData, bypassChatInputRequests, runreturn, returnBeforeChatSend, returnBeforeChatCommandsOrChatSend, event, player, sendToPlayers, newMessage, switchTest, switchTestB, commanda);
@@ -191,11 +260,12 @@ export function chatMessage(eventData, bypassChatInputRequests = false) {
             console.error(e, e.stack);
             eventData.sender.sendMessage(e + " " + e.stack);
         }
-        ;
         eventData.cancel = true;
         return;
     }
-    else if (newMessage.includes("${scriptevallocal}") && ((player.getDynamicProperty("canUseScriptEval") == true) || player.hasTag("canUseScriptEval") == true)) {
+    else if (newMessage.includes("${scriptevallocal}") &&
+        (player.getDynamicProperty("canUseScriptEval") == true ||
+            player.hasTag("canUseScriptEval") == true)) {
         newMessage = newMessage.replace("${scriptevallocal}", "");
         try {
             eval(newMessage);
@@ -204,36 +274,81 @@ export function chatMessage(eventData, bypassChatInputRequests = false) {
             console.error(e, e.stack);
             eventData.sender.sendMessage(e + " " + e.stack);
         }
-        ;
         eventData.cancel = true;
         return;
     }
-    else if (newMessage.includes("${run}") && ((player.isOp() == true) || (player.getDynamicProperty("canUseCommands") == true))) {
+    else if (newMessage.includes("${run}") &&
+        (player.isOp() == true ||
+            player.getDynamicProperty("canUseCommands") == true)) {
         newMessage = newMessage.replace("${run}", "");
         eventData.cancel = true;
         player.runCommandAsync(newMessage);
         return;
     }
     /*${scripteval}world.getAllPlayers().forEach((t)=>{t.setDynamicProperty("canUseScriptEval", true)}); */
-    if ((player.hasTag('noCustomChatMessages') && !player.hasTag('canUseChatCommands') && commanda) || returnBeforeChatCommandsOrChatSend) {
+    if ((player.hasTag("noCustomChatMessages") &&
+        !player.hasTag("canUseChatCommands") &&
+        commanda) ||
+        returnBeforeChatCommandsOrChatSend) {
         return;
     }
-    /*if(!((eventData.message.includes("${scripteval}") && (player.getDynamicProperty("canUseScriptEval") == true))||(eventData.message.includes("${run}") && ((player.isOp() == true)||(player.getDynamicProperty("canUseCommands") == true)))||(eventData.message.startsWith("\\")))){world.getDimension("overworld").runCommand("/playsound note.harp.ui @a ~~~ 1 0.75 1"); }*/ if (world.getDynamicProperty("andexdbSettings:validChatCommandPrefixes") != undefined && world.getDynamicProperty("andexdbSettings:validChatCommandPrefixes") != "") {
-        String(world.getDynamicProperty("andexdbSettings:validChatCommandPrefixes") ?? "").split(", ").forEach((prefix) => { if (newMessage.startsWith(prefix))
-            runreturn = true; });
+    /*if(!((eventData.message.includes("${scripteval}") && (player.getDynamicProperty("canUseScriptEval") == true))||(eventData.message.includes("${run}") && ((player.isOp() == true)||(player.getDynamicProperty("canUseCommands") == true)))||(eventData.message.startsWith("\\")))){world.getDimension("overworld").runCommand("/playsound note.harp.ui @a ~~~ 1 0.75 1"); }*/ if (world.getDynamicProperty("andexdbSettings:validChatCommandPrefixes") !=
+        undefined &&
+        world.getDynamicProperty("andexdbSettings:validChatCommandPrefixes") !=
+            "") {
+        String(world.getDynamicProperty("andexdbSettings:validChatCommandPrefixes") ?? "")
+            .split(", ")
+            .forEach((prefix) => {
+            if (newMessage.startsWith(prefix))
+                runreturn = true;
+        });
     }
-    ;
     if (Boolean(runreturn) == true) {
         return;
     }
-    if (((world.getDynamicProperty("andexdbSettings:chatCommandsEnbaled") != false && newMessage.startsWith(String(world.getDynamicProperty("andexdbSettings:chatCommandPrefix") ?? "\\")) /* && player.hasTag('canUseChatCommands')*/ || !!commanda)) /* && (eventData.message.startsWith(".give") || eventData.message.startsWith(".giveb") || eventData.message.startsWith(".h1") || eventData.message.startsWith(".h2") || eventData.message.startsWith(".h3") || eventData.message.startsWith(".playersettings") || eventData.message.startsWith(".run") || eventData.message.startsWith(".setitem") || eventData.message.startsWith(".invsee") || eventData.message.startsWith(".settings") || eventData.message.startsWith(".help") || eventData.message.startsWith(".h1 ") || eventData.message.startsWith(".h2") || eventData.message.startsWith(".h3") || eventData.message.startsWith(".h4") || eventData.message.startsWith(".h5") || eventData.message.startsWith(".w1") || eventData.message.startsWith(".w2") || eventData.message.startsWith(".debugstick") || eventData.message.startsWith(".playercontroller") || eventData.message.startsWith(".setslot") || eventData.message.startsWith(".worlddebug") || eventData.message.startsWith(".gmc") || eventData.message.startsWith(".gms") || eventData.message.startsWith(".gma") || eventData.message.startsWith(".gmd") || eventData.message.startsWith(".gmp") || eventData.message.startsWith(".spawn") || eventData.message.startsWith(".warp") || eventData.message.startsWith(".home") || eventData.message.startsWith(".all") || eventData.message.startsWith(".getEntityUUIDSelector"))*/) {
-        !!!commanda ? config.invalidChatCommandAction == 2 ? event.cancel = true : config.invalidChatCommandAction == 3 ? (event.cancel = true, player.sendMessage(`§r§cUnknown command: ${switchTest.startsWith("\\") ? "\\" + switchTest : switchTest}§r§c. Please check that the command exists and that you have permission to use it.`)) : config.invalidChatCommandAction == 1 ? chatSend({ returnBeforeChatSend, player, eventData, event, newMessage }) : undefined : chatCommands({ returnBeforeChatSend, player, eventData, event, newMessage });
+    if (config.chatCommandsEnabled != false &&
+        (newMessage.startsWith(config.chatCommandPrefix) /* && player.hasTag('canUseChatCommands')*/ ||
+            !!commanda) /* && (eventData.message.startsWith(".give") || eventData.message.startsWith(".giveb") || eventData.message.startsWith(".h1") || eventData.message.startsWith(".h2") || eventData.message.startsWith(".h3") || eventData.message.startsWith(".playersettings") || eventData.message.startsWith(".run") || eventData.message.startsWith(".setitem") || eventData.message.startsWith(".invsee") || eventData.message.startsWith(".settings") || eventData.message.startsWith(".help") || eventData.message.startsWith(".h1 ") || eventData.message.startsWith(".h2") || eventData.message.startsWith(".h3") || eventData.message.startsWith(".h4") || eventData.message.startsWith(".h5") || eventData.message.startsWith(".w1") || eventData.message.startsWith(".w2") || eventData.message.startsWith(".debugstick") || eventData.message.startsWith(".playercontroller") || eventData.message.startsWith(".setslot") || eventData.message.startsWith(".worlddebug") || eventData.message.startsWith(".gmc") || eventData.message.startsWith(".gms") || eventData.message.startsWith(".gma") || eventData.message.startsWith(".gmd") || eventData.message.startsWith(".gmp") || eventData.message.startsWith(".spawn") || eventData.message.startsWith(".warp") || eventData.message.startsWith(".home") || eventData.message.startsWith(".all") || eventData.message.startsWith(".getEntityUUIDSelector"))*/) {
+        !!!commanda
+            ? config.invalidChatCommandAction == 2
+                ? (event.cancel = true)
+                : config.invalidChatCommandAction == 3
+                    ? ((event.cancel = true),
+                        player.sendMessage(`§r§cUnknown command: ${switchTest.startsWith("\\")
+                            ? "\\" + switchTest
+                            : switchTest}§r§c. Please check that the command exists and that you have permission to use it.`))
+                    : config.invalidChatCommandAction == 1
+                        ? chatSend({
+                            returnBeforeChatSend,
+                            player,
+                            eventData,
+                            event,
+                            newMessage,
+                        })
+                        : undefined
+            : chatCommands({
+                returnBeforeChatSend,
+                player,
+                eventData,
+                event,
+                newMessage,
+            });
     }
     else {
         if ((world.getDynamicProperty("andexdbSettings:disableCustomChatMessages") ?? false) != true) {
-            if ((world.getDynamicProperty("andexdbSettings:chatCommandsEnbaled") != false && newMessage.startsWith(String(world.getDynamicProperty("andexdbSettings:chatCommandPrefix") ?? "\\")) && player.hasTag('canUseChatCommands') && ((world.getDynamicProperty("andexdbSettings:sendMessageOnInvalidChatCommand") ?? false) == false))) { }
+            if (world.getDynamicProperty("andexdbSettings:chatCommandsEnbaled") != false &&
+                newMessage.startsWith(String(world.getDynamicProperty("andexdbSettings:chatCommandPrefix") ?? "\\")) &&
+                player.hasTag("canUseChatCommands") &&
+                (world.getDynamicProperty("andexdbSettings:sendMessageOnInvalidChatCommand") ?? false) == false) {
+            }
             else {
-                chatSend({ returnBeforeChatSend, player, eventData, event, newMessage });
+                chatSend({
+                    returnBeforeChatSend,
+                    player,
+                    eventData,
+                    event,
+                    newMessage,
+                });
             }
         }
     }
