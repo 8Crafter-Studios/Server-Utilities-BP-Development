@@ -9,6 +9,7 @@ import { roundVector3ToMiddleOfBlock } from "modules/coordinates/functions/round
 import { fillBlocksHB } from "modules/main/functions/fillBlocksHB";
 import { fillBlocksHFGB } from "modules/main/functions/fillBlocksHFGB";
 import { fillBlocksHSGB } from "modules/main/functions/fillBlocksHSGB";
+import { scriptEvalRunWindow } from "modules/ui/functions/scriptEvalRunWindow";
 import { editorStick } from "modules/ui/functions/editorStick";
 import { editorStickB } from "modules/ui/functions/editorStickB";
 import { editorStickC } from "modules/ui/functions/editorStickC";
@@ -379,6 +380,10 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe(
             // ...
             // Output: [ <TextField Input>, <Dropdown Input>, <Slider Input>, <Toggle Input> ]
         }
+        if (event.itemStack?.typeId === "andexdb:script_runner") {
+            event.cancel = true;
+            srun(() => scriptEvalRunWindow(event.source));
+        }
         if (event.itemStack?.typeId === "andexdb:editor_stick") {
             event.cancel = true;
             try {
@@ -571,10 +576,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe(
                                     "§cError: Pattern for sphere generation is not defined on the item's dynamic properties."
                                 );
                             } else {
-                                const pos =
-                                    roundVector3ToMiddleOfBlock(
-                                        loc
-                                    );
+                                const pos = roundVector3ToMiddleOfBlock(loc);
                                 const blocktypes = BlockTypes.getAll();
                                 //console.warn("a")
                                 try {
@@ -663,10 +665,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe(
                                     "§cError: Pattern for sphere generation is not defined on the item's dynamic properties."
                                 );
                             } else {
-                                const pos =
-                                    roundVector3ToMiddleOfBlock(
-                                        loc
-                                    );
+                                const pos = roundVector3ToMiddleOfBlock(loc);
                                 const blocktypes = BlockTypes.getAll();
                                 //console.warn("a")
                                 try {
@@ -767,10 +766,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe(
                                     "§cError: Pattern for sphere generation is not defined on the item's dynamic properties."
                                 );
                             } else {
-                                const pos =
-                                    roundVector3ToMiddleOfBlock(
-                                        loc
-                                    );
+                                const pos = roundVector3ToMiddleOfBlock(loc);
                                 const blocktypes = BlockTypes.getAll();
                                 //console.warn("a")
                                 try {
@@ -884,10 +880,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe(
                                     "§cError: Pattern for sphere generation is not defined on the item's dynamic properties."
                                 );
                             } else {
-                                const pos =
-                                    roundVector3ToMiddleOfBlock(
-                                        loc
-                                    );
+                                const pos = roundVector3ToMiddleOfBlock(loc);
                                 const blocktypes = BlockTypes.getAll();
                                 //console.warn("a")
                                 try {
@@ -1006,10 +999,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe(
                                     "§cError: Pattern for sphere generation is not defined on the item's dynamic properties."
                                 );
                             } else {
-                                const pos =
-                                    roundVector3ToMiddleOfBlock(
-                                        loc
-                                    );
+                                const pos = roundVector3ToMiddleOfBlock(loc);
                                 const blocktypes = BlockTypes.getAll();
                                 //console.warn("a")
                                 try {
@@ -1140,10 +1130,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe(
                                     "§cError: Pattern for sphere generation is not defined on the item's dynamic properties."
                                 );
                             } else {
-                                const pos =
-                                    roundVector3ToMiddleOfBlock(
-                                        loc
-                                    );
+                                const pos = roundVector3ToMiddleOfBlock(loc);
                                 const blocktypes = BlockTypes.getAll();
                                 //console.warn("a")
                                 try {
@@ -1278,10 +1265,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe(
                                     "§cError: Pattern for sphere generation is not defined on the item's dynamic properties."
                                 );
                             } else {
-                                const pos =
-                                    roundVector3ToMiddleOfBlock(
-                                        loc
-                                    );
+                                const pos = roundVector3ToMiddleOfBlock(loc);
                                 const blocktypes = BlockTypes.getAll();
                                 //console.warn("a")
                                 try {
@@ -1412,10 +1396,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe(
                                     "§cError: Pattern for sphere generation is not defined on the item's dynamic properties."
                                 );
                             } else {
-                                const pos =
-                                    roundVector3ToMiddleOfBlock(
-                                        loc
-                                    );
+                                const pos = roundVector3ToMiddleOfBlock(loc);
                                 //const cornerradius = Vector.distance(pos, {x: pos.x-radius, y: pos.y-radius, z: pos.z-radius})
                                 const blocktypes = BlockTypes.getAll();
                                 //console.warn("a")
@@ -1558,10 +1539,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe(
                                     "§cError: Pattern for sphere generation is not defined on the item's dynamic properties."
                                 );
                             } else {
-                                const pos =
-                                    roundVector3ToMiddleOfBlock(
-                                        loc
-                                    );
+                                const pos = roundVector3ToMiddleOfBlock(loc);
                                 //const cornerradius = Vector.distance(pos, {x: pos.x-radius, y: pos.y-radius, z: pos.z-radius})
                                 const blocktypes = BlockTypes.getAll();
                                 //console.warn("a")
@@ -1673,10 +1651,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe(
                                     "§cError: You must be facing a block."
                                 );
                             } else {
-                                const pos =
-                                    roundVector3ToMiddleOfBlock(
-                                        loc
-                                    );
+                                const pos = roundVector3ToMiddleOfBlock(loc);
                                 let froma = Vector3Utils.subtract(pos, {
                                     x: radius,
                                     y: radius,
@@ -1753,10 +1728,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe(
                                     "§cError: You must be facing a block."
                                 );
                             } else {
-                                const pos =
-                                    roundVector3ToMiddleOfBlock(
-                                        loc
-                                    );
+                                const pos = roundVector3ToMiddleOfBlock(loc);
                                 let froma = Vector3Utils.subtract(pos, {
                                     x: radius,
                                     y: radius,
@@ -1959,10 +1931,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe(
                                     "§cError: You must be facing a block."
                                 );
                             } else {
-                                const pos =
-                                    roundVector3ToMiddleOfBlock(
-                                        loc
-                                    );
+                                const pos = roundVector3ToMiddleOfBlock(loc);
                                 let froma = Vector3Utils.subtract(pos, {
                                     x: radius,
                                     y: radius,

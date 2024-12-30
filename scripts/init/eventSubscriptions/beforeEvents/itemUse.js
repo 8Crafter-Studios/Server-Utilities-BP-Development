@@ -9,6 +9,7 @@ import { roundVector3ToMiddleOfBlock } from "modules/coordinates/functions/round
 import { fillBlocksHB } from "modules/main/functions/fillBlocksHB";
 import { fillBlocksHFGB } from "modules/main/functions/fillBlocksHFGB";
 import { fillBlocksHSGB } from "modules/main/functions/fillBlocksHSGB";
+import { scriptEvalRunWindow } from "modules/ui/functions/scriptEvalRunWindow";
 import { editorStick } from "modules/ui/functions/editorStick";
 import { editorStickB } from "modules/ui/functions/editorStickB";
 import { editorStickC } from "modules/ui/functions/editorStickC";
@@ -361,6 +362,10 @@ console.error(e, e.stack);
         });
         // ...
         // Output: [ <TextField Input>, <Dropdown Input>, <Slider Input>, <Toggle Input> ]
+    }
+    if (event.itemStack?.typeId === "andexdb:script_runner") {
+        event.cancel = true;
+        srun(() => scriptEvalRunWindow(event.source));
     }
     if (event.itemStack?.typeId === "andexdb:editor_stick") {
         event.cancel = true;

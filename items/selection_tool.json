@@ -1,5 +1,5 @@
 {
-	"format_version": "1.20.50",
+	"format_version": "1.21.50",
 	"minecraft:item": {
 		"description": {
 			"identifier": "andexdb:selection_tool"
@@ -9,9 +9,11 @@
 			"minecraft:stacked_by_data": true,
 			"minecraft:max_stack_size": 1,
 			"minecraft:icon": {
-				"texture": "axe"
+				"textures": {
+					"default": "axe"
+				}
 			},
-			"minecraft:interact_button": true, /*
+			"minecraft:interact_button": "Select", /*
 			"minecraft:render_offsets": {
 				"main_hand": {
 					"first_person": {*//*
