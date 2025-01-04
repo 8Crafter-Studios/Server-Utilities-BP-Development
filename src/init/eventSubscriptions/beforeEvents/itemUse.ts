@@ -14,6 +14,7 @@ import { editorStick } from "modules/ui/functions/editorStick";
 import { editorStickB } from "modules/ui/functions/editorStickB";
 import { editorStickC } from "modules/ui/functions/editorStickC";
 import { mainMenu } from "modules/ui/functions/mainMenu";
+import { securityVariables } from "security/ultraSecurityModeUtils";
 
 subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe(
     (event) => {
@@ -72,6 +73,12 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe(
         if (event.itemStack?.typeId === "andexdb:inventory_controller") {
             event.cancel = true;
             try {
+                if (securityVariables.ultraSecurityModeEnabled) {
+                    if(securityVariables.testPlayerForPermission(event.source, "andexdb.canUseInventoryController") == false){
+                        event.source.sendMessage("§cYou do not have permission to use an Inventory Controller. You need the following permission to use this item: andexdb.canUseInventoryController");
+                        return;
+                    }
+                }
                 event.source.runCommandAsync(
                     String(
                         "/scriptevent andexdb:itemLoreInventoryModifier hisw"
@@ -214,6 +221,12 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe(
         ) {
             event.cancel = true;
             try {
+                if (securityVariables.ultraSecurityModeEnabled) {
+                    if(securityVariables.testPlayerForPermission(event.source, "andexdb.canUseInventoryController") == false){
+                        event.source.sendMessage("§cYou do not have permission to use an Inventory Controller. You need the following permission to use this item: andexdb.canUseInventoryController");
+                        return;
+                    }
+                }
                 event.source.runCommandAsync(
                     String(
                         "/scriptevent andexdb:itemLoreInventoryModifier hisw"
@@ -352,6 +365,12 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe(
         }
         if (event.itemStack?.typeId === "andexdb:command_runner") {
             event.cancel = true;
+            if (securityVariables.ultraSecurityModeEnabled) {
+                if(securityVariables.testPlayerForPermission(event.source, "andexdb.canUseCommandRunnerStick") == false){
+                    event.source.sendMessage("§cYou do not have permission to use a Command Runner. You need the following permission to use this item: andexdb.canUseCommandRunnerStick");
+                    return;
+                }
+            }
             system.run(() => {
                 let form = new ModalFormData();
                 form.title("Command Runner / Terminal");
@@ -382,10 +401,22 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe(
         }
         if (event.itemStack?.typeId === "andexdb:script_runner") {
             event.cancel = true;
+            if (securityVariables.ultraSecurityModeEnabled) {
+                if(securityVariables.testPlayerForPermission(event.source, "andexdb.canUseScriptRunnerStick") == false){
+                    event.source.sendMessage("§cYou do not have permission to use a Script Runner. You need the following permission to use this item: andexdb.canUseScriptRunnerStick");
+                    return;
+                }
+            }
             srun(() => scriptEvalRunWindow(event.source));
         }
         if (event.itemStack?.typeId === "andexdb:editor_stick") {
             event.cancel = true;
+            if (securityVariables.ultraSecurityModeEnabled) {
+                if(securityVariables.testPlayerForPermission(event.source, "andexdb.canUseEditorSticks") == false){
+                    event.source.sendMessage("§cYou do not have permission to use an Editor Stick. You need the following permission to use this item: andexdb.canUseEditorSticks");
+                    return;
+                }
+            }
             try {
                 system.clearRun(
                     editorStickMenuOpeningAsyncCancelActionNumbers[
@@ -401,6 +432,12 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe(
         }
         if (event.itemStack?.typeId === "andexdb:editor_stick_b") {
             event.cancel = true;
+            if (securityVariables.ultraSecurityModeEnabled) {
+                if(securityVariables.testPlayerForPermission(event.source, "andexdb.canUseEditorSticks") == false){
+                    event.source.sendMessage("§cYou do not have permission to use an Editor Stick B. You need the following permission to use this item: andexdb.canUseEditorSticks");
+                    return;
+                }
+            }
             try {
                 system.clearRun(
                     editorStickMenuOpeningAsyncCancelActionNumbers[
@@ -416,6 +453,12 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe(
         }
         if (event.itemStack?.typeId === "andexdb:editor_stick_c") {
             event.cancel = true;
+            if (securityVariables.ultraSecurityModeEnabled) {
+                if(securityVariables.testPlayerForPermission(event.source, "andexdb.canUseEditorSticks") == false){
+                    event.source.sendMessage("§cYou do not have permission to use an Editor StickC. You need the following permission to use this item: andexdb.canUseEditorSticks");
+                    return;
+                }
+            }
             try {
                 system.clearRun(
                     editorStickMenuOpeningAsyncCancelActionNumbers[
@@ -431,6 +474,12 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe(
         }
         if (event.itemStack?.typeId === "andexdb:player_debug_stick") {
             event.cancel = true;
+            if (securityVariables.ultraSecurityModeEnabled) {
+                if(securityVariables.testPlayerForPermission(event.source, "andexdb.canUseEntityDebugSticks") == false){
+                    event.source.sendMessage("§cYou do not have permission to use a Player Debug Stick. You need the following permission to use this item: andexdb.canUseEntityDebugSticks");
+                    return;
+                }
+            }
             try {
                 event.source.runCommandAsync(
                     String("/scriptevent andexdb:playerDebug saqw")
@@ -444,6 +493,12 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe(
         }
         if (event.itemStack?.typeId === "andexdb:player_controller") {
             event.cancel = true;
+            if (securityVariables.ultraSecurityModeEnabled) {
+                if(securityVariables.testPlayerForPermission(event.source, "andexdb.canUseEntityControllerItems") == false){
+                    event.source.sendMessage("§cYou do not have permission to use a Player Controller. You need the following permission to use this item: andexdb.canUseEntityControllerItems");
+                    return;
+                }
+            }
             try {
                 event.source.runCommandAsync(
                     String("/scriptevent andexdb:playerController asdw")
@@ -457,6 +512,12 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe(
         }
         if (event.itemStack?.typeId === "andexdb:debug_screen") {
             event.cancel = true;
+            if (securityVariables.ultraSecurityModeEnabled) {
+                if(securityVariables.testPlayerForPermission(event.source, "andexdb.canUseEditorSticks") == false){
+                    event.source.sendMessage("§cYou do not have permission to use a Debug Screen. You need the following permission to use this item: andexdb.canUseEditorSticks");
+                    return;
+                }
+            }
             try {
                 event.source.runCommandAsync(
                     String("/scriptevent andexdb:debugScreen sdaq")
@@ -470,6 +531,12 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe(
         }
         if (event.itemStack?.typeId === "andexdb:entity_controller") {
             event.cancel = true;
+            if (securityVariables.ultraSecurityModeEnabled) {
+                if(securityVariables.testPlayerForPermission(event.source, "andexdb.canUseEntityControllerItems") == false){
+                    event.source.sendMessage("§cYou do not have permission to use an Entity Controller. You need the following permission to use this item: andexdb.canUseEntityControllerItems");
+                    return;
+                }
+            }
             try {
                 event.source.runCommandAsync(
                     String("/scriptevent andexdb:entityController nsaz")
@@ -483,6 +550,12 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe(
         }
         if (event.itemStack?.typeId === "andexdb:entity_debug_stick") {
             event.cancel = true;
+            if (securityVariables.ultraSecurityModeEnabled) {
+                if(securityVariables.testPlayerForPermission(event.source, "andexdb.canUseEntityDebugSticks") == false){
+                    event.source.sendMessage("§cYou do not have permission to use a Entity Debug Stick. You need the following permission to use this item: andexdb.canUseEntityDebugSticks");
+                    return;
+                }
+            }
             try {
                 event.source.runCommandAsync(
                     String("/scriptevent andexdb:entityDebug saop")
@@ -496,6 +569,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe(
         }
         if (event.itemStack?.typeId === "andexdb:main_menu") {
             event.cancel = true;
+            // Don't bother adding a permissions checker because it will check when opening the main menu.
             try {
                 srun(() => mainMenu(event.source));
             } catch (e) {
@@ -507,6 +581,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe(
         }
         if (event.itemStack?.typeId === "andexdb:selection_menu") {
             event.cancel = true;
+            // Don't bother adding a permissions checker because it will check when opening the main menu.
             try {
                 srun(() => mainMenu(event.source));
             } catch (e) {
@@ -517,6 +592,12 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe(
             // Output: [ <TextField Input>, <Dropdown Input>, <Slider Input>, <Toggle Input> ]
         }
         if (!!event.itemStack.getDynamicProperty("brushtype")) {
+            if (securityVariables.ultraSecurityModeEnabled) {
+                if(securityVariables.testPlayerForPermission(event.source, "andexdb.useWorldEdit") == false){
+                    event.source.sendMessage("§cYou do not have permission to use WorldEdit Brushes. You need the following permission to use this item: andexdb.useWorldEdit");
+                    return;
+                }
+            }
             try {
                 //console.warn("b")
                 switch (
@@ -2071,6 +2152,12 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe(
             }
         } else if (event.itemStack?.typeId === "andexdb:selection_tool") {
             event.cancel = true;
+            if (securityVariables.ultraSecurityModeEnabled) {
+                if(securityVariables.testPlayerForPermission(event.source, "andexdb.useWorldEdit") == false){
+                    event.source.sendMessage("§cYou do not have permission to use the WorldEdit Selection Tool. You need the following permission to use this item: andexdb.useWorldEdit");
+                    return;
+                }
+            }
             try {
                 const mode = Boolean(
                     event.source.getDynamicProperty("posM") ?? false

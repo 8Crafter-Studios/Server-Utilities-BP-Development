@@ -78,8 +78,8 @@ export type optionalModuleObjectImportFilePathsImportMap = {
     "BP/scripts/modules/commands/functions/generateNBTFileF.js": typeof import("./modules/commands/functions/generateNBTFileF");
     "BP/scripts/modules/commands/functions/getAllEntities.js": typeof import("./modules/commands/functions/getAllEntities");
     "BP/scripts/modules/commands/functions/getEntityById.js": typeof import("./modules/commands/functions/getEntityById");
-    "BP/scripts/modules/commands/functions/getPlayer.js": typeof import("./modules/commands/functions/getPlayer");
-    "BP/scripts/modules/commands/functions/getPlayerById.js": typeof import("./modules/commands/functions/getPlayerById");
+    "BP/scripts/modules/commands/functions/getPlayer.js": typeof import("./init/functions/getPlayer");
+    "BP/scripts/modules/commands/functions/getPlayerById.js": typeof import("./init/functions/getPlayerById");
     "BP/scripts/modules/commands/functions/getPlayersWithAnyOfTags.js": typeof import("./modules/commands/functions/getPlayersWithAnyOfTags");
     "BP/scripts/modules/commands/functions/getPlayersWithTags.js": typeof import("./modules/commands/functions/getPlayersWithTags");
     "BP/scripts/modules/commands/functions/idGenerator.js": typeof import("./modules/commands/functions/idGenerator");

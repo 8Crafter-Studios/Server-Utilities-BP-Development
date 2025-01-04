@@ -13,3 +13,4 @@ globalThis.formatDate = function formatDate(
         .toString()
         .padStart(2, "0")}/${dateb.getUTCFullYear().toString()}`;
 };
+import "init/meta/importToMakeValidModule";

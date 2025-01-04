@@ -21,3 +21,4 @@ globalThis.formatTime = function formatTime<includeMs extends boolean>(
             ? `.${dateb.getUTCMilliseconds().toString().padStart(3, "0")}`
             : ""} ${dateb.getUTCHours() > 11 ? "P" : "A"}M` as any;
 };
+import "init/meta/importToMakeValidModule";

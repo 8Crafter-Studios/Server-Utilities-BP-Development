@@ -3,14 +3,48 @@ import { ModalFormData, ModalFormResponse } from "@minecraft/server-ui";
 import { config } from "init/classes/config";
 import { forceShow } from "modules/ui/functions/forceShow";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
-import { moderationSettings } from "./moderationSettings";
+import { securityVariables } from "security/ultraSecurityModeUtils";
+import { showMessage } from "modules/utilities/functions/showMessage";
 
-export function antispamSettings(
+/**
+ * Configures and displays the anti-spam settings form to the specified player or entity.
+ * 
+ * @param sourceEntitya - The entity or player requesting the anti-spam settings. Can be of type `Entity`, `executeCommandPlayerW`, or `Player`.
+ * @returns A promise that resolves to:
+ * - `1` if the form was successfully shown and handled.
+ * - `0` if the user canceled the form.
+ * - `-2` if an error occurred.
+ * 
+ * The function performs the following steps:
+ * 1. Checks if ultra security mode is enabled and if the player has the required permission to access the settings.
+ * 2. If the player lacks permission, shows an access denied message.
+ * 3. Creates and configures a modal form for anti-spam settings.
+ * 4. Displays the form to the player and processes the form response.
+ * 5. Updates the configuration based on the form input.
+ * 
+ * The form includes the following settings:
+ * - Toggle for enabling/disabling anti-spam.
+ * - Toggle for resetting the anti-spam mute timer upon attempted message send while muted.
+ * - Text field for setting the wait time before a player can send another chat message.
+ * - Text field for setting the maximum time between messages to trigger anti-spam.
+ * - Slider for setting the message count to trigger anti-spam.
+ */
+export async function antispamSettings(
     sourceEntitya: Entity | executeCommandPlayerW | Player
-) {
+): Promise<1 | -2 | 0> {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW
         ? sourceEntitya.player
         : sourceEntitya;
+    if (securityVariables.ultraSecurityModeEnabled) {
+        if(securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.accessSettings") == false){
+            const r = await showMessage(sourceEntity as Player, "Access Denied (403)", "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.accessSettings", "Okay", "Cancel");
+            if(r.canceled || r.selection == 0){
+                return 1;
+            }else{
+                return 0;
+            }
+        }
+    }
     let form2 = new ModalFormData();
     form2.title("Anti-Spam Settings [§cExperimental§r]");
     form2.toggle(
@@ -40,12 +74,11 @@ export function antispamSettings(
         config.antiSpamSystem.antispamTriggerMessageCount
     );
     form2.submitButton("Save");
-    forceShow(form2, sourceEntity as Player)
+    return await forceShow(form2, sourceEntity as Player)
         .then((to) => {
             let t = to as ModalFormResponse;
             if (t.canceled) {
-                moderationSettings(sourceEntity);
-                return;
+                return 1 as const;
             } /*
     GameTest.Test.prototype.spawnSimulatedPlayer({x: 0, y: 0, z: 0})*/ /*
         ${se}GameTest.Test.prototype.spawnSimulatedPlayer({x: 0, y: 0, z: 0})*/
@@ -70,9 +103,10 @@ export function antispamSettings(
             config.antiSpamSystem.antispamTriggerMessageCount = Number(
                 antispamTriggerMessageCount
             );
-            moderationSettings(sourceEntity);
+            return 1;
         })
         .catch((e) => {
             console.error(e, e.stack);
+            return -2 as const;
         });
 }

@@ -4,10 +4,23 @@ import { config } from "init/classes/config";
 import { forceShow } from "modules/ui/functions/forceShow";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { settings } from "./settings";
-export function globalSettings(sourceEntitya) {
+import { securityVariables } from "security/ultraSecurityModeUtils";
+import { showMessage } from "modules/utilities/functions/showMessage";
+export async function globalSettings(sourceEntitya) {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW
         ? sourceEntitya.player
         : sourceEntitya;
+    if (securityVariables.ultraSecurityModeEnabled) {
+        if (securityVariables.testPlayerForPermission(sourceEntity, "andexdb.accessSettings") == false) {
+            const r = await showMessage(sourceEntity, "Access Denied (403)", "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.accessSettings", "Back", "Cancel");
+            if (r.canceled || r.selection == 0) {
+                return 1;
+            }
+            else {
+                return 0;
+            }
+        }
+    }
     let form2 = new ModalFormData();
     ("andexdbSettings:autoEscapeChatMessages");
     ("andexdbSettings:autoURIEscapeChatMessages");
@@ -48,12 +61,11 @@ export function globalSettings(sourceEntitya) {
     form2.toggle("§l§fplayerInventoryDataSaveSystemEnabled§r\nWhether or not to save the player's inventory data when saving player data, disabling this will result in being unable to check the inventories of offline players, this only applies when §bautoSavePlayerData§r is enabled, the default is true", config.system.playerInventoryDataSaveSystemEnabled);
     form2.toggle("§l§fuseLegacyPlayerInventoryDataSaveSystem§r\nWhether or not to use the pre-1.26 player inventory data save system, enabling this will result in only being able to see general details about the items that were in an offline player's inventory, as well as increasing lag, this only applies when §bautoSavePlayerData§r and §bplayerInventoryDataSaveSystemEnabled§r are enabled, the default is false", config.system.useLegacyPlayerInventoryDataSaveSystem);
     form2.submitButton("Save");
-    forceShow(form2, sourceEntity)
+    return await forceShow(form2, sourceEntity)
         .then((to) => {
         let t = to;
         if (t.canceled) {
-            settings(sourceEntity);
-            return;
+            return 1;
         } /*
 GameTest.Test.prototype.spawnSimulatedPlayer({x: 0, y: 0, z: 0})*/ /*
             ${se}GameTest.Test.prototype.spawnSimulatedPlayer({x: 0, y: 0, z: 0})*/
@@ -84,10 +96,10 @@ world.setDynamicProperty("andexdbSettings:chatNameAndMessageSeparator", chatName
                 !!!spawnCommandLocation.split(" ")[1]
                 ? null
                 : Number(spawnCommandLocation.split(" ")[1]),
-            z: spawnCommandLocation.split(" ")[0] == "" ||
-                !!!spawnCommandLocation.split(" ")[1]
+            z: spawnCommandLocation.split(" ")[2] == "" ||
+                !!!spawnCommandLocation.split(" ")[2]
                 ? null
-                : Number(spawnCommandLocation.split(" ")[1]),
+                : Number(spawnCommandLocation.split(" ")[2]),
             dimension: dimensions[spawnCommandDimension],
         };
         config.chatCommandsEnabled = chatCommandsEnbaled; /*
@@ -103,10 +115,11 @@ world.setDynamicProperty("andexdbSettings:chatDisplayTimeStamp", chatDisplayTime
             playerInventoryDataSaveSystemEnabled;
         config.system.useLegacyPlayerInventoryDataSaveSystem =
             useLegacyPlayerInventoryDataSaveSystem;
-        settings(sourceEntity);
+        return 1;
     })
         .catch((e) => {
         console.error(e, e.stack);
+        return 0;
     });
 }
 //# sourceMappingURL=globalSettings.js.map

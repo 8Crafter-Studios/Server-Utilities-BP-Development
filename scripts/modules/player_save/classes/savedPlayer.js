@@ -1,8 +1,10 @@
-import { EquipmentSlot, Dimension, GameMode, MemoryTier, PlatformType, PlayerInputPermissions, world, Player, StructureSaveMode, ItemStack } from "@minecraft/server";
+import { EquipmentSlot, Dimension, GameMode, MemoryTier, PlatformType, PlayerInputPermissions, world, Player, StructureSaveMode, ItemStack, InputPermissionCategory, PlayerCursorInventoryComponent, ContainerSlot, } from "@minecraft/server";
 import { config } from "init/classes/config";
 import { ban } from "modules/ban/classes/ban";
+import { getSlotFromParsedSlot } from "modules/command_utilities/functions/getSlotFromParsedSlot";
 import { EquipmentSlots } from "modules/command_utilities/constants/EquipmentSlots";
 import { player_save_format_version } from "modules/player_save/functions/player_save_format_version";
+import * as semver from "semver";
 export class savedPlayer {
     name;
     id;
@@ -27,6 +29,16 @@ export class savedPlayer {
     maxRenderDistance;
     platformType;
     inputPermissions;
+    /**
+     * @since format version 1.6.0
+     * @since v1.28.0-preview.20+BUILD.1
+     */
+    playerPermissions;
+    /**
+     * @since format version 1.6.0
+     * @since v1.28.0-preview.20+BUILD.1
+     */
+    onJoinActions = [];
     constructor(data) {
         if (!!data.format_version &&
             semver.gt(data.player_save_format_version ?? "0.0.0", player_save_format_version)) {
@@ -55,6 +67,11 @@ export class savedPlayer {
             this.maxRenderDistance = data.maxRenderDistance;
             this.platformType = data.platformType;
         }
+        if (semver.satisfies(data.player_save_format_version ?? "0.0.0", ">=1.6.0 <2.0.0", { includePrerelease: true })) {
+            this.inputPermissions = data.inputPermissions;
+            this.playerPermissions = data.playerPermissions;
+            this.onJoinActions = data.onJoinActions;
+        }
         if (semver.satisfies(data.player_save_format_version ?? "0.0.0", "<1.5.0", { includePrerelease: true })) {
             this.items = data.items;
         }
@@ -70,6 +87,52 @@ export class savedPlayer {
             bypassParameterTypeChecks: true,
             rethrowErrorInFinally: false,
         });
+    }
+    async executeOnJoinActions() {
+        const player = getPlayerById(this.id);
+        if (!!player) {
+            this.onJoinActions.forEach((action) => {
+                switch (action.type) {
+                    case "add_tag":
+                        getPlayer(this.id).addTag(action.tag);
+                        break;
+                    case "remove_tag":
+                        getPlayer(this.id).removeTag(action.tag);
+                        break;
+                    case "add_tags":
+                        action.tags.forEach((tag) => getPlayer(this.id).addTag(tag));
+                        break;
+                    case "remove_tags":
+                        action.tags.forEach((tag) => getPlayer(this.id).removeTag(tag));
+                        break;
+                    case "remove_item_in_slot":
+                        const slot = getSlotFromParsedSlot(action.slot, {
+                            container: player.inventory.container,
+                            equipment: player.equippable,
+                            cursor: player.cursorInventory,
+                            selectedSlotIndex: player
+                                .selectedSlotIndex,
+                        });
+                        if ("item" in slot) {
+                            slot.clear();
+                        }
+                        else {
+                            slot.setItem(null);
+                        }
+                        break;
+                    case "clear_inventory":
+                        player.inventory.container.clearAll();
+                        break;
+                    case "set_permission":
+                        player.playerPermissions[action.permission] = action.value;
+                        break;
+                }
+            });
+            this.onJoinActions = [];
+            this.save();
+        }
+        else
+            throw new ReferenceError("Player not found");
     }
     get isOnline() {
         return world.getAllPlayers().find((_) => _.id == this.id) != undefined;
@@ -412,6 +475,7 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
         return items;
     }
     static savePlayer(player) {
+        const origData = this.getSavedPlayer("player:" + player.id);
         let savedPlayerData;
         savedPlayerData = {
             name: player.name,
@@ -423,7 +487,7 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
             format_version: format_version,
             player_save_format_version: player_save_format_version,
             lastOnline: Date.now(),
-            firstJoined: tryget(() => this.getSavedPlayer("player:" + player.id).firstJoined) ?? Date.now(),
+            firstJoined: origData.firstJoined ?? Date.now(),
             location: player.location,
             dimension: player.dimension,
             rotation: player.getRotation(),
@@ -433,9 +497,24 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
             maxRenderDistance: player.clientSystemInfo.maxRenderDistance,
             platformType: player.clientSystemInfo.platformType,
             inputPermissions: {
-                cameraEnabled: player.inputPermissions.cameraEnabled,
-                movementEnabled: player.inputPermissions.movementEnabled,
+                Camera: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.Camera),
+                Movement: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.Movement),
+                LateralMovement: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.LateralMovement),
+                Sneak: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.Sneak),
+                Jump: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.Jump),
+                Mount: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.Mount),
+                Dismount: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.Dismount),
+                MoveForward: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.MoveForward),
+                MoveBackward: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.MoveBackward),
+                MoveLeft: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.MoveLeft),
+                MoveRight: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.MoveRight),
             },
+            inputInfo: {
+                lastInputModeUsed: player.inputInfo.lastInputModeUsed,
+                touchOnlyAffectsHotbar: player.inputInfo.touchOnlyAffectsHotbar,
+            },
+            playerPermissions: player.playerPermissions.toJSON(),
+            onJoinActions: origData.onJoinActions ?? [],
         };
         savedPlayerData.saveId =
             savedPlayerData.saveId ?? "player:" + savedPlayerData.id;
@@ -613,6 +692,8 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
         return savedPlayerData.saveId ?? `player:${savedPlayerData.id}`;
     }
     static async savePlayerAsync(player) {
+        const origData = tryget(() => this.getSavedPlayer("player:" + player.id)) ??
+            {};
         let savedPlayerData;
         savedPlayerData = {
             name: player.name,
@@ -624,7 +705,7 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
             format_version: format_version,
             player_save_format_version: player_save_format_version,
             lastOnline: Date.now(),
-            firstJoined: tryget(() => this.getSavedPlayer("player:" + player.id).firstJoined) ?? Date.now(),
+            firstJoined: origData.firstJoined ?? Date.now(),
             location: player.location,
             dimension: player.dimension,
             rotation: player.getRotation(),
@@ -634,9 +715,24 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
             maxRenderDistance: player.clientSystemInfo.maxRenderDistance,
             platformType: player.clientSystemInfo.platformType,
             inputPermissions: {
-                cameraEnabled: player.inputPermissions.cameraEnabled,
-                movementEnabled: player.inputPermissions.movementEnabled,
+                Camera: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.Camera),
+                Movement: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.Movement),
+                LateralMovement: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.LateralMovement),
+                Sneak: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.Sneak),
+                Jump: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.Jump),
+                Mount: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.Mount),
+                Dismount: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.Dismount),
+                MoveForward: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.MoveForward),
+                MoveBackward: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.MoveBackward),
+                MoveLeft: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.MoveLeft),
+                MoveRight: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.MoveRight),
             },
+            inputInfo: {
+                lastInputModeUsed: player.inputInfo.lastInputModeUsed,
+                touchOnlyAffectsHotbar: player.inputInfo.touchOnlyAffectsHotbar,
+            },
+            playerPermissions: player.playerPermissions.toJSON(),
+            onJoinActions: origData.onJoinActions ?? [],
         };
         savedPlayerData.saveId =
             savedPlayerData.saveId ?? "player:" + savedPlayerData.id;

@@ -5,10 +5,12 @@ import { antispamSettings } from "./antispamSettings";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { manageBans } from "./manageBans";
 import { mainMenu } from "./mainMenu";
+import { securityVariables } from "security/ultraSecurityModeUtils";
+import { showMessage } from "modules/utilities/functions/showMessage";
 
-export function moderationSettings(
+export async function moderationSettings(
     sourceEntitya: Entity | executeCommandPlayerW | Player
-) {
+): Promise<-2 | 0 | 1> {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW
         ? sourceEntitya.player
         : sourceEntitya;
@@ -26,40 +28,53 @@ export function moderationSettings(
         "§4Anti-Cheat§f(§cComing Soon!§f)",
         "textures/ui/friend_glyph_desaturated"
     );
-    form.button("Back", "textures/ui/arrow_left"); /*
+    form.button("Back", "textures/ui/arrow_left");
+    form.button("Close", "textures/ui/crossout"); /*
 form.button("Debug Screen", "textures/ui/ui_debug_glyph_color");*/
 
-    forceShow(form, sourceEntity as Player)
-        .then((ra) => {
+    return await forceShow(form, sourceEntity as Player)
+        .then(async (ra) => {
             let r = ra as ActionFormResponse;
             // This will stop the code when the player closes the form
-            if (r.canceled) return;
+            if (r.canceled) return 1 as const;
 
             let response = r.selection;
             switch (response) {
                 case 0:
                     //manageBannedItems(sourceEntity)
+                    return 1;
                     break;
 
                 case 1:
-                    manageBans(sourceEntity, moderationSettings);
+                    if((await manageBans(sourceEntity)) == 1){
+                        return await moderationSettings(sourceEntity);
+                    }else{
+                        return 0;
+                    };
                     break;
 
                 case 2:
-                    antispamSettings(sourceEntity);
+                    if((await antispamSettings(sourceEntity)) == 1){
+                        return await moderationSettings(sourceEntity);
+                    }else{
+                        return 0;
+                    };
                     break;
 
                 case 3:
                     //anticheatSettings(sourceEntity)
+                    return 1;
                     break;
 
                 case 4:
-                    mainMenu(sourceEntity);
+                    return 1
                     break;
                 default:
+                    return 0;
             }
         })
         .catch((e) => {
             console.error(e, e.stack);
+            return -2 as const;
         });
 }

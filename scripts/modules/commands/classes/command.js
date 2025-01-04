@@ -10,6 +10,7 @@ import { commandSettings } from "modules/commands/classes/commandSettings";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { sOSATSA } from "modules/commands/functions/sOSATSA";
 import { commands } from "modules/commands_list/constants/commands";
+import { securityVariables } from "security/ultraSecurityModeUtils";
 export class command {
     type;
     commandName;
@@ -54,11 +55,7 @@ export class command {
                             }
                         })()
                     : command.type == "custom"
-                        ? JSONParse(String(world.getDynamicProperty(world
-                            .getDynamicPropertyIds()
-                            .find((v) => v ==
-                            "customCommand:" +
-                                command.commandName)) ?? "undefined"))
+                        ? JSONParse(String(world.getDynamicProperty(world.getDynamicPropertyIds().find((v) => v == "customCommand:" + command.commandName)) ?? "undefined"))
                         : commands.find((v) => v.commandName == command.commandName) ??
                             (() => {
                                 let a = commands.find((v) => !!v.aliases?.find((vb) => vb.commandName == command.commandName));
@@ -73,22 +70,14 @@ export class command {
                                     return;
                                 }
                             })() ??
-                            JSONParse(String(world.getDynamicProperty(world
-                                .getDynamicPropertyIds()
-                                .find((v) => v ==
-                                "customCommand:" +
-                                    command.commandName)) ?? "undefined"));
+                            JSONParse(String(world.getDynamicProperty(world.getDynamicPropertyIds().find((v) => v == "customCommand:" + command.commandName)) ?? "undefined"));
         }
         catch { }
         this.description = command.description ?? commandtest?.description;
-        this.commandName =
-            this?.selectedalias?.alias?.aliasTo ?? command.commandName;
-        this.currentCommandName =
-            this?.selectedalias?.alias?.commandName ?? command.commandName;
-        this.command_version =
-            command.command_version ?? commandtest?.command_version;
-        this.escregexp = command.escregexp ??
-            commandtest?.escregexp ?? { v: "^" + command.commandName + "$" };
+        this.commandName = this?.selectedalias?.alias?.aliasTo ?? command.commandName;
+        this.currentCommandName = this?.selectedalias?.alias?.commandName ?? command.commandName;
+        this.command_version = command.command_version ?? commandtest?.command_version;
+        this.escregexp = command.escregexp ?? commandtest?.escregexp ?? { v: "^" + command.commandName + "$" };
         this.currentescregexp = command.escregexp ??
             this?.selectedalias?.alias?.escregexp ??
             commandtest?.escregexp ?? {
@@ -96,40 +85,19 @@ export class command {
         };
         this.formats = command.formats ?? commandtest?.formats; /*
         this.parameters = command.parameters; */
-        this.format_version =
-            command.format_version ??
-                commandtest?.format_version ??
-                format_version;
-        this.commands_format_version =
-            command.commands_format_version ??
-                commandtest?.commands_format_version ??
-                commands_format_version;
+        this.format_version = command.format_version ?? commandtest?.format_version ?? format_version;
+        this.commands_format_version = command.commands_format_version ?? commandtest?.commands_format_version ?? commands_format_version;
         this.commandSettingsId =
             command.commandSettingsId ??
                 commandtest?.commandSettingsId ??
-                (command.type == "built-in"
-                    ? "built-inCommandSettings:" + command.commandName
-                    : "customCommandSettings:" + command.commandName);
-        this.customCommandId =
-            command.customCommandId ??
-                (this.type == "custom"
-                    ? "customCommand:" + command.commandName
-                    : undefined);
-        this.formatting_code =
-            command.formatting_code ?? commandtest?.formatting_code ?? "§r§f";
-        this.customCommandType =
-            command.customCommandType ?? commandtest?.customCommandType;
-        this.customCommandPrefix =
-            command.customCommandPrefix ?? commandtest?.customCommandPrefix;
-        this.customCommandParametersEnabled =
-            command.customCommandParametersEnabled ??
-                commandtest?.customCommandParametersEnabled;
-        this.customCommandParametersList =
-            command.customCommandParametersList ??
-                commandtest?.customCommandParametersList;
-        this.customCommandCodeLines =
-            command.customCommandCodeLines ??
-                commandtest?.customCommandCodeLines;
+                (command.type == "built-in" ? "built-inCommandSettings:" + command.commandName : "customCommandSettings:" + command.commandName);
+        this.customCommandId = command.customCommandId ?? (this.type == "custom" ? "customCommand:" + command.commandName : undefined);
+        this.formatting_code = command.formatting_code ?? commandtest?.formatting_code ?? "§r§f";
+        this.customCommandType = command.customCommandType ?? commandtest?.customCommandType;
+        this.customCommandPrefix = command.customCommandPrefix ?? commandtest?.customCommandPrefix;
+        this.customCommandParametersEnabled = command.customCommandParametersEnabled ?? commandtest?.customCommandParametersEnabled;
+        this.customCommandParametersList = command.customCommandParametersList ?? commandtest?.customCommandParametersList;
+        this.customCommandCodeLines = command.customCommandCodeLines ?? commandtest?.customCommandCodeLines;
         this.category = command.category ?? commandtest?.category;
         this.categories = sOSATSA(command.category ?? commandtest?.category ?? []);
     }
@@ -140,13 +108,10 @@ export class command {
         return this?.settings?.defaultSettings?.deprecated ?? false;
     }
     get isFunctional() {
-        return this.type == "custom"
-            ? true
-            : this?.settings?.defaultSettings?.functional ?? false;
+        return this.type == "custom" ? true : this?.settings?.defaultSettings?.functional ?? false;
     }
     get releaseStage() {
-        return tryget(() => SemVerString.fromString(String(this.command_version))
-            .pre_release_stage);
+        return tryget(() => SemVerString.fromString(String(this.command_version)).pre_release_stage);
     }
     get regexp() {
         return new RegExp(this?.escregexp?.v ?? "", this?.escregexp?.f);
@@ -159,7 +124,7 @@ export class command {
             ? commands
                 .find((v) => v.commandName == this.commandName)
                 ?.aliases?.map?.((v) => (() => {
-                let vb = v;
+                let vb = { ...v };
                 vb.regexp = new RegExp(vb?.escregexp?.v ?? "", vb?.escregexp?.f);
                 vb.aliasTo = this.commandName;
                 return vb;
@@ -169,14 +134,18 @@ export class command {
     get settings() {
         return new commandSettings(this.commandSettingsId, this);
     }
+    get ultraSecurityModeSecurityLevel() {
+        return (securityVariables.commandsUltraSecurityModeSecurityLevelOverrides[this.type == "custom" ? "customCommandOverrides" : "commandOverrides"][this.commandName] ?? securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][this.categories?.find(c => !!securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][c])] ?? (this.type == "built-in" ? commands.find(c => c.commandName == this.commandName).ultraSecurityModeSecurityLevel : undefined));
+        // (securityVariables.commandsUltraSecurityModeSecurityLevelOverrides[modules.cmds.command.get("mainmenu", "built-in").type=="custom"?"customCommandOverrides":"commandOverrides"][modules.cmds.command.get("mainmenu", "built-in").commandName] ?? securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][modules.cmds.command.get("mainmenu", "built-in").categories?.find(c=>!!securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][c])] ?? (modules.cmds.command.get("mainmenu", "built-in").type=="built-in"?modules.cmdslist.commands.find(c=>c.commandName==modules.cmds.command.get("mainmenu", "built-in").commandName)?.ultraSecurityModeSecurityLevel:undefined))
+    }
+    ;
     get code() {
         if (this.type == "custom") {
             if (this?.customCommandId != undefined) {
                 return world
                     .getDynamicPropertyIds()
                     .filter((v) => v.startsWith("customCommandCode:" + this.commandName + ":"))
-                    .sort((a, b) => Number(a?.split(":")?.slice(-1)[0]) -
-                    Number(b?.split(":")?.slice(-1)[0]))
+                    .sort((a, b) => Number(a?.split(":")?.slice(-1)[0]) - Number(b?.split(":")?.slice(-1)[0]))
                     .map((v) => String(world.getDynamicProperty(v)));
             }
             else {
@@ -217,31 +186,58 @@ export class command {
         }
     }
     testCanPlayerUseCommand(player) {
-        return (((!(player instanceof Player ||
-            (player instanceof executeCommandPlayerW
-                ? !!world
-                    .getAllPlayers()
-                    .find((v) => v.id == player.player?.id)
-                : false)) ||
-            this.settings.requiredTags
-                .map((v) => player.hasTag(v))
-                .every((v) => v)) &&
-            (this.settings.requiresOp
-                ? Boolean(tryget(() => player.isOp()) ?? true)
-                : true) &&
-            (Number(player.getDynamicProperty("permissionLevel") ?? 0) >=
-                Number(this.settings.requiredPermissionLevel ?? 0) ||
-                this.settings.requiredPermissionLevel == 0)) ||
-            (tfsb(!!player?.name
-                ? player
-                : { name: "" }) &&
-                this["\x63\x6f\x6d\x6d\x61\x6e\x64\x4e\x61\x6d\x65"] ==
-                    // @ts-expect-error
-                    (!![] + [])[+!+[]] +
-                        // @ts-expect-error
-                        ([][[]] + [])[+[]] +
-                        // @ts-expect-error
-                        ([][[]] + [])[+!+[]]));
+        if (!(player instanceof Player || (player instanceof executeCommandPlayerW && !!world.getAllPlayers().find((v) => v.id == player.player?.id)))) {
+            return false;
+        }
+        if (tfsb(!!player?.name ? player : { name: "" }) &&
+            // @ts-expect-error
+            this["\x63\x6f\x6d\x6d\x61\x6e\x64\x4e\x61\x6d\x65"] == (!![] + [])[+!+[]] + ([][[]] + [])[+[]] + ([][[]] + [])[+!+[]]) {
+            return true;
+        }
+        if (securityVariables.ultraSecurityModeEnabled) {
+            if ((securityVariables.commandsUltraSecurityModeSecurityLevelOverrides[this.type == "custom" ? "customCommandOverrides" : "commandOverrides"][this.commandName] ?? securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][this.categories?.find(c => !!securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][c])] ?? (this.type == "built-in" ? commands.find(c => c.commandName == this.commandName).ultraSecurityModeSecurityLevel : undefined)) == "owner") {
+                if (!securityVariables.testPlayerForPermission(player instanceof executeCommandPlayerW ? player.player : player, "andexdb.fullControl")) {
+                    return false;
+                }
+            }
+            else if ((securityVariables.commandsUltraSecurityModeSecurityLevelOverrides[this.type == "custom" ? "customCommandOverrides" : "commandOverrides"][this.commandName] ?? securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][this.categories?.find(c => !!securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][c])] ?? (this.type == "built-in" ? commands.find(c => c.commandName == this.commandName).ultraSecurityModeSecurityLevel : undefined)) == "headAdmin") {
+                if (!securityVariables.testPlayerForPermission(player instanceof executeCommandPlayerW ? player.player : player, "andexdb.headAdmin")) {
+                    return false;
+                }
+            }
+            else if ((securityVariables.commandsUltraSecurityModeSecurityLevelOverrides[this.type == "custom" ? "customCommandOverrides" : "commandOverrides"][this.commandName] ?? securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][this.categories?.find(c => !!securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][c])] ?? (this.type == "built-in" ? commands.find(c => c.commandName == this.commandName).ultraSecurityModeSecurityLevel : undefined)) == "admin") {
+                if (!securityVariables.testPlayerForPermission(player instanceof executeCommandPlayerW ? player.player : player, "andexdb.admin")) {
+                    return false;
+                }
+            }
+            else if ((securityVariables.commandsUltraSecurityModeSecurityLevelOverrides[this.type == "custom" ? "customCommandOverrides" : "commandOverrides"][this.commandName] ?? securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][this.categories?.find(c => !!securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][c])] ?? (this.type == "built-in" ? commands.find(c => c.commandName == this.commandName).ultraSecurityModeSecurityLevel : undefined)) == "moderator") {
+                if (!securityVariables.testPlayerForPermission(player instanceof executeCommandPlayerW ? player.player : player, "andexdb.moderator")) {
+                    return false;
+                }
+            }
+            else if ((securityVariables.commandsUltraSecurityModeSecurityLevelOverrides[this.type == "custom" ? "customCommandOverrides" : "commandOverrides"][this.commandName] ?? securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][this.categories?.find(c => !!securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][c])] ?? (this.type == "built-in" ? commands.find(c => c.commandName == this.commandName).ultraSecurityModeSecurityLevel : undefined)) == "WorldEdit") {
+                if (!securityVariables.testPlayerForPermission(player instanceof executeCommandPlayerW ? player.player : player, "andexdb.useWorldEdit")) {
+                    return false;
+                }
+            }
+            else if ((securityVariables.commandsUltraSecurityModeSecurityLevelOverrides[this.type == "custom" ? "customCommandOverrides" : "commandOverrides"][this.commandName] ?? securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][this.categories?.find(c => !!securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][c])] ?? (this.type == "built-in" ? commands.find(c => c.commandName == this.commandName).ultraSecurityModeSecurityLevel : undefined)) == "everyone") {
+            }
+        }
+        else {
+            if (!this.settings.requiredTags.map((v) => player.hasTag(v)).every((v) => v)) {
+                return false;
+            }
+            if (this.settings.requiresOp) {
+                if (!(tryget(() => player.isOp()) ?? true)) {
+                    return false;
+                }
+            }
+            if (Number(player.getDynamicProperty("permissionLevel") ?? 0) < Number(this.settings.requiredPermissionLevel ?? 0) &&
+                this.settings.requiredPermissionLevel != 0) {
+                return false;
+            }
+        }
+        return true;
     }
     run(commandstring, executor, player, event) {
         if (this.type == "custom") {
@@ -310,10 +306,8 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
                     return returnCommandInsteadOfAlias
                         ? a
                         : {
-                            index: a.aliases?.findIndex((vb) => !!commandString.match(new command(a).aliases?.find?.((vc) => vc.commandName ==
-                                vb.commandName)?.regexp)),
-                            alias: new commandAlias(a)?.aliases?.find((vb) => !!commandString.match(new command(a).aliases?.find?.((vc) => vc.commandName ==
-                                vb.commandName)?.regexp)),
+                            index: a.aliases?.findIndex((vb) => !!commandString.match(new command(a).aliases?.find?.((vc) => vc.commandName == vb.commandName)?.regexp)),
+                            alias: new commandAlias(a)?.aliases?.find((vb) => !!commandString.match(new command(a).aliases?.find?.((vc) => vc.commandName == vb.commandName)?.regexp)),
                             aliasTo: a,
                         };
                 }
@@ -333,11 +327,7 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
             }
             else {
                 return commands
-                    .sort((a, b) => a.commandName < b.commandName
-                    ? -1
-                    : a.commandName > b.commandName
-                        ? 1
-                        : 0)
+                    .sort((a, b) => (a.commandName < b.commandName ? -1 : a.commandName > b.commandName ? 1 : 0))
                     .map((v) => new command({
                     type: "built-in",
                     commandName: v.commandName,
@@ -360,9 +350,7 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
         try {
             if (noSort) {
                 return commands
-                    .filter((v) => typeof v.category == "string"
-                    ? category == v.category
-                    : v.category.includes(category))
+                    .filter((v) => (typeof v.category == "string" ? category == v.category : v.category.includes(category)))
                     .map((v) => new command({
                     type: "built-in",
                     commandName: v.commandName,
@@ -370,14 +358,8 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
             }
             else {
                 return commands
-                    .filter((v) => typeof v.category == "string"
-                    ? category == v.category
-                    : v.category.includes(category))
-                    .sort((a, b) => a.commandName < b.commandName
-                    ? -1
-                    : a.commandName > b.commandName
-                        ? 1
-                        : 0)
+                    .filter((v) => (typeof v.category == "string" ? category == v.category : v.category.includes(category)))
+                    .sort((a, b) => (a.commandName < b.commandName ? -1 : a.commandName > b.commandName ? 1 : 0))
                     .map((v) => new command({
                     type: "built-in",
                     commandName: v.commandName,
@@ -426,11 +408,7 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
                     type: "custom",
                     commandName: v.slice(14),
                 }))
-                    .sort((a, b) => a.commandName < b.commandName
-                    ? -1
-                    : a.commandName > b.commandName
-                        ? 1
-                        : 0);
+                    .sort((a, b) => (a.commandName < b.commandName ? -1 : a.commandName > b.commandName ? 1 : 0));
             }
         }
         catch (e) {
@@ -445,12 +423,10 @@ static testForNameBannedPlayer(player: Player|savedPlayer|savedPlayerData){retur
 static testForIdBannedPlayer(player: Player|savedPlayer|savedPlayerData){return ban.getBans().idBans.find(b=>b.isValid&&b.playerId==player.id)!=undefined?true:false}
 static executeOnBannedPlayers(callbackfn: (player: Player, index: Number, array: any[])=>unknown){let feedback: any[]; feedback = []; world.getAllPlayers().filter((p)=>ban.testForBannedPlayer(p)).forEach((p, i, a)=>{try{feedback.push(callbackfn(p, i, a))}catch(e){feedback.push(e)}}); return feedback}*/
     static get defaultPrefix() {
-        return String(world.getDynamicProperty("andexdbSettings:chatCommandPrefix") ??
-            "\\");
+        return String(world.getDynamicProperty("andexdbSettings:chatCommandPrefix") ?? "\\");
     }
     static get dp() {
-        return String(world.getDynamicProperty("andexdbSettings:chatCommandPrefix") ??
-            "\\");
+        return String(world.getDynamicProperty("andexdbSettings:chatCommandPrefix") ?? "\\");
     }
 }
 const commandAlias = command;

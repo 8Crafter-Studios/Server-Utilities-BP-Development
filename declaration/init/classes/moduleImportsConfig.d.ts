@@ -57,8 +57,8 @@ export declare class moduleImportsConfig {
      * @remarks overrides all other options, including overrides for specific modules
      * @todo Make the deprecated list.
      */
-    static get override(): typeof this.overrideOptions[number];
-    static set override(option: typeof this.overrideOptions[number] | undefined | null);
+    static get override(): (typeof this.overrideOptions)[number];
+    static set override(option: (typeof this.overrideOptions)[number] | undefined | null);
     static get moduleOverrides(): {
         ban: "none" | "disableAll" | "enableAll" | "enableAllNonDeprecated" | undefined | null;
         chat: "none" | "disableAll" | "enableAll" | "enableAllNonDeprecated" | undefined | null;
@@ -98,7 +98,8 @@ export declare class moduleImportsConfig {
     static forceImport<M extends moduleNameForModuleImportsConfig>(module: M): Promise<{
         [K in keyof moduleOptionalImportPathMapObjectMapper<M, unknown> & keyof optionalModuleObjectImportFilePathsImportMap]?: optionalModuleObjectImportFilePathsImportMap[K];
     }>;
-    static import<M extends moduleNameForModuleImportsConfig>(module: M): Promise<{
+    static import<M extends moduleNameForModuleImportsConfig>(module: M): Promise<Partial<UnionToIntersection<optionalModuleObjectImportFilePathsImportMap[(typeof moduleOptionalImportPathMap)[M][number]]>>>;
+    static importSeparatedIntoPaths<M extends moduleNameForModuleImportsConfig>(module: M): Promise<{
         [K in keyof moduleOptionalImportPathMapObjectMapper<M, unknown> & keyof optionalModuleObjectImportFilePathsImportMap]?: optionalModuleObjectImportFilePathsImportMap[K];
     }>;
 }

@@ -1,3 +1,4 @@
+import "init/meta/importToMakeValidModule";
 globalThis.catchtry = function catchtry(trycallbackfn, catchcallbackfn = (e) => console.error(e, e?.stack), finallycallbackfn = (v) => {
     return v;
 }) {

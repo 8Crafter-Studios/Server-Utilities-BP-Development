@@ -1,6 +1,8 @@
 import { MoneySystem } from "ExtraFeatures/money";
 import type { RotationLocation } from "modules/coordinates/interfaces/RotationLocation";
 import type { PlayerNotifications } from "init/classes/PlayerNotifications";
+import type { PlayerPermissions } from "init/classes/PlayerPermissions";
+import type { WorldEditSelection } from "init/classes/WorldEditSelection";
 export declare const exports_5603749806156139082470132985463298047098135609812364098: any;
 declare module "@minecraft/server" {
     interface Entity {
@@ -60,6 +62,8 @@ declare module "@minecraft/server" {
         get activeSlot(): ContainerSlot | undefined;
         get moneySystem(): MoneySystem;
         get playerNotifications(): PlayerNotifications;
+        get playerPermissions(): PlayerPermissions;
+        get worldEditSelection(): WorldEditSelection;
         get dimensionLocation(): DimensionLocation;
         get locationstring(): `${number} ${number} ${number}`;
         get rotationstring(): `${number} ${number}`;

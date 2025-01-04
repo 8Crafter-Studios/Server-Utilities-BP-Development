@@ -1,3 +1,4 @@
+import "init/meta/importToMakeValidModule";
 /**
  * Better Version of JSON.stringify() that is able to save undefined, NaN, Infinity, and -Infinity values.
  * @param {any} value A JavaScript value, usually an object or array, to be converted (with undefined, NaN, Infinity, and -Infinity values allowed).

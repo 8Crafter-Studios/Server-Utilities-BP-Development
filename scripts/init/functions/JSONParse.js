@@ -1,3 +1,4 @@
+import "init/meta/importToMakeValidModule";
 globalThis.JSONParse = function JSONParse(JSONString, keepUndefined = true) {
     let g = [];
     let h = [];

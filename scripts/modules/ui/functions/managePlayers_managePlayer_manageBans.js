@@ -3,7 +3,20 @@ import { ActionFormData, ActionFormResponse, ModalFormData, ModalFormResponse, M
 import { forceShow } from "modules/ui/functions/forceShow";
 import { ban_format_version } from "modules/ban/constants/ban_format_version";
 import { ban } from "modules/ban/classes/ban";
+import { securityVariables } from "security/ultraSecurityModeUtils";
+import { showMessage } from "modules/utilities/functions/showMessage";
 export async function managePlayers_managePlayer_manageBans(sourceEntity, player) {
+    if (securityVariables.ultraSecurityModeEnabled) {
+        if (securityVariables.testPlayerForPermission(sourceEntity, "andexdb.accessManageBansUI") == false) {
+            const r = await showMessage(sourceEntity, "Access Denied (403)", "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.accessManageBansUI", "Okay", "Cancel");
+            if (r.canceled || r.selection == 0) {
+                return 1;
+            }
+            else {
+                return 0;
+            }
+        }
+    }
     let form6 = new ActionFormData();
     form6.title(player.name);
     player.idBans.valid.forEach((p) => {
@@ -46,6 +59,17 @@ export async function managePlayers_managePlayer_manageBans(sourceEntity, player
         }
         switch (g.selection) {
             case banList.length:
+                if (securityVariables.ultraSecurityModeEnabled) {
+                    if (securityVariables.testPlayerForPermission(sourceEntity, "andexdb.banPlayers") == false) {
+                        const r = await showMessage(sourceEntity, "Access Denied (403)", "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.banPlayers", "Okay", "Cancel");
+                        if (r.canceled || r.selection == 0) {
+                            return 1;
+                        }
+                        else {
+                            return 0;
+                        }
+                    }
+                }
                 let form5 = new ModalFormData();
                 form5.title(`Add ID Ban`);
                 form5.textField("Ban Time (In Minutes)", "Decimal");
@@ -86,6 +110,17 @@ export async function managePlayers_managePlayer_manageBans(sourceEntity, player
                 });
                 break;
             case banList.length + 1:
+                if (securityVariables.ultraSecurityModeEnabled) {
+                    if (securityVariables.testPlayerForPermission(sourceEntity, "andexdb.banPlayers") == false) {
+                        const r = await showMessage(sourceEntity, "Access Denied (403)", "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.banPlayers", "Okay", "Cancel");
+                        if (r.canceled || r.selection == 0) {
+                            return 1;
+                        }
+                        else {
+                            return 0;
+                        }
+                    }
+                }
                 let form6 = new ModalFormData();
                 form6.title(`Add Name Ban`);
                 form6.textField("Ban Time (In Minutes)", "Decimal");
@@ -156,12 +191,23 @@ export async function managePlayers_managePlayer_manageBans(sourceEntity, player
                 form4.button("Unban");
                 form4.button("Back");
                 return await forceShow(form4, sourceEntity)
-                    .then((ha) => {
+                    .then(async (ha) => {
                     let h = ha;
                     if (h.canceled) {
                         return 1;
                     }
                     if (h.selection == 0) {
+                        if (securityVariables.ultraSecurityModeEnabled) {
+                            if (securityVariables.testPlayerForPermission(sourceEntity, "andexdb.unbanPlayers") == false) {
+                                const r = await showMessage(sourceEntity, "Access Denied (403)", "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.unbanPlayers", "Okay", "Cancel");
+                                if (r.canceled || r.selection == 0) {
+                                    return 1;
+                                }
+                                else {
+                                    return 0;
+                                }
+                            }
+                        }
                         banList[g.selection].remove();
                         return 1;
                     }

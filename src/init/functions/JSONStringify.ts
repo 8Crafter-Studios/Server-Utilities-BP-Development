@@ -1,3 +1,4 @@
+import "init/meta/importToMakeValidModule";
 globalThis.JSONStringify = function JSONStringify(
     JSONObject: any,
     keepUndefined: boolean = false,

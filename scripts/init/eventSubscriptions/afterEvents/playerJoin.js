@@ -1,5 +1,6 @@
 import { world } from "@minecraft/server";
 import { ban } from "modules/ban/classes/ban";
+import { savedPlayer } from "modules/player_save/classes/savedPlayer";
 subscribedEvents.afterPlayerJoin = world.afterEvents.playerJoin.subscribe((event) => {
     try {
         console.warn(`Player ${JSON.stringify(event.playerName)}<${event.playerId}> joined the game.`);
@@ -55,6 +56,7 @@ subscribedEvents.afterPlayerJoin = world.afterEvents.playerJoin.subscribe((event
                         ?.replaceAll("{timeRemainingSeconds}", String(b?.timeRemaining.seconds))
                         ?.replaceAll("{timeRemainingMilliseconds}", String(b?.timeRemaining.milliseconds))
                         ?.replaceAll("{bannedBy}", String(b?.bannedByName))
+                        ?.replaceAll("{bannedByName}", String(b?.bannedByName))
                         ?.replaceAll("{bannedById}", String(b?.bannedById))
                         ?.replaceAll("{banDate}", String(new Date(Number(b?.banDate)).toUTCString() +
                         " GMT"))
@@ -71,6 +73,29 @@ subscribedEvents.afterPlayerJoin = world.afterEvents.playerJoin.subscribe((event
             console.error(e, e.stack);
         }
     }
+    async function executePlayerOnJoinActions() {
+        for (let i = 0; i < 101; i++) {
+            if (i == 100) {
+                return;
+            }
+            if (!!getPlayerById(event.playerId)) {
+                break;
+            }
+            await waitTick();
+        }
+        savedPlayer.getSavedPlayer("player:" + event.playerId).executeOnJoinActions().catch((e) => {
+            console.error(e, e.stack);
+            world.getPlayers({ tags: ["getSavedPlayerOnJoinActionsDebugErrors"] }).forEach((currentplayer) => {
+                currentplayer.sendMessage(`§cAn error occured when executing ${event.playerName}'s on join actions: ${e} ${e.stack}`);
+            });
+        });
+    }
+    executePlayerOnJoinActions().catch((e) => {
+        console.error(e, e.stack);
+        world.getPlayers({ tags: ["getSavedPlayerOnJoinActionsDebugErrors"] }).forEach((currentplayer) => {
+            currentplayer.sendMessage(`§cAn error occured when executing ${event.playerName}'s on join actions: ${e} ${e.stack}`);
+        });
+    });
     try {
         eval(String(world.getDynamicProperty("evalAfterEvents:playerJoin")));
     }

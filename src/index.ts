@@ -52,7 +52,7 @@ import "GameTestScripts/ItemEnchantmentsTests.js"; /*
 import "GameTestScripts/SculkTests.js";
 import "GameTestScripts/VibrationTests.js";
 import "GameTestScripts/EnchantmentTests.js";*/ /*
-import "Eval.js";*/
+import "Eval.js";*//* 
 import "legacyModuleAliases/commands_documentation.js";
 import "legacyModuleAliases/commands.js";
 import "legacyModuleAliases/coordinates.js";
@@ -64,32 +64,64 @@ import "legacyModuleAliases/chat.js";
 import "legacyModuleAliases/command_utilities.js";
 import "legacyModuleAliases/commands_list.js";
 import "legacyModuleAliases/errors.js";
-import "legacyModuleAliases/utilities.js";
+import "legacyModuleAliases/utilities.js"; */
 import "@minecraft/math.js";
 import "GlobalDecorators";
-import * as main from "legacyModuleAliases/Main";
-import * as coords from "legacyModuleAliases/coordinates";
-import * as cmds from "legacyModuleAliases/commands";
-import * as bans from "legacyModuleAliases/ban";
-import * as uis from "legacyModuleAliases/ui";
-import * as playersave from "legacyModuleAliases/player_save";
-import * as spawnprot from "legacyModuleAliases/spawn_protection";
-import * as chat from "legacyModuleAliases/chat";
-import * as cmdutils from "legacyModuleAliases/command_utilities";
-import * as cmdslist from "legacyModuleAliases/commands_list";
-import * as cmdsdocs from "legacyModuleAliases/commands_documentation";
-import * as utils from "legacyModuleAliases/utilities";
+import mcMath from "@minecraft/math.js";
+import colorCore, { Color } from "color-core";
+import Decimal from "decimal.js";
+import * as semver from "semver";
+// semver
+// import * as main from "legacyModuleAliases/Main";
+// import * as coords from "legacyModuleAliases/coordinates";
+// import * as cmds from "legacyModuleAliases/commands";
+// import * as bans from "legacyModuleAliases/ban";
+// import * as uis from "legacyModuleAliases/ui";
+// import * as playersave from "legacyModuleAliases/player_save";
+// import * as spawnprot from "legacyModuleAliases/spawn_protection";
+// import * as chat from "legacyModuleAliases/chat";
+// import * as cmdutils from "legacyModuleAliases/command_utilities";
+// import * as cmdslist from "legacyModuleAliases/commands_list";
+// import * as cmdsdocs from "legacyModuleAliases/commands_documentation";
+// import * as utils from "legacyModuleAliases/utilities";
 import * as shopmain from "ExtraFeatures/shop_main";
 import * as servershop from "ExtraFeatures/server_shop";
 import * as playershop from "ExtraFeatures/player_shop";
 import * as moneysystem from "ExtraFeatures/money";
 import * as structuremappings from "Assets/constants/structure_mappings";
 import * as transformrecipes from "Assets/constants/transformrecipes";
-import * as errors from "legacyModuleAliases/errors";
-import mcMath from "@minecraft/math.js";
-import colorCore, { Color } from "color-core";
-import Decimal from "decimal.js";
-import * as semver from "semver";
+// import * as errors from "legacyModuleAliases/errors";
+const main = await moduleImportsConfig.import("main");
+const coords = await moduleImportsConfig.import("coordinates");
+const cmds = await moduleImportsConfig.import("commands");
+const bans = await moduleImportsConfig.import("ban");
+const uis = await moduleImportsConfig.import("ui");
+const playersave = await moduleImportsConfig.import("player_save");
+const spawnprot = await moduleImportsConfig.import("spawn_protection");
+const chat = await moduleImportsConfig.import("chat");
+const cmdutils = await moduleImportsConfig.import("command_utilities");
+const cmdslist = await moduleImportsConfig.import("commands_list");
+const cmdsdocs = await moduleImportsConfig.import("commands_documentation");
+const utils = await moduleImportsConfig.import("utilities");
+const errors = await moduleImportsConfig.import("errors");
+// const main = {};
+// const coords = {};
+// const cmds = {};
+// const bans = {};
+// const uis = {};
+// const playersave = {};
+// const spawnprot = {};
+// const chat = {};
+// const cmdutils = {};
+// const cmdslist = {};
+// const cmdsdocs = {};
+// const utils = {};
+// const errors = {};
+// const shopmain = {};
+// const servershop = {};
+// const playershop = {};
+// const moneysystem = {};
+// const mcMath = {};
 export const modulesMap = {
     mcServer: mcServer,
     mcServerUi,
@@ -150,7 +182,7 @@ declare global {
         var modules: typeof modulesMap;
     }
 }
-import "Main";
+// import "Main";
 import { undoClipboard } from "modules/coordinates/classes/undoClipboard";
 globalThis.scriptStartTick = system.currentTick;
 world.setDynamicProperty("format_version", format_version);

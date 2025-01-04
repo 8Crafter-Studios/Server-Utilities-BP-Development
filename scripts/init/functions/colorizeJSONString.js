@@ -1,3 +1,4 @@
+import "init/meta/importToMakeValidModule";
 globalThis.colorizeJSONString = function colorizeJSONString(json, options) {
     if (typeof json !== 'string') {
         json = JSON.stringify(json, undefined, 2);

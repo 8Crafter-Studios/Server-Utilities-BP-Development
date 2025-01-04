@@ -8,6 +8,7 @@ import { chatCommands } from "modules/commands/functions/chatCommands";
 import { commands } from "modules/commands_list/constants/commands";
 import { chatSend } from "./chatSend";
 import { cmdsEval } from "../../../Main/commands";
+import { securityVariables } from "security/ultraSecurityModeUtils";
 export function chatMessage(eventData, bypassChatInputRequests = false) {
     if (!bypassChatInputRequests &&
         Object.keys(currentlyRequestedChatInput[eventData.sender.id]?.anyInput ?? {}).length != 0) {
@@ -214,8 +215,7 @@ export function chatMessage(eventData, bypassChatInputRequests = false) {
         }
     }
     if (newMessage.includes("${se}") &&
-        (player.getDynamicProperty("canUseScriptEval") == true ||
-            player.hasTag("canUseScriptEval") == true)) {
+        (securityVariables.ultraSecurityModeEnabled ? securityVariables.testPlayerForPermission(player, permissionType["andexdb.useScriptEvalEscapeSequence"]) : player.playerPermissions.canUseScriptEval)) {
         newMessage = newMessage.replace("${se}", "");
         try {
             cmdsEval(newMessage, eventData, bypassChatInputRequests, runreturn, returnBeforeChatSend, returnBeforeChatCommandsOrChatSend, event, player, sendToPlayers, newMessage, switchTest, switchTestB, commanda);
@@ -228,8 +228,7 @@ export function chatMessage(eventData, bypassChatInputRequests = false) {
         return;
     }
     else if (newMessage.includes("${sel}") &&
-        (player.getDynamicProperty("canUseScriptEval") == true ||
-            player.hasTag("canUseScriptEval") == true)) {
+        (securityVariables.ultraSecurityModeEnabled ? securityVariables.testPlayerForPermission(player, permissionType["andexdb.useScriptEvalEscapeSequence"]) : player.playerPermissions.canUseScriptEval)) {
         newMessage = newMessage.replace("${sel}", "");
         try {
             eval(newMessage);
@@ -242,16 +241,14 @@ export function chatMessage(eventData, bypassChatInputRequests = false) {
         return;
     }
     else if (newMessage.includes("${r}") &&
-        (player.isOp() == true ||
-            player.getDynamicProperty("canUseCommands") == true)) {
+        (securityVariables.ultraSecurityModeEnabled ? securityVariables.testPlayerForPermission(player, permissionType["andexdb.useCommandsRunningEscapeSequence"]) : (player.isOp() == true || player.playerPermissions.canUseCommands))) {
         newMessage = newMessage.replace("${r}", "");
         eventData.cancel = true;
         player.runCommandAsync(newMessage);
         return;
     }
     if (newMessage.includes("${scripteval}") &&
-        (player.getDynamicProperty("canUseScriptEval") == true ||
-            player.hasTag("canUseScriptEval") == true)) {
+        (securityVariables.ultraSecurityModeEnabled ? securityVariables.testPlayerForPermission(player, permissionType["andexdb.useScriptEvalEscapeSequence"]) : player.playerPermissions.canUseScriptEval)) {
         newMessage = newMessage.replace("${scripteval}", "");
         try {
             cmdsEval(newMessage, eventData, bypassChatInputRequests, runreturn, returnBeforeChatSend, returnBeforeChatCommandsOrChatSend, event, player, sendToPlayers, newMessage, switchTest, switchTestB, commanda);
@@ -264,8 +261,7 @@ export function chatMessage(eventData, bypassChatInputRequests = false) {
         return;
     }
     else if (newMessage.includes("${scriptevallocal}") &&
-        (player.getDynamicProperty("canUseScriptEval") == true ||
-            player.hasTag("canUseScriptEval") == true)) {
+        (securityVariables.ultraSecurityModeEnabled ? securityVariables.testPlayerForPermission(player, permissionType["andexdb.useScriptEvalEscapeSequence"]) : player.playerPermissions.canUseScriptEval)) {
         newMessage = newMessage.replace("${scriptevallocal}", "");
         try {
             eval(newMessage);
@@ -278,18 +274,18 @@ export function chatMessage(eventData, bypassChatInputRequests = false) {
         return;
     }
     else if (newMessage.includes("${run}") &&
-        (player.isOp() == true ||
-            player.getDynamicProperty("canUseCommands") == true)) {
+        (securityVariables.ultraSecurityModeEnabled ? securityVariables.testPlayerForPermission(player, permissionType["andexdb.useCommandsRunningEscapeSequence"]) : (player.isOp() == true || player.playerPermissions.canUseCommands))) {
         newMessage = newMessage.replace("${run}", "");
         eventData.cancel = true;
         player.runCommandAsync(newMessage);
         return;
     }
     /*${scripteval}world.getAllPlayers().forEach((t)=>{t.setDynamicProperty("canUseScriptEval", true)}); */
-    if ((player.hasTag("noCustomChatMessages") &&
-        !player.hasTag("canUseChatCommands") &&
-        commanda) ||
-        returnBeforeChatCommandsOrChatSend) {
+    if (
+    /* (player.hasTag("noCustomChatMessages") &&
+        !(securityVariables.ultraSecurityModeEnabled ? securityVariables.testPlayerForPermission(player, "") : player.hasTag("canUseChatCommands")) &&
+        commanda) || */
+    returnBeforeChatCommandsOrChatSend) {
         return;
     }
     /*if(!((eventData.message.includes("${scripteval}") && (player.getDynamicProperty("canUseScriptEval") == true))||(eventData.message.includes("${run}") && ((player.isOp() == true)||(player.getDynamicProperty("canUseCommands") == true)))||(eventData.message.startsWith("\\")))){world.getDimension("overworld").runCommand("/playsound note.harp.ui @a ~~~ 1 0.75 1"); }*/ if (world.getDynamicProperty("andexdbSettings:validChatCommandPrefixes") !=

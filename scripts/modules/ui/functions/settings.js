@@ -14,10 +14,24 @@ import { personalSettings } from "./personalSettings";
 import { scriptSettings } from "./scriptSettings";
 import { tpaSettings } from "./tpaSettings";
 import { uiSettings } from "./uiSettings";
+import { editModuleImportsConfig } from "./editModuleImportsConfig";
+import { securityVariables } from "security/ultraSecurityModeUtils";
+import { showMessage } from "modules/utilities/functions/showMessage";
 export async function settings(sourceEntitya) {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW
         ? sourceEntitya.player
         : sourceEntitya;
+    if (securityVariables.ultraSecurityModeEnabled) {
+        if (securityVariables.testPlayerForPermission(sourceEntity, "andexdb.accessSettings") == false) {
+            const r = await showMessage(sourceEntity, "Access Denied (403)", "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.accessSettings", "Back", "Cancel");
+            if (r.canceled || r.selection == 0) {
+                return 1;
+            }
+            else {
+                return 0;
+            }
+        }
+    }
     let form = new ActionFormData();
     let players = world.getPlayers();
     form.title("Settings");
@@ -29,8 +43,9 @@ export async function settings(sourceEntitya) {
     form.button("Eval Auto Execute Settings", "textures/ui/automation_glyph_color");
     form.button("Personal Settings", "textures/ui/profile_glyph_color");
     form.button("Notifications Settings", "textures/ui/icon_bell");
-    form.button("Home System Settings [§cExperimental§r]", "textures/ui/store_home_icon");
-    form.button("TPA System Settings [§cExperimental§r]", "textures/items/ender_pearl");
+    form.button("Home System Settings", "textures/ui/store_home_icon");
+    form.button("TPA System Settings", "textures/items/ender_pearl");
+    form.button("Module Imports", "textures/items/import");
     form.button("Manage Game Rules", "textures/ui/controller_glyph_color");
     form.button("Extra Features", "textures/ui/color_plus");
     form.button("Advanced", "textures/ui/creator_glyph_color");
@@ -46,51 +61,95 @@ form.button("Debug Screen", "textures/ui/ui_debug_glyph_color");*/
         let response = r.selection;
         switch (response) {
             case 0:
-                globalSettings(sourceEntity);
-                return 0;
+                if ((await globalSettings(sourceEntity)) == 1) {
+                    return await settings(sourceEntity);
+                }
+                else {
+                    return 0;
+                }
                 break;
             case 1:
-                chatRanksSettings(sourceEntity);
-                return 0;
+                if ((await chatRanksSettings(sourceEntity)) == 1) {
+                    return await settings(sourceEntity);
+                }
+                else {
+                    return 0;
+                }
                 break;
             case 2:
-                scriptSettings(sourceEntity);
-                return 0;
+                if ((await scriptSettings(sourceEntity)) == 1) {
+                    return await settings(sourceEntity);
+                }
+                else {
+                    return 0;
+                }
                 break;
             case 3:
-                uiSettings(sourceEntity);
-                return 0;
+                if ((await uiSettings(sourceEntity)) == 1) {
+                    return await settings(sourceEntity);
+                }
+                else {
+                    return 0;
+                }
                 break;
             case 4:
-                evalAutoScriptSettings(sourceEntity);
-                return 0;
+                if ((await evalAutoScriptSettings(sourceEntity)) == 1) {
+                    return await settings(sourceEntity);
+                }
+                else {
+                    return 0;
+                }
                 break;
             case 5:
-                personalSettings(sourceEntity);
-                return 0;
+                if ((await personalSettings(sourceEntity)) == 1) {
+                    return await settings(sourceEntity);
+                }
+                else {
+                    return 0;
+                }
                 break;
             case 6:
-                notificationsSettings(sourceEntity);
-                return 0;
+                if ((await notificationsSettings(sourceEntity)) == 1) {
+                    return await settings(sourceEntity);
+                }
+                else {
+                    return 0;
+                }
                 break;
             case 7:
-                homeSystemSettings(sourceEntity);
-                return 0;
+                if ((await homeSystemSettings(sourceEntity)) == 1) {
+                    return await settings(sourceEntity);
+                }
+                else {
+                    return 0;
+                }
                 break;
             case 8:
-                tpaSettings(sourceEntity);
-                return 0;
+                if ((await tpaSettings(sourceEntity)) == 1) {
+                    return await settings(sourceEntity);
+                }
+                else {
+                    return 0;
+                }
                 break;
             case 9:
-                manageGameRulesUI(sourceEntity);
-                return 0;
+                if ((await editModuleImportsConfig(sourceEntity)) == 1) {
+                    return await settings(sourceEntity);
+                }
+                else {
+                    return 0;
+                }
                 break;
             case 10:
-                extraFeaturesSettings(sourceEntity);
-                return 0;
+                if ((await manageGameRulesUI(sourceEntity)) == 1) {
+                    return await settings(sourceEntity);
+                }
+                else {
+                    return 0;
+                }
                 break;
             case 11:
-                if ((await advancedSettings(sourceEntity)) == 1) {
+                if ((await extraFeaturesSettings(sourceEntity)) == 1) {
                     return await settings(sourceEntity);
                 }
                 else {
@@ -98,8 +157,16 @@ form.button("Debug Screen", "textures/ui/ui_debug_glyph_color");*/
                 }
                 break;
             case 12:
-                return 1;
+                if ((await advancedSettings(sourceEntity)) == 1) {
+                    return await settings(sourceEntity);
+                }
+                else {
+                    return 0;
+                }
+                break;
             case 13:
+                return 1;
+            case 14:
                 return 0;
             default:
                 return 1;
@@ -107,7 +174,7 @@ form.button("Debug Screen", "textures/ui/ui_debug_glyph_color");*/
     })
         .catch((e) => {
         console.error(e, e.stack);
-        return 0;
+        return -2;
     });
 }
 //# sourceMappingURL=settings.js.map

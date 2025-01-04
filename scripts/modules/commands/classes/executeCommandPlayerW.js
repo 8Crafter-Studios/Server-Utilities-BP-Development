@@ -1,6 +1,8 @@
-import { Player, Dimension, Block, Entity, EntityInventoryComponent, EntityEquippableComponent, PlayerCursorInventoryComponent, ItemStack, EquipmentSlot, ContainerSlot, EffectType, GameMode, MolangVariableMap } from "@minecraft/server";
+import { Player, Dimension, Block, Entity, EntityInventoryComponent, EntityEquippableComponent, PlayerCursorInventoryComponent, ItemStack, EquipmentSlot, ContainerSlot, EffectType, GameMode, MolangVariableMap, InputInfo } from "@minecraft/server";
 import { MoneySystem } from "ExtraFeatures/money";
 import { PlayerNotifications } from "init/classes/PlayerNotifications";
+import { PlayerPermissions } from "init/classes/PlayerPermissions";
+import { WorldEditSelection } from "init/classes/WorldEditSelection";
 import { config } from "init/classes/config";
 import { chatCommands } from "modules/commands/functions/chatCommands";
 import { WorldPosition } from "modules/coordinates/classes/WorldPosition";
@@ -227,6 +229,12 @@ export class executeCommandPlayerW {
     get playerNotifications() {
         return new PlayerNotifications(this.player);
     }
+    get playerPermissions() {
+        return new PlayerPermissions(this.player);
+    }
+    get worldEditSelection() {
+        return new WorldEditSelection(this.player);
+    }
     get dimensionLocation() {
         return Object.assign(this.location, { dimension: this.dimension });
     }
@@ -374,6 +382,9 @@ export class executeCommandPlayerW {
     get clientSystemInfo() {
         return this.player?.clientSystemInfo;
     }
+    get inputInfo() {
+        return this.player?.inputInfo;
+    }
     addEffect(effectType, duration, options) {
         return this.player?.addEffect(effectType, duration, options);
     }
@@ -408,6 +419,9 @@ export class executeCommandPlayerW {
     }
     isOp() {
         return this.player?.isOp();
+    }
+    lookAt(targetLocation) {
+        return this.player?.lookAt(targetLocation);
     }
     playMusic(trackId, musicOptions) {
         return this.player?.playMusic(trackId, musicOptions);

@@ -1,1 +1,1 @@
-export declare function getStringFromDynamicProperties(propertyName: string): string;
+export declare function getStringFromDynamicProperties(propertyName: string, zeroLengthPlaceholder?: string): string;

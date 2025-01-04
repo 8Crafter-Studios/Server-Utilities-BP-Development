@@ -33,7 +33,8 @@ export function generateNBTFileC(
                         "minecraft:light_gray_terracotta"
                     )
                 ),
-                nbt.block_palette[b].name == "minecraft:coarse_dirt" ||
+                // Not needed any more as coarse_dirt is now a valid block id.
+                /* nbt.block_palette[b].name == "minecraft:coarse_dirt" ||
                     nbt.block_palette[b].name == "coarse_dirt"
                     ? location.dimension.setBlockPermutation(
                         Vector3Utils.add(
@@ -51,7 +52,7 @@ export function generateNBTFileC(
                             dirt_type: "coarse",
                         })
                     )
-                    : !!nbt.block_palette[b].states
+                    :  */!!nbt.block_palette[b].states
                         ? Object.entries(nbt.block_palette[b].states).forEach(
                             (p) => tryrun(() => location.dimension.setBlockPermutation(
                                 Vector3Utils.add(

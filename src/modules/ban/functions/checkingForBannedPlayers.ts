@@ -79,6 +79,10 @@ export function startCheckingForBannedPlayers(): void {
                                     String(b?.bannedByName)
                                 )
                                 ?.replaceAll(
+                                    "{bannedByName}",
+                                    String(b?.bannedByName)
+                                )
+                                ?.replaceAll(
                                     "{bannedById}",
                                     String(b?.bannedById)
                                 )

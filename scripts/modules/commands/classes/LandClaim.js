@@ -1,5 +1,5 @@
 import { Dimension, world, Player } from "@minecraft/server";
-import { getPlayerById } from "modules/commands/functions/getPlayerById";
+import { getPlayerById } from "init/functions/getPlayerById";
 import { LandClaimSystem } from "./LandClaimSystem";
 export class LandClaim {
     area;

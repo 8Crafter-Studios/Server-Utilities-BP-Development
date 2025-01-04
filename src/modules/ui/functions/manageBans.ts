@@ -4,15 +4,36 @@ import { forceShow } from "modules/ui/functions/forceShow";
 import { ban_format_version } from "modules/ban/constants/ban_format_version";
 import { ban } from "modules/ban/classes/ban";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
-import { mainMenu } from "./mainMenu";
+import { showMessage } from "modules/utilities/functions/showMessage";
+import { securityVariables } from "security/ultraSecurityModeUtils";
 
-export function manageBans(
+/**
+ * Manages the bans for a given source entity. This function displays a UI for managing bans,
+ * including viewing valid and expired bans, adding new bans by ID or name, and unbanning players.
+ * 
+ * @param sourceEntitya - The entity that is invoking the manage bans function. This can be an Entity, executeCommandPlayerW, or Player.
+ * 
+ * @returns A promise that resolves to one of the following values:
+ * - `1` if the operation was successful or canceled by the user.
+ * - `0` if the user does not have the required permissions.
+ * - `-2` if an error occurred during the operation.
+ */
+export async function manageBans(
     sourceEntitya: Entity | executeCommandPlayerW | Player,
-    backMenuFunction: (sourceEntity: Entity | Player) => any = mainMenu
-) {
+): Promise<1 | 0 | -2> {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW
         ? sourceEntitya.player
         : sourceEntitya;
+    if (securityVariables.ultraSecurityModeEnabled) {
+        if(securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.accessManageBansUI") == false){
+            const r = await showMessage(sourceEntity as Player, "Access Denied (403)", "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.accessManageBansUI", "Okay", "Cancel");
+            if(r.canceled || r.selection == 0){
+                return 1;
+            }else{
+                return 0;
+            }
+        }
+    }
     let form6 = new ActionFormData();
     form6.title("Manage Bans");
     ban.getValidBans().idBans.forEach((p) => {
@@ -38,15 +59,24 @@ export function manageBans(
     form6.button("Add ID Ban");
     form6.button("Add Name Ban");
     form6.button("Back");
-    forceShow(form6, sourceEntity as Player)
-        .then((ga) => {
+    return await forceShow(form6, sourceEntity as Player)
+        .then(async (ga) => {
             let g = ga as ActionFormResponse;
             if (g.canceled) {
-                backMenuFunction(sourceEntity);
-                return;
+                return 1 as const;
             }
             switch (g.selection) {
                 case banList.length:
+                    if (securityVariables.ultraSecurityModeEnabled) {
+                        if(securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.banPlayers") == false){
+                            const r = await showMessage(sourceEntity as Player, "Access Denied (403)", "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.banPlayers", "Okay", "Cancel");
+                            if(r.canceled || r.selection == 0){
+                                return 1;
+                            }else{
+                                return 0;
+                            }
+                        }
+                    }
                     let form5 = new ModalFormData();
                     form5.title(`Add ID Ban`);
                     form5.textField(
@@ -60,11 +90,11 @@ export function manageBans(
                         '"§cYOU HAVE BEEN BANNED BY THE BAN HAMMER\\nBanned By: {bannedByName}\\nBanned Until: {unbanDate}\\nBanned On: {banDate}\\nTime Remaining: {timeRemaining}"'
                     );
                     form5.submitButton("Ban");
-                    forceShow(form5, sourceEntity as Player)
+                    return await forceShow(form5, sourceEntity as Player)
                         .then((ha) => {
                             let h = ha as ModalFormResponse;
                             if (h.canceled) {
-                                return;
+                                return 1 as const;
                             }
                             ban.saveBan({
                                 removeAfterBanExpires: false,
@@ -85,21 +115,31 @@ export function manageBans(
                                 format_version: format_version,
                                 reason: String(h.formValues[2]),
                             });
-                            backMenuFunction(sourceEntity);
+                            return 1;
                         })
-                        .catch((e) => {
+                        .catch(async (e) => {
                             let formError = new MessageFormData();
                             formError.body(e + e.stack);
                             formError.title("Error");
                             formError.button1("Done");
-                            forceShow(formError, sourceEntity as Player).then(
+                            return await forceShow(formError, sourceEntity as Player).then(
                                 () => {
-                                    return e;
+                                    return -2 as const;
                                 }
                             );
                         });
                     break;
                 case banList.length + 1:
+                    if (securityVariables.ultraSecurityModeEnabled) {
+                        if(securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.banPlayers") == false){
+                            const r = await showMessage(sourceEntity as Player, "Access Denied (403)", "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.banPlayers", "Okay", "Cancel");
+                            if(r.canceled || r.selection == 0){
+                                return 1;
+                            }else{
+                                return 0;
+                            }
+                        }
+                    }
                     let form6 = new ModalFormData();
                     form6.title(`Add Name Ban`);
                     form6.textField(
@@ -113,11 +153,11 @@ export function manageBans(
                         '"§cYOU HAVE BEEN BANNED BY THE BAN HAMMER\\nBanned By: {bannedByName}\\nBanned Until: {unbanDate}\\nBanned On: {banDate}\\nTime Remaining: {timeRemaining}"'
                     );
                     form6.submitButton("Ban");
-                    forceShow(form6, sourceEntity as Player)
+                    return await forceShow(form6, sourceEntity as Player)
                         .then((ha) => {
                             let h = ha as ModalFormResponse;
                             if (h.canceled) {
-                                return;
+                                return 1 as const;
                             }
                             ban.saveBan({
                                 removeAfterBanExpires: false,
@@ -138,22 +178,22 @@ export function manageBans(
                                 format_version: format_version,
                                 reason: String(h.formValues[2]),
                             });
-                            backMenuFunction(sourceEntity);
+                            return 1;
                         })
-                        .catch((e) => {
+                        .catch(async (e) => {
                             let formError = new MessageFormData();
                             formError.body(e + e.stack);
                             formError.title("Error");
                             formError.button1("Done");
-                            forceShow(formError, sourceEntity as Player).then(
+                            return await forceShow(formError, sourceEntity as Player).then(
                                 () => {
-                                    return e;
+                                    return -2 as const;
                                 }
                             );
                         });
                     break;
                 case banList.length + 2:
-                    backMenuFunction(sourceEntity);
+                    return 1;
                     break; /*
         case banList.length+3:
         backMenuFunction(sourceEntity)
@@ -245,40 +285,50 @@ export function manageBans(
                     );
                     form4.button("Unban");
                     form4.button("Back");
-                    forceShow(form4, sourceEntity as Player)
-                        .then((ha) => {
+                    return await forceShow(form4, sourceEntity as Player)
+                        .then(async (ha) => {
                             let h = ha as ActionFormResponse;
                             if (h.canceled) {
-                                return;
+                                return 1 as const;
                             }
                             if (h.selection == 0) {
+                                if (securityVariables.ultraSecurityModeEnabled) {
+                                    if(securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.unbanPlayers") == false){
+                                        const r = await showMessage(sourceEntity as Player, "Access Denied (403)", "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.unbanPlayers", "Okay", "Cancel");
+                                        if(r.canceled || r.selection == 0){
+                                            return 1;
+                                        }else{
+                                            return 0;
+                                        }
+                                    }
+                                }
                                 banList[g.selection].remove();
-                                backMenuFunction(sourceEntity);
+                                return 1;
                             }
                             if (h.selection == 1) {
-                                backMenuFunction(sourceEntity);
+                                return 1;
                             }
                         })
-                        .catch((e) => {
+                        .catch(async (e) => {
                             let formError = new MessageFormData();
                             formError.body(e + e.stack);
                             formError.title("Error");
                             formError.button1("Done");
-                            forceShow(formError, sourceEntity as Player).then(
+                            return await forceShow(formError, sourceEntity as Player).then(
                                 () => {
-                                    return e;
+                                    return -2 as const;
                                 }
                             );
                         });
             }
         })
-        .catch((e) => {
+        .catch(async (e) => {
             let formError = new MessageFormData();
             formError.body(e + e.stack);
             formError.title("Error");
             formError.button1("Done");
-            forceShow(formError, sourceEntity as Player).then(() => {
-                return e;
+            return await forceShow(formError, sourceEntity as Player).then(() => {
+                return -2 as const;
             });
         });
 }

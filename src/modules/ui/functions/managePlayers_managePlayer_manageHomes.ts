@@ -5,11 +5,22 @@ import { HomeSystem } from "modules/commands/classes/HomeSystem";
 import { vTStr } from "modules/commands/functions/vTStr";
 import type { savedPlayer } from "modules/player_save/classes/savedPlayer";
 import { showMessage } from "modules/utilities/functions/showMessage";
+import { securityVariables } from "security/ultraSecurityModeUtils";
 
 export async function managePlayers_managePlayer_manageHomes(
     sourceEntity: Entity,
     player: savedPlayer
 ): Promise<0 | 1> {
+    if (securityVariables.ultraSecurityModeEnabled) {
+        if(securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.accessMainMenu") == false){
+            const r = await showMessage(sourceEntity as Player, "Access Denied (403)", "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.accessExtraFeaturesSettings", "Go Back", "Close");
+            if(r.canceled || r.selection == 0){
+                return 1;
+            }else{
+                return 0;
+            }
+        }
+    }
     let form6 = new ActionFormData();
     form6.title(player.name);
     const homes = HomeSystem.getHomesForPlayer(player.id);

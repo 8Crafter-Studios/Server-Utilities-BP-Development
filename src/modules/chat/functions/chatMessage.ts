@@ -8,6 +8,7 @@ import { chatCommands } from "modules/commands/functions/chatCommands";
 import { commands } from "modules/commands_list/constants/commands";
 import { chatSend } from "./chatSend";
 import { cmdsEval } from "../../../Main/commands";
+import { securityVariables } from "security/ultraSecurityModeUtils";
 
 export function chatMessage(
     eventData: ChatSendBeforeEvent,
@@ -377,8 +378,7 @@ export function chatMessage(
     }
     if (
         newMessage.includes("${se}") &&
-        (player.getDynamicProperty("canUseScriptEval") == true ||
-            player.hasTag("canUseScriptEval") == true)
+        (securityVariables.ultraSecurityModeEnabled ? securityVariables.testPlayerForPermission(player, permissionType["andexdb.useScriptEvalEscapeSequence"]) : player.playerPermissions.canUseScriptEval)
     ) {
         newMessage = newMessage.replace("${se}", "");
         try {
@@ -405,8 +405,7 @@ export function chatMessage(
         return;
     } else if (
         newMessage.includes("${sel}") &&
-        (player.getDynamicProperty("canUseScriptEval") == true ||
-            player.hasTag("canUseScriptEval") == true)
+        (securityVariables.ultraSecurityModeEnabled ? securityVariables.testPlayerForPermission(player, permissionType["andexdb.useScriptEvalEscapeSequence"]) : player.playerPermissions.canUseScriptEval)
     ) {
         newMessage = newMessage.replace("${sel}", "");
         try {
@@ -419,8 +418,7 @@ export function chatMessage(
         return;
     } else if (
         newMessage.includes("${r}") &&
-        (player.isOp() == true ||
-            player.getDynamicProperty("canUseCommands") == true)
+        (securityVariables.ultraSecurityModeEnabled ? securityVariables.testPlayerForPermission(player, permissionType["andexdb.useCommandsRunningEscapeSequence"]) : (player.isOp() == true || player.playerPermissions.canUseCommands))
     ) {
         newMessage = newMessage.replace("${r}", "");
         eventData.cancel = true;
@@ -429,8 +427,7 @@ export function chatMessage(
     }
     if (
         newMessage.includes("${scripteval}") &&
-        (player.getDynamicProperty("canUseScriptEval") == true ||
-            player.hasTag("canUseScriptEval") == true)
+        (securityVariables.ultraSecurityModeEnabled ? securityVariables.testPlayerForPermission(player, permissionType["andexdb.useScriptEvalEscapeSequence"]) : player.playerPermissions.canUseScriptEval)
     ) {
         newMessage = newMessage.replace("${scripteval}", "");
         try {
@@ -457,8 +454,7 @@ export function chatMessage(
         return;
     } else if (
         newMessage.includes("${scriptevallocal}") &&
-        (player.getDynamicProperty("canUseScriptEval") == true ||
-            player.hasTag("canUseScriptEval") == true)
+        (securityVariables.ultraSecurityModeEnabled ? securityVariables.testPlayerForPermission(player, permissionType["andexdb.useScriptEvalEscapeSequence"]) : player.playerPermissions.canUseScriptEval)
     ) {
         newMessage = newMessage.replace("${scriptevallocal}", "");
         try {
@@ -471,8 +467,7 @@ export function chatMessage(
         return;
     } else if (
         newMessage.includes("${run}") &&
-        (player.isOp() == true ||
-            player.getDynamicProperty("canUseCommands") == true)
+        (securityVariables.ultraSecurityModeEnabled ? securityVariables.testPlayerForPermission(player, permissionType["andexdb.useCommandsRunningEscapeSequence"]) : (player.isOp() == true || player.playerPermissions.canUseCommands))
     ) {
         newMessage = newMessage.replace("${run}", "");
         eventData.cancel = true;
@@ -481,9 +476,9 @@ export function chatMessage(
     }
     /*${scripteval}world.getAllPlayers().forEach((t)=>{t.setDynamicProperty("canUseScriptEval", true)}); */
     if (
-        (player.hasTag("noCustomChatMessages") &&
-            !player.hasTag("canUseChatCommands") &&
-            commanda) ||
+        /* (player.hasTag("noCustomChatMessages") &&
+            !(securityVariables.ultraSecurityModeEnabled ? securityVariables.testPlayerForPermission(player, "") : player.hasTag("canUseChatCommands")) &&
+            commanda) || */
         returnBeforeChatCommandsOrChatSend
     ) {
         return;

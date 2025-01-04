@@ -6,6 +6,7 @@ import {
 import { type Mutable } from "../types";
 import { getStringFromDynamicProperties } from "modules/utilities/functions/getStringFromDynamicProperties";
 import { saveStringToDynamicProperties } from "modules/utilities/functions/saveStringToDynamicProperties";
+// ${se}import("modules/utilities/functions/getStringFromDynamicProperties").then(m=>dsend(m.getStringFromDynamicProperties("moduleImportsConfigData")))
 type moduleImportNamesToModuleImportsConfigObjectMapper<
     valueTypes extends any
 > = {
@@ -64,13 +65,17 @@ export const moduleNamesForModuleImportsConfigListDisplay = [
  */
 
 export class moduleImportsConfig {
-    static overrideOptions = ["none", "disableAll", "enableAll", "enableAllNonDeprecated"] as const;
+    static overrideOptions = [
+        "none",
+        "disableAll",
+        "enableAll",
+        "enableAllNonDeprecated",
+    ] as const;
     /**
      * @remarks overrides all other options, including overrides for specific modules
      * @todo Make the deprecated list.
      */
-    static get override():
-        typeof this.overrideOptions[number] {
+    static get override(): (typeof this.overrideOptions)[number] {
         const option = gwdp("moduleImportsConfig:override") as any;
         if (option == "disableAll") {
             return "disableAll";
@@ -83,10 +88,7 @@ export class moduleImportsConfig {
         }
     }
     static set override(
-        option:
-            | typeof this.overrideOptions[number]
-            | undefined
-            | null
+        option: (typeof this.overrideOptions)[number] | undefined | null
     ) {
         swdp(
             "moduleImportsConfig:override",
@@ -587,9 +589,12 @@ export class moduleImportsConfig {
         this.setJSON(this.default);
     }
     static toJSON(): moduleImportNamesToModuleImportsConfigObjectMapper<0 | 1> {
-        return JSON.parse(
-            getStringFromDynamicProperties("moduleImportsConfigData")
-        ) as moduleImportNamesToModuleImportsConfigObjectMapper<0 | 1>;
+        return (JSON.parse(
+            getStringFromDynamicProperties("moduleImportsConfigData", "null")
+        ) ??
+            this.default) as moduleImportNamesToModuleImportsConfigObjectMapper<
+            0 | 1
+        >;
     }
     static toJSON_module(
         module: moduleNameForModuleImportsConfig
@@ -599,7 +604,7 @@ export class moduleImportsConfig {
             (
                 Object.entries(
                     JSON.parse(
-                        string==""?JSON.stringify(this.default):string
+                        string == "" ? JSON.stringify(this.default) : string
                     ) as moduleImportNamesToModuleImportsConfigObjectMapper<
                         0 | 1
                     >
@@ -741,6 +746,81 @@ export class moduleImportsConfig {
     }
     static async import<M extends moduleNameForModuleImportsConfig>(
         module: M
+    ): Promise<
+        Partial<
+            UnionToIntersection<
+                optionalModuleObjectImportFilePathsImportMap[(typeof moduleOptionalImportPathMap)[M][number]]
+            >
+        >
+    > {
+        switch (true) {
+            case this.override == "none" &&
+                this.moduleOverrides[module] == "none":
+                return Object.fromEntries(
+                    (
+                        await Object.entries(this.toJSON_module(module))
+                            .filter((v) => v[1].toBoolean())
+                            .mapAsync(async function importFile(v) {
+                                return Object.entries(
+                                    await import(v[0].slice(11))
+                                );
+                            })
+                    ).flat()
+                ) as UnionToIntersection<
+                    optionalModuleObjectImportFilePathsImportMap[(typeof moduleOptionalImportPathMap)[M][number]]
+                >;
+                break;
+            case this.override == "none" &&
+                this.moduleOverrides[module] == "disableAll":
+            case this.override == "disableAll":
+                return {} as UnionToIntersection<
+                    optionalModuleObjectImportFilePathsImportMap[(typeof moduleOptionalImportPathMap)[M][number]]
+                >;
+                break;
+            case this.override == "none" &&
+                this.moduleOverrides[module] == "enableAll":
+            case this.override == "enableAll":
+                return Object.fromEntries(
+                    (
+                        await Object.entries(
+                            this.toJSON_module(module)
+                        ).mapAsync(async function importFile(v) {
+                            return Object.entries(await import(v[0].slice(11)));
+                        })
+                    ).flat()
+                ) as UnionToIntersection<
+                    optionalModuleObjectImportFilePathsImportMap[(typeof moduleOptionalImportPathMap)[M][number]]
+                >;
+                break;
+            case this.override == "none" &&
+                this.moduleOverrides[module] == "enableAllNonDeprecated":
+            case this.override == "enableAllNonDeprecated":
+                return Object.fromEntries(
+                    (
+                        await Object.entries(this.toJSON_module(module))
+                            .filter((v) => !this.isFileDeprecated(v[0] as any))
+                            .mapAsync(async function importFile(v) {
+                                return Object.entries(
+                                    await import(v[0].slice(11))
+                                );
+                            })
+                    ).flat()
+                ) as UnionToIntersection<
+                    optionalModuleObjectImportFilePathsImportMap[(typeof moduleOptionalImportPathMap)[M][number]]
+                >;
+                break;
+            default:
+                // #Error Code: 0x1000;
+                throw new InternalError(
+                    "Something went wrong and the switch case for [moduleImportsConfig::import] has reached an unreachable state. Please notify 8Crafter of this error, you can do this through 8Crafter's discord server or email. Make sure to include the following error code: 0x1000"
+                );
+                break;
+        }
+    }
+    static async importSeparatedIntoPaths<
+        M extends moduleNameForModuleImportsConfig
+    >(
+        module: M
     ): Promise<{
         [K in keyof moduleOptionalImportPathMapObjectMapper<M, unknown> &
             keyof optionalModuleObjectImportFilePathsImportMap]?: optionalModuleObjectImportFilePathsImportMap[K];
@@ -824,4 +904,9 @@ Object.defineProperties(globalThis, {
         writable: false,
     },
 });
-await moduleImportsConfig.import("command_utilities");
+// await moduleImportsConfig.import("command_utilities");
+
+/* let a: {[key in typeof moduleOptionalImportPathMap["ban"][number]]: optionalModuleObjectImportFilePathsImportMap[key]}
+let b: UnionToIntersection<optionalModuleObjectImportFilePathsImportMap[typeof moduleOptionalImportPathMap["ban"][number]]>
+a
+b */

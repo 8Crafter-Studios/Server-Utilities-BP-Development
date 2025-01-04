@@ -4,13 +4,25 @@ import { config } from "init/classes/config";
 import { forceShow } from "modules/ui/functions/forceShow";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { settings } from "./settings";
+import { securityVariables } from "security/ultraSecurityModeUtils";
+import { showMessage } from "modules/utilities/functions/showMessage";
 
-export function globalSettings(
+export async function globalSettings(
     sourceEntitya: Entity | executeCommandPlayerW | Player
 ) {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW
         ? sourceEntitya.player
         : sourceEntitya;
+    if (securityVariables.ultraSecurityModeEnabled) {
+        if(securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.accessSettings") == false){
+            const r = await showMessage(sourceEntity as Player, "Access Denied (403)", "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.accessSettings", "Back", "Cancel");
+            if(r.canceled || r.selection == 0){
+                return 1;
+            }else{
+                return 0;
+            }
+        }
+    }
     let form2 = new ModalFormData();
     ("andexdbSettings:autoEscapeChatMessages");
     ("andexdbSettings:autoURIEscapeChatMessages");
@@ -131,12 +143,11 @@ export function globalSettings(
         config.system.useLegacyPlayerInventoryDataSaveSystem
     );
     form2.submitButton("Save");
-    forceShow(form2, sourceEntity as Player)
+    return await forceShow(form2, sourceEntity as Player)
         .then((to) => {
             let t = to as ModalFormResponse;
             if (t.canceled) {
-                settings(sourceEntity);
-                return;
+                return 1;
             } /*
     GameTest.Test.prototype.spawnSimulatedPlayer({x: 0, y: 0, z: 0})*/ /*
         ${se}GameTest.Test.prototype.spawnSimulatedPlayer({x: 0, y: 0, z: 0})*/
@@ -209,11 +220,11 @@ export function globalSettings(
                     : Number(
                         (spawnCommandLocation as string).split(" ")[1]
                     ),
-                z: (spawnCommandLocation as string).split(" ")[0] == "" ||
-                    !!!(spawnCommandLocation as string).split(" ")[1]
+                z: (spawnCommandLocation as string).split(" ")[2] == "" ||
+                    !!!(spawnCommandLocation as string).split(" ")[2]
                     ? null
                     : Number(
-                        (spawnCommandLocation as string).split(" ")[1]
+                        (spawnCommandLocation as string).split(" ")[2]
                     ),
                 dimension: dimensions[spawnCommandDimension as number],
             };
@@ -242,9 +253,10 @@ export function globalSettings(
                 playerInventoryDataSaveSystemEnabled as boolean;
             config.system.useLegacyPlayerInventoryDataSaveSystem =
                 useLegacyPlayerInventoryDataSaveSystem as boolean;
-            settings(sourceEntity);
+            return 1;
         })
         .catch((e) => {
             console.error(e, e.stack);
+            return 0;
         });
 }

@@ -1,5 +1,36 @@
-import { EquipmentSlot, type Enchantment, type Vector3, Dimension, type Vector2, type DimensionLocation, GameMode, MemoryTier, PlatformType, PlayerInputPermissions, Player, ItemStack } from "@minecraft/server";
+import { EquipmentSlot, type Enchantment, type Vector3, Dimension, type Vector2, type DimensionLocation, GameMode, MemoryTier, PlatformType, Player, ItemStack } from "@minecraft/server";
+import type { PlayerPermissions } from "init/classes/PlayerPermissions";
 import { ban } from "modules/ban/classes/ban";
+export type SavedPlayerOnJoinAction = SavedPlayerOnJoinAction_add_tag | SavedPlayerOnJoinAction_remove_tag | SavedPlayerOnJoinAction_add_tags | SavedPlayerOnJoinAction_remove_tags | SavedPlayerOnJoinAction_remove_item_in_slot | SavedPlayerOnJoinAction_clear_inventory | SavedPlayerOnJoinAction_set_permission<keyof ReturnType<PlayerPermissions["toJSON"]>>;
+export interface SavedPlayerOnJoinAction_add_tag {
+    type: "add_tag";
+    tag: string;
+}
+export interface SavedPlayerOnJoinAction_remove_tag {
+    type: "remove_tag";
+    tag: string;
+}
+export interface SavedPlayerOnJoinAction_add_tags {
+    type: "add_tags";
+    tags: string[];
+}
+export interface SavedPlayerOnJoinAction_remove_tags {
+    type: "remove_tags";
+    tags: string[];
+}
+export interface SavedPlayerOnJoinAction_remove_item_in_slot {
+    type: "remove_item_in_slot";
+    slot: number | EquipmentSlot | "~" | "cursor";
+}
+export interface SavedPlayerOnJoinAction_clear_inventory {
+    type: "clear_inventory";
+}
+export interface SavedPlayerOnJoinAction_set_permission<P extends keyof ReturnType<PlayerPermissions["toJSON"]>> {
+    type: "set_permission";
+    permission: P;
+    value: ReturnType<PlayerPermissions["toJSON"]>[P];
+}
+export type SavedPlayerOnJoinActions = SavedPlayerOnJoinAction[];
 export interface savedItem {
     id?: string;
     count: number;
@@ -41,7 +72,47 @@ export interface savedPlayerData {
     memoryTier?: MemoryTier;
     maxRenderDistance?: number;
     platformType?: PlatformType;
-    inputPermissions?: PlayerInputPermissions;
+    inputPermissions?: {
+        /**
+         * @deprecated Only exists in format versions below `1.6.0`.
+         * @deprecated Supercceeded by `Camera`.
+         */
+        cameraEnabled?: boolean;
+        /**
+         * @deprecated Only exists in format versions below `1.6.0`.
+         * @deprecated Supercceeded by `Movement`.
+         */
+        movementEnabled?: boolean;
+        Camera?: boolean;
+        Movement?: boolean;
+        LateralMovement?: boolean;
+        Sneak?: boolean;
+        Jump?: boolean;
+        Mount?: boolean;
+        Dismount?: boolean;
+        MoveForward?: boolean;
+        MoveBackward?: boolean;
+        MoveLeft?: boolean;
+        MoveRight?: boolean;
+    };
+    /**
+     * @since format version 1.6.0
+     * @since v1.28.0-preview.20+BUILD.1
+     */
+    inputInfo?: {
+        lastInputModeUsed: Player["inputInfo"]["lastInputModeUsed"];
+        touchOnlyAffectsHotbar: Player["inputInfo"]["touchOnlyAffectsHotbar"];
+    };
+    /**
+     * @since format version 1.6.0
+     * @since v1.28.0-preview.20+BUILD.1
+     */
+    playerPermissions?: ReturnType<PlayerPermissions["toJSON"]>;
+    /**
+     * @since format version 1.6.0
+     * @since v1.28.0-preview.20+BUILD.1
+     */
+    onJoinActions?: SavedPlayerOnJoinActions;
 }
 export declare class savedPlayer {
     name: string;
@@ -73,7 +144,17 @@ export declare class savedPlayer {
     memoryTier?: MemoryTier;
     maxRenderDistance?: number;
     platformType?: PlatformType;
-    inputPermissions?: PlayerInputPermissions;
+    inputPermissions?: savedPlayerData["inputPermissions"];
+    /**
+     * @since format version 1.6.0
+     * @since v1.28.0-preview.20+BUILD.1
+     */
+    playerPermissions?: ReturnType<PlayerPermissions["toJSON"]>;
+    /**
+     * @since format version 1.6.0
+     * @since v1.28.0-preview.20+BUILD.1
+     */
+    onJoinActions: SavedPlayerOnJoinActions;
     constructor(data: savedPlayerData);
     save(): void;
     remove(): void;
@@ -122,6 +203,7 @@ export declare class savedPlayer {
         34?: ItemStack | undefined;
         35?: ItemStack | undefined;
     };
+    executeOnJoinActions(): Promise<void>;
     get isOnline(): boolean;
     get isBanned(): boolean;
     get isNameBanned(): boolean;

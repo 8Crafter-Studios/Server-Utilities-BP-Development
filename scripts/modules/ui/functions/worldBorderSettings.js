@@ -2,11 +2,33 @@ import { ModalFormData } from "@minecraft/server-ui";
 import { config } from "init/classes/config";
 import { forceShow } from "modules/ui/functions/forceShow";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
-import { worldBorderSettingsDimensionSelector } from "./worldBorderSettingsDimensionSelector";
-export function worldBorderSettings(sourceEntitya, dimension = 0) {
+import { securityVariables } from "security/ultraSecurityModeUtils";
+import { showMessage } from "modules/utilities/functions/showMessage";
+/**
+ * Displays and handles the world border settings form for a specified dimension.
+ *
+ * @param sourceEntitya - The entity or player who initiated the request.
+ * @param dimension - The dimension for which the world border settings are to be displayed (0: Overworld, 1: Nether, 2: The End). Default is 0.
+ * @returns A promise that resolves to:
+ * - `1` if the form was successfully submitted or the user canceled the form.
+ * - `0` if the user does not have permission to access the settings.
+ * - `-2` if an error occurred.
+ */
+export async function worldBorderSettings(sourceEntitya, dimension = 0) {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW
         ? sourceEntitya.player
         : sourceEntitya;
+    if (securityVariables.ultraSecurityModeEnabled) {
+        if (securityVariables.testPlayerForPermission(sourceEntity, "andexdb.accessExtraFeaturesSettings") == false) {
+            const r = await showMessage(sourceEntity, "Access Denied (403)", "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.accessExtraFeaturesSettings", "Go Back", "Close");
+            if (r.canceled || r.selection == 0) {
+                return 1;
+            }
+            else {
+                return 0;
+            }
+        }
+    }
     let form2 = new ModalFormData();
     const configobj = config.worldBorder[dimensionse[dimension]];
     form2.title(`${["Overworld", "Nether", "The End"][dimension]} World Border Settings`);
@@ -25,11 +47,10 @@ export function worldBorderSettings(sourceEntitya, dimension = 0) {
     form2.textField(`§l§fHorizontal Knockback§r§f\n(§bONLY APPLIES TO YEET MODE§f)\nThe amount of horizontal knockback to apply, the default is 2.5`, "float", String(configobj.knockbackH));
     form2.textField(`§l§fVertical Knockback§r§f\n(§bONLY APPLIES TO YEET MODE§f)\nThe amount of vertical knockback to apply, the default is 1.25`, "float", String(configobj.knockbackV));
     form2.submitButton("Save");
-    forceShow(form2, sourceEntity)
+    return await forceShow(form2, sourceEntity)
         .then((t) => {
         if (t.canceled) {
-            worldBorderSettingsDimensionSelector(sourceEntity);
-            return;
+            return 1;
         } /*
 GameTest.Test.prototype.spawnSimulatedPlayer({x: 0, y: 0, z: 0})*/ /*
             ${se}GameTest.Test.prototype.spawnSimulatedPlayer({x: 0, y: 0, z: 0})*/
@@ -65,10 +86,11 @@ configobj.warnPlayersInChat=warnPlayersInChat*/
             knockbackH == "" ? undefined : Number(knockbackH);
         configobj.knockbackV =
             knockbackV == "" ? undefined : Number(knockbackV);
-        worldBorderSettingsDimensionSelector(sourceEntity);
+        return 1;
     })
         .catch((e) => {
         console.error(e, e.stack);
+        return -2;
     });
 }
 //# sourceMappingURL=worldBorderSettings.js.map

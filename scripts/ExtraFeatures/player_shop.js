@@ -16,6 +16,7 @@ import { saveStringToDynamicProperties } from "modules/utilities/functions/saveS
 import {} from "./shop_main";
 import { MoneySystem } from "./money";
 import { StorageFullError } from "modules/errors/classes/StorageFullError";
+import { securityVariables } from "security/ultraSecurityModeUtils";
 /**
  *
  * @see {@link ServerShop}
@@ -1035,6 +1036,17 @@ export class PlayerShopManager {
      */
     static async playerShopSystemSettings(sourceEntitya) {
         const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
+        if (securityVariables.ultraSecurityModeEnabled) {
+            if (securityVariables.testPlayerForPermission(sourceEntity, "andexdb.accessExtraFeaturesSettings") == false) {
+                const r = await showMessage(sourceEntity, "Access Denied (403)", "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.accessExtraFeaturesSettings", "Go Back", "Close");
+                if (r.canceled || r.selection == 0) {
+                    return 1;
+                }
+                else {
+                    return 0;
+                }
+            }
+        }
         let form = new ActionFormData();
         form.title("Player Shop System");
         form.body("The player shop system is " + (config.shopSystem.player.enabled ? "§aEnabled" : "§cDisabled"));
@@ -1058,8 +1070,12 @@ export class PlayerShopManager {
                     return await PlayerShopManager.playerShopSystemSettings(sourceEntity);
                     break;
                 case 2:
-                    await PlayerShopManager.playerShopSystemSettings_main(sourceEntity);
-                    return await PlayerShopManager.playerShopSystemSettings(sourceEntity);
+                    if ((await PlayerShopManager.playerShopSystemSettings_main(sourceEntity)) == 1) {
+                        return await PlayerShopManager.playerShopSystemSettings(sourceEntity);
+                    }
+                    else {
+                        return 0;
+                    }
                     break;
                 case 3:
                     return await showMessage(sourceEntity, undefined, "§cSorry, the shop item does not exist yet.", "Back", "Close").then(async (r) => {
@@ -1087,6 +1103,17 @@ export class PlayerShopManager {
     }
     static async playerShopSystemSettings_main(sourceEntitya) {
         const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
+        if (securityVariables.ultraSecurityModeEnabled) {
+            if (securityVariables.testPlayerForPermission(sourceEntity, "andexdb.accessExtraFeaturesSettings") == false) {
+                const r = await showMessage(sourceEntity, "Access Denied (403)", "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.accessExtraFeaturesSettings", "Go Back", "Close");
+                if (r.canceled || r.selection == 0) {
+                    return 1;
+                }
+                else {
+                    return 0;
+                }
+            }
+        }
         let form2 = new ModalFormData();
         form2.title(`Player Shop System Settings`);
         form2.toggle(`§l§fEnabled§r§f\nWhether or not the player shop system is enabled, default is false`, config.shopSystem.player.enabled);

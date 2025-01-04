@@ -1,6 +1,8 @@
-import { Player, type Vector3, Dimension, type Vector2, Block, Entity, type RawMessage, EntityInventoryComponent, EntityEquippableComponent, PlayerCursorInventoryComponent, ItemStack, ContainerSlot, type VectorYZ, type VectorXZ, EffectType, type EntityEffectOptions, type MusicOptions, type PlayerSoundOptions, GameMode, type DimensionLocation, MolangVariableMap, type EntityApplyDamageByProjectileOptions, type EntityApplyDamageOptions, type BlockRaycastOptions, type EntityComponentTypeMap, type BlockComponentTypeMap, type EntityRaycastOptions, type EntityQueryOptions, type PlayAnimationOptions, type TeleportOptions } from "@minecraft/server";
+import { Player, type Vector3, Dimension, type Vector2, Block, Entity, type RawMessage, EntityInventoryComponent, EntityEquippableComponent, PlayerCursorInventoryComponent, ItemStack, ContainerSlot, type VectorYZ, type VectorXZ, EffectType, type EntityEffectOptions, type MusicOptions, type PlayerSoundOptions, GameMode, type DimensionLocation, MolangVariableMap, type EntityApplyDamageByProjectileOptions, type EntityApplyDamageOptions, type BlockRaycastOptions, type EntityComponentTypeMap, type BlockComponentTypeMap, type EntityRaycastOptions, type EntityQueryOptions, type PlayAnimationOptions, type TeleportOptions, InputInfo } from "@minecraft/server";
 import { MoneySystem } from "ExtraFeatures/money";
 import { PlayerNotifications } from "init/classes/PlayerNotifications";
+import { PlayerPermissions } from "init/classes/PlayerPermissions";
+import { WorldEditSelection } from "init/classes/WorldEditSelection";
 import { WorldPosition } from "modules/coordinates/classes/WorldPosition";
 import type { RotationLocation } from "modules/coordinates/interfaces/RotationLocation";
 export declare class executeCommandPlayerW {
@@ -30,6 +32,8 @@ export declare class executeCommandPlayerW {
     get activeSlot(): ContainerSlot | undefined;
     get moneySystem(): MoneySystem;
     get playerNotifications(): PlayerNotifications;
+    get playerPermissions(): PlayerPermissions;
+    get worldEditSelection(): WorldEditSelection;
     get dimensionLocation(): Vector3 & {
         dimension: Dimension;
     };
@@ -76,6 +80,7 @@ export declare class executeCommandPlayerW {
     set nameTag(nameTag: string | undefined | null);
     get inputPermissions(): import("@minecraft/server").PlayerInputPermissions;
     get clientSystemInfo(): import("@minecraft/server").ClientSystemInfo;
+    get inputInfo(): InputInfo;
     addEffect(effectType: string | EffectType, duration: number, options?: EntityEffectOptions): import("@minecraft/server").Effect;
     addExperience(amount: number): number;
     getRotation(): Vector2;
@@ -87,6 +92,7 @@ export declare class executeCommandPlayerW {
     getSpawnPoint(): DimensionLocation;
     getTotalXp(): number;
     isOp(): boolean;
+    lookAt(targetLocation: Vector3): void;
     playMusic(trackId: string, musicOptions?: MusicOptions): void;
     playSound(soundId: string, soundOptions?: PlayerSoundOptions): void;
     postClientMessage(id: string, value: string): void;

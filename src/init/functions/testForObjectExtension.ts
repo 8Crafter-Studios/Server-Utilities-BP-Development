@@ -1,3 +1,4 @@
+import "init/meta/importToMakeValidModule";
 globalThis.testForObjectExtension = function testForObjectExtension(
     objectToTest: object,
     base: object

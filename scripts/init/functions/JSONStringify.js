@@ -1,3 +1,4 @@
+import "init/meta/importToMakeValidModule";
 globalThis.JSONStringify = function JSONStringify(JSONObject, keepUndefined = false, space) {
     if (JSONObject == undefined) {
         return keepUndefined ? "undefined" : "";

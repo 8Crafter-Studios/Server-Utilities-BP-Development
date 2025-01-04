@@ -1,3 +1,4 @@
+import "init/meta/importToMakeValidModule";
 globalThis.clamp24HoursTo12Hours = function clamp24HoursTo12Hours(
     hours: number
 ) {

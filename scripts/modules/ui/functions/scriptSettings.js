@@ -2,11 +2,42 @@ import { ModalFormData, ModalFormResponse } from "@minecraft/server-ui";
 import { config } from "init/classes/config";
 import { forceShow } from "modules/ui/functions/forceShow";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
-import { settings } from "./settings";
-export function scriptSettings(sourceEntitya) {
+import { securityVariables } from "security/ultraSecurityModeUtils";
+import { showMessage } from "modules/utilities/functions/showMessage";
+/**
+ * Displays and handles the script settings form for the given entity.
+ *
+ * @param sourceEntitya - The entity that is requesting the script settings. Can be an instance of `Entity`, `executeCommandPlayerW`, or `Player`.
+ * @returns A promise that resolves to:
+ * - `1` if the form was successfully submitted or access was denied and the user chose to go back.
+ * - `0` if access was denied and the user chose to cancel.
+ * - `-2` if an error occurred.
+ *
+ * The form includes various settings related to script behavior, such as refresh rates for player data, protected areas, and banned players,
+ * as well as options for logging, debug mode, and undo history storage.
+ *
+ * If `ultraSecurityModeEnabled` is true, the function checks if the player has the `andexdb.accessSettings` permission.
+ * If the player does not have the required permission, an access denied message is shown.
+ *
+ * The form dynamically adjusts based on whether debug mode is enabled, showing additional debug-related settings if it is.
+ *
+ * The function uses `forceShow` to display the form and handle the response, updating the configuration based on the user's input.
+ */
+export async function scriptSettings(sourceEntitya) {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW
         ? sourceEntitya.player
         : sourceEntitya;
+    if (securityVariables.ultraSecurityModeEnabled) {
+        if (securityVariables.testPlayerForPermission(sourceEntity, "andexdb.accessSettings") == false) {
+            const r = await showMessage(sourceEntity, "Access Denied (403)", "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.accessSettings", "Back", "Cancel");
+            if (r.canceled || r.selection == 0) {
+                return 1;
+            }
+            else {
+                return 0;
+            }
+        }
+    }
     let form2 = new ModalFormData();
     form2.title("Script Settings");
     form2.textField("§l§fplayerDataRefreshRate§r\nThe interval at which to update the saved playerdata of all online players, decreasing this number may increase lag, the default is 20", "integer from 1-1000", String(config.system.playerDataRefreshRate));
@@ -25,12 +56,11 @@ export function scriptSettings(sourceEntitya) {
         form2.toggle("§l§fspreadPlayerInventoryDataSavesOverMultipleTicks§r\nWhether or not to spread player inventory data saving over multiple ticks to reduce lag, this only applies when §bGlobal Settings>useLegacyPlayerInventoryDataSaveSystem§r is disabled, the default is true", config.system.spreadPlayerInventoryDataSavesOverMultipleTicks);
     }
     form2.submitButton("Save");
-    forceShow(form2, sourceEntity)
+    return await forceShow(form2, sourceEntity)
         .then((to) => {
         let t = to;
         if (t.canceled) {
-            settings(sourceEntity);
-            return;
+            return 1;
         } /*
 GameTest.Test.prototype.spawnSimulatedPlayer({x: 0, y: 0, z: 0})*/ /*
             ${se}GameTest.Test.prototype.spawnSimulatedPlayer({x: 0, y: 0, z: 0})*/
@@ -61,10 +91,11 @@ GameTest.Test.prototype.spawnSimulatedPlayer({x: 0, y: 0, z: 0})*/ /*
             showEntityScaleNotFoundChatLog;
         config.system.showEntityScaleFoundChatLog =
             showEntityScaleFoundChatLog;
-        settings(sourceEntity);
+        return 1;
     })
         .catch((e) => {
         console.error(e, e.stack);
+        return -2;
     });
 }
 //# sourceMappingURL=scriptSettings.js.map

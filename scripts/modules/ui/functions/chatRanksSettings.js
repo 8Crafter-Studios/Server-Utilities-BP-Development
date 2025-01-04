@@ -3,13 +3,60 @@ import { ModalFormData, ModalFormResponse } from "@minecraft/server-ui";
 import { config } from "init/classes/config";
 import { forceShow } from "modules/ui/functions/forceShow";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
-import { settings } from "./settings";
 import { rankModes } from "./rankModes";
 import { rankModesArray } from "./rankModesArray";
-export function chatRanksSettings(sourceEntitya) {
+import { securityVariables } from "security/ultraSecurityModeUtils";
+import { showMessage } from "modules/utilities/functions/showMessage";
+/**
+ * Displays and handles the chat ranks settings form for a given player or entity.
+ *
+ * @param sourceEntitya - The entity or player to display the form to. Can be of type `Entity`, `executeCommandPlayerW`, or `Player`.
+ * @returns A promise that resolves to:
+ * - `-2` if an error occurs,
+ * - `0` if the player cancels the form,
+ * - `1` if the form is successfully submitted.
+ *
+ * The form allows the user to configure various chat rank settings such as:
+ * - Rank style/mode
+ * - Rank display prefix and suffix
+ * - Name display prefix and suffix
+ * - Chat name and message separator
+ * - Rank display separator
+ * - Rank template string
+ * - Message template string
+ * - Default rank template string for players with no rank
+ * - Default message formatting
+ * - Default name formatting
+ * - Default separator formatting
+ * - Disabling custom chat messages
+ * - Allowing custom chat messages muting
+ * - Auto escaping chat messages
+ * - Auto URI escaping chat messages
+ * - Allowing chat escape codes
+ * - Displaying timestamps in chat
+ * - Showing ranks on player name tags
+ *
+ * If `ultraSecurityModeEnabled` is true, the function checks if the player has the required permission to access the settings. If not, an access denied message is shown.
+ *
+ * The function uses `world.getDynamicProperty` to get the current settings and `world.setDynamicProperty` to save the updated settings.
+ *
+ * @throws Will log an error and return `-2` if an exception occurs during form submission.
+ */
+export async function chatRanksSettings(sourceEntitya) {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW
         ? sourceEntitya.player
         : sourceEntitya;
+    if (securityVariables.ultraSecurityModeEnabled) {
+        if (securityVariables.testPlayerForPermission(sourceEntity, "andexdb.accessSettings") == false) {
+            const r = await showMessage(sourceEntity, "Access Denied (403)", "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.accessSettings", "Back", "Cancel");
+            if (r.canceled || r.selection == 0) {
+                return 1;
+            }
+            else {
+                return 0;
+            }
+        }
+    }
     let form2 = new ModalFormData();
     form2.title("Chat Ranks Settings");
     //⌠⌡÷≈≡±≥≤»
@@ -42,12 +89,11 @@ export function chatRanksSettings(sourceEntitya) {
     form2.toggle("§l§fchatDisplayTimeStamp§r§f\n§r§o§5Applies to all rank modes/styles.\n§r§fSets whether or not to put a timestamp before every chat message, default is false", config.chatRanks.chatDisplayTimeStamp);
     form2.toggle("§l§fshowRanksOnPlayerNameTags§r§f\nSets whether or not to show player's ranks on their name tag, default is false", config.chatRanks.showRanksOnPlayerNameTags);
     form2.submitButton("Save");
-    forceShow(form2, sourceEntity)
+    return await forceShow(form2, sourceEntity)
         .then((to) => {
         let t = to;
         if (t.canceled) {
-            settings(sourceEntity);
-            return;
+            return 1;
         } /*
 GameTest.Test.prototype.spawnSimulatedPlayer({x: 0, y: 0, z: 0})*/ /*
             ${se}GameTest.Test.prototype.spawnSimulatedPlayer({x: 0, y: 0, z: 0})*/
@@ -73,10 +119,11 @@ GameTest.Test.prototype.spawnSimulatedPlayer({x: 0, y: 0, z: 0})*/ /*
         world.setDynamicProperty("andexdbSettings:chatDisplayTimeStamp", chatDisplayTimeStamp);
         config.chatRanks.showRanksOnPlayerNameTags =
             showRanksOnPlayerNameTags;
-        settings(sourceEntity);
+        return 1;
     })
         .catch((e) => {
         console.error(e, e.stack);
+        return -2;
     });
 }
 //# sourceMappingURL=chatRanksSettings.js.map

@@ -4,6 +4,8 @@ import type { RotationLocation } from "modules/coordinates/interfaces/RotationLo
 import type { PlayerNotifications } from "init/classes/PlayerNotifications";
 import { anglesToDirectionVectorDeg } from "modules/coordinates/functions/anglesToDirectionVectorDeg";
 import { getChunkIndexD } from "modules/coordinates/functions/getChunkIndexD";
+import type { PlayerPermissions } from "init/classes/PlayerPermissions";
+import type { WorldEditSelection } from "init/classes/WorldEditSelection";
 
 Object.defineProperties(Entity.prototype, {
     inventory: {
@@ -254,6 +256,8 @@ declare module "@minecraft/server" {
         get activeSlot(): ContainerSlot | undefined;
         get moneySystem(): MoneySystem;
         get playerNotifications(): PlayerNotifications;
+        get playerPermissions(): PlayerPermissions;
+        get worldEditSelection(): WorldEditSelection;
         get dimensionLocation(): DimensionLocation;
         get locationstring(): `${number} ${number} ${number}`;
         get rotationstring(): `${number} ${number}`;

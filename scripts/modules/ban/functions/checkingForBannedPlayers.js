@@ -38,6 +38,7 @@ export function startCheckingForBannedPlayers() {
                         ?.replaceAll("{timeRemainingSeconds}", String(b?.timeRemaining.seconds))
                         ?.replaceAll("{timeRemainingMilliseconds}", String(b?.timeRemaining.milliseconds))
                         ?.replaceAll("{bannedBy}", String(b?.bannedByName))
+                        ?.replaceAll("{bannedByName}", String(b?.bannedByName))
                         ?.replaceAll("{bannedById}", String(b?.bannedById))
                         ?.replaceAll("{banDate}", String(new Date(Number(b?.banDate)).toLocaleString() + " GMT"))
                         ?.replaceAll("{unbanDate}", String(new Date(Number(b?.unbanDate)).toLocaleString() + " GMT"))

@@ -1,10 +1,10 @@
-import { Vector3Utils, VECTOR3_ONE, VECTOR3_FORWARD, VECTOR3_DOWN, VECTOR3_UP, VECTOR3_SOUTH, VECTOR3_NORTH, VECTOR3_EAST, VECTOR3_WEST } from "@minecraft/math.js";
-import { Player, ChatSendBeforeEvent, world, EntityInventoryComponent, BlockInventoryComponent, system, ItemStack, EntityEquippableComponent, PlayerCursorInventoryComponent, EquipmentSlot, ItemLockMode, EnchantmentTypes, ContainerSlot, DimensionTypes, StructureSaveMode, StructureAnimationMode, StructureMirrorAxis, StructureRotation, BlockPermutation, BlockVolume, BlockTypes, Entity, Block, CompoundBlockVolume, ItemTypes, Dimension, EntityComponentTypes } from "@minecraft/server";
+import { Vector3Utils, VECTOR3_ONE, VECTOR3_FORWARD, VECTOR3_DOWN, VECTOR3_UP, VECTOR3_SOUTH, VECTOR3_NORTH, VECTOR3_EAST, VECTOR3_WEST, } from "@minecraft/math.js";
+import { Player, ChatSendBeforeEvent, world, EntityInventoryComponent, BlockInventoryComponent, system, ItemStack, EntityEquippableComponent, PlayerCursorInventoryComponent, EquipmentSlot, ItemLockMode, EnchantmentTypes, ContainerSlot, DimensionTypes, StructureSaveMode, StructureAnimationMode, StructureMirrorAxis, StructureRotation, BlockPermutation, BlockVolume, BlockTypes, Entity, Block, CompoundBlockVolume, ItemTypes, Dimension, EntityComponentTypes, Direction, } from "@minecraft/server";
 import { uiManager } from "@minecraft/server-ui";
 import { listoftransformrecipes } from "Assets/constants/transformrecipes";
-import { rgbToHsl, rgbToHSLuv, rgbToHsv, rgbToHsi, rgbToHPLuv, Color } from "color-core";
+import { rgbToHsl, rgbToHSLuv, rgbToHsv, rgbToHsi, rgbToHPLuv, Color, } from "color-core";
 import { PlayerShopManager, PlayerShop } from "ExtraFeatures/player_shop";
-import { LinkedServerShopCommands, ServerShopManager, ServerShop } from "ExtraFeatures/server_shop";
+import { LinkedServerShopCommands, ServerShopManager, ServerShop, } from "ExtraFeatures/server_shop";
 import { mainShopSystemSettings } from "ExtraFeatures/shop_main";
 import { PlayerNotifications } from "init/classes/PlayerNotifications";
 import { fillBlocksCG } from "modules/main/functions/fillBlocksCG";
@@ -134,6 +134,9 @@ import { helpCommandChatCommandsList } from "modules/commands_documentation/cons
 import { commands } from "modules/commands_list/constants/commands";
 import { ban } from "modules/ban/classes/ban";
 import { HSLToRGB } from "modules/utilities/functions/HSLToRGB";
+import { mazeGenerator } from "modules/utilities/functions/mazeGenerator";
+import { regenerateBlocksBasic } from "modules/utilities/functions/regenerateBlocksBasic";
+import * as semver from "semver";
 export function chatCommands(params) {
     let returnBeforeChatSend = params.returnBeforeChatSend ?? false;
     let playerab = params.player ?? params.eventData?.sender ?? params.event?.sender;
@@ -6938,8 +6941,8 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                             l.y >= player.dimension.heightRange.min - 2; i++) {
                             l = caretNotationC(l, VECTOR3_FORWARD, rot);
                         }
-                        (tryget(() => player.dimension.getBlock(l).isAir &&
-                            player.dimension.getBlock(l).below().isAir) ?? l.y <= player.dimension.heightRange.min + 2)
+                        tryget(() => player.dimension.getBlock(l).isAir &&
+                            player.dimension.getBlock(l).below().isAir) ?? l.y <= player.dimension.heightRange.min + 2
                             ? tryrun(() => {
                                 try {
                                     srun(() => {
@@ -6958,8 +6961,8 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                     player.sendError("§c" + e + e.stack, true);
                                 }
                             })
-                            : (tryget(() => player.dimension.getBlock(l).isAir &&
-                                player.dimension.getBlock(l).above().isAir) ?? l.y <= player.dimension.heightRange.min + 2)
+                            : tryget(() => player.dimension.getBlock(l).isAir &&
+                                player.dimension.getBlock(l).above().isAir) ?? l.y <= player.dimension.heightRange.min + 2
                                 ? tryrun(() => {
                                     try {
                                         srun(() => {
@@ -9149,7 +9152,7 @@ ${command.dp}ifill <center: x y z> <radius: x y z> <offset: x y z> <length: floa
                             : sglastblockname == "keep"
                                 ? ["air"]
                                 : [sglastblockname, sglastblockstates]); /*
-        console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
+            console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
                         switch (fillmodetypeenum[skygridmode
                             ? sgmode
                             : hovoidmode
@@ -10304,50 +10307,50 @@ ${command.dp}itfill <center: x y z> <radius: x y z> <offset: x y z> <length: flo
                         let lastblockname = args[10];
                         let lastblockstates = args[11];
                         let replacemode = args[12] ?? false;
-                        let matchingblock = ((lastblockname ?? "") == ""
+                        let matchingblock = (((lastblockname ?? "") == "" || [circlemode, ccirclemode, hspheremode, tunnelmode, ovoidmode, hovoidmode, skygridmode].includes(true))
                             ? [undefined, undefined]
-                            : lastblockname == "keep" || mode == "keep"
+                            : (lastblockname == "keep" || mode == "keep")
                                 ? ["air"]
                                 : [
                                     BlockTypes.get(lastblockname).id,
                                     lastblockstates,
                                 ]);
-                        let cmatchingblock = ((clastblockname ?? "") == ""
+                        let cmatchingblock = (((clastblockname ?? "") == "" || circlemode)
                             ? [undefined, undefined]
                             : clastblockname == "keep"
                                 ? ["air"]
                                 : [clastblockname, clastblockstates]);
-                        let ccmatchingblock = ((cclastblockname ?? "") == ""
+                        let ccmatchingblock = (((cclastblockname ?? "") == "" || ccirclemode)
                             ? [undefined, undefined]
                             : cclastblockname == "keep"
                                 ? ["air"]
                                 : [cclastblockname, cclastblockstates]);
-                        let hsmatchingblock = ((hslastblockname ?? "") == ""
+                        let hsmatchingblock = (((hslastblockname ?? "") == "" || hspheremode)
                             ? [undefined, undefined]
                             : hslastblockname == "keep"
                                 ? ["air"]
                                 : [hslastblockname, hslastblockstates]);
-                        let tmatchingblock = ((tlastblockname ?? "") == ""
+                        let tmatchingblock = (((tlastblockname ?? "") == "" || tunnelmode)
                             ? [undefined, undefined]
                             : tlastblockname == "keep"
                                 ? ["air"]
                                 : [tlastblockname, tlastblockstates]);
-                        let omatchingblock = ((olastblockname ?? "") == ""
+                        let omatchingblock = (((olastblockname ?? "") == "" || ovoidmode)
                             ? [undefined, undefined]
                             : olastblockname == "keep"
                                 ? ["air"]
                                 : [olastblockname, olastblockstates]);
-                        let homatchingblock = ((holastblockname ?? "") == ""
+                        let homatchingblock = (((holastblockname ?? "") == "" || hovoidmode)
                             ? [undefined, undefined]
                             : holastblockname == "keep"
                                 ? ["air"]
                                 : [holastblockname, holastblockstates]);
-                        let sgmatchingblock = ((sglastblockname ?? "") == ""
+                        let sgmatchingblock = (((sglastblockname ?? "") == "" || skygridmode)
                             ? [undefined, undefined]
                             : sglastblockname == "keep"
                                 ? ["air"]
                                 : [sglastblockname, sglastblockstates]); /*
-        console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
+            console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
                         switch (fillmodetypeenum[skygridmode
                             ? sgmode
                             : hovoidmode
@@ -18630,6 +18633,53 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                     player.sendMessageB(`Successfully set your timezone to ${args[1]}.`);
                 }
                 break;
+            case !!switchTest.match(/^\\deletesavedpos$/):
+                {
+                    eventData.cancel = true;
+                    const args = evaluateParameters(switchTestB, [
+                        "presetText",
+                        "string",
+                    ]).args;
+                    const selection = player.worldEditSelection.getSavedSelection(args[1]);
+                    if (!!!selection) {
+                        player.sendMessageB(`§cError: The saved selection ${JSON.stringify(args[1])} does not exist.`);
+                    }
+                    else {
+                        player.worldEditSelection.removeSavedSelection(args[1]);
+                        player.sendMessageB(`Successfully deleted the saved selection ${JSON.stringify(args[1])}.`);
+                    }
+                }
+                break;
+            case !!switchTest.match(/^\\loadpos$/):
+                {
+                    eventData.cancel = true;
+                    const args = evaluateParameters(switchTestB, [
+                        "presetText",
+                        "string",
+                    ]).args;
+                    const selection = player.worldEditSelection.getSavedSelection(args[1]);
+                    if (!!!selection) {
+                        player.sendMessageB(`§cError: The saved selection ${JSON.stringify(args[1])} does not exist.`);
+                    }
+                    else {
+                        player.worldEditSelection.pos1 = selection.pos1;
+                        player.worldEditSelection.pos2 = selection.pos2;
+                        player.worldEditSelection.dimension = selection.dimension;
+                        player.sendMessageB(`Successfully loaded the saved selection ${JSON.stringify(args[1])} into the pos1, pos2, and posD selection.`);
+                    }
+                }
+                break;
+            case !!switchTest.match(/^\\savepos$/):
+                {
+                    eventData.cancel = true;
+                    const args = evaluateParameters(switchTestB, [
+                        "presetText",
+                        "string",
+                    ]).args;
+                    player.worldEditSelection.saveSelection(args[1]);
+                    player.sendMessageB(`Successfully saved the current pos1, pos2, and posD selection to ${JSON.stringify(args[1])}.`);
+                }
+                break;
             case !!switchTest.match(/^\\pos1$/):
                 {
                     eventData.cancel = true;
@@ -18764,6 +18814,156 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                     player.setDynamicProperty("pos1", Vector.add(range.from, offset));
                     player.setDynamicProperty("pos2", Vector.add(range.to, offset));
                     player.sendMessageB(`Successfully shifted the selection by ${vTStr(offset)} (${vTStr(player.getDynamicProperty("pos1"))} to ${vTStr(player.getDynamicProperty("pos2"))}).`);
+                }
+                break;
+            case !!switchTest.match(/^\\regenerateblocks$/):
+                {
+                    eventData.cancel = true;
+                    const args = evaluateParameters(switchTestB, [
+                        "presetText",
+                        "number",
+                    ]).args;
+                    const radius = args[1] ?? 5;
+                    const coordinatesa = player.getDynamicProperty("pos1");
+                    const coordinatesb = player.getDynamicProperty("pos2");
+                    const ca = {
+                        x: Math.min(coordinatesa.x, coordinatesb.x),
+                        y: Math.min(coordinatesa.y, coordinatesb.y),
+                        z: Math.min(coordinatesa.z, coordinatesb.z),
+                    };
+                    const cb = {
+                        x: Math.max(coordinatesa.x, coordinatesb.x),
+                        y: Math.max(coordinatesa.y, coordinatesb.y),
+                        z: Math.max(coordinatesa.z, coordinatesb.z),
+                    };
+                    const dimensiona = world.getDimension((player.getDynamicProperty("posD") ??
+                        player.dimension.id));
+                    if (!!!coordinatesa) {
+                        player.sendMessageB("§cError: pos1 is not set.");
+                    }
+                    else {
+                        if (!!!coordinatesb) {
+                            player.sendMessageB("§cError: pos2 is not set.");
+                        }
+                        else {
+                            system.run(() => {
+                                let ta;
+                                try {
+                                    generateTickingAreaFillCoordinatesC(player.location, (() => {
+                                        let a = new CompoundBlockVolume();
+                                        a.pushVolume({
+                                            volume: new BlockVolume(ca, cb),
+                                        });
+                                        return a;
+                                    })(), dimensiona).then((tac) => {
+                                        ta = tac;
+                                        try {
+                                            undoClipboard.save(dimensiona, { from: ca, to: cb }, Date.now(), {
+                                                includeBlocks: true,
+                                                includeEntities: false,
+                                                saveMode: config.undoClipboardMode,
+                                            });
+                                        }
+                                        catch (e) {
+                                            player.sendMessageB("§c" + e + " " + e.stack);
+                                        }
+                                        try {
+                                            regenerateBlocksBasic(ca, cb, dimensiona, radius);
+                                        }
+                                        catch (e) {
+                                            player.sendError("§c" + e + e.stack, true);
+                                        }
+                                        finally {
+                                            tac.forEach((tab) => tab?.remove());
+                                        }
+                                    });
+                                }
+                                catch (e) {
+                                    player.sendError("§c" + e + e.stack, true);
+                                }
+                            });
+                        }
+                    }
+                }
+                break;
+            case !!switchTest.match(/^\\maze$/):
+                {
+                    eventData.cancel = true;
+                    const args = evaluateParameters(switchTestB, [
+                        "presetText",
+                        "block",
+                        "block",
+                        "string",
+                        "string",
+                        "number",
+                    ]).args;
+                    const wallBlock = args[1];
+                    const airBlock = args[2];
+                    const directions = [Direction.North, Direction.East, Direction.South, Direction.West];
+                    const directionsB = ["north", "east", "south", "west"];
+                    const entranceDirection = directions[directionsB.indexOf((args[3] ?? "north").toLowerCase())];
+                    const exitDirection = directions[directionsB.indexOf((args[4] ?? "south").toLowerCase())];
+                    const complexity = args[5];
+                    const coordinatesa = player.getDynamicProperty("pos1");
+                    const coordinatesb = player.getDynamicProperty("pos2");
+                    const ca = {
+                        x: Math.min(coordinatesa.x, coordinatesb.x),
+                        y: Math.min(coordinatesa.y, coordinatesb.y),
+                        z: Math.min(coordinatesa.z, coordinatesb.z),
+                    };
+                    const cb = {
+                        x: Math.max(coordinatesa.x, coordinatesb.x),
+                        y: Math.max(coordinatesa.y, coordinatesb.y),
+                        z: Math.max(coordinatesa.z, coordinatesb.z),
+                    };
+                    const dimensiona = world.getDimension((player.getDynamicProperty("posD") ??
+                        player.dimension.id));
+                    if (!!!coordinatesa) {
+                        player.sendMessageB("§cError: pos1 is not set.");
+                    }
+                    else {
+                        if (!!!coordinatesb) {
+                            player.sendMessageB("§cError: pos2 is not set.");
+                        }
+                        else {
+                            system.run(() => {
+                                let ta;
+                                try {
+                                    generateTickingAreaFillCoordinatesC(player.location, (() => {
+                                        let a = new CompoundBlockVolume();
+                                        a.pushVolume({
+                                            volume: new BlockVolume(ca, cb),
+                                        });
+                                        return a;
+                                    })(), dimensiona).then((tac) => {
+                                        ta = tac;
+                                        try {
+                                            undoClipboard.save(dimensiona, { from: ca, to: cb }, Date.now(), {
+                                                includeBlocks: true,
+                                                includeEntities: false,
+                                                saveMode: config.undoClipboardMode,
+                                            });
+                                        }
+                                        catch (e) {
+                                            player.sendMessageB("§c" + e + " " + e.stack);
+                                        }
+                                        try {
+                                            mazeGenerator(ca, cb, dimensiona, { wallBlockType: tryget(() => BlockPermutation.resolve(wallBlock.id, wallBlock.states)) ?? BlockPermutation.resolve("stone"), airBlockType: tryget(() => BlockPermutation.resolve(airBlock.id, airBlock.states)) ?? BlockPermutation.resolve("air"), complexity, entranceDirection, exitDirection });
+                                        }
+                                        catch (e) {
+                                            player.sendError("§c" + e + e.stack, true);
+                                        }
+                                        finally {
+                                            tac.forEach((tab) => tab?.remove());
+                                        }
+                                    });
+                                }
+                                catch (e) {
+                                    player.sendError("§c" + e + e.stack, true);
+                                }
+                            });
+                        }
+                    }
                 }
                 break;
             case !!switchTest.match(/^\\replace$/):
@@ -25234,7 +25434,7 @@ ${command.dp}snapshot list`);
                 !!switchTest.match(/^seli$/):
                 {
                     eventData.cancel = true;
-                    player.sendMessageB(`Currently Selected Area Info: \npos1 x: ${player.getDynamicProperty("pos1")["x"]}\npos1 y: ${player.getDynamicProperty("pos1")["y"]}\npos1 z: ${player.getDynamicProperty("pos1")["z"]}\npos2 x: ${player.getDynamicProperty("pos2")["x"]}\npos2 y: ${player.getDynamicProperty("pos2")["y"]}\npos2 z: ${player.getDynamicProperty("pos2")["z"]}\nNext Selection Mode: ${(player.getDynamicProperty("posM") ?? false)
+                    player.sendMessageB(`Currently Selected Area Info: \npos1 x: ${player.getDynamicProperty("pos1")["x"]}\npos1 y: ${player.getDynamicProperty("pos1")["y"]}\npos1 z: ${player.getDynamicProperty("pos1")["z"]}\npos2 x: ${player.getDynamicProperty("pos2")["x"]}\npos2 y: ${player.getDynamicProperty("pos2")["y"]}\npos2 z: ${player.getDynamicProperty("pos2")["z"]}\nNext Selection Mode: ${player.getDynamicProperty("posM") ?? false
                         ? "pos2"
                         : "pos1"}`);
                 }
@@ -25437,8 +25637,16 @@ ${command.dp}snapshot list`);
                                 BlockTypes.get(lastblockname).id,
                                 lastblockstates,
                             ];
-                    const coordinatesa = Vector3Utils.add(player.location, { x: -args[2], y: -args[2], z: -args[2] });
-                    const coordinatesb = Vector3Utils.add(player.location, { x: args[2], y: args[2], z: args[2] });
+                    const coordinatesa = Vector3Utils.add(player.location, {
+                        x: -args[2],
+                        y: -args[2],
+                        z: -args[2],
+                    });
+                    const coordinatesb = Vector3Utils.add(player.location, {
+                        x: args[2],
+                        y: args[2],
+                        z: args[2],
+                    });
                     const blocktypes = BlockTypes.getAll();
                     system.run(() => {
                         let ta;
@@ -25742,43 +25950,136 @@ ${command.dp}snapshot list`);
                                 player.sendError("§c" + e + e.stack, true);
                             }
                     }
-                    srun(() => [
-                        ...player.dimension.getEntities({
-                            location: player.location,
-                            type: "minecraft:tnt",
-                            maxDistance: radius,
-                        }),
-                        ...player.dimension.getEntities({
-                            location: player.location,
-                            type: "minecraft:tnt_minecart",
-                            maxDistance: radius,
-                        }),
-                        ...player.dimension.getEntities({
-                            location: player.location,
-                            type: "projectile:tnt",
-                            maxDistance: radius,
-                        }),
-                        ...player.dimension.getEntities({
-                            location: player.location,
-                            type: "andexsa:fire_tnt_arrow",
-                            maxDistance: radius,
-                        }),
-                        ...player.dimension.getEntities({
-                            location: player.location,
-                            type: "andexsa:normal_fire_tnt_arrow",
-                            maxDistance: radius,
-                        }),
-                        ...player.dimension.getEntities({
-                            location: player.location,
-                            type: "andexsa:normal_tnt_arrow",
-                            maxDistance: radius,
-                        }),
-                        ...player.dimension.getEntities({
-                            location: player.location,
-                            type: "andexsa:tnt_arrow",
-                            maxDistance: radius,
-                        }),
-                    ].forEach((v) => v.remove()));
+                    srun(() => {
+                        let explosiveEntityRemovalCount = 0n;
+                        [
+                            ...player.dimension.getEntities({
+                                location: player.location,
+                                type: "minecraft:tnt",
+                                maxDistance: radius,
+                            }),
+                            ...player.dimension.getEntities({
+                                location: player.location,
+                                type: "minecraft:tnt_minecart",
+                                maxDistance: radius,
+                            }),
+                            ...player.dimension.getEntities({
+                                location: player.location,
+                                type: "minecraft:wither",
+                                maxDistance: radius,
+                            }),
+                            ...player.dimension.getEntities({
+                                location: player.location,
+                                type: "minecraft:wither_skull",
+                                maxDistance: radius,
+                            }),
+                            ...player.dimension.getEntities({
+                                location: player.location,
+                                type: "minecraft:wither_skull_dangerous",
+                                maxDistance: radius,
+                            }),
+                            ...player.dimension.getEntities({
+                                location: player.location,
+                                type: "minecraft:ender_dragon",
+                                maxDistance: radius,
+                            }),
+                            ...player.dimension.getEntities({
+                                location: player.location,
+                                type: "projectile:tnt",
+                                maxDistance: radius,
+                            }),
+                            ...player.dimension.getEntities({
+                                location: player.location,
+                                type: "andexsa:fire_tnt_arrow",
+                                maxDistance: radius,
+                            }),
+                            ...player.dimension.getEntities({
+                                location: player.location,
+                                type: "andexsa:normal_fire_tnt_arrow",
+                                maxDistance: radius,
+                            }),
+                            ...player.dimension.getEntities({
+                                location: player.location,
+                                type: "andexsa:normal_tnt_arrow",
+                                maxDistance: radius,
+                            }),
+                            ...player.dimension.getEntities({
+                                location: player.location,
+                                type: "andexsa:tnt_arrow",
+                                maxDistance: radius,
+                            }),
+                        ].forEach((v) => { v.remove(); explosiveEntityRemovalCount++; });
+                        player.sendMessageB(`${explosiveEntityRemovalCount == 0n ? "§c" : ""}${explosiveEntityRemovalCount} explosive entities removed in radius of ${radius}`);
+                    });
+                }
+                break;
+            case !!switchTest.match(/^remexpentity$/):
+                {
+                    eventData.cancel = true;
+                    let radius = Number(String(switchTestB.split(" ")[1] ?? "").trim() == ""
+                        ? 10
+                        : String(switchTestB.split(" ")[1] ?? "").trim());
+                    srun(() => {
+                        let explosiveEntityRemovalCount = 0n;
+                        [
+                            ...player.dimension.getEntities({
+                                location: player.location,
+                                type: "minecraft:tnt",
+                                maxDistance: radius,
+                            }),
+                            ...player.dimension.getEntities({
+                                location: player.location,
+                                type: "minecraft:tnt_minecart",
+                                maxDistance: radius,
+                            }),
+                            ...player.dimension.getEntities({
+                                location: player.location,
+                                type: "minecraft:wither",
+                                maxDistance: radius,
+                            }),
+                            ...player.dimension.getEntities({
+                                location: player.location,
+                                type: "minecraft:wither_skull",
+                                maxDistance: radius,
+                            }),
+                            ...player.dimension.getEntities({
+                                location: player.location,
+                                type: "minecraft:wither_skull_dangerous",
+                                maxDistance: radius,
+                            }),
+                            ...player.dimension.getEntities({
+                                location: player.location,
+                                type: "minecraft:ender_dragon",
+                                maxDistance: radius,
+                            }),
+                            ...player.dimension.getEntities({
+                                location: player.location,
+                                type: "projectile:tnt",
+                                maxDistance: radius,
+                            }),
+                            ...player.dimension.getEntities({
+                                location: player.location,
+                                type: "andexsa:fire_tnt_arrow",
+                                maxDistance: radius,
+                            }),
+                            ...player.dimension.getEntities({
+                                location: player.location,
+                                type: "andexsa:normal_fire_tnt_arrow",
+                                maxDistance: radius,
+                            }),
+                            ...player.dimension.getEntities({
+                                location: player.location,
+                                type: "andexsa:normal_tnt_arrow",
+                                maxDistance: radius,
+                            }),
+                            ...player.dimension.getEntities({
+                                location: player.location,
+                                type: "andexsa:tnt_arrow",
+                                maxDistance: radius,
+                            }),
+                        ].forEach((v) => { v.remove(); explosiveEntityRemovalCount++; });
+                        player.sendMessageB(`${explosiveEntityRemovalCount == 0n ? "§c" : ""}${explosiveEntityRemovalCount} explosive entities removed in radius of ${radius}`);
+                    });
                 }
                 break;
             case !!switchTest.match(/^remexpne$/):

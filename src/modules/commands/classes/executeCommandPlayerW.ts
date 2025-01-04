@@ -1,6 +1,8 @@
-import { Player, type Vector3, Dimension, type Vector2, Block, Entity, type RawMessage, EntityInventoryComponent, EntityEquippableComponent, PlayerCursorInventoryComponent, ItemStack, EquipmentSlot, ContainerSlot, type VectorYZ, type VectorXZ, EffectType, type EntityEffectOptions, type MusicOptions, type PlayerSoundOptions, GameMode, type DimensionLocation, MolangVariableMap, type EntityApplyDamageByProjectileOptions, type EntityApplyDamageOptions, type BlockRaycastOptions, type EntityComponentTypeMap, type BlockComponentTypeMap, type EntityRaycastOptions, type EntityQueryOptions, type PlayAnimationOptions, type TeleportOptions } from "@minecraft/server";
+import { Player, type Vector3, Dimension, type Vector2, Block, Entity, type RawMessage, EntityInventoryComponent, EntityEquippableComponent, PlayerCursorInventoryComponent, ItemStack, EquipmentSlot, ContainerSlot, type VectorYZ, type VectorXZ, EffectType, type EntityEffectOptions, type MusicOptions, type PlayerSoundOptions, GameMode, type DimensionLocation, MolangVariableMap, type EntityApplyDamageByProjectileOptions, type EntityApplyDamageOptions, type BlockRaycastOptions, type EntityComponentTypeMap, type BlockComponentTypeMap, type EntityRaycastOptions, type EntityQueryOptions, type PlayAnimationOptions, type TeleportOptions, InputInfo } from "@minecraft/server";
 import { MoneySystem } from "ExtraFeatures/money";
 import { PlayerNotifications } from "init/classes/PlayerNotifications";
+import { PlayerPermissions } from "init/classes/PlayerPermissions";
+import { WorldEditSelection } from "init/classes/WorldEditSelection";
 import { config } from "init/classes/config";
 import { chatCommands } from "modules/commands/functions/chatCommands";
 import { WorldPosition } from "modules/coordinates/classes/WorldPosition";
@@ -268,6 +270,12 @@ export class executeCommandPlayerW {
     get playerNotifications(): PlayerNotifications {
         return new PlayerNotifications(this.player);
     }
+    get playerPermissions(): PlayerPermissions {
+        return new PlayerPermissions(this.player);
+    }
+    get worldEditSelection(): WorldEditSelection {
+        return new WorldEditSelection(this.player);
+    }
     get dimensionLocation() {
         return Object.assign(this.location, { dimension: this.dimension });
     }
@@ -420,6 +428,9 @@ export class executeCommandPlayerW {
     get clientSystemInfo() {
         return this.player?.clientSystemInfo;
     }
+    get inputInfo() {
+        return this.player?.inputInfo;
+    }
     addEffect(
         effectType: string | EffectType,
         duration: number,
@@ -458,6 +469,9 @@ export class executeCommandPlayerW {
     }
     isOp() {
         return this.player?.isOp();
+    }
+    lookAt(targetLocation: Vector3) {
+        return this.player?.lookAt(targetLocation);
     }
     playMusic(trackId: string, musicOptions?: MusicOptions) {
         return this.player?.playMusic(trackId, musicOptions);

@@ -25,9 +25,12 @@ export function generateNBTFileB(
                 nbt.palette[b.state].Name.replace(
                     "minecraft:active - lit_redstone_lamp",
                     "minecraft:light_gray_terracotta"
-                ).replace("minecraft:coarse_dirt", "minecraft:dirt")
+                )
+                // Not needed any more as coarse_dirt is now a valid block id.
+                /* .replace("minecraft:coarse_dirt", "minecraft:dirt") */
             ),
-            nbt.palette[b.state].Name == "minecraft:coarse_dirt" ||
+            // Not needed any more as coarse_dirt is now a valid block id.
+            /* nbt.palette[b.state].Name == "minecraft:coarse_dirt" ||
                 nbt.palette[b.state].Name == "coarse_dirt"
                 ? location.dimension.setBlockPermutation(
                     Vector3Utils.add(location, {
@@ -39,7 +42,7 @@ export function generateNBTFileB(
                         dirt_type: "coarse",
                     })
                 )
-                : !!nbt.palette[b.state].Properties
+                :  */!!nbt.palette[b.state].Properties
                     ? Object.entries(
                         nbt.palette[b.state].Properties as {
                             [stateName: string]: string | number | boolean;

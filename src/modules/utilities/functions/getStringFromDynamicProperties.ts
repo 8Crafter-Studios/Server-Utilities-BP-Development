@@ -1,6 +1,6 @@
 import { world } from "@minecraft/server";
 
-export function getStringFromDynamicProperties(propertyName: string) {
+export function getStringFromDynamicProperties(propertyName: string, zeroLengthPlaceholder: string = ""): string {
     if (typeof propertyName != "string") {
         throw (new TypeError(`args[0]: Expected type of string but got type of ${typeof propertyName} instead.`));
     }
@@ -9,5 +9,5 @@ export function getStringFromDynamicProperties(propertyName: string) {
     for (let i = 0n; i < length; i++) {
         data.push(world.getDynamicProperty(`#splitString[${i}]:${propertyName}`) as string);
     }
-    return data.join("");
+    return length == 0 ? zeroLengthPlaceholder : data.join("");
 }

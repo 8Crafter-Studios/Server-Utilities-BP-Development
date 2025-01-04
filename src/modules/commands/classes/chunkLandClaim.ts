@@ -1,5 +1,5 @@
 import { type Vector2, Dimension, world, Player } from "@minecraft/server";
-import { getPlayerById } from "modules/commands/functions/getPlayerById";
+import { getPlayerById } from "init/functions/getPlayerById";
 import { chunkIndexToBoundingBox } from "modules/coordinates/functions/chunkIndexToBoundingBox";
 import { LandClaimSystem } from "./LandClaimSystem";
 import { LandClaim } from "./LandClaim";

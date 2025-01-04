@@ -3,6 +3,7 @@ import type { commandCategory } from "modules/commands/types/commandCategory";
 export declare const commands: {
     type: "built-in";
     requiredTags: string[];
+    ultraSecurityModeSecurityLevel: "owner" | "headAdmin" | "admin" | "moderator" | "WorldEdit" | "everyone";
     formatting_code: string;
     commandName: string;
     escregexp: {
@@ -20,9 +21,10 @@ export declare const commands: {
             f?: string;
         };
     }[];
-    category?: commandCategory | (commandCategory)[];
-    deprecated?: boolean;
-    functional?: boolean;
-    hidden?: boolean;
-    enabled?: boolean;
+    category?: commandCategory | commandCategory[];
+    deprecated: boolean;
+    functional: boolean;
+    hidden: boolean;
+    enabled: boolean;
 }[];
+export declare const commandCategoryList: readonly ["items", "misc", "invsee", "players", "containers/inventories", "entities", "warps", "world", "uis", "shop_system", "dangerous", "Entity Scale Add-On", "built-in", "custom", "all"];

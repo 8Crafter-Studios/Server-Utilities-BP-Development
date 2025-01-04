@@ -17,4 +17,4 @@ export const commandCategories = [
     "built-in",
     "custom",
     "all",
-];
+] as const;

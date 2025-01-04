@@ -166,10 +166,35 @@ declare global {
         function JSONParse(JSONString: string, keepUndefined?: boolean): any;
         function JSONStringify(JSONObject: any, keepUndefined?: boolean, space?: string | number): string;
         function iterateGenerator<TY, TR, TN>(extractorGenerator: Generator<TY, TR, TN>, maxTimePerTick?: number, whileConditions?: boolean | number | string | Function): Promise<TY | TR>;
+        /**
+         * Asynchronously completes a generator function, yielding control back to the system
+         * if the execution time exceeds a specified limit per tick.
+         *
+         * @template T - The type of the yielded values.
+         * @template TReturn - The type of the return value.
+         * @template TNext - The type of the next value.
+         * @param {Generator<T, TReturn, TNext>} g - The generator function to complete.
+         * @param {number} [maxTimePerTick=1500] - The maximum time (in milliseconds) to spend on each tick before yielding control back to the system.
+         * @param {boolean | number | string | Function} [whileConditions=true] - The condition to continue running the generator. Can be a boolean, number, string, or function.
+         * @returns {Promise<{ yield: T; return: TReturn }>} A promise that resolves with the final yielded value and the return value of the generator.
+         */
         function completeGenerator<T, TReturn, TNext>(g: Generator<T, TReturn, TNext>, maxTimePerTick?: number, whileConditions?: boolean | number | string | Function): Promise<{
             yield: T;
             return: TReturn;
         }>;
+        /**
+         * Asynchronously completes a generator function, yielding values and respecting a maximum time per tick.
+         *
+         * @template T - The type of values yielded by the generator.
+         * @template TReturn - The type of the return value of the generator.
+         * @template TNext - The type of the value that can be passed to the generator's `next` method.
+         *
+         * @param {Generator<T, TReturn, TNext>} g - The generator function to complete.
+         * @param {number} [maxTimePerTick=1500] - The maximum time (in milliseconds) to spend on each tick before yielding control back to the system.
+         * @param {boolean} [whileConditions=true] - A condition to keep the generator running.
+         *
+         * @returns {Promise<{ yield: T[]; return: TReturn }>} A promise that resolves with an object containing the yielded values and the return value of the generator.
+         */
         function completeGeneratorB<T, TReturn, TNext>(g: Generator<T, TReturn, TNext>, maxTimePerTick?: number, whileConditions?: boolean): Promise<{
             yield: T[];
             return: TReturn;

@@ -16,6 +16,9 @@ import { editAreasMainMenu } from "modules/spawn_protection/functions/editAreasM
 import { terminal } from "./terminal";
 import { customFormListSelectionMenu } from "./customFormListSelectionMenu";
 import { itemEditorTypeSelection } from "./itemEditorTypeSelection";
+import { securitySettings } from "./securitySettings";
+import { securityVariables } from "security/ultraSecurityModeUtils";
+import { showMessage } from "modules/utilities/functions/showMessage";
 
 export async function mainMenu(
     sourceEntitya: Entity | executeCommandPlayerW | Player
@@ -23,6 +26,16 @@ export async function mainMenu(
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW
         ? sourceEntitya.player
         : sourceEntitya;
+    if (securityVariables.ultraSecurityModeEnabled) {
+        if(securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.accessMainMenu") == false){
+            const r = await showMessage(sourceEntity as Player, "Access Denied (403)", "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.accessMainMenu", "Back", "Cancel");
+            if(r.canceled || r.selection == 0){
+                return 1;
+            }else{
+                return 0;
+            }
+        }
+    }
     let form = new ActionFormData();
     let players = world.getPlayers();
     form.title("Main Menu");
@@ -68,6 +81,7 @@ form.button("Entity Debugger", "textures/ui/debug_glyph_color");*/
     form.button("Mange Restricted Areas", "textures/ui/xyz_axis.png");
     form.button("Manage Custom UIs", "textures/ui/feedIcon");
     form.button("Moderation §f[§cAlpha§f]", "textures/ui/hammer_l");
+    form.button("Security §f[§cAlpha§f]", "textures/ui/absorption_effect");
     form.button("Settings", "textures/ui/settings_glyph_color_2x");
     form.button("Manage Players", "textures/ui/user_icon_white");
     form.button(
@@ -265,24 +279,31 @@ catch(e) {
                     return 0;
                     break;
                 case 21:
-                    if ((await settings(sourceEntity)) == 1) {
+                    if ((await securitySettings(sourceEntity)) == 1) {
                         return await mainMenu(sourceEntity);
                     } else {
                         return 0;
                     }
                     break;
                 case 22:
-                    if ((await managePlayers(sourceEntity)) == 1) {
+                    if ((await settings(sourceEntity)) == 1) {
                         return await mainMenu(sourceEntity);
                     } else {
                         return 0;
                     }
                     break;
                 case 23:
+                    if ((await managePlayers(sourceEntity)) == 1) {
+                        return await mainMenu(sourceEntity);
+                    } else {
+                        return 0;
+                    }
+                    break;
+                case 24:
                     manageCommands(sourceEntity);
                     return 0;
                     break;
-                case 24:
+                case 25:
                     try {
                         itemSelector(
                             sourceEntity as Player,
@@ -298,15 +319,15 @@ catch(e) {
                         });
                     } catch { }
                     break;
-                case 25:
+                case 26:
                     mapArtGenerator(sourceEntity);
                     return 0;
                     break;
-                case 26:
+                case 27:
                     nbtStructureLoader(sourceEntity);
                     return 0;
                     break;
-                case 27:
+                case 28:
                     return 0;
                 default:
                     return 1;

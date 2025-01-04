@@ -10,4 +10,5 @@ globalThis.formatDate = function formatDate(date, timeZoneOffset = 0) {
         .toString()
         .padStart(2, "0")}/${dateb.getUTCFullYear().toString()}`;
 };
+import "init/meta/importToMakeValidModule";
 //# sourceMappingURL=formatDate.js.map

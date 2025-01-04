@@ -1,5 +1,5 @@
 import { Player, world } from "@minecraft/server";
-import { getPlayerById } from "modules/commands/functions/getPlayerById";
+import { getPlayerById } from "init/functions/getPlayerById";
 import { HomeSystem } from "./HomeSystem";
 export class Home {
     location;

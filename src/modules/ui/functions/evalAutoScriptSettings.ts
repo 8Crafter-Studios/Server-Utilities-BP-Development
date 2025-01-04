@@ -2,14 +2,42 @@ import { Entity, Player, world } from "@minecraft/server";
 import { ModalFormData, ModalFormResponse } from "@minecraft/server-ui";
 import { forceShow } from "modules/ui/functions/forceShow";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
-import { settings } from "./settings";
+import { securityVariables } from "security/ultraSecurityModeUtils";
+import { showMessage } from "modules/utilities/functions/showMessage";
 
-export function evalAutoScriptSettings(
+/**
+ * Evaluates and displays the auto script settings form to the specified entity.
+ * 
+ * @param sourceEntitya - The entity that will receive the form. It can be an instance of `Entity`, `executeCommandPlayerW`, or `Player`.
+ * @returns A promise that resolves to:
+ * - `1` if the form was successfully shown and processed.
+ * - `0` if the form was canceled by the user.
+ * - `-2` if an error occurred during the process.
+ * 
+ * The function performs the following steps:
+ * 1. Checks if ultra security mode is enabled and verifies the player's permission to access the settings.
+ * 2. Constructs a form with multiple text fields for various script API codes.
+ * 3. Displays the form to the player and processes the input values.
+ * 4. Updates the dynamic properties of the world based on the input values.
+ * 
+ * @throws Will log an error and return `-2` if an exception occurs during form processing.
+ */
+export async function evalAutoScriptSettings(
     sourceEntitya: Entity | executeCommandPlayerW | Player
-) {
+): Promise<1 | 0 | -2> {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW
         ? sourceEntitya.player
         : sourceEntitya;
+    if (securityVariables.ultraSecurityModeEnabled) {
+        if(securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.accessSettings") == false){
+            const r = await showMessage(sourceEntity as Player, "Access Denied (403)", "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.accessSettings", "Back", "Cancel");
+            if(r.canceled || r.selection == 0){
+                return 1;
+            }else{
+                return 0;
+            }
+        }
+    }
     let form2 = new ModalFormData();
     let players = world.getAllPlayers();
     let targetList = [players[0].nameTag];
@@ -137,12 +165,11 @@ export function evalAutoScriptSettings(
 
 
     form2.submitButton("Save");
-    forceShow(form2, sourceEntity as Player)
+    return await forceShow(form2, sourceEntity as Player)
         .then((to) => {
             let t = to as ModalFormResponse;
             if (t.canceled) {
-                settings(sourceEntity);
-                return;
+                return 1 as const;
             }
 
             let [
@@ -183,9 +210,10 @@ export function evalAutoScriptSettings(
             world.setDynamicProperty("evalAfterEvents:blockExplode", aebe);
             world.setDynamicProperty("evalAfterEvents:playerLeave", aepl);
             world.setDynamicProperty("evalAfterEvents:entityDie", aeed);
-            settings(sourceEntity);
+            return 1;
         })
         .catch((e) => {
             console.error(e, e.stack);
+            return -2 as const;
         });
 }

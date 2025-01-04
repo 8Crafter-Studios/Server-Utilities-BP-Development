@@ -3,14 +3,57 @@ import { ModalFormData, ModalFormResponse } from "@minecraft/server-ui";
 import { forceShow } from "modules/ui/functions/forceShow";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { PlayerNotifications } from "init/classes/PlayerNotifications";
-import { settings } from "./settings";
+import { securityVariables } from "security/ultraSecurityModeUtils";
+import { showMessage } from "modules/utilities/functions/showMessage";
 
-export function notificationsSettings(
+/**
+ * Displays a notification settings form to the player and updates the player's notification settings based on their input.
+ * 
+ * @param sourceEntitya - The entity that initiated the request. Can be an `Entity`, `executeCommandPlayerW`, or `Player`.
+ * @returns A promise that resolves to:
+ * - `-2` if an error occurs,
+ * - `0` if the player cancels the form,
+ * - `1` if the settings are successfully updated.
+ * 
+ * The form allows the player to configure various notification settings, including:
+ * - Chat command notifications
+ * - Chat message notifications
+ * - Game rule change notifications
+ * - Block explosion notifications
+ * - Button push notifications
+ * - Entity hurt notifications
+ * - Entity load notifications
+ * - Entity remove notifications
+ * - Entity spawn notifications
+ * - Explosion notifications
+ * - Player dimension change notifications
+ * - Pre-explosion notifications
+ * - Pre-chat send notifications
+ * - Player game mode change notifications
+ * - Weather change notifications
+ * - Lever action notifications
+ * - Message receive notifications
+ * - Block interaction-triggered explosion notifications
+ * - Entity interaction-triggered explosion notifications
+ * 
+ * Each notification setting includes options for enabling/disabling the notification and configuring the sound (sound ID, volume, and pitch).
+ */
+export async function notificationsSettings(
     sourceEntitya: Entity | executeCommandPlayerW | Player
-) {
+): Promise< -2 | 0 | 1 > {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW
         ? sourceEntitya.player
         : sourceEntitya;
+    if (securityVariables.ultraSecurityModeEnabled) {
+        if(securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.accessNotificationsSettings") == false){
+            const r = await showMessage(sourceEntity as Player, "Access Denied (403)", "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.accessNotificationsSettings", "Back", "Cancel");
+            if(r.canceled || r.selection == 0){
+                return 1;
+            }else{
+                return 0;
+            }
+        }
+    }
     let form2 = new ModalFormData();
     const noti = new PlayerNotifications(sourceEntity);
     form2.title("Notifications Settings");
@@ -396,12 +439,11 @@ export function notificationsSettings(
         )
     );
     form2.submitButton("Save");
-    forceShow(form2, sourceEntity as Player)
+    return await forceShow(form2, sourceEntity as Player)
         .then((to) => {
             let t = to as ModalFormResponse;
             if (t.canceled) {
-                settings(sourceEntity);
-                return;
+                return 1 as const;
             } /*
     GameTest.Test.prototype.spawnSimulatedPlayer({x: 0, y: 0, z: 0})*/ /*
         ${se}GameTest.Test.prototype.spawnSimulatedPlayer({x: 0, y: 0, z: 0})*/
@@ -949,9 +991,10 @@ export function notificationsSettings(
                         255
                     ),
             };
-            settings(sourceEntity);
+            return 1;
         })
         .catch((e) => {
             console.error(e, e.stack);
+            return -2;
         });
 }

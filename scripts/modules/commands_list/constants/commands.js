@@ -1,3823 +1,3383 @@
 export const commands = [
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "\\\\backuparea",
         escregexp: {
-            v: "^\\\\backuparea$"
+            v: "^\\\\backuparea$",
         },
         formats: [
             {
-                format: "\\\\backuparea"
-            }
+                format: "\\\\backuparea",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server",
-            "worldedit"
-        ],
+        category: ["system", "world", "server", "worldedit"],
         commandSettingsId: "built-inCommandSettings:\\backuparea",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§c",
         commandName: "\\\\ceil",
         escregexp: {
-            v: "^\\\\ceil$"
+            v: "^\\\\ceil$",
         },
         formats: [
             {
-                format: "\\ceil"
-            }
+                format: "\\ceil",
+            },
         ],
         command_version: "0.0.0",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server",
-            "worldedit"
-        ],
+        category: ["system", "world", "server", "worldedit"],
         commandSettingsId: "built-inCommandSettings:\\ceil",
         deprecated: false,
         functional: false,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "\\\\chunk",
         escregexp: {
-            v: "^\\\\chunk$"
+            v: "^\\\\chunk$",
         },
         formats: [
             {
-                format: "\\\\chunk"
-            }
+                format: "\\\\chunk",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server",
-            "worldedit"
-        ],
+        category: ["system", "world", "server", "worldedit"],
         commandSettingsId: "built-inCommandSettings:\\chunk",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§e",
         commandName: "\\\\cone",
         escregexp: {
-            v: "^\\\\cone$"
+            v: "^\\\\cone$",
         },
         formats: [
             {
-                format: "\\cone"
-            }
+                format: "\\cone",
+            },
         ],
         command_version: "1.0.0-beta.59",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server",
-            "worldedit"
-        ],
+        category: ["system", "world", "server", "worldedit"],
         commandSettingsId: "built-inCommandSettings:\\cone",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "\\\\copy",
         escregexp: {
-            v: "^\\\\copy$"
+            v: "^\\\\copy$",
         },
         formats: [
             {
-                format: "\\copy"
-            }
+                format: "\\copy",
+            },
         ],
         command_version: "3.0.2",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server",
-            "worldedit"
-        ],
+        category: ["system", "world", "server", "worldedit"],
         commandSettingsId: "built-inCommandSettings:\\copy",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§c",
         commandName: "\\\\cube",
         escregexp: {
-            v: "^\\\\cube$"
+            v: "^\\\\cube$",
         },
         formats: [
             {
-                format: "\\cube"
-            }
+                format: "\\cube",
+            },
         ],
         command_version: "0.0.0",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server",
-            "worldedit"
-        ],
+        category: ["system", "world", "server", "worldedit"],
         commandSettingsId: "built-inCommandSettings:\\cube",
         deprecated: false,
         functional: false,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "\\\\cut",
         escregexp: {
-            v: "^\\\\cut$"
+            v: "^\\\\cut$",
         },
         formats: [
             {
-                format: "\\cut"
-            }
+                format: "\\cut",
+            },
         ],
         command_version: "3.0.2",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server",
-            "worldedit"
-        ],
+        category: ["system", "world", "server", "worldedit"],
         commandSettingsId: "built-inCommandSettings:\\cut",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§c",
         commandName: "\\\\cyl",
         escregexp: {
-            v: "^\\\\cyl$"
+            v: "^\\\\cyl$",
         },
         formats: [
             {
-                format: "\\cyl"
-            }
+                format: "\\cyl",
+            },
         ],
         command_version: "0.0.0",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server",
-            "worldedit"
-        ],
+        category: ["system", "world", "server", "worldedit"],
         commandSettingsId: "built-inCommandSettings:\\cyl",
         functional: false,
         deprecated: false,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
-        commandName: "\\\\drain",
+        commandName: "\\\\deletesavedpos",
         escregexp: {
-            v: "^\\\\drain$"
+            v: "^\\\\deletesavedpos$",
         },
         formats: [
             {
-                format: "\\drain"
-            }
+                format: "\\\\deletesavedpos <selectionID: string>",
+            },
+        ],
+        command_version: "1.0.0",
+        description: "",
+        category: ["system", "world", "server", "worldedit"],
+        commandSettingsId: "built-inCommandSettings:\\deletesavedpos",
+        deprecated: false,
+        functional: true,
+        hidden: false,
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
+    },
+    {
+        type: "built-in",
+        requiredTags: ["canUseChatCommands"],
+        formatting_code: "§r§f",
+        commandName: "\\\\drain",
+        escregexp: {
+            v: "^\\\\drain$",
+        },
+        formats: [
+            {
+                format: "\\drain",
+            },
         ],
         command_version: "1.0.2",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server",
-            "worldedit"
-        ],
+        category: ["system", "world", "server", "worldedit"],
         commandSettingsId: "built-inCommandSettings:\\drain",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "\\\\flood",
         escregexp: {
-            v: "^\\\\flood$"
+            v: "^\\\\flood$",
         },
         formats: [
             {
-                format: "\\flood"
-            }
+                format: "\\flood",
+            },
         ],
         command_version: "1.0.2",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server",
-            "worldedit"
-        ],
+        category: ["system", "world", "server", "worldedit"],
         commandSettingsId: "built-inCommandSettings:\\flood",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§c",
         commandName: "\\\\floor",
         escregexp: {
-            v: "^\\\\floor$"
+            v: "^\\\\floor$",
         },
         formats: [
             {
-                format: "\\floor"
-            }
+                format: "\\floor",
+            },
         ],
         command_version: "0.0.0",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server",
-            "worldedit"
-        ],
+        category: ["system", "world", "server", "worldedit"],
         commandSettingsId: "built-inCommandSettings:\\floor",
         deprecated: false,
         functional: false,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "\\\\generate",
         escregexp: {
-            v: "^\\\\generate$"
+            v: "^\\\\generate$",
         },
         formats: [
             {
-                format: "\\generate"
-            }
+                format: "\\generate",
+            },
         ],
         command_version: "2.0.0",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server",
-            "worldedit"
-        ],
+        category: ["system", "world", "server", "worldedit"],
         commandSettingsId: "built-inCommandSettings:\\generate",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§c",
         commandName: "\\\\generatecallback",
         escregexp: {
-            v: "^\\\\generatecallback$"
+            v: "^\\\\generatecallback$",
         },
         formats: [
             {
-                format: "\\generatecallback"
-            }
+                format: "\\generatecallback",
+            },
         ],
         command_version: "0.0.0",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server",
-            "worldedit"
-        ],
+        category: ["system", "world", "server", "worldedit"],
         commandSettingsId: "built-inCommandSettings:\\generatecallback",
         deprecated: false,
         functional: false,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "\\\\generatef",
         escregexp: {
-            v: "^\\\\generatef$"
+            v: "^\\\\generatef$",
         },
         formats: [
             {
-                format: "\\generatef"
-            }
+                format: "\\generatef",
+            },
         ],
         command_version: "2.0.0",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server",
-            "worldedit"
-        ],
+        category: ["system", "world", "server", "worldedit"],
         commandSettingsId: "built-inCommandSettings:\\generatef",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§c",
         commandName: "\\\\generatejs",
         escregexp: {
-            v: "^\\\\generatejs$"
+            v: "^\\\\generatejs$",
         },
         formats: [
             {
-                format: "\\generatejs"
-            }
+                format: "\\generatejs",
+            },
         ],
         command_version: "0.0.0",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server",
-            "worldedit"
-        ],
+        category: ["system", "world", "server", "worldedit"],
         commandSettingsId: "built-inCommandSettings:\\generatejs",
         deprecated: false,
         functional: false,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "\\\\generates",
         escregexp: {
-            v: "^\\\\generates$"
+            v: "^\\\\generates$",
         },
         formats: [
             {
-                format: "\\generates"
-            }
+                format: "\\generates",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server",
-            "worldedit"
-        ],
+        category: ["system", "world", "server", "worldedit"],
         commandSettingsId: "built-inCommandSettings:\\generates",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§c",
         commandName: "\\\\hcone",
         escregexp: {
-            v: "^\\\\hcone$"
+            v: "^\\\\hcone$",
         },
         formats: [
             {
-                format: "\\hcone"
-            }
+                format: "\\hcone",
+            },
         ],
         command_version: "0.0.0",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server",
-            "worldedit"
-        ],
+        category: ["system", "world", "server", "worldedit"],
         commandSettingsId: "built-inCommandSettings:\\hcone",
         deprecated: false,
         functional: false,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§c",
         commandName: "\\\\hcube",
         escregexp: {
-            v: "^\\\\hcube$"
+            v: "^\\\\hcube$",
         },
         formats: [
             {
-                format: "\\hcube"
-            }
+                format: "\\hcube",
+            },
         ],
         command_version: "0.0.0",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server",
-            "worldedit"
-        ],
+        category: ["system", "world", "server", "worldedit"],
         commandSettingsId: "built-inCommandSettings:\\hcube",
         deprecated: false,
         functional: false,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§c",
         commandName: "\\\\hcyl",
         escregexp: {
-            v: "^\\\\hcyl$"
+            v: "^\\\\hcyl$",
         },
         formats: [
             {
-                format: "\\hcyl"
-            }
+                format: "\\hcyl",
+            },
         ],
         command_version: "0.0.0",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server",
-            "worldedit"
-        ],
+        category: ["system", "world", "server", "worldedit"],
         commandSettingsId: "built-inCommandSettings:\\hcyl",
         deprecated: false,
         functional: false,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "\\\\hpos1",
         escregexp: {
-            v: "^\\\\hpos1$"
+            v: "^\\\\hpos1$",
         },
         formats: [
             {
-                format: "\\\\hpos1"
-            }
+                format: "\\\\hpos1",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server",
-            "worldedit"
-        ],
+        category: ["system", "world", "server", "worldedit"],
         commandSettingsId: "built-inCommandSettings:\\hpos1",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "\\\\hpos2",
         escregexp: {
-            v: "^\\\\hpos2$"
+            v: "^\\\\hpos2$",
         },
         formats: [
             {
-                format: "\\\\hpos2"
-            }
+                format: "\\\\hpos2",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server",
-            "worldedit"
-        ],
+        category: ["system", "world", "server", "worldedit"],
         commandSettingsId: "built-inCommandSettings:\\hpos2",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "\\\\hsphere",
         escregexp: {
-            v: "^\\\\hsphere$"
+            v: "^\\\\hsphere$",
         },
         formats: [
             {
-                format: "\\hsphere"
-            }
+                format: "\\hsphere",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server",
-            "worldedit"
-        ],
+        category: ["system", "world", "server", "worldedit"],
         commandSettingsId: "built-inCommandSettings:\\hsphere",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§c",
         commandName: "\\\\idtfill",
         escregexp: {
-            v: "^\\\\idtfill$"
+            v: "^\\\\idtfill$",
         },
         formats: [
             {
-                format: "\\\\idtfill"
-            }
+                format: "\\\\idtfill",
+            },
         ],
         command_version: "1.0.2-rc.5",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server",
-            "worldedit"
-        ],
+        category: ["system", "world", "server", "worldedit"],
         commandSettingsId: "built-inCommandSettings:\\idtfill",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "\\\\itfill",
         escregexp: {
-            v: "^\\\\itfill$"
+            v: "^\\\\itfill$",
         },
         formats: [
             {
-                format: "\\\\itfill"
-            }
+                format: "\\\\itfill",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server",
-            "worldedit"
-        ],
+        category: ["system", "world", "server", "worldedit"],
         commandSettingsId: "built-inCommandSettings:\\itfill",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
-        formatting_code: "§r§c",
-        commandName: "\\\\move",
+        requiredTags: ["canUseChatCommands"],
+        formatting_code: "§r§f",
+        commandName: "\\\\loadpos",
         escregexp: {
-            v: "^\\\\move$"
+            v: "^\\\\loadpos$",
         },
         formats: [
             {
-                format: "\\\\move"
-            }
+                format: "\\\\loadpos <selectionID: string>",
+            },
+        ],
+        command_version: "1.0.0",
+        description: "",
+        category: ["system", "world", "server", "worldedit"],
+        commandSettingsId: "built-inCommandSettings:\\loadpos",
+        deprecated: false,
+        functional: true,
+        hidden: false,
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
+    },
+    {
+        type: "built-in",
+        requiredTags: ["canUseChatCommands"],
+        formatting_code: "§r§f",
+        commandName: "\\\\maze",
+        escregexp: {
+            v: "^\\\\maze$",
+        },
+        formats: [
+            {
+                format: "\\maze [wallBlockType: Block[?=minecraft:stone]] [airBlockType: Block[?=minecraft:air]] [entranceDirection: ({North}|{South}|{East}|{West})[?=North]] [exitDirection: ({North}|{South}|{East}|{West})[?=South]] [complexity: int[?=0]]",
+            },
+        ],
+        command_version: "2.0.0",
+        description: "",
+        category: ["system", "world", "server", "worldedit"],
+        commandSettingsId: "built-inCommandSettings:\\maze",
+        deprecated: false,
+        functional: true,
+        hidden: false,
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
+    },
+    {
+        type: "built-in",
+        requiredTags: ["canUseChatCommands"],
+        formatting_code: "§r§c",
+        commandName: "\\\\move",
+        escregexp: {
+            v: "^\\\\move$",
+        },
+        formats: [
+            {
+                format: "\\\\move",
+            },
         ],
         command_version: "0.0.0",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server",
-            "worldedit"
-        ],
+        category: ["system", "world", "server", "worldedit"],
         commandSettingsId: "built-inCommandSettings:\\move",
         deprecated: false,
         functional: false,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "\\\\offset",
         escregexp: {
-            v: "^\\\\offset$"
+            v: "^\\\\offset$",
         },
         formats: [
             {
-                format: "\\\\offset"
-            }
+                format: "\\\\offset",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server",
-            "worldedit"
-        ],
+        category: ["system", "world", "server", "worldedit"],
         commandSettingsId: "built-inCommandSettings:\\offset",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§c",
         commandName: "\\\\omove",
         escregexp: {
-            v: "^\\\\omove$"
+            v: "^\\\\omove$",
         },
         formats: [
             {
-                format: "\\\\omove"
-            }
+                format: "\\\\omove",
+            },
         ],
         command_version: "0.0.0",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server",
-            "worldedit"
-        ],
+        category: ["system", "world", "server", "worldedit"],
         commandSettingsId: "built-inCommandSettings:\\omove",
         deprecated: false,
         functional: false,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "\\\\paste",
         escregexp: {
-            v: "^\\\\paste$"
+            v: "^\\\\paste$",
         },
         formats: [
             {
-                format: "\\paste"
-            }
+                format: "\\paste",
+            },
         ],
         command_version: "3.0.0",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server",
-            "worldedit"
-        ],
+        category: ["system", "world", "server", "worldedit"],
         commandSettingsId: "built-inCommandSettings:\\paste",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "\\\\pos1",
         escregexp: {
-            v: "^\\\\pos1$"
+            v: "^\\\\pos1$",
         },
         formats: [
             {
-                format: "\\\\pos1"
-            }
+                format: "\\\\pos1",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server",
-            "worldedit"
-        ],
+        category: ["system", "world", "server", "worldedit"],
         commandSettingsId: "built-inCommandSettings:\\pos1",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "\\\\pos2",
         escregexp: {
-            v: "^\\\\pos2$"
+            v: "^\\\\pos2$",
         },
         formats: [
             {
-                format: "\\\\pos2"
-            }
+                format: "\\\\pos2",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server",
-            "worldedit"
-        ],
+        category: ["system", "world", "server", "worldedit"],
         commandSettingsId: "built-inCommandSettings:\\pos2",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "\\\\protectarea",
         escregexp: {
-            v: "^\\\\protectarea$"
+            v: "^\\\\protectarea$",
         },
         formats: [
             {
-                format: "\\\\protectarea"
-            }
+                format: "\\\\protectarea",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server",
-            "worldedit"
-        ],
+        category: ["system", "world", "server", "worldedit"],
         commandSettingsId: "built-inCommandSettings:\\protectarea",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
-        commandName: "\\\\remove",
+        commandName: "\\\\regenerateblocks",
         escregexp: {
-            v: "^\\\\remove$"
+            v: "^\\\\regenerateblocks$",
         },
         formats: [
             {
-                format: "\\remove"
-            }
+                format: "\\\\regenerateblocks",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server",
-            "worldedit"
+        category: ["system", "world", "server", "worldedit"],
+        commandSettingsId: "built-inCommandSettings:\\regenerateblocks",
+        deprecated: false,
+        functional: true,
+        hidden: false,
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
+    },
+    {
+        type: "built-in",
+        requiredTags: ["canUseChatCommands"],
+        formatting_code: "§r§f",
+        commandName: "\\\\remove",
+        escregexp: {
+            v: "^\\\\remove$",
+        },
+        formats: [
+            {
+                format: "\\remove",
+            },
         ],
+        command_version: "1.0.0",
+        description: "",
+        category: ["system", "world", "server", "worldedit"],
         commandSettingsId: "built-inCommandSettings:\\remove",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "\\\\replace",
         escregexp: {
-            v: "^\\\\replace$"
+            v: "^\\\\replace$",
         },
         formats: [
             {
-                format: "\\replace"
-            }
+                format: "\\replace",
+            },
         ],
         command_version: "2.0.0",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server",
-            "worldedit"
-        ],
+        category: ["system", "world", "server", "worldedit"],
         commandSettingsId: "built-inCommandSettings:\\replace",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
-        commandName: "\\\\selectmode",
+        commandName: "\\\\savepos",
         escregexp: {
-            v: "^\\\\selectmode$"
+            v: "^\\\\savepos$",
         },
         formats: [
             {
-                format: "\\\\selectmode [default|noliquid|nopassable|noliquidnopassable]"
-            }
+                format: "\\\\savepos <selectionID: string>",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server",
-            "worldedit"
+        category: ["system", "world", "server", "worldedit"],
+        commandSettingsId: "built-inCommandSettings:\\savepos",
+        deprecated: false,
+        functional: true,
+        hidden: false,
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
+    },
+    {
+        type: "built-in",
+        requiredTags: ["canUseChatCommands"],
+        formatting_code: "§r§f",
+        commandName: "\\\\selectmode",
+        escregexp: {
+            v: "^\\\\selectmode$",
+        },
+        formats: [
+            {
+                format: "\\\\selectmode [default|noliquid|nopassable|noliquidnopassable]",
+            },
         ],
+        command_version: "1.0.0",
+        description: "",
+        category: ["system", "world", "server", "worldedit"],
         commandSettingsId: "built-inCommandSettings:\\selectmode",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "\\\\set",
         escregexp: {
-            v: "^\\\\set$"
+            v: "^\\\\set$",
         },
         formats: [
             {
-                format: "\\set"
-            }
+                format: "\\set",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server",
-            "worldedit"
-        ],
+        category: ["system", "world", "server", "worldedit"],
         commandSettingsId: "built-inCommandSettings:\\set",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "\\\\seti",
         escregexp: {
-            v: "^\\\\seti$"
+            v: "^\\\\seti$",
         },
         formats: [
             {
-                format: "\\seti"
-            }
+                format: "\\seti",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server",
-            "worldedit"
-        ],
+        category: ["system", "world", "server", "worldedit"],
         commandSettingsId: "built-inCommandSettings:\\seti",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "\\\\shift",
         escregexp: {
-            v: "^\\\\shift$"
+            v: "^\\\\shift$",
         },
         formats: [
             {
-                format: "\\\\shift"
-            }
+                format: "\\\\shift",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server",
-            "worldedit"
-        ],
+        category: ["system", "world", "server", "worldedit"],
         commandSettingsId: "built-inCommandSettings:\\shift",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§c",
         commandName: "\\\\smove",
         escregexp: {
-            v: "^\\\\smove$"
+            v: "^\\\\smove$",
         },
         formats: [
             {
-                format: "\\\\smove"
-            }
+                format: "\\\\smove",
+            },
         ],
         command_version: "0.0.0",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server",
-            "worldedit"
-        ],
+        category: ["system", "world", "server", "worldedit"],
         commandSettingsId: "built-inCommandSettings:\\smove",
         deprecated: false,
         functional: false,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "\\\\sphere",
         escregexp: {
-            v: "^\\\\sphere$"
+            v: "^\\\\sphere$",
         },
         formats: [
             {
-                format: "\\sphere"
-            }
+                format: "\\sphere",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server",
-            "worldedit"
-        ],
+        category: ["system", "world", "server", "worldedit"],
         commandSettingsId: "built-inCommandSettings:\\sphere",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "\\\\stack",
         escregexp: {
-            v: "^\\\\stack$"
+            v: "^\\\\stack$",
         },
         formats: [
             {
-                format: "\\stack"
-            }
+                format: "\\stack",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server",
-            "worldedit"
-        ],
+        category: ["system", "world", "server", "worldedit"],
         commandSettingsId: "built-inCommandSettings:\\stack",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "\\\\undo",
         escregexp: {
-            v: "^\\\\undo$"
+            v: "^\\\\undo$",
         },
         formats: [
             {
-                format: "\\undo"
-            }
+                format: "\\undo",
+            },
         ],
         command_version: "3.0.0",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server",
-            "worldedit"
-        ],
+        category: ["system", "world", "server", "worldedit"],
         commandSettingsId: "built-inCommandSettings:\\undo",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§e",
         commandName: "\\\\walls",
         escregexp: {
-            v: "^\\\\walls$"
+            v: "^\\\\walls$",
         },
         formats: [
             {
-                format: "\\walls"
-            }
+                format: "\\walls",
+            },
         ],
         command_version: "1.0.2-beta.3",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server",
-            "worldedit"
-        ],
+        category: ["system", "world", "server", "worldedit"],
         commandSettingsId: "built-inCommandSettings:\\walls",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "align",
         escregexp: {
-            v: "^align$"
+            v: "^align$",
         },
         formats: [
             {
-                format: "align"
-            }
+                format: "align",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "world",
-            "players"
-        ],
+        category: ["world", "players"],
         commandSettingsId: "built-inCommandSettings:align",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "aligncenter",
         escregexp: {
-            v: "^aligncenter$"
+            v: "^aligncenter$",
         },
         formats: [
             {
-                format: "aligncenter"
-            }
+                format: "aligncenter",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "world",
-            "players"
-        ],
+        category: ["world", "players"],
         commandSettingsId: "built-inCommandSettings:aligncenter",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§c",
         commandName: "attribute",
         escregexp: {
-            v: "^attribute$"
+            v: "^attribute$",
         },
         formats: [
             {
-                format: "Too many to list here. Run the command \"\\help cmd attribute\" instead. "
-            }
+                format: 'Too many to list here. Run the command "\\help cmd attribute" instead. ',
+            },
         ],
         command_version: "0.17.9-alpha.33",
-        category: [
-            "world"
-        ],
+        category: ["world"],
         description: "",
         commandSettingsId: "built-inCommandSettings:attribute",
         functional: false,
         deprecated: false,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "binvsee",
         escregexp: {
-            v: "^binvsee$"
+            v: "^binvsee$",
         },
         formats: [
             {
-                format: "binvsee <dimension: dimensionId|~> <blockLocation: x y z>"
-            }
+                format: "binvsee <dimension: dimensionId|~> <blockLocation: x y z>",
+            },
         ],
         command_version: "4.1.0",
         description: "Invsees into a block. ",
-        category: [
-            "invsee"
-        ],
+        category: ["invsee"],
         commandSettingsId: "built-inCommandSettings:binvsee",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "block",
         escregexp: {
-            v: "^block$"
+            v: "^block$",
         },
         formats: [
             {
-                format: "block ..."
-            }
+                format: "block ...",
+            },
         ],
         command_version: "0.2.7-alpha.36",
         description: "Manages blocks.",
-        category: [
-            "world",
-            "blocks"
-        ],
+        category: ["world", "blocks"],
         commandSettingsId: "built-inCommandSettings:block",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "brush",
         escregexp: {
-            v: "^brush$"
+            v: "^brush$",
         },
         aliases: [
             {
                 commandName: "br",
                 escregexp: {
-                    v: "^br$"
-                }
+                    v: "^br$",
+                },
             },
             {
                 commandName: "\\\\brush",
                 escregexp: {
-                    v: "^\\\\brush$"
-                }
+                    v: "^\\\\brush$",
+                },
             },
             {
                 commandName: "\\\\br",
                 escregexp: {
-                    v: "^\\\\br$"
-                }
-            }
+                    v: "^\\\\br$",
+                },
+            },
         ],
         formats: [
             {
-                format: "brush"
-            }
+                format: "brush",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "world",
-            "worldedit"
-        ],
+        category: ["world", "worldedit"],
         commandSettingsId: "built-inCommandSettings:brush",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "butcher",
         escregexp: {
-            v: "^butcher$"
+            v: "^butcher$",
         },
         aliases: [
             {
                 commandName: "but",
                 escregexp: {
-                    v: "^but$"
-                }
-            }
+                    v: "^but$",
+                },
+            },
         ],
         formats: [
             {
-                format: "butcher"
-            }
+                format: "butcher",
+            },
         ],
         command_version: "2.7.0",
         description: "",
-        category: [
-            "world",
-            "worldedit"
-        ],
+        category: ["world", "worldedit"],
         commandSettingsId: "built-inCommandSettings:butcher",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "butcherdespawn",
         escregexp: {
-            v: "^butcherdespawn$"
+            v: "^butcherdespawn$",
         },
         aliases: [
             {
                 commandName: "butdes",
                 escregexp: {
-                    v: "^butdes$"
-                }
-            }
+                    v: "^butdes$",
+                },
+            },
         ],
         formats: [
             {
-                format: "butcherdespawn"
-            }
+                format: "butcherdespawn",
+            },
         ],
         command_version: "2.7.0",
         description: "",
-        category: [
-            "world",
-            "worldedit"
-        ],
+        category: ["world", "worldedit"],
         commandSettingsId: "built-inCommandSettings:butcherdespawn",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "chatcommandui",
         escregexp: {
-            v: "^chatcommandui$"
+            v: "^chatcommandui$",
         },
         aliases: [
             {
                 commandName: "chtcmdui",
                 escregexp: {
-                    v: "^chtcmdui$"
-                }
+                    v: "^chtcmdui$",
+                },
             },
             {
                 commandName: "cmdui",
                 escregexp: {
-                    v: "^cmdui$"
-                }
+                    v: "^cmdui$",
+                },
             },
             {
                 commandName: "commandui",
                 escregexp: {
-                    v: "^commandui$"
-                }
-            }
+                    v: "^commandui$",
+                },
+            },
         ],
         formats: [
             {
-                format: "chatcommandui"
-            }
+                format: "chatcommandui",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "uis"
-        ],
+        category: ["uis"],
         commandSettingsId: "built-inCommandSettings:chatcommandui",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "chatsendui",
         escregexp: {
-            v: "^chatsendui$"
+            v: "^chatsendui$",
         },
         aliases: [
             {
                 commandName: "chtsndui",
                 escregexp: {
-                    v: "^chtsndui$"
-                }
+                    v: "^chtsndui$",
+                },
             },
             {
                 commandName: "chtsendui",
                 escregexp: {
-                    v: "^chtsendui$"
-                }
+                    v: "^chtsendui$",
+                },
             },
             {
                 commandName: "sendui",
                 escregexp: {
-                    v: "^sendui$"
-                }
-            }
+                    v: "^sendui$",
+                },
+            },
         ],
         formats: [
             {
-                format: "chatsendui"
-            }
+                format: "chatsendui",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "uis"
-        ],
+        category: ["uis"],
         commandSettingsId: "built-inCommandSettings:chatsendui",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands",
-            "canUseDangerousCommands"
-        ],
+        requiredTags: ["canUseChatCommands", "canUseDangerousCommands"],
         formatting_code: "§r§4",
         commandName: "chunkban",
         escregexp: {
-            v: "^chunkban$"
+            v: "^chunkban$",
         },
         formats: [
             {
-                format: "chunkban [slot: int|~] [loopCount: int] [target: string|~]"
-            }
+                format: "chunkban [slot: int|~] [loopCount: int] [target: string|~]",
+            },
         ],
         command_version: "1.2.7-beta.83",
         description: "",
-        category: [
-            "dangerous"
-        ],
+        category: ["dangerous"],
         commandSettingsId: "built-inCommandSettings:chunkban",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "chunkinfo",
         escregexp: {
-            v: "^chunkinfo$"
+            v: "^chunkinfo$",
         },
         formats: [
             {
-                format: "chunkinfo"
-            }
+                format: "chunkinfo",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "world",
-            "worldedit"
-        ],
+        category: ["world", "worldedit"],
         commandSettingsId: "built-inCommandSettings:chunkinfo",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§c",
         commandName: "clear",
         escregexp: {
-            v: "^clear$"
+            v: "^clear$",
         },
         formats: [
             {
-                format: "clear <target: string> [itemType: Item]"
-            }
+                format: "clear <target: string> [itemType: Item]",
+            },
         ],
         command_version: "0.0.1-indev.35",
-        category: [
-            "players"
-        ],
+        category: ["players"],
         description: "",
         commandSettingsId: "built-inCommandSettings:clear",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§e",
         commandName: "clearenderchest",
         escregexp: {
-            v: "^clearenderchest$"
+            v: "^clearenderchest$",
         },
         formats: [
             {
-                format: "clearenderchest [stackCount: int|fill|replaceall|replacefill] [stackSize: int|max|~] [target: string|~]"
-            }
+                format: "clearenderchest [stackCount: int|fill|replaceall|replacefill] [stackSize: int|max|~] [target: string|~]",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "players",
-            "containers/inventories"
-        ],
+        category: ["players", "containers/inventories"],
         commandSettingsId: "built-inCommandSettings:clearenderchest",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§e",
         commandName: "clearenderchestslot",
         escregexp: {
-            v: "^clearenderchestslot$"
+            v: "^clearenderchestslot$",
         },
         formats: [
             {
-                format: "clearenderchestslot [stackCount: int|fill|replaceall|replacefill] [stackSize: int|max|~] [target: string|~]"
-            }
+                format: "clearenderchestslot [stackCount: int|fill|replaceall|replacefill] [stackSize: int|max|~] [target: string|~]",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "players",
-            "containers/inventories"
-        ],
+        category: ["players", "containers/inventories"],
         commandSettingsId: "built-inCommandSettings:clearenderchestslot",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§e",
         commandName: "cloneitem",
         escregexp: {
-            v: "^cloneitem$"
+            v: "^cloneitem$",
         },
         formats: [
             {
-                format: "cloneitem <toPlayer: playerName>"
-            }
+                format: "cloneitem <toPlayer: playerName>",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "items"
-        ],
+        category: ["items"],
         commandSettingsId: "built-inCommandSettings:cloneitem",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§e",
         commandName: "closeuis",
         escregexp: {
-            v: "^closeuis$"
+            v: "^closeuis$",
         },
         aliases: [
             {
                 commandName: "closeui",
                 escregexp: {
-                    v: "^closeui$"
-                }
-            }
+                    v: "^closeui$",
+                },
+            },
         ],
         formats: [
             {
-                format: "closeuis [targets: target[?=@a,allowMultiple=true,playersOnly=true]]"
-            }
+                format: "closeuis [targets: target[?=@a,allowMultiple=true,playersOnly=true]]",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "uis"
-        ],
+        category: ["uis"],
         commandSettingsId: "built-inCommandSettings:closeuis",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "compressitems",
         escregexp: {
-            v: "^compressitems$"
+            v: "^compressitems$",
         },
         formats: [
             {
-                format: "compressitems [mode: inventory|hotbar|armor|equipment|all] [target: string|~]"
-            }
+                format: "compressitems [mode: inventory|hotbar|armor|equipment|all] [target: string|~]",
+            },
         ],
         command_version: "1.0.0-rc.5",
         description: "Compresses your items into chest(s) and gives you those chest(s) as items. ",
-        category: [
-            "players",
-            "containers/inventories",
-            "items"
-        ],
+        category: ["players", "containers/inventories", "items"],
         commandSettingsId: "built-inCommandSettings:compressitems",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "compressitemscontainer",
         escregexp: {
-            v: "^compressitemscontainer$"
+            v: "^compressitemscontainer$",
         },
         formats: [
             {
-                format: "compressitemscontainer [containerType: Block] [mode: inventory|hotbar|armor|equipment|all] [target: string|~]"
-            }
+                format: "compressitemscontainer [containerType: Block] [mode: inventory|hotbar|armor|equipment|all] [target: string|~]",
+            },
         ],
         command_version: "1.0.0",
         description: "Compresses your items into container(s) and gives you those container(s) as items. ",
-        category: [
-            "players",
-            "containers/inventories",
-            "items"
-        ],
+        category: ["players", "containers/inventories", "items"],
         commandSettingsId: "built-inCommandSettings:compressitemscontainer",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "compressitemscontainerb",
         escregexp: {
-            v: "^compressitemscontainerb$"
+            v: "^compressitemscontainerb$",
         },
         formats: [
             {
-                format: "compressitemscontainerb [containerType: Block] [mode: inventory|hotbar|armor|equipment|all] [target: string|~]"
-            }
+                format: "compressitemscontainerb [containerType: Block] [mode: inventory|hotbar|armor|equipment|all] [target: string|~]",
+            },
         ],
         command_version: "0.0.1-alpha.76",
         description: "Compresses your items into container(s) and gives you those container(s) as items. ",
-        category: [
-            "players",
-            "containers/inventories",
-            "items"
-        ],
+        category: ["players", "containers/inventories", "items"],
         commandSettingsId: "built-inCommandSettings:compressitemscontainerb",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "compressitemsshulker",
         escregexp: {
-            v: "^compressitemsshulker$"
+            v: "^compressitemsshulker$",
         },
         formats: [
             {
-                format: "compressitemsshulker [mode: inventory|hotbar|armor|equipment|all] [target: string|~]"
-            }
+                format: "compressitemsshulker [mode: inventory|hotbar|armor|equipment|all] [target: string|~]",
+            },
         ],
         command_version: "1.0.0",
         description: "Compresses your items into shulker box(es) and gives you those shulker box(es) as items. ",
-        category: [
-            "players",
-            "containers/inventories",
-            "items"
-        ],
+        category: ["players", "containers/inventories", "items"],
         commandSettingsId: "built-inCommandSettings:compressitemsshulker",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "copyitem",
         escregexp: {
-            v: "^copyitem$"
+            v: "^copyitem$",
         },
         formats: [
             {
-                format: "copyitem <slot: int|\"head\"|\"chest\"|\"legs\"|\"feet\"|\"mainhand\"|\"offhand\"> <toPlayer: (playerName|~)[?=~]>"
-            }
+                format: 'copyitem <slot: int|"head"|"chest"|"legs"|"feet"|"mainhand"|"offhand"> <toPlayer: (playerName|~)[?=~]>',
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "items",
-            "containers/inventories"
-        ],
+        category: ["items", "containers/inventories"],
         commandSettingsId: "built-inCommandSettings:copyitem",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "copyitemfrom",
         escregexp: {
-            v: "^copyitem$from"
+            v: "^copyitem$from",
         },
         formats: [
             {
-                format: "copyitemfrom <fromSlot: int|{head}|{chest}|{legs}|{feet}|{mainhand}|{offhand}> [toSlot: (int|{head}|{chest}|{legs}|{feet}|{mainhand}|{offhand})[?=~]] [fromPlayer: (playerName|~)[?=~]] [toPlayer: (playerName|~)[?=~]]"
-            }
+                format: "copyitemfrom <fromSlot: int|{head}|{chest}|{legs}|{feet}|{mainhand}|{offhand}> [toSlot: (int|{head}|{chest}|{legs}|{feet}|{mainhand}|{offhand})[?=~]] [fromPlayer: (playerName|~)[?=~]] [toPlayer: (playerName|~)[?=~]]",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "items",
-            "containers/inventories"
-        ],
+        category: ["items", "containers/inventories"],
         commandSettingsId: "built-inCommandSettings:copyitemfrom",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "createexplosion",
         escregexp: {
-            v: "^createexplosion$"
+            v: "^createexplosion$",
         },
         formats: [
             {
-                format: "createexplosion <location: x y z> <dimension: string> [radius: float] [allowUnderwater: bool] [breaksBlocks: bool] [causesFire: bool] [source: targetSelector]"
-            }
+                format: "createexplosion <location: x y z> <dimension: string> [radius: float] [allowUnderwater: bool] [breaksBlocks: bool] [causesFire: bool] [source: targetSelector]",
+            },
         ],
         command_version: "1.0.0-rc.57",
         description: "Creates an explosion. ",
-        category: [
-            "world"
-        ],
+        category: ["world"],
         commandSettingsId: "built-inCommandSettings:createexplosion",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§c",
         commandName: "data",
         escregexp: {
-            v: "^data$"
+            v: "^data$",
         },
         formats: [
             {
-                format: "Too many to list here. Run the command \"\\help cmd data\" instead. "
-            }
+                format: 'Too many to list here. Run the command "\\help cmd data" instead. ',
+            },
         ],
         command_version: "0.56.76-alpha.12",
-        category: [
-            "world"
-        ],
+        category: ["world"],
         description: "",
         commandSettingsId: "built-inCommandSettings:data",
         functional: false,
         deprecated: false,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "datapickblock",
         escregexp: {
-            v: "^datapickblock$"
+            v: "^datapickblock$",
         },
         aliases: [
             {
                 commandName: "dpb",
                 escregexp: {
-                    v: "^dpb$"
-                }
-            }
+                    v: "^dpb$",
+                },
+            },
         ],
         formats: [
             {
-                format: "datapickblock"
-            }
+                format: "datapickblock",
+            },
         ],
         command_version: "1.0.0",
-        category: [
-            "world"
-        ],
+        category: ["world"],
         description: "",
         commandSettingsId: "built-inCommandSettings:datapickblock",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "debugstickdyingmode",
         escregexp: {
-            v: "^debugstickdyingmode$"
+            v: "^debugstickdyingmode$",
         },
         aliases: [
             {
                 commandName: "debugsticksdyingmode",
                 escregexp: {
-                    v: "^debugsticksdyingmode$"
-                }
+                    v: "^debugsticksdyingmode$",
+                },
             },
             {
                 commandName: "dsdm",
                 escregexp: {
-                    v: "^dsdm$"
-                }
-            }
+                    v: "^dsdm$",
+                },
+            },
         ],
         formats: [
             {
-                format: "debugstickdyingmode [enabled: bool[?=toggle]]"
-            }
+                format: "debugstickdyingmode [enabled: bool[?=toggle]]",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "players",
-            "items"
-        ],
+        category: ["players", "items"],
         commandSettingsId: "built-inCommandSettings:debugstickdyingmode",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "defaulthealth",
         escregexp: {
-            v: "^defaulthealth$"
+            v: "^defaulthealth$",
         },
         aliases: [
             {
                 commandName: "dfthlth",
                 escregexp: {
-                    v: "^dfthlth$"
-                }
+                    v: "^dfthlth$",
+                },
             },
             {
                 commandName: "dflthlth",
                 escregexp: {
-                    v: "^dflthlth$"
-                }
+                    v: "^dflthlth$",
+                },
             },
             {
                 commandName: "dfthealth",
                 escregexp: {
-                    v: "^dfthealth$"
-                }
+                    v: "^dfthealth$",
+                },
             },
             {
                 commandName: "dflthealth",
                 escregexp: {
-                    v: "^dfthealth$"
-                }
-            }
+                    v: "^dfthealth$",
+                },
+            },
         ],
         formats: [
             {
-                format: "defaulthealth [target: target[?=@s,allowMultiple=true]]"
-            }
+                format: "defaulthealth [target: target[?=@s,allowMultiple=true]]",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "players",
-            "entities"
-        ],
+        category: ["players", "entities"],
         commandSettingsId: "built-inCommandSettings:defaulthealth",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§6",
         commandName: "disconnect",
         escregexp: {
-            v: "^disconnect$"
+            v: "^disconnect$",
         },
         aliases: [
             {
                 commandName: "boot",
                 escregexp: {
-                    v: "^boot$"
-                }
-            }
+                    v: "^boot$",
+                },
+            },
         ],
         formats: [
             {
-                format: "disconnect [players: target[?=@s,allowMultiple=true,onlyPlayers=true]]"
-            }
+                format: "disconnect [players: target[?=@s,allowMultiple=true,onlyPlayers=true]]",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "Entity Scale Add-On",
-            "system",
-            "world",
-            "players",
-            "server"
-        ],
+        category: ["Entity Scale Add-On", "system", "world", "players", "server"],
         commandSettingsId: "built-inCommandSettings:disconnect",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "drain",
         escregexp: {
-            v: "^drain$"
+            v: "^drain$",
         },
         formats: [
             {
-                format: "drain [radius: number]"
-            }
+                format: "drain [radius: number]",
+            },
         ],
         command_version: "3.0.0",
         description: "Drains liquids in the specified radius, the radius defaults to 10 if not specified. ",
-        category: [
-            "world"
-        ],
+        category: ["world"],
         commandSettingsId: "built-inCommandSettings:drain",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§e",
         commandName: "dupeitem",
         escregexp: {
-            v: "^dupeitem$"
+            v: "^dupeitem$",
         },
         formats: [
             {
-                format: "dupeitem"
-            }
+                format: "dupeitem",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "items"
-        ],
+        category: ["items"],
         commandSettingsId: "built-inCommandSettings:dupeitem",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "editorstick",
         escregexp: {
-            v: "^editorstick$"
+            v: "^editorstick$",
         },
         formats: [
             {
-                format: "editorstick"
-            }
+                format: "editorstick",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "uis"
-        ],
+        category: ["uis"],
         commandSettingsId: "built-inCommandSettings:editorstick",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "editorstickb",
         escregexp: {
-            v: "^editorstickb$"
+            v: "^editorstickb$",
         },
         formats: [
             {
-                format: "editorstickb"
-            }
+                format: "editorstickb",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "uis"
-        ],
+        category: ["uis"],
         commandSettingsId: "built-inCommandSettings:editorstickb",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "editorstickc",
         escregexp: {
-            v: "^editorstickc$"
+            v: "^editorstickc$",
         },
         formats: [
             {
-                format: "editorstickc"
-            }
+                format: "editorstickc",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "uis"
-        ],
+        category: ["uis"],
         commandSettingsId: "built-inCommandSettings:editorstickc",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "einvsee",
         escregexp: {
-            v: "^einvsee$"
+            v: "^einvsee$",
         },
         formats: [
             {
-                format: "einvsee <targetSelector: targetSelector>"
-            }
+                format: "einvsee <targetSelector: targetSelector>",
+            },
         ],
         command_version: "1.6.0",
         description: "Invsees into and entity's inventory and equipment slots. ",
-        category: [
-            "invsee"
-        ],
+        category: ["invsee"],
         commandSettingsId: "built-inCommandSettings:einvsee",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "einvseeb",
         escregexp: {
-            v: "^einvseeb$"
+            v: "^einvseeb$",
         },
         formats: [
             {
-                format: "einvseeb <targetSelector: targetSelector>"
-            }
+                format: "einvseeb <targetSelector: targetSelector>",
+            },
         ],
         command_version: "1.6.0",
         description: "The original version of the \\einvsee command that does not scan equipment slots. ",
-        category: [
-            "invsee"
-        ],
+        category: ["invsee"],
         commandSettingsId: "built-inCommandSettings:einvseeb",
         deprecated: true,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "enchantmentbarrels",
         escregexp: {
-            v: "^enchantmentbarrels$"
+            v: "^enchantmentbarrels$",
         },
         aliases: [
             {
                 commandName: "eb",
                 escregexp: {
-                    v: "^eb$"
-                }
-            }
+                    v: "^eb$",
+                },
+            },
         ],
         formats: [
             {
-                format: "enchantmentbarrels [level: number[?=0]]"
-            }
+                format: "enchantmentbarrels [level: number[?=0]]",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "items",
-            "blocks",
-            "world"
-        ],
+        category: ["items", "blocks", "world"],
         commandSettingsId: "built-inCommandSettings:enchantmentbarrels",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "enderchest",
         escregexp: {
-            v: "^enderchest$"
+            v: "^enderchest$",
         },
         aliases: [
             {
                 commandName: "ec",
                 escregexp: {
-                    v: "^ec$"
-                }
-            }
+                    v: "^ec$",
+                },
+            },
         ],
         formats: [
             {
-                format: "enderchest"
-            }
+                format: "enderchest",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "misc"
-        ],
+        category: ["misc"],
         commandSettingsId: "built-inCommandSettings:enderchest",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "entityscaleversion",
         escregexp: {
-            v: "^entityscaleversion$"
+            v: "^entityscaleversion$",
         },
         aliases: [
             {
                 commandName: "esver",
                 escregexp: {
-                    v: "^esver$"
-                }
-            }
+                    v: "^esver$",
+                },
+            },
         ],
         formats: [
             {
-                format: "entityscaleversion"
-            }
+                format: "entityscaleversion",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server"
-        ],
+        category: ["system", "world", "server"],
         commandSettingsId: "built-inCommandSettings:entityscaleversion",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "eval",
         escregexp: {
-            v: "^eval$"
+            v: "^eval$",
         },
         formats: [
             {
-                format: "eval <script: JavaScript>"
-            }
+                format: "eval <script: JavaScript>",
+            },
         ],
         command_version: "1.1.0",
         description: "",
-        category: [
-            "misc"
-        ],
+        category: ["misc"],
         commandSettingsId: "built-inCommandSettings:eval",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "execute",
         escregexp: {
-            v: "^execute$"
+            v: "^execute$",
         },
         formats: [
             {
-                format: "execute"
-            }
+                format: "execute",
+            },
         ],
         command_version: "2.0.0",
         description: "",
-        category: [
-            "system"
-        ],
+        category: ["system"],
         commandSettingsId: "built-inCommandSettings:execute",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "extinguish",
         escregexp: {
-            v: "^extinguish$"
+            v: "^extinguish$",
         },
         aliases: [
             {
                 commandName: "ext",
                 escregexp: {
-                    v: "^ext$"
-                }
+                    v: "^ext$",
+                },
             },
             {
                 commandName: "ex",
                 escregexp: {
-                    v: "^ex$"
-                }
+                    v: "^ex$",
+                },
             },
             {
                 commandName: "remfire",
                 escregexp: {
-                    v: "^remfire$"
-                }
-            }
+                    v: "^remfire$",
+                },
+            },
         ],
         formats: [
             {
-                format: "extinguish [radius: number]"
-            }
+                format: "extinguish [radius: number]",
+            },
         ],
         command_version: "2.2.0",
         description: "Extinguishes fire in the specified radius, the radius default to 10 if not specified. ",
-        category: [
-            "world"
-        ],
+        category: ["world"],
         commandSettingsId: "built-inCommandSettings:extinguish",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "extrafeaturessettings",
         escregexp: {
-            v: "^extrafeaturessettings$"
+            v: "^extrafeaturessettings$",
         },
         aliases: [
             {
                 commandName: "extrasettings",
                 escregexp: {
-                    v: "^extrasettings$"
-                }
-            }
+                    v: "^extrasettings$",
+                },
+            },
         ],
         formats: [
             {
-                format: "extrafeaturessettings"
-            }
+                format: "extrafeaturessettings",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "uis"
-        ],
+        category: ["uis"],
         commandSettingsId: "built-inCommandSettings:extrafeaturessettings",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "fill",
         escregexp: {
-            v: "^fill$"
+            v: "^fill$",
         },
         formats: [
             {
-                format: "fill <from: x y z> <to: x y z> <tileName: Block> <blockStates: block states|JSON|Array> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]"
+                format: "fill <from: x y z> <to: x y z> <tileName: Block> <blockStates: block states|JSON|Array> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]",
             },
             {
-                format: "fill <from: x y z> <to: x y z> <tileName: Block> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]"
-            }
+                format: "fill <from: x y z> <to: x y z> <tileName: Block> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]",
+            },
         ],
         command_version: "1.1.0",
         description: "Better version fo the vanilla /fill command that can fill secret blocks types that normally require an nbt editor to obtain. ",
-        category: [
-            "world"
-        ],
+        category: ["world"],
         commandSettingsId: "built-inCommandSettings:fill",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§c",
         commandName: "fillillegal",
         escregexp: {
-            v: "^fillillegal$"
+            v: "^fillillegal$",
         },
         aliases: [
             {
                 commandName: "invfillillegal",
                 escregexp: {
-                    v: "^invfillillegal$"
-                }
-            }
+                    v: "^invfillillegal$",
+                },
+            },
         ],
         formats: [
             {
-                format: "fillillegal [stackCount: int|fill|replaceall|replacefill] [stackSize: int|max|~] [target: string|~]"
-            }
+                format: "fillillegal [stackCount: int|fill|replaceall|replacefill] [stackSize: int|max|~] [target: string|~]",
+            },
         ],
         command_version: "0.9.0-alpha.37",
         description: "",
-        category: [
-            "items",
-            "players",
-            "containers/inventories"
-        ],
+        category: ["items", "players", "containers/inventories"],
         commandSettingsId: "built-inCommandSettings:fillillegal",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§e",
         commandName: "fillinventory",
         escregexp: {
-            v: "^fillinventory$"
+            v: "^fillinventory$",
         },
         aliases: [
             {
                 commandName: "invfill",
                 escregexp: {
-                    v: "^invfill$"
-                }
-            }
+                    v: "^invfill$",
+                },
+            },
         ],
         formats: [
             {
-                format: "fillinventory <itemJSON: itemJSON> [stackCount: int|fill|replaceall|replacefill] [target: string|~]"
-            }
+                format: "fillinventory <itemJSON: itemJSON> [stackCount: int|fill|replaceall|replacefill] [target: string|~]",
+            },
         ],
         command_version: "1.0.0-beta.17",
         description: "",
-        category: [
-            "items",
-            "players",
-            "containers/inventories"
-        ],
+        category: ["items", "players", "containers/inventories"],
         commandSettingsId: "built-inCommandSettings:fillinventory",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§c",
         commandName: "filljunk",
         escregexp: {
-            v: "^filljunk$"
+            v: "^filljunk$",
         },
         aliases: [
             {
                 commandName: "invfilljunk",
                 escregexp: {
-                    v: "^invfilljunk$"
-                }
-            }
+                    v: "^invfilljunk$",
+                },
+            },
         ],
         formats: [
             {
-                format: "filljunk [stackCount: int|fill|replaceall|replacefill] [stackSize: int|max|~] [target: string|~]"
-            }
+                format: "filljunk [stackCount: int|fill|replaceall|replacefill] [stackSize: int|max|~] [target: string|~]",
+            },
         ],
         command_version: "0.9.0-alpha.37",
         description: "",
-        category: [
-            "items",
-            "players",
-            "containers/inventories"
-        ],
+        category: ["items", "players", "containers/inventories"],
         commandSettingsId: "built-inCommandSettings:filljunk",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§c",
         commandName: "fillop",
         escregexp: {
-            v: "^fillop$"
+            v: "^fillop$",
         },
         aliases: [
             {
                 commandName: "invfillop",
                 escregexp: {
-                    v: "^invfillop$"
-                }
-            }
+                    v: "^invfillop$",
+                },
+            },
         ],
         formats: [
             {
-                format: "fillop [stackCount: int|fill|replaceall|replacefill] [stackSize: int|max|~] [target: string|~]"
-            }
+                format: "fillop [stackCount: int|fill|replaceall|replacefill] [stackSize: int|max|~] [target: string|~]",
+            },
         ],
         command_version: "0.9.0-alpha.37",
         description: "",
-        category: [
-            "items",
-            "players",
-            "containers/inventories"
-        ],
+        category: ["items", "players", "containers/inventories"],
         commandSettingsId: "built-inCommandSettings:fillop",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "fillrandom",
         escregexp: {
-            v: "^fillrandom$"
+            v: "^fillrandom$",
         },
         aliases: [
             {
                 commandName: "invfillrandom",
                 escregexp: {
-                    v: "^invfillrandom$"
-                }
-            }
+                    v: "^invfillrandom$",
+                },
+            },
         ],
         formats: [
             {
-                format: "fillrandom [stackCount: int|fill|replaceall|replacefill] [stackSize: int|max|~] [target: string|~]"
-            }
+                format: "fillrandom [stackCount: int|fill|replaceall|replacefill] [stackSize: int|max|~] [target: string|~]",
+            },
         ],
         command_version: "1.0.0-rc.77",
         description: "",
-        category: [
-            "items",
-            "players",
-            "containers/inventories"
-        ],
+        category: ["items", "players", "containers/inventories"],
         commandSettingsId: "built-inCommandSettings:fillrandom",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "findtransformdvindex",
         escregexp: {
-            v: "^findtransformdvindex$"
+            v: "^findtransformdvindex$",
         },
         formats: [
             {
-                format: "findtransformdvindex"
-            }
+                format: "findtransformdvindex",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "server",
-            "items"
-        ],
+        category: ["server", "items"],
         commandSettingsId: "built-inCommandSettings:findtransformdvindex",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "gettransformst",
         escregexp: {
-            v: "^gettransformst$"
+            v: "^gettransformst$",
         },
         formats: [
             {
-                format: "gettransformst"
-            }
+                format: "gettransformst",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "server",
-            "items"
-        ],
+        category: ["server", "items"],
         commandSettingsId: "built-inCommandSettings:gettransformst",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "getuuid",
         escregexp: {
-            v: "^getuuid$"
+            v: "^getuuid$",
         },
         formats: [
             {
-                format: "getuuid <targets: target[allowMultiple=true]>"
-            }
+                format: "getuuid <targets: target[allowMultiple=true]>",
+            },
         ],
         command_version: "2.0.0",
         description: "",
-        category: [
-            "entities"
-        ],
+        category: ["entities"],
         commandSettingsId: "built-inCommandSettings:getuuid",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "getworldspawnpoint",
         escregexp: {
-            v: "^getworldspawnpoint$"
+            v: "^getworldspawnpoint$",
         },
         aliases: [
             {
                 commandName: "getworldspawn",
                 escregexp: {
-                    v: "^getworldspawn$"
-                }
+                    v: "^getworldspawn$",
+                },
             },
             {
                 commandName: "getwsp",
                 escregexp: {
-                    v: "^getwsp$"
-                }
+                    v: "^getwsp$",
+                },
             },
             {
                 commandName: "getws",
                 escregexp: {
-                    v: "^getws$"
-                }
+                    v: "^getws$",
+                },
             },
             {
                 commandName: "gwsp",
                 escregexp: {
-                    v: "^gwsp$"
-                }
+                    v: "^gwsp$",
+                },
             },
             {
                 commandName: "gws",
                 escregexp: {
-                    v: "^gws$"
-                }
-            }
+                    v: "^gws$",
+                },
+            },
         ],
         formats: [
             {
-                format: "getworldspawnpoint"
-            }
+                format: "getworldspawnpoint",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "world"
-        ],
+        category: ["world"],
         commandSettingsId: "built-inCommandSettings:getworldspawnpoint",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "give",
         escregexp: {
-            v: "^give$"
+            v: "^give$",
         },
         formats: [
             {
-                format: "give <item: itemType> [amount: int[min=1,max=Infinity]]"
-            }
+                format: "give <item: itemType> [amount: int[min=1,max=Infinity]]",
+            },
         ],
         command_version: "2.0.0",
         description: "This command can give you items of any type, even ones that normally require an nbt editor to obtain. ",
-        category: [
-            "items"
-        ],
+        category: ["items"],
         commandSettingsId: "built-inCommandSettings:give",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "giveb",
         escregexp: {
-            v: "^giveb$"
+            v: "^giveb$",
         },
         formats: [
             {
-                format: "giveb <item: itemType> [amount: int[min=1,max=255]]"
-            }
+                format: "giveb <item: itemType> [amount: int[min=1,max=255]]",
+            },
         ],
         command_version: "2.0.0",
         description: "This command can give you items of any type, even ones that normally require an nbt editor to obtain, with any stack size up to 255, in your next unoccupied inventory slot. ",
-        category: [
-            "items"
-        ],
+        category: ["items"],
         commandSettingsId: "built-inCommandSettings:giveb",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "givec",
         escregexp: {
-            v: "^givec$"
+            v: "^givec$",
         },
         formats: [
             {
-                format: "givec <itemJSON: itemJSON>"
-            }
+                format: "givec <itemJSON: itemJSON>",
+            },
         ],
         command_version: "2.0.0",
         description: "This command can give you items of any type with lots of properties already set on it through the item JSON, even ones that normally require an nbt editor to obtain, with any stack size up to 255, in your next unoccupied inventory slot. ",
-        category: [
-            "items"
-        ],
+        category: ["items"],
         commandSettingsId: "built-inCommandSettings:givec",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "gma",
         escregexp: {
-            v: "^gma$"
+            v: "^gma$",
         },
         formats: [
             {
-                format: "gma"
-            }
+                format: "gma",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "misc"
-        ],
+        category: ["misc"],
         commandSettingsId: "built-inCommandSettings:gma",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "moderator",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "gmc",
         escregexp: {
-            v: "^gmc$"
+            v: "^gmc$",
         },
         formats: [
             {
-                format: "gmc"
-            }
+                format: "gmc",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "players"
-        ],
+        category: ["players"],
         commandSettingsId: "built-inCommandSettings:gmc",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "moderator",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "gmd",
         escregexp: {
-            v: "^gmd$"
+            v: "^gmd$",
         },
         formats: [
             {
-                format: "gmd"
-            }
+                format: "gmd",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "misc"
-        ],
+        category: ["misc"],
         commandSettingsId: "built-inCommandSettings:gmd",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "moderator",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "gmp",
         escregexp: {
-            v: "^gmp$"
+            v: "^gmp$",
         },
         formats: [
             {
-                format: "gmp"
-            }
+                format: "gmp",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "misc"
-        ],
+        category: ["misc"],
         commandSettingsId: "built-inCommandSettings:gmp",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "moderator",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "gmr",
         escregexp: {
-            v: "^gmr$"
+            v: "^gmr$",
         },
         formats: [
             {
-                format: "gmr"
-            }
+                format: "gmr",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "misc"
-        ],
+        category: ["misc"],
         commandSettingsId: "built-inCommandSettings:gmr",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "moderator",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "gms",
         escregexp: {
-            v: "^gms$"
+            v: "^gms$",
         },
         formats: [
             {
-                format: "gms"
-            }
+                format: "gms",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "misc"
-        ],
+        category: ["misc"],
         commandSettingsId: "built-inCommandSettings:gms",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "moderator",
     },
     {
         type: "built-in",
         requiredTags: [],
+        ultraSecurityModeSecurityLevel: "everyone",
         formatting_code: "§r§f",
         commandName: "gohome",
         escregexp: {
-            v: "^gohome$"
+            v: "^gohome$",
         },
         formats: [
             {
-                format: "gohome"
-            }
+                format: "gohome",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "players",
-            "warps"
-        ],
+        category: ["players", "warps"],
         commandSettingsId: "built-inCommandSettings:gohome",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "ground",
         escregexp: {
-            v: "^ground$"
+            v: "^ground$",
         },
         formats: [
             {
-                format: "ground [-lp]"
-            }
+                format: "ground [-lp]",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "world",
-            "warps"
-        ],
+        category: ["world", "warps"],
         commandSettingsId: "built-inCommandSettings:ground",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "h#",
         escregexp: {
-            v: "^h(\\d*)$"
+            v: "^h(\\d*)$",
         },
         formats: [
             {
-                format: "h<presetId: float> <containerRow: float>"
-            }
+                format: "h<presetId: float> <containerRow: float>",
+            },
         ],
         command_version: "1.0.0",
         description: "Swaps your hotbar with the specified hotbar preset. ",
-        category: [
-            "containers/inventories"
-        ],
+        category: ["containers/inventories"],
         commandSettingsId: "built-inCommandSettings:h#",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "heal",
         escregexp: {
-            v: "^heal$"
+            v: "^heal$",
         },
         formats: [
             {
-                format: "heal"
-            }
+                format: "heal",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "players",
-            "entities"
-        ],
+        category: ["players", "entities"],
         commandSettingsId: "built-inCommandSettings:heal",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "health",
         escregexp: {
-            v: "^health$"
+            v: "^health$",
         },
         formats: [
             {
-                format: "health"
-            }
+                format: "health",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "players",
-            "entities"
-        ],
+        category: ["players", "entities"],
         commandSettingsId: "built-inCommandSettings:health",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
         requiredTags: [],
+        ultraSecurityModeSecurityLevel: "everyone",
         formatting_code: "§r§f",
         commandName: "help",
         escregexp: {
-            v: "^help$"
+            v: "^help$",
         },
         formats: [
             {
-                format: "help"
+                format: "help",
             },
             {
                 format: "help chatcommands",
-                description: "lists the available chat commands and their main formats"
+                description: "lists the available chat commands and their main formats",
             },
             {
                 format: "help javascriptfunctions",
-                description: "lists all available javascript functions, constants, variables, and classes"
+                description: "lists all available javascript functions, constants, variables, and classes",
             },
             {
                 format: "help jsfunction <jsObjectId: string>",
-                description: "gets the source code of a specific javascript function, constant, variable, or class"
-            }
+                description: "gets the source code of a specific javascript function, constant, variable, or class",
+            },
         ],
         command_version: "33.5.2",
-        category: [
-            "misc"
-        ],
+        category: ["misc"],
         description: "",
         commandSettingsId: "built-inCommandSettings:help",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "hlist",
         escregexp: {
-            v: "^hlist$"
+            v: "^hlist$",
         },
         formats: [
             {
-                format: "hlist"
-            }
+                format: "hlist",
+            },
         ],
         command_version: "1.0.0",
         description: "Lists all of your currently saved hotbar presets.",
-        category: [
-            "containers/inventories"
-        ],
+        category: ["containers/inventories"],
         commandSettingsId: "built-inCommandSettings:hlist",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "hcontents",
         escregexp: {
-            v: "^hcontents$"
+            v: "^hcontents$",
         },
         formats: [
             {
-                format: "hcontents [presetId: int]"
-            }
+                format: "hcontents [presetId: int]",
+            },
         ],
         command_version: "0.7.9-beta.76",
         description: "Lists the contents of all of your currently saved hotbar presets.",
-        category: [
-            "containers/inventories"
-        ],
+        category: ["containers/inventories"],
         commandSettingsId: "built-inCommandSettings:hcontents",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
         requiredTags: [],
+        ultraSecurityModeSecurityLevel: "everyone",
         formatting_code: "§r§f",
         commandName: "home",
         escregexp: {
-            v: "^home$"
+            v: "^home$",
         },
         formats: [
             {
-                format: "home"
-            }
+                format: "home",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "players",
-            "warps"
-        ],
+        category: ["players", "warps"],
         commandSettingsId: "built-inCommandSettings:home",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "hset",
         escregexp: {
-            v: "^hset$"
+            v: "^hset$",
         },
         formats: [
             {
-                format: "hset <presetId: float> [dimensionId: string] [location: x y z]"
-            }
+                format: "hset <presetId: float> [dimensionId: string] [location: x y z]",
+            },
         ],
         command_version: "1.0.0",
         description: "Sets the specified hotbar preset to the specified location. ",
-        category: [
-            "containers/inventories"
-        ],
+        category: ["containers/inventories"],
         commandSettingsId: "built-inCommandSettings:hset",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§e",
         commandName: "idtfill",
         escregexp: {
-            v: "^idtfill$"
+            v: "^idtfill$",
         },
-        formats: [
-            "Too many to list. Use the \\help command to see the syntax."
-        ],
+        formats: ["Too many to list. Use the \\help command to see the syntax."],
         command_version: "30.0.1-beta.99",
         description: "Same as the \\itfill command except for the fact that it allows you to specify the integrity of the fill. ",
-        category: [
-            "world"
-        ],
+        category: ["world"],
         commandSettingsId: "built-inCommandSettings:idtfill",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "ifill",
         escregexp: {
-            v: "^ifill$"
+            v: "^ifill$",
         },
         formats: [
             {
-                format: "ifill <from: x y z> <to: x y z> <tileName: Block> <blockStates: block states|JSON|Array> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]"
+                format: "ifill <from: x y z> <to: x y z> <tileName: Block> <blockStates: block states|JSON|Array> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]",
             },
             {
-                format: "ifill <from: x y z> <to: x y z> <tileName: Block> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]"
-            }
+                format: "ifill <from: x y z> <to: x y z> <tileName: Block> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]",
+            },
         ],
         command_version: "32.0.1",
         description: "Better version of the vanilla /fill command that can fill secret blocks types that normally require an nbt editor to obtain, and has no fill size limits. ",
-        category: [
-            "world"
-        ],
+        category: ["world"],
         commandSettingsId: "built-inCommandSettings:ifill",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§n",
         commandName: "ifillb",
         escregexp: {
-            v: "^ifillb$"
+            v: "^ifillb$",
         },
         formats: [
             {
-                format: "ifillb <from: x y z> <to: x y z> <tileName: Block> <blockStates: block states|JSON|Array> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]"
+                format: "ifillb <from: x y z> <to: x y z> <tileName: Block> <blockStates: block states|JSON|Array> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]",
             },
             {
-                format: "ifillb <from: x y z> <to: x y z> <tileName: Block> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]"
-            }
+                format: "ifillb <from: x y z> <to: x y z> <tileName: Block> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]",
+            },
         ],
         command_version: "1.28.1",
         description: "Better version fo the vanilla /fill command that can fill secret blocks types that normally require an nbt editor to obtain, and has no fill size limits. Original version of the \\ifill command, only allows for matching exact block states but is much quicker. ",
-        category: [
-            "world"
-        ],
+        category: ["world"],
         commandSettingsId: "built-inCommandSettings:ifillb",
         deprecated: true,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§n",
         commandName: "ifillc",
         escregexp: {
-            v: "^ifillc$"
+            v: "^ifillc$",
         },
         formats: [],
         command_version: "1.28.1",
         description: "Better version fo the vanilla /fill command that can fill secret blocks types that normally require an nbt editor to obtain, and has no fill size limits. Second version of the \\ifill command. ",
-        category: [
-            "world"
-        ],
+        category: ["world"],
         commandSettingsId: "built-inCommandSettings:ifillc",
         deprecated: true,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§n",
         commandName: "ifilld",
         escregexp: {
-            v: "^ifilld$"
+            v: "^ifilld$",
         },
         formats: [],
         command_version: "1.28.1",
         description: "Better version fo the vanilla /fill command that can fill secret blocks types that normally require an nbt editor to obtain, and has no fill size limits. Third version of the \\ifill command. ",
-        category: [
-            "world"
-        ],
+        category: ["world"],
         commandSettingsId: "built-inCommandSettings:ifilld",
         deprecated: true,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§n",
         commandName: "igfill",
         escregexp: {
-            v: "^igfill$"
+            v: "^igfill$",
         },
         formats: [
             {
-                format: "igfill <from: x y z> <to: x y z> <tileName: Block> <blockStates: block states|JSON|Array> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]"
+                format: "igfill <from: x y z> <to: x y z> <tileName: Block> <blockStates: block states|JSON|Array> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]",
             },
             {
-                format: "igfill <from: x y z> <to: x y z> <tileName: Block> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]"
-            }
+                format: "igfill <from: x y z> <to: x y z> <tileName: Block> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]",
+            },
         ],
         command_version: "4.100.1",
         description: "This is a version of the \\ifill command that uses a generator function so it does not cause as much lag, but it is VERY slow. Better version fo the vanilla /fill command that can fill secret blocks types that normally require an nbt editor to obtain, and has no fill size limits. ",
-        category: [
-            "world"
-        ],
+        category: ["world"],
         commandSettingsId: "built-inCommandSettings:igfill",
         deprecated: true,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§e",
         commandName: "ignite",
         escregexp: {
-            v: "^ignite$"
+            v: "^ignite$",
         },
         formats: [
             {
-                format: "ignite [radius: number]"
-            }
+                format: "ignite [radius: number]",
+            },
         ],
         command_version: "2.3.0-beta.17",
         description: "Ignites air blocks in the specified radius, the radius defaults to 10 if not specified. ",
-        category: [
-            "world"
-        ],
+        category: ["world"],
         commandSettingsId: "built-inCommandSettings:ignite",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§n",
         commandName: "ihollow",
         escregexp: {
-            v: "^ihollow$"
+            v: "^ihollow$",
         },
         formats: [
             {
-                format: "ihollow <from: x y z> <to: x y z> <tileName: Block> <blockStates: block states|JSON|Array> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]"
+                format: "ihollow <from: x y z> <to: x y z> <tileName: Block> <blockStates: block states|JSON|Array> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]",
             },
             {
-                format: "ihollow <from: x y z> <to: x y z> <tileName: Block> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]"
-            }
+                format: "ihollow <from: x y z> <to: x y z> <tileName: Block> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]",
+            },
         ],
         command_version: "6.12.0",
         description: "Same as the \\ifill command except for the fact that it only fills the sides of the specified area. ",
-        category: [
-            "world"
-        ],
+        category: ["world"],
         commandSettingsId: "built-inCommandSettings:ihollow",
         deprecated: true,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "invsee",
         escregexp: {
-            v: "^invsee$"
+            v: "^invsee$",
         },
         formats: [
             {
-                format: "invsee <target: targetSelector>"
-            }
+                format: "invsee <target: targetSelector>",
+            },
         ],
         command_version: "1.6.0",
         description: "",
-        category: [
-            "invsee"
-        ],
+        category: ["invsee"],
         commandSettingsId: "built-inCommandSettings:invsee",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "invseep",
         escregexp: {
-            v: "^invseep$"
+            v: "^invseep$",
         },
         formats: [
             {
-                format: "invseep <target: targetSelector>"
-            }
+                format: "invseep <target: targetSelector>",
+            },
         ],
         command_version: "1.6.0",
         description: "",
-        category: [
-            "invsee"
-        ],
+        category: ["invsee"],
         commandSettingsId: "built-inCommandSettings:invseep",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "invseeuuidmode",
         escregexp: {
-            v: "^invseeuuidmode$"
+            v: "^invseeuuidmode$",
         },
         formats: [
             {
-                format: "invseeuuidmode <entityUUID: UUID>"
-            }
+                format: "invseeuuidmode <entityUUID: UUID>",
+            },
         ],
         command_version: "1.2.0",
         description: "Invsees into he entity matching the inputted UUID. ",
-        category: [
-            "invsee"
-        ],
+        category: ["invsee"],
         commandSettingsId: "built-inCommandSettings:invseeuuidmode",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§n",
         commandName: "iogfill",
         escregexp: {
-            v: "^iogfill$"
+            v: "^iogfill$",
         },
         formats: [
             {
-                format: "iogfill <from: x y z> <to: x y z> <tileName: Block> <blockStates: block states|JSON|Array> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]"
+                format: "iogfill <from: x y z> <to: x y z> <tileName: Block> <blockStates: block states|JSON|Array> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]",
             },
             {
-                format: "iogfill <from: x y z> <to: x y z> <tileName: Block> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]"
-            }
+                format: "iogfill <from: x y z> <to: x y z> <tileName: Block> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]",
+            },
         ],
         command_version: "4.19.1",
         description: "This is a version of the \\ifill command that uses a generator function so it does not cause as much lag, but it is VERY slow. Better version fo the vanilla /fill command that can fill secret blocks types that normally require an nbt editor to obtain, and has no fill size limits. Same as \\igfill except for the fact that it always resets any non-specified block states to the defaults instead of keeping them as what they were if possible. ",
-        category: [
-            "world"
-        ],
+        category: ["world"],
         commandSettingsId: "built-inCommandSettings:iogfill",
         deprecated: true,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§n",
         commandName: "ioutline",
         escregexp: {
-            v: "^ioutline$"
+            v: "^ioutline$",
         },
         formats: [
             {
-                format: "ioutline <from: x y z> <to: x y z> <tileName: Block> <blockStates: block states|JSON|Array> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]"
+                format: "ioutline <from: x y z> <to: x y z> <tileName: Block> <blockStates: block states|JSON|Array> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]",
             },
             {
-                format: "ioutline <from: x y z> <to: x y z> <tileName: Block> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]"
-            }
+                format: "ioutline <from: x y z> <to: x y z> <tileName: Block> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]",
+            },
         ],
         command_version: "6.12.0",
         description: "Same as the \\ifill command except for the fact that it only fills the outline of the specified area. ",
-        category: [
-            "world"
-        ],
+        category: ["world"],
         commandSettingsId: "built-inCommandSettings:ioutline",
         deprecated: true,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§n",
         commandName: "ipillars",
         escregexp: {
-            v: "^ipillars$"
+            v: "^ipillars$",
         },
         formats: [
             {
-                format: "ipillars <from: x y z> <to: x y z> <tileName: Block> <blockStates: block states|JSON|Array> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]"
+                format: "ipillars <from: x y z> <to: x y z> <tileName: Block> <blockStates: block states|JSON|Array> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]",
             },
             {
-                format: "ipillars <from: x y z> <to: x y z> <tileName: Block> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]"
-            }
+                format: "ipillars <from: x y z> <to: x y z> <tileName: Block> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]",
+            },
         ],
         command_version: "6.12.0",
         description: "Same as the \\ifill command except for the fact that it only fills the pillars of the specified area. ",
-        category: [
-            "world"
-        ],
+        category: ["world"],
         commandSettingsId: "built-inCommandSettings:ipillars",
         deprecated: true,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "item",
         escregexp: {
-            v: "^item$"
+            v: "^item$",
         },
         formats: [
             {
-                format: "item lore <loreArray: escapableStringJSON>"
+                format: "item lore <loreArray: escapableStringJSON>",
             },
             {
-                format: "item lorene <loreArray: JSON>"
+                format: "item lorene <loreArray: JSON>",
             },
             {
-                format: "item name <name: escapableString>"
+                format: "item name <name: escapableString>",
             },
             {
-                format: "item json <itemJSON: itemJSON>"
+                format: "item json <itemJSON: itemJSON>",
             },
             {
-                format: "item jsonb <itemJSON: itemJSON>"
+                format: "item jsonb <itemJSON: itemJSON>",
             },
             {
-                format: "item count <itemCount: int>"
+                format: "item count <itemCount: int>",
             },
             {
-                format: "item amount <itemAmount: int>"
+                format: "item amount <itemAmount: int>",
             },
             {
-                format: "item property..."
+                format: "item property...",
             },
             {
                 format: [
@@ -3825,2898 +3385,2602 @@ export const commands = [
                     "item slot <inventorySlotNumber: int|~> lorene <loreArray: JSON>",
                     "item slot <inventorySlotNumber: int|~> name <name: escapableString>",
                     "item slot <inventorySlotNumber: int|~> json <itemJSON: itemJSON>",
-                    "item slot <inventorySlotNumber: int|~> jsonb <itemJSON: itemJSON>"
-                ]
+                    "item slot <inventorySlotNumber: int|~> jsonb <itemJSON: itemJSON>",
+                ],
             },
             {
-                format: "§citem components..."
-            }
+                format: "§citem components...",
+            },
         ],
         command_version: "5.0.0",
         description: "",
-        category: [
-            "items"
-        ],
+        category: ["items"],
         commandSettingsId: "built-inCommandSettings:item",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "itfill",
         escregexp: {
-            v: "^itfill$"
+            v: "^itfill$",
         },
-        formats: [
-            "Too many to list. Use the \\help command to see the syntax."
-        ],
+        formats: ["Too many to list. Use the \\help command to see the syntax."],
         command_version: "29.100.1",
         description: "Same as the \\ifill command except for the fact that it temporarily spawns a tickingarea to load in the chunks where the blocks will be filled. ",
-        category: [
-            "world"
-        ],
+        category: ["world"],
         commandSettingsId: "built-inCommandSettings:itfill",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§n",
         commandName: "ithollow",
         escregexp: {
-            v: "^ithollow$"
+            v: "^ithollow$",
         },
         formats: [
             {
-                format: "ithollow <from: x y z> <to: x y z> <tileName: Block> <blockStates: block states|JSON|Array> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]"
+                format: "ithollow <from: x y z> <to: x y z> <tileName: Block> <blockStates: block states|JSON|Array> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]",
             },
             {
-                format: "ithollow <from: x y z> <to: x y z> <tileName: Block> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]"
-            }
+                format: "ithollow <from: x y z> <to: x y z> <tileName: Block> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]",
+            },
         ],
         command_version: "7.12.0",
         description: "Same as the \\ihollow command except for the fact that it temporarily spawns a tickingarea to load in the chunks where the blocks will be filled. ",
-        category: [
-            "world"
-        ],
+        category: ["world"],
         commandSettingsId: "built-inCommandSettings:ithollow",
         deprecated: true,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§n",
         commandName: "itoutline",
         escregexp: {
-            v: "^itoutline$"
+            v: "^itoutline$",
         },
         formats: [
             {
-                format: "itoutline <from: x y z> <to: x y z> <tileName: Block> <blockStates: block states|JSON|Array> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]"
+                format: "itoutline <from: x y z> <to: x y z> <tileName: Block> <blockStates: block states|JSON|Array> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]",
             },
             {
-                format: "itoutline <from: x y z> <to: x y z> <tileName: Block> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]"
-            }
+                format: "itoutline <from: x y z> <to: x y z> <tileName: Block> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]",
+            },
         ],
         command_version: "7.12.0",
         description: "Same as the \\ioutline command except for the fact that it temporarily spawns a tickingarea to load in the chunks where the blocks will be filled. ",
-        category: [
-            "world"
-        ],
+        category: ["world"],
         commandSettingsId: "built-inCommandSettings:itoutline",
         deprecated: true,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§n",
         commandName: "itpillars",
         escregexp: {
-            v: "^itpillars$"
+            v: "^itpillars$",
         },
         formats: [
             {
-                format: "itpillars <from: x y z> <to: x y z> <tileName: Block> <blockStates: block states|JSON|Array> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]"
+                format: "itpillars <from: x y z> <to: x y z> <tileName: Block> <blockStates: block states|JSON|Array> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]",
             },
             {
-                format: "itpillars <from: x y z> <to: x y z> <tileName: Block> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]"
-            }
+                format: "itpillars <from: x y z> <to: x y z> <tileName: Block> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]",
+            },
         ],
         command_version: "7.12.0",
         description: "Same as the \\ipillars command except for the fact that it temporarily spawns a tickingarea to load in the chunks where the blocks will be filled. ",
-        category: [
-            "world"
-        ],
+        category: ["world"],
         commandSettingsId: "built-inCommandSettings:itpillars",
         deprecated: true,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§n",
         commandName: "itwalls",
         escregexp: {
-            v: "^itwalls$"
+            v: "^itwalls$",
         },
         formats: [
             {
-                format: "itwalls <from: x y z> <to: x y z> <tileName: Block> <blockStates: block states|JSON|Array> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]"
+                format: "itwalls <from: x y z> <to: x y z> <tileName: Block> <blockStates: block states|JSON|Array> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]",
             },
             {
-                format: "itwalls <from: x y z> <to: x y z> <tileName: Block> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]"
-            }
+                format: "itwalls <from: x y z> <to: x y z> <tileName: Block> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]",
+            },
         ],
         command_version: "7.12.0",
         description: "Same as the \\iwalls command except for the fact that it temporarily spawns a tickingarea to load in the chunks where the blocks will be filled. ",
-        category: [
-            "world"
-        ],
+        category: ["world"],
         commandSettingsId: "built-inCommandSettings:itwalls",
         deprecated: true,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§n",
         commandName: "iwalls",
         escregexp: {
-            v: "^iwalls$"
+            v: "^iwalls$",
         },
         formats: [
             {
-                format: "iwalls <from: x y z> <to: x y z> <tileName: Block> <blockStates: block states|JSON|Array> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]"
+                format: "iwalls <from: x y z> <to: x y z> <tileName: Block> <blockStates: block states|JSON|Array> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]",
             },
             {
-                format: "iwalls <from: x y z> <to: x y z> <tileName: Block> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]"
-            }
+                format: "iwalls <from: x y z> <to: x y z> <tileName: Block> [replaceTileName: Block] [replaceBlockStates: block states|JSON|Array]",
+            },
         ],
         command_version: "6.12.0",
         description: "Same as the \\ifill command except for the fact that it only fills the walls of the specified area. ",
-        category: [
-            "world"
-        ],
+        category: ["world"],
         commandSettingsId: "built-inCommandSettings:iwalls",
         deprecated: true,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "jumpto",
         escregexp: {
-            v: "^jumpto$"
+            v: "^jumpto$",
         },
         aliases: [
             {
                 commandName: "j",
                 escregexp: {
-                    v: "^j$"
-                }
-            }
+                    v: "^j$",
+                },
+            },
         ],
         formats: [
             {
-                format: "jumpto"
-            }
+                format: "jumpto",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "world"
-        ],
+        category: ["world"],
         commandSettingsId: "built-inCommandSettings:jumpto",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "kick",
         escregexp: {
-            v: "^kick$"
+            v: "^kick$",
         },
         formats: [
             {
-                format: "kick <players: targetSelector> [reason: string]"
-            }
+                format: "kick <players: targetSelector> [reason: string]",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "system",
-            "world",
-            "players",
-            "server"
-        ],
+        category: ["system", "world", "players", "server"],
         commandSettingsId: "built-inCommandSettings:kick",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "listbans",
         escregexp: {
-            v: "^listbans$"
+            v: "^listbans$",
         },
         aliases: [
             {
                 commandName: "getbans",
                 escregexp: {
-                    v: "^getbans$"
-                }
-            }
+                    v: "^getbans$",
+                },
+            },
         ],
         formats: [
             {
-                format: "listbans"
-            }
+                format: "listbans",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server"
-        ],
+        category: ["system", "world", "server"],
         commandSettingsId: "built-inCommandSettings:listbans",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "listidbans",
         escregexp: {
-            v: "^listidbans$"
+            v: "^listidbans$",
         },
         aliases: [
             {
                 commandName: "getidbans",
                 escregexp: {
-                    v: "^getidbans$"
-                }
-            }
+                    v: "^getidbans$",
+                },
+            },
         ],
         formats: [
             {
-                format: "listidbans"
-            }
+                format: "listidbans",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server"
-        ],
+        category: ["system", "world", "server"],
         commandSettingsId: "built-inCommandSettings:listidbans",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "listnamebans",
         escregexp: {
-            v: "^listnamebans$"
+            v: "^listnamebans$",
         },
         aliases: [
             {
                 commandName: "getnamebans",
                 escregexp: {
-                    v: "^getnamebans$"
-                }
-            }
+                    v: "^getnamebans$",
+                },
+            },
         ],
         formats: [
             {
-                format: "listnamebans"
-            }
+                format: "listnamebans",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server"
-        ],
+        category: ["system", "world", "server"],
         commandSettingsId: "built-inCommandSettings:listnamebans",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "liststructures",
         escregexp: {
-            v: "^liststructures$"
+            v: "^liststructures$",
         },
         aliases: [
             {
                 commandName: "getstructures",
                 escregexp: {
-                    v: "^getstructures$"
-                }
-            }
+                    v: "^getstructures$",
+                },
+            },
         ],
         formats: [
             {
-                format: "liststructures"
-            }
+                format: "liststructures",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server",
-            "blocks"
-        ],
+        category: ["system", "world", "server", "blocks"],
         commandSettingsId: "built-inCommandSettings:liststructures",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "mainmenu",
         escregexp: {
-            v: "^mainmenu$"
+            v: "^mainmenu$",
         },
         aliases: [
             {
                 commandName: "menu",
                 escregexp: {
-                    v: "^menu$"
-                }
+                    v: "^menu$",
+                },
             },
             {
                 commandName: "mm",
                 escregexp: {
-                    v: "^mm$"
-                }
-            }
+                    v: "^mm$",
+                },
+            },
         ],
         formats: [
             {
-                format: "mainmenu"
-            }
+                format: "mainmenu",
+            },
         ],
         command_version: "2.0.0",
         description: "",
-        category: [
-            "uis"
-        ],
+        category: ["uis"],
         commandSettingsId: "built-inCommandSettings:mainmenu",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "moderator",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "managecommands",
         escregexp: {
-            v: "^managecommands$"
+            v: "^managecommands$",
         },
         aliases: [
             {
                 commandName: "mngcmds",
                 escregexp: {
-                    v: "^mngcmds$"
-                }
-            }
+                    v: "^mngcmds$",
+                },
+            },
         ],
         formats: [
             {
-                format: "managecommands"
-            }
+                format: "managecommands",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "uis"
-        ],
+        category: ["uis"],
         commandSettingsId: "built-inCommandSettings:managecommands",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "manageplayers",
         escregexp: {
-            v: "^manageplayers$"
+            v: "^manageplayers$",
         },
         aliases: [
             {
                 commandName: "mngplyrs",
                 escregexp: {
-                    v: "^mngplyrs$"
-                }
-            }
+                    v: "^mngplyrs$",
+                },
+            },
         ],
         formats: [
             {
-                format: "manageplayers"
-            }
+                format: "manageplayers",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "uis"
-        ],
+        category: ["uis"],
         commandSettingsId: "built-inCommandSettings:manageplayers",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "managescriptautoeval",
         escregexp: {
-            v: "^managescriptautoeval$"
+            v: "^managescriptautoeval$",
         },
         formats: [
             {
-                format: "managescriptautoeval"
-            }
+                format: "managescriptautoeval",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "uis"
-        ],
+        category: ["uis"],
         commandSettingsId: "built-inCommandSettings:managescriptautoeval",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "maxhealth",
         escregexp: {
-            v: "^maxhealth$"
+            v: "^maxhealth$",
         },
         formats: [
             {
-                format: "maxhealth"
-            }
+                format: "maxhealth",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "players",
-            "entities"
-        ],
+        category: ["players", "entities"],
         commandSettingsId: "built-inCommandSettings:maxhealth",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "messageui",
         escregexp: {
-            v: "^messageui$"
+            v: "^messageui$",
         },
         aliases: [
             {
                 commandName: "msgui",
                 escregexp: {
-                    v: "^msgui$"
-                }
-            }
+                    v: "^msgui$",
+                },
+            },
         ],
         formats: [
             {
-                format: "messageui"
-            }
+                format: "messageui",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "uis"
-        ],
+        category: ["uis"],
         commandSettingsId: "built-inCommandSettings:messageui",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "minhealth",
         escregexp: {
-            v: "^minhealth$"
+            v: "^minhealth$",
         },
         formats: [
             {
-                format: "minhealth"
-            }
+                format: "minhealth",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "players",
-            "entities"
-        ],
+        category: ["players", "entities"],
         commandSettingsId: "built-inCommandSettings:minhealth",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§6",
         commandName: "morph",
         escregexp: {
-            v: "^morph$"
+            v: "^morph$",
         },
         formats: [
             {
-                format: ""
-            }
+                format: "",
+            },
         ],
         command_version: "1.0.1",
         description: "",
-        category: [
-            "Entity Scale Add-On"
-        ],
+        category: ["Entity Scale Add-On"],
         commandSettingsId: "built-inCommandSettings:morph",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "notificationsettings",
         escregexp: {
-            v: "^notificationsettings$"
+            v: "^notificationsettings$",
         },
         aliases: [
             {
                 commandName: "notificationssettings",
                 escregexp: {
-                    v: "^notificationssettings$"
-                }
-            }
+                    v: "^notificationssettings$",
+                },
+            },
         ],
         formats: [
             {
-                format: "notificationsettings"
-            }
+                format: "notificationsettings",
+            },
         ],
         command_version: "2.0.0",
         description: "",
-        category: [
-            "uis"
-        ],
+        category: ["uis"],
         commandSettingsId: "built-inCommandSettings:notificationsettings",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "offlineinfo",
         escregexp: {
-            v: "^offlineinfo$"
+            v: "^offlineinfo$",
         },
         formats: [
             {
-                format: "offlineinfo <player: playerName>"
-            }
+                format: "offlineinfo <player: playerName>",
+            },
         ],
         command_version: "1.1.0",
         description: "",
-        category: [
-            "players"
-        ],
+        category: ["players"],
         commandSettingsId: "built-inCommandSettings:offlineinfo",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§c",
         commandName: "offlineinfoescaped",
         escregexp: {
-            v: "^offlineinfoescaped$"
+            v: "^offlineinfoescaped$",
         },
         formats: [
             {
-                format: ""
-            }
+                format: "",
+            },
         ],
         command_version: "0.1.0-alpha.12",
         description: "",
-        category: [
-            "players"
-        ],
+        category: ["players"],
         commandSettingsId: "built-inCommandSettings:offlineinfoescaped",
         deprecated: false,
         functional: true,
         hidden: false,
         enabled: true,
-        notes: "§r§cThis command is very laggy."
+        notes: "§r§cThis command is very laggy.",
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§c",
         commandName: "offlineinforaw",
         escregexp: {
-            v: "^offlineinforaw$"
+            v: "^offlineinforaw$",
         },
         formats: [
             {
-                format: ""
-            }
+                format: "",
+            },
         ],
         command_version: "1.0.0-rc.1",
         description: "",
-        category: [
-            "players"
-        ],
+        category: ["players"],
         commandSettingsId: "built-inCommandSettings:offlineinforaw",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§c",
         commandName: "offlineinfourl",
         escregexp: {
-            v: "^offlineinfourl$"
+            v: "^offlineinfourl$",
         },
         formats: [
             {
-                format: ""
-            }
+                format: "",
+            },
         ],
         command_version: "1.0.0-rc.1",
         description: "",
-        category: [
-            "players"
-        ],
+        category: ["players"],
         commandSettingsId: "built-inCommandSettings:offlineinfourl",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "offlineinvsee",
         escregexp: {
-            v: "^offlineinvsee$"
+            v: "^offlineinvsee$",
         },
         formats: [
             {
-                format: "offlineinvsee <player: playerName>"
-            }
+                format: "offlineinvsee <player: playerName>",
+            },
         ],
         command_version: "1.2.0",
         description: "",
-        category: [
-            "players",
-            "invsee"
-        ],
+        category: ["players", "invsee"],
         commandSettingsId: "built-inCommandSettings:offlineinvsee",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "offlineuuidinfo",
         escregexp: {
-            v: "^offlineuuidinfo$"
+            v: "^offlineuuidinfo$",
         },
         formats: [
             {
-                format: "offlineuuidinfo <playerUUID: UUID>"
-            }
+                format: "offlineuuidinfo <playerUUID: UUID>",
+            },
         ],
         command_version: "1.1.0",
         description: "",
-        category: [
-            "players"
-        ],
+        category: ["players"],
         commandSettingsId: "built-inCommandSettings:offlineuuidinfo",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§c",
         commandName: "offlineuuidinfoescaped",
         escregexp: {
-            v: "^offlineuuidinfoescaped$"
+            v: "^offlineuuidinfoescaped$",
         },
         formats: [
             {
-                format: ""
-            }
+                format: "",
+            },
         ],
         command_version: "0.1.0-alpha.3",
         description: "",
-        category: [
-            "players"
-        ],
+        category: ["players"],
         commandSettingsId: "built-inCommandSettings:offlineuuidinfoescaped",
         deprecated: false,
         functional: true,
         hidden: false,
         enabled: true,
-        notes: "§r§cThis command is very laggy."
+        notes: "§r§cThis command is very laggy.",
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§c",
         commandName: "offlineuuidinforaw",
         escregexp: {
-            v: "^offlineuuidinforaw$"
+            v: "^offlineuuidinforaw$",
         },
         formats: [
             {
-                format: ""
-            }
+                format: "",
+            },
         ],
         command_version: "1.0.0-rc.1",
         description: "",
-        category: [
-            "players"
-        ],
+        category: ["players"],
         commandSettingsId: "built-inCommandSettings:offlineuuidinforaw",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§c",
         commandName: "offlineuuidinfourl",
         escregexp: {
-            v: "^offlineuuidinfourl$"
+            v: "^offlineuuidinfourl$",
         },
         formats: [
             {
-                format: ""
-            }
+                format: "",
+            },
         ],
         command_version: "1.0.0-rc.1",
         description: "",
-        category: [
-            "players"
-        ],
+        category: ["players"],
         commandSettingsId: "built-inCommandSettings:offlineuuidinfourl",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "offlineuuidinvsee",
         escregexp: {
-            v: "^offlineuuidinvsee$"
+            v: "^offlineuuidinvsee$",
         },
         formats: [
             {
-                format: "offlineuuidinvsee <playerUUID: UUID>"
-            }
+                format: "offlineuuidinvsee <playerUUID: UUID>",
+            },
         ],
         command_version: "1.2.0",
         description: "",
-        category: [
-            "players",
-            "invsee"
-        ],
+        category: ["players", "invsee"],
         commandSettingsId: "built-inCommandSettings:offlineuuidinvsee",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "phase",
         escregexp: {
-            v: "^phase$"
+            v: "^phase$",
         },
         formats: [
             {
-                format: "phase"
-            }
+                format: "phase",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "world"
-        ],
+        category: ["world"],
         commandSettingsId: "built-inCommandSettings:phase",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "playershopsystemsettings",
         escregexp: {
-            v: "^playershopsystemsettings$"
+            v: "^playershopsystemsettings$",
         },
         aliases: [
             {
                 commandName: "playershopsyssettings",
                 escregexp: {
-                    v: "^playershopsyssettings$"
-                }
+                    v: "^playershopsyssettings$",
+                },
             },
             {
                 commandName: "plyrshopsyssettings",
                 escregexp: {
-                    v: "^plyrshopsyssettings$"
-                }
-            }
+                    v: "^plyrshopsyssettings$",
+                },
+            },
         ],
         formats: [
             {
-                format: "playershopsystemsettings"
-            }
+                format: "playershopsystemsettings",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "uis"
-        ],
+        category: ["uis"],
         commandSettingsId: "built-inCommandSettings:playershopsystemsettings",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "printlayers",
         escregexp: {
-            v: "^printlayers$"
+            v: "^printlayers$",
         },
         formats: [
             {
-                format: "printlayers"
-            }
+                format: "printlayers",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "world"
-        ],
+        category: ["world"],
         commandSettingsId: "built-inCommandSettings:printlayers",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "pthru",
         escregexp: {
-            v: "^pthru$"
+            v: "^pthru$",
         },
         formats: [
             {
-                format: "pthru"
-            }
+                format: "pthru",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "world"
-        ],
+        category: ["world"],
         commandSettingsId: "built-inCommandSettings:pthru",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "rank",
         escregexp: {
-            v: "^rank$"
+            v: "^rank$",
         },
         formats: [
             {
-                format: "rank <players: targetSelector> <mode: add|remove> <tag: string>"
+                format: "rank <players: targetSelector> <mode: add|remove> <tag: string>",
             },
             {
-                format: "rank <players: targetSelector> clear"
-            }
+                format: "rank <players: targetSelector> clear",
+            },
         ],
         command_version: "1.0.0",
         description: "Adds, removes, or clears ranks from a player. ",
-        category: [
-            "players"
-        ],
+        category: ["players"],
         commandSettingsId: "built-inCommandSettings:rank",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "remexp",
         escregexp: {
-            v: "^remexp$"
+            v: "^remexp$",
         },
         formats: [
             {
-                format: "remexp [radius: number]"
-            }
+                format: "remexp [radius: number]",
+            },
         ],
         command_version: "2.3.0",
         description: "Removes explosive blocks and entities in the specified radius, the radius defaults to 10 if not specified. ",
-        category: [
-            "world"
-        ],
+        category: ["world"],
         commandSettingsId: "built-inCommandSettings:remexp",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "moderator",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
-        commandName: "remexpne",
+        commandName: "remexpentity",
         escregexp: {
-            v: "^remexpne$"
+            v: "^remexpentity$",
         },
         formats: [
             {
-                format: "remexpne [radius: number]"
-            }
+                format: "remexpentity [radius: number]",
+            },
+        ],
+        command_version: "2.3.0",
+        description: "Removes explosive entities in the specified radius, the radius defaults to 10 if not specified.",
+        category: ["world"],
+        commandSettingsId: "built-inCommandSettings:remexpentity",
+        deprecated: false,
+        functional: true,
+        hidden: false,
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "moderator",
+    },
+    {
+        type: "built-in",
+        requiredTags: ["canUseChatCommands"],
+        formatting_code: "§r§f",
+        commandName: "remexpne",
+        escregexp: {
+            v: "^remexpne$",
+        },
+        formats: [
+            {
+                format: "remexpne [radius: number]",
+            },
         ],
         command_version: "2.3.0",
         description: "Removes explosive blocks in the specified radius, the radius defaults to 10 if not specified. ",
-        category: [
-            "world"
-        ],
+        category: ["world"],
         commandSettingsId: "built-inCommandSettings:remexpne",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "moderator",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "remove",
         escregexp: {
-            v: "^remove$"
+            v: "^remove$",
         },
         aliases: [
             {
                 commandName: "rem",
                 escregexp: {
-                    v: "^rem$"
-                }
+                    v: "^rem$",
+                },
             },
             {
                 commandName: "rement",
                 escregexp: {
-                    v: "^rement$"
-                }
-            }
+                    v: "^rement$",
+                },
+            },
         ],
         formats: [
             {
-                format: "remove"
-            }
+                format: "remove",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "world",
-            "worldedit"
-        ],
+        category: ["world", "worldedit"],
         commandSettingsId: "built-inCommandSettings:remove",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "removeotheritemenchantments",
         escregexp: {
-            v: "^removeotheritemenchantments$"
+            v: "^removeotheritemenchantments$",
         },
         aliases: [
             {
                 commandName: "remotheritemenchants",
                 escregexp: {
-                    v: "^remotheritemenchants$"
-                }
+                    v: "^remotheritemenchants$",
+                },
             },
             {
                 commandName: "roie",
                 escregexp: {
-                    v: "^roie$"
-                }
-            }
+                    v: "^roie$",
+                },
+            },
         ],
         formats: [
             {
-                format: "removeotheritemenchantments"
-            }
+                format: "removeotheritemenchantments",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "server",
-            "items"
-        ],
+        category: ["server", "items"],
         commandSettingsId: "built-inCommandSettings:removeotheritemenchantments",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "replacenear",
         escregexp: {
-            v: "^replacenear$"
+            v: "^replacenear$",
         },
         formats: [
             {
-                format: "replacenear"
-            }
+                format: "replacenear",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "world",
-            "worldedit"
-        ],
+        category: ["world", "worldedit"],
         commandSettingsId: "built-inCommandSettings:replacenear",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "run",
         escregexp: {
-            v: "^run$"
+            v: "^run$",
         },
         formats: [
             {
-                format: "run <tickDelay: int>=1> <command: command>"
-            }
+                format: "run <tickDelay: int>=1> <command: command>",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "misc"
-        ],
+        category: ["misc"],
         commandSettingsId: "built-inCommandSettings:run",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§6",
         commandName: "scale",
         escregexp: {
-            v: "^scale$"
+            v: "^scale$",
         },
         formats: [
             {
-                format: ""
-            }
+                format: "",
+            },
         ],
         command_version: "1.0.1",
         description: "",
-        category: [
-            "Entity Scale Add-On"
-        ],
+        category: ["Entity Scale Add-On"],
         commandSettingsId: "built-inCommandSettings:scale",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§e",
         commandName: "scanenderchest",
         escregexp: {
-            v: "^scanenderchest$"
+            v: "^scanenderchest$",
         },
         aliases: [
             {
                 commandName: "ecinvsee",
                 escregexp: {
-                    v: "^ecinvsee$"
-                }
+                    v: "^ecinvsee$",
+                },
             },
             {
                 commandName: "scnendchest",
                 escregexp: {
-                    v: "^scnendchest$"
-                }
-            }
+                    v: "^scnendchest$",
+                },
+            },
         ],
         formats: [
             {
-                format: "scanenderchest [targets: targetSelector|~]"
-            }
+                format: "scanenderchest [targets: targetSelector|~]",
+            },
         ],
         command_version: "1.3.0",
         description: "",
-        category: [
-            "players",
-            "containers/inventories",
-            "invsee"
-        ],
+        category: ["players", "containers/inventories", "invsee"],
         commandSettingsId: "built-inCommandSettings:scanenderchest",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§e",
         commandName: "scanenderchestc",
         escregexp: {
-            v: "^scanenderchestc$"
+            v: "^scanenderchestc$",
         },
         aliases: [
             {
                 commandName: "ecinvseec",
                 escregexp: {
-                    v: "^ecinvseec$"
-                }
+                    v: "^ecinvseec$",
+                },
             },
             {
                 commandName: "scnendchestc",
                 escregexp: {
-                    v: "^scnendchestc$"
-                }
-            }
+                    v: "^scnendchestc$",
+                },
+            },
         ],
         formats: [
             {
-                format: "scanenderchestc [target: string|~]"
-            }
+                format: "scanenderchestc [target: string|~]",
+            },
         ],
         command_version: "1.4.0",
         description: "",
-        category: [
-            "players",
-            "containers/inventories",
-            "invsee"
-        ],
+        category: ["players", "containers/inventories", "invsee"],
         commandSettingsId: "built-inCommandSettings:scanenderchestc",
         deprecated: true,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "selectioninfo",
         escregexp: {
-            v: "^selectioninfo$"
+            v: "^selectioninfo$",
         },
         aliases: [
             {
                 commandName: "selinfo",
                 escregexp: {
-                    v: "^selinfo$"
-                }
+                    v: "^selinfo$",
+                },
             },
             {
                 commandName: "seli",
                 escregexp: {
-                    v: "^seli$"
-                }
-            }
+                    v: "^seli$",
+                },
+            },
         ],
         formats: [
             {
-                format: "selectioninfo"
-            }
+                format: "selectioninfo",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "world",
-            "worldedit"
-        ],
+        category: ["world", "worldedit"],
         commandSettingsId: "built-inCommandSettings:selectioninfo",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "servershopsystemsettings",
         escregexp: {
-            v: "^servershopsystemsettings$"
+            v: "^servershopsystemsettings$",
         },
         aliases: [
             {
                 commandName: "servershopsyssettings",
                 escregexp: {
-                    v: "^servershopsyssettings$"
-                }
+                    v: "^servershopsyssettings$",
+                },
             },
             {
                 commandName: "srvrshopsyssettings",
                 escregexp: {
-                    v: "^srvrshopsyssettings$"
-                }
-            }
+                    v: "^srvrshopsyssettings$",
+                },
+            },
         ],
         formats: [
             {
-                format: "servershopsystemsettings"
-            }
+                format: "servershopsystemsettings",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "uis"
-        ],
+        category: ["uis"],
         commandSettingsId: "built-inCommandSettings:servershopsystemsettings",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "setitem",
         escregexp: {
-            v: "^setitem$"
+            v: "^setitem$",
         },
         formats: [
             {
-                format: "setitem <item: itemType> <amount: int> <slot: int>"
-            }
+                format: "setitem <item: itemType> <amount: int> <slot: int>",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "misc"
-        ],
+        category: ["misc"],
         commandSettingsId: "built-inCommandSettings:setitem",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "setitemb",
         escregexp: {
-            v: "^setitemb$"
+            v: "^setitemb$",
         },
         formats: [
             {
-                format: "setitemb <itemJSON: itemJSON> [slot: int] [playerTargets: targetSelector]"
-            }
+                format: "setitemb <itemJSON: itemJSON> [slot: int] [playerTargets: targetSelector]",
+            },
         ],
         command_version: "2.0.0",
         description: "",
-        category: [
-            "misc"
-        ],
+        category: ["misc"],
         commandSettingsId: "built-inCommandSettings:setitemb",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "setnametag",
         escregexp: {
-            v: "^setnametag$"
+            v: "^setnametag$",
         },
         aliases: [
             {
                 commandName: "setplayernametag",
                 escregexp: {
-                    v: "^setplayernametag$"
-                }
+                    v: "^setplayernametag$",
+                },
             },
             {
                 commandName: "setentitynametag",
                 escregexp: {
-                    v: "^setentitynametag$"
-                }
-            }
+                    v: "^setentitynametag$",
+                },
+            },
         ],
         formats: [],
         command_version: "1.1.0",
         description: "",
-        category: [
-            "misc"
-        ],
+        category: ["misc"],
         commandSettingsId: "built-inCommandSettings:setnametag",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "settings",
         escregexp: {
-            v: "^settings$"
+            v: "^settings$",
         },
         formats: [
             {
-                format: "settings"
-            }
+                format: "settings",
+            },
         ],
         command_version: "2.0.0",
         description: "",
-        category: [
-            "uis"
-        ],
+        category: ["uis"],
         commandSettingsId: "built-inCommandSettings:settings",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "shopsystemsettings",
         escregexp: {
-            v: "^shopsystemsettings$"
+            v: "^shopsystemsettings$",
         },
         aliases: [
             {
                 commandName: "shopsyssettings",
                 escregexp: {
-                    v: "^shopsyssettings$"
-                }
-            }
+                    v: "^shopsyssettings$",
+                },
+            },
         ],
         formats: [
             {
-                format: "shopsystemsettings"
-            }
+                format: "shopsystemsettings",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "uis"
-        ],
+        category: ["uis"],
         commandSettingsId: "built-inCommandSettings:shopsystemsettings",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§e",
         commandName: "shuffleinventory",
         escregexp: {
-            v: "^shuffleinventory$"
+            v: "^shuffleinventory$",
         },
         aliases: [
             {
                 commandName: "invshuffle",
                 escregexp: {
-                    v: "^invshuffle$"
-                }
-            }
+                    v: "^invshuffle$",
+                },
+            },
         ],
         formats: [
             {
-                format: "shuffleinventory [player: string|~]"
-            }
+                format: "shuffleinventory [player: string|~]",
+            },
         ],
         command_version: "0.2.2-beta.2",
         description: "",
-        category: [
-            "players"
-        ],
+        category: ["players"],
         commandSettingsId: "built-inCommandSettings:shuffleinventory",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "snapshot",
         escregexp: {
-            v: "^snapshot$"
+            v: "^snapshot$",
         },
         formats: [
             {
-                format: "snapshot"
-            }
+                format: "snapshot",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server",
-            "worldedit"
-        ],
+        category: ["system", "world", "server", "worldedit"],
         commandSettingsId: "built-inCommandSettings:snapshot",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "spawn",
         escregexp: {
-            v: "^spawn$"
+            v: "^spawn$",
         },
         formats: [
             {
-                format: "spawn"
-            }
+                format: "spawn",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "world",
-            "players",
-            "warps",
-            "misc"
-        ],
+        category: ["world", "players", "warps", "misc"],
         commandSettingsId: "built-inCommandSettings:spawn",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§c",
         commandName: "spawnitem",
         escregexp: {
-            v: "^spawnitem$"
+            v: "^spawnitem$",
         },
         formats: [
             {
-                format: "spawnitem"
-            }
+                format: "spawnitem",
+            },
         ],
         command_version: "0.0.0",
         description: "",
-        category: [
-            "entities",
-            "items"
-        ],
+        category: ["entities", "items"],
         commandSettingsId: "built-inCommandSettings:spawnitem",
         deprecated: false,
         functional: false,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "stopalldbintervals",
         escregexp: {
-            v: "^stopalldbintervals$"
+            v: "^stopalldbintervals$",
         },
         formats: [
             {
-                format: "stopalldbintervals"
-            }
+                format: "stopalldbintervals",
+            },
         ],
         command_version: "1.0.0",
         description: "Stops all known intervals from system.runInterval() for this add-on.",
-        category: [
-            "system"
-        ],
+        category: ["system"],
         commandSettingsId: "built-inCommandSettings:stopalldbintervals",
         deprecated: true,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "stopallsaintervals",
         escregexp: {
-            v: "^stopallsaintervals$"
+            v: "^stopallsaintervals$",
         },
         formats: [
             {
-                format: "stopallsaintervals"
-            }
+                format: "stopallsaintervals",
+            },
         ],
         command_version: "1.0.0",
         description: "Stops all known intervals from system.runInterval() for the entity scale add-on if it is active and is on version 1.14.0 or newer.",
-        category: [
-            "system",
-            "Entity Scale Add-On"
-        ],
+        category: ["system", "Entity Scale Add-On"],
         commandSettingsId: "built-inCommandSettings:stopallsaintervals",
         deprecated: true,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "stopgen",
         escregexp: {
-            v: "^stopgen$"
+            v: "^stopgen$",
         },
         formats: [
             {
-                format: "stopgen <generatorId: int>"
-            }
+                format: "stopgen <generatorId: int>",
+            },
         ],
         command_version: "1.0.0",
         description: "Stops generator functions such as the \\igfill and \\iogfill commands. ",
-        category: [
-            "misc"
-        ],
+        category: ["misc"],
         commandSettingsId: "built-inCommandSettings:stopgen",
         deprecated: true,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "structure",
         escregexp: {
-            v: "^structure$"
+            v: "^structure$",
         },
         formats: [
             {
-                format: "structure"
-            }
+                format: "structure",
+            },
         ],
         command_version: "2.3.17",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server",
-            "blocks"
-        ],
+        category: ["system", "world", "server", "blocks"],
         commandSettingsId: "built-inCommandSettings:structure",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "summon",
         escregexp: {
-            v: "^summon$"
+            v: "^summon$",
         },
         formats: [
             {
-                format: "summon"
-            }
+                format: "summon",
+            },
         ],
         command_version: "1.3.4",
         description: "",
-        category: [
-            "entities"
-        ],
+        category: ["entities"],
         commandSettingsId: "built-inCommandSettings:summon",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§e",
         commandName: "swapinventories",
         escregexp: {
-            v: "^swapinventories$"
+            v: "^swapinventories$",
         },
         aliases: [
             {
                 commandName: "invswap",
                 escregexp: {
-                    v: "^invswap$"
-                }
-            }
+                    v: "^invswap$",
+                },
+            },
         ],
         formats: [
             {
-                format: "swapinventories <player1: string|~> <player2: string|~>"
-            }
+                format: "swapinventories <player1: string|~> <player2: string|~>",
+            },
         ],
         command_version: "0.2.1-beta.1",
         description: "Swaps the inventory, offhand, hotbar, and armor of two specified players. ",
-        category: [
-            "players",
-            "containers/inventories"
-        ],
+        category: ["players", "containers/inventories"],
         commandSettingsId: "built-inCommandSettings:swapinventories",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§n",
         commandName: "swapinventoriesb",
         escregexp: {
-            v: "^swapinventoriesb$"
+            v: "^swapinventoriesb$",
         },
         aliases: [
             {
                 commandName: "invswapb",
                 escregexp: {
-                    v: "^invswapb$"
-                }
-            }
+                    v: "^invswapb$",
+                },
+            },
         ],
         formats: [
             {
-                format: "swapinventoriesb <player1: string|~> <player2: string|~>"
-            }
+                format: "swapinventoriesb <player1: string|~> <player2: string|~>",
+            },
         ],
         command_version: "1.4.1",
         description: "Swaps the inventory and hotbar of two specified players. ",
-        category: [
-            "players",
-            "containers/inventories"
-        ],
+        category: ["players", "containers/inventories"],
         commandSettingsId: "built-inCommandSettings:swapinventoriesb",
         deprecated: true,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§e",
         commandName: "swapitems",
         escregexp: {
-            v: "^swapitems$"
+            v: "^swapitems$",
         },
         formats: [
             {
-                format: "swapitems <slot: number|~> <otherSlot: number|~> <otherPlayer: playerName>"
-            }
+                format: "swapitems <slot: number|~> <otherSlot: number|~> <otherPlayer: playerName>",
+            },
         ],
         command_version: "0.1.1-beta.1",
         description: "",
-        category: [
-            "items",
-            "containers/inventories"
-        ],
+        category: ["items", "containers/inventories"],
         commandSettingsId: "built-inCommandSettings:swapitems",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "swaprows",
         escregexp: {
-            v: "^swaprows$"
+            v: "^swaprows$",
         },
         aliases: [
             {
                 commandName: "rowswap",
                 escregexp: {
-                    v: "^rowswap$"
-                }
+                    v: "^rowswap$",
+                },
             },
             {
                 commandName: "rs",
                 escregexp: {
-                    v: "^rs$"
-                }
-            }
+                    v: "^rs$",
+                },
+            },
         ],
         formats: [
             {
-                format: "swaprows <row1: float|{equipment}> [row2: (float|{equipment})[?=0]] [player1: (string|~)[?=~]] [player2: (string|~)[?=~]]"
-            }
+                format: "swaprows <row1: float|{equipment}> [row2: (float|{equipment})[?=0]] [player1: (string|~)[?=~]] [player2: (string|~)[?=~]]",
+            },
         ],
         command_version: "1.0.0",
         description: "Swaps two inventory rows, if the row number is not a whole number then it will offset the row selection by that much.",
-        category: [
-            "players",
-            "containers/inventories"
-        ],
+        category: ["players", "containers/inventories"],
         commandSettingsId: "built-inCommandSettings:swaprows",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§e",
         commandName: "takeitem",
         escregexp: {
-            v: "^takeitem$"
+            v: "^takeitem$",
         },
         formats: [
             {
-                format: "takeitem <fromSlot: number|~> <fromPlayer: playerName>"
-            }
+                format: "takeitem <fromSlot: number|~> <fromPlayer: playerName>",
+            },
         ],
         command_version: "0.1.1-beta.1",
         description: "",
-        category: [
-            "items"
-        ],
+        category: ["items"],
         commandSettingsId: "built-inCommandSettings:takeitem",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "terminal",
         escregexp: {
-            v: "^terminal$"
+            v: "^terminal$",
         },
         aliases: [
             {
                 commandName: "cmdrunner",
                 escregexp: {
-                    v: "^cmdrunner$"
-                }
-            }
+                    v: "^cmdrunner$",
+                },
+            },
         ],
         formats: [
             {
-                format: "terminal"
-            }
+                format: "terminal",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "uis"
-        ],
+        category: ["uis"],
         commandSettingsId: "built-inCommandSettings:terminal",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "thru",
         escregexp: {
-            v: "^thru$"
+            v: "^thru$",
         },
         formats: [
             {
-                format: "thru"
-            }
+                format: "thru",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "world"
-        ],
+        category: ["world"],
         commandSettingsId: "built-inCommandSettings:thru",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
         requiredTags: [],
+        ultraSecurityModeSecurityLevel: "everyone",
         formatting_code: "§r§f",
         commandName: "timezone",
         escregexp: {
-            v: "^timezone$"
+            v: "^timezone$",
         },
         aliases: [
             {
                 commandName: "tz",
                 escregexp: {
-                    v: "^tz$"
-                }
-            }
+                    v: "^tz$",
+                },
+            },
         ],
         formats: [
             {
-                format: "timezone [UTCOffsetInHours: float]"
-            }
+                format: "timezone [UTCOffsetInHours: float]",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server"
-        ],
+        category: ["system", "world", "server"],
         commandSettingsId: "built-inCommandSettings:timezone",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§6",
         commandName: "tint",
         escregexp: {
-            v: "^tint$"
+            v: "^tint$",
         },
         formats: [
             {
-                format: "tint [red: float|~] [green: float|~] [blue: float|~] [alpha: float|~] [materialType: 0|1] [playerTarget: targetSelector]"
-            }
+                format: "tint [red: float|~] [green: float|~] [blue: float|~] [alpha: float|~] [materialType: 0|1] [playerTarget: targetSelector]",
+            },
         ],
         command_version: "1.0.4",
         description: "",
-        category: [
-            "Entity Scale Add-On"
-        ],
+        category: ["Entity Scale Add-On"],
         commandSettingsId: "built-inCommandSettings:tint",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "top",
         escregexp: {
-            v: "^top$"
+            v: "^top$",
         },
         formats: [
             {
-                format: "top [-lp]"
-            }
+                format: "top [-lp]",
+            },
         ],
         command_version: "2.0.0",
         description: "",
-        category: [
-            "world",
-            "players",
-            "warps"
-        ],
+        category: ["world", "players", "warps"],
         commandSettingsId: "built-inCommandSettings:top",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
         requiredTags: [],
+        ultraSecurityModeSecurityLevel: "everyone",
         formatting_code: "§r§f",
         commandName: "tpa",
         escregexp: {
-            v: "^tpa$"
+            v: "^tpa$",
         },
         formats: [
             {
-                format: "tpa <player: targetSelector|playerName>"
-            }
+                format: "tpa <player: targetSelector|playerName>",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "players",
-            "warps"
-        ],
+        category: ["players", "warps"],
         commandSettingsId: "built-inCommandSettings:tpa",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
     },
     {
         type: "built-in",
         requiredTags: [],
+        ultraSecurityModeSecurityLevel: "everyone",
         formatting_code: "§r§c",
         commandName: "tpaccept",
         escregexp: {
-            v: "^tpaccept$"
+            v: "^tpaccept$",
         },
         formats: [
             {
-                format: "tpaccept [player: targetSelector|playerName]"
+                format: "tpaccept [player: targetSelector|playerName]",
             },
             {
-                format: "tpaccept all"
-            }
+                format: "tpaccept all",
+            },
         ],
         command_version: "0.0.0",
         description: "",
-        category: [
-            "players",
-            "warps"
-        ],
+        category: ["players", "warps"],
         commandSettingsId: "built-inCommandSettings:tpaccept",
         deprecated: false,
         functional: false,
         hidden: false,
-        enabled: true
+        enabled: true,
     },
     {
         type: "built-in",
         requiredTags: [],
+        ultraSecurityModeSecurityLevel: "everyone",
         formatting_code: "§r§c",
         commandName: "tpdeny",
         escregexp: {
-            v: "^tpdeny$"
+            v: "^tpdeny$",
         },
         formats: [
             {
-                format: "tpdeny [player: targetSelector|playerName]"
+                format: "tpdeny [player: targetSelector|playerName]",
             },
             {
-                format: "tpdeny all"
-            }
+                format: "tpdeny all",
+            },
         ],
         command_version: "0.0.0",
         description: "",
-        category: [
-            "players",
-            "warps"
-        ],
+        category: ["players", "warps"],
         commandSettingsId: "built-inCommandSettings:tpdeny",
         deprecated: false,
         functional: false,
         hidden: false,
-        enabled: true
+        enabled: true,
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§6",
         commandName: "tps",
         escregexp: {
-            v: "^tps$"
+            v: "^tps$",
         },
         formats: [
             {
-                format: "tps"
-            }
+                format: "tps",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "Entity Scale Add-On",
-            "system",
-            "world"
-        ],
+        category: ["Entity Scale Add-On", "system", "world"],
         commandSettingsId: "built-inCommandSettings:tps",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§e",
         commandName: "transferitem",
         escregexp: {
-            v: "^transferitem$"
+            v: "^transferitem$",
         },
         formats: [
             {
-                format: "transferitem <toPlayer: playerName>"
-            }
+                format: "transferitem <toPlayer: playerName>",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "items"
-        ],
+        category: ["items"],
         commandSettingsId: "built-inCommandSettings:transferitem",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "transformresultatdvindex",
         escregexp: {
-            v: "^transformresultatdvindex$"
+            v: "^transformresultatdvindex$",
         },
         formats: [
             {
-                format: "transformresultatdvindex"
-            }
+                format: "transformresultatdvindex",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "server",
-            "items"
-        ],
+        category: ["server", "items"],
         commandSettingsId: "built-inCommandSettings:transformresultatdvindex",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "up",
         escregexp: {
-            v: "^up$"
+            v: "^up$",
         },
         formats: [
             {
-                format: "up [placeGlass: boolean]"
-            }
+                format: "up [placeGlass: boolean]",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "world"
-        ],
+        category: ["world"],
         commandSettingsId: "built-inCommandSettings:up",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "version",
         escregexp: {
-            v: "^version$"
+            v: "^version$",
         },
         aliases: [
             {
                 commandName: "ver",
                 escregexp: {
-                    v: "^ver$"
-                }
-            }
+                    v: "^ver$",
+                },
+            },
         ],
         formats: [
             {
-                format: "version"
-            }
+                format: "version",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "system",
-            "world",
-            "server"
-        ],
+        category: ["system", "world", "server"],
         commandSettingsId: "built-inCommandSettings:version",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§6",
         commandName: "visualscale",
         escregexp: {
-            v: "^visualscale$"
+            v: "^visualscale$",
         },
         formats: [
             {
-                format: "visualscale <visualscale: float>"
-            }
+                format: "visualscale <visualscale: float>",
+            },
         ],
         command_version: "1.0.0-beta.1",
         description: "Sets the visual scale of the player, the default is 0.9375. The visual scale scales the rendering of the player by a certain amount without changing the hitbox, this can be combined with the regular scale. ",
-        category: [
-            "Entity Scale Add-On"
-        ],
+        category: ["Entity Scale Add-On"],
         commandSettingsId: "built-inCommandSettings:visualscale",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§6",
         commandName: "visualscaleenabled",
         escregexp: {
-            v: "^visualscaleenabled$"
+            v: "^visualscaleenabled$",
         },
         formats: [
             {
-                format: ""
-            }
+                format: "",
+            },
         ],
         command_version: "1.0.0-beta.1",
         description: "",
-        category: [
-            "Entity Scale Add-On"
-        ],
+        category: ["Entity Scale Add-On"],
         commandSettingsId: "built-inCommandSettings:visualscaleenabled",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "vthru",
         escregexp: {
-            v: "^vthru$"
+            v: "^vthru$",
         },
         formats: [
             {
-                format: "vthru"
-            }
+                format: "vthru",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "world"
-        ],
+        category: ["world"],
         commandSettingsId: "built-inCommandSettings:vthru",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "w",
         escregexp: {
-            v: "^w$"
+            v: "^w$",
         },
         formats: [
             {
-                format: "w <wName: escapableString>"
-            }
+                format: "w <wName: escapableString>",
+            },
         ],
         command_version: "1.1.0",
         description: "",
-        category: [
-            "warps"
-        ],
+        category: ["warps"],
         commandSettingsId: "built-inCommandSettings:w",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "warp",
         escregexp: {
-            v: "^warp$"
+            v: "^warp$",
         },
         formats: [
             {
-                format: "warp <warpName: escapableString>"
-            }
+                format: "warp <warpName: escapableString>",
+            },
         ],
         command_version: "1.1.0",
         description: "",
-        category: [
-            "warps"
-        ],
+        category: ["warps"],
         commandSettingsId: "built-inCommandSettings:warp",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "warplist",
         escregexp: {
-            v: "^warplist$"
+            v: "^warplist$",
         },
         formats: [
             {
-                format: "warlist"
-            }
+                format: "warlist",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "warps"
-        ],
+        category: ["warps"],
         commandSettingsId: "built-inCommandSettings:warplist",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "warplistdetails",
         escregexp: {
-            v: "^warplistdetails$"
+            v: "^warplistdetails$",
         },
         formats: [
             {
-                format: "warplistdetails"
-            }
+                format: "warplistdetails",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "warps"
-        ],
+        category: ["warps"],
         commandSettingsId: "built-inCommandSettings:warplistdetails",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "warplistrawdata",
         escregexp: {
-            v: "^warplistrawdata$"
+            v: "^warplistrawdata$",
         },
         formats: [
             {
-                format: "warplistrawdata"
-            }
+                format: "warplistrawdata",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "warps"
-        ],
+        category: ["warps"],
         commandSettingsId: "built-inCommandSettings:warplistrawdata",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "warpremove",
         escregexp: {
-            v: "^warpremove$"
+            v: "^warpremove$",
         },
         formats: [
             {
-                format: "warpremove <warpName: escapableString>"
-            }
+                format: "warpremove <warpName: escapableString>",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "warps"
-        ],
+        category: ["warps"],
         commandSettingsId: "built-inCommandSettings:warpremove",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "warpreset",
         escregexp: {
-            v: "^warpreset$"
+            v: "^warpreset$",
         },
         formats: [
             {
-                format: "warpreset"
-            }
+                format: "warpreset",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "warps"
-        ],
+        category: ["warps"],
         commandSettingsId: "built-inCommandSettings:warpreset",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "warpset",
         escregexp: {
-            v: "^warpset$"
+            v: "^warpset$",
         },
         formats: [
             {
-                format: "warpset <dimension: dimension|~> <x: float|~> <y: float|~> <z: float|~> <name: escapableString>"
-            }
+                format: "warpset <dimension: dimension|~> <x: float|~> <y: float|~> <z: float|~> <name: escapableString>",
+            },
         ],
         command_version: "1.1.0",
         description: "",
-        category: [
-            "warps"
-        ],
+        category: ["warps"],
         commandSettingsId: "built-inCommandSettings:warpset",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "wlist",
         escregexp: {
-            v: "^wlist$"
+            v: "^wlist$",
         },
         formats: [
             {
-                format: "wlist"
-            }
+                format: "wlist",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "warps"
-        ],
+        category: ["warps"],
         commandSettingsId: "built-inCommandSettings:wlist",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "wlistdetails",
         escregexp: {
-            v: "^wlistdetails$"
+            v: "^wlistdetails$",
         },
         formats: [
             {
-                format: "wlistdetails"
-            }
+                format: "wlistdetails",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "warps"
-        ],
+        category: ["warps"],
         commandSettingsId: "built-inCommandSettings:wlistdetails",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "wlistrawdata",
         escregexp: {
-            v: "^wlistrawdata$"
+            v: "^wlistrawdata$",
         },
         formats: [
             {
-                format: "wlistrawdata"
-            }
+                format: "wlistrawdata",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "warps"
-        ],
+        category: ["warps"],
         commandSettingsId: "built-inCommandSettings:wlistrawdata",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "wremove",
         escregexp: {
-            v: "^wremove$"
+            v: "^wremove$",
         },
         formats: [
             {
-                format: "wremove <wName: escapableString>"
-            }
+                format: "wremove <wName: escapableString>",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "warps"
-        ],
+        category: ["warps"],
         commandSettingsId: "built-inCommandSettings:wremove",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "wreset",
         escregexp: {
-            v: "^wreset$"
+            v: "^wreset$",
         },
         formats: [
             {
-                format: "wreset"
-            }
+                format: "wreset",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "warps"
-        ],
+        category: ["warps"],
         commandSettingsId: "built-inCommandSettings:wreset",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
-        requiredTags: [
-            "canUseChatCommands"
-        ],
+        requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
         commandName: "wset",
         escregexp: {
-            v: "^wset$"
+            v: "^wset$",
         },
         formats: [
             {
-                format: "wset <dimension: dimension|~> <x: float|~> <y: float|~> <z: float|~> <name: escapableString>"
-            }
+                format: "wset <dimension: dimension|~> <x: float|~> <y: float|~> <z: float|~> <name: escapableString>",
+            },
         ],
         command_version: "1.1.0",
         description: "",
-        category: [
-            "warps"
-        ],
+        category: ["warps"],
         commandSettingsId: "built-inCommandSettings:wset",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "admin",
     },
     {
         type: "built-in",
         requiredTags: [],
+        ultraSecurityModeSecurityLevel: "everyone",
         formatting_code: "§r§f",
         commandName: "viewplayershops",
         escregexp: {
-            v: "^viewplayershops$"
+            v: "^viewplayershops$",
         },
         formats: [
             {
-                format: "viewplayershops"
-            }
+                format: "viewplayershops",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "shop_system"
-        ],
+        category: ["shop_system"],
         commandSettingsId: "built-inCommandSettings:viewplayershops",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
+        enabled: true,
     },
     {
         type: "built-in",
         requiredTags: [],
+        ultraSecurityModeSecurityLevel: "everyone",
         formatting_code: "§r§f",
         commandName: "viewservershops",
         escregexp: {
-            v: "^viewservershops$"
+            v: "^viewservershops$",
         },
         formats: [
             {
-                format: "viewservershops"
-            }
+                format: "viewservershops",
+            },
         ],
         command_version: "1.0.0",
         description: "",
-        category: [
-            "shop_system"
-        ],
+        category: ["shop_system"],
         commandSettingsId: "built-inCommandSettings:viewservershops",
         deprecated: false,
         functional: true,
         hidden: false,
-        enabled: true
-    }
+        enabled: true,
+    },
 ];
+export const commandCategoryList = Object.freeze([
+    "items",
+    "misc",
+    "invsee",
+    "players",
+    "containers/inventories",
+    "entities",
+    "warps",
+    "world",
+    "uis",
+    "shop_system",
+    "dangerous",
+    "Entity Scale Add-On",
+    "built-in",
+    "custom",
+    "all",
+]);
 //# sourceMappingURL=commands.js.map

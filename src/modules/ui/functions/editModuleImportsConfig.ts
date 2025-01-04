@@ -3,6 +3,7 @@ import {
     ActionFormData,
     ActionFormResponse,
     MessageFormData,
+    ModalFormData,
 } from "@minecraft/server-ui";
 import { forceShow } from "modules/ui/functions/forceShow";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
@@ -120,17 +121,27 @@ export async function editModuleImportsConfig_module(
         (typeof optionalModuleObjectImportFilePaths)[number],
         0 | 1
     ][];
-    const itemsB = [...new Set(items.map(item=>item[0].split("/")[4]))]
+    const itemsB = [...new Set(items.map((item) => item[0].split("/")[4]))];
     let form = new ActionFormData();
     form.title("Edit Module Imports Config: " + module);
     form.button(
         "Change Module Override\n" + moduleImportsConfig.moduleOverrides[module]
     );
-    itemsB.forEach((item)=>{
+    itemsB.forEach((item) => {
         form.button(
-            item + "\n" + (items.filter(i=>i[0].split("/")[4]==item).every(i=>i[1]==1) ? "§aAll Enabled" : "§cSome Disabled")
+            item +
+                "\n" +
+                (items
+                    .filter((i) => i[0].split("/")[4] == item)
+                    .every((i) => i[1] == 1)
+                    ? "§aAll Enabled"
+                    : items
+                          .filter((i) => i[0].split("/")[4] == item)
+                          .every((i) => i[1] == 0)
+                    ? "§cAll Disabled"
+                    : "§eSome Disabled")
         );
-    })
+    });
     form.button("Back");
     form.button("Close");
     return await forceShow(form, sourceEntity as Player)
@@ -178,7 +189,7 @@ export async function editModuleImportsConfig_module(
                     let result = await editModuleImportsConfig_module_folder(
                         sourceEntity,
                         module,
-                        itemsB[r.selection - 1][0]
+                        itemsB[r.selection - 1]
                     );
                     if (result == 1) {
                         return await editModuleImportsConfig_module(
@@ -222,20 +233,25 @@ export async function editModuleImportsConfig_module_folder(
         sourceEntitya instanceof executeCommandPlayerW
             ? sourceEntitya.player
             : sourceEntitya;
-    const items = Object.entries(moduleImportsConfig.toJSON_module(module)).filter(v=>v[0].split("/")[4]==folder) as [
+    const items = Object.entries(
+        moduleImportsConfig.toJSON_module(module)
+    ).filter((v) => v[0].split("/")[4] == folder) as [
         (typeof optionalModuleObjectImportFilePaths)[number],
         0 | 1
     ][];
     let form = new ActionFormData();
     form.title("Edit Module Imports Config: " + module);
+    form.body(`Path: ${module}/${folder}/`);
     form.button(
         "Change Module Override\n" + moduleImportsConfig.moduleOverrides[module]
     );
-    items.forEach((item)=>{
+    items.forEach((item) => {
         form.button(
-            item[0].split("/").slice(4).join("/").slice(-30) + "\n" + (item[1] == 1 ? "§aEnabled" : "§cDisabled")
+            item[0].split("/").slice(5).join("/").slice(-30) +
+                "\n" +
+                (item[1] == 1 ? "§aEnabled" : "§cDisabled")
         );
-    })
+    });
     form.button("Back");
     form.button("Close");
     return await forceShow(form, sourceEntity as Player)
@@ -330,12 +346,13 @@ export async function editModuleImportsConfig_module_item(
             : sourceEntitya;
     const configJSON = moduleImportsConfig.toJSON();
     let form = new ActionFormData();
-    form.title("Edit Module Imports Config: " + module + "." + item);
+    form.title("Edit Module Imports Config");
     form.body(`Module: ${module}
 Path: ${item}
 Status: ${configJSON[item] == 1 ? "Enabled" : "Disabled"}
 Deprecated: ${moduleImportsConfig.isFileDeprecated(item as any)}`);
     form.button(configJSON[item] == 1 ? "Disable" : "Enable");
+    form.button("View Data");
     form.button("Back");
     form.button("Close");
     return await forceShow(form, sourceEntity as Player)
@@ -348,10 +365,56 @@ Deprecated: ${moduleImportsConfig.isFileDeprecated(item as any)}`);
                 case 0:
                     configJSON[item] = (1 - configJSON[item]) as 0 | 1;
                     moduleImportsConfig.setJSON(configJSON);
-                    return 1;
+                    return await editModuleImportsConfig_module_item(
+                        sourceEntity,
+                        module,
+                        item
+                    );
                 case 1:
-                    return 1;
+                    let form = new ActionFormData();
+                    form.title("Data");
+                    form.body(
+                        JSONB.stringify(
+                            await import(item.split("/").slice(2).join("/")),
+                            undefined,
+                            4,
+                            {
+                                bigint: true,
+                                function: true,
+                                get: true,
+                                Infinity: true,
+                                NaN: true,
+                                NegativeInfinity: true,
+                                set: true,
+                                undefined: true,
+                            }
+                        )
+                    );
+                    form.button("Done");
+                    return await form
+                        .forceShow(sourceEntity as Player)
+                        .then(async () => {
+                            return await editModuleImportsConfig_module_item(
+                                sourceEntity,
+                                module,
+                                item
+                            );
+                        })
+                        .catch(async (e) => {
+                            let formError = new MessageFormData();
+                            formError.body(e + " " + e.stack);
+                            formError.title("Error");
+                            formError.button1("Done");
+                            return await forceShow(
+                                formError,
+                                sourceEntity as Player
+                            ).then(() => {
+                                return -2 as const;
+                            });
+                        });
                 case 2:
+                    return 1;
+                case 3:
                     return 0;
                 default:
                     const error = new InternalError("Invalid selection");

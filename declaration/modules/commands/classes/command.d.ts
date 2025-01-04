@@ -88,15 +88,17 @@ export declare class command<T extends "built-in" | "custom" | "unknown" = "unkn
         aliasTo?: string;
     }[];
     get settings(): commandSettings<T>;
+    get ultraSecurityModeSecurityLevel(): "owner" | "headAdmin" | "admin" | "moderator" | "WorldEdit" | "everyone";
     get code(): string[];
     save(): string;
     remove(): void;
     testCanPlayerUseCommand(player: Player | executeCommandPlayerW | Entity): boolean;
     run(commandstring: string, executor: Player | executeCommandPlayerW | Entity | Dimension, player?: Player | executeCommandPlayerW, event?: Object): void;
-    static get(commandName: string, type?: "built-in" | "custom" | "unknown"): command<"built-in"> | command<"custom"> | command<"unknown">;
+    static get(commandName: string, type?: "built-in" | "custom" | "unknown"): command<"custom"> | command<"built-in"> | command<"unknown">;
     static findBuiltIn(commandString: string, returnCommandInsteadOfAlias?: boolean): {
         type: "built-in";
         requiredTags: string[];
+        ultraSecurityModeSecurityLevel: "owner" | "headAdmin" | "admin" | "moderator" | "WorldEdit" | "everyone";
         formatting_code: string;
         commandName: string;
         escregexp: {
@@ -114,11 +116,11 @@ export declare class command<T extends "built-in" | "custom" | "unknown" = "unkn
                 f?: string;
             };
         }[];
-        category?: commandCategory | (commandCategory)[];
-        deprecated?: boolean;
-        functional?: boolean;
-        hidden?: boolean;
-        enabled?: boolean;
+        category?: commandCategory | commandCategory[];
+        deprecated: boolean;
+        functional: boolean;
+        hidden: boolean;
+        enabled: boolean;
     } | {
         index: number;
         alias: {
@@ -133,6 +135,7 @@ export declare class command<T extends "built-in" | "custom" | "unknown" = "unkn
         aliasTo: {
             type: "built-in";
             requiredTags: string[];
+            ultraSecurityModeSecurityLevel: "owner" | "headAdmin" | "admin" | "moderator" | "WorldEdit" | "everyone";
             formatting_code: string;
             commandName: string;
             escregexp: {
@@ -150,11 +153,11 @@ export declare class command<T extends "built-in" | "custom" | "unknown" = "unkn
                     f?: string;
                 };
             }[];
-            category?: commandCategory | (commandCategory)[];
-            deprecated?: boolean;
-            functional?: boolean;
-            hidden?: boolean;
-            enabled?: boolean;
+            category?: commandCategory | commandCategory[];
+            deprecated: boolean;
+            functional: boolean;
+            hidden: boolean;
+            enabled: boolean;
         };
     };
     static getDefaultCommands(noSort?: boolean): command<"built-in">[];

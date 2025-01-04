@@ -141,7 +141,7 @@ export declare class PlayerShopManager {
      * @returns
      */
     static playerShopSystemSettings(sourceEntitya: Entity | executeCommandPlayerW | Player): Promise<0 | 1>;
-    static playerShopSystemSettings_main(sourceEntitya: Entity | executeCommandPlayerW | Player): Promise<1>;
+    static playerShopSystemSettings_main(sourceEntitya: Entity | executeCommandPlayerW | Player): Promise<0 | 1>;
     static managePlayerShops(sourceEntitya: Entity | executeCommandPlayerW | Player, all?: boolean): Promise<0 | 1>;
     static addPlayerShop(sourceEntitya: Entity | executeCommandPlayerW | Player): Promise<0 | 1>;
     static addPlayerShopAsPlayer(sourceEntitya: Entity | executeCommandPlayerW | Player, targetPlayerID: `${number}`, targetPlayerName: string): Promise<0 | 1>;

@@ -13,7 +13,8 @@ import { getStringFromDynamicProperties } from "modules/utilities/functions/getS
 import { saveStringToDynamicProperties } from "modules/utilities/functions/saveStringToDynamicProperties";
 import { type SellableShopElement, type BuyableShopElement, type ShopItem, type SellableShopItem, type ShopPage } from "./shop_main";
 import { MoneySystem } from "./money";
-import type { PlayerShopManager, PlayerShop, playerShopConfig } from "./player_shop"
+import { PlayerShopManager, type PlayerShop, type playerShopConfig } from "./player_shop"
+import { securityVariables } from "security/ultraSecurityModeUtils";
 
 /**
  * @see {@link playerShopConfig}
@@ -721,6 +722,16 @@ export class ServerShopManager{
      */
     static async serverShopSystemSettings(sourceEntitya: Entity|executeCommandPlayerW|Player): Promise<0|1>{
         const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya
+        if (securityVariables.ultraSecurityModeEnabled) {
+            if(securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.accessExtraFeaturesSettings") == false){
+                const r = await showMessage(sourceEntity as Player, "Access Denied (403)", "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.accessExtraFeaturesSettings", "Go Back", "Close");
+                if(r.canceled || r.selection == 0){
+                    return 1;
+                }else{
+                    return 0;
+                }
+            }
+        }
         let form = new ActionFormData();
         form.title("Server Shop System");
         form.body("The server shop system is "+(config.shopSystem.server.enabled?"§aEnabled":"§cDisabled"));

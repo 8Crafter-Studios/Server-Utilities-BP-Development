@@ -36,7 +36,12 @@ export const moduleNamesForModuleImportsConfigListDisplay = [
  * A class containing configuration detailing which functions, classes, and constants from the modules to import into their respective properties on the global modules object.
  */
 export class moduleImportsConfig {
-    static overrideOptions = ["none", "disableAll", "enableAll", "enableAllNonDeprecated"];
+    static overrideOptions = [
+        "none",
+        "disableAll",
+        "enableAll",
+        "enableAllNonDeprecated",
+    ];
     /**
      * @remarks overrides all other options, including overrides for specific modules
      * @todo Make the deprecated list.
@@ -417,7 +422,8 @@ export class moduleImportsConfig {
         this.setJSON(this.default);
     }
     static toJSON() {
-        return JSON.parse(getStringFromDynamicProperties("moduleImportsConfigData"));
+        return (JSON.parse(getStringFromDynamicProperties("moduleImportsConfigData", "null")) ??
+            this.default);
     }
     static toJSON_module(module) {
         let string = getStringFromDynamicProperties("moduleImportsConfigData");
@@ -481,6 +487,43 @@ export class moduleImportsConfig {
         switch (true) {
             case this.override == "none" &&
                 this.moduleOverrides[module] == "none":
+                return Object.fromEntries((await Object.entries(this.toJSON_module(module))
+                    .filter((v) => v[1].toBoolean())
+                    .mapAsync(async function importFile(v) {
+                    return Object.entries(await import(v[0].slice(11)));
+                })).flat());
+                break;
+            case this.override == "none" &&
+                this.moduleOverrides[module] == "disableAll":
+            case this.override == "disableAll":
+                return {};
+                break;
+            case this.override == "none" &&
+                this.moduleOverrides[module] == "enableAll":
+            case this.override == "enableAll":
+                return Object.fromEntries((await Object.entries(this.toJSON_module(module)).mapAsync(async function importFile(v) {
+                    return Object.entries(await import(v[0].slice(11)));
+                })).flat());
+                break;
+            case this.override == "none" &&
+                this.moduleOverrides[module] == "enableAllNonDeprecated":
+            case this.override == "enableAllNonDeprecated":
+                return Object.fromEntries((await Object.entries(this.toJSON_module(module))
+                    .filter((v) => !this.isFileDeprecated(v[0]))
+                    .mapAsync(async function importFile(v) {
+                    return Object.entries(await import(v[0].slice(11)));
+                })).flat());
+                break;
+            default:
+                // #Error Code: 0x1000;
+                throw new InternalError("Something went wrong and the switch case for [moduleImportsConfig::import] has reached an unreachable state. Please notify 8Crafter of this error, you can do this through 8Crafter's discord server or email. Make sure to include the following error code: 0x1000");
+                break;
+        }
+    }
+    static async importSeparatedIntoPaths(module) {
+        switch (true) {
+            case this.override == "none" &&
+                this.moduleOverrides[module] == "none":
                 return Object.fromEntries(await Object.entries(this.toJSON_module(module))
                     .filter((v) => v[1].toBoolean())
                     .mapAsync(async function importFile(v) {
@@ -536,5 +579,9 @@ Object.defineProperties(globalThis, {
         writable: false,
     },
 });
-await moduleImportsConfig.import("command_utilities");
+// await moduleImportsConfig.import("command_utilities");
+/* let a: {[key in typeof moduleOptionalImportPathMap["ban"][number]]: optionalModuleObjectImportFilePathsImportMap[key]}
+let b: UnionToIntersection<optionalModuleObjectImportFilePathsImportMap[typeof moduleOptionalImportPathMap["ban"][number]]>
+a
+b */
 //# sourceMappingURL=moduleImportsConfig.js.map

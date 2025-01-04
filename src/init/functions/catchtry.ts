@@ -1,3 +1,4 @@
+import "init/meta/importToMakeValidModule";
 globalThis.catchtry = function catchtry<
     TT extends unknown,
     CT extends unknown,

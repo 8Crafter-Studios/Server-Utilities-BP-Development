@@ -3,7 +3,7 @@ import { targetSelectorAllListC } from "modules/command_utilities/functions/targ
 import { targetSelectorAllListD } from "modules/command_utilities/functions/targetSelectorAllListD";
 import type { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { getEntityById } from "modules/commands/functions/getEntityById";
-import { getPlayer } from "modules/commands/functions/getPlayer";
+import { getPlayer } from "init/functions/getPlayer";
 import { componentTypeEnum } from "../enums/componentTypeEnum";
 import { durabilityComponentTypeEnum } from "../enums/durabilityComponentTypeEnum";
 import { enchantableComponentTypeEnum } from "../enums/enchantableComponentTypeEnum";

@@ -9,10 +9,37 @@ import { mainMenu } from "./mainMenu";
 import { commandCategories } from "./commandCategories";
 import { commandCategoriesDisplay } from "./commandCategoriesDisplay";
 import { command } from "modules/commands/classes/command";
-export function manageCommands(sourceEntitya) {
+import { showMessage } from "modules/utilities/functions/showMessage";
+import { securityVariables } from "security/ultraSecurityModeUtils";
+/**
+ * Manages the commands UI for a given source entity.
+ *
+ * @todo update this function to use the new async ui system
+ * @param sourceEntitya - The source entity which can be of type `Entity`, `executeCommandPlayerW`, or `Player`.
+ * @returns A promise that resolves to a number indicating the result of the operation.
+ *
+ * This function performs the following tasks:
+ * - Checks if ultra security mode is enabled and verifies if the player has the necessary permissions to access the manage commands UI.
+ * - Displays a form to manage commands, including built-in and custom commands.
+ * - Allows adding, editing, and deleting custom commands.
+ * - Provides detailed information and settings for each command.
+ * - Handles various user interactions with the UI, such as confirming deletions and saving changes.
+ */
+export async function manageCommands(sourceEntitya) {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW
         ? sourceEntitya.player
         : sourceEntitya;
+    if (securityVariables.ultraSecurityModeEnabled) {
+        if (securityVariables.testPlayerForPermission(sourceEntity, "andexdb.accessManageCommandsUI") == false) {
+            const r = await showMessage(sourceEntity, "Access Denied (403)", "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.accessManageCommandsUI", "Back", "Cancel");
+            if (r.canceled || r.selection == 0) {
+                return 1;
+            }
+            else {
+                return 0;
+            }
+        }
+    }
     let form = new ActionFormData();
     form.title("Manage Commands");
     let defaultCommands = command.getDefaultCommands();
@@ -47,7 +74,7 @@ export function manageCommands(sourceEntitya) {
                             ? customCommands
                             : command.getDefaultCommandsOfCategory(category);
                 let formB = new ActionFormData();
-                form.title(`Manage ${categoryDisplay}§r Commands`);
+                formB.title(`Manage ${categoryDisplay}§r Commands`);
                 commandsListB.forEach((p) => {
                     formB.button(`${p.formatting_code + p.commandName}\n${p.type +
                         ": " +

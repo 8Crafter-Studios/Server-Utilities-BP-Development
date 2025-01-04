@@ -2,14 +2,40 @@ import type { Entity, Player } from "@minecraft/server";
 import { ModalFormData, ModalFormResponse } from "@minecraft/server-ui";
 import { forceShow } from "modules/ui/functions/forceShow";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
-import { settings } from "./settings";
+import { securityVariables } from "security/ultraSecurityModeUtils";
+import { showMessage } from "modules/utilities/functions/showMessage";
 
-export function personalSettings(
+/**
+ * Displays and handles the personal settings form for a player.
+ * 
+ * @param sourceEntitya - The entity or player invoking the settings. Can be of type `Entity`, `executeCommandPlayerW`, or `Player`.
+ * @returns A promise that resolves to:
+ * - `-2` if an error occurs,
+ * - `0` if the user cancels the form,
+ * - `1` if the form is successfully submitted.
+ * 
+ * The function performs the following steps:
+ * 1. Checks if ultra security mode is enabled and if the player has the necessary permissions to access the settings.
+ * 2. Displays a modal form with various personal settings fields.
+ * 3. Handles the form submission, updating the player's dynamic properties based on the form values.
+ * 4. Returns the appropriate status code based on the outcome.
+ */
+export async function personalSettings(
     sourceEntitya: Entity | executeCommandPlayerW | Player
-) {
+): Promise<-2 | 0 | 1> {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW
         ? sourceEntitya.player
         : sourceEntitya;
+    if (securityVariables.ultraSecurityModeEnabled) {
+        if(securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.accessPersonalSettings") == false){
+            const r = await showMessage(sourceEntity as Player, "Access Denied (403)", "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.accessPersonalSettings", "Back", "Cancel");
+            if(r.canceled || r.selection == 0){
+                return 1;
+            }else{
+                return 0;
+            }
+        }
+    }
     let form2 = new ModalFormData();
     ("andexdbSettings:autoEscapeChatMessages");
     ("andexdbSettings:autoURIEscapeChatMessages");
@@ -176,12 +202,11 @@ export function personalSettings(
 
 
     form2.submitButton("Save");
-    forceShow(form2, sourceEntity as Player)
+    return await forceShow(form2, sourceEntity as Player)
         .then((to) => {
             let t = to as ModalFormResponse;
             if (t.canceled) {
-                settings(sourceEntity);
-                return;
+                return 1 as const;
             } /*
     GameTest.Test.prototype.spawnSimulatedPlayer({x: 0, y: 0, z: 0})*/ /*
         ${se}GameTest.Test.prototype.spawnSimulatedPlayer({x: 0, y: 0, z: 0})*/
@@ -258,21 +283,10 @@ export function personalSettings(
     world.setDynamicProperty("andexdbSettings:autoURIEscapeChatMessages", autoURIEscapeChatMessages)
     world.setDynamicProperty("andexdbSettings:allowChatEscapeCodes", allowChatEscapeCodes)
     world.setDynamicProperty("andexdbSettings:autoSavePlayerData", autoSavePlayerData)*/
-
-
-
-
-
-
-
-
-
-
-
-
-            settings(sourceEntity);
+            return 1;
         })
         .catch((e) => {
             console.error(e, e.stack);
+            return -2;
         });
 }

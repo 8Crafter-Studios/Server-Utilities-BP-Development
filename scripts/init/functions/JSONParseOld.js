@@ -1,3 +1,4 @@
+import "init/meta/importToMakeValidModule";
 /**
  * Better Version of JSON.parse() that is able to read undefined, NaN, Infinity, and -Infinity values.
  * @param {string} text A valid JSON string (with undefined, NaN, Infinity, and -Infinity values allowed).

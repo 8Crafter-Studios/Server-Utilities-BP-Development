@@ -1,13 +1,21 @@
 import { Entity, Player, world } from "@minecraft/server";
-import { ActionFormData, ActionFormResponse, MessageFormData, MessageFormResponse, ModalFormData } from "@minecraft/server-ui";
+import {
+    ActionFormData,
+    ActionFormResponse,
+    MessageFormData,
+    MessageFormResponse,
+    ModalFormData,
+} from "@minecraft/server-ui";
 import { MoneySystem } from "ExtraFeatures/money";
 import { forceShow } from "modules/ui/functions/forceShow";
 import { ban } from "modules/ban/classes/ban";
 import { managePlayers_managePlayer_manageBans } from "./managePlayers_managePlayer_manageBans";
 import { managePlayers_managePlayer_manageHomes } from "./managePlayers_managePlayer_manageHomes";
-import type { savedPlayer } from "modules/player_save/classes/savedPlayer";
+import type { savedPlayer, SavedPlayerOnJoinAction_set_permission } from "modules/player_save/classes/savedPlayer";
 import { EquipmentSlots } from "modules/command_utilities/constants/EquipmentSlots";
 import { showMessage } from "modules/utilities/functions/showMessage";
+import { editPermissionForPlayerUI, securityVariables } from "security/ultraSecurityModeUtils";
+import * as semver from "semver"
 
 /**
  *
@@ -20,34 +28,55 @@ export async function managePlayers_managePlayer(
     sourceEntity: Entity,
     player: savedPlayer
 ): Promise<0 | 1> {
+    if (securityVariables.ultraSecurityModeEnabled) {
+        if(securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.accessManagePlayersUI") == false){
+            const r = await showMessage(sourceEntity as Player, "Access Denied (403)", "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.accessManagePlayersUI", "Okay", "Cancel");
+            if(r.canceled || r.selection == 0){
+                return 1;
+            }else{
+                return 0;
+            }
+        }
+    }
     let form2 = new ActionFormData();
     form2.title(player.name);
     form2.body(
-        `UUID: ${player.id}\n${player.isOnline
-            ? "Online"
-            : "Last Online: " +
-            new Date(player.lastOnline).formatDateTime(
-                sourceEntity.timeZone,
-                false,
-                true
-            )}\nData Format Version: ${player.format_version}${ban.testForIdBannedPlayer(player)
-            ? "ID BANNED"
-            : ban.testForIdBannedPlayer(player)
+        `UUID: ${player.id}\n${
+            player.isOnline
+                ? "Online\nLast Saved: " +
+                  new Date(player.lastOnline).formatDateTime(
+                      sourceEntity.timeZone,
+                      false,
+                      true
+                  )
+                : "Last Online: " +
+                  new Date(player.lastOnline).formatDateTime(
+                      sourceEntity.timeZone,
+                      false,
+                      true
+                  )
+        }\nData Format Version: ${player.format_version}${
+            ban.testForIdBannedPlayer(player)
+                ? "ID BANNED"
+                : ban.testForIdBannedPlayer(player)
                 ? "NAME BANNED"
-                : ""}`
+                : ""
+        }`
     );
     form2.button("Clear Data");
     form2.button("Show Data");
     form2.button("Check Inventory");
-    if (semver.satisfies(
-        player.player_save_format_version ?? "0.0.0",
-        ">=1.5.0"
-    )) {
+    if (
+        semver.satisfies(
+            player.player_save_format_version ?? "0.0.0",
+            ">=1.5.0"
+        )
+    ) {
         form2.button("Copy Inventory To Chest");
     }
     form2.button("Manage Bans");
     form2.button("Edit Money");
-    form2.button("§4Manage Permissions§f(§cCOMING SOON!§f)");
+    form2.button("Manage Permissions");
     form2.button("§4Manage Hotbar Presets§f(§cCOMING SOON!§f)");
     form2.button("§4Manage Private Warps§f(§cCOMING SOON!§f)");
     form2.button("Manage Homes");
@@ -61,6 +90,16 @@ export async function managePlayers_managePlayer(
             }
             switch (g.selection) {
                 case 0:
+                    if (securityVariables.ultraSecurityModeEnabled) {
+                        if(securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.UIs.managePlayersUI.deleteSavedPlayerData") == false){
+                            const r = await showMessage(sourceEntity as Player, "Access Denied (403)", "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.UIs.managePlayersUI.deleteSavedPlayerData", "Okay", "Cancel");
+                            if(r.canceled || r.selection == 0){
+                                return 1;
+                            }else{
+                                return 0;
+                            }
+                        }
+                    }
                     let form3 = new MessageFormData();
                     form3.title("Confirm Player Data Clear");
                     form3.body(
@@ -93,68 +132,58 @@ export async function managePlayers_managePlayer(
                         });
                     break;
                 case 1:
-                    let form4 = new ActionFormData();
-                    form4.title(`${player.name}'s Saved Player Data`);
-                    form4.body(
-                        `${
-                /*arrayModifier(*/ JSON.stringify(
+                    if (
+                        (await managePlayers_managePlayer_viewData(
+                            sourceEntity,
                             player
-                        ).replaceAll(
-                            /(?<!\\)(?![},:](\"|{\"))\"/g,
-                            '§r§f"'
-                        ) /*.split(""), (v, i)=>(Number(String((i/30).toFixed(4)))==Math.round(i/30)?"\n"+v:v))*/}`
-                    );
-                    form4.button("Done");
-                    return await forceShow(form4, sourceEntity as Player)
-                        .then(() => 1)
-                        .catch((e) => {
-                            let formError = new MessageFormData();
-                            formError.body(e + e.stack);
-                            formError.title("Error");
-                            formError.button1("Done");
-                            formError.button2("Close");
-                            forceShow(formError, sourceEntity as Player).then(
-                                (r) => {
-                                    return +(r.selection == 0);
-                                }
-                            );
-                        });
+                        )) == 1
+                    ) {
+                        return await managePlayers_managePlayer(
+                            sourceEntity,
+                            player
+                        );
+                    } else {
+                        return 0;
+                    }
                     break;
                 case 2:
                     let slotsArray = [];
                     let text = "";
-                    if (semver.satisfies(
-                        player.player_save_format_version ?? "0.0.0",
-                        ">=1.5.0"
-                    )) {
+                    if (
+                        semver.satisfies(
+                            player.player_save_format_version ?? "0.0.0",
+                            ">=1.5.0"
+                        )
+                    ) {
                         const items = player.getItems(sourceEntity);
                         Object.entries(items).forEachB((item) => {
                             if (!!item[1]) {
                                 slotsArray = slotsArray.concat(
                                     String(
                                         "slot: " +
-                                        item[0] +
-                                        "§r§f, item: " +
-                                        item[1].typeId +
-                                        "§r§f, amount: " +
-                                        item[1].amount +
-                                        "§r§f, nameTag: " +
-                                        item[1].nameTag +
-                                        "§r§f, lore: " +
-                                        JSONStringify(
-                                            item[1].getLore() ?? [],
-                                            true
-                                        ) +
-                                        "§r§f, enchantments: " +
-                                        JSONStringify(
-                                            tryget(() => item[1]
-                                                .getComponent(
-                                                    "enchantable"
-                                                )
-                                                .getEnchantments()
-                                            ) ?? "N/A",
-                                            true
-                                        )
+                                            item[0] +
+                                            "§r§f, item: " +
+                                            item[1].typeId +
+                                            "§r§f, amount: " +
+                                            item[1].amount +
+                                            "§r§f, nameTag: " +
+                                            item[1].nameTag +
+                                            "§r§f, lore: " +
+                                            JSONStringify(
+                                                item[1].getLore() ?? [],
+                                                true
+                                            ) +
+                                            "§r§f, enchantments: " +
+                                            JSONStringify(
+                                                tryget(() =>
+                                                    item[1]
+                                                        .getComponent(
+                                                            "enchantable"
+                                                        )
+                                                        .getEnchantments()
+                                                ) ?? "N/A",
+                                                true
+                                            )
                                     )
                                 );
                             } else {
@@ -172,49 +201,49 @@ export async function managePlayers_managePlayer(
                                 slotsArray = slotsArray.concat(
                                     String(
                                         "slot: " +
-                                        item.slot +
-                                        ", item: " +
-                                        item.id +
-                                        "§r§f, amount: " +
-                                        item.count +
-                                        ", nameTag: " +
-                                        item.name +
-                                        "§r§f, lore: " +
-                                        JSONStringify(
-                                            item.lore ?? [],
-                                            true
-                                        ) +
-                                        "§r§f, enchantments: " +
-                                        JSON.stringify(
-                                            item.enchants ?? "N/A"
-                                        )
+                                            item.slot +
+                                            ", item: " +
+                                            item.id +
+                                            "§r§f, amount: " +
+                                            item.count +
+                                            ", nameTag: " +
+                                            item.name +
+                                            "§r§f, lore: " +
+                                            JSONStringify(
+                                                item.lore ?? [],
+                                                true
+                                            ) +
+                                            "§r§f, enchantments: " +
+                                            JSON.stringify(
+                                                item.enchants ?? "N/A"
+                                            )
                                     )
                                 );
                             } else {
                                 slotsArray = slotsArray.concat(
                                     "slot: " +
-                                    item.slot +
-                                    ", item: minecraft:air"
+                                        item.slot +
+                                        ", item: minecraft:air"
                                 );
                             }
                         });
                     }
                     text = String(
                         "(format_version: " +
-                        player.format_version +
-                        ") " +
-                        player.name +
-                        (world
-                            .getAllPlayers()
-                            .find((p) => p.id == player.id) != undefined
-                            ? " (Online)"
-                            : " (last seen: " +
-                            new Date(player.lastOnline).formatDateTime(
-                                sourceEntity.timeZone
-                            ) +
-                            ")") +
-                        " Items: \n" +
-                        slotsArray.join("§r§f\n")
+                            player.format_version +
+                            ") " +
+                            player.name +
+                            (world
+                                .getAllPlayers()
+                                .find((p) => p.id == player.id) != undefined
+                                ? " (Online)"
+                                : " (last seen: " +
+                                  new Date(player.lastOnline).formatDateTime(
+                                      sourceEntity.timeZone
+                                  ) +
+                                  ")") +
+                            " Items: \n" +
+                            slotsArray.join("§r§f\n")
                     );
                     let form5 = new ActionFormData();
                     form5.title(`${player.name}'s Saved Inventory Data`);
@@ -266,10 +295,7 @@ export async function managePlayers_managePlayer(
                             bc2.setItem(i - 27, items[i]);
                         }
                         for (let i = 0; i < 6; i++) {
-                            bc2.setItem(
-                                i + 9,
-                                items[EquipmentSlots[i]]
-                            );
+                            bc2.setItem(i + 9, items[EquipmentSlots[i]]);
                         }
                         bc2.setItem(15, items.Cursor);
                         return await managePlayers_managePlayer(
@@ -282,10 +308,12 @@ export async function managePlayers_managePlayer(
                     player.player_save_format_version ?? "0.0.0",
                     ">=1.5.0"
                 ) + 3:
-                    if ((await managePlayers_managePlayer_manageBans(
-                        sourceEntity,
-                        player
-                    )) == 1) {
+                    if (
+                        (await managePlayers_managePlayer_manageBans(
+                            sourceEntity,
+                            player
+                        )) == 1
+                    ) {
                         return await managePlayers_managePlayer(
                             sourceEntity,
                             player
@@ -332,11 +360,32 @@ export async function managePlayers_managePlayer(
                 case +semver.satisfies(
                     player.player_save_format_version ?? "0.0.0",
                     ">=1.5.0"
+                ) + 5:
+                    if (
+                        (await (securityVariables.ultraSecurityModeEnabled ? editPermissionForPlayerUI(sourceEntity as Player, player.id) : managePlayers_managePlayer_managePermissions(
+                            sourceEntity,
+                            player
+                        ))) == 1
+                    ) {
+                        return await managePlayers_managePlayer(
+                            sourceEntity,
+                            player
+                        );
+                    } else {
+                        return 0;
+                    }
+                    return 1;
+                    break;
+                case +semver.satisfies(
+                    player.player_save_format_version ?? "0.0.0",
+                    ">=1.5.0"
                 ) + 8:
-                    if ((await managePlayers_managePlayer_manageHomes(
-                        sourceEntity,
-                        player
-                    )) == 1) {
+                    if (
+                        (await managePlayers_managePlayer_manageHomes(
+                            sourceEntity,
+                            player
+                        )) == 1
+                    ) {
                         return await managePlayers_managePlayer(
                             sourceEntity,
                             player
@@ -355,7 +404,7 @@ export async function managePlayers_managePlayer(
                 case +semver.satisfies(
                     player.player_save_format_version ?? "0.0.0",
                     ">=1.5.0"
-                ) + 11:
+                ) + 10:
                     return 0;
                     break;
                 default:
@@ -374,4 +423,105 @@ export async function managePlayers_managePlayer(
                 }
             );
         })) as 0 | 1;
+}
+export async function managePlayers_managePlayer_viewData(
+    sourceEntity: Entity,
+    player: savedPlayer
+): Promise<0 | 1> {
+    let form4 = new ActionFormData();
+    form4.title(`${player.name}'s Saved Player Data`);
+    form4.body(
+        `${colorizeJSONString(
+            JSON.stringify(player, undefined, 2).replaceAll("§", "\uF019") /* .replaceAll(
+                /(?<!\\)(?![},:](\"|{\"))\"/g,
+                '§r§f"'
+            ) */
+        )}`
+    );
+    form4.button("Done");
+    return await forceShow(form4, sourceEntity as Player)
+        .then(() => 1 as const)
+        .catch(async (e) => {
+            let formError = new MessageFormData();
+            formError.body(e + e.stack);
+            formError.title("Error");
+            formError.button1("Done");
+            formError.button2("Close");
+            return await forceShow(formError, sourceEntity as Player).then(
+                (r) => {
+                    return +(r.selection == 0) as 0 | 1;
+                }
+            );
+        });
+}
+export async function managePlayers_managePlayer_managePermissions(
+    sourceEntity: Entity,
+    player: savedPlayer
+): Promise<0 | 1> {
+    let form4 = new ModalFormData();
+    form4.title(`${player.name}'s Permissions`);
+    form4.toggle(`canUseChatCommands${!!player.onJoinActions.find(a => a.type == "set_permission" && a.permission == "canUseChatCommands") ? `§a (Will be set to §b${(player.onJoinActions.find(a => a.type == "set_permission" && a.permission == "canUseChatCommands") as SavedPlayerOnJoinAction_set_permission<"canUseChatCommands">).value}§a when the player joins)` : ""}`, player.playerPermissions.canUseChatCommands);
+    form4.toggle(`canUseDangerousCommands${!!player.onJoinActions.find(a => a.type == "set_permission" && a.permission == "canUseDangerousCommands") ? `§a (Will be set to §b${(player.onJoinActions.find(a => a.type == "set_permission" && a.permission == "canUseDangerousCommands") as SavedPlayerOnJoinAction_set_permission<"canUseDangerousCommands">).value}§a when the player joins)` : ""}`, player.playerPermissions.canUseDangerousCommands);
+    form4.toggle(`canUseScriptEval${!!player.onJoinActions.find(a => a.type == "set_permission" && a.permission == "canUseScriptEval") ? `§a (Will be set to §b${(player.onJoinActions.find(a => a.type == "set_permission" && a.permission == "canUseScriptEval") as SavedPlayerOnJoinAction_set_permission<"canUseScriptEval">).value}§a when the player joins)` : ""}`, player.playerPermissions.canUseScriptEval);
+    form4.toggle(`canUseCommands${!!player.onJoinActions.find(a => a.type == "set_permission" && a.permission == "canUseCommands") ? `§a (Will be set to §b${(player.onJoinActions.find(a => a.type == "set_permission" && a.permission == "canUseCommands") as SavedPlayerOnJoinAction_set_permission<"canUseCommands">).value}§a when the player joins)` : ""}`, player.playerPermissions.canUseCommands);
+    form4.toggle(`canBypassProtectedAreas${!!player.onJoinActions.find(a => a.type == "set_permission" && a.permission == "canBypassProtectedAreas") ? `§a (Will be set to §b${(player.onJoinActions.find(a => a.type == "set_permission" && a.permission == "canBypassProtectedAreas") as SavedPlayerOnJoinAction_set_permission<"canBypassProtectedAreas">).value}§a when the player joins)` : ""}`, player.playerPermissions.canBypassProtectedAreas);
+    form4.toggle(`getAllChatCommands${!!player.onJoinActions.find(a => a.type == "set_permission" && a.permission == "getAllChatCommands") ? `§a (Will be set to §b${(player.onJoinActions.find(a => a.type == "set_permission" && a.permission == "getAllChatCommands") as SavedPlayerOnJoinAction_set_permission<"getAllChatCommands">).value}§a when the player joins)` : ""}`, player.playerPermissions.getAllChatCommands);
+    form4.toggle(`admin${!!player.onJoinActions.find(a => a.type == "set_permission" && a.permission == "admin") ? `§a (Will be set to §b${(player.onJoinActions.find(a => a.type == "set_permission" && a.permission == "admin") as SavedPlayerOnJoinAction_set_permission<"admin">).value}§a when the player joins)` : ""}`, player.playerPermissions.admin);
+    form4.slider(`permissionLevel${!!player.onJoinActions.find(a => a.type == "set_permission" && a.permission == "permissionLevel") ? `§a (Will be set to §b${(player.onJoinActions.find(a => a.type == "set_permission" && a.permission == "permissionLevel") as SavedPlayerOnJoinAction_set_permission<"permissionLevel">).value}§a when the player joins)` : ""}`, 0, 10, 1, player.playerPermissions.permissionLevel);
+    form4.submitButton("Save");
+    return await forceShow(form4, sourceEntity as Player)
+        .then(async r => {
+            if(r.canceled){
+                return 1;
+            }
+            if(player.isOnline){
+                player.playerPermissions.canUseChatCommands = r.formValues[0] as boolean;
+                player.playerPermissions.canUseDangerousCommands = r.formValues[1] as boolean;
+                player.playerPermissions.canUseScriptEval = r.formValues[2] as boolean;
+                player.playerPermissions.canUseCommands = r.formValues[3] as boolean;
+                player.playerPermissions.canBypassProtectedAreas = r.formValues[4] as boolean;
+                player.playerPermissions.getAllChatCommands = r.formValues[5] as boolean;
+                player.playerPermissions.admin = r.formValues[6] as boolean;
+                player.playerPermissions.permissionLevel = r.formValues[7] as number;
+            }else{
+                let form2 = new MessageFormData();
+                form2.body("Changing a player's permissions while they are offline will schedule the permission changes to be applied to the player when they join. Saving these changes will also result in any previously scheduled permission changes being canceled. To cancel the scheduled changes and keep the current permissions, just open the \"Manage Permissions\" menu again and save it without changing any options.");
+                form2.title("Clear Previously Scheduled Changes?");
+                form2.button1("Continue");
+                form2.button2("Cancel");
+                return await forceShow(form2, sourceEntity as Player).then(
+                    (rb) => {
+                        if(rb.selection == 0){
+                            player.onJoinActions.forEach((a, i) => {
+                                if(a.type == "set_permission"){
+                                    player.onJoinActions.splice(i, 1);
+                                }
+                            });
+                            player.onJoinActions.push({type: "set_permission", permission: "canUseChatCommands", value: r.formValues[0] as boolean});
+                            player.onJoinActions.push({type: "set_permission", permission: "canUseDangerousCommands", value: r.formValues[1] as boolean});
+                            player.onJoinActions.push({type: "set_permission", permission: "canUseScriptEval", value: r.formValues[2] as boolean});
+                            player.onJoinActions.push({type: "set_permission", permission: "canUseCommands", value: r.formValues[3] as boolean});
+                            player.onJoinActions.push({type: "set_permission", permission: "canBypassProtectedAreas", value: r.formValues[4] as boolean});
+                            player.onJoinActions.push({type: "set_permission", permission: "getAllChatCommands", value: r.formValues[5] as boolean});
+                            player.onJoinActions.push({type: "set_permission", permission: "admin", value: r.formValues[6] as boolean});
+                            player.onJoinActions.push({type: "set_permission", permission: "permissionLevel", value: r.formValues[7] as number});
+                            player.save();
+                        };
+                        return 1 as const;
+                    }
+                );
+            }
+        })
+        .catch(async (e) => {
+            let formError = new MessageFormData();
+            formError.body(e + e.stack);
+            formError.title("Error");
+            formError.button1("Done");
+            formError.button2("Close");
+            return await forceShow(formError, sourceEntity as Player).then(
+                (r) => {
+                    return +(r.selection == 0) as 0 | 1;
+                }
+            );
+        });
 }

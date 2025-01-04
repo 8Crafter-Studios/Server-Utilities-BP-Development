@@ -1,6 +1,7 @@
 import { world } from "@minecraft/server";
 import { protectedAreaVariables } from "init/variables/protectedAreaVariables";
 import { testIsWithinRanges } from "modules/spawn_protection/functions/testIsWithinRanges";
+import { securityVariables } from "security/ultraSecurityModeUtils";
 
 subscribedEvents.beforeItemUseOn = world.beforeEvents.itemUseOn.subscribe(
     (event) => {
@@ -92,9 +93,7 @@ if (event.itemStack?.typeId === "andexdb:selection_tool") {
                     event.source.name
                 );
             });
-        if (event.source.getDynamicProperty("canBypassProtectedAreas") !=
-            true &&
-            event.source.hasTag("canBypassProtectedAreas") != true &&
+        if ((securityVariables.ultraSecurityModeEnabled ? securityVariables.testPlayerForPermission(event.source, permissionType["andexdb.bypassProtectedAreas"]) : event.source.hasTag("canBypassProtectedAreas")) != true &&
             (((testIsWithinRanges(
                 protectedAreaVariables.noBlockInteractAreas.positive.filter(
                     (v) => v.dimension == dimensions.indexOf(event.block.dimension)

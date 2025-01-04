@@ -1,6 +1,7 @@
 import { world } from "@minecraft/server";
 import { protectedAreaVariables } from "init/variables/protectedAreaVariables";
 import { testIsWithinRanges } from "modules/spawn_protection/functions/testIsWithinRanges";
+import { securityVariables } from "security/ultraSecurityModeUtils";
 subscribedEvents.beforePlayerBreakBlock =
     world.beforeEvents.playerBreakBlock.subscribe((event) => {
         if (!!event?.itemStack?.getDynamicProperty("playerBreakBlockCode")) {
@@ -48,9 +49,7 @@ subscribedEvents.beforePlayerBreakBlock =
                 ", Player: " +
                 event.player.name);
         });
-        if (event.player.getDynamicProperty("canBypassProtectedAreas") !=
-            true &&
-            event.player.hasTag("canBypassProtectedAreas") != true &&
+        if ((securityVariables.ultraSecurityModeEnabled ? securityVariables.testPlayerForPermission(event.player, permissionType["andexdb.bypassProtectedAreas"]) : event.player.hasTag("canBypassProtectedAreas")) != true &&
             (((testIsWithinRanges(protectedAreaVariables.noBlockBreakAreas.positive.filter((v) => v.dimension == dimensions.indexOf(event.dimension)), event.block.location) ?? false) == true &&
                 (testIsWithinRanges(protectedAreaVariables.noBlockBreakAreas.negative.filter((v) => v.dimension == dimensions.indexOf(event.dimension)), event.block.location) ?? false) == false) ||
                 ((testIsWithinRanges(protectedAreaVariables.protectedAreas.positive.filter((v) => v.dimension == dimensions.indexOf(event.dimension)), event.block.location) ?? false) == true &&

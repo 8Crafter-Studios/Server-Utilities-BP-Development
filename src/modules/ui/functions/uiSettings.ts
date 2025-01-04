@@ -3,14 +3,42 @@ import { ModalFormData, ModalFormResponse } from "@minecraft/server-ui";
 import { config } from "init/classes/config";
 import { forceShow } from "modules/ui/functions/forceShow";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
-import { settings } from "./settings";
+import { securityVariables } from "security/ultraSecurityModeUtils";
+import { showMessage } from "modules/utilities/functions/showMessage";
 
-export function uiSettings(
+/**
+ * Displays and handles the UI settings form for a given entity.
+ * 
+ * @param sourceEntitya - The entity that initiated the request. Can be an instance of `Entity`, `executeCommandPlayerW`, or `Player`.
+ * @returns A promise that resolves to:
+ * - `1` if the operation was successful or the form was canceled.
+ * - `0` if the user selected "Cancel" in the access denied message.
+ * - `-2` if an error occurred.
+ * 
+ * The function performs the following steps:
+ * 1. Checks if ultra security mode is enabled.
+ * 2. If enabled, verifies if the player has the required permission to access the settings.
+ * 3. If the player lacks permission, displays an access denied message.
+ * 4. If the player has permission or ultra security mode is disabled, displays the UI settings form.
+ * 5. Updates the configuration based on the form input.
+ * 6. Returns the appropriate status code based on the outcome.
+ */
+export async function uiSettings(
     sourceEntitya: Entity | executeCommandPlayerW | Player
-) {
+): Promise<1 | 0 | -2> {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW
         ? sourceEntitya.player
         : sourceEntitya;
+    if (securityVariables.ultraSecurityModeEnabled) {
+        if(securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.accessSettings") == false){
+            const r = await showMessage(sourceEntity as Player, "Access Denied (403)", "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.accessSettings", "Back", "Cancel");
+            if(r.canceled || r.selection == 0){
+                return 1;
+            }else{
+                return 0;
+            }
+        }
+    }
     let form2 = new ModalFormData();
     ("andexdbSettings:autoEscapeChatMessages");
     ("andexdbSettings:autoURIEscapeChatMessages");
@@ -26,12 +54,11 @@ export function uiSettings(
         config.ui.other.useStarWarsReference404Page
     );
     form2.submitButton("Save");
-    forceShow(form2, sourceEntity as Player)
+    return await forceShow(form2, sourceEntity as Player)
         .then((to) => {
             let t = to as ModalFormResponse;
             if (t.canceled) {
-                settings(sourceEntity);
-                return;
+                return 1 as const;
             } /*
     GameTest.Test.prototype.spawnSimulatedPlayer({x: 0, y: 0, z: 0})*/ /*
         ${se}GameTest.Test.prototype.spawnSimulatedPlayer({x: 0, y: 0, z: 0})*/
@@ -46,9 +73,10 @@ export function uiSettings(
                 maxPlayersPerManagePlayersPage.toNumber();
             config.ui.other.useStarWarsReference404Page =
                 useStarWarsReference404Page;
-            settings(sourceEntity);
+            return 1;
         })
         .catch((e) => {
             console.error(e, e.stack);
+            return -2 as const;
         });
 }

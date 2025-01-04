@@ -17,4 +17,5 @@ globalThis.formatTime = function formatTime(date, timeZoneOffset = 0, includeMs 
         ? `.${dateb.getUTCMilliseconds().toString().padStart(3, "0")}`
         : ""} ${dateb.getUTCHours() > 11 ? "P" : "A"}M`;
 };
+import "init/meta/importToMakeValidModule";
 //# sourceMappingURL=formatTime.js.map
