@@ -925,8 +925,9 @@ export async function editPermissionForPlayerUI(player, targetPlayerId) {
     }
     let form = new ActionFormData();
     form.title("Edit Permissions For Player");
-    Object.keys(permissionType).forEach((permissionType) => {
-        form.button(permissionType);
+    const perms = Object.entries(permissionType);
+    perms.forEach((permissionType) => {
+        form.button(permissionType[0]);
     });
     form.button("Back");
     form.button("Close");
@@ -940,7 +941,7 @@ export async function editPermissionForPlayerUI(player, targetPlayerId) {
         case Object.keys(permissionType).length + 1:
             return 0;
         default:
-            if ((await editPermissionForPlayerUI_permission(player, targetPlayerId, permissionTypes[r.selection])) == 1) {
+            if ((await editPermissionForPlayerUI_permission(player, targetPlayerId, perms[r.selection][1])) == 1) {
                 return await editPermissionForPlayerUI(player, targetPlayerId);
             }
             else {
