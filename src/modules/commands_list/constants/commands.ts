@@ -4911,7 +4911,7 @@ export const commands = [
     },
     {
         type: "built-in",
-        requiredTags: ["canUseChatCommands"],
+        requiredTags: [],
         formatting_code: "§r§f",
         commandName: "spawn",
         escregexp: {
@@ -4930,7 +4930,7 @@ export const commands = [
         functional: true,
         hidden: false,
         enabled: true,
-        ultraSecurityModeSecurityLevel: "admin",
+        ultraSecurityModeSecurityLevel: "everyone",
     },
     {
         type: "built-in",
