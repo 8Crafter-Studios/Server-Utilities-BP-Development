@@ -813,7 +813,9 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
         }
         return items;
     }
-    static savePlayer(player: Player) {
+    static savePlayer(player: Player) {/* 
+        // playerDataSaveDebug
+        world.getAllPlayers().filter(p=>p.hasTag("playerDataSaveDebug")).forEach(p=>p.sendMessage(`§r[${formatTime(new Date(Date.now() + (Number(p.getDynamicProperty("andexdbPersonalSettings:timeZone") ?? world.getDynamicProperty("andexdbSettings:timeZone") ?? 0) * 3600000)))}] §r[§l§bplayerDataSaveDebug§r] savePlayer() for player ${tryget(()=>player?.name??"undefined")??"ERROR"}<${tryget(()=>player?.id??"undefined")??"ERROR"}>`)) */
         const origData = this.getSavedPlayer("player:" + player.id);
         let savedPlayerData: savedPlayerData;
         savedPlayerData = {
@@ -1090,7 +1092,9 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
         );
         return savedPlayerData.saveId ?? `player:${savedPlayerData.id}`;
     }
-    static async savePlayerAsync(player: Player) {
+    static async savePlayerAsync(player: Player) {/* 
+        // playerDataSaveDebug
+        world.getAllPlayers().filter(p=>p.hasTag("playerDataSaveDebug")).forEach(p=>p.sendMessage(`§r[${formatTime(new Date(Date.now() + (Number(p.getDynamicProperty("andexdbPersonalSettings:timeZone") ?? world.getDynamicProperty("andexdbSettings:timeZone") ?? 0) * 3600000)))}] §r[§l§bplayerDataSaveDebug§r] savePlayerAsync() for player ${tryget(()=>player?.name??"undefined")??"ERROR"}<${tryget(()=>player?.id??"undefined")??"ERROR"}>`)) */
         const origData =
             tryget(() => this.getSavedPlayer("player:" + player.id)) ??
             ({} as savedPlayer);

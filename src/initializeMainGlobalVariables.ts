@@ -23,6 +23,13 @@ globalThis.editorStickMenuOpeningAsyncCancelActionNumbers = {} as {
 globalThis.crashEnabled = false
 globalThis.tempSavedVariables = []
 globalThis.scriptStartTick=-1
+Object.defineProperties(globalThis, {
+    errorLog: {
+        value: {
+            playerDataAutoSave: []
+        },
+    }
+})
 declare global {
     namespace globalThis {
         var tempSavedVariables: any[]
@@ -47,6 +54,10 @@ declare global {
         };
         var entity_scale_format_version: string | null;
         var multipleEntityScaleVersionsDetected: boolean;
+        var errorLog: {
+            playerDataAutoSave: {time: number, error: Error}[];
+            [logCategory: string]: {time: number, error: Error}[];
+        };
     }
 }
 /* Object.defineProperty(console, "error", {

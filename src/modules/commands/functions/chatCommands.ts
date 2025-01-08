@@ -41665,7 +41665,7 @@ ${command.dp}snapshot list`);
                     );
                 }
                 break;
-            case !!switchTest.match(/^butcher$/):
+            case !!switchTest.match(/^butcher$/) || !!switchTest.match(/^but$/):
                 {
                     eventData.cancel = true;
                     const args = evaluateParameters(switchTestB, [
@@ -41853,7 +41853,7 @@ ${command.dp}snapshot list`);
                     });
                 }
                 break;
-            case !!switchTest.match(/^butcherdespawn$/):
+            case !!switchTest.match(/^butcherdespawn$/) || !!switchTest.match(/^butdes$/):
                 {
                     eventData.cancel = true;
                     const args = evaluateParameters(switchTestB, [
