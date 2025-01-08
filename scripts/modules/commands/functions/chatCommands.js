@@ -4978,7 +4978,7 @@ case !!switchTest.match(/^settings$/):
         break;
     }
 break; */
-            case !!switchTest.match(/^enderchest$/):
+            case !!switchTest.match(/^enderchest$/) || !!switchTest.match(/^ec$/):
                 eventData.cancel = true;
                 try {
                     player.runCommandAsync("/setblock ~~~ ender_chest");

@@ -7757,7 +7757,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
         }
     break; */
 
-            case !!switchTest.match(/^enderchest$/):
+            case !!switchTest.match(/^enderchest$/) || !!switchTest.match(/^ec$/):
                 eventData.cancel = true;
                 try {
                     player.runCommandAsync("/setblock ~~~ ender_chest");
