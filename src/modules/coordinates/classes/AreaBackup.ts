@@ -118,10 +118,11 @@ export class AreaBackup {
         options?: StructurePlaceOptions,
         sizes: Vector3 = { x: 64, y: 128, z: 64 }
     ) {
-        if (this.backupStructureIds.length == 0) {
+        let ids = this.saveIds(saveTime);
+        if (ids.length == 0) {
             return 0;
         }
-        this.saveIds(saveTime)
+        ids
             .map((v) => ({
                 id: v,
                 x: Number(v.split(",")[1] ?? 0) * sizes.x,

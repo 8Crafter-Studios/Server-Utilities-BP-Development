@@ -132,7 +132,7 @@ export async function chatRanksSettings(
         "javascript template string",
         String(
             world.getDynamicProperty("andexdbSettings:messageTemplateString") ??
-            '§r${timestampenabled?`[${timestamp}]`:""}${ranks}§r${(ranks!="")?" ":""}<${name}§r> ${message}'
+            '§r${timestampenabled?`[${timestamp}]`:""}${ranks}§r${(ranks!="")?" ":""}<${nameFormatting}${name}§r> ${message}'
         )
     );
     form2.textField(

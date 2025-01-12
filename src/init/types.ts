@@ -17,6 +17,8 @@ export type NoRepetition<U extends string, ResultT extends any[] = []> = ResultT
     [k in U]: NoRepetition<Exclude<U, k>, [k, ...ResultT]>
 }[U];
 
+export type LooseAutocomplete<T extends string> = T | Omit<string, T>
+
 export type test1a = [name: number, id: `ID:${number}`, hi: "text"];
 
 declare global {
@@ -38,4 +40,6 @@ declare global {
     type NoRepetition<U extends string, ResultT extends any[] = []> = ResultT | {
         [k in U]: NoRepetition<Exclude<U, k>, [k, ...ResultT]>
     }[U];
+    // Source: https://www.totaltypescript.com/tips/create-autocomplete-helper-which-allows-for-arbitrary-values
+    type LooseAutocomplete<T extends string> = T | Omit<string, T> & string
 }

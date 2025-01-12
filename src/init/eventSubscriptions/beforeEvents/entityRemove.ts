@@ -1,4 +1,4 @@
-import { world } from "@minecraft/server";
+import { Player, world } from "@minecraft/server";
 
 subscribedEvents.beforeEntityRemove = world.beforeEvents.entityRemove.subscribe(
     (event) => {
@@ -15,6 +15,9 @@ subscribedEvents.beforeEntityRemove = world.beforeEvents.entityRemove.subscribe(
                     currentplayer.sendMessage(e + e.stack);
                 }
             });
+        }
+        if(event.removedEntity instanceof Player){
+            event.removedEntity.setDynamicProperty("lastHurtByPlayerTime", 0);
         }
     }
 );

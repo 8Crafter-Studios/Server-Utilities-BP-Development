@@ -29,5 +29,15 @@ declare global {
         };
         var entity_scale_format_version: string | null;
         var multipleEntityScaleVersionsDetected: boolean;
+        var errorLog: {
+            playerDataAutoSave: {
+                time: number;
+                error: Error;
+            }[];
+            [logCategory: string]: {
+                time: number;
+                error: Error;
+            }[];
+        };
     }
 }

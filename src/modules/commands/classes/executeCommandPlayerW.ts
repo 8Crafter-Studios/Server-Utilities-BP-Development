@@ -1,4 +1,37 @@
-import { Player, type Vector3, Dimension, type Vector2, Block, Entity, type RawMessage, EntityInventoryComponent, EntityEquippableComponent, PlayerCursorInventoryComponent, ItemStack, EquipmentSlot, ContainerSlot, type VectorYZ, type VectorXZ, EffectType, type EntityEffectOptions, type MusicOptions, type PlayerSoundOptions, GameMode, type DimensionLocation, MolangVariableMap, type EntityApplyDamageByProjectileOptions, type EntityApplyDamageOptions, type BlockRaycastOptions, type EntityComponentTypeMap, type BlockComponentTypeMap, type EntityRaycastOptions, type EntityQueryOptions, type PlayAnimationOptions, type TeleportOptions, InputInfo } from "@minecraft/server";
+import {
+    Player,
+    type Vector3,
+    Dimension,
+    type Vector2,
+    Block,
+    Entity,
+    type RawMessage,
+    EntityInventoryComponent,
+    EntityEquippableComponent,
+    PlayerCursorInventoryComponent,
+    ItemStack,
+    EquipmentSlot,
+    ContainerSlot,
+    type VectorYZ,
+    type VectorXZ,
+    EffectType,
+    type EntityEffectOptions,
+    type MusicOptions,
+    type PlayerSoundOptions,
+    GameMode,
+    type DimensionLocation,
+    MolangVariableMap,
+    type EntityApplyDamageByProjectileOptions,
+    type EntityApplyDamageOptions,
+    type BlockRaycastOptions,
+    type EntityComponentTypeMap,
+    type BlockComponentTypeMap,
+    type EntityRaycastOptions,
+    type EntityQueryOptions,
+    type PlayAnimationOptions,
+    type TeleportOptions,
+    InputInfo,
+} from "@minecraft/server";
 import { MoneySystem } from "ExtraFeatures/money";
 import { PlayerNotifications } from "init/classes/PlayerNotifications";
 import { PlayerPermissions } from "init/classes/PlayerPermissions";
@@ -9,15 +42,12 @@ import { WorldPosition } from "modules/coordinates/classes/WorldPosition";
 import { anglesToDirectionVectorDeg } from "modules/coordinates/functions/anglesToDirectionVectorDeg";
 import { getChunkIndexD } from "modules/coordinates/functions/getChunkIndexD";
 import type { RotationLocation } from "modules/coordinates/interfaces/RotationLocation";
+import { getStringFromEntityDynamicProperties } from "modules/utilities/functions/getStringFromEntityDynamicProperties";
+import { saveStringToEntityDynamicProperties } from "modules/utilities/functions/saveStringToEntityDynamicProperties";
 
 export class executeCommandPlayerW {
     player?: Player;
-    sendErrorsTo?: Player |
-        Console |
-        Player[] |
-        (() => Player | Player[] | Console) |
-        null |
-        undefined;
+    sendErrorsTo?: Player | Console | Player[] | (() => Player | Player[] | Console) | null | undefined;
     modifiedlocation?: Vector3;
     modifieddimension?: Dimension;
     rotation?: Vector2;
@@ -31,10 +61,7 @@ export class executeCommandPlayerW {
     rawWorldPosition?: WorldPosition;
     raw?: any;
 
-    constructor(
-        player: Player | Entity | WorldPosition,
-        sendErrorsTo?: Player | Console | null | number
-    ) {
+    constructor(player: Player | Entity | WorldPosition, sendErrorsTo?: Player | Console | null | number) {
         if (player instanceof WorldPosition) {
             this.modifiedlocation = player.location;
             this.modifieddimension = player.dimension;
@@ -43,13 +70,8 @@ export class executeCommandPlayerW {
             this.sendErrorsTo =
                 sendErrorsTo === null || Number.isNaN(sendErrorsTo as number)
                     ? null
-                    : (sendErrorsTo as Player |
-                        Player[] |
-                        Console |
-                        (() => Player | Player[] | Console)) ??
-                    (player.entity instanceof Player
-                        ? player.entity
-                        : console);
+                    : (sendErrorsTo as Player | Player[] | Console | (() => Player | Player[] | Console)) ??
+                      (player.entity instanceof Player ? player.entity : console);
             this.block = player.block;
             this.isFromWorldPosition = true;
             this.fromPlayerWorldPosition = player.entity instanceof Player;
@@ -64,11 +86,7 @@ export class executeCommandPlayerW {
             this.sendErrorsTo =
                 sendErrorsTo === null || Number.isNaN(sendErrorsTo as number)
                     ? null
-                    : (sendErrorsTo as Player |
-                        Player[] |
-                        Console |
-                        (() => Player | Player[] | Console)) ??
-                    (player instanceof Player ? player : console);
+                    : (sendErrorsTo as Player | Player[] | Console | (() => Player | Player[] | Console)) ?? (player instanceof Player ? player : console);
             this.modifiedlocation = player.location;
             this.modifieddimension = player.dimension;
             this.rotation = player.getRotation();
@@ -83,23 +101,17 @@ export class executeCommandPlayerW {
                 `Unsupported type ${JSON.stringify(
                     typeof player == "object"
                         ? (
-                            tryget(() => (player as object)?.constructor) ?? {
-                                name: typeof player,
-                            }
-                        ).name
+                              tryget(() => (player as object)?.constructor) ?? {
+                                  name: typeof player,
+                              }
+                          ).name
                         : typeof player
                 )} passed into parameter [0]. `
             );
         }
     }
     toWorldPosition() {
-        return new WorldPosition(
-            this.location,
-            this.getRotation(),
-            this.dimension,
-            this.player,
-            this.block
-        );
+        return new WorldPosition(this.location, this.getRotation(), this.dimension, this.player, this.block);
     }
     run(command: string) {
         chatCommands({
@@ -118,16 +130,7 @@ export class executeCommandPlayerW {
             player: this.player as Player,
         });
     }
-    sendError(
-        error: any,
-        sendErrorAsIs: boolean = false,
-        sendErrorsTo?: Player |
-            Console |
-            Player[] |
-            (() => Player | Player[] | Console) |
-            null |
-            undefined
-    ) {
+    sendError(error: any, sendErrorAsIs: boolean = false, sendErrorsTo?: Player | Console | Player[] | (() => Player | Player[] | Console) | null | undefined) {
         const sest = sendErrorsTo ?? this.sendErrorsTo;
         if (!!sest) {
             if (sendErrorAsIs) {
@@ -152,12 +155,10 @@ export class executeCommandPlayerW {
                         typeof error == "string"
                             ? error
                             : "rawtext" in error
-                                ? error
-                                : typeof error == "object"
-                                    ? tryget(() => JSONStringify(error)) ??
-                                    tryget(() => JSON.stringify(error)) ??
-                                    String(error)
-                                    : String(error)
+                            ? error
+                            : typeof error == "object"
+                            ? tryget(() => JSONStringify(error)) ?? tryget(() => JSON.stringify(error)) ?? String(error)
+                            : String(error)
                     );
                 } else if (sest instanceof Array) {
                     sest.forEach((v) => {
@@ -166,26 +167,22 @@ export class executeCommandPlayerW {
                                 typeof error == "string"
                                     ? error
                                     : "rawtext" in error
-                                        ? error
-                                        : typeof error == "object"
-                                            ? tryget(() => JSONStringify(error)) ??
-                                            tryget(() => JSON.stringify(error)) ??
-                                            String(error)
-                                            : String(error)
+                                    ? error
+                                    : typeof error == "object"
+                                    ? tryget(() => JSONStringify(error)) ?? tryget(() => JSON.stringify(error)) ?? String(error)
+                                    : String(error)
                             );
                         } else if ("warn" in (v as any as Console)) {
                             (v as any as Console).error(
                                 typeof error == "string"
                                     ? error
                                     : "rawtext" in error
-                                        ? error
-                                        : error instanceof Array
-                                            ? error
-                                            : typeof error == "object"
-                                                ? tryget(() => JSONStringify(error)) ??
-                                                tryget(() => JSON.stringify(error)) ??
-                                                String(error)
-                                                : String(error)
+                                    ? error
+                                    : error instanceof Array
+                                    ? error
+                                    : typeof error == "object"
+                                    ? tryget(() => JSONStringify(error)) ?? tryget(() => JSON.stringify(error)) ?? String(error)
+                                    : String(error)
                             );
                         }
                     });
@@ -194,14 +191,12 @@ export class executeCommandPlayerW {
                         typeof error == "string"
                             ? error
                             : "rawtext" in error
-                                ? error
-                                : error instanceof Array
-                                    ? error
-                                    : typeof error == "object"
-                                        ? tryget(() => JSONStringify(error)) ??
-                                        tryget(() => JSON.stringify(error)) ??
-                                        String(error)
-                                        : String(error)
+                            ? error
+                            : error instanceof Array
+                            ? error
+                            : typeof error == "object"
+                            ? tryget(() => JSONStringify(error)) ?? tryget(() => JSON.stringify(error)) ?? String(error)
+                            : String(error)
                     );
                 } else if (typeof sest == "function") {
                     this.sendError(error as string, true, sest());
@@ -211,12 +206,7 @@ export class executeCommandPlayerW {
     }
     sendMessageB(
         message: string | RawMessage | (string | RawMessage)[],
-        sendErrorsTo?: Player |
-            Console |
-            Player[] |
-            (() => Player | Player[] | Console) |
-            null |
-            undefined
+        sendErrorsTo?: Player | Console | Player[] | (() => Player | Player[] | Console) | null | undefined
     ) {
         const sest = sendErrorsTo ?? this.sendErrorsTo;
         if (!!sest) {
@@ -250,18 +240,14 @@ export class executeCommandPlayerW {
         if (!!!this.getComponent("equippable")) {
             return undefined;
         } else {
-            return this.getComponent("equippable").getEquipment(
-                EquipmentSlot.Mainhand
-            );
+            return this.getComponent("equippable").getEquipment(EquipmentSlot.Mainhand);
         }
     }
     get activeSlot(): ContainerSlot | undefined {
         if (!!!this.getComponent("equippable")) {
             return undefined;
         } else {
-            return this.getComponent("equippable").getEquipmentSlot(
-                EquipmentSlot.Mainhand
-            );
+            return this.getComponent("equippable").getEquipmentSlot(EquipmentSlot.Mainhand);
         }
     }
     get moneySystem(): MoneySystem {
@@ -286,11 +272,7 @@ export class executeCommandPlayerW {
         return this.modifiedlocation ?? this.player?.location;
     }
     get locationstring(): `${number} ${number} ${number}` {
-        return (this.x +
-            " " +
-            this.y +
-            " " +
-            this.z) as `${number} ${number} ${number}`;
+        return (this.x + " " + this.y + " " + this.z) as `${number} ${number} ${number}`;
     }
     get rotationstring(): `${number} ${number}` {
         return (this.rotx + " " + this.roty) as `${number} ${number}`;
@@ -335,18 +317,10 @@ export class executeCommandPlayerW {
         return this.rotation?.y ?? this.player?.getRotation?.()?.y;
     }
     get timeZone(): number {
-        return (
-            this.getDynamicProperty("andexdbPersonalSettings:timeZone") ??
-            config.system.timeZone
-        )
-            .toString()
-            .toNumber();
+        return (this.getDynamicProperty("andexdbPersonalSettings:timeZone") ?? config.system.timeZone).toString().toNumber();
     }
     set timeZone(timezone: number | string | boolean | null | undefined) {
-        this.setDynamicProperty(
-            "andexdbPersonalSettings:timeZone",
-            !!timezone ? timezone.toString() : undefined
-        );
+        this.setDynamicProperty("andexdbPersonalSettings:timeZone", !!timezone ? timezone.toString() : undefined);
     }
     get camera() {
         return this.player?.camera;
@@ -431,11 +405,7 @@ export class executeCommandPlayerW {
     get inputInfo() {
         return this.player?.inputInfo;
     }
-    addEffect(
-        effectType: string | EffectType,
-        duration: number,
-        options?: EntityEffectOptions
-    ) {
+    addEffect(effectType: string | EffectType, duration: number, options?: EntityEffectOptions) {
         return this.player?.addEffect(effectType, duration, options);
     }
     addExperience(amount: number) {
@@ -445,9 +415,7 @@ export class executeCommandPlayerW {
         return this.rotation ?? this.player?.getRotation();
     }
     getViewDirection() {
-        return !!this.rotation
-            ? anglesToDirectionVectorDeg(this.rotation.x, this.rotation.y)
-            : this.player?.getViewDirection();
+        return !!this.rotation ? anglesToDirectionVectorDeg(this.rotation.x, this.rotation.y) : this.player?.getViewDirection();
     }
     addLevels(amount: number) {
         return this.player?.addLevels(amount);
@@ -500,16 +468,8 @@ export class executeCommandPlayerW {
     setSpawnPoint(spawnPoint?: DimensionLocation) {
         return this.player?.setSpawnPoint(spawnPoint);
     }
-    spawnParticle(
-        effectName: string,
-        location: Vector3,
-        molangVariables?: MolangVariableMap
-    ) {
-        return this.player?.spawnParticle(
-            effectName,
-            location,
-            molangVariables
-        );
+    spawnParticle(effectName: string, location: Vector3, molangVariables?: MolangVariableMap) {
+        return this.player?.spawnParticle(effectName, location, molangVariables);
     }
     startItemCooldown(itemCategory: string, tickDuration: number) {
         return this.player?.startItemCooldown(itemCategory, tickDuration);
@@ -520,28 +480,14 @@ export class executeCommandPlayerW {
     addTag(tag: string) {
         return this.player?.addTag(tag);
     }
-    applyDamage(
-        amount: number,
-        options?: EntityApplyDamageByProjectileOptions |
-            EntityApplyDamageOptions
-    ) {
+    applyDamage(amount: number, options?: EntityApplyDamageByProjectileOptions | EntityApplyDamageOptions) {
         return this.player?.applyDamage(amount, options);
     }
     applyImpulse(vector: Vector3) {
         return this.player?.applyImpulse(vector);
     }
-    applyKnockback(
-        directionX: number,
-        directionZ: number,
-        horizontalStrength: number,
-        verticalStrength: number
-    ) {
-        return this.player?.applyKnockback(
-            directionX,
-            directionZ,
-            horizontalStrength,
-            verticalStrength
-        );
+    applyKnockback(directionX: number, directionZ: number, horizontalStrength: number, verticalStrength: number) {
+        return this.player?.applyKnockback(directionX, directionZ, horizontalStrength, verticalStrength);
     }
     clearDynamicProperties() {
         return this.player?.clearDynamicProperties();
@@ -555,25 +501,21 @@ export class executeCommandPlayerW {
     getBlockFromViewDirection(options?: BlockRaycastOptions) {
         return this.player?.getBlockFromViewDirection(options);
     }
-    getComponent<T extends keyof EntityComponentTypeMap>(
+    getComponent<T extends keyof EntityComponentTypeMap>(componentId: T): EntityComponentTypeMap[T] | undefined;
+    getComponent<T extends keyof BlockComponentTypeMap>(componentId: T): BlockComponentTypeMap[T] | undefined;
+    getComponent<T extends keyof EntityComponentTypeMap | keyof BlockComponentTypeMap>(
         componentId: T
-    ): EntityComponentTypeMap[T] | undefined;
-    getComponent<T extends keyof BlockComponentTypeMap>(
-        componentId: T
-    ): BlockComponentTypeMap[T] | undefined;
-    getComponent<
-        T extends keyof EntityComponentTypeMap | keyof BlockComponentTypeMap
-    >(
-        componentId: T
-    ): T extends keyof EntityComponentTypeMap ? EntityComponentTypeMap[T] | undefined : T extends keyof BlockComponentTypeMap ? BlockComponentTypeMap[T] | undefined : undefined {
-        return (tryget(() => this.player?.getComponent(
-            componentId as keyof EntityComponentTypeMap
-        )
-        ) ??
-            tryget(() => this.block?.getComponent(
-                componentId as keyof BlockComponentTypeMap
-            )
-            )) as T extends keyof EntityComponentTypeMap ? EntityComponentTypeMap[T] | undefined : T extends keyof BlockComponentTypeMap ? BlockComponentTypeMap[T] | undefined : undefined;
+    ): T extends keyof EntityComponentTypeMap
+        ? EntityComponentTypeMap[T] | undefined
+        : T extends keyof BlockComponentTypeMap
+        ? BlockComponentTypeMap[T] | undefined
+        : undefined {
+        return (tryget(() => this.player?.getComponent(componentId as keyof EntityComponentTypeMap)) ??
+            tryget(() => this.block?.getComponent(componentId as keyof BlockComponentTypeMap))) as T extends keyof EntityComponentTypeMap
+            ? EntityComponentTypeMap[T] | undefined
+            : T extends keyof BlockComponentTypeMap
+            ? BlockComponentTypeMap[T] | undefined
+            : undefined;
     }
     getComponents() {
         return this.player?.getComponents();
@@ -644,10 +586,7 @@ export class executeCommandPlayerW {
     runCommandAsync(commandString: string) {
         return this.player?.runCommandAsync(commandString);
     }
-    setDynamicProperty(
-        identifier: string,
-        value?: string | number | boolean | Vector3
-    ) {
+    setDynamicProperty(identifier: string, value?: string | number | boolean | Vector3) {
         return this.player?.setDynamicProperty(identifier, value);
     }
     setOnFire(seconds: number, useEffects?: boolean) {
@@ -667,5 +606,11 @@ export class executeCommandPlayerW {
     }
     tryTeleport(location: Vector3, teleportOptions?: TeleportOptions) {
         return this.player?.tryTeleport(location, teleportOptions);
+    }
+    saveStringToDynamicProperties(string: string, propertyName: string, clearOldProperties: boolean = true, chunkSize: number | bigint = 32760): void {
+        return saveStringToEntityDynamicProperties(this.player as Entity, string, propertyName, clearOldProperties, chunkSize);
+    }
+    getStringFromDynamicProperties(propertyName: string, zeroLengthPlaceholder: string = ""): string {
+        return getStringFromEntityDynamicProperties(this.player as Entity, propertyName, zeroLengthPlaceholder);
     }
 }

@@ -20,6 +20,13 @@ globalThis.editorStickMenuOpeningAsyncCancelActionNumbers = {};
 globalThis.crashEnabled = false;
 globalThis.tempSavedVariables = [];
 globalThis.scriptStartTick = -1;
+Object.defineProperties(globalThis, {
+    errorLog: {
+        value: {
+            playerDataAutoSave: []
+        },
+    }
+});
 /* Object.defineProperty(console, "error", {
     value: function error(...args: any[]) {
         world.sendMessage(args.join(" "));

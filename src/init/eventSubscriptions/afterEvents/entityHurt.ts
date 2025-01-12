@@ -105,5 +105,8 @@ subscribedEvents.afterEntityHurt = world.afterEvents.entityHurt.subscribe(
         } catch (e) {
             console.error(e, e.stack);
         }
+        if(event.hurtEntity instanceof Player && event.damageSource.damagingEntity instanceof Player && event.hurtEntity != event.damageSource.damagingEntity){
+            event.hurtEntity.setDynamicProperty("lastHurtByPlayerTime", Date.now());
+        }
     }
 );
