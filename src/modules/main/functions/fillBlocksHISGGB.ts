@@ -5,9 +5,11 @@ import { generateMinecraftSphereBGProgress } from "modules/coordinates/constants
 import { generatorProgress } from "modules/coordinates/constants/generatorProgress";
 import { generateInverseSkygridBG } from "modules/coordinates/functions/generateInverseSkygridBG";
 import { generateMinecraftSphereBGIdGenerator } from "modules/coordinates/functions/generateMinecraftSphereBGIdGenerator";
+import type { fillInverseSkygrid } from "modules/block_generation_utilities/functions/fillInverseSkygrid"
 
 /**
  * Generates an inverse skygrid.
+ * @deprecated Legacy function. Superceeded by {@link fillInverseSkygrid}.
  * @since 1.18.0-development.20
  * @version 1.0.0
  * @async

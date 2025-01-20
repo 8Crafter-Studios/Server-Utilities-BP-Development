@@ -2,9 +2,10 @@ import { type Vector3, Dimension, BlockVolume, CompoundBlockVolume, BlockPermuta
 import { clearAllContainerBlocks } from "modules/main/functions/clearAllContainerBlocks";
 import { fillBlocksB } from "modules/main/functions/fillBlocksB";
 import { scanForContainerBlocks } from "modules/main/functions/scanForContainerBlocks";
+import type { fillBlocksHWG } from "./fillBlocksHWG"
 
 /**
- * @deprecated
+ * @deprecated Legacy function that may cause script hang error. Superceeded by {@link fillBlocksHWG}.
  */
 export function fillBlocksHW(
     from: Vector3,

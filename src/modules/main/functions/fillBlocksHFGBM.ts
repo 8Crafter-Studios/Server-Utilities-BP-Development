@@ -5,9 +5,11 @@ import { testBlockForMatchToMask } from "modules/commands/functions/testBlockFor
 import { generatorProgress } from "modules/coordinates/constants/generatorProgress";
 import { generateFillBG } from "modules/coordinates/functions/generateFillBG";
 import { generatorProgressIdGenerator } from "modules/coordinates/functions/generatorProgressIdGenerator";
+import type { fillArea } from "modules/block_generation_utilities/functions/fillArea"
 
 /**
  * Generates a fill. Supports block masks.
+ * @deprecated Legacy function. Superceeded by {@link fillArea}.
  * @async
  * @param {Vector3} begin The location of a corner of the area to fill in.
  * @param {Vector3} end The location of the opposite corner of the area to fill in.

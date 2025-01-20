@@ -4,9 +4,10 @@ import { generateMinecraftSphereBGProgress } from "modules/coordinates/constants
 import { generatorProgress } from "modules/coordinates/constants/generatorProgress";
 import { generateMinecraftSemiSphereBG } from "modules/coordinates/functions/generateMinecraftSemiSphereBG";
 import { generateMinecraftSphereBGIdGenerator } from "modules/coordinates/functions/generateMinecraftSphereBGIdGenerator";
+import type { fillSemiSphere } from "modules/block_generation_utilities/functions/fillSemiSphere"
 
 /**
- * @todo Make the new updated version of this function and then deprecate this one.
+ * @deprecated Legacy function. Superceeded by {@link fillSemiSphere}.
  */
 export async function fillBlocksHSSG(
     center: Vector3,

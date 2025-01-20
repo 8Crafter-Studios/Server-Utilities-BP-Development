@@ -3,9 +3,10 @@ import { clearContainer } from "modules/command_utilities/functions/clearContain
 import { generatorProgress } from "modules/coordinates/constants/generatorProgress";
 import { generateDomeBG } from "modules/coordinates/functions/generateDomeBG";
 import { generatorProgressIdGenerator } from "modules/coordinates/functions/generatorProgressIdGenerator";
+import type { fillDome } from "modules/block_generation_utilities/functions/fillDome"
 
 /**
- * @todo Make the new updated version of this function and then deprecate this one.
+ * @deprecated Legacy function. Superceeded by {@link fillDome}.
  */
 export async function fillBlocksHDG(
     center: Vector3,

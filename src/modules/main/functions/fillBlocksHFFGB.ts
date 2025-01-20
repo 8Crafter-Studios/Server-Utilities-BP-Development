@@ -2,9 +2,11 @@ import { type Vector3, Dimension, system, LocationInUnloadedChunkError } from "@
 import { generatorProgress } from "modules/coordinates/constants/generatorProgress";
 import { generateFillBG } from "modules/coordinates/functions/generateFillBG";
 import { generatorProgressIdGenerator } from "modules/coordinates/functions/generatorProgressIdGenerator";
+import type { fillFlood } from "modules/block_generation_utilities/functions/fillFlood"
 
 /**
  * Generates a flood fill.
+ * @deprecated Legacy function. Superceeded by {@link fillFlood}.
  * @async
  * @param {Vector3} begin The location of a corner of the area to flood.
  * @param {Vector3} end The location of the opposite corner of the area to flood.

@@ -9,7 +9,7 @@ export function getCommandHelpPageForModBayCommandsDocumentation(commandName: st
     return (!!!commanddescriptions[cmd.commandName] && !!!commandsyntaxes[cmd.commandName] && !!!commandflags[cmd.commandName] && !!!cmd.command_version)
         ? `§cError: Unknown command "${cmd.commandName}§r§c", check that the command exists, if it does then there is just no help info for it, if you specified an alias of a command try using the full name of the command instead.`
         : `${!cmd.commandName.startsWith("\\") ? "\\" + cmd.commandName : cmd.commandName}\n${(commanddescriptions[cmd.commandName] ?? cmd.settings.defaultSettings?.description).replaceAll(/§[a-zA-Z]/g, "")}\nCommand Syntax:\n- ${(
-            commandsyntaxes[cmd.currentCommandName] ?? commandsyntaxes[cmd.commandName] ?? tryget(() => cmd.formats["map"](v => !!v?.format ? v.format : v).join(" ")) ?? (typeof cmd.formats == "string" ? cmd.formats : undefined) ?? "missing"
+            commandsyntaxes[cmd.currentCommandName] ?? commandsyntaxes[cmd.commandName]?.replaceAll((cmd.commandName.startsWith("\\\\") ? command.dp + cmd.commandName.slice(1) : command.dp + cmd.commandName) + " ", (cmd.currentCommandName.startsWith("\\\\") ? command.dp + cmd.currentCommandName.slice(1) : command.dp + cmd.currentCommandName) + " ") ?? commandsyntaxes[cmd.commandName] ?? tryget(() => cmd.formats["map"](v => !!v?.format ? v.format : v).join(" ")) ?? (typeof cmd.formats == "string" ? cmd.formats : undefined) ?? "missing"
         )
             .split("\n")
             .join("§r\n- ")}${!!!commandflags[cmd.currentCommandName]

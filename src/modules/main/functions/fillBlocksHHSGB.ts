@@ -5,9 +5,11 @@ import { generateMinecraftSphereBGProgress } from "modules/coordinates/constants
 import { generatorProgress } from "modules/coordinates/constants/generatorProgress";
 import { generateHollowSphereBG } from "modules/coordinates/functions/generateHollowSphereBG";
 import { generateMinecraftSphereBGIdGenerator } from "modules/coordinates/functions/generateMinecraftSphereBGIdGenerator";
+import type { fillHollowSphere } from "modules/block_generation_utilities/functions/fillHollowSphere"
 
 /**
  * Generates a hollow sphere.
+ * @deprecated Legacy function. Superceeded by {@link fillHollowSphere}.
  * @since 1.18.0-development.27
  * @version 1.0.0
  * @param {Vector3} center The location of the center of the hollow sphere.

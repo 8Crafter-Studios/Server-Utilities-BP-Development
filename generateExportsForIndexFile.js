@@ -15,4 +15,4 @@ function getFiles (dir, files_){
     return files_;
 }
 
-console.log(getFiles(path).filter(da=>da!=path+'/index.ts').map(db=>'export * from \x22./'+db.slice(path+'/'.length, -3)+'\x22').join('\n'))
+console.log(getFiles(path).filter(da=>da!=path.split("/").slice(2).join("/")+'/index.ts').map(db=>'export * from \x22./'+db.slice(path.split("/").slice(2).join("/")+'/'.length, -3)+'\x22').join('\n'))

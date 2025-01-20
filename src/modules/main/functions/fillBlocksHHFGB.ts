@@ -4,9 +4,11 @@ import { testBlockForMatch } from "modules/commands/functions/testBlockForMatch"
 import { generatorProgress } from "modules/coordinates/constants/generatorProgress";
 import { generateHollowFillBG } from "modules/coordinates/functions/generateHollowFillBG";
 import { generatorProgressIdGenerator } from "modules/coordinates/functions/generatorProgressIdGenerator";
+import type { fillHollow } from "modules/block_generation_utilities/functions/fillHollow"
 
 /**
  * Generates a hollow fill.
+ * @deprecated Legacy function. Superceeded by {@link fillHollow}.
  * @async
  * @param {Vector3} begin The location of a corner of the area to have its edges filled in.
  * @param {Vector3} end The location of the opposite corner of the area to have its edges filled in.

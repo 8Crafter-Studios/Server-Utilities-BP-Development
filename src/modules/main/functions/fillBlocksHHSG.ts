@@ -3,10 +3,11 @@ import { clearContainer } from "modules/command_utilities/functions/clearContain
 import { generatorProgress } from "modules/coordinates/constants/generatorProgress";
 import { generateHollowSphereBG } from "modules/coordinates/functions/generateHollowSphereBG";
 import { generatorProgressIdGenerator } from "modules/coordinates/functions/generatorProgressIdGenerator";
+import type { fillBlocksHHSGB } from "./fillBlocksHHSGB"
 
 /**
  * Generates a hollow sphere.
- * @deprecated Legacy function. Superceeded by fillBlocksHHSGB().
+ * @deprecated Legacy function. Superceeded by {@link fillBlocksHHSGB}.
  * @async
  * @param {Vector3} center The location of the center of the hollow sphere.
  * @param {number} radius Radius of the hollow sphere.

@@ -10,7 +10,7 @@ export function getCommandHelpPage(commandName: string, player?: Player | execut
     return !!!commanddescriptions[cmd.commandName] && !!!commandsyntaxes[cmd.commandName] && !!!commandflags[cmd.commandName] && !!!cmd.command_version && !cmd.isHidden
         ? `§cError: Unknown command "${cmd.commandName}§r§c", check that the command exists, if it does then there is just no help info for it, if you specified an alias of a command try using the full name of the command instead.`
         : `§e${cmd.commandName}${(cmd.aliases?.length ?? 0) != 0 ? ` (also ${cmd.aliases.map((v) => v.commandName).join(", ")})` : ""}:\n${commanddescriptions[cmd.commandName] ?? cmd.description}§r\nUsage:\n- ${(
-            commandsyntaxes[cmd.currentCommandName] ?? tryget(() => cmd.formats?.["map"](v => !!v?.format ? v.format : v).join(" ")) ?? (typeof cmd.formats == "string" ? cmd.formats : undefined) ?? "missing"
+            commandsyntaxes[cmd.currentCommandName] ?? commandsyntaxes[cmd.commandName]?.replaceAll((cmd.commandName.startsWith("\\\\") ? command.dp + cmd.commandName.slice(1) : command.dp + cmd.commandName) + " ", (cmd.currentCommandName.startsWith("\\\\") ? command.dp + cmd.currentCommandName.slice(1) : command.dp + cmd.currentCommandName) + " ") ?? tryget(() => cmd.formats?.["map"](v => !!v?.format ? v.format : v).join(" ")) ?? (typeof cmd.formats == "string" ? cmd.formats : undefined) ?? "missing"
         )
             .split("\n")
             .join("§r\n- ")}${!!!commandflags[cmd.currentCommandName]

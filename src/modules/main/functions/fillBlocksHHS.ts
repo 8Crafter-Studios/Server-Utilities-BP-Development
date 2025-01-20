@@ -2,10 +2,11 @@ import { type Vector3, Dimension, BlockPermutation, BlockTypes } from "@minecraf
 import { clearContainer } from "modules/command_utilities/functions/clearContainer";
 import { degradeArray } from "modules/coordinates/functions/degradeArray";
 import { generateHollowSphere } from "modules/coordinates/functions/generateHollowSphere";
+import type { fillBlocksHHSG } from "./fillBlocksHHSG"
 
 /**
  * Generates a hollow sphere.
- * @deprecated Legacy function that may cause script hang errors. Superceeded by fillBlocksHHSGB().
+ * @deprecated Legacy function that may cause script hang errors. Superceeded by {@link fillBlocksHHSG}.
  * @param {Vector3} center The location of the center of the hollow sphere.
  * @param {number} radius Radius of the hollow sphere.
  * @param {number} thickness Thickness of the hollow sphere.

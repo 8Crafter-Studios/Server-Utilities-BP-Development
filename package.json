@@ -1,6 +1,6 @@
 {
   "name": "debug-sticks",
-  "version": "1.28.0-preview.20+BUILD.1",
+  "version": "1.29.0-preview.20+BUILD.1",
   "description": "",
   "main": "scripts/Main.js",
   "scripts": {

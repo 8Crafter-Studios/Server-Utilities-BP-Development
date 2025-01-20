@@ -2,17 +2,19 @@ import { type Vector3, Dimension, system, LocationInUnloadedChunkError } from "@
 import { generatorProgress } from "modules/coordinates/constants/generatorProgress";
 import { generateFillBG } from "modules/coordinates/functions/generateFillBG";
 import { generatorProgressIdGenerator } from "modules/coordinates/functions/generatorProgressIdGenerator";
+import type { fillDrain } from "modules/block_generation_utilities/functions/fillDrain"
 
 /**
  * Generates a drain fill.
+ * @deprecated Legacy function. Superceeded by {@link fillDrain}.
  * @async
- * @param {Vector3} begin The location of a corner of the area to flood.
- * @param {Vector3} end The location of the opposite corner of the area to flood.
- * @param {Dimension} dimension The dimension to generate the flood fill in.
+ * @param {Vector3} begin The location of a corner of the area to drain.
+ * @param {Vector3} end The location of the opposite corner of the area to drain.
+ * @param {Dimension} dimension The dimension to generate the drain fill in.
  * @param options Optional extra options for the fill generation execution.
  * @param options.minMSBetweenYields The shortest the generation can run for before pausing until the next tick.
- * @param integrity The integrity of the flood fill generation.
- * @returns A promise that resolves with the details of the flood fill generation once the flood fill generation is complete.
+ * @param integrity The integrity of the drain fill generation.
+ * @returns A promise that resolves with the details of the drain fill generation once the drain fill generation is complete.
  */
 export async function fillBlocksHDFGB(
     begin: Vector3,

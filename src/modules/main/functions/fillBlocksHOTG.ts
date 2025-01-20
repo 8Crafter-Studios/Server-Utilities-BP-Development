@@ -3,9 +3,10 @@ import { clearContainer } from "modules/command_utilities/functions/clearContain
 import { generatorProgress } from "modules/coordinates/constants/generatorProgress";
 import { generateOutlineFillBG } from "modules/coordinates/functions/generateOutlineFillBG";
 import { generatorProgressIdGenerator } from "modules/coordinates/functions/generatorProgressIdGenerator";
+import type { fillBlocksHOFGB } from "./fillBlocksHOFGB"
 
 /**
- * @deprecated
+ * @deprecated Legacy function. Superceeded by {@link fillBlocksHOFGB}.
  */
 export async function fillBlocksHOTG(
     begin: Vector3,

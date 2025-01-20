@@ -4,10 +4,11 @@ import { clearContainer } from "modules/command_utilities/functions/clearContain
 import { generatorProgress } from "modules/coordinates/constants/generatorProgress";
 import { generateInverseSkygridBG } from "modules/coordinates/functions/generateInverseSkygridBG";
 import { generatorProgressIdGenerator } from "modules/coordinates/functions/generatorProgressIdGenerator";
+import type { fillBlocksHISGGB } from "./fillBlocksHISGGB"
 
 /**
  * Generates an inverse skygrid.
- * @deprecated
+ * @deprecated Legacy function. Superceeded by {@link fillBlocksHISGGB}.
  * @async
  * @param {Vector3} from The location of a corner of the area to generate the inverse skygrid in.
  * @param {Vector3} to The location of the opposite corner of the area to generate the inverse skygrid in.

@@ -30,6 +30,7 @@ type moduleNameForModuleImportsConfig =
     keyof typeof moduleOptionalImportPathMap;
 export const moduleNamesForModuleImportsConfigList = [
     "ban",
+    "block_generation_utilities",
     "chat",
     "command_utilities",
     "commands",
@@ -46,6 +47,7 @@ export const moduleNamesForModuleImportsConfigList = [
 
 export const moduleNamesForModuleImportsConfigListDisplay = [
     { name: "ban", icon: "" },
+    { name: "block_generation_utilities", icon: "" },
     { name: "chat", icon: "" },
     { name: "command_utilities", icon: "" },
     { name: "commands", icon: "" },
@@ -129,6 +131,41 @@ export class moduleImportsConfig {
             ) {
                 swdp(
                     "moduleImportsConfig:moduleOverride.ban",
+                    [
+                        "none",
+                        "disableAll",
+                        "enableAll",
+                        "enableAllNonDeprecated",
+                    ].includes(option as any)
+                        ? option
+                        : "none"
+                );
+            },
+            get block_generation_utilities() {
+                const option = gwdp(
+                    "moduleImportsConfig:moduleOverride.block_generation_utilities"
+                ) as any;
+                if (option == "disableAll") {
+                    return "disableAll";
+                } else if (option == "enableAll") {
+                    return "enableAll";
+                } else if (option == "enableAllNonDeprecated") {
+                    return "enableAllNonDeprecated";
+                } else {
+                    return "none";
+                }
+            },
+            set block_generation_utilities(
+                option:
+                    | "none"
+                    | "disableAll"
+                    | "enableAll"
+                    | "enableAllNonDeprecated"
+                    | undefined
+                    | null
+            ) {
+                swdp(
+                    "moduleImportsConfig:moduleOverride.block_generation_utilities",
                     [
                         "none",
                         "disableAll",
@@ -589,10 +626,9 @@ export class moduleImportsConfig {
         this.setJSON(this.default);
     }
     static toJSON(): moduleImportNamesToModuleImportsConfigObjectMapper<0 | 1> {
-        return (JSON.parse(
+        return Object.assign(this.default, Object.fromEntries(Object.entries(JSON.parse(
             getStringFromDynamicProperties("moduleImportsConfigData", "null")
-        ) ??
-            this.default) as moduleImportNamesToModuleImportsConfigObjectMapper<
+        ) ?? {}).filter((f) => optionalModuleObjectImportFilePaths.includes(f[0] as any)))) as moduleImportNamesToModuleImportsConfigObjectMapper<
             0 | 1
         >;
     }
@@ -600,7 +636,7 @@ export class moduleImportsConfig {
         module: moduleNameForModuleImportsConfig
     ): Partial<moduleImportNamesToModuleImportsConfigObjectMapper<0 | 1>> {
         let string = getStringFromDynamicProperties("moduleImportsConfigData");
-        return Object.fromEntries(
+        return Object.assign(Object.fromEntries(moduleOptionalImportPathMap[module].map(v=>[v, 0])), Object.fromEntries(
             (
                 Object.entries(
                     JSON.parse(
@@ -614,8 +650,8 @@ export class moduleImportsConfig {
                     >,
                     0 | 1
                 ][]
-            ).filter((f) => f[0].startsWith(`BP/scripts/modules/${module}/`))
-        ) as Partial<moduleImportNamesToModuleImportsConfigObjectMapper<0 | 1>>;
+            ).filter((f) => f[0].startsWith(`BP/scripts/modules/${module}/`) && moduleOptionalImportPathMap[module].includes(f[0] as never))
+        )) as Partial<moduleImportNamesToModuleImportsConfigObjectMapper<0 | 1>>;
     }
     static setJSON(
         json: moduleImportNamesToModuleImportsConfigObjectMapper<0 | 1>

@@ -39,6 +39,7 @@ import {
     Dimension,
     EntityComponentTypes,
     Direction,
+    MolangVariableMap,
 } from "@minecraft/server";
 import { uiManager } from "@minecraft/server-ui";
 import { listoftransformrecipes } from "Assets/constants/transformrecipes";
@@ -189,6 +190,18 @@ import type { BlockMask } from "legacyModuleAliases/commands";
 import { mazeGenerator } from "modules/utilities/functions/mazeGenerator";
 import { regenerateBlocksBasic } from "modules/utilities/functions/regenerateBlocksBasic";
 import * as semver from "semver"
+import { fillArea } from "modules/block_generation_utilities/functions/fillArea";
+import { fillWalls } from "modules/block_generation_utilities/functions/fillWalls";
+import { fillTunnel } from "modules/block_generation_utilities/functions/fillTunnel";
+import { fillHollow } from "modules/block_generation_utilities/functions/fillHollow";
+import { fillSphere } from "modules/block_generation_utilities/functions/fillSphere";
+import { fillHollowSphere } from "modules/block_generation_utilities/functions/fillHollowSphere";
+import { fillCone } from "modules/block_generation_utilities/functions/fillCone";
+import { fillFlood } from "modules/block_generation_utilities/functions/fillFlood";
+import { fillDrain } from "modules/block_generation_utilities/functions/fillDrain";
+import { fillCylinder } from "modules/block_generation_utilities/functions/fillCylinder";
+import { fillStretchedSphere } from "modules/block_generation_utilities/functions/fillStretchedSphere";
+import { fillOutline } from "modules/block_generation_utilities/functions/fillOutline";
 
 export function chatCommands(params: {
     returnBeforeChatSend: boolean | undefined;
@@ -10319,7 +10332,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                     eventData.cancel = true;
                     let l = caretNotationC(
                         player.location,
-                        Vector3Utils.scale(VECTOR3_FORWARD, 2),
+                        {x: 0, y: 0, z: 2},
                         player.getRotation()
                     );
                     try {
@@ -27467,40 +27480,50 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         "presetText",
                         "presetText",
                         "presetText",
-                        "string",
-                        "string",
+                        "targetSelector",
+                        "targetSelector",
                     ]).args;
                     if (args[3] == "~") {
-                        args[3] = player.name;
+                        args[3] = JSON.stringify(player.name);
                     }
                     if (!!!args[3]) {
-                        args[3] = player.name;
+                        args[3] = JSON.stringify(player.name);
                     }
                     if (args[4] == "~") {
-                        args[4] = player.name;
+                        args[4] = JSON.stringify(player.name);
                     }
                     if (!!!args[4]) {
-                        args[4] = player.name;
+                        args[4] = JSON.stringify(player.name);
                     }
-                    const target = world
-                        .getAllPlayers()
-                        .find((_) => _.name == args[3]);
-                    const targetb = world
-                        .getAllPlayers()
-                        .find((_) => _.name == args[4]);
-                    args[1] ??= "0";
-                    args[2] ??= "0";
-                    if (!!!target) {
+                    let target = targetSelectorAllListC(
+                        args[3],
+                        "",
+                        vTStr(player.location),
+                        player
+                    ).find(
+                        (v) => v.typeId == "minecraft:player"
+                    ) as Player;
+                    let targetb = targetSelectorAllListC(
+                        args[4],
+                        "",
+                        vTStr(player.location),
+                        player
+                    ).find(
+                        (v) => v.typeId == "minecraft:player"
+                    ) as Player;
+                    if (target == undefined) {
                         player.sendError(
-                            `§cError: Unable to find player with the name ${args[3]}. `,
+                            `§cError: No players matching the specified target selector for player1 were found. `,
                             true
                         );
-                    } else if (!!!targetb) {
+                    } else if (target == undefined) {
                         player.sendError(
-                            `§cError: Unable to find player with the name ${args[4]}. `,
+                            `§cError: No players matching the specified target selector for player1 were found. `,
                             true
                         );
                     } else {
+                        args[1] ??= "0";
+                        args[2] ??= "0";
                         system.run(() => {
                             const targetInventory = target.inventory;
                             const targetInventoryB = targetb.inventory;
@@ -29755,6 +29778,56 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                     );
                 }
                 break;
+            case !!switchTest.match(/^\\savestructure$/):
+                {
+                    eventData.cancel = true;
+                    const coordinatesa = player.getDynamicProperty("pos1") as
+                        | Vector3
+                        | undefined;
+                    const coordinatesb = player.getDynamicProperty("pos2") as
+                        | Vector3
+                        | undefined;
+                    const dimensiona = world.getDimension(
+                        (player.getDynamicProperty("posD") ??
+                            player.dimension.id) as string
+                    ) as Dimension | undefined;
+                    if (!!!coordinatesa) {
+                        player.sendMessageB("§cError: pos1 is not set.");
+                    } else {
+                        if (!!!coordinatesb) {
+                            player.sendMessageB("§cError: pos2 is not set.");
+                        } else {
+                            let args = evaluateParameters(
+                                switchTestB,
+                                [
+                                    { type: "presetText" },
+                                    { type: "string" },
+                                    { type: "presetText" },
+                                    { type: "neboolean" },
+                                    { type: "neboolean" },
+                                ]
+                            ).args;
+                            world.structureManager.createFromWorld(
+                                args[1],
+                                dimensiona,
+                                coordinatesa,
+                                coordinatesb,
+                                {
+                                    saveMode:
+                                        (
+                                            args[2] ?? ""
+                                        ).toLowerCase() == "world"
+                                            ? StructureSaveMode.World
+                                            : StructureSaveMode.Memory,
+                                    includeBlocks: args[3] ?? true,
+                                    includeEntities:
+                                        args[4] ?? true,
+                                }
+                            );
+                        }
+                    }
+                }
+                break;
             case !!switchTest.match(/^\\deletesavedpos$/):
                 {
                     eventData.cancel = true;
@@ -29793,6 +29866,21 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         player.worldEditSelection.dimension = selection.dimension;
                         player.sendMessageB(
                             `Successfully loaded the saved selection ${JSON.stringify(args[1])} into the pos1, pos2, and posD selection.`
+                        );
+                    }
+                }
+                break;
+            case !!switchTest.match(/^\\listpos$/):
+                {
+                    eventData.cancel = true;
+                    const selections = player.worldEditSelection.getSavedSelectionIds();
+                    if(selections.length == 0) {
+                        player.sendMessageB(
+                            `You have no saved selections.`
+                        );
+                    }else{
+                        player.sendMessageB(
+                            selections.map(s=>`${s}: ${JSON.stringify(player.worldEditSelection.getSavedSelection(s))}`)
                         );
                     }
                 }
@@ -30280,7 +30368,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                         }
                                         const blocktypes = BlockTypes.getAll();
                                         try {
-                                            fillBlocksHFGBM(
+                                            fillArea(
                                                 ca,
                                                 cb,
                                                 dimensiona,
@@ -30305,41 +30393,1007 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                 },
                                                 {
                                                     blockMask: mask,
-                                                    minMSBetweenYields: 2500,
-                                                },
-                                                args[1].c,
-                                                100
+                                                    minMSBetweenTickWaits: 2500,
+                                                    replacemode: args[1].c,
+                                                    integrity: 100,
+                                                    liteMode: false,
+                                                }
                                             ).then(
                                                 (a) => {
                                                     player.sendMessageB(
                                                         `${
-                                                            a.counter == 0
+                                                            a.counter == 0n
                                                                 ? "§c"
                                                                 : ""
                                                         }${
                                                             a.counter
                                                         } blocks replaced in ${
-                                                            a.completionData
-                                                                .endTime -
-                                                            a.completionData
-                                                                .startTime
+                                                            a.endTime -
+                                                            a.startTime
                                                         } ms over ${
-                                                            a.completionData
-                                                                .endTick -
-                                                            a.completionData
-                                                                .startTick
+                                                            a.endTick -
+                                                            a.startTick
                                                         } tick${
-                                                            a.completionData
-                                                                .endTick -
-                                                                a.completionData
-                                                                    .startTick ==
+                                                            a.endTick -
+                                                                a.startTick ==
                                                             1
                                                                 ? ""
                                                                 : "s"
                                                         }${
-                                                            a.completionData
-                                                                .containsUnloadedChunks
-                                                                ? "; Some blocks were not generated because they were in unloaded chunks. "
+                                                            a.containsUnloadedChunks
+                                                                ? "; Some blocks were not generated because they were in unloaded chunks."
+                                                                : ""
+                                                        }`
+                                                    );
+                                                },
+                                                (e) => {
+                                                    player.sendError(
+                                                        "§c" + e + e.stack,
+                                                        true
+                                                    );
+                                                }
+                                            );
+                                        } catch (e) {
+                                            player.sendError(
+                                                "§c" + e + e.stack,
+                                                true
+                                            );
+                                        } finally {
+                                            tac.forEach((tab) => tab?.remove());
+                                        }
+                                    });
+                                } catch (e) {
+                                    player.sendError("§c" + e + e.stack, true);
+                                }
+                            });
+                        }
+                    }
+                }
+                break;
+            case !!switchTest.match(/^\\ceil$/):
+                {
+                    eventData.cancel = true;
+                    const args = evaluateParameters(switchTestB, [
+                        "presetText",
+                        "f-c",
+                        "blockPattern",
+                        "blockMask",
+                    ]).args;
+                    const firstblockpattern = args[2] as BlockPattern;
+                    const mask = args[3];
+                    const coordinatesa = player.getDynamicProperty("pos1") as
+                        | Vector3
+                        | undefined;
+                    const coordinatesb = player.getDynamicProperty("pos2") as
+                        | Vector3
+                        | undefined;
+                    const ca = {
+                        x: Math.min(coordinatesa.x, coordinatesb.x),
+                        y: Math.max(coordinatesa.y, coordinatesb.y),
+                        z: Math.min(coordinatesa.z, coordinatesb.z),
+                    };
+                    const cb = {
+                        x: Math.max(coordinatesa.x, coordinatesb.x),
+                        y: Math.max(coordinatesa.y, coordinatesb.y),
+                        z: Math.max(coordinatesa.z, coordinatesb.z),
+                    };
+                    const dimensiona = world.getDimension(
+                        (player.getDynamicProperty("posD") ??
+                            player.dimension.id) as string
+                    ) as Dimension | undefined;
+                    if (!!!coordinatesa) {
+                        player.sendMessageB("§cError: pos1 is not set.");
+                    } else {
+                        if (!!!coordinatesb) {
+                            player.sendMessageB("§cError: pos2 is not set.");
+                        } else {
+                            system.run(() => {
+                                let ta: Entity[];
+                                try {
+                                    generateTickingAreaFillCoordinatesC(
+                                        player.location,
+                                        (() => {
+                                            let a = new CompoundBlockVolume();
+                                            a.pushVolume({
+                                                volume: new BlockVolume(ca, cb),
+                                            });
+                                            return a;
+                                        })(),
+                                        dimensiona
+                                    ).then((tac) => {
+                                        ta = tac;
+                                        try {
+                                            undoClipboard.save(
+                                                dimensiona,
+                                                { from: ca, to: cb },
+                                                Date.now(),
+                                                {
+                                                    includeBlocks: true,
+                                                    includeEntities: false,
+                                                    saveMode:
+                                                        config.undoClipboardMode,
+                                                }
+                                            );
+                                        } catch (e) {
+                                            player.sendMessageB(
+                                                "§c" + e + " " + e.stack
+                                            );
+                                        }
+                                        const blocktypes = BlockTypes.getAll();
+                                        try {
+                                            fillArea(
+                                                ca,
+                                                cb,
+                                                dimensiona,
+                                                (l, i) => {
+                                                    const b =
+                                                        firstblockpattern.generateBlock(
+                                                            i
+                                                        );
+                                                    return b.type == "random"
+                                                        ? BlockPermutation.resolve(
+                                                              blocktypes[
+                                                                  Math.floor(
+                                                                      blocktypes.length *
+                                                                          Math.random()
+                                                                  )
+                                                              ].id
+                                                          )
+                                                        : BlockPermutation.resolve(
+                                                              b.type,
+                                                              b.states
+                                                          );
+                                                },
+                                                {
+                                                    blockMask: mask,
+                                                    minMSBetweenTickWaits: 2500,
+                                                    replacemode: args[1].c,
+                                                    integrity: 100,
+                                                    liteMode: false,
+                                                }
+                                            ).then(
+                                                (a) => {
+                                                    player.sendMessageB(
+                                                        `${
+                                                            a.counter == 0n
+                                                                ? "§c"
+                                                                : ""
+                                                        }${
+                                                            a.counter
+                                                        } blocks replaced in ${
+                                                            a.endTime -
+                                                            a.startTime
+                                                        } ms over ${
+                                                            a.endTick -
+                                                            a.startTick
+                                                        } tick${
+                                                            a.endTick -
+                                                                a.startTick ==
+                                                            1
+                                                                ? ""
+                                                                : "s"
+                                                        }${
+                                                            a.containsUnloadedChunks
+                                                                ? "; Some blocks were not generated because they were in unloaded chunks."
+                                                                : ""
+                                                        }`
+                                                    );
+                                                },
+                                                (e) => {
+                                                    player.sendError(
+                                                        "§c" + e + e.stack,
+                                                        true
+                                                    );
+                                                }
+                                            );
+                                        } catch (e) {
+                                            player.sendError(
+                                                "§c" + e + e.stack,
+                                                true
+                                            );
+                                        } finally {
+                                            tac.forEach((tab) => tab?.remove());
+                                        }
+                                    });
+                                } catch (e) {
+                                    player.sendError("§c" + e + e.stack, true);
+                                }
+                            });
+                        }
+                    }
+                }
+                break;
+            case !!switchTest.match(/^\\floor$/):
+                {
+                    eventData.cancel = true;
+                    const args = evaluateParameters(switchTestB, [
+                        "presetText",
+                        "f-c",
+                        "blockPattern",
+                        "blockMask",
+                    ]).args;
+                    const firstblockpattern = args[2] as BlockPattern;
+                    const mask = args[3];
+                    const coordinatesa = player.getDynamicProperty("pos1") as
+                        | Vector3
+                        | undefined;
+                    const coordinatesb = player.getDynamicProperty("pos2") as
+                        | Vector3
+                        | undefined;
+                    const ca = {
+                        x: Math.min(coordinatesa.x, coordinatesb.x),
+                        y: Math.min(coordinatesa.y, coordinatesb.y),
+                        z: Math.min(coordinatesa.z, coordinatesb.z),
+                    };
+                    const cb = {
+                        x: Math.max(coordinatesa.x, coordinatesb.x),
+                        y: Math.min(coordinatesa.y, coordinatesb.y),
+                        z: Math.max(coordinatesa.z, coordinatesb.z),
+                    };
+                    const dimensiona = world.getDimension(
+                        (player.getDynamicProperty("posD") ??
+                            player.dimension.id) as string
+                    ) as Dimension | undefined;
+                    if (!!!coordinatesa) {
+                        player.sendMessageB("§cError: pos1 is not set.");
+                    } else {
+                        if (!!!coordinatesb) {
+                            player.sendMessageB("§cError: pos2 is not set.");
+                        } else {
+                            system.run(() => {
+                                let ta: Entity[];
+                                try {
+                                    generateTickingAreaFillCoordinatesC(
+                                        player.location,
+                                        (() => {
+                                            let a = new CompoundBlockVolume();
+                                            a.pushVolume({
+                                                volume: new BlockVolume(ca, cb),
+                                            });
+                                            return a;
+                                        })(),
+                                        dimensiona
+                                    ).then((tac) => {
+                                        ta = tac;
+                                        try {
+                                            undoClipboard.save(
+                                                dimensiona,
+                                                { from: ca, to: cb },
+                                                Date.now(),
+                                                {
+                                                    includeBlocks: true,
+                                                    includeEntities: false,
+                                                    saveMode:
+                                                        config.undoClipboardMode,
+                                                }
+                                            );
+                                        } catch (e) {
+                                            player.sendMessageB(
+                                                "§c" + e + " " + e.stack
+                                            );
+                                        }
+                                        const blocktypes = BlockTypes.getAll();
+                                        try {
+                                            fillArea(
+                                                ca,
+                                                cb,
+                                                dimensiona,
+                                                (l, i) => {
+                                                    const b =
+                                                        firstblockpattern.generateBlock(
+                                                            i
+                                                        );
+                                                    return b.type == "random"
+                                                        ? BlockPermutation.resolve(
+                                                              blocktypes[
+                                                                  Math.floor(
+                                                                      blocktypes.length *
+                                                                          Math.random()
+                                                                  )
+                                                              ].id
+                                                          )
+                                                        : BlockPermutation.resolve(
+                                                              b.type,
+                                                              b.states
+                                                          );
+                                                },
+                                                {
+                                                    blockMask: mask,
+                                                    minMSBetweenTickWaits: 2500,
+                                                    replacemode: args[1].c,
+                                                    integrity: 100,
+                                                    liteMode: false,
+                                                }
+                                            ).then(
+                                                (a) => {
+                                                    player.sendMessageB(
+                                                        `${
+                                                            a.counter == 0n
+                                                                ? "§c"
+                                                                : ""
+                                                        }${
+                                                            a.counter
+                                                        } blocks replaced in ${
+                                                            a.endTime -
+                                                            a.startTime
+                                                        } ms over ${
+                                                            a.endTick -
+                                                            a.startTick
+                                                        } tick${
+                                                            a.endTick -
+                                                                a.startTick ==
+                                                            1
+                                                                ? ""
+                                                                : "s"
+                                                        }${
+                                                            a.containsUnloadedChunks
+                                                                ? "; Some blocks were not generated because they were in unloaded chunks."
+                                                                : ""
+                                                        }`
+                                                    );
+                                                },
+                                                (e) => {
+                                                    player.sendError(
+                                                        "§c" + e + e.stack,
+                                                        true
+                                                    );
+                                                }
+                                            );
+                                        } catch (e) {
+                                            player.sendError(
+                                                "§c" + e + e.stack,
+                                                true
+                                            );
+                                        } finally {
+                                            tac.forEach((tab) => tab?.remove());
+                                        }
+                                    });
+                                } catch (e) {
+                                    player.sendError("§c" + e + e.stack, true);
+                                }
+                            });
+                        }
+                    }
+                }
+                break;
+            case !!switchTest.match(/^\\hreplace$/):
+                {
+                    eventData.cancel = true;
+                    const args = evaluateParameters(switchTestB, [
+                        "presetText",
+                        "f-c",
+                        "blockPattern",
+                        "blockMask",
+                    ]).args;
+                    const firstblockpattern = args[2] as BlockPattern;
+                    const mask = args[3];
+                    const coordinatesa = player.getDynamicProperty("pos1") as
+                        | Vector3
+                        | undefined;
+                    const coordinatesb = player.getDynamicProperty("pos2") as
+                        | Vector3
+                        | undefined;
+                    const ca = {
+                        x: Math.min(coordinatesa.x, coordinatesb.x),
+                        y: Math.min(coordinatesa.y, coordinatesb.y),
+                        z: Math.min(coordinatesa.z, coordinatesb.z),
+                    };
+                    const cb = {
+                        x: Math.max(coordinatesa.x, coordinatesb.x),
+                        y: Math.max(coordinatesa.y, coordinatesb.y),
+                        z: Math.max(coordinatesa.z, coordinatesb.z),
+                    };
+                    const dimensiona = world.getDimension(
+                        (player.getDynamicProperty("posD") ??
+                            player.dimension.id) as string
+                    ) as Dimension | undefined;
+                    if (!!!coordinatesa) {
+                        player.sendMessageB("§cError: pos1 is not set.");
+                    } else {
+                        if (!!!coordinatesb) {
+                            player.sendMessageB("§cError: pos2 is not set.");
+                        } else {
+                            system.run(() => {
+                                let ta: Entity[];
+                                try {
+                                    generateTickingAreaFillCoordinatesC(
+                                        player.location,
+                                        (() => {
+                                            let a = new CompoundBlockVolume();
+                                            a.pushVolume({
+                                                volume: new BlockVolume(ca, cb),
+                                            });
+                                            return a;
+                                        })(),
+                                        dimensiona
+                                    ).then((tac) => {
+                                        ta = tac;
+                                        try {
+                                            undoClipboard.save(
+                                                dimensiona,
+                                                { from: ca, to: cb },
+                                                Date.now(),
+                                                {
+                                                    includeBlocks: true,
+                                                    includeEntities: false,
+                                                    saveMode:
+                                                        config.undoClipboardMode,
+                                                }
+                                            );
+                                        } catch (e) {
+                                            player.sendMessageB(
+                                                "§c" + e + " " + e.stack
+                                            );
+                                        }
+                                        const blocktypes = BlockTypes.getAll();
+                                        try {
+                                            fillHollow(
+                                                ca,
+                                                cb,
+                                                dimensiona,
+                                                (l, i) => {
+                                                    const b =
+                                                        firstblockpattern.generateBlock(
+                                                            i
+                                                        );
+                                                    return b.type == "random"
+                                                        ? BlockPermutation.resolve(
+                                                              blocktypes[
+                                                                  Math.floor(
+                                                                      blocktypes.length *
+                                                                          Math.random()
+                                                                  )
+                                                              ].id
+                                                          )
+                                                        : BlockPermutation.resolve(
+                                                              b.type,
+                                                              b.states
+                                                          );
+                                                },
+                                                {
+                                                    blockMask: mask,
+                                                    minMSBetweenTickWaits: 2500,
+                                                    replacemode: args[1].c,
+                                                    integrity: 100,
+                                                    liteMode: false,
+                                                }
+                                            ).then(
+                                                (a) => {
+                                                    player.sendMessageB(
+                                                        `${
+                                                            a.counter == 0n
+                                                                ? "§c"
+                                                                : ""
+                                                        }${
+                                                            a.counter
+                                                        } blocks replaced in ${
+                                                            a.endTime -
+                                                            a.startTime
+                                                        } ms over ${
+                                                            a.endTick -
+                                                            a.startTick
+                                                        } tick${
+                                                            a.endTick -
+                                                                a.startTick ==
+                                                            1
+                                                                ? ""
+                                                                : "s"
+                                                        }${
+                                                            a.containsUnloadedChunks
+                                                                ? "; Some blocks were not generated because they were in unloaded chunks."
+                                                                : ""
+                                                        }`
+                                                    );
+                                                },
+                                                (e) => {
+                                                    player.sendError(
+                                                        "§c" + e + e.stack,
+                                                        true
+                                                    );
+                                                }
+                                            );
+                                        } catch (e) {
+                                            player.sendError(
+                                                "§c" + e + e.stack,
+                                                true
+                                            );
+                                        } finally {
+                                            tac.forEach((tab) => tab?.remove());
+                                        }
+                                    });
+                                } catch (e) {
+                                    player.sendError("§c" + e + e.stack, true);
+                                }
+                            });
+                        }
+                    }
+                }
+                break;
+            case !!switchTest.match(/^\\hcube$/):
+                {
+                    eventData.cancel = true;
+                    const args = evaluateParameters(switchTestB, [
+                        "presetText",
+                        "f-c",
+                        "blockPattern",
+                        "blockMask",
+                    ]).args;
+                    const firstblockpattern = args[2] as BlockPattern;
+                    const mask = args[3];
+                    const coordinatesa = player.getDynamicProperty("pos1") as
+                        | Vector3
+                        | undefined;
+                    const coordinatesb = player.getDynamicProperty("pos2") as
+                        | Vector3
+                        | undefined;
+                    const center = {
+                        x: (coordinatesa.x+coordinatesb.x)/2,
+                        y: (coordinatesa.y+coordinatesb.y)/2,
+                        z: (coordinatesa.z+coordinatesb.z)/2,
+                    } as Vector3;
+                    const radius = Math.min(Math.abs(coordinatesb.x - center.x), Math.abs(coordinatesb.y - center.y), Math.abs(coordinatesb.z - center.z));
+                    const ca = {
+                        x: center.x-radius,
+                        y: center.y-radius,
+                        z: center.z-radius,
+                    };
+                    const cb = {
+                        x: center.x+radius,
+                        y: center.y+radius,
+                        z: center.z+radius,
+                    };
+                    const dimensiona = world.getDimension(
+                        (player.getDynamicProperty("posD") ??
+                            player.dimension.id) as string
+                    ) as Dimension | undefined;
+                    if (!!!coordinatesa) {
+                        player.sendMessageB("§cError: pos1 is not set.");
+                    } else {
+                        if (!!!coordinatesb) {
+                            player.sendMessageB("§cError: pos2 is not set.");
+                        } else {
+                            system.run(() => {
+                                let ta: Entity[];
+                                try {
+                                    generateTickingAreaFillCoordinatesC(
+                                        player.location,
+                                        (() => {
+                                            let a = new CompoundBlockVolume();
+                                            a.pushVolume({
+                                                volume: new BlockVolume(ca, cb),
+                                            });
+                                            return a;
+                                        })(),
+                                        dimensiona
+                                    ).then((tac) => {
+                                        ta = tac;
+                                        try {
+                                            undoClipboard.save(
+                                                dimensiona,
+                                                { from: ca, to: cb },
+                                                Date.now(),
+                                                {
+                                                    includeBlocks: true,
+                                                    includeEntities: false,
+                                                    saveMode:
+                                                        config.undoClipboardMode,
+                                                }
+                                            );
+                                        } catch (e) {
+                                            player.sendMessageB(
+                                                "§c" + e + " " + e.stack
+                                            );
+                                        }
+                                        const blocktypes = BlockTypes.getAll();
+                                        try {
+                                            fillHollow(
+                                                ca,
+                                                cb,
+                                                dimensiona,
+                                                (l, i) => {
+                                                    const b =
+                                                        firstblockpattern.generateBlock(
+                                                            i
+                                                        );
+                                                    return b.type == "random"
+                                                        ? BlockPermutation.resolve(
+                                                              blocktypes[
+                                                                  Math.floor(
+                                                                      blocktypes.length *
+                                                                          Math.random()
+                                                                  )
+                                                              ].id
+                                                          )
+                                                        : BlockPermutation.resolve(
+                                                              b.type,
+                                                              b.states
+                                                          );
+                                                },
+                                                {
+                                                    blockMask: mask,
+                                                    minMSBetweenTickWaits: 2500,
+                                                    replacemode: args[1].c,
+                                                    integrity: 100,
+                                                    liteMode: false,
+                                                }
+                                            ).then(
+                                                (a) => {
+                                                    player.sendMessageB(
+                                                        `${
+                                                            a.counter == 0n
+                                                                ? "§c"
+                                                                : ""
+                                                        }${
+                                                            a.counter
+                                                        } blocks replaced in ${
+                                                            a.endTime -
+                                                            a.startTime
+                                                        } ms over ${
+                                                            a.endTick -
+                                                            a.startTick
+                                                        } tick${
+                                                            a.endTick -
+                                                                a.startTick ==
+                                                            1
+                                                                ? ""
+                                                                : "s"
+                                                        }${
+                                                            a.containsUnloadedChunks
+                                                                ? "; Some blocks were not generated because they were in unloaded chunks."
+                                                                : ""
+                                                        }`
+                                                    );
+                                                },
+                                                (e) => {
+                                                    player.sendError(
+                                                        "§c" + e + e.stack,
+                                                        true
+                                                    );
+                                                }
+                                            );
+                                        } catch (e) {
+                                            player.sendError(
+                                                "§c" + e + e.stack,
+                                                true
+                                            );
+                                        } finally {
+                                            tac.forEach((tab) => tab?.remove());
+                                        }
+                                    });
+                                } catch (e) {
+                                    player.sendError("§c" + e + e.stack, true);
+                                }
+                            });
+                        }
+                    }
+                }
+                break;
+            case !!switchTest.match(/^\\tube$/):
+                {
+                    eventData.cancel = true;
+                    const args = evaluateParameters(switchTestB, [
+                        "presetText",
+                        "f-c",
+                        "presetText",
+                        "blockPattern",
+                        "blockMask",
+                    ]).args;
+                    let axis = (args[2]??"x").toLowerCase() as "x"|"y"|"z"|"";
+                    if(!["x", "y", "z", ""].includes(axis)){
+                        player.sendMessageB(`§cError: Invalid axis provided: ${JSON.stringify(axis)}.`);
+                        return;
+                    }else if (axis === ""){
+                        axis = "x";
+                    };
+                    const firstblockpattern = args[3] as BlockPattern;
+                    const mask = args[4];
+                    const coordinatesa = player.getDynamicProperty("pos1") as
+                        | Vector3
+                        | undefined;
+                    const coordinatesb = player.getDynamicProperty("pos2") as
+                        | Vector3
+                        | undefined;
+                    const ca = {
+                        x: Math.min(coordinatesa.x, coordinatesb.x),
+                        y: Math.min(coordinatesa.y, coordinatesb.y),
+                        z: Math.min(coordinatesa.z, coordinatesb.z),
+                    };
+                    const cb = {
+                        x: Math.max(coordinatesa.x, coordinatesb.x),
+                        y: Math.max(coordinatesa.y, coordinatesb.y),
+                        z: Math.max(coordinatesa.z, coordinatesb.z),
+                    };
+                    const center = {
+                        x: (ca.x+cb.x)/2,
+                        y: (ca.y+cb.y)/2,
+                        z: (ca.z+cb.z)/2,
+                    };
+                    const length = cb[axis] - ca[axis];
+                    let radius = 0;
+                    if(axis === "x"){
+                        radius = Math.min(cb.z - ca.z, cb.y - ca.y)/2;
+                    }else if(axis === "y"){
+                        radius = Math.min(cb.z - ca.z, cb.x - ca.x)/2;
+                    }else{
+                        radius = Math.min(cb.y - ca.y, cb.x - ca.x)/2;
+                    }
+                    const dimensiona = world.getDimension(
+                        (player.getDynamicProperty("posD") ??
+                            player.dimension.id) as string
+                    ) as Dimension | undefined;
+                    if (!!!coordinatesa) {
+                        player.sendMessageB("§cError: pos1 is not set.");
+                    } else {
+                        if (!!!coordinatesb) {
+                            player.sendMessageB("§cError: pos2 is not set.");
+                        } else {
+                            system.run(() => {
+                                let ta: Entity[];
+                                try {
+                                    generateTickingAreaFillCoordinatesC(
+                                        player.location,
+                                        (() => {
+                                            let a = new CompoundBlockVolume();
+                                            a.pushVolume({
+                                                volume: new BlockVolume(ca, cb),
+                                            });
+                                            return a;
+                                        })(),
+                                        dimensiona
+                                    ).then((tac) => {
+                                        ta = tac;
+                                        try {
+                                            undoClipboard.save(
+                                                dimensiona,
+                                                { from: ca, to: cb },
+                                                Date.now(),
+                                                {
+                                                    includeBlocks: true,
+                                                    includeEntities: false,
+                                                    saveMode:
+                                                        config.undoClipboardMode,
+                                                }
+                                            );
+                                        } catch (e) {
+                                            player.sendMessageB(
+                                                "§c" + e + " " + e.stack
+                                            );
+                                        }
+                                        const blocktypes = BlockTypes.getAll();
+                                        try {
+                                            fillTunnel(
+                                                center,
+                                                radius,
+                                                length,
+                                                axis,
+                                                dimensiona,
+                                                (l, i) => {
+                                                    const b =
+                                                        firstblockpattern.generateBlock(
+                                                            i
+                                                        );
+                                                    return b.type == "random"
+                                                        ? BlockPermutation.resolve(
+                                                              blocktypes[
+                                                                  Math.floor(
+                                                                      blocktypes.length *
+                                                                          Math.random()
+                                                                  )
+                                                              ].id
+                                                          )
+                                                        : BlockPermutation.resolve(
+                                                              b.type,
+                                                              b.states
+                                                          );
+                                                },
+                                                {
+                                                    blockMask: mask,
+                                                    minMSBetweenTickWaits: 2500,
+                                                    replacemode: args[1].c,
+                                                    integrity: 100,
+                                                    liteMode: false,
+                                                }
+                                            ).then(
+                                                (a) => {
+                                                    player.sendMessageB(
+                                                        `${
+                                                            a.counter == 0n
+                                                                ? "§c"
+                                                                : ""
+                                                        }${
+                                                            a.counter
+                                                        } blocks replaced in ${
+                                                            a.endTime -
+                                                            a.startTime
+                                                        } ms over ${
+                                                            a.endTick -
+                                                            a.startTick
+                                                        } tick${
+                                                            a.endTick -
+                                                                a.startTick ==
+                                                            1
+                                                                ? ""
+                                                                : "s"
+                                                        }${
+                                                            a.containsUnloadedChunks
+                                                                ? "; Some blocks were not generated because they were in unloaded chunks."
+                                                                : ""
+                                                        }`
+                                                    );
+                                                },
+                                                (e) => {
+                                                    player.sendError(
+                                                        "§c" + e + e.stack,
+                                                        true
+                                                    );
+                                                }
+                                            );
+                                        } catch (e) {
+                                            player.sendError(
+                                                "§c" + e + e.stack,
+                                                true
+                                            );
+                                        } finally {
+                                            tac.forEach((tab) => tab?.remove());
+                                        }
+                                    });
+                                } catch (e) {
+                                    player.sendError("§c" + e + e.stack, true);
+                                }
+                            });
+                        }
+                    }
+                }
+                break;
+            case !!switchTest.match(/^\\cyl$/):
+                {
+                    eventData.cancel = true;
+                    const args = evaluateParameters(switchTestB, [
+                        "presetText",
+                        "f-c",
+                        "presetText",
+                        "blockPattern",
+                        "blockMask",
+                    ]).args;
+                    let axis = (args[2]??"x").toLowerCase() as "x"|"y"|"z"|"";
+                    if(!["x", "y", "z", ""].includes(axis)){
+                        player.sendMessageB(`§cError: Invalid axis provided: ${JSON.stringify(axis)}.`);
+                        return;
+                    }else if (axis === ""){
+                        axis = "x";
+                    };
+                    const firstblockpattern = args[3] as BlockPattern;
+                    const mask = args[4];
+                    const coordinatesa = player.getDynamicProperty("pos1") as
+                        | Vector3
+                        | undefined;
+                    const coordinatesb = player.getDynamicProperty("pos2") as
+                        | Vector3
+                        | undefined;
+                    const ca = {
+                        x: Math.min(coordinatesa.x, coordinatesb.x),
+                        y: Math.min(coordinatesa.y, coordinatesb.y),
+                        z: Math.min(coordinatesa.z, coordinatesb.z),
+                    };
+                    const cb = {
+                        x: Math.max(coordinatesa.x, coordinatesb.x),
+                        y: Math.max(coordinatesa.y, coordinatesb.y),
+                        z: Math.max(coordinatesa.z, coordinatesb.z),
+                    };
+                    const center = {
+                        x: (ca.x+cb.x)/2,
+                        y: (ca.y+cb.y)/2,
+                        z: (ca.z+cb.z)/2,
+                    };
+                    const length = cb[axis] - ca[axis];
+                    let radius = 0;
+                    if(axis === "x"){
+                        radius = Math.min(Math.abs(cb.z - ca.z), Math.abs(cb.y - ca.y))/2;
+                    }else if(axis === "y"){
+                        radius = Math.min(Math.abs(cb.z - ca.z), Math.abs(cb.x - ca.x))/2;
+                    }else{
+                        radius = Math.min(Math.abs(cb.y - ca.y), Math.abs(cb.x - ca.x))/2;
+                    }
+                    const dimensiona = world.getDimension(
+                        (player.getDynamicProperty("posD") ??
+                            player.dimension.id) as string
+                    ) as Dimension | undefined;
+                    if (!!!coordinatesa) {
+                        player.sendMessageB("§cError: pos1 is not set.");
+                    } else {
+                        if (!!!coordinatesb) {
+                            player.sendMessageB("§cError: pos2 is not set.");
+                        } else {
+                            system.run(() => {
+                                let ta: Entity[];
+                                try {
+                                    generateTickingAreaFillCoordinatesC(
+                                        player.location,
+                                        (() => {
+                                            let a = new CompoundBlockVolume();
+                                            a.pushVolume({
+                                                volume: new BlockVolume(ca, cb),
+                                            });
+                                            return a;
+                                        })(),
+                                        dimensiona
+                                    ).then((tac) => {
+                                        ta = tac;
+                                        try {
+                                            undoClipboard.save(
+                                                dimensiona,
+                                                { from: ca, to: cb },
+                                                Date.now(),
+                                                {
+                                                    includeBlocks: true,
+                                                    includeEntities: false,
+                                                    saveMode:
+                                                        config.undoClipboardMode,
+                                                }
+                                            );
+                                        } catch (e) {
+                                            player.sendMessageB(
+                                                "§c" + e + " " + e.stack
+                                            );
+                                        }
+                                        const blocktypes = BlockTypes.getAll();
+                                        try {
+                                            fillCylinder(
+                                                center,
+                                                radius,
+                                                length,
+                                                axis,
+                                                dimensiona,
+                                                (l, i) => {
+                                                    const b =
+                                                        firstblockpattern.generateBlock(
+                                                            i
+                                                        );
+                                                    return b.type == "random"
+                                                        ? BlockPermutation.resolve(
+                                                                blocktypes[
+                                                                    Math.floor(
+                                                                        blocktypes.length *
+                                                                            Math.random()
+                                                                    )
+                                                                ].id
+                                                            )
+                                                        : BlockPermutation.resolve(
+                                                                b.type,
+                                                                b.states
+                                                            );
+                                                },
+                                                {
+                                                    blockMask: mask,
+                                                    minMSBetweenTickWaits: 2500,
+                                                    replacemode: args[1].c,
+                                                    integrity: 100,
+                                                    liteMode: false,
+                                                }
+                                            ).then(
+                                                (a) => {
+                                                    player.sendMessageB(
+                                                        `${
+                                                            a.counter == 0n
+                                                                ? "§c"
+                                                                : ""
+                                                        }${
+                                                            a.counter
+                                                        } blocks replaced in ${
+                                                            a.endTime -
+                                                            a.startTime
+                                                        } ms over ${
+                                                            a.endTick -
+                                                            a.startTick
+                                                        } tick${
+                                                            a.endTick -
+                                                                a.startTick ==
+                                                            1
+                                                                ? ""
+                                                                : "s"
+                                                        }${
+                                                            a.containsUnloadedChunks
+                                                                ? "; Some blocks were not generated because they were in unloaded chunks."
                                                                 : ""
                                                         }`
                                                     );
@@ -30681,6 +31735,11 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
             case !!switchTest.match(/^\\flood$/):
                 {
                     eventData.cancel = true;
+                    const args = evaluateParameters(switchTestB, [
+                        "presetText",
+                        "blockMask",
+                    ]).args;
+                    const mask = args[1];
                     const coordinatesa = player.getDynamicProperty("pos1") as
                         | Vector3
                         | undefined;
@@ -30735,46 +31794,46 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                 }
                                             );
                                         } catch (e) {
-                                            perror(player, e);
+                                            player.sendMessageB(
+                                                "§c" + e + " " + e.stack
+                                            );
                                         }
+                                        const blocktypes = BlockTypes.getAll();
                                         try {
-                                            fillBlocksHFFGB(
+                                            fillFlood(
                                                 ca,
                                                 cb,
                                                 dimensiona,
-                                                { minMSBetweenYields: 2500 },
-                                                100
+                                                {
+                                                    blockMask: mask,
+                                                    minMSBetweenTickWaits: 2500,
+                                                    integrity: 100,
+                                                    liteMode: false,
+                                                }
                                             ).then(
                                                 (a) => {
                                                     player.sendMessageB(
                                                         `${
-                                                            a.counter == 0
+                                                            a.counter == 0n
                                                                 ? "§c"
                                                                 : ""
                                                         }${
                                                             a.counter
                                                         } blocks replaced in ${
-                                                            a.completionData
-                                                                .endTime -
-                                                            a.completionData
-                                                                .startTime
+                                                            a.endTime -
+                                                            a.startTime
                                                         } ms over ${
-                                                            a.completionData
-                                                                .endTick -
-                                                            a.completionData
-                                                                .startTick
+                                                            a.endTick -
+                                                            a.startTick
                                                         } tick${
-                                                            a.completionData
-                                                                .endTick -
-                                                                a.completionData
-                                                                    .startTick ==
+                                                            a.endTick -
+                                                                a.startTick ==
                                                             1
                                                                 ? ""
                                                                 : "s"
                                                         }${
-                                                            a.completionData
-                                                                .containsUnloadedChunks
-                                                                ? "; Some blocks were not generated because they were in unloaded chunks. "
+                                                            a.containsUnloadedChunks
+                                                                ? "; Some blocks were not generated because they were in unloaded chunks."
                                                                 : ""
                                                         }`
                                                     );
@@ -30806,6 +31865,11 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
             case !!switchTest.match(/^\\drain$/):
                 {
                     eventData.cancel = true;
+                    const args = evaluateParameters(switchTestB, [
+                        "presetText",
+                        "blockMask",
+                    ]).args;
+                    const mask = args[1];
                     const coordinatesa = player.getDynamicProperty("pos1") as
                         | Vector3
                         | undefined;
@@ -30826,7 +31890,6 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         (player.getDynamicProperty("posD") ??
                             player.dimension.id) as string
                     ) as Dimension | undefined;
-                    const airpermutation = BlockPermutation.resolve("air");
                     if (!!!coordinatesa) {
                         player.sendMessageB("§cError: pos1 is not set.");
                     } else {
@@ -30861,46 +31924,46 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                 }
                                             );
                                         } catch (e) {
-                                            perror(player, e);
+                                            player.sendMessageB(
+                                                "§c" + e + " " + e.stack
+                                            );
                                         }
+                                        const blocktypes = BlockTypes.getAll();
                                         try {
-                                            fillBlocksHDFGB(
+                                            fillDrain(
                                                 ca,
                                                 cb,
                                                 dimensiona,
-                                                { minMSBetweenYields: 2500 },
-                                                100
+                                                {
+                                                    blockMask: mask,
+                                                    minMSBetweenTickWaits: 2500,
+                                                    integrity: 100,
+                                                    liteMode: false,
+                                                }
                                             ).then(
                                                 (a) => {
                                                     player.sendMessageB(
                                                         `${
-                                                            a.counter == 0
+                                                            a.counter == 0n
                                                                 ? "§c"
                                                                 : ""
                                                         }${
                                                             a.counter
                                                         } blocks replaced in ${
-                                                            a.completionData
-                                                                .endTime -
-                                                            a.completionData
-                                                                .startTime
+                                                            a.endTime -
+                                                            a.startTime
                                                         } ms over ${
-                                                            a.completionData
-                                                                .endTick -
-                                                            a.completionData
-                                                                .startTick
+                                                            a.endTick -
+                                                            a.startTick
                                                         } tick${
-                                                            a.completionData
-                                                                .endTick -
-                                                                a.completionData
-                                                                    .startTick ==
+                                                            a.endTick -
+                                                                a.startTick ==
                                                             1
                                                                 ? ""
                                                                 : "s"
                                                         }${
-                                                            a.completionData
-                                                                .containsUnloadedChunks
-                                                                ? "; Some blocks were not generated because they were in unloaded chunks. "
+                                                            a.containsUnloadedChunks
+                                                                ? "; Some blocks were not generated because they were in unloaded chunks."
                                                                 : ""
                                                         }`
                                                     );
@@ -30923,26 +31986,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                     });
                                 } catch (e) {
                                     player.sendError("§c" + e + e.stack, true);
-                                } /*
-                        try{
-                            fillBlocksHFGB(ca, cb, dimensiona, ()=>airpermutation, {matchingBlock: "minecraft:water", minMSBetweenYields: 2500}).then(a=>{
-                                fillBlocksHFGB(ca, cb, dimensiona, ()=>airpermutation, {matchingBlock: "minecraft:flowing_water", minMSBetweenYields: 2500}).then(b=>{
-                                    fillBlocksHFGB(ca, cb, dimensiona, ()=>airpermutation, {matchingBlock: "minecraft:lava", minMSBetweenYields: 2500}).then(c=>{
-                                        fillBlocksHFGB(ca, cb, dimensiona, ()=>airpermutation, {matchingBlock: "minecraft:flowing_lava", minMSBetweenYields: 2500}).then(d=>{
-                                            player.sendMessageB(`${a.counter+b.counter+c.counter+d.counter==0?"§c":""}${a.counter} blocks replaced in ${(a.completionData.endTime-a.completionData.startTime)+(b.completionData.endTime-b.completionData.startTime)+(c.completionData.endTime-c.completionData.startTime)+(d.completionData.endTime-d.completionData.startTime)} ms over ${(a.completionData.endTick-a.completionData.startTick)+(b.completionData.endTick-b.completionData.startTick)+(c.completionData.endTick-c.completionData.startTick)+(d.completionData.endTick-d.completionData.startTick)} tick${((a.completionData.endTick-a.completionData.startTick)+(b.completionData.endTick-b.completionData.startTick)+(c.completionData.endTick-c.completionData.startTick)+(d.completionData.endTick-d.completionData.startTick))==1?"":"s"}${a.completionData.containsUnloadedChunks?"; Some blocks were not generated because they were in unloaded chunks. ":""}`);
-                                        }, (e)=>{
-                                            player.sendError("§c" + e + e.stack, true)
-                                        })
-                                    }, (e)=>{
-                                        player.sendError("§c" + e + e.stack, true)
-                                    })
-                                }, (e)=>{
-                                    player.sendError("§c" + e + e.stack, true)
-                                })
-                            }, (e)=>{
-                                player.sendError("§c" + e + e.stack, true)
-                            })
-                        }catch(e){player.sendError("§c" + e + e.stack, true)}finally{tac.forEach(tab=>tab?.remove())}}); }catch(e){player.sendError("§c" + e + e.stack, true)}*/
+                                }
                             });
                         }
                     }
@@ -31112,50 +32156,36 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         "presetText",
                         "f-c",
                         "blockPattern",
-                        "block",
+                        "blockMask",
                     ]).args;
                     const firstblockpattern = args[2] as BlockPattern;
-                    const lastblockname = args[3]?.id;
-                    const lastblockstates = args[3]?.states;
-                    const matchingblock = (
-                        (lastblockname ?? "") == ""
-                            ? [undefined, undefined]
-                            : lastblockname == "keep"
-                            ? ["air"]
-                            : [
-                                  BlockTypes.get(lastblockname).id,
-                                  lastblockstates,
-                              ]
-                    ) as [
-                        string | undefined,
-                        Record<string, string | number | boolean> | undefined
-                    ];
+                    const mask = args[3];
                     const coordinatesa = player.getDynamicProperty("pos1") as
                         | Vector3
                         | undefined;
                     const coordinatesb = player.getDynamicProperty("pos2") as
                         | Vector3
                         | undefined;
-                    const ca = {
-                        x: Math.min(coordinatesa.x, coordinatesb.x),
-                        y: Math.min(coordinatesa.y, coordinatesb.y),
-                        z: Math.min(coordinatesa.z, coordinatesb.z),
-                    };
-                    const cb = {
-                        x: Math.max(coordinatesa.x, coordinatesb.x),
-                        y: Math.max(coordinatesa.y, coordinatesb.y),
-                        z: Math.max(coordinatesa.z, coordinatesb.z),
-                    };
-                    const dimensiona = world.getDimension(
-                        (player.getDynamicProperty("posD") ??
-                            player.dimension.id) as string
-                    ) as Dimension | undefined;
                     if (!!!coordinatesa) {
                         player.sendMessageB("§cError: pos1 is not set.");
                     } else {
                         if (!!!coordinatesb) {
                             player.sendMessageB("§cError: pos2 is not set.");
                         } else {
+                            const ca = {
+                                x: Math.min(coordinatesa.x, coordinatesb.x),
+                                y: Math.min(coordinatesa.y, coordinatesb.y),
+                                z: Math.min(coordinatesa.z, coordinatesb.z),
+                            };
+                            const cb = {
+                                x: Math.max(coordinatesa.x, coordinatesb.x),
+                                y: Math.max(coordinatesa.y, coordinatesb.y),
+                                z: Math.max(coordinatesa.z, coordinatesb.z),
+                            };
+                            const dimensiona = world.getDimension(
+                                (player.getDynamicProperty("posD") ??
+                                    player.dimension.id) as string
+                            ) as Dimension | undefined;
                             system.run(() => {
                                 let ta: Entity[];
                                 try {
@@ -31190,7 +32220,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                         }
                                         const blocktypes = BlockTypes.getAll();
                                         try {
-                                            fillBlocksHWFGB(
+                                            fillWalls(
                                                 ca,
                                                 cb,
                                                 dimensiona,
@@ -31214,44 +32244,36 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                           );
                                                 },
                                                 {
-                                                    matchingBlock:
-                                                        matchingblock[0],
-                                                    matchingBlockStates:
-                                                        matchingblock[1],
-                                                    minMSBetweenYields: 2500,
-                                                },
-                                                args[1].c,
-                                                100
+                                                    blockMask:
+                                                        mask,
+                                                    minMSBetweenTickWaits: 2500,
+                                                    replacemode: args[1].c,
+                                                    integrity: 100,
+                                                    liteMode: false,
+                                                }
                                             ).then(
                                                 (a) => {
                                                     player.sendMessageB(
                                                         `${
-                                                            a.counter == 0
+                                                            a.counter == 0n
                                                                 ? "§c"
                                                                 : ""
                                                         }${
                                                             a.counter
                                                         } blocks replaced in ${
-                                                            a.completionData
-                                                                .endTime -
-                                                            a.completionData
-                                                                .startTime
+                                                            a.endTime -
+                                                            a.startTime
                                                         } ms over ${
-                                                            a.completionData
-                                                                .endTick -
-                                                            a.completionData
-                                                                .startTick
+                                                            a.endTick -
+                                                            a.startTick
                                                         } tick${
-                                                            a.completionData
-                                                                .endTick -
-                                                                a.completionData
-                                                                    .startTick ==
+                                                            a.endTick -
+                                                                a.startTick ==
                                                             1
                                                                 ? ""
                                                                 : "s"
                                                         }${
-                                                            a.completionData
-                                                                .containsUnloadedChunks
+                                                            a.containsUnloadedChunks
                                                                 ? "; Some blocks were not generated because they were in unloaded chunks. "
                                                                 : ""
                                                         }`
@@ -31289,41 +32311,18 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         "f-c",
                         "number",
                         "blockPattern",
-                        "block",
+                        "blockMask",
                     ]).args;
                     const radius = args[2] as number;
                     const firstblockpattern = args[3] as BlockPattern;
-                    const lastblockname = args[4]?.id;
-                    const lastblockstates = args[4]?.states;
-                    const matchingblock = (
-                        (lastblockname ?? "") == ""
-                            ? [undefined, undefined]
-                            : lastblockname == "keep"
-                            ? ["air"]
-                            : [
-                                  BlockTypes.get(lastblockname).id,
-                                  lastblockstates,
-                              ]
-                    ) as [
-                        string | undefined,
-                        Record<string, string | number | boolean> | undefined
-                    ];
+                    const mask = args[4];
                     const coordinatesa = roundVector3ToMiddleOfBlock(
                         player.getDynamicProperty("pos1") as Vector3 | undefined
                     );
                     const coordinatesb = roundVector3ToMiddleOfBlock(
                         player.getDynamicProperty("pos2") as Vector3 | undefined
                     );
-                    const ca = {
-                        x: Math.min(coordinatesa.x, coordinatesb.x),
-                        y: Math.min(coordinatesa.y, coordinatesb.y),
-                        z: Math.min(coordinatesa.z, coordinatesb.z),
-                    };
-                    const cb = {
-                        x: Math.max(coordinatesa.x, coordinatesb.x),
-                        y: Math.max(coordinatesa.y, coordinatesb.y),
-                        z: Math.max(coordinatesa.z, coordinatesb.z),
-                    };
+                    const center = Vector.scale(Vector.add(coordinatesa, coordinatesb), 0.5);
                     const dimensiona = world.getDimension(
                         (player.getDynamicProperty("posD") ??
                             player.dimension.id) as string
@@ -31344,14 +32343,14 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                             a.pushVolume({
                                                 volume: new BlockVolume(
                                                     Vector.subtract(
-                                                        coordinatesa,
+                                                        center,
                                                         Vector.scale(
                                                             Vector.one,
                                                             Math.abs(radius)
                                                         )
                                                     ),
                                                     Vector.add(
-                                                        coordinatesa,
+                                                        center,
                                                         Vector.scale(
                                                             Vector.one,
                                                             Math.abs(radius)
@@ -31369,14 +32368,14 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                 dimensiona,
                                                 {
                                                     from: Vector.subtract(
-                                                        coordinatesa,
+                                                        center,
                                                         Vector.scale(
                                                             Vector.one,
                                                             Math.abs(radius)
                                                         )
                                                     ),
                                                     to: Vector.add(
-                                                        coordinatesa,
+                                                        center,
                                                         Vector.scale(
                                                             Vector.one,
                                                             Math.abs(radius)
@@ -31398,8 +32397,8 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                         }
                                         const blocktypes = BlockTypes.getAll();
                                         try {
-                                            fillBlocksHSGB(
-                                                coordinatesa,
+                                            fillSphere(
+                                                center,
                                                 radius - 0.5,
                                                 dimensiona,
                                                 (l, i) => {
@@ -31422,44 +32421,213 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                           );
                                                 },
                                                 {
-                                                    matchingBlock:
-                                                        matchingblock[0],
-                                                    matchingBlockStates:
-                                                        matchingblock[1],
-                                                    minMSBetweenYields: 2500,
-                                                },
-                                                args[1].c,
-                                                100
+                                                    blockMask: mask,
+                                                    minMSBetweenTickWaits: 2500,
+                                                    replacemode: args[1].c,
+                                                    integrity: 100,
+                                                    liteMode: false,
+                                                }
                                             ).then(
                                                 (a) => {
                                                     player.sendMessageB(
                                                         `${
-                                                            a.counter == 0
+                                                            a.counter == 0n
                                                                 ? "§c"
                                                                 : ""
                                                         }${
                                                             a.counter
                                                         } blocks filled in ${
-                                                            a.completionData
-                                                                .endTime -
-                                                            a.completionData
-                                                                .startTime
+                                                            a.endTime -
+                                                            a.startTime
                                                         } ms over ${
-                                                            a.completionData
-                                                                .endTick -
-                                                            a.completionData
-                                                                .startTick
+                                                            a.endTick -
+                                                            a.startTick
                                                         } tick${
-                                                            a.completionData
-                                                                .endTick -
-                                                                a.completionData
-                                                                    .startTick ==
+                                                            a.endTick -
+                                                                a.startTick ==
                                                             1
                                                                 ? ""
                                                                 : "s"
                                                         }${
-                                                            a.completionData
-                                                                .containsUnloadedChunks
+                                                            a.containsUnloadedChunks
+                                                                ? "; Some blocks were not generated because they were in unloaded chunks. "
+                                                                : ""
+                                                        }`
+                                                    );
+                                                },
+                                                (e) => {
+                                                    player.sendError(
+                                                        "§c" + e + e.stack,
+                                                        true
+                                                    );
+                                                }
+                                            );
+                                        } catch (e) {
+                                            player.sendError(
+                                                "§c" + e + e.stack,
+                                                true
+                                            );
+                                        } finally {
+                                            tac.forEach((tab) => tab?.remove());
+                                        }
+                                    });
+                                } catch (e) {
+                                    player.sendError("§c" + e + e.stack, true);
+                                }
+                            });
+                        }
+                    }
+                }
+                break;
+            case !!switchTest.match(/^\\stsphere$/):
+                {
+                    eventData.cancel = true;
+                    const args = evaluateParameters(switchTestB, [
+                        "presetText",
+                        "f-c",
+                        "blockPattern",
+                        "blockMask",
+                    ]).args;
+                    const firstblockpattern = args[2] as BlockPattern;
+                    const mask = args[3];
+                    const coordinatesa = roundVector3ToMiddleOfBlock(
+                        player.getDynamicProperty("pos1") as Vector3 | undefined
+                    );
+                    const coordinatesb = roundVector3ToMiddleOfBlock(
+                        player.getDynamicProperty("pos2") as Vector3 | undefined
+                    );
+                    const center = Vector.scale(Vector.add(coordinatesa, coordinatesb), 0.5);
+                    const radius = Math.min(Math.abs(coordinatesb.z - coordinatesa.z), Math.abs(coordinatesb.y - coordinatesa.y), Math.abs(coordinatesb.x - coordinatesa.x))/2;
+                    const stretch = {x: (Math.abs(coordinatesb.x - coordinatesa.x) / 2) / radius, y: (Math.abs(coordinatesb.y - coordinatesa.y) / 2) / radius, z: (Math.abs(coordinatesb.z - coordinatesa.z) / 2) / radius} as Vector3;
+                    const dimensiona = world.getDimension(
+                        (player.getDynamicProperty("posD") ??
+                            player.dimension.id) as string
+                    ) as Dimension | undefined;
+                    console.log(JSON.stringify({coordinatesa, coordinatesb, center, radius, stretch}));
+                    if (!!!coordinatesa) {
+                        player.sendMessageB("§cError: pos1 is not set.");
+                    } else {
+                        if (!!!coordinatesb) {
+                            player.sendMessageB("§cError: pos2 is not set.");
+                        } else {
+                            system.run(() => {
+                                let ta: Entity[];
+                                try {
+                                    generateTickingAreaFillCoordinatesC(
+                                        player.location,
+                                        (() => {
+                                            let a = new CompoundBlockVolume();
+                                            a.pushVolume({
+                                                volume: new BlockVolume(
+                                                    Vector.subtract(
+                                                        center,
+                                                        Vector.scale(
+                                                            Vector.one,
+                                                            Math.abs(radius)
+                                                        )
+                                                    ),
+                                                    Vector.add(
+                                                        center,
+                                                        Vector.scale(
+                                                            Vector.one,
+                                                            Math.abs(radius)
+                                                        )
+                                                    )
+                                                ),
+                                            });
+                                            return a;
+                                        })(),
+                                        dimensiona
+                                    ).then((tac) => {
+                                        ta = tac;
+                                        try {
+                                            undoClipboard.save(
+                                                dimensiona,
+                                                {
+                                                    from: Vector.subtract(
+                                                        center,
+                                                        Vector.scale(
+                                                            stretch,
+                                                            Math.abs(radius)
+                                                        )
+                                                    ),
+                                                    to: Vector.add(
+                                                        center,
+                                                        Vector.scale(
+                                                            stretch,
+                                                            Math.abs(radius)
+                                                        )
+                                                    ),
+                                                },
+                                                Date.now(),
+                                                {
+                                                    includeBlocks: true,
+                                                    includeEntities: false,
+                                                    saveMode:
+                                                        config.undoClipboardMode,
+                                                }
+                                            );
+                                        } catch (e) {
+                                            player.sendMessageB(
+                                                "§c" + e + " " + e.stack
+                                            );
+                                        }
+                                        const blocktypes = BlockTypes.getAll();
+                                        try {
+                                            fillStretchedSphere(
+                                                center,
+                                                radius,
+                                                stretch,
+                                                dimensiona,
+                                                (l, i) => {
+                                                    const b =
+                                                        firstblockpattern.generateBlock(
+                                                            i
+                                                        );
+                                                    return b.type == "random"
+                                                        ? BlockPermutation.resolve(
+                                                              blocktypes[
+                                                                  Math.floor(
+                                                                      blocktypes.length *
+                                                                          Math.random()
+                                                                  )
+                                                              ].id
+                                                          )
+                                                        : BlockPermutation.resolve(
+                                                              b.type,
+                                                              b.states
+                                                          );
+                                                },
+                                                {
+                                                    blockMask: mask,
+                                                    minMSBetweenTickWaits: 2500,
+                                                    replacemode: args[1].c,
+                                                    integrity: 100,
+                                                    liteMode: false,
+                                                }
+                                            ).then(
+                                                (a) => {
+                                                    player.sendMessageB(
+                                                        `${
+                                                            a.counter == 0n
+                                                                ? "§c"
+                                                                : ""
+                                                        }${
+                                                            a.counter
+                                                        } blocks filled in ${
+                                                            a.endTime -
+                                                            a.startTime
+                                                        } ms over ${
+                                                            a.endTick -
+                                                            a.startTick
+                                                        } tick${
+                                                            a.endTick -
+                                                                a.startTick ==
+                                                            1
+                                                                ? ""
+                                                                : "s"
+                                                        }${
+                                                            a.containsUnloadedChunks
                                                                 ? "; Some blocks were not generated because they were in unloaded chunks. "
                                                                 : ""
                                                         }`
@@ -31499,42 +32667,19 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         "number",
                         "number",
                         "blockPattern",
-                        "block",
+                        "blockMask",
                     ]).args;
                     const radius = args[2] as number;
                     const thickness = args[3] as number;
                     const firstblockpattern = args[4] as BlockPattern;
-                    const lastblockname = args[5]?.id;
-                    const lastblockstates = args[5]?.states;
-                    const matchingblock = (
-                        (lastblockname ?? "") == ""
-                            ? [undefined, undefined]
-                            : lastblockname == "keep"
-                            ? ["air"]
-                            : [
-                                  BlockTypes.get(lastblockname).id,
-                                  lastblockstates,
-                              ]
-                    ) as [
-                        string | undefined,
-                        Record<string, string | number | boolean> | undefined
-                    ];
+                    const mask = args[5];
                     const coordinatesa = roundVector3ToMiddleOfBlock(
                         player.getDynamicProperty("pos1") as Vector3 | undefined
                     );
                     const coordinatesb = roundVector3ToMiddleOfBlock(
                         player.getDynamicProperty("pos2") as Vector3 | undefined
                     );
-                    const ca = {
-                        x: Math.min(coordinatesa.x, coordinatesb.x),
-                        y: Math.min(coordinatesa.y, coordinatesb.y),
-                        z: Math.min(coordinatesa.z, coordinatesb.z),
-                    };
-                    const cb = {
-                        x: Math.max(coordinatesa.x, coordinatesb.x),
-                        y: Math.max(coordinatesa.y, coordinatesb.y),
-                        z: Math.max(coordinatesa.z, coordinatesb.z),
-                    };
+                    const center = Vector.scale(Vector.add(coordinatesa, coordinatesb), 0.5);
                     const dimensiona = world.getDimension(
                         (player.getDynamicProperty("posD") ??
                             player.dimension.id) as string
@@ -31555,14 +32700,14 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                             a.pushVolume({
                                                 volume: new BlockVolume(
                                                     Vector.subtract(
-                                                        coordinatesa,
+                                                        center,
                                                         Vector.scale(
                                                             Vector.one,
                                                             Math.abs(radius)
                                                         )
                                                     ),
                                                     Vector.add(
-                                                        coordinatesa,
+                                                        center,
                                                         Vector.scale(
                                                             Vector.one,
                                                             Math.abs(radius)
@@ -31580,14 +32725,14 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                 dimensiona,
                                                 {
                                                     from: Vector.subtract(
-                                                        coordinatesa,
+                                                        center,
                                                         Vector.scale(
                                                             Vector.one,
                                                             Math.abs(radius)
                                                         )
                                                     ),
                                                     to: Vector.add(
-                                                        coordinatesa,
+                                                        center,
                                                         Vector.scale(
                                                             Vector.one,
                                                             Math.abs(radius)
@@ -31609,8 +32754,8 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                         }
                                         const blocktypes = BlockTypes.getAll();
                                         try {
-                                            fillBlocksHHSGB(
-                                                coordinatesa,
+                                            fillHollowSphere(
+                                                center,
                                                 radius - 0.5,
                                                 thickness,
                                                 dimensiona,
@@ -31634,44 +32779,35 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                           );
                                                 },
                                                 {
-                                                    matchingBlock:
-                                                        matchingblock[0],
-                                                    matchingBlockStates:
-                                                        matchingblock[1],
-                                                    minMSBetweenYields: 2500,
+                                                    blockMask: mask,
+                                                    minMSBetweenTickWaits: 2500,
+                                                    replacemode: args[1].c,
+                                                    integrity: 100,
+                                                    liteMode: false,
                                                 },
-                                                args[1].c,
-                                                100
                                             ).then(
                                                 (a) => {
                                                     player.sendMessageB(
                                                         `${
-                                                            a.counter == 0
+                                                            a.counter == 0n
                                                                 ? "§c"
                                                                 : ""
                                                         }${
                                                             a.counter
                                                         } blocks filled in ${
-                                                            a.completionData
-                                                                .endTime -
-                                                            a.completionData
-                                                                .startTime
+                                                            a.endTime -
+                                                            a.startTime
                                                         } ms over ${
-                                                            a.completionData
-                                                                .endTick -
-                                                            a.completionData
-                                                                .startTick
+                                                            a.endTick -
+                                                            a.startTick
                                                         } tick${
-                                                            a.completionData
-                                                                .endTick -
-                                                                a.completionData
-                                                                    .startTick ==
+                                                            a.endTick -
+                                                                a.startTick ==
                                                             1
                                                                 ? ""
                                                                 : "s"
                                                         }${
-                                                            a.completionData
-                                                                .containsUnloadedChunks
+                                                            a.containsUnloadedChunks
                                                                 ? "; Some blocks were not generated because they were in unloaded chunks. "
                                                                 : ""
                                                         }`
@@ -31710,42 +32846,18 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         "number",
                         "number",
                         "blockPattern",
-                        "block",
+                        "blockMask",
                     ]).args;
                     const radius = args[2] as number;
                     const height = args[3] as number;
                     const firstblockpattern = args[4] as BlockPattern;
-                    const lastblockname = args[5]?.id;
-                    const lastblockstates = args[5]?.states;
-                    const matchingblock = (
-                        (lastblockname ?? "") == ""
-                            ? [undefined, undefined]
-                            : lastblockname == "keep"
-                            ? ["air"]
-                            : [
-                                  BlockTypes.get(lastblockname).id,
-                                  lastblockstates,
-                              ]
-                    ) as [
-                        string | undefined,
-                        Record<string, string | number | boolean> | undefined
-                    ];
+                    const mask = args[5];
                     const coordinatesa = roundVector3ToMiddleOfBlockFloorY(
                         player.getDynamicProperty("pos1") as Vector3 | undefined
                     );
                     const coordinatesb = roundVector3ToMiddleOfBlockFloorY(
                         player.getDynamicProperty("pos2") as Vector3 | undefined
                     );
-                    const ca = {
-                        x: Math.min(coordinatesa.x, coordinatesb.x),
-                        y: Math.min(coordinatesa.y, coordinatesb.y),
-                        z: Math.min(coordinatesa.z, coordinatesb.z),
-                    };
-                    const cb = {
-                        x: Math.max(coordinatesa.x, coordinatesb.x),
-                        y: Math.max(coordinatesa.y, coordinatesb.y),
-                        z: Math.max(coordinatesa.z, coordinatesb.z),
-                    };
                     const dimensiona = world.getDimension(
                         (player.getDynamicProperty("posD") ??
                             player.dimension.id) as string
@@ -31821,7 +32933,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                         }
                                         const blocktypes = BlockTypes.getAll();
                                         try {
-                                            fillBlocksHCGB(
+                                            fillCone(
                                                 coordinatesa,
                                                 radius,
                                                 height,
@@ -31846,44 +32958,35 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                           );
                                                 },
                                                 {
-                                                    matchingBlock:
-                                                        matchingblock[0],
-                                                    matchingBlockStates:
-                                                        matchingblock[1],
-                                                    minMSBetweenYields: 2500,
+                                                    blockMask: mask,
+                                                    minMSBetweenTickWaits: 2500,
+                                                    replacemode: args[1].c,
+                                                    integrity: 100,
+                                                    liteMode: false,
                                                 },
-                                                args[1].c,
-                                                100
                                             ).then(
                                                 (a) => {
                                                     player.sendMessageB(
                                                         `${
-                                                            a.counter == 0
+                                                            a.counter == 0n
                                                                 ? "§c"
                                                                 : ""
                                                         }${
                                                             a.counter
                                                         } blocks filled in ${
-                                                            a.completionData
-                                                                .endTime -
-                                                            a.completionData
-                                                                .startTime
+                                                            a.endTime -
+                                                            a.startTime
                                                         } ms over ${
-                                                            a.completionData
-                                                                .endTick -
-                                                            a.completionData
-                                                                .startTick
+                                                            a.endTick -
+                                                            a.startTick
                                                         } tick${
-                                                            a.completionData
-                                                                .endTick -
-                                                                a.completionData
-                                                                    .startTick ==
+                                                            a.endTick -
+                                                                a.startTick ==
                                                             1
                                                                 ? ""
                                                                 : "s"
                                                         }${
-                                                            a.completionData
-                                                                .containsUnloadedChunks
+                                                            a.containsUnloadedChunks
                                                                 ? "; Some blocks were not generated because they were in unloaded chunks. "
                                                                 : ""
                                                         }`
@@ -40131,6 +41234,60 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                     );
                                 }
                                 break;
+                            case "remexpe":
+                                {
+                                    let args = evaluateParameters(switchTestB, [
+                                        "presetText",
+                                        "f-l",
+                                        "string",
+                                        "number",
+                                    ]).args;
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "brushtype",
+                                            "remexpe"
+                                        );
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "radius",
+                                            isNaN(Number(args[3]))
+                                                ? 10
+                                                : args[3]
+                                        );
+                                    if (!args[1].l) {
+                                        srun(() =>
+                                            player
+                                                .getComponent("inventory")
+                                                .container.getSlot(
+                                                    player.selectedSlotIndex
+                                                )
+                                                .setLore([
+                                                    `§r§bBrush Type: §aRemExpE`,
+                                                    `§r§bBrush Radius: ${
+                                                        isNaN(Number(args[3]))
+                                                            ? 10
+                                                            : args[3]
+                                                    }`,
+                                                ])
+                                        );
+                                    }
+                                    player.sendMessageB(
+                                        `Successfully set brush type of the held item to remexp with a radius of ${
+                                            isNaN(Number(args[3]))
+                                                ? 10
+                                                : args[3]
+                                        }.`
+                                    );
+                                }
+                                break;
                             case "remexpne":
                                 {
                                     let args = evaluateParameters(switchTestB, [
@@ -40194,6 +41351,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                         "f-h",
                                         "blockPattern",
                                         "number",
+                                        "blockMask",
                                     ]).args;
                                     player
                                         .getComponent("inventory")
@@ -40233,6 +41391,45 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                             "radius",
                                             isNaN(Number(args[5])) ? 3 : args[5]
                                         );
+                                    if(args[6] != undefined){
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "mask",
+                                                JSON.stringify(
+                                                    args[6].blocks
+                                                )
+                                            );
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "masktype",
+                                                args[6].type
+                                            );
+                                    }else{
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "mask"
+                                            );
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "masktype"
+                                            );
+                                    }
                                     if (!args[1].l) {
                                         srun(() =>
                                             player
@@ -40262,7 +41459,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                         0,
                                                         (
                                                             args[4] as BlockPattern
-                                                        ).blocks.length > 15
+                                                        ).blocks.length <= 15
                                                             ? -1
                                                             : undefined
                                                     ),
@@ -40271,6 +41468,27 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                             args[4] as BlockPattern
                                                         ).type
                                                     }`,
+                                                    ...(args[6] != undefined ? 
+                                                        [
+                                                            "§r§bBrush Mask: §d",
+                                                            ...args[6].blocks
+                                                            .map((v) => v.rawns)
+                                                            .slice(0, 15)
+                                                            .map(
+                                                                (v) =>
+                                                                    `§r§d${v}`
+                                                            ),
+                                                            "§r§d..."
+                                                        ].slice(
+                                                            0,
+                                                            args[6].blocks.length <= 15
+                                                                ? -1
+                                                                : undefined
+                                                        )
+                                                    : []),
+                                                    ...(args[6] != undefined ? [`§r§bBrush Mask Type: §a${
+                                                        args[6].type
+                                                    }`] : []),
                                                 ])
                                         );
                                     }
@@ -40290,6 +41508,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                         "f-h",
                                         "blockPattern",
                                         "number",
+                                        "blockMask",
                                     ]).args;
                                     player
                                         .getComponent("inventory")
@@ -40329,6 +41548,45 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                             "radius",
                                             isNaN(Number(args[5])) ? 3 : args[5]
                                         );
+                                    if(args[6] != undefined){
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "mask",
+                                                JSON.stringify(
+                                                    args[6].blocks
+                                                )
+                                            );
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "masktype",
+                                                args[6].type
+                                            );
+                                    }else{
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "mask"
+                                            );
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "masktype"
+                                            );
+                                    }
                                     if (!args[1].l) {
                                         srun(() =>
                                             player
@@ -40358,7 +41616,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                         0,
                                                         (
                                                             args[4] as BlockPattern
-                                                        ).blocks.length > 15
+                                                        ).blocks.length <= 15
                                                             ? -1
                                                             : undefined
                                                     ),
@@ -40367,6 +41625,27 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                             args[4] as BlockPattern
                                                         ).type
                                                     }`,
+                                                    ...(args[6] != undefined ? 
+                                                        [
+                                                            "§r§bBrush Mask: §d",
+                                                            ...args[6].blocks
+                                                            .map((v) => v.rawns)
+                                                            .slice(0, 15)
+                                                            .map(
+                                                                (v) =>
+                                                                    `§r§d${v}`
+                                                            ),
+                                                            "§r§d..."
+                                                        ].slice(
+                                                            0,
+                                                            args[6].blocks.length <= 15
+                                                                ? -1
+                                                                : undefined
+                                                        )
+                                                    : []),
+                                                    ...(args[6] != undefined ? [`§r§bBrush Mask Type: §a${
+                                                        args[6].type
+                                                    }`] : []),
                                                 ])
                                         );
                                     }
@@ -40386,6 +41665,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                         "f-h",
                                         "blockPattern",
                                         "number",
+                                        "blockMask",
                                     ]).args;
                                     player
                                         .getComponent("inventory")
@@ -40425,6 +41705,45 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                             "radius",
                                             isNaN(Number(args[5])) ? 3 : args[5]
                                         );
+                                    if(args[6] != undefined){
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "mask",
+                                                JSON.stringify(
+                                                    args[6].blocks
+                                                )
+                                            );
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "masktype",
+                                                args[6].type
+                                            );
+                                    }else{
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "mask"
+                                            );
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "masktype"
+                                            );
+                                    }
                                     if (!args[1].l) {
                                         srun(() =>
                                             player
@@ -40454,7 +41773,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                         0,
                                                         (
                                                             args[4] as BlockPattern
-                                                        ).blocks.length > 15
+                                                        ).blocks.length <= 15
                                                             ? -1
                                                             : undefined
                                                     ),
@@ -40463,6 +41782,27 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                             args[4] as BlockPattern
                                                         ).type
                                                     }`,
+                                                    ...(args[6] != undefined ? 
+                                                        [
+                                                            "§r§bBrush Mask: §d",
+                                                            ...args[6].blocks
+                                                            .map((v) => v.rawns)
+                                                            .slice(0, 15)
+                                                            .map(
+                                                                (v) =>
+                                                                    `§r§d${v}`
+                                                            ),
+                                                            "§r§d..."
+                                                        ].slice(
+                                                            0,
+                                                            args[6].blocks.length <= 15
+                                                                ? -1
+                                                                : undefined
+                                                        )
+                                                    : []),
+                                                    ...(args[6] != undefined ? [`§r§bBrush Mask Type: §a${
+                                                        args[6].type
+                                                    }`] : []),
                                                 ])
                                         );
                                     }
@@ -40483,6 +41823,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                         "blockPattern",
                                         "number",
                                         "number",
+                                        "blockMask",
                                     ]).args;
                                     player
                                         .getComponent("inventory")
@@ -40531,6 +41872,45 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                             "radius",
                                             isNaN(Number(args[5])) ? 3 : args[5]
                                         );
+                                    if(args[7] != undefined){
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "mask",
+                                                JSON.stringify(
+                                                    args[7].blocks
+                                                )
+                                            );
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "masktype",
+                                                args[7].type
+                                            );
+                                    }else{
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "mask"
+                                            );
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "masktype"
+                                            );
+                                    }
                                     //console.warn(JSON.stringify((args[4] as BlockPattern).blocks))
                                     if (!args[1].l) {
                                         srun(() =>
@@ -40567,7 +41947,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                         0,
                                                         (
                                                             args[4] as BlockPattern
-                                                        ).blocks.length > 15
+                                                        ).blocks.length <= 15
                                                             ? -1
                                                             : undefined
                                                     ),
@@ -40576,6 +41956,27 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                             args[4] as BlockPattern
                                                         ).type
                                                     }`,
+                                                    ...(args[7] != undefined ? 
+                                                        [
+                                                            "§r§bBrush Mask: §d",
+                                                            ...args[7].blocks
+                                                            .map((v) => v.rawns)
+                                                            .slice(0, 15)
+                                                            .map(
+                                                                (v) =>
+                                                                    `§r§d${v}`
+                                                            ),
+                                                            "§r§d..."
+                                                        ].slice(
+                                                            0,
+                                                            args[7].blocks.length <= 15
+                                                                ? -1
+                                                                : undefined
+                                                        )
+                                                    : []),
+                                                    ...(args[7] != undefined ? [`§r§bBrush Mask Type: §a${
+                                                        args[7].type
+                                                    }`] : []),
                                                 ])
                                         );
                                     }
@@ -40598,6 +41999,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                         "blockPattern",
                                         "number",
                                         "number",
+                                        "blockMask",
                                     ]).args;
                                     player
                                         .getComponent("inventory")
@@ -40646,6 +42048,45 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                             "radius",
                                             isNaN(Number(args[5])) ? 3 : args[5]
                                         );
+                                    if(args[7] != undefined){
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "mask",
+                                                JSON.stringify(
+                                                    args[7].blocks
+                                                )
+                                            );
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "masktype",
+                                                args[7].type
+                                            );
+                                    }else{
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "mask"
+                                            );
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "masktype"
+                                            );
+                                    }
                                     if (!args[1].l) {
                                         srun(() =>
                                             player
@@ -40680,7 +42121,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                         0,
                                                         (
                                                             args[4] as BlockPattern
-                                                        ).blocks.length > 15
+                                                        ).blocks.length <= 15
                                                             ? -1
                                                             : undefined
                                                     ),
@@ -40689,6 +42130,27 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                             args[4] as BlockPattern
                                                         ).type
                                                     }`,
+                                                    ...(args[7] != undefined ? 
+                                                        [
+                                                            "§r§bBrush Mask: §d",
+                                                            ...args[7].blocks
+                                                            .map((v) => v.rawns)
+                                                            .slice(0, 15)
+                                                            .map(
+                                                                (v) =>
+                                                                    `§r§d${v}`
+                                                            ),
+                                                            "§r§d..."
+                                                        ].slice(
+                                                            0,
+                                                            args[7].blocks.length <= 15
+                                                                ? -1
+                                                                : undefined
+                                                        )
+                                                    : []),
+                                                    ...(args[7] != undefined ? [`§r§bBrush Mask Type: §a${
+                                                        args[7].type
+                                                    }`] : []),
                                                 ])
                                         );
                                     }
@@ -40711,6 +42173,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                         "blockPattern",
                                         "number",
                                         "number",
+                                        "blockMask",
                                     ]).args;
                                     player
                                         .getComponent("inventory")
@@ -40759,6 +42222,45 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                             "radius",
                                             isNaN(Number(args[5])) ? 3 : args[5]
                                         );
+                                    if(args[7] != undefined){
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "mask",
+                                                JSON.stringify(
+                                                    args[7].blocks
+                                                )
+                                            );
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "masktype",
+                                                args[7].type
+                                            );
+                                    }else{
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "mask"
+                                            );
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "masktype"
+                                            );
+                                    }
                                     if (!args[1].l) {
                                         srun(() =>
                                             player
@@ -40793,7 +42295,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                         0,
                                                         (
                                                             args[4] as BlockPattern
-                                                        ).blocks.length > 15
+                                                        ).blocks.length <= 15
                                                             ? -1
                                                             : undefined
                                                     ),
@@ -40802,6 +42304,27 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                             args[4] as BlockPattern
                                                         ).type
                                                     }`,
+                                                    ...(args[7] != undefined ? 
+                                                        [
+                                                            "§r§bBrush Mask: §d",
+                                                            ...args[7].blocks
+                                                            .map((v) => v.rawns)
+                                                            .slice(0, 15)
+                                                            .map(
+                                                                (v) =>
+                                                                    `§r§d${v}`
+                                                            ),
+                                                            "§r§d..."
+                                                        ].slice(
+                                                            0,
+                                                            args[7].blocks.length <= 15
+                                                                ? -1
+                                                                : undefined
+                                                        )
+                                                    : []),
+                                                    ...(args[7] != undefined ? [`§r§bBrush Mask Type: §a${
+                                                        args[7].type
+                                                    }`] : []),
                                                 ])
                                         );
                                     }
@@ -40824,6 +42347,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                         "blockPattern",
                                         "number",
                                         "number",
+                                        "blockMask",
                                     ]).args;
                                     player
                                         .getComponent("inventory")
@@ -40872,6 +42396,45 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                             "radius",
                                             isNaN(Number(args[5])) ? 3 : args[5]
                                         );
+                                    if(args[7] != undefined){
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "mask",
+                                                JSON.stringify(
+                                                    args[7].blocks
+                                                )
+                                            );
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "masktype",
+                                                args[7].type
+                                            );
+                                    }else{
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "mask"
+                                            );
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "masktype"
+                                            );
+                                    }
                                     if (!args[1].l) {
                                         srun(() =>
                                             player
@@ -40906,7 +42469,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                         0,
                                                         (
                                                             args[4] as BlockPattern
-                                                        ).blocks.length > 15
+                                                        ).blocks.length <= 15
                                                             ? -1
                                                             : undefined
                                                     ),
@@ -40915,6 +42478,27 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                             args[4] as BlockPattern
                                                         ).type
                                                     }`,
+                                                    ...(args[7] != undefined ? 
+                                                        [
+                                                            "§r§bBrush Mask: §d",
+                                                            ...args[7].blocks
+                                                            .map((v) => v.rawns)
+                                                            .slice(0, 15)
+                                                            .map(
+                                                                (v) =>
+                                                                    `§r§d${v}`
+                                                            ),
+                                                            "§r§d..."
+                                                        ].slice(
+                                                            0,
+                                                            args[7].blocks.length <= 15
+                                                                ? -1
+                                                                : undefined
+                                                        )
+                                                    : []),
+                                                    ...(args[7] != undefined ? [`§r§bBrush Mask Type: §a${
+                                                        args[7].type
+                                                    }`] : []),
                                                 ])
                                         );
                                     }
@@ -40937,6 +42521,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                         "blockPattern",
                                         "number",
                                         "number",
+                                        "blockMask",
                                     ]).args;
                                     player
                                         .getComponent("inventory")
@@ -40985,6 +42570,45 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                             "radius",
                                             isNaN(Number(args[5])) ? 3 : args[5]
                                         );
+                                    if(args[7] != undefined){
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "mask",
+                                                JSON.stringify(
+                                                    args[7].blocks
+                                                )
+                                            );
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "masktype",
+                                                args[7].type
+                                            );
+                                    }else{
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "mask"
+                                            );
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "masktype"
+                                            );
+                                    }
                                     if (!args[1].l) {
                                         srun(() =>
                                             player
@@ -41019,7 +42643,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                         0,
                                                         (
                                                             args[4] as BlockPattern
-                                                        ).blocks.length > 15
+                                                        ).blocks.length <= 15
                                                             ? -1
                                                             : undefined
                                                     ),
@@ -41028,6 +42652,27 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                             args[4] as BlockPattern
                                                         ).type
                                                     }`,
+                                                    ...(args[7] != undefined ? 
+                                                        [
+                                                            "§r§bBrush Mask: §d",
+                                                            ...args[7].blocks
+                                                            .map((v) => v.rawns)
+                                                            .slice(0, 15)
+                                                            .map(
+                                                                (v) =>
+                                                                    `§r§d${v}`
+                                                            ),
+                                                            "§r§d..."
+                                                        ].slice(
+                                                            0,
+                                                            args[7].blocks.length <= 15
+                                                                ? -1
+                                                                : undefined
+                                                        )
+                                                    : []),
+                                                    ...(args[7] != undefined ? [`§r§bBrush Mask Type: §a${
+                                                        args[7].type
+                                                    }`] : []),
                                                 ])
                                         );
                                     }
@@ -41050,6 +42695,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                         "blockPattern",
                                         "number",
                                         "number",
+                                        "blockMask",
                                     ]).args;
                                     player
                                         .getComponent("inventory")
@@ -41098,6 +42744,45 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                             "radius",
                                             isNaN(Number(args[5])) ? 3 : args[5]
                                         );
+                                    if(args[7] != undefined){
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "mask",
+                                                JSON.stringify(
+                                                    args[7].blocks
+                                                )
+                                            );
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "masktype",
+                                                args[7].type
+                                            );
+                                    }else{
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "mask"
+                                            );
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "masktype"
+                                            );
+                                    }
                                     if (!args[1].l) {
                                         srun(() =>
                                             player
@@ -41132,7 +42817,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                         0,
                                                         (
                                                             args[4] as BlockPattern
-                                                        ).blocks.length > 15
+                                                        ).blocks.length <= 15
                                                             ? -1
                                                             : undefined
                                                     ),
@@ -41141,6 +42826,27 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                             args[4] as BlockPattern
                                                         ).type
                                                     }`,
+                                                    ...(args[7] != undefined ? 
+                                                        [
+                                                            "§r§bBrush Mask: §d",
+                                                            ...args[7].blocks
+                                                            .map((v) => v.rawns)
+                                                            .slice(0, 15)
+                                                            .map(
+                                                                (v) =>
+                                                                    `§r§d${v}`
+                                                            ),
+                                                            "§r§d..."
+                                                        ].slice(
+                                                            0,
+                                                            args[7].blocks.length <= 15
+                                                                ? -1
+                                                                : undefined
+                                                        )
+                                                    : []),
+                                                    ...(args[7] != undefined ? [`§r§bBrush Mask Type: §a${
+                                                        args[7].type
+                                                    }`] : []),
                                                 ])
                                         );
                                     }
@@ -41658,6 +43364,101 @@ ${command.dp}snapshot list`);
                     );
                 }
                 break;
+            case !!switchTest.match(/^selectionrender$/) ||
+                !!switchTest.match(/^selrender$/) ||
+                !!switchTest.match(/^selr$/):
+                {
+                    eventData.cancel = true;
+                    srun(async ()=>{
+                        var msSinceLastTickWait = Date.now();
+                        const begin = {
+                            x: Math.min(player.worldEditSelection.pos1.x, player.worldEditSelection.pos2.x),
+                            y: Math.min(player.worldEditSelection.pos1.y, player.worldEditSelection.pos2.y),
+                            z: Math.min(player.worldEditSelection.pos1.z, player.worldEditSelection.pos2.z),
+                        }
+                        const end = {
+                            x: Math.max(player.worldEditSelection.pos1.x, player.worldEditSelection.pos2.x),
+                            y: Math.max(player.worldEditSelection.pos1.y, player.worldEditSelection.pos2.y),
+                            z: Math.max(player.worldEditSelection.pos1.z, player.worldEditSelection.pos2.z),
+                        }
+                        const molangVariables = new MolangVariableMap();
+                        molangVariables.setFloat("variable.max_lifetime", 10);
+                        const dimension = player.worldEditSelection.dimension
+                        for (let x = Math.min(begin.x, end.x); x <= Math.max(begin.x, end.x); x++) {
+                            for (let y = Math.min(begin.y, end.y); y <= Math.max(begin.y, end.y); y++) {
+                                for (
+                                    let z = Math.min(begin.z, end.z);
+                                    z <= Math.max(begin.z, end.z);
+                                    z++
+                                ) {
+                                    if(!(
+                                        // Vertical edges (along z-axis)
+                                        ((x == begin.x || x == end.x) && (y == begin.y || y == end.y) && z >= begin.z && z <= end.z) ||
+
+                                        // Horizontal edges (along x-axis)
+                                        ((y == begin.y || y == end.y) && (z == begin.z || z == end.z) && x >= begin.x && x <= end.x) ||
+
+                                        // Horizontal edges (along y-axis)
+                                        ((x == begin.x || x == end.x) && (z == begin.z || z == end.z) && y >= begin.y && y <= end.y)
+                                    )){
+                                        continue;
+                                    }
+                                    const mode = Vector.distance({x, y, z}, begin) > Vector.distance({x, y, z}, end)
+                                    dimension.spawnParticle(
+                                        mode
+                                            ? "andexdb:xz_axis_particle_pos2"
+                                            : "andexdb:xz_axis_particle_pos1",
+                                        Vector.add({x, y, z}, { x: 0.5, y: 1.005, z: 0.5 }),
+                                        molangVariables
+                                    );
+                                    dimension.spawnParticle(
+                                        mode
+                                            ? "andexdb:xz_axis_particle_pos2_north"
+                                            : "andexdb:xz_axis_particle_pos1_north",
+                                        Vector.add({x, y, z}, { x: 0.5, y: 0.5, z: 1.005 }),
+                                        molangVariables
+                                    );
+                                    dimension.spawnParticle(
+                                        mode
+                                            ? "andexdb:xz_axis_particle_pos2_east"
+                                            : "andexdb:xz_axis_particle_pos1_east",
+                                        Vector.add({x, y, z}, { x: -0.005, y: 0.5, z: 0.5 }),
+                                        molangVariables
+                                    );
+                                    dimension.spawnParticle(
+                                        mode
+                                            ? "andexdb:xz_axis_particle_pos2_down"
+                                            : "andexdb:xz_axis_particle_pos1_down",
+                                        Vector.add({x, y, z}, { x: 0.5, y: -0.005, z: 0.5 }),
+                                        molangVariables
+                                    );
+                                    dimension.spawnParticle(
+                                        mode
+                                            ? "andexdb:xz_axis_particle_pos2_south"
+                                            : "andexdb:xz_axis_particle_pos1_south",
+                                        Vector.add({x, y, z}, { x: 0.5, y: 0.5, z: -0.005 }),
+                                        molangVariables
+                                    );
+                                    dimension.spawnParticle(
+                                        mode
+                                            ? "andexdb:xz_axis_particle_pos2_west"
+                                            : "andexdb:xz_axis_particle_pos1_west",
+                                        Vector.add({x, y, z}, { x: 1.005, y: 0.5, z: 0.5 }),
+                                        molangVariables
+                                    );
+                                    if (Date.now() - msSinceLastTickWait >= 20) {
+                                        await waitTick();
+                                        msSinceLastTickWait = Date.now();
+                                    }
+                                }
+                            }
+                        }
+                    player.sendMessageB(
+                        `Selected area outline has been successfully rendered.`
+                    );
+                });
+                }
+                break;
             case !!switchTest.match(/^chunkinfo$/):
                 {
                     eventData.cancel = true;
@@ -42113,6 +43914,17 @@ ${command.dp}snapshot list`);
                             ).then((tac) => {
                                 ta = tac;
                                 try {
+                                    undoClipboard.save(
+                                        player.dimension,
+                                        { from: coordinatesa, to: coordinatesb },
+                                        Date.now(),
+                                        {
+                                            includeBlocks: true,
+                                            includeEntities: false,
+                                            saveMode:
+                                                config.undoClipboardMode,
+                                        }
+                                    );
                                     fillBlocksHFG(
                                         coordinatesa,
                                         coordinatesb,
@@ -42650,6 +44462,8 @@ ${command.dp}snapshot list`);
                 }
                 break;
             case !!switchTest.match(/^remexpentity$/):
+            case !!switchTest.match(/^remexpen$/):
+            case !!switchTest.match(/^remexpe$/):
                 {
                     eventData.cancel = true;
                     let radius = Number(

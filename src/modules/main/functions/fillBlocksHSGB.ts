@@ -5,9 +5,11 @@ import { generateMinecraftSphereBGProgress } from "modules/coordinates/constants
 import { generatorProgress } from "modules/coordinates/constants/generatorProgress";
 import { generateMinecraftSphereBG } from "modules/coordinates/functions/generateMinecraftSphereBG";
 import { generateMinecraftSphereBGIdGenerator } from "modules/coordinates/functions/generateMinecraftSphereBGIdGenerator";
+import type { fillSphere } from "modules/block_generation_utilities/functions/fillSphere"
 
 /**
  * Generates a sphere.
+ * @deprecated Legacy function. Superceeded by {@link fillSphere}.
  * @since 1.18.0-development.26
  * @version 1.0.0
  * @param {Vector3} center The location of the center of the sphere.

@@ -4,10 +4,11 @@ import { generateMinecraftSphereBGProgress } from "modules/coordinates/constants
 import { generatorProgress } from "modules/coordinates/constants/generatorProgress";
 import { generateMinecraftSphereBG } from "modules/coordinates/functions/generateMinecraftSphereBG";
 import { generateMinecraftSphereBGIdGenerator } from "modules/coordinates/functions/generateMinecraftSphereBGIdGenerator";
+import type { fillBlocksHSGB } from "./fillBlocksHSGB"
 
 /**
  * Generates a sphere.
- * @deprecated Legacy function. Superceeded by fillBlocksHSGB().
+ * @deprecated Legacy function. Superceeded by {@link fillBlocksHSGB}.
  * @async
  * @param {Vector3} center The location of the center of the sphere.
  * @param {number} radius Radius of the sphere.

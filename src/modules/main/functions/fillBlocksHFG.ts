@@ -3,10 +3,11 @@ import { clearContainer } from "modules/command_utilities/functions/clearContain
 import { generatorProgress } from "modules/coordinates/constants/generatorProgress";
 import { generateFillBG } from "modules/coordinates/functions/generateFillBG";
 import { generatorProgressIdGenerator } from "modules/coordinates/functions/generatorProgressIdGenerator";
+import type { fillBlocksHFGB } from "./fillBlocksHFGB"
 
 /**
  * Generates a fill.
- * @deprecated Legacy function. Superceeded by fillBlocksHFGB().
+ * @deprecated Legacy function. Superceeded by {@link fillBlocksHFGB}.
  * @async
  * @param {Vector3} begin The location of a corner of the area to fill in.
  * @param {Vector3} end The location of the opposite corner of the area to fill in.

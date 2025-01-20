@@ -4,9 +4,11 @@ import { testBlockForMatch } from "modules/commands/functions/testBlockForMatch"
 import { generatorProgress } from "modules/coordinates/constants/generatorProgress";
 import { generateWallsFillBG } from "modules/coordinates/functions/generateWallsFillBG";
 import { generatorProgressIdGenerator } from "modules/coordinates/functions/generatorProgressIdGenerator";
+import type { fillWalls } from "modules/block_generation_utilities/functions/fillWalls"
 
 /**
  * Generates a walls fill.
+ * @deprecated Legacy function. Superceeded by {@link fillWalls}.
  * @async
  * @param {Vector3} begin The location of a corner of the area to have its walls filled in.
  * @param {Vector3} end The location of the opposite corner of the area to have its walls filled in.

@@ -42,20 +42,74 @@ function log(value: any, propertyKey?: string){
 }
 globalThis.log=log
 function configurable(value: boolean) {
-    return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
-        descriptor.configurable = value;
+    return function (target: any, propertyKey: string, descriptor?: PropertyDescriptor) {
+        if(descriptor!=undefined){
+            descriptor.configurable = value;
+        }else{
+            Object.defineProperty(target, propertyKey, {
+                ...Object.getOwnPropertyDescriptor(target, propertyKey),
+                configurable: value,
+            });
+        }
     };
 }
 globalThis.configurable=configurable
 function enumerable(value: boolean) {
-    return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
-        descriptor.enumerable = value;
+    return function (target: any, propertyKey: string, descriptor?: PropertyDescriptor) {
+        if(descriptor!=undefined){
+            descriptor.enumerable = value;
+        }else{
+            Object.defineProperty(target, propertyKey, {
+                ...Object.getOwnPropertyDescriptor(target, propertyKey),
+                enumerable: value,
+            });
+        }
     };
 }
 globalThis.enumerable=enumerable
 function writable(value: boolean) {
-    return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
-        descriptor.writable = value;
+    return function (target: any, propertyKey: string, descriptor?: PropertyDescriptor) {
+        if(descriptor!=undefined){
+            descriptor.writable = value;
+        }else{
+            Object.defineProperty(target, propertyKey, {
+                ...Object.getOwnPropertyDescriptor(target, propertyKey),
+                writable: value,
+            });
+        }
     };
 }
 globalThis.writable=writable
+const readonlifyMap = new Map<any, true>();
+
+// CLASS DECORATOR
+function readonlify<T extends { new (...args: any[]): {} }>(constructor: T) {
+const c = class extends constructor {
+    constructor(...args: any[]) {
+    super(...args);
+    if (new.target === c) readonlifyMap.set(this, true);
+    }
+};
+return c;
+}
+globalThis.readonlify=readonlify
+
+// PROPERTY DECORATOR
+function readonly(
+target: any,
+key: string,
+propertyDescriptor?: PropertyDescriptor
+) {
+let z: any = undefined;
+Object.defineProperty(target, key, {
+    get() {
+    return z;
+    },
+    set(value) {
+    console.log("Set ", value);
+    if (readonlifyMap.get(this)) throw new Error();
+    z = value;
+    }
+});
+}
+globalThis.readonly=readonly

@@ -4,10 +4,11 @@ import { clearContainer } from "modules/command_utilities/functions/clearContain
 import { generatorProgress } from "modules/coordinates/constants/generatorProgress";
 import { generateSkygridBG } from "modules/coordinates/functions/generateSkygridBG";
 import { generatorProgressIdGenerator } from "modules/coordinates/functions/generatorProgressIdGenerator";
+import type { fillBlocksHSGGB } from "./fillBlocksHSGGB"
 
 /**
  * Generates a skygrid.
- * @deprecated
+ * @deprecated Legacy function. Superceeded by {@link fillBlocksHSGGB}.
  * @async
  * @param {Vector3} from The location of a corner of the area to generate the skygrid in.
  * @param {Vector3} to The location of the opposite corner of the area to generate the skygrid in.
