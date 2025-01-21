@@ -56,6 +56,14 @@ subscribedEvents.beforePlayerInteractWithBlock = world.beforeEvents.playerIntera
     }
     if (event.itemStack?.typeId === "andexdb:debug_stick" || event.itemStack?.typeId === "andexdb:liquid_clipped_debug_stick") {
         event.cancel = true;
+        if (securityVariables.ultraSecurityModeEnabled) {
+            if (securityVariables.testPlayerForPermission(event.player, "andexdb.canUseDebugStick") == false) {
+                event.player.sendMessage(
+                    "§cYou do not have permission to use an Debug Stick. You need the following permission to use this item: andexdb.canUseDebugStick"
+                );
+                return;
+            }
+        }
         let initialDelay = 4;
         let delay = 4;
         let holdDuration = 10;
@@ -165,6 +173,14 @@ subscribedEvents.beforePlayerInteractWithBlock = world.beforeEvents.playerIntera
     if (event.isFirstEvent) {
         if (event.itemStack?.typeId === "andexdb:editor_stick") {
             event.cancel = true;
+            if (securityVariables.ultraSecurityModeEnabled) {
+                if (securityVariables.testPlayerForPermission(event.player, "andexdb.canUseEditorSticks") == false) {
+                    event.player.sendMessage(
+                        "§cYou do not have permission to use an Editor Stick. You need the following permission to use this item: andexdb.canUseEditorSticks"
+                    );
+                    return;
+                }
+            }
             try {
                 editorStickMenuOpeningAsyncCancelActionNumbers[event.player.id] = srun(() => editorStick(event.player));
             } catch (e) {
@@ -173,6 +189,14 @@ subscribedEvents.beforePlayerInteractWithBlock = world.beforeEvents.playerIntera
         }
         if (event.itemStack?.typeId === "andexdb:editor_stick_b") {
             event.cancel = true;
+            if (securityVariables.ultraSecurityModeEnabled) {
+                if (securityVariables.testPlayerForPermission(event.player, "andexdb.canUseEditorSticks") == false) {
+                    event.player.sendMessage(
+                        "§cYou do not have permission to use an Editor Stick B. You need the following permission to use this item: andexdb.canUseEditorSticks"
+                    );
+                    return;
+                }
+            }
             try {
                 editorStickMenuOpeningAsyncCancelActionNumbers[event.player.id] = srun(() => editorStickB(event.player));
             } catch (e) {
@@ -181,6 +205,14 @@ subscribedEvents.beforePlayerInteractWithBlock = world.beforeEvents.playerIntera
         }
         if (event.itemStack?.typeId === "andexdb:editor_stick_c") {
             event.cancel = true;
+            if (securityVariables.ultraSecurityModeEnabled) {
+                if (securityVariables.testPlayerForPermission(event.player, "andexdb.canUseEditorSticks") == false) {
+                    event.player.sendMessage(
+                        "§cYou do not have permission to use an Editor Stick C. You need the following permission to use this item: andexdb.canUseEditorSticks"
+                    );
+                    return;
+                }
+            }
             try {
                 editorStickMenuOpeningAsyncCancelActionNumbers[event.player.id] = srun(() => editorStickC(event.player));
             } catch (e) {
