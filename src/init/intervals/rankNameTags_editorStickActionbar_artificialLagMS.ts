@@ -541,12 +541,9 @@ try {
                                     .join(
                                         String(
                                             playerList2[indexb].getDynamicProperty(
-                                                "andexdbPersonalSettings:chatNameAndMessageSeparator"
+                                                "andexdbPersonalSettings:rankDisplaySeparator"
                                             ) ??
-                                            world.getDynamicProperty(
-                                                "andexdbSettings:chatNameAndMessageSeparator"
-                                            ) ??
-                                            " "
+                                            config.chatRanks.rankDisplaySeparator
                                         )
                                     );
                                 if (rank == "") {
@@ -560,24 +557,10 @@ try {
                                     );
                                 }
                                 let dimension = dimensionTypeDisplayFormattingE[playerList2[index].dimension.id];
+                                const currentHealth = playerList2[indexb].getComponent("health").currentValue;
+                                const maxHealth = playerList2[indexb].getComponent("health").effectiveMax;
                                 playerList2[indexb].nameTag =
-                                    (showDimension
-                                        ? "[" + dimension + "§r§f] "
-                                        : "") +
-                                    rank +
-                                    " " +
-                                    nameb +
-                                    (showHealth
-                                        ? "§r§f[" +
-                                        playerList2[indexb].getComponent(
-                                            "health"
-                                        ).currentValue +
-                                        "/" +
-                                        playerList2[indexb].getComponent(
-                                            "health"
-                                        ).effectiveMax +
-                                        "] "
-                                        : ""); /*(
+                                    eval(config.chatRanks.nameTagTemplateString ?? `\`${'${(showDimension ? `[${dimension}§r§f] ` : "")}${rank} ${nameb}${(showHealth ? `§r§f[${currentHealth}/${maxHealth}] ` : "")}'}\``); /*(
         playerList2[index].hasTag("nameTagUseSudo")?
         playerList2[index].getTags().find(t=>t.startsWith(String(playerList2[index].getDynamicProperty("andexdbPersonalSettings:chatSudoPrefix") ?? world.getDynamicProperty("andexdbSettings:chatSudoPrefix") ?? "sudo:")))
         .slice(String(playerList2[index].getDynamicProperty("andexdbPersonalSettings:chatSudoPrefix") ?? world.getDynamicProperty("andexdbSettings:chatSudoPrefix") ?? "sudo:").length):

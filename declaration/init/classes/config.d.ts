@@ -186,8 +186,12 @@ export declare class config {
         nameDisplaySuffix: string | undefined;
         chatNameAndMessageSeparator: string | undefined;
         rankDisplaySeparator: string | undefined;
+        /**
+         * The template string for individual ranks.
+         */
         rankTemplateString: string | undefined;
         messageTemplateString: string | undefined;
+        nameTagTemplateString: string | undefined;
         defaultRankTemplateString: string | undefined;
         defaultMessageFormatting: string | undefined;
         defaultNameFormatting: string | undefined;
@@ -197,6 +201,28 @@ export declare class config {
         autoEscapeChatMessages: boolean | undefined;
         autoURIEscapeChatMessages: boolean | undefined;
         allowChatEscapeCodes: boolean | undefined;
+    };
+    static get moneySystem(): {
+        /**
+         * Whether or not to use a scoreboard-based money system instead of a dynamic property-based one.
+         *
+         * Enabling this option will cause the money system to max out at the 32-bit integer limit (approximately 2.1 billion), but will allow for modifying a player's money with the /scoreboard command instead of having to use the main menu or use script eval.
+         *
+         * When this option is disabled the limit is 10^32767. So basically infinite.
+         *
+         * Default: false.
+         *
+         * Dynamic Property ID: andexdbSettings:moneySystem.useScoreboardBasedMoneySystem
+         */
+        useScoreboardBasedMoneySystem: boolean | undefined;
+        /**
+         * The name of the scoreboard to use for the money system.
+         *
+         * Default: "andexdb:money".
+         *
+         * Dynamic Property ID: andexdbSettings:moneySystem.scoreboardName
+         */
+        scoreboardName: string | undefined;
     };
     static get antiSpamSystem(): {
         antispamEnabled: boolean | undefined;

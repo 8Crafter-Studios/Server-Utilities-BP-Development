@@ -1,22 +1,70 @@
 import { Entity, world } from "@minecraft/server"
+import { savedPlayer } from "modules/player_save/classes/savedPlayer";
 
 export class MoneySystem {
     playerID: `${number}`
-    get money(){return String(world.getDynamicProperty(`playerMoney:${this.playerID}`)).toBigInt()??0n}
+    get money(){
+        if(world.scoreboard.getObjective(config.moneySystem.scoreboardName).getParticipants().find(v=>tryget(()=>v.getEntity()?.id)==this.playerID)==undefined){
+            if(world.getAllPlayers().find(v=>v.id==this.playerID) != undefined){
+                world.scoreboard.getObjective(config.moneySystem.scoreboardName).addScore(world.getAllPlayers().find(v=>v.id==this.playerID), 0);
+            }
+        }
+        if(config.moneySystem.useScoreboardBasedMoneySystem){
+            try{
+                return world.scoreboard.getObjective(config.moneySystem.scoreboardName).getScore(world.scoreboard.getParticipants().find(v=>tryget(()=>v.getEntity()?.id)==this.playerID)??world.scoreboard.getParticipants().find(v=>v.id==savedPlayer.getSavedPlayer("player:"+this.playerID).scoreboardIdentity)).toBigInt();
+            }catch{
+                return 0n;
+            }
+        }else{
+            return String(world.getDynamicProperty(`playerMoney:${this.playerID}`)).toBigInt()??0n
+        }
+    }
     addMoney(amount: number|bigint){
-        world.setDynamicProperty(`playerMoney:${this.playerID}`, (this.money+amount.toBigInt()).toString())
-        try{world.scoreboard.getObjective("andexdb:money").setScore(world.scoreboard.getObjective("andexdb:money").getParticipants().find(v=>v.getEntity()?.id==this.playerID), Math.min(this.money.toNumber(), 2000000000))}catch{}
+        if(world.scoreboard.getObjective(config.moneySystem.scoreboardName).getParticipants().find(v=>tryget(()=>v.getEntity()?.id)==this.playerID)==undefined){
+            if(world.getAllPlayers().find(v=>v.id==this.playerID) != undefined){
+                world.scoreboard.getObjective(config.moneySystem.scoreboardName).addScore(world.getAllPlayers().find(v=>v.id==this.playerID), 0);
+            }
+        }
+        if(config.moneySystem.useScoreboardBasedMoneySystem){
+            try{world.scoreboard.getObjective(config.moneySystem.scoreboardName).setScore(world.scoreboard.getParticipants().find(v=>tryget(()=>v.getEntity()?.id)==this.playerID)??world.scoreboard.getParticipants().find(v=>v.id==savedPlayer.getSavedPlayer("player:"+this.playerID).scoreboardIdentity), Math.min((this.money+amount.toBigInt()).toNumber(), 2147483647))}catch{};
+        }else{
+            world.setDynamicProperty(`playerMoney:${this.playerID}`, (this.money+amount.toBigInt()).toString());
+            try{world.scoreboard.getObjective(config.moneySystem.scoreboardName).setScore(world.scoreboard.getParticipants().find(v=>tryget(()=>v.getEntity()?.id)==this.playerID)??world.scoreboard.getParticipants().find(v=>v.id==savedPlayer.getSavedPlayer("player:"+this.playerID).scoreboardIdentity), Math.min(this.money.toNumber(), 2000000000))}catch{}
+        }
     }
     removeMoney(amount: number|bigint){
-        world.setDynamicProperty(`playerMoney:${this.playerID}`, (this.money-amount.toBigInt()).toString())
-        try{world.scoreboard.getObjective("andexdb:money").setScore(world.scoreboard.getObjective("andexdb:money").getParticipants().find(v=>v.getEntity()?.id==this.playerID), Math.min(this.money.toNumber(), 2000000000))}catch{}
+        if(world.scoreboard.getObjective(config.moneySystem.scoreboardName).getParticipants().find(v=>tryget(()=>v.getEntity()?.id)==this.playerID)==undefined){
+            if(world.getAllPlayers().find(v=>v.id==this.playerID) != undefined){
+                world.scoreboard.getObjective(config.moneySystem.scoreboardName).addScore(world.getAllPlayers().find(v=>v.id==this.playerID), 0);
+            }
+        }
+        if(config.moneySystem.useScoreboardBasedMoneySystem){
+            try{world.scoreboard.getObjective(config.moneySystem.scoreboardName).setScore(world.scoreboard.getParticipants().find(v=>tryget(()=>v.getEntity()?.id)==this.playerID)??world.scoreboard.getParticipants().find(v=>v.id==savedPlayer.getSavedPlayer("player:"+this.playerID).scoreboardIdentity), Math.min((this.money-amount.toBigInt()).toNumber(), 2147483647))}catch{};
+        }else{
+            world.setDynamicProperty(`playerMoney:${this.playerID}`, (this.money-amount.toBigInt()).toString());
+            try{world.scoreboard.getObjective(config.moneySystem.scoreboardName).setScore(world.scoreboard.getParticipants().find(v=>tryget(()=>v.getEntity()?.id)==this.playerID)??world.scoreboard.getParticipants().find(v=>v.id==savedPlayer.getSavedPlayer("player:"+this.playerID).scoreboardIdentity), Math.min(this.money.toNumber(), 2000000000))}catch{}
+        }
     }
     setMoney(amount: number|bigint = 0){
-        world.setDynamicProperty(`playerMoney:${this.playerID}`, amount.toBigInt().toString())
-        try{world.scoreboard.getObjective("andexdb:money").setScore(world.scoreboard.getObjective("andexdb:money").getParticipants().find(v=>v.getEntity()?.id==this.playerID), Math.min(amount.toNumber(), 2000000000))}catch{}
+        if(world.scoreboard.getObjective(config.moneySystem.scoreboardName).getParticipants().find(v=>tryget(()=>v.getEntity()?.id)==this.playerID)==undefined){
+            if(world.getAllPlayers().find(v=>v.id==this.playerID) != undefined){
+                world.scoreboard.getObjective(config.moneySystem.scoreboardName).addScore(world.getAllPlayers().find(v=>v.id==this.playerID), 0);
+            }
+        }
+        if(config.moneySystem.useScoreboardBasedMoneySystem){
+            try{world.scoreboard.getObjective(config.moneySystem.scoreboardName).setScore(world.scoreboard.getParticipants().find(v=>tryget(()=>v.getEntity()?.id)==this.playerID)??world.scoreboard.getParticipants().find(v=>v.id==savedPlayer.getSavedPlayer("player:"+this.playerID).scoreboardIdentity), Math.min(amount.toNumber(), 2147483647))}catch{};
+        }else{
+            world.setDynamicProperty(`playerMoney:${this.playerID}`, amount.toBigInt().toString());
+            try{world.scoreboard.getObjective(config.moneySystem.scoreboardName).setScore(world.scoreboard.getParticipants().find(v=>tryget(()=>v.getEntity()?.id)==this.playerID)??world.scoreboard.getParticipants().find(v=>v.id==savedPlayer.getSavedPlayer("player:"+this.playerID).scoreboardIdentity), Math.min(amount.toNumber(), 2000000000))}catch{}
+        }
     }
     constructor(playerID: `${number}`){
-        this.playerID=playerID
+        this.playerID=playerID;
+        if(world.scoreboard.getObjective(config.moneySystem.scoreboardName).getParticipants().find(v=>tryget(()=>v.getEntity()?.id)==this.playerID)==undefined){
+            if(world.getAllPlayers().find(v=>v.id==this.playerID) != undefined){
+                world.scoreboard.getObjective(config.moneySystem.scoreboardName).addScore(world.getAllPlayers().find(v=>v.id==this.playerID), 0);
+            }
+        }
     }
     static get(player: `${number}`|Entity|{id: string|`${number}`}|number|bigint|string){
         return new MoneySystem(typeof player == "string" ? player as `${number}` : typeof player == "number" ? player.toString() as `${number}` : typeof player == "bigint" ? player.toString() as `${number}` : player.id as `${number}`)

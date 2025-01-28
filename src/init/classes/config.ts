@@ -643,6 +643,9 @@ export class config {
             set rankDisplaySeparator(rankDisplaySeparator: string | undefined) {
                 world.setDynamicProperty("andexdbSettings:rankDisplaySeparator", rankDisplaySeparator ?? " ");
             },
+            /**
+             * The template string for individual ranks.
+             */
             get rankTemplateString() {
                 return String(world.getDynamicProperty("andexdbSettings:rankTemplateString") ?? "[${rank}§r]");
             },
@@ -659,6 +662,18 @@ export class config {
                 world.setDynamicProperty(
                     "andexdbSettings:messageTemplateString",
                     messageTemplateString ?? '§r${timestampenabled?`[${timestamp}]`:""}${ranks}§r${(ranks!="")?" ":""}<${name}§r> ${message}'
+                );
+            },
+            get nameTagTemplateString() {
+                return String(
+                    world.getDynamicProperty("andexdbSettings:messageTemplateString") ??
+                        '${(showDimension ? `[${dimension}§r§f] ` : "")}${rank} ${nameb}${(showHealth ? `§r§f[${currentHealth}/${maxHealth}] ` : "")}'
+                );
+            },
+            set nameTagTemplateString(messageTemplateString: string | undefined) {
+                world.setDynamicProperty(
+                    "andexdbSettings:messageTemplateString",
+                    messageTemplateString ?? '${(showDimension ? `[${dimension}§r§f] ` : "")}${rank} ${nameb}${(showHealth ? `§r§f[${currentHealth}/${maxHealth}] ` : "")}'
                 );
             },
             get defaultRankTemplateString() {
@@ -714,6 +729,40 @@ export class config {
             },
             set allowChatEscapeCodes(allowChatEscapeCodes: boolean | undefined) {
                 world.setDynamicProperty("andexdbSettings:allowChatEscapeCodes", allowChatEscapeCodes ?? false);
+            },
+        };
+    }
+    static get moneySystem() {
+        return {
+            /**
+             * Whether or not to use a scoreboard-based money system instead of a dynamic property-based one.
+             * 
+             * Enabling this option will cause the money system to max out at the 32-bit integer limit (approximately 2.1 billion), but will allow for modifying a player's money with the /scoreboard command instead of having to use the main menu or use script eval.
+             * 
+             * When this option is disabled the limit is 10^32767. So basically infinite.
+             * 
+             * Default: false.
+             * 
+             * Dynamic Property ID: andexdbSettings:moneySystem.useScoreboardBasedMoneySystem
+             */
+            get useScoreboardBasedMoneySystem() {
+                return Boolean(world.getDynamicProperty("andexdbSettings:moneySystem.useScoreboardBasedMoneySystem") ?? false);
+            },
+            set useScoreboardBasedMoneySystem(enabled: boolean | undefined) {
+                world.setDynamicProperty("andexdbSettings:moneySystem.useScoreboardBasedMoneySystem", enabled ?? false);
+            },
+            /**
+             * The name of the scoreboard to use for the money system.
+             * 
+             * Default: "andexdb:money".
+             * 
+             * Dynamic Property ID: andexdbSettings:moneySystem.scoreboardName
+             */
+            get scoreboardName() {
+                return String(world.getDynamicProperty("andexdbSettings:moneySystem.scoreboardName") ?? "andexdb:money");
+            },
+            set scoreboardName(enabled: string | undefined) {
+                world.setDynamicProperty("andexdbSettings:moneySystem.scoreboardName", enabled ?? "andexdb:money");
             },
         };
     }
