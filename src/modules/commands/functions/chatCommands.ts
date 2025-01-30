@@ -12021,6 +12021,20 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                     );
                 }
                 break;
+            case !!switchTest.match(/^bluemodsversion$/) ||
+                !!switchTest.match(/^bmver$/):
+                {
+                    eventData.cancel = true;
+                    player.sendMessageB(
+                        (bluemods_anticheat_format_version != null
+                            ? bluemods_anticheat_format_version
+                            : "BlueMods Anticheat Not Detected") +
+                            (multipleBlueModsAnticheatVersionsDetected
+                                ? "<MULTIPLE VERSIONS WERE DETECTED!>"
+                                : "")
+                    );
+                }
+                break;
             case !!switchTest.match(/^despawn$/):
                 {
                     eventData.cancel = true;

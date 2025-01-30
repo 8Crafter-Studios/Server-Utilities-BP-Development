@@ -28,6 +28,8 @@ declare global {
             [intervalName: string]: number;
         };
         var entity_scale_format_version: string | null;
+        var bluemods_anticheat_format_version: string | null;
+        var multipleBlueModsAnticheatVersionsDetected: boolean;
         var multipleEntityScaleVersionsDetected: boolean;
         var errorLog: {
             playerDataAutoSave: {
@@ -38,6 +40,10 @@ declare global {
                 time: number;
                 error: Error;
             }[];
+        };
+        var blueModsAnticheatConfig: {
+            prefix?: string;
+            bmversion?: string;
         };
     }
 }

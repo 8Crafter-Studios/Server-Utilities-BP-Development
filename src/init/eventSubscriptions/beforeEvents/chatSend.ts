@@ -5,6 +5,9 @@ import { getPlayersWithAnyOfTags } from "modules/commands/functions/getPlayersWi
 
 subscribedEvents.beforeChatSend = world.beforeEvents.chatSend.subscribe(
     (eventData) => {
+        if(bluemods_anticheat_format_version != null && eventData.message.startsWith(blueModsAnticheatConfig.prefix)){
+            return;
+        }
         try {
             getPlayersWithAnyOfTags([
                 "getBeforeChatSendNotifications",

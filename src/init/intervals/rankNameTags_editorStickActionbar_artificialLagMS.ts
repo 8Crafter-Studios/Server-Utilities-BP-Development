@@ -127,7 +127,7 @@ try {
                             }
                         } catch (e) { }
                         if (config.chatRanks.showRanksOnPlayerNameTags) {
-                            if (!playerList2[index].hasTag("doNotSetNameTag")) {
+                            try{if (!playerList2[index].hasTag("doNotSetNameTag")) {
                                 let nameFormatting = "";
                                 let nameGradientMode = undefined;
                                 let showDimension = false;
@@ -559,8 +559,7 @@ try {
                                 let dimension = dimensionTypeDisplayFormattingE[playerList2[index].dimension.id];
                                 const currentHealth = playerList2[indexb].getComponent("health").currentValue;
                                 const maxHealth = playerList2[indexb].getComponent("health").effectiveMax;
-                                playerList2[indexb].nameTag =
-                                    eval(config.chatRanks.nameTagTemplateString ?? `\`${'${(showDimension ? `[${dimension}§r§f] ` : "")}${rank} ${nameb}${(showHealth ? `§r§f[${currentHealth}/${maxHealth}] ` : "")}'}\``); /*(
+                                playerList2[indexb].nameTag = eval(`\`${config.chatRanks.nameTagTemplateString}\``); /*(
         playerList2[index].hasTag("nameTagUseSudo")?
         playerList2[index].getTags().find(t=>t.startsWith(String(playerList2[index].getDynamicProperty("andexdbPersonalSettings:chatSudoPrefix") ?? world.getDynamicProperty("andexdbSettings:chatSudoPrefix") ?? "sudo:")))
         .slice(String(playerList2[index].getDynamicProperty("andexdbPersonalSettings:chatSudoPrefix") ?? world.getDynamicProperty("andexdbSettings:chatSudoPrefix") ?? "sudo:").length):
@@ -572,6 +571,10 @@ try {
 
 
                             }
+                        } catch (e) {
+                            console.error(e, e.stack);
+                            world.getPlayers({tags: ["getNameTagRankSettingsErrors"]}).forEach(p=>p.sendMessage("§cError while setting " + tryget(()=>playerList2[index].name) + "'s name tag in rankNameTags_editorStickActionbar_artificialLagMS: "+e+e.stack));
+                        }
                         }
                         try {
                             if (playerList2[index].hasTag("isSneaking")) {

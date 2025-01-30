@@ -280,6 +280,20 @@ export declare class config {
         showEntityScaleFoundConsoleLog: boolean | undefined;
         showEntityScaleNotFoundChatLog: boolean | undefined;
         showEntityScaleFoundChatLog: boolean | undefined;
+        showBlueModsAnticheatNotFoundConsoleLog: boolean | undefined;
+        showBlueModsAnticheatFoundConsoleLog: boolean | undefined;
+        showBlueModsAnticheatNotFoundChatLog: boolean | undefined;
+        showBlueModsAnticheatFoundChatLog: boolean | undefined;
+        /**
+         * Sets whether or not the add-on is allowed to connect to and communicate with the entity scale add-on.
+         * @warning It is HIGHLY DISCOURAGED to disable this option.
+         */
+        allowConnectingToEntityScale: boolean | undefined;
+        /**
+         * Sets whether or not the add-on is allowed to connect to and communicate with the BlueMods Anticheat add-on.
+         * @warning It is HIGHLY DISCOURAGED to disable this option.
+         */
+        allowConnectingToBlueModsAnticheat: boolean | undefined;
     };
     static reset(): void;
     static toJSON(): {

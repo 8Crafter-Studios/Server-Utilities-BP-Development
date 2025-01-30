@@ -2,12 +2,15 @@ import { system } from "@minecraft/server";
 import "init/functions/breakpoint";
 
 globalThis.beforeScriptStartTick = system.currentTick;
-export const current_format_version = "1.29.0-preview.20+BUILD.1";
+export const current_format_version = "1.30.0-preview.20+BUILD.1";
 globalThis.format_version = current_format_version
 export const current_supported_minecraft_version = "1.21.5x";
 globalThis.supported_minecraft_version = current_supported_minecraft_version
 globalThis.entity_scale_format_version = null;
 globalThis.multipleEntityScaleVersionsDetected = false;
+globalThis.bluemods_anticheat_format_version = null;
+globalThis.multipleBlueModsAnticheatVersionsDetected = false;
+globalThis.blueModsAnticheatConfig = {};
 globalThis.modules={
     assets: {
         classes: {},
@@ -53,11 +56,17 @@ declare global {
             [intervalName: string]: number;
         };
         var entity_scale_format_version: string | null;
+        var bluemods_anticheat_format_version: string | null;
+        var multipleBlueModsAnticheatVersionsDetected: boolean;
         var multipleEntityScaleVersionsDetected: boolean;
         var errorLog: {
             playerDataAutoSave: {time: number, error: Error}[];
             [logCategory: string]: {time: number, error: Error}[];
         };
+        var blueModsAnticheatConfig: {
+            prefix?: string,
+            bmversion?: string,
+        }
     }
 }
 /* Object.defineProperty(console, "error", {

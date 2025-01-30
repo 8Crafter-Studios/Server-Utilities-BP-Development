@@ -7,6 +7,9 @@ export const current_supported_minecraft_version = "1.21.5x";
 globalThis.supported_minecraft_version = current_supported_minecraft_version;
 globalThis.entity_scale_format_version = null;
 globalThis.multipleEntityScaleVersionsDetected = false;
+globalThis.bluemods_anticheat_format_version = null;
+globalThis.multipleBlueModsAnticheatVersionsDetected = false;
+globalThis.blueModsAnticheatConfig = {};
 globalThis.modules = {
     assets: {
         classes: {},
