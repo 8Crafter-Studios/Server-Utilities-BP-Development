@@ -658,7 +658,7 @@ export class config {
                         '§r${timestampenabled?`[${timestamp}]`:""}${ranks}§r${(ranks!="")?" ":""}<${name}§r> ${message}'
                 );
             },
-            set messageTemplateString(messageTemplateString: string | undefined) {
+            set messageTemplateString(nameTagTemplateString: string | undefined) {
                 world.setDynamicProperty(
                     "andexdbSettings:messageTemplateString",
                     messageTemplateString ?? '§r${timestampenabled?`[${timestamp}]`:""}${ranks}§r${(ranks!="")?" ":""}<${name}§r> ${message}'
@@ -666,13 +666,13 @@ export class config {
             },
             get nameTagTemplateString() {
                 return String(
-                    world.getDynamicProperty("andexdbSettings:messageTemplateString") ??
+                    world.getDynamicProperty("andexdbSettings:nameTagTemplateString") ??
                         '${(showDimension ? `[${dimension}§r§f] ` : "")}${rank} ${nameb}${(showHealth ? `§r§f[${currentHealth}/${maxHealth}] ` : "")}'
                 );
             },
-            set nameTagTemplateString(messageTemplateString: string | undefined) {
+            set nameTagTemplateString(nameTagTemplateString: string | undefined) {
                 world.setDynamicProperty(
-                    "andexdbSettings:messageTemplateString",
+                    "andexdbSettings:nameTagTemplateString",
                     messageTemplateString ?? '${(showDimension ? `[${dimension}§r§f] ` : "")}${rank} ${nameb}${(showHealth ? `§r§f[${currentHealth}/${maxHealth}] ` : "")}'
                 );
             },
