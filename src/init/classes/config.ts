@@ -658,7 +658,7 @@ export class config {
                         '§r${timestampenabled?`[${timestamp}]`:""}${ranks}§r${(ranks!="")?" ":""}<${name}§r> ${message}'
                 );
             },
-            set messageTemplateString(nameTagTemplateString: string | undefined) {
+            set messageTemplateString(messageTemplateString: string | undefined) {
                 world.setDynamicProperty(
                     "andexdbSettings:messageTemplateString",
                     messageTemplateString ?? '§r${timestampenabled?`[${timestamp}]`:""}${ranks}§r${(ranks!="")?" ":""}<${name}§r> ${message}'
@@ -673,7 +673,7 @@ export class config {
             set nameTagTemplateString(nameTagTemplateString: string | undefined) {
                 world.setDynamicProperty(
                     "andexdbSettings:nameTagTemplateString",
-                    messageTemplateString ?? '${(showDimension ? `[${dimension}§r§f] ` : "")}${rank} ${nameb}${(showHealth ? `§r§f[${currentHealth}/${maxHealth}] ` : "")}'
+                    nameTagTemplateString ?? '${(showDimension ? `[${dimension}§r§f] ` : "")}${rank} ${nameb}${(showHealth ? `§r§f[${currentHealth}/${maxHealth}] ` : "")}'
                 );
             },
             get defaultRankTemplateString() {
