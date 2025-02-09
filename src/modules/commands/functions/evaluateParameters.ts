@@ -199,7 +199,7 @@ export function evaluateParameters<
                     vectorCount?: number;
                     maxLength?: number;
                 })
-                : { type: v, vectorCount: undefined, maxLength: undefined }
+                : { type: v, vectorCount: undefined as undefined, maxLength: undefined as undefined }
             : v?.type == "Vectors"
                 ? (v as {
                     type: "Vectors";

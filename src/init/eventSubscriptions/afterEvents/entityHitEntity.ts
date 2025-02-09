@@ -67,7 +67,7 @@ subscribedEvents.afterEntityHitEntity =
                             ? ` in ${dimensionTypeDisplayFormatting[tryget(
                                 () => event.hitEntity?.dimension
                                     ?.id
-                            )] ?? "an unknown dimension"} at ${!!tryget(
+                            ) as keyof typeof dimensionTypeDisplayFormatting] ?? "an unknown dimension"} at ${!!tryget(
                                 () => event.hitEntity?.location
                             ) &&
                                 (event.hitEntity?.isValid() ?? true)
@@ -78,7 +78,7 @@ subscribedEvents.afterEntityHitEntity =
                                 ? `, the entity/player who hit the explosive entity is in ${dimensionTypeDisplayFormatting[tryget(
                                     () => event.damagingEntity
                                         ?.dimension?.id
-                                )] ?? "an unknown dimension"} at ${!!tryget(
+                                ) as keyof typeof dimensionTypeDisplayFormatting] ?? "an unknown dimension"} at ${!!tryget(
                                     () => event.damagingEntity?.location
                                 ) &&
                                     (event.damagingEntity?.isValid() ??

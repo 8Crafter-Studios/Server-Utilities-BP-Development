@@ -71,7 +71,7 @@ subscribedEvents.afterPlayerInteractWithBlock =
                             ) ?? ""}[§eexplosiveBlockInteraction§r] ${!!event.player
                                 ? `${event.player.name ??
                                 event.player.nameTag} interacted with explosive block of type "${event.block.typeId}"`
-                                : `Explosive block of type "${event.block.typeId}" was interacted with`} in ${dimensionTypeDisplayFormatting[event.block.dimension.id]} at ${vTStr(event.block.location)}${!!event.itemStack
+                                : `Explosive block of type "${event.block.typeId}" was interacted with`} in ${dimensionTypeDisplayFormatting[event.block.dimension.id as keyof typeof dimensionTypeDisplayFormatting]} at ${vTStr(event.block.location)}${!!event.itemStack
                                 ? ` using ${event.itemStack?.typeId}`
                                 : ""}. `
                         );

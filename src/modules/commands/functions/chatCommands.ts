@@ -564,7 +564,7 @@ export function chatCommands(params: {
                 ) as EntityInventoryComponent;
                 system.run(() => {
                     try {
-                        let slotsArray = [];
+                        let slotsArray: any[] = [];
                         for (let i = 0; i < inventoryb.inventorySize; i++) {
                             if (
                                 inventoryb.container.getItem(Number(i)) !==
@@ -683,7 +683,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                     } else {
                         system.run(() => {
                             try {
-                                let slotsArray = [];
+                                let slotsArray: any[] = [];
                                 for (
                                     let i = 0;
                                     i < inventoryb.inventorySize;
@@ -749,7 +749,7 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventorye.container.swapItems(i,
                 break;
             case !!switchTest.match(/^hset$/):
                 eventData.cancel = true;
-                let coordinates = { x: undefined, y: undefined, z: undefined };
+                let coordinates: Vector3 = { x: undefined, y: undefined, z: undefined };
                 try {
                     coordinates = evaluateCoordinates(
                         (
@@ -1167,7 +1167,7 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                         "cursor_inventory"
                     ) as PlayerCursorInventoryComponent;
                     try {
-                        let slotsArray = [];
+                        let slotsArray: any[] = [];
                         for (let i = 0; i < inventoryd2.inventorySize; i++) {
                             if (
                                 inventoryd2.container.getItem(Number(i)) !==
@@ -1366,7 +1366,7 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                         "cursor_inventory"
                     ) as PlayerCursorInventoryComponent;
                     try {
-                        let slotsArray = [];
+                        let slotsArray: any[] = [];
                         for (let i = 0; i < inventoryd2.inventorySize; i++) {
                             if (
                                 inventoryd2.container.getItem(Number(i)) !==
@@ -1429,7 +1429,7 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                                                             ? null
                                                             : {};
                                                     } else {
-                                                        let properties = {};
+                                                        let properties: {[k: string]: boolean | number | string | Vector3 | undefined} = {};
                                                         inventoryd2.container
                                                             .getItem(Number(i))
                                                             .getDynamicPropertyIds()
@@ -1527,7 +1527,7 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                                                                 ? null
                                                                 : {};
                                                         } else {
-                                                            let properties = {};
+                                                            let properties: {[k: string]: boolean | number | string | Vector3 | undefined} = {};
                                                             item.getDynamicPropertyIds().forEach(
                                                                 (v) =>
                                                                     (properties[
@@ -1591,7 +1591,7 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                                                   ) ?? "[]"
                                                 : "N/A") +
                                             ", properties: " +
-                                            JSONStringify((i) => {
+                                            JSONStringify((i: any) => {
                                                 if (
                                                     (
                                                         item.getDynamicPropertyIds() ??
@@ -1602,7 +1602,7 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                                                         ? null
                                                         : {};
                                                 } else {
-                                                    let properties = {};
+                                                    let properties: {[k: string]: boolean | number | string | Vector3 | undefined} = {};
                                                     item.getDynamicPropertyIds().forEach(
                                                         (v) =>
                                                             (properties[v] =
@@ -2062,7 +2062,7 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                 eventData.cancel = true;
                 try {
                     (async () => {
-                        let slotsArray = [];
+                        let slotsArray: any[] = [];
                         let players = savedPlayer
                             .getSavedPlayers()
                             .filter(
@@ -2217,7 +2217,7 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                 eventData.cancel = true;
                 try {
                     (async () => {
-                        let slotsArray = [];
+                        let slotsArray: any[] = [];
                         let players = savedPlayer
                             .getSavedPlayers()
                             .filter(
@@ -2390,7 +2390,7 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
 
                     const inventoryd2 = block.getComponent("inventory");
                     try {
-                        let slotsArray = [];
+                        let slotsArray: any[] = [];
                         for (let i = 0; i < inventoryd2.container.size; i++) {
                             if (
                                 inventoryd2.container.getItem(Number(i)) !==
@@ -2478,7 +2478,7 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                         )
                         .getComponent("inventory");
                     try {
-                        let slotsArray = [];
+                        let slotsArray: any[] = [];
                         for (let i = 0; i < inventoryd2.inventorySize; i++) {
                             if (
                                 inventoryd2.container.getItem(Number(i)) !==
@@ -2596,7 +2596,7 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                         )
                         .getComponent("equippable");
                     try {
-                        let slotsArray = [];
+                        let slotsArray: any[] = [];
                         if (!!inventoryd2) {
                             try {
                                 for (
@@ -2789,7 +2789,7 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                     .getComponent("equippable");
                 system.run(() => {
                     try {
-                        let slotsArray = [];
+                        let slotsArray: any[] = [];
                         if (!!inventoryd) {
                             try {
                                 for (
@@ -4168,7 +4168,7 @@ potionModifierType: ${d.potionModifierType.id}`)(item.getComponent("potion"))
                                                             )
                                                             .addEnchantments(
                                                                 enchantmentlist.map(
-                                                                    (v) => ({
+                                                                    (v: { level: any; type: string; }) => ({
                                                                         level: v.level,
                                                                         type: EnchantmentTypes.get(
                                                                             v.type
@@ -4972,7 +4972,7 @@ potionModifierType: ${d.potionModifierType.id}`)(item.getComponent("potion"))
                                                                     .addEnchantments(
                                                                         enchantmentlist.map(
                                                                             (
-                                                                                v
+                                                                                v: { level: any; type: string; }
                                                                             ) => ({
                                                                                 level: v.level,
                                                                                 type: EnchantmentTypes.get(
@@ -8967,7 +8967,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                       player.getRotation().x
                                   } in ${
                                       dimensionTypeDisplayFormattingF[
-                                          player.dimension.id
+                                          player.dimension.id as keyof typeof dimensionTypeDisplayFormattingF
                                       ]
                                   } run `
                                 : "") + newMessage.split(" ").slice(2).join(" ")
@@ -9292,7 +9292,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                 let warpListD = String(
                     world.getDynamicProperty("globalWarpListValues")
                 ).split("||||");
-                let warp = undefined; /*
+                let warp: any[] = undefined; /*
             console.warn("wasdqrte\\sanwqhieasdrt\\p\\nasqw".replaceAll(/(?<!\\p)\\n/g, "\n").replaceAll(/(?<!\\p)\\s/g, "\s").replaceAll(/(?<!\\p)\\0/g, "\0").replaceAll(/(?<!\\p)\\r/g, "\r").replaceAll(/(?<!\\p)\\t/g, "\t").replaceAll(/(?<!\\p)\\v/g, "\v").replaceAll(/(?<!\\p)\\f/g, "\f")*/ /*.replaceAll(/[\\x]/g, "\x").replaceAll(/[\\u]/g, "\u")*/ /*.replaceAll(/(?<!\\p)\\k/g, "\k").replaceAll(/(?<!\\p)\\p/g, ""))*/
 
                 switch (
@@ -9690,7 +9690,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                 let wListD = String(
                     player.getDynamicProperty("warpList")
                 ).split("||||");
-                let warpB = undefined;
+                let warpB: any[] = undefined;
                 switch (
                     wListD.find(
                         (findWarp) =>
@@ -10574,7 +10574,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                                         args[10] ?? false,
                                                     animationMode:
                                                         StructureAnimationMode[
-                                                            args[13]
+                                                            args[13] as StructureAnimationMode
                                                         ] ??
                                                         StructureAnimationMode.None,
                                                     animationSeconds: args[14],
@@ -10942,7 +10942,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                             player.location
                                         )} in ${
                                             dimensionTypeDisplayFormatting[
-                                                player.dimension.id
+                                                player.dimension.id as keyof typeof dimensionTypeDisplayFormatting
                                             ]
                                         }. `
                                     );
@@ -13011,7 +13011,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                       .join(" ")
                                       .trimStart(),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : reststringaftercoordinates
                               .split(" ")
@@ -13030,7 +13030,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                       .replaceAll("[", "{")
                                       .replaceAll("]", "}"),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : undefined;
                     let lastblockname = reststringaftercoordinates
@@ -13155,7 +13155,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                               .join(" ")
                               .trim();
                     let lastblockstates = somethingtest.startsWith("{")
-                        ? JSONParse(extractJSONStrings(somethingtest, false)[0])
+                        ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
                         : somethingtest.startsWith("[")
                         ? JSONParse(
                               extractJSONStrings(
@@ -13164,7 +13164,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                       .replaceAll("[", "{")
                                       .replaceAll("]", "}"),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : undefined;
                     let matchingblock =
@@ -13459,8 +13459,8 @@ ${command.dp}ifill <center: x y z> <radius: x y z> <offset: x y z> <length: floa
                         if (
                             ["circle"].includes(
                                 fillmodetypeenum[
-                                    argsc[8] ??
-                                        "undefined"?.toLowerCase()?.trim()
+                                    (argsc[8] ??
+                                        "undefined"?.toLowerCase()?.trim()) as fillmodetypeenum
                                 ]
                             )
                         ) {
@@ -13479,8 +13479,8 @@ ${command.dp}ifill <center: x y z> <radius: x y z> <offset: x y z> <length: floa
                                 "semisphere",
                             ].includes(
                                 fillmodetypeenum[
-                                    argse[7] ??
-                                        "undefined"?.toLowerCase()?.trim()
+                                    (argse[7] ??
+                                        "undefined"?.toLowerCase()?.trim()) as fillmodetypeenum
                                 ]
                             )
                         ) {
@@ -13499,8 +13499,8 @@ ${command.dp}ifill <center: x y z> <radius: x y z> <offset: x y z> <length: floa
                                 "dome",
                             ].includes(
                                 fillmodetypeenum[
-                                    argsg[8] ??
-                                        "undefined"?.toLowerCase()?.trim()
+                                    (argsg[8] ??
+                                        "undefined"?.toLowerCase()?.trim()) as fillmodetypeenum
                                 ]
                             )
                         ) {
@@ -13509,8 +13509,8 @@ ${command.dp}ifill <center: x y z> <radius: x y z> <offset: x y z> <length: floa
                         if (
                             ["tunnel", "cylinder"].includes(
                                 fillmodetypeenum[
-                                    argsi[9] ??
-                                        "undefined"?.toLowerCase()?.trim()
+                                    (argsi[9] ??
+                                        "undefined"?.toLowerCase()?.trim()) as fillmodetypeenum
                                 ]
                             )
                         ) {
@@ -13519,8 +13519,8 @@ ${command.dp}ifill <center: x y z> <radius: x y z> <offset: x y z> <length: floa
                         if (
                             ["ovoid"].includes(
                                 fillmodetypeenum[
-                                    argsm[12] ??
-                                        "undefined"?.toLowerCase()?.trim()
+                                    (argsm[12] ??
+                                        "undefined"?.toLowerCase()?.trim()) as fillmodetypeenum
                                 ]
                             )
                         ) {
@@ -13529,8 +13529,8 @@ ${command.dp}ifill <center: x y z> <radius: x y z> <offset: x y z> <length: floa
                         if (
                             ["hollowovoid"].includes(
                                 fillmodetypeenum[
-                                    argsk[13] ??
-                                        "undefined"?.toLowerCase()?.trim()
+                                    (argsk[13] ??
+                                        "undefined"?.toLowerCase()?.trim()) as fillmodetypeenum
                                 ]
                             )
                         ) {
@@ -13539,8 +13539,8 @@ ${command.dp}ifill <center: x y z> <radius: x y z> <offset: x y z> <length: floa
                         if (
                             ["skygrid", "inverseskygrid"].includes(
                                 fillmodetypeenum[
-                                    argso[10] ??
-                                        "undefined"?.toLowerCase()?.trim()
+                                    (argso[10] ??
+                                        "undefined"?.toLowerCase()?.trim()) as fillmodetypeenum
                                 ]
                             )
                         ) {
@@ -13720,7 +13720,7 @@ ${command.dp}ifill <center: x y z> <radius: x y z> <offset: x y z> <length: floa
 
                         switch (
                             fillmodetypeenum[
-                                skygridmode
+                                (skygridmode
                                     ? sgmode
                                     : hovoidmode
                                     ? homode
@@ -13734,7 +13734,7 @@ ${command.dp}ifill <center: x y z> <radius: x y z> <offset: x y z> <length: floa
                                     ? cmode
                                     : ccirclemode
                                     ? ccmode
-                                    : mode ?? ""
+                                    : mode ?? "") as fillmodetypeenum
                             ]
                         ) {
                             case "":
@@ -15635,8 +15635,8 @@ ${command.dp}itfill <center: x y z> <radius: x y z> <offset: x y z> <length: flo
                         if (
                             ["circle"].includes(
                                 fillmodetypeenum[
-                                    argsc[8] ??
-                                        "undefined"?.toLowerCase()?.trim()
+                                    (argsc[8] ??
+                                        "undefined"?.toLowerCase()?.trim()) as fillmodetypeenum
                                 ]
                             )
                         ) {
@@ -15655,8 +15655,8 @@ ${command.dp}itfill <center: x y z> <radius: x y z> <offset: x y z> <length: flo
                                 "semisphere",
                             ].includes(
                                 fillmodetypeenum[
-                                    argse[7] ??
-                                        "undefined"?.toLowerCase()?.trim()
+                                    (argse[7] ??
+                                        "undefined"?.toLowerCase()?.trim()) as fillmodetypeenum
                                 ]
                             )
                         ) {
@@ -15675,8 +15675,8 @@ ${command.dp}itfill <center: x y z> <radius: x y z> <offset: x y z> <length: flo
                                 "dome",
                             ].includes(
                                 fillmodetypeenum[
-                                    argsg[8] ??
-                                        "undefined"?.toLowerCase()?.trim()
+                                    (argsg[8] ??
+                                        "undefined"?.toLowerCase()?.trim()) as fillmodetypeenum
                                 ]
                             )
                         ) {
@@ -15685,8 +15685,8 @@ ${command.dp}itfill <center: x y z> <radius: x y z> <offset: x y z> <length: flo
                         if (
                             ["tunnel", "cylinder"].includes(
                                 fillmodetypeenum[
-                                    argsi[9] ??
-                                        "undefined"?.toLowerCase()?.trim()
+                                    (argsi[9] ??
+                                        "undefined"?.toLowerCase()?.trim()) as fillmodetypeenum
                                 ]
                             )
                         ) {
@@ -15695,8 +15695,8 @@ ${command.dp}itfill <center: x y z> <radius: x y z> <offset: x y z> <length: flo
                         if (
                             ["ovoid"].includes(
                                 fillmodetypeenum[
-                                    argsm[12] ??
-                                        "undefined"?.toLowerCase()?.trim()
+                                    (argsm[12] ??
+                                        "undefined"?.toLowerCase()?.trim()) as fillmodetypeenum
                                 ]
                             )
                         ) {
@@ -15705,8 +15705,8 @@ ${command.dp}itfill <center: x y z> <radius: x y z> <offset: x y z> <length: flo
                         if (
                             ["hollowovoid"].includes(
                                 fillmodetypeenum[
-                                    argsk[13] ??
-                                        "undefined"?.toLowerCase()?.trim()
+                                    (argsk[13] ??
+                                        "undefined"?.toLowerCase()?.trim()) as fillmodetypeenum
                                 ]
                             )
                         ) {
@@ -15715,8 +15715,8 @@ ${command.dp}itfill <center: x y z> <radius: x y z> <offset: x y z> <length: flo
                         if (
                             ["skygrid", "inverseskygrid"].includes(
                                 fillmodetypeenum[
-                                    argso[10] ??
-                                        "undefined"?.toLowerCase()?.trim()
+                                    (argso[10] ??
+                                        "undefined"?.toLowerCase()?.trim()) as fillmodetypeenum
                                 ]
                             )
                         ) {
@@ -15896,7 +15896,7 @@ ${command.dp}itfill <center: x y z> <radius: x y z> <offset: x y z> <length: flo
 
                         switch (
                             fillmodetypeenum[
-                                skygridmode
+                                (skygridmode
                                     ? sgmode
                                     : hovoidmode
                                     ? homode
@@ -15910,7 +15910,7 @@ ${command.dp}itfill <center: x y z> <radius: x y z> <offset: x y z> <length: flo
                                     ? cmode
                                     : ccirclemode
                                     ? ccmode
-                                    : mode ?? ""
+                                    : mode ?? "") as fillmodetypeenum
                             ]
                         ) {
                             case "":
@@ -19194,8 +19194,8 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         if (
                             ["circle"].includes(
                                 fillmodetypeenum[
-                                    argsc[9] ??
-                                        "undefined"?.toLowerCase()?.trim()
+                                    (argsc[9] ??
+                                        "undefined"?.toLowerCase()?.trim()) as fillmodetypeenum
                                 ]
                             )
                         ) {
@@ -19214,8 +19214,8 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 "semisphere",
                             ].includes(
                                 fillmodetypeenum[
-                                    argse[8] ??
-                                        "undefined"?.toLowerCase()?.trim()
+                                    (argse[8] ??
+                                        "undefined"?.toLowerCase()?.trim()) as fillmodetypeenum
                                 ]
                             )
                         ) {
@@ -19234,8 +19234,8 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 "dome",
                             ].includes(
                                 fillmodetypeenum[
-                                    argsg[9] ??
-                                        "undefined"?.toLowerCase()?.trim()
+                                    (argsg[9] ??
+                                        "undefined"?.toLowerCase()?.trim()) as fillmodetypeenum
                                 ]
                             )
                         ) {
@@ -19244,8 +19244,8 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         if (
                             ["tunnel", "cylinder"].includes(
                                 fillmodetypeenum[
-                                    argsi[10] ??
-                                        "undefined"?.toLowerCase()?.trim()
+                                    (argsi[10] ??
+                                        "undefined"?.toLowerCase()?.trim()) as fillmodetypeenum
                                 ]
                             )
                         ) {
@@ -19254,8 +19254,8 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         if (
                             ["ovoid"].includes(
                                 fillmodetypeenum[
-                                    argsm[13] ??
-                                        "undefined"?.toLowerCase()?.trim()
+                                    (argsm[13] ??
+                                        "undefined"?.toLowerCase()?.trim()) as fillmodetypeenum
                                 ]
                             )
                         ) {
@@ -19264,8 +19264,8 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         if (
                             ["hollowovoid"].includes(
                                 fillmodetypeenum[
-                                    argsk[14] ??
-                                        "undefined"?.toLowerCase()?.trim()
+                                    (argsk[14] ??
+                                        "undefined"?.toLowerCase()?.trim()) as fillmodetypeenum
                                 ]
                             )
                         ) {
@@ -19274,8 +19274,8 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         if (
                             ["skygrid", "inverseskygrid"].includes(
                                 fillmodetypeenum[
-                                    argso[11] ??
-                                        "undefined"?.toLowerCase()?.trim()
+                                    (argso[11] ??
+                                        "undefined"?.toLowerCase()?.trim()) as fillmodetypeenum
                                 ]
                             )
                         ) {
@@ -19459,7 +19459,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
 
                         switch (
                             fillmodetypeenum[
-                                skygridmode
+                                (skygridmode
                                     ? sgmode
                                     : hovoidmode
                                     ? homode
@@ -19473,7 +19473,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                     ? cmode
                                     : ccirclemode
                                     ? ccmode
-                                    : mode ?? ""
+                                    : mode ?? "") as fillmodetypeenum
                             ]
                         ) {
                             case "":
@@ -22466,7 +22466,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                       .join(" ")
                                       .trimStart(),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : reststringaftercoordinates
                               .split(" ")
@@ -22485,7 +22485,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                       .replaceAll("[", "{")
                                       .replaceAll("]", "}"),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : undefined;
                     let lastblockname = reststringaftercoordinates
@@ -22610,7 +22610,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                               .join(" ")
                               .trim();
                     let lastblockstates = somethingtest.startsWith("{")
-                        ? JSONParse(extractJSONStrings(somethingtest, false)[0])
+                        ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
                         : somethingtest.startsWith("[")
                         ? JSONParse(
                               extractJSONStrings(
@@ -22619,7 +22619,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                       .replaceAll("[", "{")
                                       .replaceAll("]", "}"),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : undefined;
                     let matchingblock =
@@ -22766,7 +22766,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                       .join(" ")
                                       .trimStart(),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : reststringaftercoordinates
                               .split(" ")
@@ -22785,7 +22785,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                       .replaceAll("[", "{")
                                       .replaceAll("]", "}"),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : undefined;
                     let lastblockname = reststringaftercoordinates
@@ -22910,7 +22910,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                               .join(" ")
                               .trim();
                     let lastblockstates = somethingtest.startsWith("{")
-                        ? JSONParse(extractJSONStrings(somethingtest, false)[0])
+                        ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
                         : somethingtest.startsWith("[")
                         ? JSONParse(
                               extractJSONStrings(
@@ -22919,7 +22919,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                       .replaceAll("[", "{")
                                       .replaceAll("]", "}"),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : undefined;
                     let matchingblock =
@@ -23066,7 +23066,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                       .join(" ")
                                       .trimStart(),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : reststringaftercoordinates
                               .split(" ")
@@ -23085,7 +23085,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                       .replaceAll("[", "{")
                                       .replaceAll("]", "}"),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : undefined;
                     let lastblockname = reststringaftercoordinates
@@ -23210,7 +23210,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                               .join(" ")
                               .trim();
                     let lastblockstates = somethingtest.startsWith("{")
-                        ? JSONParse(extractJSONStrings(somethingtest, false)[0])
+                        ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
                         : somethingtest.startsWith("[")
                         ? JSONParse(
                               extractJSONStrings(
@@ -23219,7 +23219,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                       .replaceAll("[", "{")
                                       .replaceAll("]", "}"),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : undefined;
                     let matchingblock =
@@ -23392,7 +23392,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                       .join(" ")
                                       .trimStart(),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : reststringaftercoordinates
                               .split(" ")
@@ -23411,7 +23411,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                       .replaceAll("[", "{")
                                       .replaceAll("]", "}"),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : undefined;
                     let lastblockname = reststringaftercoordinates
@@ -23536,7 +23536,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                               .join(" ")
                               .trim();
                     let lastblockstates = somethingtest.startsWith("{")
-                        ? JSONParse(extractJSONStrings(somethingtest, false)[0])
+                        ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
                         : somethingtest.startsWith("[")
                         ? JSONParse(
                               extractJSONStrings(
@@ -23545,7 +23545,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                       .replaceAll("[", "{")
                                       .replaceAll("]", "}"),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : undefined;
                     let matchingblock =
@@ -23625,7 +23625,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                               extractJSONStrings(
                                   argsa.extra.trimStart(),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : argsa.extra.trimStart().startsWith("[")
                         ? JSONParse(
@@ -23636,7 +23636,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                       .replaceAll("[", "{")
                                       .replaceAll("]", "}"),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : undefined;
                     let lastblockname = argsa.extra.trimStart().startsWith("{")
@@ -23705,7 +23705,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                               .join(" ")
                               .trim();
                     let lastblockstates = somethingtest.startsWith("{")
-                        ? JSONParse(extractJSONStrings(somethingtest, false)[0])
+                        ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
                         : somethingtest.startsWith("[")
                         ? JSONParse(
                               extractJSONStrings(
@@ -23714,7 +23714,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                       .replaceAll("[", "{")
                                       .replaceAll("]", "}"),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : undefined;
                     let matchingblock =
@@ -23905,7 +23905,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                       .join(" ")
                                       .trimStart(),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : reststringaftercoordinates
                               .split(" ")
@@ -23924,7 +23924,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                       .replaceAll("[", "{")
                                       .replaceAll("]", "}"),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : undefined;
                     let lastblockname = reststringaftercoordinates
@@ -24049,7 +24049,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                               .join(" ")
                               .trim();
                     let lastblockstates = somethingtest.startsWith("{")
-                        ? JSONParse(extractJSONStrings(somethingtest, false)[0])
+                        ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
                         : somethingtest.startsWith("[")
                         ? JSONParse(
                               extractJSONStrings(
@@ -24058,7 +24058,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                       .replaceAll("[", "{")
                                       .replaceAll("]", "}"),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : undefined;
                     let matchingblock =
@@ -24138,7 +24138,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                               extractJSONStrings(
                                   argsa.extra.trimStart(),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : argsa.extra.trimStart().startsWith("[")
                         ? JSONParse(
@@ -24149,7 +24149,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                       .replaceAll("[", "{")
                                       .replaceAll("]", "}"),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : undefined;
                     let lastblockname = argsa.extra.trimStart().startsWith("{")
@@ -24218,7 +24218,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                               .join(" ")
                               .trim();
                     let lastblockstates = somethingtest.startsWith("{")
-                        ? JSONParse(extractJSONStrings(somethingtest, false)[0])
+                        ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
                         : somethingtest.startsWith("[")
                         ? JSONParse(
                               extractJSONStrings(
@@ -24227,7 +24227,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                       .replaceAll("[", "{")
                                       .replaceAll("]", "}"),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : undefined;
                     let matchingblock =
@@ -24418,7 +24418,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                       .join(" ")
                                       .trimStart(),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : reststringaftercoordinates
                               .split(" ")
@@ -24437,7 +24437,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                       .replaceAll("[", "{")
                                       .replaceAll("]", "}"),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : undefined;
                     let lastblockname = reststringaftercoordinates
@@ -24562,7 +24562,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                               .join(" ")
                               .trim();
                     let lastblockstates = somethingtest.startsWith("{")
-                        ? JSONParse(extractJSONStrings(somethingtest, false)[0])
+                        ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
                         : somethingtest.startsWith("[")
                         ? JSONParse(
                               extractJSONStrings(
@@ -24571,7 +24571,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                       .replaceAll("[", "{")
                                       .replaceAll("]", "}"),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : undefined;
                     let matchingblock =
@@ -24651,7 +24651,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                               extractJSONStrings(
                                   argsa.extra.trimStart(),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : argsa.extra.trimStart().startsWith("[")
                         ? JSONParse(
@@ -24662,7 +24662,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                       .replaceAll("[", "{")
                                       .replaceAll("]", "}"),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : undefined;
                     let lastblockname = argsa.extra.trimStart().startsWith("{")
@@ -24731,7 +24731,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                               .join(" ")
                               .trim();
                     let lastblockstates = somethingtest.startsWith("{")
-                        ? JSONParse(extractJSONStrings(somethingtest, false)[0])
+                        ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
                         : somethingtest.startsWith("[")
                         ? JSONParse(
                               extractJSONStrings(
@@ -24740,7 +24740,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                       .replaceAll("[", "{")
                                       .replaceAll("]", "}"),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : undefined;
                     let matchingblock =
@@ -24931,7 +24931,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                       .join(" ")
                                       .trimStart(),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : reststringaftercoordinates
                               .split(" ")
@@ -24950,7 +24950,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                       .replaceAll("[", "{")
                                       .replaceAll("]", "}"),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : undefined;
                     let lastblockname = reststringaftercoordinates
@@ -25075,7 +25075,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                               .join(" ")
                               .trim();
                     let lastblockstates = somethingtest.startsWith("{")
-                        ? JSONParse(extractJSONStrings(somethingtest, false)[0])
+                        ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
                         : somethingtest.startsWith("[")
                         ? JSONParse(
                               extractJSONStrings(
@@ -25084,7 +25084,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                       .replaceAll("[", "{")
                                       .replaceAll("]", "}"),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : undefined;
                     let matchingblock =
@@ -25164,7 +25164,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                               extractJSONStrings(
                                   argsa.extra.trimStart(),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : argsa.extra.trimStart().startsWith("[")
                         ? JSONParse(
@@ -25175,7 +25175,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                       .replaceAll("[", "{")
                                       .replaceAll("]", "}"),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : undefined;
                     let lastblockname = argsa.extra.trimStart().startsWith("{")
@@ -25244,7 +25244,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                               .join(" ")
                               .trim();
                     let lastblockstates = somethingtest.startsWith("{")
-                        ? JSONParse(extractJSONStrings(somethingtest, false)[0])
+                        ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
                         : somethingtest.startsWith("[")
                         ? JSONParse(
                               extractJSONStrings(
@@ -25253,7 +25253,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                       .replaceAll("[", "{")
                                       .replaceAll("]", "}"),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : undefined;
                     let matchingblock =
@@ -25444,7 +25444,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                       .join(" ")
                                       .trimStart(),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : reststringaftercoordinates
                               .split(" ")
@@ -25463,7 +25463,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                       .replaceAll("[", "{")
                                       .replaceAll("]", "}"),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : undefined;
                     let lastblockname = reststringaftercoordinates
@@ -25588,7 +25588,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                               .join(" ")
                               .trim();
                     let lastblockstates = somethingtest.startsWith("{")
-                        ? JSONParse(extractJSONStrings(somethingtest, false)[0])
+                        ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
                         : somethingtest.startsWith("[")
                         ? JSONParse(
                               extractJSONStrings(
@@ -25597,7 +25597,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                       .replaceAll("[", "{")
                                       .replaceAll("]", "}"),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : undefined;
                     let matchingblock =
@@ -25761,7 +25761,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                       .join(" ")
                                       .trimStart(),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : reststringaftercoordinates
                               .split(" ")
@@ -25780,7 +25780,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                       .replaceAll("[", "{")
                                       .replaceAll("]", "}"),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : undefined;
                     let lastblockname = reststringaftercoordinates
@@ -25905,7 +25905,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                               .join(" ")
                               .trim();
                     let lastblockstates = somethingtest.startsWith("{")
-                        ? JSONParse(extractJSONStrings(somethingtest, false)[0])
+                        ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
                         : somethingtest.startsWith("[")
                         ? JSONParse(
                               extractJSONStrings(
@@ -25914,7 +25914,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                       .replaceAll("[", "{")
                                       .replaceAll("]", "}"),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : undefined;
                     let matchingblock =
@@ -26094,7 +26094,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                       .join(" ")
                                       .trimStart(),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : reststringaftercoordinates
                               .split(" ")
@@ -26113,7 +26113,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                       .replaceAll("[", "{")
                                       .replaceAll("]", "}"),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : undefined;
                     let lastblockname = reststringaftercoordinates
@@ -26238,7 +26238,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                               .join(" ")
                               .trim();
                     let lastblockstates = somethingtest.startsWith("{")
-                        ? JSONParse(extractJSONStrings(somethingtest, false)[0])
+                        ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
                         : somethingtest.startsWith("[")
                         ? JSONParse(
                               extractJSONStrings(
@@ -26247,7 +26247,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                       .replaceAll("[", "{")
                                       .replaceAll("]", "}"),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : undefined;
                     let matchingblock =
@@ -26395,7 +26395,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                       .join(" ")
                                       .trimStart(),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : reststringaftercoordinates
                               .split(" ")
@@ -26414,7 +26414,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                       .replaceAll("[", "{")
                                       .replaceAll("]", "}"),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : undefined;
                     let lastblockname = reststringaftercoordinates
@@ -26539,7 +26539,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                               .join(" ")
                               .trim();
                     let lastblockstates = somethingtest.startsWith("{")
-                        ? JSONParse(extractJSONStrings(somethingtest, false)[0])
+                        ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
                         : somethingtest.startsWith("[")
                         ? JSONParse(
                               extractJSONStrings(
@@ -26548,7 +26548,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                       .replaceAll("[", "{")
                                       .replaceAll("]", "}"),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : undefined;
                     let matchingblock =
@@ -26690,7 +26690,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                       .join(" ")
                                       .trimStart(),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : reststringaftercoordinates
                               .split(" ")
@@ -26709,7 +26709,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                       .replaceAll("[", "{")
                                       .replaceAll("]", "}"),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : undefined;
                     let lastblockname = reststringaftercoordinates
@@ -26834,7 +26834,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                               .join(" ")
                               .trim();
                     let lastblockstates = somethingtest.startsWith("{")
-                        ? JSONParse(extractJSONStrings(somethingtest, false)[0])
+                        ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
                         : somethingtest.startsWith("[")
                         ? JSONParse(
                               extractJSONStrings(
@@ -26843,7 +26843,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                       .replaceAll("[", "{")
                                       .replaceAll("]", "}"),
                                   false
-                              )[0]
+                              )[0] as string
                           )
                         : undefined;
                     let matchingblock =
@@ -33644,7 +33644,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                         true,
                                                         100
                                                     ).then(
-                                                        () => undefined,
+                                                        () => undefined as any,
                                                         (e) => {
                                                             player.sendMessageB(
                                                                 "§c" +
@@ -33974,7 +33974,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                     world.getDynamicProperty(
                                                         `andexdb:undoclipboardd;${undoClipboard.newestSaveTime}`
                                                     )
-                                                )
+                                                ) as keyof typeof dimensionsb
                                             ] ??
                                                 dimensionsb[
                                                     "minecraft:overworld"
@@ -34381,8 +34381,8 @@ ${command.dp}\\itfill <offsetx: float> <offsety: float> <offsetz: float> <thickn
                         if (
                             ["circle"].includes(
                                 fillmodetypeenum[
-                                    argsc[4] ??
-                                        "undefined"?.toLowerCase()?.trim()
+                                    (argsc[4] ??
+                                        "undefined"?.toLowerCase()?.trim()) as fillmodetypeenum
                                 ]
                             )
                         ) {
@@ -34401,8 +34401,8 @@ ${command.dp}\\itfill <offsetx: float> <offsety: float> <offsetz: float> <thickn
                                 "semisphere",
                             ].includes(
                                 fillmodetypeenum[
-                                    argse[3] ??
-                                        "undefined"?.toLowerCase()?.trim()
+                                    (argse[3] ??
+                                        "undefined"?.toLowerCase()?.trim()) as fillmodetypeenum
                                 ]
                             )
                         ) {
@@ -34421,8 +34421,8 @@ ${command.dp}\\itfill <offsetx: float> <offsety: float> <offsetz: float> <thickn
                                 "dome",
                             ].includes(
                                 fillmodetypeenum[
-                                    argsg[4] ??
-                                        "undefined"?.toLowerCase()?.trim()
+                                    (argsg[4] ??
+                                        "undefined"?.toLowerCase()?.trim()) as fillmodetypeenum
                                 ]
                             )
                         ) {
@@ -34431,8 +34431,8 @@ ${command.dp}\\itfill <offsetx: float> <offsety: float> <offsetz: float> <thickn
                         if (
                             ["tunnel", "cylinder"].includes(
                                 fillmodetypeenum[
-                                    argsi[5] ??
-                                        "undefined"?.toLowerCase()?.trim()
+                                    (argsi[5] ??
+                                        "undefined"?.toLowerCase()?.trim()) as fillmodetypeenum
                                 ]
                             )
                         ) {
@@ -34441,8 +34441,8 @@ ${command.dp}\\itfill <offsetx: float> <offsety: float> <offsetz: float> <thickn
                         if (
                             ["ovoid"].includes(
                                 fillmodetypeenum[
-                                    argsm[6] ??
-                                        "undefined"?.toLowerCase()?.trim()
+                                    (argsm[6] ??
+                                        "undefined"?.toLowerCase()?.trim()) as fillmodetypeenum
                                 ]
                             )
                         ) {
@@ -34451,8 +34451,8 @@ ${command.dp}\\itfill <offsetx: float> <offsety: float> <offsetz: float> <thickn
                         if (
                             ["hollowovoid"].includes(
                                 fillmodetypeenum[
-                                    argsk[7] ??
-                                        "undefined"?.toLowerCase()?.trim()
+                                    (argsk[7] ??
+                                        "undefined"?.toLowerCase()?.trim()) as fillmodetypeenum
                                 ]
                             )
                         ) {
@@ -34461,8 +34461,8 @@ ${command.dp}\\itfill <offsetx: float> <offsety: float> <offsetz: float> <thickn
                         if (
                             ["skygrid", "inverseskygrid"].includes(
                                 fillmodetypeenum[
-                                    argso[4] ??
-                                        "undefined"?.toLowerCase()?.trim()
+                                    (argso[4] ??
+                                        "undefined"?.toLowerCase()?.trim()) as fillmodetypeenum
                                 ]
                             )
                         ) {
@@ -34624,7 +34624,7 @@ ${command.dp}\\itfill <offsetx: float> <offsety: float> <offsetz: float> <thickn
 
                         switch (
                             fillmodetypeenum[
-                                skygridmode
+                                (skygridmode
                                     ? sgmode
                                     : hovoidmode
                                     ? homode
@@ -34638,7 +34638,7 @@ ${command.dp}\\itfill <offsetx: float> <offsety: float> <offsetz: float> <thickn
                                     ? cmode
                                     : ccirclemode
                                     ? ccmode
-                                    : mode ?? ""
+                                    : mode ?? "") as fillmodetypeenum
                             ]
                         ) {
                             case "":
@@ -37880,8 +37880,8 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                         if (
                             ["circle"].includes(
                                 fillmodetypeenum[
-                                    argsc[5] ??
-                                        "undefined"?.toLowerCase()?.trim()
+                                    (argsc[5] ??
+                                        "undefined"?.toLowerCase()?.trim()) as fillmodetypeenum
                                 ]
                             )
                         ) {
@@ -37900,8 +37900,8 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                 "semisphere",
                             ].includes(
                                 fillmodetypeenum[
-                                    argse[4] ??
-                                        "undefined"?.toLowerCase()?.trim()
+                                    (argse[4] ??
+                                        "undefined"?.toLowerCase()?.trim()) as fillmodetypeenum
                                 ]
                             )
                         ) {
@@ -37920,8 +37920,8 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                 "dome",
                             ].includes(
                                 fillmodetypeenum[
-                                    argsg[5] ??
-                                        "undefined"?.toLowerCase()?.trim()
+                                    (argsg[5] ??
+                                        "undefined"?.toLowerCase()?.trim()) as fillmodetypeenum
                                 ]
                             )
                         ) {
@@ -37930,8 +37930,8 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                         if (
                             ["tunnel", "cylinder"].includes(
                                 fillmodetypeenum[
-                                    argsi[5] ??
-                                        "undefined"?.toLowerCase()?.trim()
+                                    (argsi[5] ??
+                                        "undefined"?.toLowerCase()?.trim()) as fillmodetypeenum
                                 ]
                             )
                         ) {
@@ -37940,8 +37940,8 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                         if (
                             ["ovoid"].includes(
                                 fillmodetypeenum[
-                                    argsm[7] ??
-                                        "undefined"?.toLowerCase()?.trim()
+                                    (argsm[7] ??
+                                        "undefined"?.toLowerCase()?.trim()) as fillmodetypeenum
                                 ]
                             )
                         ) {
@@ -37950,8 +37950,8 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                         if (
                             ["hollowovoid"].includes(
                                 fillmodetypeenum[
-                                    argsk[8] ??
-                                        "undefined"?.toLowerCase()?.trim()
+                                    (argsk[8] ??
+                                        "undefined"?.toLowerCase()?.trim()) as fillmodetypeenum
                                 ]
                             )
                         ) {
@@ -37960,8 +37960,8 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                         if (
                             ["skygrid", "inverseskygrid"].includes(
                                 fillmodetypeenum[
-                                    argso[5] ??
-                                        "undefined"?.toLowerCase()?.trim()
+                                    (argso[5] ??
+                                        "undefined"?.toLowerCase()?.trim()) as fillmodetypeenum
                                 ]
                             )
                         ) {
@@ -38127,7 +38127,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
 
                         switch (
                             fillmodetypeenum[
-                                skygridmode
+                                (skygridmode
                                     ? sgmode
                                     : hovoidmode
                                     ? homode
@@ -38141,7 +38141,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                     ? cmode
                                     : ccirclemode
                                     ? ccmode
-                                    : mode ?? ""
+                                    : mode ?? "") as fillmodetypeenum
                             ]
                         ) {
                             case "":
@@ -43359,17 +43359,17 @@ ${command.dp}snapshot list`);
                     eventData.cancel = true;
                     player.sendMessageB(
                         `Currently Selected Area Info: \npos1 x: ${
-                            player.getDynamicProperty("pos1")["x"]
+                            player.worldEditSelection.pos1.x
                         }\npos1 y: ${
-                            player.getDynamicProperty("pos1")["y"]
+                            player.worldEditSelection.pos1.y
                         }\npos1 z: ${
-                            player.getDynamicProperty("pos1")["z"]
+                            player.worldEditSelection.pos1.z
                         }\npos2 x: ${
-                            player.getDynamicProperty("pos2")["x"]
+                            player.worldEditSelection.pos2.x
                         }\npos2 y: ${
-                            player.getDynamicProperty("pos2")["y"]
+                            player.worldEditSelection.pos2.y
                         }\npos2 z: ${
-                            player.getDynamicProperty("pos2")["z"]
+                            player.worldEditSelection.pos2.z
                         }\nNext Selection Mode: ${
                             player.getDynamicProperty("posM") ?? false
                                 ? "pos2"
@@ -43478,7 +43478,7 @@ ${command.dp}snapshot list`);
                     eventData.cancel = true;
                     player.sendMessageB(
                         `Chunk Info: \nDimension: ${
-                            dimensionTypeDisplayFormattingD[player.dimension.id]
+                            dimensionTypeDisplayFormattingD[player.dimension.id as keyof typeof dimensionTypeDisplayFormattingD]
                         }\nChunk Index x: ${
                             getChunkIndex(player.location).x
                         }\nChunk Index y: ${
@@ -44083,15 +44083,15 @@ ${command.dp}snapshot list`);
                         listoftransformrecipes.findIndex(
                             (v) =>
                                 v.id == args[1] &&
-                                ((!!!v["data"] && !!!args[2]) ||
-                                    v["data"] == args[2])
+                                ((!!!(v as any)["data"] && !!!args[2]) ||
+                                    (v as any)["data"] == args[2])
                         ) == -1
                             ? "§cError: Could not find a suitable data value for enchantment transfer smithing template to create the specified item with the specified data value."
                             : `Data value for enchantment transfer smithing template is ${listoftransformrecipes.findIndex(
                                   (v) =>
                                       v.id == args[1] &&
-                                      ((!!!v["data"] && !!!args[2]) ||
-                                          v["data"] == args[2])
+                                      ((!!!(v as any)["data"] && !!!args[2]) ||
+                                          (v as any)["data"] == args[2])
                               )}.`
                     );
                 }
@@ -44111,23 +44111,23 @@ ${command.dp}snapshot list`);
                         `/give @s andexdb:enchantment_transfer_smithing_template 1 ${listoftransformrecipes.findIndex(
                             (v) =>
                                 v.id == args[1] &&
-                                ((!!!v["data"] && !!!args[2]) ||
-                                    v["data"] == args[2])
+                                ((!!!(v as any)["data"] && !!!args[2]) ||
+                                    (v as any)["data"] == args[2])
                         )}`
                     );
                     player.sendMessageB(
                         listoftransformrecipes.findIndex(
                             (v) =>
                                 v.id == args[1] &&
-                                ((!!!v["data"] && !!!args[2]) ||
-                                    v["data"] == args[2])
+                                ((!!!(v as any)["data"] && !!!args[2]) ||
+                                    (v as any)["data"] == args[2])
                         ) == -1
                             ? "§cError: Could not find a suitable data value for enchantment transfer smithing template to create the specified item with the specified data value."
                             : `You have been given an enchantment transfer smithing template with the data value ${listoftransformrecipes.findIndex(
                                   (v) =>
                                       v.id == args[1] &&
-                                      ((!!!v["data"] && !!!args[2]) ||
-                                          v["data"] == args[2])
+                                      ((!!!(v as any)["data"] && !!!args[2]) ||
+                                          (v as any)["data"] == args[2])
                               )}.`
                     );
                 }
@@ -44984,7 +44984,7 @@ ${command.dp}snapshot list`);
                                             };
                                             pbsend(
                                                 player,
-                                                directory[argsa.args[1]]
+                                                directory[argsa.args[1] as keyof typeof directory]
                                             );
                                         } catch (e) {
                                             player.sendError(e);
@@ -45053,7 +45053,7 @@ ${command.dp}snapshot list`);
                                                             get [v]() {
                                                                 return target.getComponent(
                                                                     EntityComponentTypes[
-                                                                        v
+                                                                        v as keyof typeof EntityComponentTypes
                                                                     ]
                                                                 );
                                                             },
@@ -45061,7 +45061,7 @@ ${command.dp}snapshot list`);
                                                     )
                                                 );
                                                 path.forEach((v) => {
-                                                    directory = directory[v];
+                                                    directory = directory[v as keyof typeof directory] as any;
                                                 });
                                                 pbsend(player, directory);
                                             } catch (e) {
@@ -45110,7 +45110,7 @@ ${command.dp}snapshot list`);
                                                             get [v]() {
                                                                 return target.getComponent(
                                                                     EntityComponentTypes[
-                                                                        v
+                                                                        v as keyof typeof EntityComponentTypes
                                                                     ]
                                                                 );
                                                             },
@@ -45118,7 +45118,7 @@ ${command.dp}snapshot list`);
                                                     )
                                                 );
                                                 path.forEach((v) => {
-                                                    directory = directory[v];
+                                                    directory = directory[v as keyof typeof directory] as any;
                                                 });
                                                 pbsend(
                                                     player,
@@ -45172,7 +45172,7 @@ ${command.dp}snapshot list`);
                                                             get [v]() {
                                                                 return target.getComponent(
                                                                     EntityComponentTypes[
-                                                                        v
+                                                                        v as keyof typeof EntityComponentTypes
                                                                     ]
                                                                 );
                                                             },
@@ -45180,7 +45180,7 @@ ${command.dp}snapshot list`);
                                                     )
                                                 );
                                                 path.forEach((v) => {
-                                                    directory = directory[v];
+                                                    directory = directory[v as keyof typeof directory] as any;
                                                 });
                                                 pbsend(
                                                     player,
@@ -45244,7 +45244,7 @@ ${command.dp}snapshot list`);
                                                             get [v]() {
                                                                 return target.getComponent(
                                                                     EntityComponentTypes[
-                                                                        v
+                                                                        v as keyof typeof EntityComponentTypes
                                                                     ]
                                                                 );
                                                             },
@@ -45252,7 +45252,7 @@ ${command.dp}snapshot list`);
                                                     )
                                                 );
                                                 path.forEach((v) => {
-                                                    directory = directory[v];
+                                                    directory = directory[v as keyof typeof directory] as any;
                                                 });
                                                 pbsend(
                                                     player,
@@ -45307,7 +45307,7 @@ ${command.dp}snapshot list`);
                                                             get [v]() {
                                                                 return target.getComponent(
                                                                     EntityComponentTypes[
-                                                                        v
+                                                                        v as keyof typeof EntityComponentTypes
                                                                     ]
                                                                 );
                                                             },
@@ -45315,7 +45315,7 @@ ${command.dp}snapshot list`);
                                                     )
                                                 );
                                                 path.forEach((v) => {
-                                                    directory = directory[v];
+                                                    directory = directory[v as keyof typeof directory] as any;
                                                 });
                                                 pbsend(
                                                     player,

@@ -9,8 +9,8 @@ globalThis.JSONParseOld = function JSONParseOld(
     text: string,
     keepUndefined: boolean = true
 ) {
-    let g = [];
-    let h = [];
+    let g: any[] = [];
+    let h: any[] = [];
     let a = JSON.parse(
         text
             .replace(

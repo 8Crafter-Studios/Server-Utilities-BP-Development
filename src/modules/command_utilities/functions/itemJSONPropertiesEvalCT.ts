@@ -22,7 +22,7 @@ export function itemJSONPropertiesEvalCT(
     }
 
     const itemPropertyEnum = {
-        components: (property: [string, any]) => Object.entries(property[1]).forEach((vb) => itemComponentEnum[componentTypeEnum[vb[0]]](vb)
+        components: (property: [string, any]) => Object.entries(property[1]).forEach((vb) => itemComponentEnum[componentTypeEnum[vb[0] as componentTypeEnum]](vb)
         ),
         nameTag: (property: [string, any]) => property[1] !== item.nameTag || ij.force
             ? (item.nameTag = property[1])
@@ -73,7 +73,7 @@ export function itemJSONPropertiesEvalCT(
         removeDynamicProperty: (property: [string, string]) => item.setDynamicProperty(property[1]),
     };
     const itemComponentEnum = {
-        enchantable: (property: [string, any]) => Object.entries(property[1]).forEach((vc) => itemEnchantableComponentEnum[enchantableComponentTypeEnum[vc[0]]](vc)
+        enchantable: (property: [string, any]) => Object.entries(property[1]).forEach((vc: [string, any]) => itemEnchantableComponentEnum[enchantableComponentTypeEnum[vc[0] as enchantableComponentTypeEnum]](vc)
         ),
         durability: (property: [string, any]) => typeof property[1] == "number"
             ? (() => {
@@ -83,7 +83,7 @@ export function itemJSONPropertiesEvalCT(
                     property[1];
                 item.setItem(itemb);
             })()
-            : Object.entries(property[1]).forEach((v) => itemDurabilityComponentEnum[durabilityComponentTypeEnum[v[0]]](v[1])
+            : Object.entries(property[1]).forEach((v: [string, [string, number]]) => itemDurabilityComponentEnum[durabilityComponentTypeEnum[v[0] as durabilityComponentTypeEnum]](v[1])
             ),
         damage: (property: [string, any]) => typeof property[1] == "number"
             ? (() => {
@@ -91,7 +91,7 @@ export function itemJSONPropertiesEvalCT(
                 itemb.getComponent("durability").damage = property[1];
                 item.setItem(itemb);
             })()
-            : Object.entries(property[1]).forEach((v) => itemDurabilityComponentEnum[durabilityComponentTypeEnum[v[0]]](v)
+            : Object.entries(property[1]).forEach((v: [string, number]) => itemDurabilityComponentEnum[durabilityComponentTypeEnum[v[0] as durabilityComponentTypeEnum]](v)
             ),
         food: (property?: [string, any]) => { },
         cooldown: (property?: [string, any]) => { },
@@ -119,7 +119,7 @@ export function itemJSONPropertiesEvalCT(
         addEnchantments: (property: [string, any]) => (() => {
             let itemb = item.getItem();
             itemb.getComponent("enchantable").addEnchantments(
-                property[1].map((v) => ({
+                property[1].map((v: { level: number; type: string; }) => ({
                     level: v.level,
                     type: EnchantmentTypes.get(v.type),
                 }))
@@ -187,7 +187,7 @@ export function itemJSONPropertiesEvalCT(
                 v[0]
             )
         )
-        .forEach((va) => itemPropertyEnum[propertyTypeEnum[va[0]]](va));
+        .forEach((va) => itemPropertyEnum[propertyTypeEnum[va[0] as propertyTypeEnum]](va as any));
     return item;
     /*
 

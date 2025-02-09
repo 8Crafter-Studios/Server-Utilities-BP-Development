@@ -14,31 +14,31 @@ export function chatSend(params: { returnBeforeChatSend: boolean | undefined; pl
     if (config.antiSpamSystem.antispamEnabled) {
         if (!player.hasTag("canBypassAntiSpam")) {
             if ( /*
-                globalThis["lastChatMessage" + player.id] == event.message &&*/Date.now() - (globalThis["lastChatTime" + player.id] ?? 0) <
+                globalThis["lastChatMessage" + player.id] == event.message &&*/Date.now() - (globalThis["lastChatTime" + player.id as keyof globalThis] ?? 0) <
                 config.antiSpamSystem.waitTimeAfterAntispamActivation * 1000) {
-                globalThis["msgAmountOfSpam" + player.id] = (globalThis["msgAmountOfSpam" + player.id] ?? 0) + 1;
-                if (globalThis["msgAmountOfSpam" + player.id] >= config.antiSpamSystem.antispamTriggerMessageCount) {
+                (globalThis["msgAmountOfSpam" + player.id as keyof globalThis] as number) = (globalThis["msgAmountOfSpam" + player.id as keyof globalThis] ?? 0) + 1;
+                if (globalThis["msgAmountOfSpam" + player.id as keyof globalThis] >= config.antiSpamSystem.antispamTriggerMessageCount) {
                     returnBeforeChatSend = true;
                     event.cancel = true;
                     player.sendMessage("§cStop Spamming");
                 }
             } else {
-                globalThis["msgAmountOfSpam" + player.id] = 0;
+                (globalThis["msgAmountOfSpam" + player.id as keyof globalThis] as number) = 0;
             }
-            globalThis["lastChatMessage" + player.id] = event.message;
-            globalThis["lastChatTime" + player.id] = Date.now();
+            (globalThis["lastChatMessage" + player.id as keyof globalThis] as string) = event.message;
+            (globalThis["lastChatTime" + player.id as keyof globalThis] as number) = Date.now();
         }
     }
 
     try { eval(String(world.getDynamicProperty("evalBeforeEvents:chatSendComplete"))); } catch (e) { console.error(e, e.stack); world.getAllPlayers().forEach((currentplayer) => { if (currentplayer.hasTag("chatSendBeforeEventDebugErrors")) { currentplayer.sendMessage((e + " " + e.stack)); } }); }
     if (returnBeforeChatSend) return;
-    let messageFormatting = "";
-    let messageGradientMode = undefined;
-    let nameFormatting = "";
-    let nameGradientMode = undefined;
-    let separatorFormatting = "";
-    let separatorGradientMode = undefined;
-    let showDimension = false;
+    let messageFormatting: string = "";
+    let messageGradientMode: string = undefined;
+    let nameFormatting: string = "";
+    let nameGradientMode: string = undefined;
+    let separatorFormatting: string = "";
+    let separatorGradientMode: string = undefined;
+    let showDimension: boolean = false;
     //    let showHealth = false
     if (player.hasTag('messageFormatting:r')) { messageFormatting += "§r"; };
     if (player.hasTag('messageFormatting:o')) { messageFormatting += "§o"; };
@@ -99,7 +99,7 @@ export function chatSend(params: { returnBeforeChatSend: boolean | undefined; pl
     }
     player.getTags().filter(v => v.startsWith("messageColor:")).forEach(v => {
         if (patternColors.includes(v.slice(13).toLowerCase())) {
-            messageFormatting += patternColorsMap[v.slice(13).toLowerCase()];
+            messageFormatting += patternColorsMap[v.slice(13).toLowerCase() as keyof typeof patternColorsMap];
         } else if (Object.keys(patternFunctionList).includes(v.slice(13).toLowerCase())) {
             messageGradientMode = v.slice(13).toLowerCase();
         } else if (['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'm', 'n', 'p', 'q', 's', 't', 'u'].includes(v.slice(13).toLowerCase())) {
@@ -172,7 +172,7 @@ export function chatSend(params: { returnBeforeChatSend: boolean | undefined; pl
     }
     player.getTags().filter(v => v.startsWith("nameColor:")).forEach(v => {
         if (patternColors.includes(v.slice(10).toLowerCase())) {
-            nameFormatting += patternColorsMap[v.slice(10).toLowerCase()];
+            nameFormatting += patternColorsMap[v.slice(10).toLowerCase() as keyof typeof patternColorsMap];
         } else if (Object.keys(patternFunctionList).includes(v.slice(10).toLowerCase())) {
             nameGradientMode = v.slice(10).toLowerCase();
         } else if (['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'm', 'n', 'p', 'q', 's', 't', 'u'].includes(v.slice(13).toLowerCase())) {
@@ -245,7 +245,7 @@ export function chatSend(params: { returnBeforeChatSend: boolean | undefined; pl
     }
     player.getTags().filter(v => v.startsWith("separatorColor:")).forEach(v => {
         if (patternColors.includes(v.slice(15).toLowerCase())) {
-            separatorFormatting += patternColorsMap[v.slice(15).toLowerCase()];
+            separatorFormatting += patternColorsMap[v.slice(15).toLowerCase() as keyof typeof patternColorsMap];
         } else if (Object.keys(patternFunctionList).includes(v.slice(15).toLowerCase())) {
             separatorGradientMode = v.slice(15).toLowerCase();
         } else if (['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'm', 'n', 'p', 'q', 's', 't', 'u'].includes(v.slice(13).toLowerCase())) {
@@ -327,7 +327,7 @@ export function chatSend(params: { returnBeforeChatSend: boolean | undefined; pl
             let messageTimeStampEnabled = (player.hasTag("chatDisplayTimeStamp") || p.hasTag("chatDisplayTimeStamps") || ((world.getDynamicProperty("andexdbSettings:chatDisplayTimeStamp") ?? false) && !player.hasTag("hideChatDisplayTimeStamp") && !p.hasTag("hideChatDisplayTimeStamps")));
             let timestampenabled = messageTimeStampEnabled;
             let timestamp = messageTimeStampEnabled ? formatTime(new Date(Date.now() + (Number(p.getDynamicProperty("andexdbPersonalSettings:timeZone") ?? world.getDynamicProperty("andexdbSettings:timeZone") ?? 0) * 3600000))) : "";
-            let dimension = dimensionTypeDisplayFormattingE[player.dimension.id];
+            let dimension = dimensionTypeDisplayFormatting[player.dimension.id as keyof typeof dimensionTypeDisplayFormatting];
             let namec = name;
             let message = (world.getDynamicProperty("autoEscapeChatMessages") == true) ? newMessage.escapeCharacters(true) : newMessage;
             if (!!messageGradientMode) {

@@ -267,6 +267,30 @@ declare global {
             prefix?: string
         ): void;
         /**
+         * An alias of {@link console.info}.
+         * 
+         * [MDN Reference](https://developer.mozilla.org/docs/Web/API/console/error_static)
+         */
+        function cinfo(...data: any[]): void
+        /**
+         * An alias of {@link console.log}.
+         * 
+         * [MDN Reference](https://developer.mozilla.org/docs/Web/API/console/error_static)
+         */
+        function clog(...data: any[]): void
+        /**
+         * An alias of {@link console.warn}.
+         * 
+         * [MDN Reference](https://developer.mozilla.org/docs/Web/API/console/error_static)
+         */
+        function cwarn(...data: any[]): void
+        /**
+         * An alias of {@link console.error}.
+         * 
+         * [MDN Reference](https://developer.mozilla.org/docs/Web/API/console/error_static)
+         */
+        function cerror(...data: any[]): void
+        /**
          * @remarks Triggers a breakpoint when run while the {@link https://marketplace.visualstudio.com/items?itemName=mojang-studios.minecraft-debugger Visual Studio Code Minecraft Debugger Extension} is connected via the /script command.
          * @since 1.26.0-rc.2+BUILD.1
          * @since 11/7/2024 11:25 AM PST
@@ -694,6 +718,10 @@ declare global {
          * @see {@link modules.main.moduleImportsConfig}
          */
         static get moduleImportsConfig(): typeof import("init/classes/moduleImportsConfig").moduleImportsConfig;
+        /**
+         * If this is set to true it will stop all instances of {@link modules.playersave.playerDataAutoSaveAsync}.
+         */
+        static get lastPlayerDataAutoSaveRun(): number;
     }
     interface Function {
         readonly lineNumber: number;
@@ -704,6 +732,7 @@ declare global {
         readonly fileName: string;
     }
 }
+
 declare module "@minecraft/server" {
     interface ItemStack {
         hasComponent(componentId: keyof ItemComponentTypeMap): boolean;

@@ -2,7 +2,7 @@
 
 import * as GameTest from "@minecraft/server-gametest";
 
-function poweredRailTest(test, pulseTicks) {
+function poweredRailTest(test: GameTest.Test, pulseTicks: number) {
   test.pulseRedstone({ x: 1, y: 2, z: 3 }, pulseTicks);
 
   test
@@ -48,7 +48,7 @@ GameTest.register("DuplicationTests", "detector_rail", (test) => {
     .thenSucceed();
 }).tag(GameTest.Tags.suiteDefault);
 
-function railClassicTest(test, pulseTicks) {
+function railClassicTest(test: GameTest.Test, pulseTicks: number) {
   test.pulseRedstone({ x: 1, y: 5, z: 5 }, pulseTicks);
 
   test

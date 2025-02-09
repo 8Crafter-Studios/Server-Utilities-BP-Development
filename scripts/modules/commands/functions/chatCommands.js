@@ -9067,8 +9067,8 @@ ${command.dp}ifill <center: x y z> <radius: x y z> <offset: x y z> <length: floa
                         let ovoidmode = false;
                         let hovoidmode = false;
                         let skygridmode = false;
-                        if (["circle"].includes(fillmodetypeenum[argsc[8] ??
-                            "undefined"?.toLowerCase()?.trim()])) {
+                        if (["circle"].includes(fillmodetypeenum[(argsc[8] ??
+                            "undefined"?.toLowerCase()?.trim())])) {
                             circlemode = true;
                         }
                         if ([
@@ -9081,8 +9081,8 @@ ${command.dp}ifill <center: x y z> <radius: x y z> <offset: x y z> <length: floa
                             "circlexyz",
                             "sphere",
                             "semisphere",
-                        ].includes(fillmodetypeenum[argse[7] ??
-                            "undefined"?.toLowerCase()?.trim()])) {
+                        ].includes(fillmodetypeenum[(argse[7] ??
+                            "undefined"?.toLowerCase()?.trim())])) {
                             ccirclemode = true;
                         }
                         if ([
@@ -9095,24 +9095,24 @@ ${command.dp}ifill <center: x y z> <radius: x y z> <offset: x y z> <length: floa
                             "cylinderxz",
                             "cylinderxyz",
                             "dome",
-                        ].includes(fillmodetypeenum[argsg[8] ??
-                            "undefined"?.toLowerCase()?.trim()])) {
+                        ].includes(fillmodetypeenum[(argsg[8] ??
+                            "undefined"?.toLowerCase()?.trim())])) {
                             hspheremode = true;
                         }
-                        if (["tunnel", "cylinder"].includes(fillmodetypeenum[argsi[9] ??
-                            "undefined"?.toLowerCase()?.trim()])) {
+                        if (["tunnel", "cylinder"].includes(fillmodetypeenum[(argsi[9] ??
+                            "undefined"?.toLowerCase()?.trim())])) {
                             tunnelmode = true;
                         }
-                        if (["ovoid"].includes(fillmodetypeenum[argsm[12] ??
-                            "undefined"?.toLowerCase()?.trim()])) {
+                        if (["ovoid"].includes(fillmodetypeenum[(argsm[12] ??
+                            "undefined"?.toLowerCase()?.trim())])) {
                             ovoidmode = true;
                         }
-                        if (["hollowovoid"].includes(fillmodetypeenum[argsk[13] ??
-                            "undefined"?.toLowerCase()?.trim()])) {
+                        if (["hollowovoid"].includes(fillmodetypeenum[(argsk[13] ??
+                            "undefined"?.toLowerCase()?.trim())])) {
                             hovoidmode = true;
                         }
-                        if (["skygrid", "inverseskygrid"].includes(fillmodetypeenum[argso[10] ??
-                            "undefined"?.toLowerCase()?.trim()])) {
+                        if (["skygrid", "inverseskygrid"].includes(fillmodetypeenum[(argso[10] ??
+                            "undefined"?.toLowerCase()?.trim())])) {
                             skygridmode = true;
                         }
                         let coordinatesa; /*
@@ -9205,7 +9205,7 @@ ${command.dp}ifill <center: x y z> <radius: x y z> <offset: x y z> <length: floa
                                 ? ["air"]
                                 : [sglastblockname, sglastblockstates]); /*
             console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
-                        switch (fillmodetypeenum[skygridmode
+                        switch (fillmodetypeenum[(skygridmode
                             ? sgmode
                             : hovoidmode
                                 ? homode
@@ -9219,7 +9219,7 @@ ${command.dp}ifill <center: x y z> <radius: x y z> <offset: x y z> <length: floa
                                                 ? cmode
                                                 : ccirclemode
                                                     ? ccmode
-                                                    : mode ?? ""]) {
+                                                    : mode ?? "")]) {
                             case "":
                                 system.run(() => {
                                     let ta;
@@ -10265,8 +10265,8 @@ ${command.dp}itfill <center: x y z> <radius: x y z> <offset: x y z> <length: flo
                         let ovoidmode = false;
                         let hovoidmode = false;
                         let skygridmode = false;
-                        if (["circle"].includes(fillmodetypeenum[argsc[8] ??
-                            "undefined"?.toLowerCase()?.trim()])) {
+                        if (["circle"].includes(fillmodetypeenum[(argsc[8] ??
+                            "undefined"?.toLowerCase()?.trim())])) {
                             circlemode = true;
                         }
                         if ([
@@ -10279,8 +10279,8 @@ ${command.dp}itfill <center: x y z> <radius: x y z> <offset: x y z> <length: flo
                             "circlexyz",
                             "sphere",
                             "semisphere",
-                        ].includes(fillmodetypeenum[argse[7] ??
-                            "undefined"?.toLowerCase()?.trim()])) {
+                        ].includes(fillmodetypeenum[(argse[7] ??
+                            "undefined"?.toLowerCase()?.trim())])) {
                             ccirclemode = true;
                         }
                         if ([
@@ -10293,24 +10293,24 @@ ${command.dp}itfill <center: x y z> <radius: x y z> <offset: x y z> <length: flo
                             "cylinderxz",
                             "cylinderxyz",
                             "dome",
-                        ].includes(fillmodetypeenum[argsg[8] ??
-                            "undefined"?.toLowerCase()?.trim()])) {
+                        ].includes(fillmodetypeenum[(argsg[8] ??
+                            "undefined"?.toLowerCase()?.trim())])) {
                             hspheremode = true;
                         }
-                        if (["tunnel", "cylinder"].includes(fillmodetypeenum[argsi[9] ??
-                            "undefined"?.toLowerCase()?.trim()])) {
+                        if (["tunnel", "cylinder"].includes(fillmodetypeenum[(argsi[9] ??
+                            "undefined"?.toLowerCase()?.trim())])) {
                             tunnelmode = true;
                         }
-                        if (["ovoid"].includes(fillmodetypeenum[argsm[12] ??
-                            "undefined"?.toLowerCase()?.trim()])) {
+                        if (["ovoid"].includes(fillmodetypeenum[(argsm[12] ??
+                            "undefined"?.toLowerCase()?.trim())])) {
                             ovoidmode = true;
                         }
-                        if (["hollowovoid"].includes(fillmodetypeenum[argsk[13] ??
-                            "undefined"?.toLowerCase()?.trim()])) {
+                        if (["hollowovoid"].includes(fillmodetypeenum[(argsk[13] ??
+                            "undefined"?.toLowerCase()?.trim())])) {
                             hovoidmode = true;
                         }
-                        if (["skygrid", "inverseskygrid"].includes(fillmodetypeenum[argso[10] ??
-                            "undefined"?.toLowerCase()?.trim()])) {
+                        if (["skygrid", "inverseskygrid"].includes(fillmodetypeenum[(argso[10] ??
+                            "undefined"?.toLowerCase()?.trim())])) {
                             skygridmode = true;
                         }
                         let coordinatesa; /*
@@ -10403,7 +10403,7 @@ ${command.dp}itfill <center: x y z> <radius: x y z> <offset: x y z> <length: flo
                                 ? ["air"]
                                 : [sglastblockname, sglastblockstates]); /*
             console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
-                        switch (fillmodetypeenum[skygridmode
+                        switch (fillmodetypeenum[(skygridmode
                             ? sgmode
                             : hovoidmode
                                 ? homode
@@ -10417,7 +10417,7 @@ ${command.dp}itfill <center: x y z> <radius: x y z> <offset: x y z> <length: flo
                                                 ? cmode
                                                 : ccirclemode
                                                     ? ccmode
-                                                    : mode ?? ""]) {
+                                                    : mode ?? "")]) {
                             case "":
                                 system.run(() => {
                                     let ta;
@@ -12075,8 +12075,8 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         let ovoidmode = false;
                         let hovoidmode = false;
                         let skygridmode = false;
-                        if (["circle"].includes(fillmodetypeenum[argsc[9] ??
-                            "undefined"?.toLowerCase()?.trim()])) {
+                        if (["circle"].includes(fillmodetypeenum[(argsc[9] ??
+                            "undefined"?.toLowerCase()?.trim())])) {
                             circlemode = true;
                         }
                         if ([
@@ -12089,8 +12089,8 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                             "circlexyz",
                             "sphere",
                             "semisphere",
-                        ].includes(fillmodetypeenum[argse[8] ??
-                            "undefined"?.toLowerCase()?.trim()])) {
+                        ].includes(fillmodetypeenum[(argse[8] ??
+                            "undefined"?.toLowerCase()?.trim())])) {
                             ccirclemode = true;
                         }
                         if ([
@@ -12103,24 +12103,24 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                             "cylinderxz",
                             "cylinderxyz",
                             "dome",
-                        ].includes(fillmodetypeenum[argsg[9] ??
-                            "undefined"?.toLowerCase()?.trim()])) {
+                        ].includes(fillmodetypeenum[(argsg[9] ??
+                            "undefined"?.toLowerCase()?.trim())])) {
                             hspheremode = true;
                         }
-                        if (["tunnel", "cylinder"].includes(fillmodetypeenum[argsi[10] ??
-                            "undefined"?.toLowerCase()?.trim()])) {
+                        if (["tunnel", "cylinder"].includes(fillmodetypeenum[(argsi[10] ??
+                            "undefined"?.toLowerCase()?.trim())])) {
                             tunnelmode = true;
                         }
-                        if (["ovoid"].includes(fillmodetypeenum[argsm[13] ??
-                            "undefined"?.toLowerCase()?.trim()])) {
+                        if (["ovoid"].includes(fillmodetypeenum[(argsm[13] ??
+                            "undefined"?.toLowerCase()?.trim())])) {
                             ovoidmode = true;
                         }
-                        if (["hollowovoid"].includes(fillmodetypeenum[argsk[14] ??
-                            "undefined"?.toLowerCase()?.trim()])) {
+                        if (["hollowovoid"].includes(fillmodetypeenum[(argsk[14] ??
+                            "undefined"?.toLowerCase()?.trim())])) {
                             hovoidmode = true;
                         }
-                        if (["skygrid", "inverseskygrid"].includes(fillmodetypeenum[argso[11] ??
-                            "undefined"?.toLowerCase()?.trim()])) {
+                        if (["skygrid", "inverseskygrid"].includes(fillmodetypeenum[(argso[11] ??
+                            "undefined"?.toLowerCase()?.trim())])) {
                             skygridmode = true;
                         }
                         let coordinatesa; /*
@@ -12217,7 +12217,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 : [sglastblockname, sglastblockstates]);
                         const blocktypes = BlockTypes.getAll(); /*
             console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
-                        switch (fillmodetypeenum[skygridmode
+                        switch (fillmodetypeenum[(skygridmode
                             ? sgmode
                             : hovoidmode
                                 ? homode
@@ -12231,7 +12231,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                 ? cmode
                                                 : ccirclemode
                                                     ? ccmode
-                                                    : mode ?? ""]) {
+                                                    : mode ?? "")]) {
                             case "":
                                 system.run(() => {
                                     let ta;
@@ -21762,8 +21762,8 @@ ${command.dp}\\itfill <offsetx: float> <offsety: float> <offsetz: float> <thickn
                         let ovoidmode = false;
                         let hovoidmode = false;
                         let skygridmode = false;
-                        if (["circle"].includes(fillmodetypeenum[argsc[4] ??
-                            "undefined"?.toLowerCase()?.trim()])) {
+                        if (["circle"].includes(fillmodetypeenum[(argsc[4] ??
+                            "undefined"?.toLowerCase()?.trim())])) {
                             circlemode = true;
                         }
                         if ([
@@ -21776,8 +21776,8 @@ ${command.dp}\\itfill <offsetx: float> <offsety: float> <offsetz: float> <thickn
                             "circlexyz",
                             "sphere",
                             "semisphere",
-                        ].includes(fillmodetypeenum[argse[3] ??
-                            "undefined"?.toLowerCase()?.trim()])) {
+                        ].includes(fillmodetypeenum[(argse[3] ??
+                            "undefined"?.toLowerCase()?.trim())])) {
                             ccirclemode = true;
                         }
                         if ([
@@ -21790,24 +21790,24 @@ ${command.dp}\\itfill <offsetx: float> <offsety: float> <offsetz: float> <thickn
                             "cylinderxz",
                             "cylinderxyz",
                             "dome",
-                        ].includes(fillmodetypeenum[argsg[4] ??
-                            "undefined"?.toLowerCase()?.trim()])) {
+                        ].includes(fillmodetypeenum[(argsg[4] ??
+                            "undefined"?.toLowerCase()?.trim())])) {
                             hspheremode = true;
                         }
-                        if (["tunnel", "cylinder"].includes(fillmodetypeenum[argsi[5] ??
-                            "undefined"?.toLowerCase()?.trim()])) {
+                        if (["tunnel", "cylinder"].includes(fillmodetypeenum[(argsi[5] ??
+                            "undefined"?.toLowerCase()?.trim())])) {
                             tunnelmode = true;
                         }
-                        if (["ovoid"].includes(fillmodetypeenum[argsm[6] ??
-                            "undefined"?.toLowerCase()?.trim()])) {
+                        if (["ovoid"].includes(fillmodetypeenum[(argsm[6] ??
+                            "undefined"?.toLowerCase()?.trim())])) {
                             ovoidmode = true;
                         }
-                        if (["hollowovoid"].includes(fillmodetypeenum[argsk[7] ??
-                            "undefined"?.toLowerCase()?.trim()])) {
+                        if (["hollowovoid"].includes(fillmodetypeenum[(argsk[7] ??
+                            "undefined"?.toLowerCase()?.trim())])) {
                             hovoidmode = true;
                         }
-                        if (["skygrid", "inverseskygrid"].includes(fillmodetypeenum[argso[4] ??
-                            "undefined"?.toLowerCase()?.trim()])) {
+                        if (["skygrid", "inverseskygrid"].includes(fillmodetypeenum[(argso[4] ??
+                            "undefined"?.toLowerCase()?.trim())])) {
                             skygridmode = true;
                         }
                         let coordinatesa; /*
@@ -21910,7 +21910,7 @@ ${command.dp}\\itfill <offsetx: float> <offsety: float> <offsetz: float> <thickn
                                 ? ["air"]
                                 : [sglastblockname, sglastblockstates]; /*
 console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
-                        switch (fillmodetypeenum[skygridmode
+                        switch (fillmodetypeenum[(skygridmode
                             ? sgmode
                             : hovoidmode
                                 ? homode
@@ -21924,7 +21924,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                                 ? cmode
                                                 : ccirclemode
                                                     ? ccmode
-                                                    : mode ?? ""]) {
+                                                    : mode ?? "")]) {
                             case "":
                                 system.run(() => {
                                     let ta;
@@ -23541,8 +23541,8 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                         let ovoidmode = false;
                         let hovoidmode = false;
                         let skygridmode = false;
-                        if (["circle"].includes(fillmodetypeenum[argsc[5] ??
-                            "undefined"?.toLowerCase()?.trim()])) {
+                        if (["circle"].includes(fillmodetypeenum[(argsc[5] ??
+                            "undefined"?.toLowerCase()?.trim())])) {
                             circlemode = true;
                         }
                         if ([
@@ -23555,8 +23555,8 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                             "circlexyz",
                             "sphere",
                             "semisphere",
-                        ].includes(fillmodetypeenum[argse[4] ??
-                            "undefined"?.toLowerCase()?.trim()])) {
+                        ].includes(fillmodetypeenum[(argse[4] ??
+                            "undefined"?.toLowerCase()?.trim())])) {
                             ccirclemode = true;
                         }
                         if ([
@@ -23569,24 +23569,24 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                             "cylinderxz",
                             "cylinderxyz",
                             "dome",
-                        ].includes(fillmodetypeenum[argsg[5] ??
-                            "undefined"?.toLowerCase()?.trim()])) {
+                        ].includes(fillmodetypeenum[(argsg[5] ??
+                            "undefined"?.toLowerCase()?.trim())])) {
                             hspheremode = true;
                         }
-                        if (["tunnel", "cylinder"].includes(fillmodetypeenum[argsi[5] ??
-                            "undefined"?.toLowerCase()?.trim()])) {
+                        if (["tunnel", "cylinder"].includes(fillmodetypeenum[(argsi[5] ??
+                            "undefined"?.toLowerCase()?.trim())])) {
                             tunnelmode = true;
                         }
-                        if (["ovoid"].includes(fillmodetypeenum[argsm[7] ??
-                            "undefined"?.toLowerCase()?.trim()])) {
+                        if (["ovoid"].includes(fillmodetypeenum[(argsm[7] ??
+                            "undefined"?.toLowerCase()?.trim())])) {
                             ovoidmode = true;
                         }
-                        if (["hollowovoid"].includes(fillmodetypeenum[argsk[8] ??
-                            "undefined"?.toLowerCase()?.trim()])) {
+                        if (["hollowovoid"].includes(fillmodetypeenum[(argsk[8] ??
+                            "undefined"?.toLowerCase()?.trim())])) {
                             hovoidmode = true;
                         }
-                        if (["skygrid", "inverseskygrid"].includes(fillmodetypeenum[argso[5] ??
-                            "undefined"?.toLowerCase()?.trim()])) {
+                        if (["skygrid", "inverseskygrid"].includes(fillmodetypeenum[(argso[5] ??
+                            "undefined"?.toLowerCase()?.trim())])) {
                             skygridmode = true;
                         }
                         let coordinatesa; /*
@@ -23693,7 +23693,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                 : [sglastblockname, sglastblockstates];
                         const blocktypes = BlockTypes.getAll(); /*
             console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
-                        switch (fillmodetypeenum[skygridmode
+                        switch (fillmodetypeenum[(skygridmode
                             ? sgmode
                             : hovoidmode
                                 ? homode
@@ -23707,7 +23707,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                 ? cmode
                                                 : ccirclemode
                                                     ? ccmode
-                                                    : mode ?? ""]) {
+                                                    : mode ?? "")]) {
                             case "":
                                 system.run(() => {
                                     let ta;
@@ -26513,7 +26513,7 @@ ${command.dp}snapshot list`);
                 !!switchTest.match(/^seli$/):
                 {
                     eventData.cancel = true;
-                    player.sendMessageB(`Currently Selected Area Info: \npos1 x: ${player.getDynamicProperty("pos1")["x"]}\npos1 y: ${player.getDynamicProperty("pos1")["y"]}\npos1 z: ${player.getDynamicProperty("pos1")["z"]}\npos2 x: ${player.getDynamicProperty("pos2")["x"]}\npos2 y: ${player.getDynamicProperty("pos2")["y"]}\npos2 z: ${player.getDynamicProperty("pos2")["z"]}\nNext Selection Mode: ${player.getDynamicProperty("posM") ?? false
+                    player.sendMessageB(`Currently Selected Area Info: \npos1 x: ${player.worldEditSelection.pos1.x}\npos1 y: ${player.worldEditSelection.pos1.y}\npos1 z: ${player.worldEditSelection.pos1.z}\npos2 x: ${player.worldEditSelection.pos2.x}\npos2 y: ${player.worldEditSelection.pos2.y}\npos2 z: ${player.worldEditSelection.pos2.z}\nNext Selection Mode: ${player.getDynamicProperty("posM") ?? false
                         ? "pos2"
                         : "pos1"}`);
                 }

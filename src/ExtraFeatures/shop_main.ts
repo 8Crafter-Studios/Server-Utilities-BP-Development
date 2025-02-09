@@ -31,6 +31,7 @@ import { securityVariables } from "security/ultraSecurityModeUtils";
  */
 export async function mainShopSystemSettings(sourceEntitya: Entity|executeCommandPlayerW|Player): Promise<-2 | 0 | 1>{
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya
+        assertIsDefined(sourceEntity);
     if (securityVariables.ultraSecurityModeEnabled) {
         if(securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.accessExtraFeaturesSettings") == false){
             const r = await showMessage(sourceEntity as Player, "Access Denied (403)", "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.accessExtraFeaturesSettings", "Go Back", "Close");

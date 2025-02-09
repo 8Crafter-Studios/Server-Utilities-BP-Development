@@ -13,7 +13,7 @@ export function playerController(
     let form2 = new ModalFormData();
     let playerList = world.getPlayers();
     let targetList = [playerList[0].nameTag];
-    let componentList = [playerList[0].getComponents[0]];
+    let componentList = [playerList[0].getComponents()[0]];
     let dimension = "";
     let spawnXPosition = "";
     let spawnYPosition = "";
@@ -40,7 +40,7 @@ export function playerController(
 
 
 
-    function playerControllerFormPopup(playerTargetB, playerViewerB) {
+    function playerControllerFormPopup(playerTargetB: number, playerViewerB: number) {
         let form = new ModalFormData();
         try {
             dimension = String(

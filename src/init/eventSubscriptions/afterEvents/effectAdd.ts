@@ -33,7 +33,7 @@ subscribedEvents.afterEffectAdd = world.afterEvents.effectAdd.subscribe(
                     `§r§f[§l§dServer§r§f]${world.getDynamicProperty("serverNotificationSpacer") ??
                     ""}[§eeffectAdd§r] The effect ${event.effect.displayName} with the amplifier ${event.effect.amplifier} and the duration ${event.effect.duration} was added to ${event.entity.typeId == "minecraft:player"
                         ? (event.entity as Player)?.name
-                        : `an entity of type ${event.entity.typeId} with the id ${event.entity.id} in ${dimensionTypeDisplayFormatting[event.entity.dimension.id]} at ${event.entity.location}`}. `
+                        : `an entity of type ${event.entity.typeId} with the id ${event.entity.id} in ${dimensionTypeDisplayFormatting[event.entity.dimension.id as keyof typeof dimensionTypeDisplayFormatting]} at ${event.entity.location}`}. `
                 );
                 let pn = new PlayerNotifications(p);
                 srun(() => p.playSound(

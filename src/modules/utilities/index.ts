@@ -37,5 +37,5 @@ export * from "./functions/splitTextByMaxProperyLength"
 export * from "./functions/splitUpStringData"
 export * from "./functions/stringify"
 export * from "./functions/toBase"
-export const exports_5603749806156139082470132985463298047098135609812364098 =
+export const exports_5603749806156139082470132985463298047098135609812364098: undefined =
     undefined;

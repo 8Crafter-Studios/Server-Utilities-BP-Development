@@ -131,7 +131,7 @@ export class undoClipboard {
                         world.getDynamicProperty(
                             `andexdb:undoclipboardd;${saveTime}`
                         )
-                    )] ?? dimensionsb["minecraft:overworld"],
+                    ) as keyof typeof dimensionsb] ?? dimensionsb["minecraft:overworld"],
                     Vector.add(
                         v,
                         world.getDynamicProperty(

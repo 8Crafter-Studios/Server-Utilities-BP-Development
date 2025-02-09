@@ -100,7 +100,7 @@ export class moduleImportsConfig {
                 "enableAll",
                 "enableAllNonDeprecated",
             ].includes(option as any)
-                ? option
+                ? option ?? undefined
                 : "none"
         );
     }
@@ -137,7 +137,7 @@ export class moduleImportsConfig {
                         "enableAll",
                         "enableAllNonDeprecated",
                     ].includes(option as any)
-                        ? option
+                        ? option ?? undefined
                         : "none"
                 );
             },
@@ -172,7 +172,7 @@ export class moduleImportsConfig {
                         "enableAll",
                         "enableAllNonDeprecated",
                     ].includes(option as any)
-                        ? option
+                        ? option ?? undefined
                         : "none"
                 );
             },
@@ -207,7 +207,7 @@ export class moduleImportsConfig {
                         "enableAll",
                         "enableAllNonDeprecated",
                     ].includes(option as any)
-                        ? option
+                        ? option ?? undefined
                         : "none"
                 );
             },
@@ -242,7 +242,7 @@ export class moduleImportsConfig {
                         "enableAll",
                         "enableAllNonDeprecated",
                     ].includes(option as any)
-                        ? option
+                        ? option ?? undefined
                         : "none"
                 );
             },
@@ -277,7 +277,7 @@ export class moduleImportsConfig {
                         "enableAll",
                         "enableAllNonDeprecated",
                     ].includes(option as any)
-                        ? option
+                        ? option ?? undefined
                         : "none"
                 );
             },
@@ -312,7 +312,7 @@ export class moduleImportsConfig {
                         "enableAll",
                         "enableAllNonDeprecated",
                     ].includes(option as any)
-                        ? option
+                        ? option ?? undefined
                         : "none"
                 );
             },
@@ -347,7 +347,7 @@ export class moduleImportsConfig {
                         "enableAll",
                         "enableAllNonDeprecated",
                     ].includes(option as any)
-                        ? option
+                        ? option ?? undefined
                         : "none"
                 );
             },
@@ -382,7 +382,7 @@ export class moduleImportsConfig {
                         "enableAll",
                         "enableAllNonDeprecated",
                     ].includes(option as any)
-                        ? option
+                        ? option ?? undefined
                         : "none"
                 );
             },
@@ -417,7 +417,7 @@ export class moduleImportsConfig {
                         "enableAll",
                         "enableAllNonDeprecated",
                     ].includes(option as any)
-                        ? option
+                        ? option ?? undefined
                         : "none"
                 );
             },
@@ -452,7 +452,7 @@ export class moduleImportsConfig {
                         "enableAll",
                         "enableAllNonDeprecated",
                     ].includes(option as any)
-                        ? option
+                        ? option ?? undefined
                         : "none"
                 );
             },
@@ -487,7 +487,7 @@ export class moduleImportsConfig {
                         "enableAll",
                         "enableAllNonDeprecated",
                     ].includes(option as any)
-                        ? option
+                        ? option ?? undefined
                         : "none"
                 );
             },
@@ -522,7 +522,7 @@ export class moduleImportsConfig {
                         "enableAll",
                         "enableAllNonDeprecated",
                     ].includes(option as any)
-                        ? option
+                        ? option ?? undefined
                         : "none"
                 );
             },
@@ -557,7 +557,7 @@ export class moduleImportsConfig {
                         "enableAll",
                         "enableAllNonDeprecated",
                     ].includes(option as any)
-                        ? option
+                        ? option ?? undefined
                         : "none"
                 );
             },
@@ -592,7 +592,7 @@ export class moduleImportsConfig {
                         "enableAll",
                         "enableAllNonDeprecated",
                     ].includes(option as any)
-                        ? option
+                        ? option ?? undefined
                         : "none"
                 );
             },
@@ -674,7 +674,7 @@ export class moduleImportsConfig {
         filePath: keyof moduleImportNamesToModuleImportsConfigObjectMapper<unknown>,
         enabled: "0" | "1" | boolean | 0 | 1 = 0
     ): asserts enabled is "0" | "1" | boolean | 0 | 1 {
-        if (![0, 1].includes(enabled.toNumber())) {
+        if (![0, 1].includes(enabled.toNumber() as number)) {
             throw new SyntaxError(
                 `[moduleImportsConfig::set::Args[0]]: Expected a boolean, 0, or 1, but got ${JSON.stringify(
                     enabled

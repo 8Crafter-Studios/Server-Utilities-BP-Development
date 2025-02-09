@@ -14,7 +14,7 @@ export function* generateNBTFileEGGB(
         size: [x: number, y: number, z: number];
         nbt_type: "cmprbnbt";
     }
-) {
+): Generator<void, number, unknown> {
     var successCount = 0;
     var b = undefined as number;
     for (let i = 0; i < nbt.block_indices.length; i++) {

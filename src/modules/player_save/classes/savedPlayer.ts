@@ -797,7 +797,7 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
             const ei = entity.inventory.container;
             for (let i = 0; i < 36; i++) {
                 try {
-                    items[i] = ei.getItem(i);
+                    items[i as keyof typeof items] = ei.getItem(i);
                 } catch (e) {}
             }
             for (let i = 0; i < 6; i++) {

@@ -1,6 +1,6 @@
 import { Structure, BlockPermutation } from "@minecraft/server";
 
-export function* removeAirFromStructure(structure: Structure) {
+export function* removeAirFromStructure(structure: Structure): Generator<void, void, unknown> {
     for (let x = 0; x < structure.size.x; x++) {
         for (let y = 0; y < structure.size.y; y++) {
             for (let z = 0; z < structure.size.z; z++) {

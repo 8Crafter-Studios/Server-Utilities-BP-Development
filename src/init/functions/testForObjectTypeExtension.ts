@@ -2,7 +2,7 @@ import "init/meta/importToMakeValidModule";
 globalThis.testForObjectTypeExtension = function testForObjectTypeExtension(
     objectToTest: object,
     base: object
-) {
+): boolean {
     return Object.entries(base).every((v) => {
         if (!Object.keys(objectToTest).includes(v[0])) {
             return false;

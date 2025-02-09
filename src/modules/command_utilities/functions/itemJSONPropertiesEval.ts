@@ -97,7 +97,7 @@ if(!!ij.new){item=new ItemStack(ij.new[0], ij.new[1])}*/
 
 
     const itemPropertyEnum = {
-        components: (property: [string, any]) => Object.entries(property[1]).forEach((vb) => itemComponentEnum[componentTypeEnum[vb[0]]](vb)
+        components: (property: [string, any]) => Object.entries(property[1]).forEach((vb: [string, object]) => itemComponentEnum[componentTypeEnum[vb[0] as componentTypeEnum] as keyof typeof itemComponentEnum](vb)
         ),
         nameTag: (property: [string, any]) => property[1] !== item.nameTag || ij.force
             ? (item.nameTag = property[1])
@@ -148,17 +148,17 @@ if(!!ij.new){item=new ItemStack(ij.new[0], ij.new[1])}*/
         removeDynamicProperty: (property: [string, string]) => item.setDynamicProperty(property[1]),
     };
     const itemComponentEnum = {
-        enchantable: (property: [string, object]) => Object.entries(property[1]).forEach((vc) => itemEnchantableComponentEnum[enchantableComponentTypeEnum[vc[0]]](vc)
+        enchantable: (property: [string, object]) => Object.entries(property[1]).forEach((vc) => itemEnchantableComponentEnum[enchantableComponentTypeEnum[vc[0] as enchantableComponentTypeEnum]](vc)
         ),
         durability: (property: [string, any]) => typeof property[1] == "number"
             ? (item.getComponent("durability").damage =
                 item.getComponent("durability").maxDurability -
                 property[1])
-            : Object.entries(property[1]).forEach((v) => itemDurabilityComponentEnum[durabilityComponentTypeEnum[v[0]]](v[1])
+            : Object.entries(property[1]).forEach((v: [string, [string, number]]) => itemDurabilityComponentEnum[durabilityComponentTypeEnum[v[0] as durabilityComponentTypeEnum]](v[1])
             ),
         damage: (property: [string, any]) => typeof property[1] == "number"
             ? (item.getComponent("durability").damage = property[1])
-            : Object.entries(property[1]).forEach((v) => itemDurabilityComponentEnum[durabilityComponentTypeEnum[v[0]]](v)
+            : Object.entries(property[1]).forEach((v: [string, number]) => itemDurabilityComponentEnum[durabilityComponentTypeEnum[v[0] as durabilityComponentTypeEnum]](v)
             ),
         food: (property?: [string, any]) => { },
         cooldown: (property?: [string, any]) => { },
@@ -176,7 +176,7 @@ if(!!ij.new){item=new ItemStack(ij.new[0], ij.new[1])}*/
                 type: EnchantmentTypes.get(property[1].type),
             }),
         addEnchantments: (property: [string, any]) => item.getComponent("enchantable").addEnchantments(
-            property[1].map((v) => ({
+            property[1].map((v: { level: number; type: string; }) => ({
                 level: v.level,
                 type: EnchantmentTypes.get(v.type),
             }))
@@ -207,7 +207,7 @@ if(!!ij.new){item=new ItemStack(ij.new[0], ij.new[1])}*/
                 v[0]
             )
         )
-        .forEach((va) => itemPropertyEnum[propertyTypeEnum[va[0]]](va));
+        .forEach((va) => itemPropertyEnum[propertyTypeEnum[va[0] as propertyTypeEnum] as keyof typeof itemPropertyEnum](va as any));
     return item;
     /*
 

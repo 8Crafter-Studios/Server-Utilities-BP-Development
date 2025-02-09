@@ -36,7 +36,7 @@ export function mapArtGeneratorB(
         );
         form.dropdown(
             "Dimension",
-            dimensions.map((d) => dimensionTypeDisplayFormatting[d.id]),
+            dimensions.map((d) => dimensionTypeDisplayFormatting[d.id as keyof typeof dimensionTypeDisplayFormatting]),
             dimensions.indexOf(sourceEntity.dimension)
         );
         form.submitButton("Generate Map Art");

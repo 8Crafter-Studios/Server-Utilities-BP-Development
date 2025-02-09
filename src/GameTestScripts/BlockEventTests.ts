@@ -6,23 +6,30 @@ import {
   ItemStack,
   GameMode,
   Direction,
+  ItemType,
+  BlockType,
+  PlayerBreakBlockAfterEvent,
+  Block,
+  PlayerPlaceBlockAfterEvent,
+  BlockTypes,
+  ItemTypes,
 } from "@minecraft/server";
 
-function registerBlockBreakTest(gameMode, blockType, blockBreakTicks) {
+function registerBlockBreakTest(gameMode: string, blockType: BlockType, blockBreakTicks: number) {
   GameTest.registerAsync("BlockEventTests", `block_break_event_${gameMode}_${blockType.id}`, async (test) => {
     const spawnLocation = {x: 1, y: 2, z: 3};
     const blockLocation = {x: 2, y: 2, z: 2};
 
-    const player = test.spawnSimulatedPlayer(spawnLocation, `${gameMode}_player`, GameMode[gameMode]);
+    const player = test.spawnSimulatedPlayer(spawnLocation, `${gameMode}_player`, GameMode[gameMode as GameMode]);
 
     // Set block
     test.setBlockType(blockType, blockLocation);
 
     // Listen for block break
     let blockDidBreak = false;
-    const listener = (event) => {
+    const listener = (event: PlayerBreakBlockAfterEvent) => {
       // Make sure it's our block that broke
-      const locationCorrect = event.block.location.equals(test.worldBlockLocation(blockLocation));
+      const locationCorrect = Vector.equals(event.block.location, test.worldBlockLocation(blockLocation));
       const blockTypeCorrect = event.brokenBlockPermutation.type.id == blockType.id;
 
       if (locationCorrect && blockTypeCorrect) {
@@ -53,13 +60,13 @@ function registerBlockBreakTest(gameMode, blockType, blockBreakTicks) {
     .tag(GameTest.Tags.suiteDefault);
 }
 
-function registerBlockPlaceTest(itemType?, belowBlock?) {
-  const registerTest = function (gameMode) {
+function registerBlockPlaceTest(itemType: ItemType, belowBlock?: BlockType) {
+  const registerTest = function (gameMode: string) {
     GameTest.registerAsync("BlockEventTests", `block_place_event_${gameMode}_${itemType.id}`, async (test) => {
       const spawnLocation ={x: 1, y: 2, z: 3};
       const blockLocation = {x: 2, y: 1, z: 2};
 
-      const player = test.spawnSimulatedPlayer(spawnLocation, `${gameMode}_player`, GameMode[gameMode]);
+      const player = test.spawnSimulatedPlayer(spawnLocation, `${gameMode}_player`, GameMode[gameMode as GameMode]);
 
       if (belowBlock) {
         // Set bellow block
@@ -68,8 +75,8 @@ function registerBlockPlaceTest(itemType?, belowBlock?) {
 
       // Listen for block place
       let blockDidPlace = false;
-      const listener = (event) => {
-        if (event.block.location.equals(test.worldBlockLocation(Vector.add(blockLocation, {x: 0, y: 1, z: 0})))) {
+      const listener = (event: PlayerPlaceBlockAfterEvent) => {
+        if (Vector.equals(event.block.location, test.worldBlockLocation(Vector.add(blockLocation, {x: 0, y: 1, z: 0})))) {
           blockDidPlace = true;
         }
       };
@@ -102,17 +109,17 @@ function registerBlockPlaceTest(itemType?, belowBlock?) {
 }
 
 // Break Block Tests
-registerBlockBreakTest("creative", "dirt", 20);
-registerBlockBreakTest("survival", "dirt", 100);
+registerBlockBreakTest("creative", BlockTypes.get("dirt") as BlockType, 20);
+registerBlockBreakTest("survival", BlockTypes.get("dirt") as BlockType, 100);
 
 // Place Block Tests
 // Note: These are fired in a bunch of
 //  different spots in the code, hence the different
 //  items I chose to test
-registerBlockPlaceTest("dirt");
-registerBlockPlaceTest("bamboo", "dirt");
-registerBlockPlaceTest("banner");
-registerBlockPlaceTest("bed");
-registerBlockPlaceTest("flowerPot");
-registerBlockPlaceTest("redstone");
-registerBlockPlaceTest("oakSign");
+registerBlockPlaceTest(ItemTypes.get("dirt") as ItemType);
+registerBlockPlaceTest(ItemTypes.get("bamboo") as ItemType, BlockTypes.get("dirt"));
+registerBlockPlaceTest(ItemTypes.get("banner") as ItemType);
+registerBlockPlaceTest(ItemTypes.get("bed") as ItemType);
+registerBlockPlaceTest(ItemTypes.get("flower_pot") as ItemType);
+registerBlockPlaceTest(ItemTypes.get("redstone") as ItemType);
+registerBlockPlaceTest(ItemTypes.get("oak_sign") as ItemType);

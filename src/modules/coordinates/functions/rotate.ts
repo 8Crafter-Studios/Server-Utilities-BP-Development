@@ -1,6 +1,6 @@
-import { world } from "@minecraft/server";
+import { world, type Vector3 } from "@minecraft/server";
 
-export function rotate(pitchb: number, rollb: number, yawb: number, points) {
+export function rotate(pitchb: number, rollb: number, yawb: number, points: Vector3[]) {
     let pitch = pitchb * (Math.PI / 180);
     let roll = rollb * (Math.PI / 180);
     let yaw = yawb * (Math.PI / 180);

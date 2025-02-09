@@ -21,7 +21,8 @@ try {
                                 let block = playerList2[index].getBlockFromViewDirection({
                                     includeLiquidBlocks: true,
                                     includePassableBlocks: true,
-                                }).block;
+                                })?.block;
+                                assertIsDefined(block);
                                 let blockStates = Object.entries(
                                     block.permutation.getAllStates()
                                 );
@@ -49,48 +50,48 @@ try {
 §l§eRedstone Power: §r§c${block.getRedstonePower()}${!!block.getComponent("inventory")
                                         ? `
 §l§eminecraft:inventory: §r§9{§eSlots Filled: §r§c${block.getComponent("inventory")
-                                            .container.size -
-                                        block.getComponent("inventory")
-                                            .container.emptySlotsCount}§b/§c${block.getComponent("inventory")
-                                            .container.size}§9}`
+                                            ?.container?.size as number -
+                                        (block.getComponent("inventory")
+                                            ?.container?.emptySlotsCount as number)}§b/§c${block.getComponent("inventory")
+                                            ?.container?.size}§9}`
                                         : ""}${!!block.getComponent("piston")
                                         ? `
 §l§eminecraft:piston: §r§9{§eIs Moving: §r${((b: boolean) => (b ? "§2" : "§4") + String(b))(
                                             block.getComponent("piston")
-                                                .isMoving
-                                        )}§a, §eState: §r§u${block.getComponent("piston").state}§a, §eAttatched Block Count: §r§c${block
+                                                ?.isMoving as boolean
+                                        )}§a, §eState: §r§u${block.getComponent("piston")?.state}§a, §eAttatched Block Count: §r§c${block
                                             .getComponent("piston")
-                                            .getAttachedBlocks().length}§9}`
+                                            ?.getAttachedBlocks().length}§9}`
                                         : ""}${!!block.getComponent("record_player")
                                         ? `
 §l§eminecraft:recordPlayer: §r§9{§eIs Playing: §r${((b: boolean) => (b ? "§2" : "§4") + String(b))(
                                             block
                                                 .getComponent("record_player")
-                                                .isPlaying()
+                                                ?.isPlaying() as boolean
                                         )}§9}`
                                         : ""}${!!block.getComponent("sign")
                                         ? `
 §l§eminecraft:sign: §r§9{§eIs Waxed: §r${((b: boolean) => (b ? "§2" : "§4") + String(b))(
-                                            block.getComponent("sign").isWaxed
+                                            block.getComponent("sign")?.isWaxed as boolean
                                         )}§a, §eF Dye: §r§u${block
                                             .getComponent("sign")
-                                            .getTextDyeColor(
+                                            ?.getTextDyeColor(
                                                 SignSide.Front
                                             ) ?? "null"}§a, §eB Dye: §r§u${block
                                             .getComponent("sign")
-                                            .getTextDyeColor(
+                                            ?.getTextDyeColor(
                                                 SignSide.Back
                                             ) ?? "null"}§a, §eF Text Length: §r§c${block
                                             .getComponent("sign")
-                                            .getText(SignSide.Front)
-                                            .length}§a, §eB Text Length: §r§c${block
+                                            ?.getText(SignSide.Front)
+                                            ?.length}§a, §eB Text Length: §r§c${block
                                             .getComponent("sign")
-                                            .getText(SignSide.Back).length}§a, §eF Is Raw Text: §r${((
+                                            ?.getText(SignSide.Back)?.length}§a, §eF Is Raw Text: §r${((
                                                 b: boolean
                                             ) => (b ? "§2" : "§4") + String(b))(
                                                 !!tryget(() => block
                                                     .getComponent("sign")
-                                                    .getRawText(
+                                                    ?.getRawText(
                                                         SignSide.Front
                                                     )
                                                 )
@@ -99,19 +100,19 @@ try {
                                             ) => (b ? "§2" : "§4") + String(b))(
                                                 !!tryget(() => block
                                                     .getComponent("sign")
-                                                    .getRawText(SignSide.Back)
+                                                    ?.getRawText(SignSide.Back)
                                                 )
                                             )}§9}`
                                         : ""}${!!block.getComponent("fluidContainer")
                                         ? `
 §l§eminecraft:fluidContainer: §r§9{§eFill Level: §r§c${block.getComponent(
                                             "fluidContainer"
-                                        ).fillLevel}§a, §eFluid Type: §r§c§a${block
+                                        )?.fillLevel}§a, §eFluid Type: §r§c§a${block
                                             .getComponent("fluidContainer")
-                                            .getFluidType()}, §eCustom Color: §r§c${JSON.stringify(
+                                            ?.getFluidType()}, §eCustom Color: §r§c${JSON.stringify(
                                                 block.getComponent(
                                                     "fluidContainer"
-                                                ).fluidColor
+                                                )?.fluidColor
                                             )}§9}`
                                         : ""}`;
                                 playerList2[index].onScreenDisplay.setActionBar(
@@ -336,7 +337,7 @@ try {
                                             v.slice(10).toLowerCase()
                                         )) {
                                             nameFormatting +=
-                                                patternColorsMap[v.slice(10).toLowerCase()];
+                                                patternColorsMap[v.slice(10).toLowerCase() as keyof typeof patternColorsMap];
                                         } else if (Object.keys(
                                             patternFunctionList
                                         ).includes(
@@ -421,7 +422,7 @@ try {
                                                     )
                                                 )
                                                 )
-                                                .slice(
+                                                ?.slice(
                                                     String(
                                                         playerList2[index].getDynamicProperty(
                                                             "andexdbPersonalSettings:chatSudoPrefix"
@@ -431,7 +432,7 @@ try {
                                                         ) ??
                                                         "sudo:"
                                                     ).length
-                                                ),
+                                                ) ?? "",
                                             nameGradientMode
                                         )
                                         : playerList2[index]
@@ -448,7 +449,7 @@ try {
                                                 )
                                             )
                                             )
-                                            .slice(
+                                            ?.slice(
                                                 String(
                                                     playerList2[index].getDynamicProperty(
                                                         "andexdbPersonalSettings:chatSudoPrefix"
@@ -458,7 +459,7 @@ try {
                                                     ) ??
                                                     "sudo:"
                                                 ).length
-                                            )
+                                            ) ?? ""
                                     : !!playerList2[index]
                                         .getTags()
                                         .find((t) => t.startsWith("nameTagSudo:")
@@ -471,8 +472,8 @@ try {
                                                         "nameTagSudo:"
                                                     )
                                                     )
-                                                    .slice(12)
-                                                ),
+                                                    ?.slice(12)
+                                                ) ?? "",
                                                 nameGradientMode
                                             )
                                             : tryget(() => playerList2[index]
@@ -480,7 +481,7 @@ try {
                                                 .find((t) => t.startsWith(
                                                     "nameTagSudo:"
                                                 )
-                                                )
+                                                ) ?? ""
                                                 .slice(12)
                                             )
                                         : playerList2[index].hasTag(
@@ -502,7 +503,7 @@ try {
                                                         nameGradientMode
                                                     )
                                                     : playerList2[index].name;
-                                let indexb = index;
+                                let indexb: `${number}` = index as any;
                                 let rank = playerList2[indexb]
                                     .getTags()
                                     .filter((t) => t.startsWith(
@@ -556,9 +557,9 @@ try {
                                         )}\``
                                     );
                                 }
-                                let dimension = dimensionTypeDisplayFormattingE[playerList2[index].dimension.id];
-                                const currentHealth = playerList2[indexb].getComponent("health").currentValue;
-                                const maxHealth = playerList2[indexb].getComponent("health").effectiveMax;
+                                let dimension = dimensionTypeDisplayFormatting[playerList2[index].dimension.id as keyof typeof dimensionTypeDisplayFormatting];
+                                const currentHealth = playerList2[indexb].getComponent("health")?.currentValue;
+                                const maxHealth = playerList2[indexb].getComponent("health")?.effectiveMax;
                                 playerList2[indexb].nameTag = eval(`\`${config.chatRanks.nameTagTemplateString}\``); /*(
         playerList2[index].hasTag("nameTagUseSudo")?
         playerList2[index].getTags().find(t=>t.startsWith(String(playerList2[index].getDynamicProperty("andexdbPersonalSettings:chatSudoPrefix") ?? world.getDynamicProperty("andexdbSettings:chatSudoPrefix") ?? "sudo:")))

@@ -587,6 +587,7 @@ itemStack.hasComponent("potion")?`\n§r§bPotion Effect Type: §d${itemStack.get
      */
     static async openPublicShopsSelector(sourceEntitya: Entity|executeCommandPlayerW|Player): Promise<0|1>{
         const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya
+        assertIsDefined(sourceEntity);
         let form = new ActionFormData();
         form.title("Public Server Shops");
         const shopsList = (ServerShop.getAll()??[]).filter(s=>s.publicShop==true)
@@ -722,6 +723,7 @@ export class ServerShopManager{
      */
     static async serverShopSystemSettings(sourceEntitya: Entity|executeCommandPlayerW|Player): Promise<0|1>{
         const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya
+        assertIsDefined(sourceEntity);
         if (securityVariables.ultraSecurityModeEnabled) {
             if(securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.accessExtraFeaturesSettings") == false){
                 const r = await showMessage(sourceEntity as Player, "Access Denied (403)", "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.accessExtraFeaturesSettings", "Go Back", "Close");
@@ -798,6 +800,7 @@ export class ServerShopManager{
      */
     static async serverShopSystemSettings_main(sourceEntitya: Entity|executeCommandPlayerW|Player): Promise<1>{
         const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya
+        assertIsDefined(sourceEntity);
         let form2 = new ModalFormData();
         form2.title(`Server Shop System Settings`)
         form2.toggle(`§l§fEnabled§r§f\nWhether or not the server shop system is enabled, default is false`, config.shopSystem.server.enabled)
@@ -819,6 +822,7 @@ export class ServerShopManager{
      */
     static async manageServerShops(sourceEntitya: Entity|executeCommandPlayerW|Player): Promise<0|1>{
         const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya
+        assertIsDefined(sourceEntity);
         let form = new ActionFormData();
         form.title("Manage Server Shops");
         form.body("The server shop system is "+(config.shopSystem.server.enabled?"§aEnabled":"§cDisabled"));
@@ -871,6 +875,7 @@ export class ServerShopManager{
      */
     static async addServerShop(sourceEntitya: Entity|executeCommandPlayerW|Player): Promise<1>{
         const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya
+        assertIsDefined(sourceEntity);
         let form2 = new ModalFormData();
         form2.title(`Server Shop System Settings`)
         form2.textField(`§l§fShop ID§r§c*§f\nThe ID of the shop\nThis ID must be unique, all server shops must have different IDs.`, "string")
@@ -909,6 +914,7 @@ export class ServerShopManager{
      */
     static async manageServerShop(sourceEntitya: Entity|executeCommandPlayerW|Player, shop: ServerShop): Promise<0|1>{
         const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya
+        assertIsDefined(sourceEntity);
         let form = new ActionFormData();
         form.title("Manage "+shop.title);
         form.body(`ID: ${shop.id}
@@ -1095,6 +1101,7 @@ Is Buy Shop: ${shop.buyShop?"§aTrue":"§cFalse"}
      */
     static async manageServerShop_settings(sourceEntitya: Entity|executeCommandPlayerW|Player, shop: ServerShop): Promise<0|1>{
         const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya
+        assertIsDefined(sourceEntity);
         let form2 = new ModalFormData();
         form2.title(`${shop.title} Settings`)
         form2.textField(`§l§fButton Title§r§f\nThe title of the button for this shop`, "My Shop", JSON.stringify(shop.name??"").slice(1, -1).replaceAll("\\\"", "\""))
@@ -1127,6 +1134,7 @@ Is Buy Shop: ${shop.buyShop?"§aTrue":"§cFalse"}
      */
     static async manageServerShop_editLinkedCommand(sourceEntitya: Entity|executeCommandPlayerW|Player, shop: ServerShop): Promise<0|1>{
         const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya
+        assertIsDefined(sourceEntity);
         let form2 = new ModalFormData();
         form2.title(`Editing Linked Command For ${shop.title}`)
         form2.textField(`§l§fCommand§r§f\nThe command to open this shop, you must include the prefix\nLeave the text box blank to remove the command.`, "\\myshop", LinkedServerShopCommands.LinkedCommands.find(c=>c[1]==shop.id)[0])
@@ -1153,6 +1161,7 @@ Is Buy Shop: ${shop.buyShop?"§aTrue":"§cFalse"}
      */
     static async manageServerShop_addLinkedCommand(sourceEntitya: Entity|executeCommandPlayerW|Player, shop: ServerShop): Promise<0|1>{
         const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya
+        assertIsDefined(sourceEntity);
         let form2 = new ModalFormData();
         form2.title(`Adding Linked Command For ${shop.title}`)
         form2.textField(`§l§fCommand§r§f\nThe command to open this shop, you must include the prefix`, "\\myshop")
@@ -1185,6 +1194,7 @@ Is Buy Shop: ${shop.buyShop?"§aTrue":"§cFalse"}
      */
     static async manageServerShop_contents(sourceEntitya: Entity|executeCommandPlayerW|Player, shop: ServerShop, mode: "buy"|"sell" = "buy"): Promise<0|1>{
         const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya
+        assertIsDefined(sourceEntity);
         let form = new ActionFormData();
         form.title(`Manage ${shop.title??""} Contents`);
         if(!!shop.mainPageBodyText)form.body(shop.mainPageBodyText);
@@ -1330,6 +1340,7 @@ Is Buy Shop: ${shop.buyShop?"§aTrue":"§cFalse"}
      */
     static async manageServerShop_manageItem<mode extends "buy"|"sell">(sourceEntitya: Entity|executeCommandPlayerW|Player, shop: ServerShop, item: (mode extends "buy" ? ShopItem : SellableShopItem), itemIndex: number, mode: mode): Promise<0|1>{
         const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya
+        assertIsDefined(sourceEntity);
         const form = new ActionFormData;
         form.title("Manage "+item.title);
         form.body(
@@ -1418,6 +1429,7 @@ ${mode=="buy"?"Price":"Value"}: ${mode=="buy"?(item as ShopItem).price:(item as 
      */
     static async manageServerShop_editItem<mode extends "buy"|"sell">(sourceEntitya: Entity|executeCommandPlayerW|Player, shop: ServerShop, item: (mode extends "buy" ? ShopItem : SellableShopItem), itemIndex: number, mode: mode): Promise<1>{
         const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya
+        assertIsDefined(sourceEntity);
         const form = new ModalFormData;
         form.title("Manage "+item.title);
         if(item.itemType=="newItemStack"){
@@ -1548,6 +1560,7 @@ ${mode=="buy"?"Price":"Value"}: ${mode=="buy"?(item as ShopItem).price:(item as 
      */
     static async manageServerShop_addItem<mode extends "buy"|"sell">(sourceEntitya: Entity|executeCommandPlayerW|Player, shop: ServerShop, type: "pre-made"|"pre-made_manual"|"newItemStack"|"giveCommand"|"sellable", mode: mode): Promise<1>{
         const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya
+        assertIsDefined(sourceEntity);
         const form = new ModalFormData;
         form.title("Add Item");
         if(type=="newItemStack"){
@@ -1703,6 +1716,7 @@ ${mode=="buy"?"Price":"Value"}: ${mode=="buy"?(item as ShopItem).price:(item as 
      */
     static async manageServerShop_managePage<mode extends "buy"|"sell">(sourceEntitya: Entity|executeCommandPlayerW|Player, shop: ServerShop, page: ShopPage, pageIndex: number, mode: mode): Promise<0|1>{
         const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya
+        assertIsDefined(sourceEntity);
         const form = new ActionFormData;
         form.title("Manage "+page.pageTitle);
         form.body(
@@ -1796,6 +1810,7 @@ Texture: ${page.texture}`
      */
     static async manageServerShop_editPage<mode extends "buy"|"sell">(sourceEntitya: Entity|executeCommandPlayerW|Player, shop: ServerShop, page: ShopPage, pageIndex: number, mode: mode): Promise<1>{
         const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya
+        assertIsDefined(sourceEntity);
         const form = new ModalFormData;
         form.title("Edit Item");
         form.textField("§fPage Title§c*", "Items", JSON.stringify(page.pageTitle).slice(1, -1).replaceAll("\\\"", "\""))
@@ -1833,6 +1848,7 @@ Texture: ${page.texture}`
      */
     static async manageServerShop_addPage<mode extends "buy"|"sell">(sourceEntitya: Entity|executeCommandPlayerW|Player, shop: ServerShop, mode: mode): Promise<1>{
         const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya
+        assertIsDefined(sourceEntity);
         const form = new ModalFormData;
         form.title("Add Item");
         form.textField("§fPage Title§c*", "Items")
@@ -1878,6 +1894,7 @@ Texture: ${page.texture}`
      */
     static async manageServerShopPage_contents<mode extends "buy"|"sell">(sourceEntitya: Entity|executeCommandPlayerW|Player, shop: ServerShop, path: [mode, ...string[]]): Promise<0|1>{
         const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya
+        assertIsDefined(sourceEntity);
         const mode = path[0]
         let form = new ActionFormData();
         const shopDataA: ShopPage = tryget(()=>{return getPathInObject(shop[mode+"Data" as `${"buy"|"sell"}Data`], path) as ShopPage})??{} as ShopPage;
@@ -2035,8 +2052,9 @@ Texture: ${page.texture}`
      * @param itemIndex 
      * @returns 
      */
-    static async manageServerShopPage_manageItem<mode extends "buy"|"sell">(sourceEntitya: Entity|executeCommandPlayerW|Player, shop: ServerShop, path: [mode, ...string[]], item: (mode extends "buy" ? ShopItem : SellableShopItem), itemIndex: number){
+    static async manageServerShopPage_manageItem<mode extends "buy"|"sell">(sourceEntitya: Entity|executeCommandPlayerW|Player, shop: ServerShop, path: [mode, ...string[]], item: (mode extends "buy" ? ShopItem : SellableShopItem), itemIndex: number): Promise<0|1>{
         const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya
+        assertIsDefined(sourceEntity);
         const mode = path[0]
         const form = new ActionFormData;
         form.title("Manage "+item.title);
@@ -2131,6 +2149,7 @@ ${mode=="buy"?"Price":"Value"}: ${mode=="buy"?(item as ShopItem).price:(item as 
      */
     static async manageServerShopPage_editItem<mode extends "buy"|"sell">(sourceEntitya: Entity|executeCommandPlayerW|Player, shop: ServerShop, path: [mode, ...string[]], item: (mode extends "buy" ? ShopItem : SellableShopItem), itemIndex: number): Promise<0|1>{
         const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya
+        assertIsDefined(sourceEntity);
         const mode = path[0]
         const form = new ModalFormData;
         form.title("Manage "+item.title);
@@ -2264,6 +2283,7 @@ ${mode=="buy"?"Price":"Value"}: ${mode=="buy"?(item as ShopItem).price:(item as 
      */
     static async manageServerShopPage_addItem<mode extends "buy"|"sell">(sourceEntitya: Entity|executeCommandPlayerW|Player, shop: ServerShop, path: [mode, ...string[]], type: "pre-made"|"pre-made_manual"|"newItemStack"|"giveCommand"|"sellable"): Promise<0|1>{
         const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya
+        assertIsDefined(sourceEntity);
         const mode = path[0]
         const form = new ModalFormData;
         form.title("Add Item");
@@ -2422,6 +2442,7 @@ ${mode=="buy"?"Price":"Value"}: ${mode=="buy"?(item as ShopItem).price:(item as 
      */
     static async manageServerShopPage_managePage<mode extends "buy"|"sell">(sourceEntitya: Entity|executeCommandPlayerW|Player, shop: ServerShop, path: [mode, ...string[]], page: ShopPage, pageIndex: number): Promise<0|1>{
         const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya
+        assertIsDefined(sourceEntity);
         const mode = path[0]
         const form = new ActionFormData;
         form.title("Manage "+page.pageTitle);
@@ -2516,6 +2537,7 @@ Texture: ${page.texture}`
      */
     static async manageServerShopPage_editPage<mode extends "buy"|"sell">(sourceEntitya: Entity|executeCommandPlayerW|Player, shop: ServerShop, path: [mode, ...string[]], page: ShopPage, pageIndex: number): Promise<0|1>{
         const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya
+        assertIsDefined(sourceEntity);
         const mode = path[0]
         const form = new ModalFormData;
         form.title("Edit Page");
@@ -2556,6 +2578,7 @@ Texture: ${page.texture}`
      */
     static async manageServerShopPage_addPage<mode extends "buy"|"sell">(sourceEntitya: Entity|executeCommandPlayerW|Player, shop: ServerShop, path: [mode, ...string[]]): Promise<0|1>{
         const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya
+        assertIsDefined(sourceEntity);
         const mode = path[0]
         const form = new ModalFormData;
         form.title("Add Page");

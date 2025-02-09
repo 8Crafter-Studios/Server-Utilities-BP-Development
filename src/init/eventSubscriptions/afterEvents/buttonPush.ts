@@ -58,7 +58,7 @@ subscribedEvents.afterButtonPush = world.afterEvents.buttonPush.subscribe(
                         p,
                         `§r§f[§l§dServer§r§f]${world.getDynamicProperty(
                             "serverNotificationSpacer"
-                        ) ?? ""}[§ebuttonPush§r] Button in ${dimensionTypeDisplayFormatting[event.dimension.id]} at ${vTStr(event.block.location)} was pressed by ${(event.source as Player)?.name ??
+                        ) ?? ""}[§ebuttonPush§r] Button in ${dimensionTypeDisplayFormatting[event.dimension.id as keyof typeof dimensionTypeDisplayFormatting]} at ${vTStr(event.block.location)} was pressed by ${(event.source as Player)?.name ??
                         tryget(() => event.source?.nameTag == ""
                             ? undefined
                             : event.source?.nameTag +

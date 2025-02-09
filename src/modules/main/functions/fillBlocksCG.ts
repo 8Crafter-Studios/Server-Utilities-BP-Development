@@ -22,7 +22,7 @@ export function* fillBlocksCG(
     ) => any = () => { },
     onCompleteArgsObject?: any,
     ...onCompleteArgs: any[]
-) {
+): Generator<void, void, unknown> {
     var timea = Date.now();
     var mainArray = Array.from(
         new BlockVolume(begin, end).getBlockLocationIterator()

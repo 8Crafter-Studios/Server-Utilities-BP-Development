@@ -42,7 +42,7 @@ subscribedEvents.afterLeverAction = world.afterEvents.leverAction.subscribe(
                         p,
                         `§r§f[§l§dServer§r§f]${world.getDynamicProperty(
                             "serverNotificationSpacer"
-                        ) ?? ""}[§eleverAction§r][${event.player.name}] Lever in ${dimensionTypeDisplayFormatting[event.dimension.id]} at ${vTStr(event.block.location)} turned ${event.isPowered ? "ON" : "OFF"}. `
+                        ) ?? ""}[§eleverAction§r][${event.player.name}] Lever in ${dimensionTypeDisplayFormatting[event.dimension.id as keyof typeof dimensionTypeDisplayFormatting]} at ${vTStr(event.block.location)} turned ${event.isPowered ? "ON" : "OFF"}. `
                     );
                     let pn = new PlayerNotifications(p);
                     srun(() => p.playSound(

@@ -6,10 +6,10 @@ import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPl
 
 export function editorStickC(
     sourceEntitya: Entity | executeCommandPlayerW | Player,
-    includeLiquidBlocks = false,
-    includePassableBlocks = false,
-    maxDistance = undefined
-) {
+    includeLiquidBlocks: boolean = false,
+    includePassableBlocks: boolean = false,
+    maxDistance: number = undefined
+): void {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW
         ? sourceEntitya.player
         : (sourceEntitya as Player);

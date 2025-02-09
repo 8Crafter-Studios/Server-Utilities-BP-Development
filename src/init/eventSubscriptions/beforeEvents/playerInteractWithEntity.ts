@@ -106,7 +106,7 @@ subscribedEvents.beforePlayerInteractWithEntity =
                 console.error(e, e.stack);
                 componentList = "§4None§a";
             }
-            let effectsList = [];
+            let effectsList: string[] = [];
             try {
                 effectsList = [
                     "§9{ §stypeId§a: §u" +

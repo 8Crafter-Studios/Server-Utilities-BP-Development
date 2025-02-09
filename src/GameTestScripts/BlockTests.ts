@@ -2,6 +2,7 @@
 
 import * as GameTest from "@minecraft/server-gametest";
 import {
+  BlockType,
   BlockTypes,
   Direction,
 } from "@minecraft/server";
@@ -37,22 +38,22 @@ const BLOCKS_THAT_SUPPORT_SAND = [
   BlockTypes.get("scaffolding"),
 ];
 
-function testThatFallingSandPopsIntoItem(test) {
+function testThatFallingSandPopsIntoItem(test: GameTest.Test) {
   test.setBlockType("sand", { x: 1, y: 4, z: 1 });
   const targetPos = { x: 1, y: 2, z: 1 };
 
   test.succeedWhen(() => {
     test.assertEntityPresentInArea("minecraft:item", true);
-    test.assertEntityPresent("minecraft:falling_block", targetPos, false);
+    test.assertEntityPresent("minecraft:falling_block", targetPos, 0, false);
   });
 }
 
-function testThatFallingSandReplaces(test) {
+function testThatFallingSandReplaces(test: GameTest.Test) {
   test.setBlockType("sand", { x: 1, y: 4, z: 1 });
   test.succeedWhenBlockPresent("sand", { x: 1, y: 2, z: 1 }, true);
 }
 
-function testThatFallingSandLandsOnTop(test) {
+function testThatFallingSandLandsOnTop(test: GameTest.Test) {
   test.setBlockType("sand", { x: 1, y: 4, z: 1 });
   test.succeedWhenBlockPresent("sand", { x: 1, y: 3, z: 1 }, true);
 }
@@ -89,12 +90,12 @@ for (let i = 0; i < BLOCKS_THAT_POP_SAND.length; i++) {
 } */
 
 for (const block of BLOCKS_REPLACED_BY_SAND) {
-  const testName = "blocktests.falling_sand_replaces_" + block.id;
+  const testName = "blocktests.falling_sand_replaces_" + block?.id;
 
   GameTest.register("BlockTests", testName, (test) => {
     //SetBlock will fail if set a block to what it already is. Skip to call setblock() for test falling_sand_replaces_air because it's just air block in initial structure.
-    if (block.id != "minecraft:air") {
-      test.setBlockType(block, { x: 1, y: 2, z: 1 });
+    if (block?.id != "minecraft:air") {
+      test.setBlockType(block as BlockType, { x: 1, y: 2, z: 1 });
     }
     testThatFallingSandReplaces(test);
   })
@@ -111,7 +112,7 @@ for (const block of BLOCKS_THAT_SUPPORT_SAND) {
   let tag = null;
 
   GameTest.register("BlockTests", testName, (test) => {
-    test.setBlockType(block, { x: 1, y: 2, z: 1 });
+    test.setBlockType(block as BlockType, { x: 1, y: 2, z: 1 });
     testThatFallingSandLandsOnTop(test);
   })
     .batch("day")
@@ -328,7 +329,7 @@ GameTest.register("BlockTests", "powder_snow_player_sink_and_freeze", (test) => 
   let healthComp = playerSim.getComponent("health");
   test
     .startSequence()
-    .thenExecuteAfter(180, () => test.assert(healthComp.currentValue < healthComp.currentValue, "no damage"))
+    .thenExecuteAfter(180, () => test.assert(healthComp?.currentValue as number < (healthComp?.currentValue as number), "no damage"))
     .thenExecute(() => test.assertEntityInstancePresent(playerSim, { x: 1, y: 2, z: 1 }))
     .thenSucceed();
 })

@@ -130,7 +130,7 @@ Default Spawn Location: ${JSONB.stringify(world.getDefaultSpawnLocation())}`,
                                                 "length",
                                             ].includes(n)
                                         )
-                                        .map((n) => [n, config[n]])
+                                        .map((n) => [n, config[n as Exclude<keyof config, "constructor"|"toString"|"toLocaleString"|"valueOf"|"hasOwnProperty"|"name"|"prototype"|"reset"|"length">]] as any)
                                 ) /*{
                 antiSpamSystem: config.antiSpamSystem,
                 chatCommandPrefix: config.chatCommandPrefix,

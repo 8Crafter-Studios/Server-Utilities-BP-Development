@@ -38,7 +38,7 @@ subscribedEvents.afterEntityHurt = world.afterEvents.entityHurt.subscribe(
                     p,
                     `§r§f[§l§dServer§r§f]${world.getDynamicProperty("serverNotificationSpacer") ??
                     ""}[§eentityHurt§r] Entity of type ${event.hurtEntity?.typeId} with the id ${event.hurtEntity?.id} took ${event.damage} damage of type "${event.damageSource?.cause}" in ${tryget(
-                        () => dimensionTypeDisplayFormatting[event.hurtEntity?.dimension?.id]
+                        () => dimensionTypeDisplayFormatting[event.hurtEntity?.dimension?.id as keyof typeof dimensionTypeDisplayFormatting]
                     ) ?? "an unknown dimension"} at ${(event.hurtEntity?.isValid() ?? false)
                         ? vTStr(event.hurtEntity?.location)
                         : "an unknown location"}${!!event.damageSource?.damagingEntity
@@ -51,16 +51,16 @@ subscribedEvents.afterEntityHurt = world.afterEvents.entityHurt.subscribe(
                             : `an entity of type ${event.damageSource?.damagingEntity
                                 ?.typeId} with the ID ${event.damageSource?.damagingEntity
                                 ?.id}${tryget(() => event.damageSource.damagingEntity
-                                    .nameTag != ""
+                                    ?.nameTag != ""
                                     ? ' and the name tag "' +
                                     event.damageSource
-                                        .damagingEntity.nameTag +
+                                        .damagingEntity?.nameTag +
                                     '"'
                                     : ""
                                 )}`}${tryget(
                                     () => " in " +
                                         dimensionTypeDisplayFormatting[event.damageSource.damagingEntity
-                                            .dimension.id] +
+                                            ?.dimension.id as keyof typeof dimensionTypeDisplayFormatting] +
                                         " at " +
                                         vTStr(
                                             event.damageSource.damagingEntity
@@ -78,7 +78,7 @@ subscribedEvents.afterEntityHurt = world.afterEvents.entityHurt.subscribe(
                         )}`}${tryget(
                             () => " in " +
                                 dimensionTypeDisplayFormatting[event.damageSource.damagingProjectile
-                                    .dimension.id] +
+                                    .dimension.id as keyof typeof dimensionTypeDisplayFormatting] +
                                 " at " +
                                 vTStr(
                                     event.damageSource.damagingProjectile

@@ -62,7 +62,7 @@ globalThis.JSONParse = function JSONParse(
         }
     );
 
-    function recursiveFind(a) {
+    function recursiveFind(a: string | {[k: string|number|symbol]: any}) {
         if (a instanceof Array) {
             let b = a;
             b.forEach((v, i) => {
@@ -78,12 +78,12 @@ globalThis.JSONParse = function JSONParse(
             a = b;
 
             {
-                let b = a;
-                !!b.forEach((va, i) => {
+                let b = a as any[];
+                b.forEach((va: string, i: string | number) => {
                     if (String(va).match(
                         /^{{"{{(Infinity|NaN|-Infinity|undefined|\-?\d+n)}}"}}$/
                     )) {
-                        b[i] = va.replace(
+                        b[Number(i)] = va.replace(
                             /^(?:{{"{{)(Infinity|NaN|-Infinity|undefined|\-?\d+n)(?:}}"}})$/g,
                             "{{$1}}"
                         );

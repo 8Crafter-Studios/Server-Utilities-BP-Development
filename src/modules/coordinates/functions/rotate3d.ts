@@ -1,6 +1,6 @@
 import { world } from "@minecraft/server";
 
-export function rotate3d(points, pitchb, rollb, yawb) {
+export function rotate3d(points: number[], pitchb: number, rollb: number, yawb: number) {
     let pitch = pitchb * (Math.PI / 180);
     let roll = rollb * (Math.PI / 180);
     let yaw = yawb * (Math.PI / 180);

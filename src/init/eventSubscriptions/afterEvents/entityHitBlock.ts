@@ -1,4 +1,4 @@
-import { world, EntityInventoryComponent, Player } from "@minecraft/server";
+import { world, EntityInventoryComponent, Player, Block } from "@minecraft/server";
 import { debugAction } from "modules/main/functions/debugAction";
 
 subscribedEvents.afterEntityHitBlock =
@@ -21,7 +21,7 @@ subscribedEvents.afterEntityHitBlock =
             event.damagingEntity.getComponent(
                 "minecraft:inventory"
             ) as EntityInventoryComponent
-        ).container.getItem(
+        ).container?.getItem(
             (event.damagingEntity as Player).selectedSlotIndex
         )?.typeId === "andexdb:debug_stick") {
             debugAction(
@@ -35,13 +35,13 @@ subscribedEvents.afterEntityHitBlock =
             event.damagingEntity.getComponent(
                 "minecraft:inventory"
             ) as EntityInventoryComponent
-        ).container.getItem(
+        ).container?.getItem(
             (event.damagingEntity as Player).selectedSlotIndex
         )?.typeId === "andexdb:liquid_clipped_debug_stick") {
             debugAction(
                 event.damagingEntity.getBlockFromViewDirection({
                     includeLiquidBlocks: true,
-                }).block,
+                })?.block as Block,
                 event.damagingEntity as Player,
                 1,
                 Number(event.damagingEntity.isSneaking)

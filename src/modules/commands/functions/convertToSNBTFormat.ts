@@ -1,7 +1,7 @@
-export function convertToSNBTFormat(parsedNBT) {
+export function convertToSNBTFormat(parsedNBT: { structure: { block_indices: any[][]; palette: { default: { block_palette: any[]; }; }; }; size: number[]; }) {
     //var blocks = []
-    var blocksb = [];
-    parsedNBT.structure.block_indices[0].forEach((b, i) => b != -1
+    var blocksb: { pos: number[]; state: any; }[] = [];
+    parsedNBT.structure.block_indices[0].forEach((b: number, i: number) => b != -1
         ? blocksb.push({
             pos: [
                 i % parsedNBT.size[2],
@@ -35,7 +35,7 @@ export function convertToSNBTFormat(parsedNBT) {
 
     return {
         blocks: blocksb,
-        palette: parsedNBT.structure.palette.default.block_palette.map((v) => ({
+        palette: parsedNBT.structure.palette.default.block_palette.map((v: { name: any; states: any; }) => ({
             Name: v.name,
             Properties: v.states,
         })),

@@ -375,7 +375,7 @@ Object.defineProperties(String.prototype, {
         writable: true,
     },
 });
-export const exports_5603749806156139082470132985463298047098135609812364098 =
+export const exports_5603749806156139082470132985463298047098135609812364098: undefined =
     undefined;
 declare global {
     interface String {

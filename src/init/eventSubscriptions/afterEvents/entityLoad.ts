@@ -28,7 +28,7 @@ subscribedEvents.afterEntityLoad = world.afterEvents.entityLoad.subscribe(
                     `§r§f[§l§dServer§r§f]${world.getDynamicProperty("serverNotificationSpacer") ??
                     ""}[§eentityLoad§r] Entity of type ${event.entity.typeId} with the ID ${event.entity.id}${event.entity.nameTag != ""
                         ? ' and the name "' + event.entity.nameTag + '"'
-                        : ""} was loaded in ${dimensionTypeDisplayFormatting[event.entity.dimension.id]} at ${vTStr(event.entity.location)}. `
+                        : ""} was loaded in ${dimensionTypeDisplayFormatting[event.entity.dimension.id as keyof typeof dimensionTypeDisplayFormatting]} at ${vTStr(event.entity.location)}. `
                 );
                 let pn = new PlayerNotifications(p);
                 srun(() => p.playSound(

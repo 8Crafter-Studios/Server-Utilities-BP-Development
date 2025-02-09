@@ -102,8 +102,8 @@ function extractCustomPatternType(str: string) {
                 mode = "sequence";
             }
             let type = match.trim();
-            let weight = null;
-            let states = null;
+            let weight: number = null;
+            let states: Record<string, string | number | boolean> = null;
 
             // Extract chance if present
             const weightMatch = type.match(/[%*]{1,2}(\d+)(?=[\s\n]*$|\[|\{)/);

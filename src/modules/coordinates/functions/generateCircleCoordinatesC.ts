@@ -1,6 +1,6 @@
 import type { Vector3 } from "@minecraft/server";
 
-export function generateCircleCoordinatesC(centerX, centerY, centerZ, radius) {
+export function generateCircleCoordinatesC(centerX: number, centerY: any, centerZ: number, radius: number) {
     const coordinates = [] as Vector3[];
     const diameter = radius * 2;
 

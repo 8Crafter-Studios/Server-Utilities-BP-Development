@@ -86,7 +86,7 @@ subscribedEvents.beforeExplosion = world.beforeEvents.explosion.subscribe(
                                 ? "Triggered explosion"
                                 : "Explosion occured"
                         } in ${
-                            dimensionTypeDisplayFormatting[event.dimension.id]
+                            dimensionTypeDisplayFormatting[event.dimension.id as keyof typeof dimensionTypeDisplayFormatting]
                         }${
                             event.getImpactedBlocks().length == 0
                                 ? ""

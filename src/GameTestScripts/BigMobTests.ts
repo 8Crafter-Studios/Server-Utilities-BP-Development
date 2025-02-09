@@ -8,7 +8,7 @@ const BIGMOB_REQUIRE = false;
 
 const MOBTOTEST = ["zoglin", "ravager", "iron_golem", "spider", "horse"];
 
-function _descending(test, wallSide, entityType) {
+function _descending(test: GameTest.Test, wallSide: string, entityType: string) {
   const zOffset = wallSide == "RIGHT" ? -0.25 : 0.25;
   const spawnType = "minecraft:" + entityType;
   const mob = test.spawnWithoutBehaviorsAtLocation(spawnType, { x: 0.5, y: 6, z: 1.5 + zOffset });
@@ -17,7 +17,7 @@ function _descending(test, wallSide, entityType) {
   test.succeedWhenEntityPresent(spawnType, targetPos, true);
 }
 
-function createDescendingTest(wallSide, entityType) {
+function createDescendingTest(wallSide: string, entityType: string) {
   const structureName = "BigMobTests:altitude_change_wall_on_" + wallSide.toLowerCase();
   const testName = "altitude_change_wall_on_" + wallSide.toLowerCase() + "_descend_" + entityType;
 
@@ -45,7 +45,7 @@ function createDescendingTest(wallSide, entityType) {
   }
 }
 
-function _ascending(test, wallSide, entityType) {
+function _ascending(test: GameTest.Test, wallSide: string, entityType: string) {
   const spawnType = "minecraft:" + entityType;
   const targetPos = { x: 0, y: 6, z: 1 };
   const targetLocPos = { x: 0.5, y: 6, z: 1.5 };
@@ -55,7 +55,7 @@ function _ascending(test, wallSide, entityType) {
   test.succeedWhenEntityPresent(spawnType, targetPos, true);
 }
 
-function createAscendingTest(wallSide, entityType) {
+function createAscendingTest(wallSide: string, entityType: string) {
   const structureName = "BigMobTests:altitude_change_wall_on_" + wallSide.toLowerCase();
   const testName = "altitude_change_wall_on_" + wallSide.toLowerCase() + "_ascend_" + entityType;
 

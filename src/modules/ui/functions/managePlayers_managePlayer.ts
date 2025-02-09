@@ -147,7 +147,7 @@ export async function managePlayers_managePlayer(
                     }
                     break;
                 case 2:
-                    let slotsArray = [];
+                    let slotsArray: string[] = [];
                     let text = "";
                     if (
                         semver.satisfies(
@@ -289,10 +289,10 @@ export async function managePlayers_managePlayer(
                         const bc = block.getComponent("inventory").container;
                         const bc2 = block2.getComponent("inventory").container;
                         for (let i = 0; i < 27; i++) {
-                            bc.setItem(i, items[i]);
+                            bc.setItem(i, items[i as keyof typeof items]);
                         }
                         for (let i = 27; i < 36; i++) {
-                            bc2.setItem(i - 27, items[i]);
+                            bc2.setItem(i - 27, items[i as keyof typeof items]);
                         }
                         for (let i = 0; i < 6; i++) {
                             bc2.setItem(i + 9, items[EquipmentSlots[i]]);

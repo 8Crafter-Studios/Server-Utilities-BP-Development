@@ -35,7 +35,7 @@ subscribedEvents.afterEntitySpawn = world.afterEvents.entitySpawn.subscribe(
                         p,
                         `§r§f[§l§dServer§r§f]${world.getDynamicProperty(
                             "serverNotificationSpacer"
-                        ) ?? ""}[§eentitySpawn§r] Entity of type ${event.entity.typeId} with the id ${event.entity.id} was spawned in ${dimensionTypeDisplayFormatting[event.entity?.dimension?.id]} at ${JSON.stringify(
+                        ) ?? ""}[§eentitySpawn§r] Entity of type ${event.entity.typeId} with the id ${event.entity.id} was spawned in ${dimensionTypeDisplayFormatting[event.entity?.dimension?.id as keyof typeof dimensionTypeDisplayFormatting]} at ${JSON.stringify(
                             event.entity?.location
                         )} with the cause "${event.cause}". `
                     );

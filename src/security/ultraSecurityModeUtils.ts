@@ -13,10 +13,10 @@ import type { command } from "modules/commands/classes/command";
 
 let ownerUsingDiablePermissionsDebug = false;
 
-const deepFreeze = (obj: object) => {
+const deepFreeze = <T extends any>(obj: T): ReadonlyDeep<T> => {
     if (obj && typeof obj === "object" && !Object.isFrozen(obj)) {
         Object.freeze(obj);
-        Object.getOwnPropertyNames(obj).forEach((prop) => deepFreeze(obj[prop]));
+        Object.getOwnPropertyNames(obj).forEach((prop) => deepFreeze(obj[prop as keyof typeof obj]));
     }
     return obj;
 };
@@ -971,7 +971,7 @@ export class securityVariables {
         playerPermissions.everyone.forEach((p) => {
             if(hasPermission) return;
             if (Object.keys(permissionPresetMap)?.includes(p)) {
-                if (playerPermissions[permissionPresetMap[p]]?.includes(perm.id) == true) {
+                if (playerPermissions[permissionPresetMap[p as keyof typeof permissionPresetMap]]?.includes(perm.id) == true) {
                     hasPermission = true;
                     return;
                 }
@@ -981,7 +981,7 @@ export class securityVariables {
             playerPermissions[playerId].forEach((p) => {
                 if(hasPermission) return;
                 if (Object.keys(permissionPresetMap)?.includes(p)) {
-                    if (playerPermissions[permissionPresetMap[p]]?.includes(perm.id) == true) {
+                    if (playerPermissions[permissionPresetMap[p as keyof typeof permissionPresetMap]]?.includes(perm.id) == true) {
                         hasPermission = true;
                         return;
                     }

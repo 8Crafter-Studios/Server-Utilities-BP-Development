@@ -15,7 +15,7 @@ export async function generateNBTFileD(
     location: DimensionLocation,
     nbt: any,
     player: Player
-) {
+): Promise<void> {
     /*
     generateTickingAreaFillCoordinatesC(player.location, (()=>{let a = new CompoundBlockVolume(); a.pushVolume({volume: new BlockVolume(Object.assign(location, {y: 320}),Vector3Utils.add(location, Object.assign(Vector3Utils.scale(VECTOR3_ONE, 320), {y: 0})))}); return a})(), player.dimension).then(tac=>{*/ try {
         let id = "andexdbmapartloader:" + Date.now();
@@ -36,7 +36,7 @@ export async function generateNBTFileD(
                     generateNBTFileE(location, nbt);
                     break;
                 case "supercmprsnbt":
-                    generateNBTFileF(location, await unsuperCompressG(nbt));
+                    generateNBTFileF(location, await unsuperCompressG(nbt) as any);
                     break;
                 case "supercmprbnbt":
                     pasend(
@@ -45,20 +45,40 @@ export async function generateNBTFileD(
                             await completeGenerator(
                                 generateNBTFileEGG(
                                     location,
-                                    await unsuperCompressG(nbt)
+                                    await unsuperCompressG(nbt) as any
                                 )
                             )
                         ).return
                     );
                     break;
                 case "ultracmprsnbt":
-                    generateNBTFileF(location, unultraCompress(nbt));
+                    generateNBTFileF(location, unultraCompress<{
+                        block_indices: string;
+                        block_palette: {
+                            name: string;
+                            states?: {
+                                [stateName: string]: string | number | boolean;
+                            };
+                        }[];
+                        size: [x: number, y: number, z: number];
+                        nbt_type: "cmprsnbt";
+                    }>(nbt));
                     break;
                 case "ultracmprbnbt":
-                    generateNBTFileE(location, unultraCompress(nbt));
+                    generateNBTFileE(location, unultraCompress<{
+                        block_indices: string;
+                        block_palette: {
+                            name: string;
+                            states?: {
+                                [stateName: string]: string | number | boolean;
+                            };
+                        }[];
+                        size: [x: number, y: number, z: number];
+                        nbt_type: "cmprbnbt";
+                    }>(nbt));
                     break;
                 case "snbt":
-                    generateNBTFileF(location, compressJavaNBTData(nbt));
+                    generateNBTFileF(location, compressJavaNBTData(nbt) as any);
                     break;
                 case "nbt":
                     generateNBTFileF(

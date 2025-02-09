@@ -9,7 +9,7 @@ export enum enchantableComponentTypeEnum {
     "minecraft:addEnchantments" = "addEnchantments",
     "remove" = "removeEnchantment",
     "minecraft:remove" = "removeEnchantment",
-    "removeEnchantments" = "removeEnchantment",
+    "removeEnchantment" = "removeEnchantment",
     "minecraft:removeEnchantments" = "removeEnchantment",
     "clear" = "removeAllEnchantments",
     "minecraft:clear" = "removeAllEnchantments",

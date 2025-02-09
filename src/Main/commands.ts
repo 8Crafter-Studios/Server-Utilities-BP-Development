@@ -1,26 +1,30 @@
+import type { ChatSendBeforeEvent, Player } from "@minecraft/server";
+import type { command, executeCommandPlayerW } from "modules/commands";
+import type { commands } from "modules/commands_list";
+
 export const cmdsmetaimport = import.meta;
 //globalThis.modules={main, coords, cmds, bans, uis, playersave, spawnprot, mcMath}
 export function cmdsEval(
     x: string,
-    eventData?,
-    bypassChatInputRequests?,
-    runreturn?,
-    returnBeforeChatSend?,
-    returnBeforeChatCommandsOrChatSend?,
-    event?,
-    player?,
-    sendToPlayers?,
-    newMessage?,
-    switchTest?,
-    switchTestB?,
-    commanda?
+    eventData?: ChatSendBeforeEvent,
+    bypassChatInputRequests?: boolean,
+    runreturn?: boolean,
+    returnBeforeChatSend?: boolean,
+    returnBeforeChatCommandsOrChatSend?: boolean,
+    event?: ChatSendBeforeEvent,
+    player?: Player,
+    sendToPlayers?: Player[],
+    newMessage?: string,
+    switchTest?: string,
+    switchTestB?: string,
+    commanda?: command<"built-in"|"custom"|"unknown">|typeof commands[number]|{ type: string; }
 ) {
     return eval(x);
 }
 export function indirectCmdsEval(x: string) {
     return eval?.(x);
 }
-export function cmdsRun(x: (...args) => any, ...args) {
+export function cmdsRun(x: (...args: any[]) => any, ...args: any[]) {
     return x(...args);
 }
 /*
@@ -33,9 +37,9 @@ export let abcdefgh = escapeRegExp.arguments*/
 
 
 function JSONify(obj: object) {
-    var o = {};
+    var o: object = {};
     for (var i in obj) {
-        o['"' + i + '"'] = obj[i]; // make the quotes
+        o['"' + i + '"' as keyof typeof o] = obj[i as keyof typeof obj]; // make the quotes
     }
     return o;
 }

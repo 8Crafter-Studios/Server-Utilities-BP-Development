@@ -1,6 +1,6 @@
 {
   "name": "debug-sticks",
-  "version": "1.29.0-preview.20+BUILD.1",
+  "version": "1.31.0-preview.20+BUILD.1",
   "description": "",
   "main": "scripts/Main.js",
   "scripts": {
@@ -33,6 +33,7 @@
     "simplex-noise": "^4.0.3"
   },
   "devDependencies": {
+    "@types/semver": "^7.5.8",
     "esbuild": "0.20.2"
   }
 }

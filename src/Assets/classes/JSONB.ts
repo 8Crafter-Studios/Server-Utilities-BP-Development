@@ -39,7 +39,7 @@ declare global {
     var rx_escapable = /[\\"\u0000-\u001f\u007f-\u009f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g;
     var rx_dangerous = /[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g;
 
-    function f(n) {
+    function f(n: number) {
         // Format integers to have at least two digits.
         return (n < 10)
             ? "0" + n
@@ -69,7 +69,7 @@ declare global {
                     + f(this.getUTCSeconds())
                     + "Z"
                 )
-                : null;
+                : null as never;
         };/*
 
         Boolean.prototype.toJSON = this_value;
@@ -77,13 +77,13 @@ declare global {
         String.prototype.toJSON = this_value;*/
     }
 
-    var gap;
-    var indent;
-    var meta;
-    var rep;
+    var gap: string;
+    var indent: string;
+    var meta: {[key: string]: string};
+    var rep: (string | number)[] | ((this: any, key: string, value: any) => any) | null | undefined;
 
 
-    function quote(string) {
+    function quote(string: string) {
 
 // If the string contains no control characters, no quote characters, and no
 // backslash characters, then we can safely slap some quotes around it.
@@ -102,7 +102,7 @@ declare global {
     }
 
 
-    function str(key, holder, options: Parameters<typeof JSONB.stringify>[3]) {
+    function str(key: string | number, holder: any, options: Parameters<typeof JSONB.stringify>[3]): string | undefined {
 
 // Produce a string from holder[key].
 
@@ -113,7 +113,7 @@ declare global {
         var mind = gap;
         var partial;
         var value = holder[key] as any|unknown|null;
-        if(options.get){
+        if(options?.get){
             if(Object.hasOwn(holder, "__lookupGetter__")?!!holder?.__lookupGetter__(key):false){
                 if(options.set){
                     if(!!holder.__lookupSetter__(key)){
@@ -129,7 +129,7 @@ declare global {
                     value = {set: holder.__lookupSetter__(key)}
                 }
             }
-        }else if(options.set){
+        }else if(options?.set){
             if(Object.hasOwn(holder, "__lookupSetter__")?!!holder.__lookupSetter__(key):false){
                 value = {set: holder.__lookupSetter__(key)}
             }
@@ -149,7 +149,7 @@ declare global {
 // obtain a replacement value.
 
         if (typeof rep === "function") {
-            value = rep.call(holder, key, value);
+            value = rep.call(holder, key.toString(), value);
         }
 
 // What happens next depends on the value's type.
@@ -165,25 +165,25 @@ declare global {
             return (isFinite(value))
                 ? String(value)
                 : value==Infinity
-                    ? options.Infinity??true
+                    ? options?.Infinity??true
                         ? "Infinity"
                         : "null"
                     : value==-Infinity
-                        ? options.NegativeInfinity??true
+                        ? options?.NegativeInfinity??true
                             ? "-Infinity"
                             : "null"
                         : Number.isNaN(value)
-                            ? options.NaN??true
+                            ? options?.NaN??true
                                 ? "NaN"
                                 : "null"
                             : "null";
 
         case "bigint":
-            return options.bigint??true?String(value)+"n":"null"
+            return options?.bigint??true?String(value)+"n":"null"
         case "undefined":
-            return options.undefined??true?"undefined":undefined
+            return options?.undefined??true?"undefined":undefined
         case "function":
-            return options.function??false?value.toString():undefined
+            return options?.function??false?value.toString():undefined
         case "boolean":
         // @ts-ignore
         case "null":
@@ -251,7 +251,7 @@ declare global {
                         k = rep[i];
                         v = str(k, value, options);
                         if (v) {
-                            partial.push(quote(k) + (
+                            partial.push(quote(k.toString()) + (
                                 (gap)
                                     ? ": "
                                     : ":"
@@ -302,7 +302,7 @@ declare global {
             "\"": "\\\"",
             "\\": "\\\\"
         };
-        JSONB.stringify = function (value: any, replacer?: ((this: any, key: string, value: any) => any) | (number | string)[] | null, space?: string | number, options: {bigint?: boolean, undefined?: boolean, Infinity?: boolean, NegativeInfinity?: boolean, NaN?: boolean, get?: false, set?: false, function?: boolean, class?: false} = {bigint: true, undefined: true, Infinity: true, NegativeInfinity: true, NaN: true, get: false, set: false, function: false, class: false}) {
+        JSONB.stringify = function (value: any, replacer?: ((this: any, key: string, value: any) => any) | (number | string)[] | null, space?: string | number, options: {bigint?: boolean, undefined?: boolean, Infinity?: boolean, NegativeInfinity?: boolean, NaN?: boolean, get?: false, set?: false, function?: boolean, class?: false} = {bigint: true, undefined: true, Infinity: true, NegativeInfinity: true, NaN: true, get: false, set: false, function: false, class: false}): string {
 
 // The stringify method takes a value and an optional replacer, and an optional
 // space parameter, and returns a JSONB text. The replacer can be a function
@@ -342,7 +342,7 @@ declare global {
 // Make a fake root object containing our value under the key of "".
 // Return the result of stringifying the value.
 
-            return str("", {"": value}, options);
+            return str("", {"": value}, options) as string;
         };
     }
 
@@ -350,7 +350,7 @@ declare global {
 // If the JSONB object does not yet have a parse method, give it one.
 
     if (typeof JSONB.parse !== "function") {
-        JSONB.parse = function (text, reviver, options: {bigint?: boolean, undefined?: boolean, Infinity?: boolean, NegativeInfinity?: boolean, NaN?: boolean, get?: false, set?: false, function?: false, class?: false} = {bigint: true, undefined: true, Infinity: true, NegativeInfinity: true, NaN: true, get: false, set: false, function: false, class: false}) {
+        JSONB.parse = function (text: string, reviver?: (this: any, key: string, value: any) => any, options: {bigint?: boolean, undefined?: boolean, Infinity?: boolean, NegativeInfinity?: boolean, NaN?: boolean, get?: false, set?: false, function?: false, class?: false} = {bigint: true, undefined: true, Infinity: true, NegativeInfinity: true, NaN: true, get: false, set: false, function: false, class: false}) {
 
 // The parse method takes a text and an optional reviver function, and returns
 // a JavaScript value if the text is a valid JSONB text.
@@ -358,7 +358,8 @@ declare global {
             var j;
             var rx_three_b = RegExp(`"[^"\\\\\\n\\r]*"|true|false|null|${options.undefined??true?"undefined|":""}${options.Infinity??true?"Infinity|":""}${options.NegativeInfinity??true?"-Infinity|":""}${options.NaN??true?"NaN|":""}-?\\d+${options.bigint??true?`(?:n|(?:\\.\\d*)?(?:[eE][+\\-]?\\d+)?)`:`(?:\\.\\d*)?(?:[eE][+\\-]?\\d+)?`}`, "g");
 
-            function walk(holder, key) {
+            function walk(holder: any, key: string) {
+                assertIsDefined(reviver);
 
 // The walk method is used to recursively walk the resulting structure so
 // that modifications can be made.

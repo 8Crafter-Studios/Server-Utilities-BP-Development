@@ -36,14 +36,17 @@ export function getParametersFromExtractedJSON(rawdata: RegExpMatchArray[]) {
     };
     let a = rawdata;
     let b = rawdata[0].input;
-    let c = [];
+    let c: {
+        t: "json" | "non-json";
+        v: any;
+    }[] = [];
     c.push(...getStringsFromString(b.substring(0, (a[0] as any)?.indices[0][0])));
     a.forEach((v, i) => {
-        c.push({ t: "json", v: v[0] });
+        c.push({ t: "json", v: v[0] as any });
         c.push(...getStringsFromString(b.substring((v as any)?.indices[0][1], (a[i + 1] as any)?.indices[0][0] ?? b.length)));
     });
     c;
-    let e = [];
+    let e: { i: number; v: any; }[] = [];
     let d = arrayModifier(c, (cb, i) => arrayModifier((cb.t == "json" ? [cb.v] : String(cb.v).trimStart().trimEnd().split(/\x20+?/g)), v => {
         if (v instanceof Function) {
             return { s: v, v: v.toString() };
@@ -56,9 +59,9 @@ export function getParametersFromExtractedJSON(rawdata: RegExpMatchArray[]) {
             }
         }
     }), false) as { s: string; v: any; }[][];
-    let f = [];
+    let f: any[] = [];
     arrayModifier(d, d => arrayModifier(d, d => d.v)).forEach(d => f.push(...d));
-    let h = [];
+    let h: { s: string; v: any; }[] = [];
     d.forEach(d => h.push(...d));
     return {
         input: a,

@@ -125,7 +125,7 @@ export async function securitySettings(
 
 export async function securitySettings_settingsSelection(
     sourceEntitya: Entity | executeCommandPlayerW | Player
-) {
+): Promise<0|1> {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW
         ? sourceEntitya.player
         : sourceEntitya;
@@ -169,7 +169,7 @@ form.button("Debug Screen", "textures/ui/ui_debug_glyph_color");*/
         .then(async (ra) => {
             let r = ra as ActionFormResponse;
             // This will stop the code when the player closes the form
-            if (r.canceled) return;
+            if (r.canceled) return 1;
 
             let response = r.selection;
             switch (response) {
@@ -221,14 +221,14 @@ form.button("Debug Screen", "textures/ui/ui_debug_glyph_color");*/
                     return 1;
             }
         })
-        .catch((e) => {
-            console.error(e, e.stack);
+        .catch(async (e) => {
+            try{return ((await showMessage(sourceEntity as Player, "§cError", `§c${e} ${e.stack}`, "Back", "Close")).selection==0).toNumber()}catch{console.error(e, e.stack); return 0;};
         });
 }
 
 export async function securitySettings_playersWithPermissions(
     sourceEntitya: Entity | executeCommandPlayerW | Player
-) {
+): Promise<0|1> {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW
         ? sourceEntitya.player
         : sourceEntitya;
@@ -274,7 +274,7 @@ form.button("Debug Screen", "textures/ui/ui_debug_glyph_color");*/
         .then(async (ra) => {
             let r = ra as ActionFormResponse;
             // This will stop the code when the player closes the form
-            if (r.canceled) return;
+            if (r.canceled) return 1;
 
             let response = r.selection;
             switch (response) {
@@ -312,8 +312,8 @@ form.button("Debug Screen", "textures/ui/ui_debug_glyph_color");*/
                     return 1;
             }
         })
-        .catch((e) => {
-            console.error(e, e.stack);
+        .catch(async (e) => {
+            try{return ((await showMessage(sourceEntity as Player, "§cError", `§c${e} ${e.stack}`, "Back", "Close")).selection==0).toNumber()}catch{console.error(e, e.stack); return 0;};
         });
 }
 
@@ -623,7 +623,7 @@ export async function securitySettings_playersWithPermissions_permission(
 
 export async function securitySettings_playersWithPermissions_UltraSecurityMode(
     sourceEntitya: Entity | executeCommandPlayerW | Player
-) {
+): Promise<0|1> {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW
         ? sourceEntitya.player
         : sourceEntitya;
@@ -680,8 +680,8 @@ form.button("Debug Screen", "textures/ui/ui_debug_glyph_color");*/
                     break;
             }
         })
-        .catch((e) => {
-            console.error(e, e.stack);
+        .catch(async (e) => {
+            return ((await showMessage(sourceEntity as Player, "§cError", `§c${e} ${e.stack}`, "Back", "Close")).selection==0).toNumber()
         });
 }
 

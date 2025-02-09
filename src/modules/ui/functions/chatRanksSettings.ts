@@ -69,7 +69,7 @@ export async function chatRanksSettings(
             rankModes[String(
                 world.getDynamicProperty("andexdbSettings:rankMode") ??
                 "custom_simple"
-            )]
+            ) as keyof typeof rankModes]
         )
     );
     form2.textField(

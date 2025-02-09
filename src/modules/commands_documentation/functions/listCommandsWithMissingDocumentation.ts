@@ -28,18 +28,18 @@ export function listCommandsWithMissingDocumentation(options: {onlyFunctional?: 
             flags: boolean;
             list: boolean;
         };
-        if(commandsyntaxes[c.commandName] === undefined){
+        if(commandsyntaxes[c.commandName as keyof typeof commandsyntaxes] === undefined){
             out.syntax = true;
         };
-        if(commanddescriptions[c.commandName] === undefined){
+        if(commanddescriptions[c.commandName as keyof typeof commanddescriptions] === undefined){
             out.description = true;
         };
-        if(/\[-[a-zA-Z0-9]+\]/.test(commandsyntaxes[c.commandName] ?? JSON.stringify(c.formats ?? "") ?? "") && commandflags[c.commandName] === undefined){
+        if(/\[-[a-zA-Z0-9]+\]/.test(commandsyntaxes[c.commandName as keyof typeof commandsyntaxes] ?? JSON.stringify(c.formats ?? "") ?? "") && commandflags[c.commandName as keyof typeof commandflags] === undefined){
             out.flags = true;
-        }else if(commandflags[c.commandName] !== undefined){
-            if([...new Set(((commandsyntaxes[c.commandName] as string ?? JSON.stringify(c.formats ?? "") ?? "").match(/(?<=\[-)[a-zA-Z0-9]+(?=\])/g) ?? []).join("").split(""))].some(v=>!(commandflags[c.commandName] as string).includes("\n" + v + ": ") || (commandflags[c.commandName] as string).startsWith(v + ": "))){
+        }else if(commandflags[c.commandName as keyof typeof commandflags] !== undefined){
+            if([...new Set(((commandsyntaxes[c.commandName as keyof typeof commandsyntaxes] as string ?? JSON.stringify(c.formats ?? "") ?? "").match(/(?<=\[-)[a-zA-Z0-9]+(?=\])/g) ?? []).join("").split(""))].some(v=>!(commandflags[c.commandName as keyof typeof commandflags] as string).includes("\n" + v + ": ") || (commandflags[c.commandName as keyof typeof commandflags] as string).startsWith(v + ": "))){
                 out.flags = true;
-                out.missingFlagsList = [...new Set(((commandsyntaxes[c.commandName] as string ?? JSON.stringify(c.formats ?? "") ?? "").match(/(?<=\[-)[a-zA-Z0-9]+(?=\])/g) ?? []).join("").split(""))].filter(v=>!(commandflags[c.commandName] as string).includes("\n" + v + ": ") || (commandflags[c.commandName] as string).startsWith(v + ": ")).join("")
+                out.missingFlagsList = [...new Set(((commandsyntaxes[c.commandName as keyof typeof commandsyntaxes] as string ?? JSON.stringify(c.formats ?? "") ?? "").match(/(?<=\[-)[a-zA-Z0-9]+(?=\])/g) ?? []).join("").split(""))].filter(v=>!(commandflags[c.commandName as keyof typeof commandflags] as string).includes("\n" + v + ": ") || (commandflags[c.commandName as keyof typeof commandflags] as string).startsWith(v + ": ")).join("")
             }
         };
         if(!helpCommandChatCommandsList.includes("\n." + (c.commandName.startsWith("\\\\") ? c.commandName.slice(1) : c.commandName) + " ")){

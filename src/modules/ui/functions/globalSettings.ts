@@ -1,4 +1,4 @@
-import { Entity, Player, world } from "@minecraft/server";
+import { Entity, Player, world, type Vector3 } from "@minecraft/server";
 import { ModalFormData, ModalFormResponse } from "@minecraft/server-ui";
 import { config } from "init/classes/config";
 import { forceShow } from "modules/ui/functions/forceShow";
@@ -8,7 +8,8 @@ import { securityVariables } from "security/ultraSecurityModeUtils";
 import { showMessage } from "modules/utilities/functions/showMessage";
 
 export async function globalSettings(sourceEntitya: Entity | executeCommandPlayerW | Player) {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya
+        assertIsDefined(sourceEntity);;
     if (securityVariables.ultraSecurityModeEnabled) {
         if (securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.accessSettings") == false) {
             const r = await showMessage(
@@ -61,9 +62,9 @@ export async function globalSettings(sourceEntitya: Entity | executeCommandPlaye
         "§l§fgametestStructureDefaultSpawnLocation§r§f\nThe default spawn location for the gametest structures, this is used when spawning in no ai entities or spawning in simulated players",
         "x y z",
         cullEmpty([
-            (world.getDynamicProperty("andexdbSettings:gametestStructureDefaultSpawnLocation") ?? {})["x"],
-            (world.getDynamicProperty("andexdbSettings:gametestStructureDefaultSpawnLocation") ?? {})["y"],
-            (world.getDynamicProperty("andexdbSettings:gametestStructureDefaultSpawnLocation") ?? {})["z"],
+            ((world.getDynamicProperty("andexdbSettings:gametestStructureDefaultSpawnLocation") ?? {}) as {x?: number|null|undefined, y?: number|null|undefined, z?: number|null|undefined})["x"],
+            ((world.getDynamicProperty("andexdbSettings:gametestStructureDefaultSpawnLocation") ?? {}) as {x?: number|null|undefined, y?: number|null|undefined, z?: number|null|undefined})["y"],
+            ((world.getDynamicProperty("andexdbSettings:gametestStructureDefaultSpawnLocation") ?? {}) as {x?: number|null|undefined, y?: number|null|undefined, z?: number|null|undefined})["z"],
         ]).join(" ")
     );
     form2.textField(

@@ -66,10 +66,10 @@ export class config {
     }
     static set spawnCommandLocation(spawnCommandLocation) {
         world.setDynamicProperty("andexdbSettings:spawnCommandLocation", JSON.stringify({
-            x: spawnCommandLocation.x,
-            y: spawnCommandLocation.y,
-            z: spawnCommandLocation.z,
-            dimension: spawnCommandLocation.dimension ?? overworld,
+            x: spawnCommandLocation?.x ?? null,
+            y: spawnCommandLocation?.y ?? null,
+            z: spawnCommandLocation?.z ?? null,
+            dimension: spawnCommandLocation?.dimension ?? overworld,
         }));
     }
     static get worldBorder() {
@@ -437,7 +437,7 @@ export class config {
                         world.setDynamicProperty("andexdbShopSystemSettings:player.enabled", enabled ?? false);
                     },
                     get maxShopsPerPlayer() {
-                        return (world.getDynamicProperty("andexdbShopSystemSettings:player.maxShopsPerPlayer") ?? 5).toString().toNumber();
+                        return (world.getDynamicProperty("andexdbShopSystemSettings:player.maxShopsPerPlayer") ?? 5).toString().toNumber() ?? 5;
                     },
                     set maxShopsPerPlayer(maxShopsPerPlayer) {
                         world.setDynamicProperty("andexdbShopSystemSettings:player.maxShopsPerPlayer", maxShopsPerPlayer ?? 5);
@@ -587,10 +587,10 @@ export class config {
             },
             get nameTagTemplateString() {
                 return String(world.getDynamicProperty("andexdbSettings:nameTagTemplateString") ??
-                    '${(showDimension ? `[${dimension}§r§f] ` : "")}${rank} ${nameb}${(showHealth ? `§r§f[${currentHealth}/${maxHealth}] ` : "")}');
+                    '${(showDimension ? `[${dimension}§r§f] ` : "")}${rank} ${nameb}${(showHealth ? `§r§f [${currentHealth}/${maxHealth}]` : "")}');
             },
             set nameTagTemplateString(nameTagTemplateString) {
-                world.setDynamicProperty("andexdbSettings:nameTagTemplateString", nameTagTemplateString ?? '${(showDimension ? `[${dimension}§r§f] ` : "")}${rank} ${nameb}${(showHealth ? `§r§f[${currentHealth}/${maxHealth}] ` : "")}');
+                world.setDynamicProperty("andexdbSettings:nameTagTemplateString", nameTagTemplateString ?? '${(showDimension ? `[${dimension}§r§f] ` : "")}${rank} ${nameb}${(showHealth ? `§r§f [${currentHealth}/${maxHealth}]` : "")}');
             },
             get defaultRankTemplateString() {
                 return String(world.getDynamicProperty("andexdbSettings:defaultRankTemplateString") ?? "");

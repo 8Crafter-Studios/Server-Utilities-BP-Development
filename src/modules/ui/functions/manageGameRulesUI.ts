@@ -43,16 +43,16 @@ export async function manageGameRulesUI(
     const ruleNames = Object.getOwnPropertyNames(GameRules.prototype)
         .filter((r) => r != "constructor")
         .sort(
-            (a, b) => -+(typeof world.gameRules[a] != typeof world.gameRules[b]) *
-                (2 * +(typeof world.gameRules[a] == "number") - 1)
+            (a, b) => -+(typeof world.gameRules[a as keyof typeof world.gameRules] != typeof world.gameRules[b as keyof typeof world.gameRules]) *
+                (2 * +(typeof world.gameRules[a as keyof typeof world.gameRules] == "number") - 1)
         );
     const ruleValues = world.gameRules;
     form2.title("Manage Game Rules");
     ruleNames.forEach((r) => {
-        if (typeof ruleValues[r] == "number") {
-            form2.textField(r, "number", String(ruleValues[r]));
+        if (typeof ruleValues[r as keyof typeof world.gameRules] == "number") {
+            form2.textField(r, "number", String(ruleValues[r as keyof typeof world.gameRules]));
         } else {
-            form2.toggle(r, Boolean(ruleValues[r]));
+            form2.toggle(r, Boolean(ruleValues[r as keyof typeof world.gameRules]));
         }
     });
     form2.submitButton("Save");
@@ -62,11 +62,11 @@ export async function manageGameRulesUI(
             if (t.canceled) return 1 as const;
             try {
                 t.formValues.forEach((v, i) => {
-                    if (ruleValues[ruleNames[i]] != v) {
-                        ruleValues[ruleNames[i]] =
-                            typeof ruleValues[ruleNames[i]] == "number"
+                    if (ruleValues[ruleNames[i] as keyof typeof world.gameRules] != v) {
+                        (ruleValues[ruleNames[i] as keyof typeof world.gameRules] as number | boolean) =
+                            typeof ruleValues[ruleNames[i] as keyof typeof world.gameRules] == "number"
                                 ? Number(v)
-                                : v;
+                                : v as boolean;
                     }
                 });
             } catch (e) {

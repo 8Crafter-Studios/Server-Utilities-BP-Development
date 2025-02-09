@@ -9,5 +9,5 @@ export * from "./functions/getCommandHelpPageDebug"
 export * from "./functions/getCommandHelpPageDebugPlus"
 export * from "./functions/getCommandHelpPageExtra"
 export * from "./functions/CMDHelpMB"
-export const exports_5603749806156139082470132985463298047098135609812364098 =
+export const exports_5603749806156139082470132985463298047098135609812364098: undefined =
     undefined;

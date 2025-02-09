@@ -59,7 +59,7 @@ subscribedEvents.afterPlayerInteractWithEntity =
                             ) ?? ""}[§eexplosiveEntityInteraction§r] ${!!event.player
                                 ? `${event.player.name ??
                                 event.player.nameTag} interacted with explosive entity of type "${event.target.typeId}"`
-                                : `Explosive entity of type "${event.target.typeId}" was interacted with`} in ${dimensionTypeDisplayFormatting[event.target.dimension.id]} at ${vTStr(event.target.location)}${!!event.itemStack
+                                : `Explosive entity of type "${event.target.typeId}" was interacted with`} in ${dimensionTypeDisplayFormatting[event.target.dimension.id as keyof typeof dimensionTypeDisplayFormatting]} at ${vTStr(event.target.location)}${!!event.itemStack
                                 ? ` using ${event.itemStack?.typeId}`
                                 : ""}. `
                         );

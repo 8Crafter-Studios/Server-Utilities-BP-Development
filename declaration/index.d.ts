@@ -17,6 +17,7 @@ import "GlobalDecorators";
 import mcMath from "@minecraft/math.js";
 import colorCore from "color-core";
 import Decimal from "decimal.js";
+import * as semver from "semver";
 import * as shopmain from "ExtraFeatures/shop_main";
 import * as servershop from "ExtraFeatures/server_shop";
 import * as playershop from "ExtraFeatures/player_shop";
@@ -42,7 +43,7 @@ export declare const modulesMap: {
     colorCore: typeof colorCore;
     Color: typeof colorCore.Color;
     Decimal: typeof Decimal;
-    semver: any;
+    semver: typeof semver;
     "@minecraft/server": typeof mcServer;
     "@minecraft/server-ui": typeof mcServerUi;
     "@minecraft/server-gametest": typeof GameTest;

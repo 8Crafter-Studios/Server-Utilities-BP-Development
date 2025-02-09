@@ -49,6 +49,14 @@ export type CutFirstChars<
   SArray = TakeFirstNElements<Split<S>, N>
 > = Join<SArray extends string[] ? SArray : never>
 
+export type Full<T> = {
+  [P in keyof T]-?: T[P];
+}
+
+export type ReadonlyDeep<T> = {
+  readonly [P in keyof T]: ReadonlyDeep<T[P]>;
+};
+
 export type test1a = [name: number, id: `ID:${number}`, hi: "text"];
 
 declare global {
@@ -101,4 +109,12 @@ declare global {
     N extends number,
     SArray = TakeFirstNElements<Split<S>, N>
     > = Join<SArray extends string[] ? SArray : never>
+
+    type Full<T> = {
+      [P in keyof T]-?: T[P];
+    }
+
+    type ReadonlyDeep<T> = {
+      readonly [P in keyof T]: ReadonlyDeep<T[P]>;
+    };
 }

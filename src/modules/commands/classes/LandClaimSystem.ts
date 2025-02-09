@@ -1,4 +1,4 @@
-import { world, Player, type Vector3 } from "@minecraft/server";
+import { world, Player, type Vector3, type DimensionLocation } from "@minecraft/server";
 import { doBoundingBoxesIntersect } from "modules/coordinates/functions/doBoundingBoxesIntersect";
 import { LandClaim } from "./LandClaim";
 
@@ -53,8 +53,8 @@ export class LandClaimSystem {
             "InteractWithBlock" |
             "EnterArea" |
             "CreateExplosion",
-        player,
-        location
+        player: Player,
+        location: DimensionLocation
     ) { }
     static testIfClaimAreaIsAlreadyClaimed(area: {
         min: Vector3;

@@ -1,3 +1,3 @@
-export function stringifyJSONCompressed(NBTData) {
+export function stringifyJSONCompressed(NBTData: any) {
     return JSON.stringify(NBTData, undefined, "");
 }

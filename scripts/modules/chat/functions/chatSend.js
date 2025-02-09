@@ -629,7 +629,7 @@ export function chatSend(params) {
             let messageTimeStampEnabled = (player.hasTag("chatDisplayTimeStamp") || p.hasTag("chatDisplayTimeStamps") || ((world.getDynamicProperty("andexdbSettings:chatDisplayTimeStamp") ?? false) && !player.hasTag("hideChatDisplayTimeStamp") && !p.hasTag("hideChatDisplayTimeStamps")));
             let timestampenabled = messageTimeStampEnabled;
             let timestamp = messageTimeStampEnabled ? formatTime(new Date(Date.now() + (Number(p.getDynamicProperty("andexdbPersonalSettings:timeZone") ?? world.getDynamicProperty("andexdbSettings:timeZone") ?? 0) * 3600000))) : "";
-            let dimension = dimensionTypeDisplayFormattingE[player.dimension.id];
+            let dimension = dimensionTypeDisplayFormatting[player.dimension.id];
             let namec = name;
             let message = (world.getDynamicProperty("autoEscapeChatMessages") == true) ? newMessage.escapeCharacters(true) : newMessage;
             if (!!messageGradientMode) {

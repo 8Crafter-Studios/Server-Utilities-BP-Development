@@ -42,7 +42,6 @@ export async function fillCone<LiteModeEnabled extends boolean = false>(
           }
         : {
               counter: bigint;
-              done: boolean;
               startTick: number;
               endTick: number;
               startTime: number;
@@ -636,7 +635,6 @@ export async function fillCone<LiteModeEnabled extends boolean = false>(
               }
             : {
                   counter: bigint;
-                  done: boolean;
                   startTick: number;
                   endTick: number;
                   startTime: number;

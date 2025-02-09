@@ -27,13 +27,13 @@ subscribedEvents.afterBlockExplode = world.afterEvents.blockExplode.subscribe(
                 psend(
                     p,
                     `§r§f[§l§dServer§r§f]${world.getDynamicProperty("serverNotificationSpacer") ??
-                    ""}[§eblockExplode§r] Block of type ${event.explodedBlockPermutation.type.id} in ${dimensionTypeDisplayFormatting[event.dimension.id]} at ${vTStr(event.block.location)} was blown up${!!event.source
+                    ""}[§eblockExplode§r] Block of type ${event.explodedBlockPermutation.type.id} in ${dimensionTypeDisplayFormatting[event.dimension.id as keyof typeof dimensionTypeDisplayFormatting]} at ${vTStr(event.block.location)} was blown up${!!event.source
                         ? ` by ${(event.source as Player)?.name ??
                         tryget(() => event.source?.nameTag == ""
                             ? undefined
                             : event.source?.nameTag +
                             "<" +
-                            event.source.id +
+                            event.source?.id +
                             ">"
                         ) ??
                         event.source?.typeId +
