@@ -1,5 +1,6 @@
 import { world, StructureSaveMode, type DimensionLocation, Dimension } from "@minecraft/server";
 import { gwdp } from "init/functions/gwdp";
+import { menuButtonIds } from "modules/ui/constants/menuButtonIds";
 
 /**
  * A class containing the configuration information for the add-on.
@@ -811,6 +812,44 @@ export class config {
     }
     static get ui() {
         return {
+            get menus() {
+                return {
+                    get mainMenu() {
+                        return {
+                            /**
+                             * 
+                             */
+                            get buttons(): (keyof typeof menuButtonIds.mainMenu.buttons)[] {
+                                return JSON.parse(
+                                    String(world.getDynamicProperty("andexdbSettings:maxPlayersPerManagePlayersPage") ?? JSON.stringify(
+                                        (Object.keys(menuButtonIds.mainMenu.buttons) as (keyof typeof menuButtonIds.mainMenu.buttons)[]).sort(
+                                            (a, b)=>
+                                                menuButtonIds.mainMenu.buttons[a].defaultButtonIndex > menuButtonIds.mainMenu.buttons[b].defaultButtonIndex
+                                                ? 1
+                                                : menuButtonIds.mainMenu.buttons[a].defaultButtonIndex < menuButtonIds.mainMenu.buttons[b].defaultButtonIndex ? -1 : 0
+                                        ))
+                                    )
+                                );
+                            },
+                            set buttons(buttonList: (keyof typeof menuButtonIds.mainMenu.buttons)[] | undefined) {
+                                world.setDynamicProperty(
+                                    "andexdbSettings:ui.menus.mainMenu.buttons",
+                                    JSON.stringify(
+                                        buttonList ?? JSON.stringify(
+                                            (Object.keys(menuButtonIds.mainMenu.buttons) as (keyof typeof menuButtonIds.mainMenu.buttons)[]).sort(
+                                                (a, b)=>
+                                                    menuButtonIds.mainMenu.buttons[a].defaultButtonIndex > menuButtonIds.mainMenu.buttons[b].defaultButtonIndex
+                                                    ? 1
+                                                    : menuButtonIds.mainMenu.buttons[a].defaultButtonIndex < menuButtonIds.mainMenu.buttons[b].defaultButtonIndex ? -1 : 0
+                                            )
+                                        )
+                                    )
+                                );
+                            },
+                        };
+                    },
+                };
+            },
             get main() {
                 return {};
             },
@@ -931,7 +970,7 @@ export class config {
                 );
             },
             /**
-             * It is reccommended to leave this set to false.
+             * It is recommended to leave this set to false.
              * @default false
              * @decorator
              * also

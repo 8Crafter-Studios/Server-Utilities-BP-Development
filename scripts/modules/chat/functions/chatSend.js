@@ -13,13 +13,17 @@ export function chatSend(params) {
     if (config.antiSpamSystem.antispamEnabled) {
         if (!player.hasTag("canBypassAntiSpam")) {
             if ( /*
-                globalThis["lastChatMessage" + player.id] == event.message &&*/Date.now() - (globalThis["lastChatTime" + player.id] ?? 0) <
+                globalThis["lastChatMessage" + player.id] == event.message &&*/Date.now() - ((globalThis["msgAmountOfSpam" + player.id] >= config.antiSpamSystem.antispamTriggerMessageCount ? globalThis["antiSpamMuteStartTime" + player.id] : globalThis["lastChatTime" + player.id]) ?? 0) <
                 config.antiSpamSystem.waitTimeAfterAntispamActivation * 1000) {
                 globalThis["msgAmountOfSpam" + player.id] = (globalThis["msgAmountOfSpam" + player.id] ?? 0) + 1;
                 if (globalThis["msgAmountOfSpam" + player.id] >= config.antiSpamSystem.antispamTriggerMessageCount) {
+                    if (globalThis["msgAmountOfSpam" + player.id] == config.antiSpamSystem.antispamTriggerMessageCount || config.antiSpamSystem.restartAntiSpamMuteTimerUponAttemptedMessageSendDuringMute) {
+                        globalThis["antiSpamMuteStartTime" + player.id] = Date.now();
+                    }
                     returnBeforeChatSend = true;
                     event.cancel = true;
-                    player.sendMessage("§cStop Spamming");
+                    const remainingSeconds = (((globalThis["antiSpamMuteStartTime" + player.id] ?? 0) + (config.antiSpamSystem.waitTimeAfterAntispamActivation * 1000) - Date.now()) / 1000).ceil();
+                    player.sendMessage("§cStop Spamming!§r You are muted for " + remainingSeconds + " second" + (remainingSeconds === 1 ? "" : "s") + ".");
                 }
             }
             else {

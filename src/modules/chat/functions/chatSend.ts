@@ -14,13 +14,17 @@ export function chatSend(params: { returnBeforeChatSend: boolean | undefined; pl
     if (config.antiSpamSystem.antispamEnabled) {
         if (!player.hasTag("canBypassAntiSpam")) {
             if ( /*
-                globalThis["lastChatMessage" + player.id] == event.message &&*/Date.now() - (globalThis["lastChatTime" + player.id as keyof globalThis] ?? 0) <
+                globalThis["lastChatMessage" + player.id] == event.message &&*/Date.now() - ((globalThis["msgAmountOfSpam" + player.id as keyof globalThis] >= config.antiSpamSystem.antispamTriggerMessageCount ? globalThis["antiSpamMuteStartTime" + player.id as keyof globalThis] : globalThis["lastChatTime" + player.id as keyof globalThis]) ?? 0) <
                 config.antiSpamSystem.waitTimeAfterAntispamActivation * 1000) {
                 (globalThis["msgAmountOfSpam" + player.id as keyof globalThis] as number) = (globalThis["msgAmountOfSpam" + player.id as keyof globalThis] ?? 0) + 1;
                 if (globalThis["msgAmountOfSpam" + player.id as keyof globalThis] >= config.antiSpamSystem.antispamTriggerMessageCount) {
+                    if (globalThis["msgAmountOfSpam" + player.id as keyof globalThis] == config.antiSpamSystem.antispamTriggerMessageCount || config.antiSpamSystem.restartAntiSpamMuteTimerUponAttemptedMessageSendDuringMute) {
+                        (globalThis["antiSpamMuteStartTime" + player.id as keyof globalThis] as number) = Date.now();
+                    }
                     returnBeforeChatSend = true;
                     event.cancel = true;
-                    player.sendMessage("§cStop Spamming");
+                    const remainingSeconds = (((globalThis["antiSpamMuteStartTime" + player.id as keyof globalThis] ?? 0) + (config.antiSpamSystem.waitTimeAfterAntispamActivation * 1000) - Date.now())/1000).ceil();
+                    player.sendMessage("§cStop Spamming!§r You are muted for " + remainingSeconds + " second" + (remainingSeconds === 1 ? "" : "s") + ".");
                 }
             } else {
                 (globalThis["msgAmountOfSpam" + player.id as keyof globalThis] as number) = 0;

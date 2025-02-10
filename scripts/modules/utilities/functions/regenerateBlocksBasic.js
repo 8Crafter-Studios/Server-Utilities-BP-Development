@@ -49,6 +49,7 @@ export async function regenerateBlocksBasic(corner1, corner2, dimension, radius,
         onlyReplaceAir: options?.onlyReplaceAir ?? true,
         airPriority: options?.airPriority ?? 0.5,
         ignoreNotYetGeneratedAir: options?.ignoreNotYetGeneratedAir ?? true,
+        ignoreNotYetGeneratedBlocks: options?.ignoreNotYetGeneratedBlocks ?? false,
         randomization: options?.randomization ?? 0.2,
         doDistanceBasedPriority: options?.doDistanceBasedPriority ?? true,
         verticalDistancePriority: options?.verticalDistancePriority ?? 1.5,
@@ -76,12 +77,11 @@ export async function regenerateBlocksBasic(corner1, corner2, dimension, radius,
                 weight /= Vector.distance({ x: 0, y: blockLocation.y, z: 0 }, { x: 0, y: surroundingBlock.y, z: 0 }) * opts.verticalDistancePriority + 1;
                 return weight;
             }
-            : opts.ignoreNotYetGeneratedAir
+            : opts.ignoreNotYetGeneratedBlocks
                 ? function calculateWeight(blockLocation, surroundingBlock) {
-                    if (surroundingBlock.typeId == "minecraft:air" &&
-                        ((surroundingBlock.x > blockLocation.x && surroundingBlock.x < maxX) ||
-                            (surroundingBlock.y > blockLocation.y && surroundingBlock.y < maxY) ||
-                            (surroundingBlock.z > blockLocation.z && surroundingBlock.z < maxZ)))
+                    if ((surroundingBlock.x > blockLocation.x && surroundingBlock.x < maxX) ||
+                        (surroundingBlock.y > blockLocation.y && surroundingBlock.y < maxY) ||
+                        (surroundingBlock.z > blockLocation.z && surroundingBlock.z < maxZ))
                         return 0;
                     let weight = 1;
                     weight /=
@@ -91,17 +91,32 @@ export async function regenerateBlocksBasic(corner1, corner2, dimension, radius,
                     weight /= Vector.distance({ x: 0, y: blockLocation.y, z: 0 }, { x: 0, y: surroundingBlock.y, z: 0 }) * opts.verticalDistancePriority + 1;
                     return weight;
                 }
-                : function calculateWeight(blockLocation, surroundingBlock) {
-                    let weight = 1;
-                    if (surroundingBlock.typeId == "minecraft:air")
-                        weight *= opts.airPriority;
-                    weight /=
-                        Vector.distance({ x: blockLocation.x, y: 0, z: blockLocation.z }, { x: surroundingBlock.x, y: 0, z: surroundingBlock.z }) *
-                            opts.horizontalDistancePriority +
-                            1;
-                    weight /= Vector.distance({ x: 0, y: blockLocation.y, z: 0 }, { x: 0, y: surroundingBlock.y, z: 0 }) * opts.verticalDistancePriority + 1;
-                    return weight;
-                };
+                : opts.ignoreNotYetGeneratedAir
+                    ? function calculateWeight(blockLocation, surroundingBlock) {
+                        if (surroundingBlock.typeId == "minecraft:air" &&
+                            ((surroundingBlock.x > blockLocation.x && surroundingBlock.x < maxX) ||
+                                (surroundingBlock.y > blockLocation.y && surroundingBlock.y < maxY) ||
+                                (surroundingBlock.z > blockLocation.z && surroundingBlock.z < maxZ)))
+                            return 0;
+                        let weight = 1;
+                        weight /=
+                            Vector.distance({ x: blockLocation.x, y: 0, z: blockLocation.z }, { x: surroundingBlock.x, y: 0, z: surroundingBlock.z }) *
+                                opts.horizontalDistancePriority +
+                                1;
+                        weight /= Vector.distance({ x: 0, y: blockLocation.y, z: 0 }, { x: 0, y: surroundingBlock.y, z: 0 }) * opts.verticalDistancePriority + 1;
+                        return weight;
+                    }
+                    : function calculateWeight(blockLocation, surroundingBlock) {
+                        let weight = 1;
+                        if (surroundingBlock.typeId == "minecraft:air")
+                            weight *= opts.airPriority;
+                        weight /=
+                            Vector.distance({ x: blockLocation.x, y: 0, z: blockLocation.z }, { x: surroundingBlock.x, y: 0, z: surroundingBlock.z }) *
+                                opts.horizontalDistancePriority +
+                                1;
+                        weight /= Vector.distance({ x: 0, y: blockLocation.y, z: 0 }, { x: 0, y: surroundingBlock.y, z: 0 }) * opts.verticalDistancePriority + 1;
+                        return weight;
+                    };
     for (let x = minX; x <= maxX; x++) {
         for (let y = minY; y <= maxY; y++) {
             for (let z = minZ; z <= maxZ; z++) {

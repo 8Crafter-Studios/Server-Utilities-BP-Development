@@ -5,18 +5,33 @@ export class WorldEditSelection {
     constructor(player: Entity) {
         this.player = player;
     }
-    get pos1() {
+    /**
+     * The first corner of the current selection.
+     * 
+     * It is stored in the player's `pos1` dynamic property.
+     */
+    get pos1(): Vector3 | undefined {
         return this.player.getDynamicProperty("pos1") as Vector3 | undefined;
     }
     set pos1(value: Vector3) {
         this.player.setDynamicProperty("pos1", value);
     }
-    get pos2() {
+    /**
+     * The second corner of the current selection.
+     * 
+     * It is stored in the player's `pos2` dynamic property.
+     */
+    get pos2(): Vector3 | undefined {
         return this.player.getDynamicProperty("pos2") as Vector3 | undefined;
     }
     set pos2(value: Vector3) {
         this.player.setDynamicProperty("pos2", value);
     }
+    /**
+     * The currently selected dimension.
+     * 
+     * It is stored in the player's `posD` dynamic property.
+     */
     get dimension(): Dimension | undefined {
         let value = this.player.getDynamicProperty("posD") as
             | (typeof dimensionsd)[number]
@@ -24,21 +39,7 @@ export class WorldEditSelection {
         if (!!!value) {
             return undefined;
         }
-        return world.getDimension(value);
-    }
-    get minPos() {
-        return {
-            x: Math.min(this.pos1.x, this.pos2.x),
-            y: Math.min(this.pos1.y, this.pos2.y),
-            z: Math.min(this.pos1.z, this.pos2.z),
-        } as Vector3;
-    }
-    get maxPos() {
-        return {
-            x: Math.max(this.pos1.x, this.pos2.x),
-            y: Math.max(this.pos1.y, this.pos2.y),
-            z: Math.max(this.pos1.z, this.pos2.z),
-        } as Vector3;
+        return tryget(()=>world.getDimension(value)) ?? undefined;
     }
     set dimension(value: string | Dimension) {
         let outValue: (typeof dimensionsd)[number] | undefined = undefined;
@@ -56,11 +57,59 @@ export class WorldEditSelection {
         }
         this.player.setDynamicProperty("posD", outValue);
     }
+    /**
+     * The smallest corner of the selection.
+     * 
+     * It gets the minimum values of each of the vectors of the `pos1` and `pos2` properties.
+     */
+    get minPos(): Vector3 | undefined {
+        const p1 = this.pos1;
+        const p2 = this.pos2;
+        if(p1 === undefined || p2 === undefined) return undefined;
+        return {
+            x: Math.min(p1.x, p2.x),
+            y: Math.min(p1.y, p2.y),
+            z: Math.min(p1.z, p2.z),
+        } as Vector3;
+    }
+    /**
+     * The largest corner of the selection.
+     * 
+     * It gets the maximum values of each of the vectors of the `pos1` and `pos2` properties.
+     */
+    get maxPos(): Vector3 | undefined {
+        const p1 = this.pos1;
+        const p2 = this.pos2;
+        if(p1 === undefined || p2 === undefined) return undefined;
+        return {
+            x: Math.max(p1.x, p2.x),
+            y: Math.max(p1.y, p2.y),
+            z: Math.max(p1.z, p2.z),
+        } as Vector3;
+    }
     getSavedSelectionIds() {
         return this.player
             .getDynamicPropertyIds()
             .filter((v) => v.startsWith("savedSelection:"))
             .map((v) => v.slice(15));
+    }
+    getSavedSelections(): {[selectionID: string]: { pos1: Vector3; pos2: Vector3; dimension: (typeof dimensionsd)[number]; }} {
+        return Object.fromEntries(cullUndefined(this.getSavedSelectionIds().map(selectionID=>{
+            if (
+                !!!this.player.getDynamicProperty("savedSelection:" + selectionID)
+            ) {
+                return undefined;
+            }
+            return [selectionID, JSON.parse(
+                String(
+                    this.player.getDynamicProperty("savedSelection:" + selectionID)
+                )
+            ) as {
+                pos1: Vector3;
+                pos2: Vector3;
+                dimension: (typeof dimensionsd)[number];
+            }];
+        })));
     }
     getSavedSelection(selectionID: string) {
         if (
@@ -126,7 +175,14 @@ export class WorldEditSelection {
         );
     }
     toJSON() {
-        return {};
+        return {
+            pos1: this.pos1,
+            pos2: this.pos2,
+            minPos: this.minPos,
+            maxPos: this.maxPos,
+            dimension: this.dimension.id,
+            savedSelections: this.getSavedSelections(),
+        };
     }
 }
 

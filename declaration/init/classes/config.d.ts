@@ -1,4 +1,5 @@
 import { StructureSaveMode, type DimensionLocation, Dimension } from "@minecraft/server";
+import { menuButtonIds } from "modules/ui/constants/menuButtonIds";
 /**
  * A class containing the configuration information for the add-on.
  */
@@ -274,6 +275,14 @@ export declare class config {
         antispamTriggerMessageCount: number;
     };
     static get ui(): {
+        readonly menus: {
+            readonly mainMenu: {
+                /**
+                 *
+                 */
+                buttons: (keyof typeof menuButtonIds.mainMenu.buttons)[];
+            };
+        };
         readonly main: {};
         readonly pages: {
             /**
@@ -309,7 +318,7 @@ export declare class config {
          */
         hideWatchdogTerminationCrashEnabledWarningsOnStartup: boolean;
         /**
-         * It is reccommended to leave this set to false.
+         * It is recommended to leave this set to false.
          * @default false
          * @decorator
          * also
@@ -579,6 +588,14 @@ export declare class config {
             maxTimeBewteenMessagesToTriggerAntiSpam: number;
             antispamTriggerMessageCount: number;
         } | {
+            readonly menus: {
+                readonly mainMenu: {
+                    /**
+                     *
+                     */
+                    buttons: (keyof typeof menuButtonIds.mainMenu.buttons)[];
+                };
+            };
             readonly main: {};
             readonly pages: {
                 /**
@@ -613,7 +630,7 @@ export declare class config {
              */
             hideWatchdogTerminationCrashEnabledWarningsOnStartup: boolean;
             /**
-             * It is reccommended to leave this set to false.
+             * It is recommended to leave this set to false.
              * @default false
              * @decorator
              * also

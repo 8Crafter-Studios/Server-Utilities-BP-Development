@@ -61,10 +61,7 @@ import { mainShopSystemSettings } from "ExtraFeatures/shop_main";
 import { PlayerNotifications } from "init/classes/PlayerNotifications";
 import { fillBlocksCG } from "modules/main/functions/fillBlocksCG";
 import { fillBlocksC } from "modules/main/functions/fillBlocksC";
-import { fillBlocksHWFGB } from "modules/main/functions/fillBlocksHWFGB";
 import { fillBlocksHDFGB } from "modules/main/functions/fillBlocksHDFGB";
-import { fillBlocksHFFGB } from "modules/main/functions/fillBlocksHFFGB";
-import { fillBlocksHFGBM } from "modules/main/functions/fillBlocksHFGBM";
 import { fillBlocksHFGB } from "modules/main/functions/fillBlocksHFGB";
 import { fillBlocksHFG } from "modules/main/functions/fillBlocksHFG";
 import { fillBlocksHT } from "modules/main/functions/fillBlocksHT";
@@ -75,9 +72,6 @@ import { fillBlocksHHOG } from "modules/main/functions/fillBlocksHHOG";
 import { fillBlocksHDG } from "modules/main/functions/fillBlocksHDG";
 import { fillBlocksHHSG } from "modules/main/functions/fillBlocksHHSG";
 import { fillBlocksHSSG } from "modules/main/functions/fillBlocksHSSG";
-import { fillBlocksHCGB } from "modules/main/functions/fillBlocksHCGB";
-import { fillBlocksHHSGB } from "modules/main/functions/fillBlocksHHSGB";
-import { fillBlocksHSGB } from "modules/main/functions/fillBlocksHSGB";
 import { fillBlocksHSG } from "modules/main/functions/fillBlocksHSG";
 import { fillBlocksHC } from "modules/main/functions/fillBlocksHC";
 import { fillBlocksHP } from "modules/main/functions/fillBlocksHP";
@@ -186,7 +180,6 @@ import { helpCommandChatCommandsList } from "modules/commands_documentation/cons
 import { commands } from "modules/commands_list/constants/commands";
 import { ban } from "modules/ban/classes/ban";
 import { HSLToRGB } from "modules/utilities/functions/HSLToRGB";
-import type { BlockMask } from "legacyModuleAliases/commands";
 import { mazeGenerator } from "modules/utilities/functions/mazeGenerator";
 import { regenerateBlocksBasic } from "modules/utilities/functions/regenerateBlocksBasic";
 import * as semver from "semver"
@@ -30136,33 +30129,21 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                     eventData.cancel = true;
                     const args = evaluateParameters(switchTestB, [
                         "presetText",
+                        "f-isabd",
+                        "number",
+                        "number",
+                        "number",
+                        "number",
                         "number",
                     ]).args;
-                    const radius = args[1] ?? 5;
-                    const coordinatesa = player.getDynamicProperty("pos1") as
-                        | Vector3
-                        | undefined;
-                    const coordinatesb = player.getDynamicProperty("pos2") as
-                        | Vector3
-                        | undefined;
-                    const ca = {
-                        x: Math.min(coordinatesa.x, coordinatesb.x),
-                        y: Math.min(coordinatesa.y, coordinatesb.y),
-                        z: Math.min(coordinatesa.z, coordinatesb.z),
-                    };
-                    const cb = {
-                        x: Math.max(coordinatesa.x, coordinatesb.x),
-                        y: Math.max(coordinatesa.y, coordinatesb.y),
-                        z: Math.max(coordinatesa.z, coordinatesb.z),
-                    };
-                    const dimensiona = world.getDimension(
-                        (player.getDynamicProperty("posD") ??
-                            player.dimension.id) as string
-                    ) as Dimension | undefined;
-                    if (!!!coordinatesa) {
+                    const radius = args[2] ?? 5;
+                    const ca = player.worldEditSelection.minPos;
+                    const cb = player.worldEditSelection.maxPos;
+                    const dimensiona = player.worldEditSelection.dimension;
+                    if (!!!ca) {
                         player.sendMessageB("§cError: pos1 is not set.");
                     } else {
-                        if (!!!coordinatesb) {
+                        if (!!!cb) {
                             player.sendMessageB("§cError: pos2 is not set.");
                         } else {
                             system.run(() => {
@@ -30198,7 +30179,17 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                             );
                                         }
                                         try {
-                                            regenerateBlocksBasic(ca, cb, dimensiona, radius);
+                                            regenerateBlocksBasic(ca, cb, dimensiona, radius, {
+                                                ignoreAir: !args[1].i,
+                                                onlyReplaceAir: !args[1].s,
+                                                ignoreNotYetGeneratedAir: args[1].a,
+                                                ignoreNotYetGeneratedBlocks: args[1].b,
+                                                doDistanceBasedPriority: !args[1].d,
+                                                verticalDistancePriority: args[3],
+                                                horizontalDistancePriority: args[4],
+                                                randomization: args[5],
+                                                airPriority: args[6],
+                                            });
                                         } catch (e) {
                                             player.sendError(
                                                 "§c" + e + e.stack,
@@ -30842,6 +30833,159 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                         const blocktypes = BlockTypes.getAll();
                                         try {
                                             fillHollow(
+                                                ca,
+                                                cb,
+                                                dimensiona,
+                                                (l, i) => {
+                                                    const b =
+                                                        firstblockpattern.generateBlock(
+                                                            i
+                                                        );
+                                                    return b.type == "random"
+                                                        ? BlockPermutation.resolve(
+                                                              blocktypes[
+                                                                  Math.floor(
+                                                                      blocktypes.length *
+                                                                          Math.random()
+                                                                  )
+                                                              ].id
+                                                          )
+                                                        : BlockPermutation.resolve(
+                                                              b.type,
+                                                              b.states
+                                                          );
+                                                },
+                                                {
+                                                    blockMask: mask,
+                                                    minMSBetweenTickWaits: 2500,
+                                                    replacemode: args[1].c,
+                                                    integrity: 100,
+                                                    liteMode: false,
+                                                }
+                                            ).then(
+                                                (a) => {
+                                                    player.sendMessageB(
+                                                        `${
+                                                            a.counter == 0n
+                                                                ? "§c"
+                                                                : ""
+                                                        }${
+                                                            a.counter
+                                                        } blocks replaced in ${
+                                                            a.endTime -
+                                                            a.startTime
+                                                        } ms over ${
+                                                            a.endTick -
+                                                            a.startTick
+                                                        } tick${
+                                                            a.endTick -
+                                                                a.startTick ==
+                                                            1
+                                                                ? ""
+                                                                : "s"
+                                                        }${
+                                                            a.containsUnloadedChunks
+                                                                ? "; Some blocks were not generated because they were in unloaded chunks."
+                                                                : ""
+                                                        }`
+                                                    );
+                                                },
+                                                (e) => {
+                                                    player.sendError(
+                                                        "§c" + e + e.stack,
+                                                        true
+                                                    );
+                                                }
+                                            );
+                                        } catch (e) {
+                                            player.sendError(
+                                                "§c" + e + e.stack,
+                                                true
+                                            );
+                                        } finally {
+                                            tac.forEach((tab) => tab?.remove());
+                                        }
+                                    });
+                                } catch (e) {
+                                    player.sendError("§c" + e + e.stack, true);
+                                }
+                            });
+                        }
+                    }
+                }
+                break;
+            case !!switchTest.match(/^\\oreplace$/):
+                {
+                    eventData.cancel = true;
+                    const args = evaluateParameters(switchTestB, [
+                        "presetText",
+                        "f-c",
+                        "blockPattern",
+                        "blockMask",
+                    ]).args;
+                    const firstblockpattern = args[2] as BlockPattern;
+                    const mask = args[3];
+                    const coordinatesa = player.getDynamicProperty("pos1") as
+                        | Vector3
+                        | undefined;
+                    const coordinatesb = player.getDynamicProperty("pos2") as
+                        | Vector3
+                        | undefined;
+                    const ca = {
+                        x: Math.min(coordinatesa.x, coordinatesb.x),
+                        y: Math.min(coordinatesa.y, coordinatesb.y),
+                        z: Math.min(coordinatesa.z, coordinatesb.z),
+                    };
+                    const cb = {
+                        x: Math.max(coordinatesa.x, coordinatesb.x),
+                        y: Math.max(coordinatesa.y, coordinatesb.y),
+                        z: Math.max(coordinatesa.z, coordinatesb.z),
+                    };
+                    const dimensiona = world.getDimension(
+                        (player.getDynamicProperty("posD") ??
+                            player.dimension.id) as string
+                    ) as Dimension | undefined;
+                    if (!!!coordinatesa) {
+                        player.sendMessageB("§cError: pos1 is not set.");
+                    } else {
+                        if (!!!coordinatesb) {
+                            player.sendMessageB("§cError: pos2 is not set.");
+                        } else {
+                            system.run(() => {
+                                let ta: Entity[];
+                                try {
+                                    generateTickingAreaFillCoordinatesC(
+                                        player.location,
+                                        (() => {
+                                            let a = new CompoundBlockVolume();
+                                            a.pushVolume({
+                                                volume: new BlockVolume(ca, cb),
+                                            });
+                                            return a;
+                                        })(),
+                                        dimensiona
+                                    ).then((tac) => {
+                                        ta = tac;
+                                        try {
+                                            undoClipboard.save(
+                                                dimensiona,
+                                                { from: ca, to: cb },
+                                                Date.now(),
+                                                {
+                                                    includeBlocks: true,
+                                                    includeEntities: false,
+                                                    saveMode:
+                                                        config.undoClipboardMode,
+                                                }
+                                            );
+                                        } catch (e) {
+                                            player.sendMessageB(
+                                                "§c" + e + " " + e.stack
+                                            );
+                                        }
+                                        const blocktypes = BlockTypes.getAll();
+                                        try {
+                                            fillOutline(
                                                 ca,
                                                 cb,
                                                 dimensiona,

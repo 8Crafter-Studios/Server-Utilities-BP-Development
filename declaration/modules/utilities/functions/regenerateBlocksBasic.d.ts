@@ -56,10 +56,15 @@ export declare function regenerateBlocksBasic(corner1: Vector3, corner2: Vector3
     airPriority?: number;
     /**
      * If true, then surrounding air blocks that are in the section that has yet to be generated will not affect the type of blocks generated.\
-     * Only applies when options.ignoreAir is set to false.\
+     * Only applies when options.ignoreAir and options.ignoreNotYetGeneratedBlocks are set to false.\
      * Defaults to true.
      */
     ignoreNotYetGeneratedAir?: boolean;
+    /**
+     * If true, then all surrounding blocks that are in the section that has yet to be generated will not affect the type of blocks generated.\
+     * Defaults to false.
+     */
+    ignoreNotYetGeneratedBlocks?: boolean;
     /**
      * The maximum amount by which to multiply or divide weights of the surrounding block permutations to randomize the generated block slightly.\
      * It will add 1 to the randomization amount before calculating, so 0.2 would result in the weights being multiplied or divided by between 1 and 1.2.\
