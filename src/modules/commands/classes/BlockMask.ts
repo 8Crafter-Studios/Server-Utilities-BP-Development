@@ -278,7 +278,7 @@ export class BlockMask {
                         case "canBeWaterlogged":
                         case "isWaterloggable":
                         case "waterloggable":
-                            if (block.type.canBeWaterlogged) {
+                            if (block.canContainLiquid(modules.mcServer.LiquidType.Water)) {
                                 if (b.states != undefined) {
                                     return BlockMask.testForStatesMatch(block.permutation.getAllStates(), b.states);
                                 } else {
@@ -365,7 +365,7 @@ export class BlockMask {
                         case "canBeWaterlogged":
                         case "isWaterloggable":
                         case "waterloggable":
-                            if (block.type.canBeWaterlogged) {
+                            if (block.canContainLiquid(modules.mcServer.LiquidType.Water)) {
                                 if (b.states != undefined) {
                                     return BlockMask.testForStatesMatch(block.getAllStates(), b.states);
                                 } else {
@@ -447,7 +447,7 @@ export class BlockMask {
                         case "canBeWaterlogged":
                         case "isWaterloggable":
                         case "waterloggable":
-                            if (block.canBeWaterlogged) {
+                            if (BlockPermutation.resolve(block.id).canContainLiquid(modules.mcServer.LiquidType.Water)) {
                                 return true;
                             } else {
                                 return false;
@@ -514,7 +514,7 @@ export class BlockMask {
                         case "canBeWaterlogged":
                         case "isWaterloggable":
                         case "waterloggable":
-                            if (tryget(()=>BlockTypes.get(block).canBeWaterlogged) ?? false) {
+                            if (tryget(()=>BlockPermutation.resolve(BlockTypes.get(block).id).canContainLiquid(modules.mcServer.LiquidType.Water)) ?? false) {
                                 return true;
                             } else {
                                 return false;
@@ -588,7 +588,7 @@ export class BlockMask {
                         case "canBeWaterlogged":
                         case "isWaterloggable":
                         case "waterloggable":
-                            if (tryget(()=>block.type instanceof BlockType ? block.type : BlockTypes.get(block.type).canBeWaterlogged) ?? false) {
+                            if (tryget(()=>block.type instanceof BlockType ? BlockPermutation.resolve(block.type.id).canContainLiquid(modules.mcServer.LiquidType.Water) : BlockPermutation.resolve(BlockTypes.get(block.type).id).canContainLiquid(modules.mcServer.LiquidType.Water)) ?? false) {
                                 if (b.states != undefined && block.states != undefined) {
                                     return BlockMask.testForStatesMatch(block.states, b.states);
                                 } else {

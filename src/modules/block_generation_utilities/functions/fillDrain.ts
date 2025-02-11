@@ -70,7 +70,7 @@ export async function fillDrain<LiteModeEnabled extends boolean = false>(
                                         "minecraft:flowing_lava",
                                     ].includes(b.typeId)) {
                                         b.setType("minecraft:air");
-                                    } else if (b.type.canBeWaterlogged == true &&
+                                    } else if (b.canContainLiquid(modules.mcServer.LiquidType.Water) == true &&
                                         b.isWaterlogged) {
                                         b.setWaterlogged(false);
                                     }
@@ -102,7 +102,7 @@ export async function fillDrain<LiteModeEnabled extends boolean = false>(
                                     "minecraft:flowing_lava",
                                 ].includes(b.typeId)) {
                                     b.setType("minecraft:air");
-                                } else if (b.type.canBeWaterlogged == true &&
+                                } else if (b.canContainLiquid(modules.mcServer.LiquidType.Water) == true &&
                                     b.isWaterlogged) {
                                     b.setWaterlogged(false);
                                 }
@@ -137,7 +137,7 @@ export async function fillDrain<LiteModeEnabled extends boolean = false>(
                                             "minecraft:flowing_lava",
                                         ].includes(b.typeId)) {
                                             b.setType("minecraft:air");
-                                        } else if (b.type.canBeWaterlogged == true &&
+                                        } else if (b.canContainLiquid(modules.mcServer.LiquidType.Water) == true &&
                                             b.isWaterlogged) {
                                             b.setWaterlogged(false);
                                         }
@@ -171,7 +171,7 @@ export async function fillDrain<LiteModeEnabled extends boolean = false>(
                                         "minecraft:flowing_lava",
                                     ].includes(b.typeId)) {
                                         b.setType("minecraft:air");
-                                    } else if (b.type.canBeWaterlogged == true &&
+                                    } else if (b.canContainLiquid(modules.mcServer.LiquidType.Water) == true &&
                                         b.isWaterlogged) {
                                         b.setWaterlogged(false);
                                     }
@@ -211,7 +211,7 @@ export async function fillDrain<LiteModeEnabled extends boolean = false>(
                                     ].includes(b.typeId)) {
                                         b.setType("minecraft:air");
                                         counter++; // Increase the counter.
-                                    } else if (b.type.canBeWaterlogged == true &&
+                                    } else if (b.canContainLiquid(modules.mcServer.LiquidType.Water) == true &&
                                         b.isWaterlogged) {
                                         b.setWaterlogged(false);
                                         counter++; // Increase the counter.
@@ -245,7 +245,7 @@ export async function fillDrain<LiteModeEnabled extends boolean = false>(
                                 ].includes(b.typeId)) {
                                     b.setType("minecraft:air");
                                     counter++; // Increase the counter.
-                                } else if (b.type.canBeWaterlogged == true &&
+                                } else if (b.canContainLiquid(modules.mcServer.LiquidType.Water) == true &&
                                     b.isWaterlogged) {
                                     b.setWaterlogged(false);
                                     counter++; // Increase the counter.
@@ -282,7 +282,7 @@ export async function fillDrain<LiteModeEnabled extends boolean = false>(
                                         ].includes(b.typeId)) {
                                             b.setType("minecraft:air");
                                             counter++; // Increase the counter.
-                                        } else if (b.type.canBeWaterlogged == true &&
+                                        } else if (b.canContainLiquid(modules.mcServer.LiquidType.Water) == true &&
                                             b.isWaterlogged) {
                                             b.setWaterlogged(false);
                                             counter++; // Increase the counter.
@@ -318,7 +318,7 @@ export async function fillDrain<LiteModeEnabled extends boolean = false>(
                                     ].includes(b.typeId)) {
                                         b.setType("minecraft:air");
                                         counter++; // Increase the counter.
-                                    } else if (b.type.canBeWaterlogged == true &&
+                                    } else if (b.canContainLiquid(modules.mcServer.LiquidType.Water) == true &&
                                         b.isWaterlogged) {
                                         b.setWaterlogged(false);
                                         counter++; // Increase the counter.

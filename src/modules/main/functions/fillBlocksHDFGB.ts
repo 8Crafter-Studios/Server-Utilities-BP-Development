@@ -42,7 +42,7 @@ export async function fillBlocksHDFGB(
                     ].includes(v.dimension.getBlock(v).typeId)) {
                         v.dimension.getBlock(v).setType("minecraft:air");
                         counter++;
-                    } else if (v.dimension.getBlock(v).type.canBeWaterlogged == true &&
+                    } else if (v.dimension.getBlock(v).canContainLiquid(modules.mcServer.LiquidType.Water) == true &&
                         v.dimension.getBlock(v).isWaterlogged) {
                         v.dimension.getBlock(v).setWaterlogged(false);
                         counter++;

@@ -16,7 +16,7 @@ export function debugAction(
         ) == -1 &&
             (player.getDynamicProperty("debugStickPropertyIndexName") !=
                 "waterlogged" ||
-                !block.type.canBeWaterlogged)) {
+                !block.canContainLiquid(modules.mcServer.LiquidType.Water))) {
             player.setDynamicProperty("debugStickPropertyIndex", 0);
             player.setDynamicProperty("debugStickPropertyIndexName", "");
         } else {
@@ -30,7 +30,7 @@ export function debugAction(
         }
     } else {
         if (Object.entries(block.permutation.getAllStates()).length +
-            Number(block.type.canBeWaterlogged) !=
+            Number(block.canContainLiquid(modules.mcServer.LiquidType.Water)) !=
             0) {
             if (mode == 1) {
                 if (direction == 1) {
@@ -46,7 +46,7 @@ export function debugAction(
                                 0,
                                 Object.entries(block.permutation.getAllStates())
                                     .length +
-                                Number(block.type.canBeWaterlogged)
+                                Number(block.canContainLiquid(modules.mcServer.LiquidType.Water))
                             )
                         )
                     );
@@ -79,7 +79,7 @@ export function debugAction(
                                 0,
                                 Object.entries(block.permutation.getAllStates())
                                     .length +
-                                Number(block.type.canBeWaterlogged)
+                                Number(block.canContainLiquid(modules.mcServer.LiquidType.Water))
                             )
                         )
                     );
@@ -117,12 +117,12 @@ export function debugAction(
         }
     } /*BlockStates.getAll().forEach((stateb)=>{player.sendMessage(stateb.id + ": " + stateb.validValues)}); */ /*let test = Object.keys(block.permutation.getAllStates())[Number(player.getDynamicProperty("debugStickPropertyIndex"))]; console.warn(Object.keys(block.permutation.getAllStates())[Number(player.getDynamicProperty("debugStickPropertyIndex"))] + "\n" + String(Object.keys(block.permutation.getAllStates())[Number(player.getDynamicProperty("debugStickPropertyIndex"))]) + "\n" + test + "\n" + BlockStates.getAll()[BlockStates.getAll().length-2].id + BlockStates.getAll().findIndex((statec)=>{console.warn("\"" + String(statec.id) + "\", \"" + String(Object.keys(block.permutation.getAllStates())[Number(player.getDynamicProperty("debugStickPropertyIndex"))]) + "\""); statec.id == test})); */
     if (Object.entries(block.permutation.getAllStates()).length +
-        Number(block.type.canBeWaterlogged) !=
+        Number(block.canContainLiquid(modules.mcServer.LiquidType.Water)) !=
         0) {
         if (mode == 0) {
             if (player.getDynamicProperty("debugStickPropertyIndexName") ==
                 "waterlogged" ||
-                (block.type.canBeWaterlogged &&
+                (block.canContainLiquid(modules.mcServer.LiquidType.Water) &&
                     Object.entries(block.permutation.getAllStates()).length ==
                     0)) {
                 system.run(() => {
@@ -243,7 +243,7 @@ export function debugAction(
         }
     }
     if (Object.entries(block.permutation.getAllStates()).length +
-        Number(block.type.canBeWaterlogged) ==
+        Number(block.canContainLiquid(modules.mcServer.LiquidType.Water)) ==
         0) {
         system.run(() => {
             player.onScreenDisplay.setActionBar(

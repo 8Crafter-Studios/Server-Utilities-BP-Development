@@ -6,6 +6,7 @@ import { showMessage } from "modules/utilities/functions/showMessage";
 import { ActionFormData } from "@minecraft/server-ui";
 import { CharacterSetConverter } from "modules/utilities/classes/CharacterSetConverter";
 import { saveStringToDynamicProperties } from "modules/utilities/functions/saveStringToDynamicProperties";
+import { mainMenu } from "modules/ui/functions/mainMenu";
 import type { commandCategory } from "modules/commands/types/commandCategory";
 import { commandCategoriesDisplay } from "modules/ui/functions/commandCategoriesDisplay";
 // import { commandCategories } from "modules/ui/functions/commandCategories";
@@ -842,7 +843,7 @@ if (ultraSecurityModeEnabled && !securityConfiguratorPackIsActive) {
             }
             const r = await showMessage(
                 world.getPlayers({ name: owner })[0],
-                "§l§cWARNING!",
+                "§l§cWARNING! §rMissing Required Pack (424)",
                 "Ultra security mode is enabled, but the security configurator pack is not active, §cultra security mode is now disabled. §aPlease add back the security configurator pack to re-enable ultra security mode. Once you add it, you will have to go back into security settings and enable ultra security mode again.",
                 "I understand",
                 "Close"
@@ -874,17 +875,16 @@ if (ultraSecurityModeEnabled && !securityConfiguratorPackIsActive) {
             }
             const r = await showMessage(
                 world.getPlayers({ name: owner })[0],
-                "§l§cWARNING! §rMissing Required Behavior Pack (424)",
-                "Ultra security mode is enabled, but the security configurator pack is not active, §cultra security mode is now disabled. §aPlease add back the security configurator pack to re-enable ultra security mode. Once you add it, you will have to go back into security settings and enable ultra security mode again.",
-                "I understand",
+                "§l§dINFO! §rUltra Security Mode Not Enabled",
+                "Security configurator pack has been detected, but you haven't enabled Ultra Security Mode yet. To enable ultra security mode, go to Main Menu > Security > Settings > Security Mode. Note: Only the owner defined in the security configurator pack can enable ultra security mode. If you are seeing this, then you are the defined owner, if you are not the owner, please let the owner know about this so that they can generate a new security configurator pack.",
+                "Open Main Menu",
                 "Close"
             );
             if (r.canceled) {
                 return;
             }
             if (r.selection == 0) {
-                owner = undefined;
-                world.setDynamicProperty("owner");
+                mainMenu(world.getPlayers({ name: owner })[0]);
             }
         }
     });
@@ -1338,9 +1338,9 @@ form.button("Debug Screen", "textures/ui/ui_debug_glyph_color");*/
             world.setDynamicProperty("ultraSecurityModeEnabled", false);
             return;
         case 1:
-            ultraSecurityModeEnabled = true;
-            world.setDynamicProperty("ultraSecurityModeEnabled", true);
             if (!ultraSecurityModeEnabled) {
+                ultraSecurityModeEnabled = true;
+                world.setDynamicProperty("ultraSecurityModeEnabled", true);
                 const rc = await showMessage(
                     player,
                     "Restart Required",

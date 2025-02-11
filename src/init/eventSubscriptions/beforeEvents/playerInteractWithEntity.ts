@@ -154,8 +154,7 @@ subscribedEvents.beforePlayerInteractWithEntity =
                     "§9{ §btypeId§a: §u" +
                     playerTargetB.getBlockFromViewDirection().block.typeId +
                     "§a, §bcanBeWaterlogged§a: §u" +
-                    playerTargetB.getBlockFromViewDirection().block.type
-                        .canBeWaterlogged +
+                    playerTargetB.getBlockFromViewDirection().block.canContainLiquid(modules.mcServer.LiquidType.Water) +
                     "§9 }§a";
             } catch (e) {
                 blockViewedBlockType = "§4None§a";
