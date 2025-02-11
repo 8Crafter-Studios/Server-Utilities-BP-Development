@@ -12,7 +12,10 @@ export type menuButtonIdsType = {
                 deprecated: boolean,
                 experimental: boolean,
                 unused: boolean,
+                upcoming: boolean,
+                functional: boolean,
                 advanced: boolean,
+                extraVisibilityConditionsCheck?: ()=>boolean,
                 
                 defaultButtonIndex: number,
             },

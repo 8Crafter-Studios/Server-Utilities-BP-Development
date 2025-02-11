@@ -821,7 +821,7 @@ export class config {
                              */
                             get buttons(): (keyof typeof menuButtonIds.mainMenu.buttons)[] {
                                 return JSON.parse(
-                                    String(world.getDynamicProperty("andexdbSettings:maxPlayersPerManagePlayersPage") ?? JSON.stringify(
+                                    String(world.getDynamicProperty("andexdbSettings:ui.menus.mainMenu.buttons") ?? JSON.stringify(
                                         (Object.keys(menuButtonIds.mainMenu.buttons) as (keyof typeof menuButtonIds.mainMenu.buttons)[]).sort(
                                             (a, b)=>
                                                 menuButtonIds.mainMenu.buttons[a].defaultButtonIndex > menuButtonIds.mainMenu.buttons[b].defaultButtonIndex
@@ -845,6 +845,150 @@ export class config {
                                         )
                                     )
                                 );
+                            },
+                            /**
+                             * Whether to show the buttons marked as deprecated on the main menu.
+                             * 
+                             * Defaults to false.
+                             */
+                            get showDeprecatedButtons(): boolean {
+                                return Boolean(world.getDynamicProperty("andexdbSettings:ui.menus.mainMenu.showDeprecatedButtons") ?? false);
+                            },
+                            set showDeprecatedButtons(show: boolean | undefined) {
+                                world.setDynamicProperty("andexdbSettings:ui.menus.mainMenu.showDeprecatedButtons", show ?? false);
+                            },
+                            /**
+                             * Whether to show the buttons marked as deprecated on the main menu.
+                             * 
+                             * Defaults to true.
+                             */
+                            get showExperimentalButtons(): boolean {
+                                return Boolean(world.getDynamicProperty("andexdbSettings:ui.menus.mainMenu.showExperimentalButtons") ?? true);
+                            },
+                            set showExperimentalButtons(show: boolean | undefined) {
+                                world.setDynamicProperty("andexdbSettings:ui.menus.mainMenu.showExperimentalButtons", show ?? true);
+                            },
+                            /**
+                             * Whether to show the buttons marked as deprecated on the main menu.
+                             * 
+                             * Defaults to false.
+                             */
+                            get showUnusedButtons(): boolean {
+                                return Boolean(world.getDynamicProperty("andexdbSettings:ui.menus.mainMenu.showUnusedButtons") ?? false);
+                            },
+                            set showUnusedButtons(show: boolean | undefined) {
+                                world.setDynamicProperty("andexdbSettings:ui.menus.mainMenu.showUnusedButtons", show ?? false);
+                            },
+                            /**
+                             * Whether to show the buttons for features that are planned to be added in a future update on the main menu.
+                             * 
+                             * Defaults to false.
+                             */
+                            get showUpcomingButtons(): boolean {
+                                return Boolean(world.getDynamicProperty("andexdbSettings:ui.menus.mainMenu.showUpcomingButtons") ?? false);
+                            },
+                            set showUpcomingButtons(show: boolean | undefined) {
+                                world.setDynamicProperty("andexdbSettings:ui.menus.mainMenu.showUpcomingButtons", show ?? false);
+                            },
+                            /**
+                             * Whether to show the buttons for features that are non-functional on the main menu.
+                             * 
+                             * Defaults to false.
+                             */
+                            get showNonFunctionalButtons(): boolean {
+                                return Boolean(world.getDynamicProperty("andexdbSettings:ui.menus.mainMenu.showNonFunctionalButtons") ?? false);
+                            },
+                            set showNonFunctionalButtons(show: boolean | undefined) {
+                                world.setDynamicProperty("andexdbSettings:ui.menus.mainMenu.showNonFunctionalButtons", show ?? false);
+                            },
+                        };
+                    },
+                    get playerMenu() {
+                        return {
+                            /**
+                             * 
+                             */
+                            get buttons(): (keyof typeof menuButtonIds.mainMenu.buttons)[] {
+                                return JSON.parse(
+                                    String(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu.buttons") ?? JSON.stringify(
+                                        (Object.keys(menuButtonIds.mainMenu.buttons) as (keyof typeof menuButtonIds.mainMenu.buttons)[]).sort(
+                                            (a, b)=>
+                                                menuButtonIds.mainMenu.buttons[a].defaultButtonIndex > menuButtonIds.mainMenu.buttons[b].defaultButtonIndex
+                                                ? 1
+                                                : menuButtonIds.mainMenu.buttons[a].defaultButtonIndex < menuButtonIds.mainMenu.buttons[b].defaultButtonIndex ? -1 : 0
+                                        ))
+                                    )
+                                );
+                            },
+                            set buttons(buttonList: (keyof typeof menuButtonIds.mainMenu.buttons)[] | undefined) {
+                                world.setDynamicProperty(
+                                    "andexdbSettings:ui.menus.playerMenu.buttons",
+                                    JSON.stringify(
+                                        buttonList ?? JSON.stringify(
+                                            (Object.keys(menuButtonIds.mainMenu.buttons) as (keyof typeof menuButtonIds.mainMenu.buttons)[]).sort(
+                                                (a, b)=>
+                                                    menuButtonIds.mainMenu.buttons[a].defaultButtonIndex > menuButtonIds.mainMenu.buttons[b].defaultButtonIndex
+                                                    ? 1
+                                                    : menuButtonIds.mainMenu.buttons[a].defaultButtonIndex < menuButtonIds.mainMenu.buttons[b].defaultButtonIndex ? -1 : 0
+                                            )
+                                        )
+                                    )
+                                );
+                            },
+                            /**
+                             * Whether to show the buttons marked as deprecated on the player menu.
+                             * 
+                             * Defaults to false.
+                             */
+                            get showDeprecatedButtons(): boolean {
+                                return Boolean(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu.showDeprecatedButtons") ?? false);
+                            },
+                            set showDeprecatedButtons(show: boolean | undefined) {
+                                world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu.showDeprecatedButtons", show ?? false);
+                            },
+                            /**
+                             * Whether to show the buttons marked as deprecated on the player menu.
+                             * 
+                             * Defaults to true.
+                             */
+                            get showExperimentalButtons(): boolean {
+                                return Boolean(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu.showExperimentalButtons") ?? true);
+                            },
+                            set showExperimentalButtons(show: boolean | undefined) {
+                                world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu.showExperimentalButtons", show ?? true);
+                            },
+                            /**
+                             * Whether to show the buttons marked as deprecated on the player menu.
+                             * 
+                             * Defaults to false.
+                             */
+                            get showUnusedButtons(): boolean {
+                                return Boolean(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu.showUnusedButtons") ?? false);
+                            },
+                            set showUnusedButtons(show: boolean | undefined) {
+                                world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu.showUnusedButtons", show ?? false);
+                            },
+                            /**
+                             * Whether to show the buttons for features that are planned to be added in a future update on the player menu.
+                             * 
+                             * Defaults to false.
+                             */
+                            get showUpcomingButtons(): boolean {
+                                return Boolean(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu.showUpcomingButtons") ?? false);
+                            },
+                            set showUpcomingButtons(show: boolean | undefined) {
+                                world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu.showUpcomingButtons", show ?? false);
+                            },
+                            /**
+                             * Whether to show the buttons for features that are non-functional on the player menu.
+                             * 
+                             * Defaults to false.
+                             */
+                            get showNonFunctionalButtons(): boolean {
+                                return Boolean(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu.showNonFunctionalButtons") ?? false);
+                            },
+                            set showNonFunctionalButtons(show: boolean | undefined) {
+                                world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu.showNonFunctionalButtons", show ?? false);
                             },
                         };
                     },
