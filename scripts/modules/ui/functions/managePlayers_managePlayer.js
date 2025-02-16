@@ -34,7 +34,7 @@ export async function managePlayers_managePlayer(sourceEntity, player) {
         ? "Online\nLast Saved: " +
             new Date(player.lastOnline).formatDateTime(sourceEntity.timeZone, false, true)
         : "Last Online: " +
-            new Date(player.lastOnline).formatDateTime(sourceEntity.timeZone, false, true)}\nData Format Version: ${player.format_version}${ban.testForIdBannedPlayer(player)
+            new Date(player.lastOnline).formatDateTime(sourceEntity.timeZone, false, true)}\nFirst Joined: ${new Date(player.firstJoined).formatDateTime(sourceEntity.timeZone, false, true)}\nData Format Version: ${player.format_version}${ban.testForIdBannedPlayer(player)
         ? "ID BANNED"
         : ban.testForIdBannedPlayer(player)
             ? "NAME BANNED"
@@ -233,6 +233,8 @@ export async function managePlayers_managePlayer(sourceEntity, player) {
                             .textField("Money", "int", MoneySystem.get(player.id).money.toString())
                             .forceShow(sourceEntity)
                             .then(async (r) => {
+                            if (r.canceled)
+                                return 1;
                             if (!!r.formValues[0].toBigInt()) {
                                 MoneySystem.get(player.id).setMoney(r.formValues[0].toBigInt());
                             }

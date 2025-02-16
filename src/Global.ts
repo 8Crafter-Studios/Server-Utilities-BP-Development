@@ -89,9 +89,9 @@ declare global {
         function tfsa(
             sdsa284f83kd_38pqnv_38_f_0_vmewd_19mvndifekod_f8ufv4m3ddm1c0nvh289cmfue8hd9mjf3: unknown
         ): unknown;
-        function cullNull<T extends any[]>(array: T): any[];
-        function cullUndefined<T extends any[]>(array: T): any[];
-        function cullEmpty<T extends any[]>(array: T): any[];
+        function cullNull<T extends any[]>(array: T): T[number][];
+        function cullUndefined<T extends any[]>(array: T): T[number][];
+        function cullEmpty<T extends any[]>(array: T): T[number][];
         function tryget<T>(callbackfn: () => T): T;
         function tryrun(callbackfn: () => any): void;
         function catchtry(

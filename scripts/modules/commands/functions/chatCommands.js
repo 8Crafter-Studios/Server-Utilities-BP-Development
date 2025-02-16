@@ -143,6 +143,7 @@ import { fillDrain } from "modules/block_generation_utilities/functions/fillDrai
 import { fillCylinder } from "modules/block_generation_utilities/functions/fillCylinder";
 import { fillStretchedSphere } from "modules/block_generation_utilities/functions/fillStretchedSphere";
 import { fillOutline } from "modules/block_generation_utilities/functions/fillOutline";
+import { playerMenu } from "modules/ui/functions/playerMenu";
 export function chatCommands(params) {
     let returnBeforeChatSend = params.returnBeforeChatSend ?? false;
     let playerab = params.player ?? params.eventData?.sender ?? params.event?.sender;
@@ -7336,6 +7337,9 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                 else if (!!HomeSystem.getHomesForPlayer(player).find((h) => h.name == args[2])) {
                                     player.sendMessageB("§cError: You already have a home with this name. Please delete the home and create it again if you want to change its location. ");
                                 }
+                                else if (player.dimension !== overworld && !config.homeSystem.allowHomesInOtherDimensions) {
+                                    player.sendMessageB('§cSorry but homes in dimensions other than the overworld have been disabled.');
+                                }
                                 else {
                                     new Home({
                                         location: Object.assign(player.location, { dimension: player.dimension }),
@@ -7358,45 +7362,69 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                 }
                                 break;
                             case "go":
-                                if (Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 > Date.now()) {
-                                    player.sendMessageB(`§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on PVP cooldown.`);
-                                }
-                                else if (!!HomeSystem.getHomesForPlayer(player).find((h) => h.name == args[2])) {
-                                    srun(() => player.teleport(HomeSystem.getHomesForPlayer(player).find((h) => h.name == args[2])
-                                        .location, {
-                                        dimension: HomeSystem.getHomesForPlayer(player).find((h) => h.name == args[2]).location.dimension,
-                                    }));
-                                    player.sendMessageB(`Successfully teleported to the home "${args[2]}§r§f". `);
-                                }
-                                else {
-                                    player.sendError(`§cError: Could not find a home with the name "${args[2]}§r§c". `, true);
-                                }
-                                break;
                             case "warp":
-                                if (Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 > Date.now()) {
-                                    player.sendMessageB(`§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on PVP cooldown.`);
-                                }
-                                else if (!!HomeSystem.getHomesForPlayer(player).find((h) => h.name == args[2])) {
-                                    srun(() => player.teleport(HomeSystem.getHomesForPlayer(player).find((h) => h.name == args[2])
-                                        .location, {
-                                        dimension: HomeSystem.getHomesForPlayer(player).find((h) => h.name == args[2]).location.dimension,
-                                    }));
-                                    player.sendMessageB(`Successfully teleported to the home "${args[2]}§r§f". `);
-                                }
-                                else {
-                                    player.sendError(`§cError: Could not find a home with the name "${args[2]}§r§c". `, true);
-                                }
-                                break;
                             case "teleport":
                                 if (Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 > Date.now()) {
                                     player.sendMessageB(`§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on PVP cooldown.`);
                                 }
+                                else if (Number(player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 > Date.now()) {
+                                    player.sendMessageB(`§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on cooldown.`);
+                                }
                                 else if (!!HomeSystem.getHomesForPlayer(player).find((h) => h.name == args[2])) {
-                                    srun(() => player.teleport(HomeSystem.getHomesForPlayer(player).find((h) => h.name == args[2])
-                                        .location, {
-                                        dimension: HomeSystem.getHomesForPlayer(player).find((h) => h.name == args[2]).location.dimension,
-                                    }));
-                                    player.sendMessageB(`Successfully teleported to the home "${args[2]}§r§f". `);
+                                    const home = HomeSystem.getHomesForPlayer(player).find((h) => h.name == args[2]);
+                                    if (config.spawnCommandLocation.dimension !== player.dimension && !config.teleportSystems.allowCrossDimensionalTeleport) {
+                                        player.sendMessageB('§cSorry but all cross-dimensional teleports have been disabled.');
+                                    }
+                                    else if (config.spawnCommandLocation.dimension !== player.dimension && !config.homeSystem.allowCrossDimensionalTeleport) {
+                                        player.sendMessageB('§cSorry but cross-dimensional home teleports have been disabled.');
+                                    }
+                                    else if (home.location.dimension !== overworld && !config.homeSystem.allowHomesInOtherDimensions) {
+                                        player.sendMessageB('§cSorry but homes in dimensions other than the overworld have been disabled.');
+                                    }
+                                    else {
+                                        srun(async () => {
+                                            const standStillTime = config.teleportSystems.standStillTimeToTeleport;
+                                            if (standStillTime > 0) {
+                                                player.sendMessageB("§eStand still for " + standStillTime + " seconds to teleport.");
+                                                await waitTicks(20);
+                                            }
+                                            const playerPosition = player.location;
+                                            let successful = true;
+                                            for (let i = 0; i < standStillTime; i++) {
+                                                if (!Vector.equals(player.location, playerPosition)) {
+                                                    successful = false;
+                                                    break;
+                                                }
+                                                ;
+                                                player.sendMessageB("§bTeleporting in " + (standStillTime - i));
+                                                await waitTicks(20);
+                                            }
+                                            // Check for PVP cooldown again after ending the teleport countdown.
+                                            if (Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 > Date.now()) {
+                                                player.sendMessageB(`§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on PVP cooldown.`);
+                                                successful = false;
+                                                return 0;
+                                            }
+                                            // Check for teleport cooldown again after ending the teleport countdown.
+                                            if (Number(player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 > Date.now()) {
+                                                player.sendMessageB(`§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on cooldown.`);
+                                                return 0;
+                                            }
+                                            if (successful) {
+                                                try {
+                                                    player.teleport(home.location, { dimension: home.location.dimension });
+                                                    player.setDynamicProperty("lastTeleportTime", Date.now());
+                                                    player.sendMessageB(`Successfully teleported to the home "${argsa.extra}§r§f". `);
+                                                }
+                                                catch (e) {
+                                                    player.sendMessageB("§cAn error occured while trying to teleport you to your home: " + e + e.stack);
+                                                }
+                                            }
+                                            else {
+                                                player.sendMessageB("§cTeleport canceled.");
+                                            }
+                                        });
+                                    }
                                 }
                                 else {
                                     player.sendError(`§cError: Could not find a home with the name "${args[2]}§r§c". `, true);
@@ -7426,25 +7454,73 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                 {
                     eventData.cancel = true;
                     if (config.homeSystem.homeSystemEnabled) {
+                        let argsa = evaluateParameters(switchTestB, [
+                            "presetText",
+                        ]);
                         if (Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 > Date.now()) {
                             player.sendMessageB(`§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on PVP cooldown.`);
                         }
-                        else {
-                            let argsa = evaluateParameters(switchTestB, [
-                                "presetText",
-                            ]);
-                            if (!!HomeSystem.getHomesForPlayer(player).find((h) => h.name == argsa.extra)) {
-                                srun(() => player.teleport(Home.get("home:" + player.id + ":" + argsa.extra).location, {
-                                    dimension: Home.get("home:" +
-                                        player.id +
-                                        ":" +
-                                        argsa.extra).location.dimension,
-                                }));
-                                player.sendMessageB(`Successfully teleported to the home "${argsa.extra}§r§f". `);
+                        else if (Number(player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 > Date.now()) {
+                            player.sendMessageB(`§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on cooldown.`);
+                        }
+                        else if (!!HomeSystem.getHomesForPlayer(player).find((h) => h.name == argsa.extra)) {
+                            const home = HomeSystem.getHomesForPlayer(player).find((h) => h.name == argsa.extra);
+                            if (config.spawnCommandLocation.dimension !== player.dimension && !config.teleportSystems.allowCrossDimensionalTeleport) {
+                                player.sendMessageB('§cSorry but all cross-dimensional teleports have been disabled.');
+                            }
+                            else if (config.spawnCommandLocation.dimension !== player.dimension && !config.homeSystem.allowCrossDimensionalTeleport) {
+                                player.sendMessageB('§cSorry but cross-dimensional home teleports have been disabled.');
+                            }
+                            else if (home.location.dimension !== overworld && !config.homeSystem.allowHomesInOtherDimensions) {
+                                player.sendMessageB('§cSorry but homes in dimensions other than the overworld have been disabled.');
                             }
                             else {
-                                player.sendError(`§cError: Could not find a home with the name "${argsa.extra}§r§c". `, true);
+                                srun(async () => {
+                                    const standStillTime = config.teleportSystems.standStillTimeToTeleport;
+                                    if (standStillTime > 0) {
+                                        player.sendMessageB("§eStand still for " + standStillTime + " seconds to teleport.");
+                                        await waitTicks(20);
+                                    }
+                                    const playerPosition = player.location;
+                                    let successful = true;
+                                    for (let i = 0; i < standStillTime; i++) {
+                                        if (!Vector.equals(player.location, playerPosition)) {
+                                            successful = false;
+                                            break;
+                                        }
+                                        ;
+                                        player.sendMessageB("§bTeleporting in " + (standStillTime - i));
+                                        await waitTicks(20);
+                                    }
+                                    // Check for PVP cooldown again after ending the teleport countdown.
+                                    if (Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 > Date.now()) {
+                                        player.sendMessageB(`§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on PVP cooldown.`);
+                                        successful = false;
+                                        return 0;
+                                    }
+                                    // Check for teleport cooldown again after ending the teleport countdown.
+                                    if (Number(player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 > Date.now()) {
+                                        player.sendMessageB(`§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on cooldown.`);
+                                        return 0;
+                                    }
+                                    if (successful) {
+                                        try {
+                                            player.teleport(home.location, { dimension: home.location.dimension });
+                                            player.setDynamicProperty("lastTeleportTime", Date.now());
+                                            player.sendMessageB(`Successfully teleported to the home "${argsa.extra}§r§f". `);
+                                        }
+                                        catch (e) {
+                                            player.sendMessageB("§cAn error occured while trying to teleport you to your home: " + e + e.stack);
+                                        }
+                                    }
+                                    else {
+                                        player.sendMessageB("§cTeleport canceled.");
+                                    }
+                                });
                             }
+                        }
+                        else {
+                            player.sendError(`§cError: Could not find a home with the name "${argsa.extra}§r§c". `, true);
                         }
                     }
                     else {
@@ -7458,13 +7534,61 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                     if (config.spawnCommandLocation.x == undefined) {
                         player.sendMessageB('§cError: This command cannot be used becuase no spawn teleport location has been set. It can be enabled at "Main Menu>Settings>Global Settings>spawnCommandLocation"');
                     }
+                    else if (config.spawnCommandLocation.dimension !== player.dimension && !config.teleportSystems.allowCrossDimensionalTeleport) {
+                        player.sendMessageB('§cSorry but you cannot teleport to spawn because you are in a different dimension than spawn and all cross-dimensional teleports have been disabled.');
+                    }
+                    else if (config.spawnCommandLocation.dimension !== player.dimension && !config.spawnCommandAllowCrossDimensionalTeleport) {
+                        player.sendMessageB('§cSorry but you cannot teleport to spawn because you are in a different dimension than spawn and cross-dimensional spawn teleports have been disabled.');
+                    }
                     else if (Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 > Date.now()) {
                         player.sendMessageB(`§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on PVP cooldown.`);
                     }
+                    else if (Number(player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 > Date.now()) {
+                        player.sendMessage(`§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on cooldown.`);
+                    }
                     else {
-                        srun(() => player.teleport(config.spawnCommandLocation, {
-                            dimension: config.spawnCommandLocation.dimension,
-                        }));
+                        srun(async () => {
+                            const standStillTime = config.teleportSystems.standStillTimeToTeleport;
+                            if (standStillTime > 0) {
+                                player.sendMessageB("§eStand still for " + standStillTime + " seconds to teleport.");
+                                await waitTicks(20);
+                            }
+                            const playerPosition = player.location;
+                            let successful = true;
+                            for (let i = 0; i < standStillTime; i++) {
+                                if (!Vector.equals(player.location, playerPosition)) {
+                                    successful = false;
+                                    break;
+                                }
+                                ;
+                                player.sendMessageB("§bTeleporting in " + (standStillTime - i));
+                                await waitTicks(20);
+                            }
+                            // Check for PVP cooldown again after ending the teleport countdown.
+                            if (Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 > Date.now()) {
+                                player.sendMessageB(`§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on PVP cooldown.`);
+                                successful = false;
+                                return 0;
+                            }
+                            // Check for teleport cooldown again after ending the teleport countdown.
+                            if (Number(player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 > Date.now()) {
+                                player.sendMessageB(`§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on cooldown.`);
+                                return 0;
+                            }
+                            if (successful) {
+                                try {
+                                    player.teleport(config.spawnCommandLocation, { dimension: config.spawnCommandLocation.dimension });
+                                    player.setDynamicProperty("lastTeleportTime", Date.now());
+                                    player.sendMessageB(`Successfully teleported to spawn.`);
+                                }
+                                catch (e) {
+                                    player.sendMessageB("§cAn error occured while trying to teleport you to spawn: " + e + e.stack);
+                                }
+                            }
+                            else {
+                                player.sendMessageB("§cTeleport canceled.");
+                            }
+                        });
                     }
                 }
                 break;
@@ -7476,6 +7600,9 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                         if (Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 > Date.now()) {
                             player.sendMessageB(`§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on PVP cooldown.`);
                         }
+                        else if (Number(player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 > Date.now()) {
+                            player.sendMessage(`§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on cooldown.`);
+                        }
                         else {
                             srun(() => {
                                 let args = evaluateParameters(switchTestB, [
@@ -7486,6 +7613,12 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                 args[1].trim().startsWith("@");
                                 let target = targetSelectorAllListC(args[1], "", vTStr(player.location), player).filter((v) => v.typeId == "minecraft:player")[0];
                                 if (!!target) {
+                                    if (target.dimension !== player.dimension && !config.teleportSystems.allowCrossDimensionalTeleport) {
+                                        player.sendMessageB('§cSorry but you cannot send a teleport request to that player because you are in a different dimension than that player and all cross-dimensional teleports have been disabled.');
+                                    }
+                                    else if (target.dimension !== player.dimension && !config.tpaSystem.allowCrossDimensionalTeleport) {
+                                        player.sendMessageB('§cSorry but you cannot send a teleport request to that player because you are in a different dimension than that player and cross-dimensional teleport requests have been disabled.');
+                                    }
                                     //requestChatInput(player, "a").then(v=>psend(player, "as")); srun(()=>requestChatInput(player, "b").then(v=>psend(player, "bs")));
                                     player.sendMessageB(`§aSent a teleport request to "${target.name}".`);
                                     requestConditionalChatInput(target, (player, message) => message.toLowerCase().trim() == "y" ||
@@ -7519,18 +7652,85 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                         expireMs: config.tpaSystem.timeoutDuration *
                                             1000,
                                     })
-                                        .then((t) => {
+                                        .then(async (t) => {
                                         if (t.toLowerCase().trim() == "y") {
                                             if (Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 > Date.now()) {
                                                 target.sendMessage(`§cAccepted teleport request from "${player.name}", but they can't teleport to you right now because they have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 - Date.now()) / 1000)} seconds before they can teleport again because they are still on PVP cooldown.`);
                                                 player.sendMessageB(`§c"${target.name}" accepted your teleport request, but you can't teleport to them right now because you have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on PVP cooldown.`);
                                             }
+                                            else if (Number(player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 > Date.now()) {
+                                                target.sendMessage(`§cAccepted teleport request from "${player.name}", but they can't teleport to you right now because they have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 - Date.now()) / 1000)} seconds before they can teleport again because they are still on cooldown.`);
+                                                player.sendMessageB(`§c"${target.name}" accepted your teleport request, but you can't teleport to them right now because you have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on cooldown.`);
+                                            }
+                                            else if (target.dimension !== player.dimension && !config.teleportSystems.allowCrossDimensionalTeleport) {
+                                                target.sendMessage(`§cAccepted teleport request from "${player.name}", but they can't teleport to you right now because you are in a different dimension than that player and all cross-dimensional teleports have been disabled.`);
+                                                player.sendMessageB(`§c"${target.name}" accepted your teleport request, but you can't teleport to them right now because you are in a different dimension than that player and all cross-dimensional teleports have been disabled.`);
+                                            }
+                                            else if (target.dimension !== player.dimension && !config.tpaSystem.allowCrossDimensionalTeleport) {
+                                                target.sendMessage(`§cAccepted teleport request from "${player.name}", but they can't teleport to you right now because you are in a different dimension than that player and cross-dimensional teleport requests have been disabled.`);
+                                                player.sendMessageB(`§c"${target.name}" accepted your teleport request, but you can't teleport to them right now because you are in a different dimension than that player and cross-dimensional teleport requests have been disabled.`);
+                                            }
                                             else {
-                                                player.teleport(target.location, {
-                                                    dimension: target.dimension,
-                                                });
                                                 target.sendMessage(`§aAccepted teleport request from "${player.name}".`);
-                                                player.sendMessageB(`§aSuccessfully teleported to "${target.name}".`);
+                                                player.sendMessageB(`§c"${target.name}" accepted your teleport request.`);
+                                                const standStillTime = config.teleportSystems.standStillTimeToTeleport;
+                                                let successfulWaitForStandStill = true;
+                                                if (standStillTime > 0) {
+                                                    player.sendMessageB("§eStand still for " + standStillTime + " seconds to teleport.");
+                                                    await waitTicks(20);
+                                                    const start = Date.now();
+                                                    while (!Vector.equals(player.getVelocity(), Vector.zero)) {
+                                                        if (Date.now() - start > 10000) {
+                                                            successfulWaitForStandStill = false;
+                                                            player.sendMessageB(`§cYou took too long to start standing still so your teleport to "${target.name}" was canceled.`);
+                                                            target.sendMessage(`§c"${player.name}" took to long to start standing still so their teleport to you was canceled.`);
+                                                            break;
+                                                        }
+                                                        await waitTick();
+                                                    }
+                                                }
+                                                if (!successfulWaitForStandStill) {
+                                                    return 0;
+                                                }
+                                                const playerPosition = player.location;
+                                                let successful = true;
+                                                for (let i = 0; i < standStillTime; i++) {
+                                                    if (!Vector.equals(player.location, playerPosition)) {
+                                                        successful = false;
+                                                        break;
+                                                    }
+                                                    ;
+                                                    player.sendMessageB("§bTeleporting in " + (standStillTime - i));
+                                                    await waitTicks(20);
+                                                }
+                                                // Check for PVP cooldown again after ending the teleport countdown.
+                                                if (Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 > Date.now()) {
+                                                    player.sendMessageB(`§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on PVP cooldown, as a result of you entering PVP cooldown, your teleport to "${target.name}" was canceled.`);
+                                                    target.sendMessage(`§c"${player.name}" entered PVP cooldown so their teleport to you was canceled.`);
+                                                    successful = false;
+                                                    return 0;
+                                                }
+                                                // Check for teleport cooldown again after ending the teleport countdown.
+                                                if (Number(player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 > Date.now()) {
+                                                    player.sendMessageB(`§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on cooldown.`);
+                                                    target.sendMessage(`§c"${player.name}" entered cooldown so their teleport to you was canceled.`);
+                                                    return 0;
+                                                }
+                                                if (successful) {
+                                                    try {
+                                                        player.teleport(target.location, { dimension: target.dimension });
+                                                        player.setDynamicProperty("lastTeleportTime", Date.now());
+                                                        player.sendMessageB(`§aSuccessfully teleported to "${target.name}".`);
+                                                    }
+                                                    catch (e) {
+                                                        player.sendMessageB("§cAn error occured while trying to teleport you to your home: " + e + e.stack);
+                                                        target.sendMessage(`§cAn error occured while "${target.name}" was trying to teleport to you.`);
+                                                    }
+                                                }
+                                                else {
+                                                    player.sendMessageB("§cTeleport canceled.");
+                                                    target.sendMessage(`§c"${player.name}" moved so their teleport to you was canceled.`);
+                                                }
                                             }
                                         }
                                         else {
@@ -8327,6 +8527,17 @@ break; */ // COMING SOON!
                     player.sendError("§c" + e + e.stack, true);
                 }
                 break;
+            case !!switchTest.match(/^playermenu$/) ||
+                !!switchTest.match(/^pm$/) ||
+                !!switchTest.match(/^pmenu$/):
+                eventData.cancel = true;
+                try {
+                    system.run(() => playerMenu(player));
+                }
+                catch (e) {
+                    player.sendError("§c" + e + e.stack, true);
+                }
+                break;
             case !!switchTest.match(/^terminal$/) ||
                 !!switchTest.match(/^cmdrunner$/):
                 eventData.cancel = true;
@@ -8493,6 +8704,20 @@ break; */ // COMING SOON!
             eventData.cancel = true;
             try{system.run(()=>world.getAllPlayers().forEach(p=>uiManager.closeAllForms(p))); }catch(e){player.sendError("§c" + e + e.stack, true)}
         break; */
+            case !!switchTest.match(/^clearchat$/) ||
+                !!switchTest.match(/^cc$/):
+                {
+                    eventData.cancel = true;
+                    // Hide all chat messages for players currently in the chat window.
+                    for (let i = 0; i < 100; i++) {
+                        world.sendMessage(" ");
+                    }
+                    // Remove the visible messages that were just sent so the when the player re-opens the chat window, the scrollbar will disappear.
+                    for (let i = 0; i < 100; i++) {
+                        world.sendMessage("");
+                    }
+                }
+                break;
             case !!switchTest.match(/^closeuis$/) ||
                 !!switchTest.match(/^closeui$/):
                 {

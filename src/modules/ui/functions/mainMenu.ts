@@ -302,8 +302,11 @@ catch(e) {
                     return 0;
                     break;
                 case "moderation":
-                    moderationSettings(sourceEntity);
-                    return 0;
+                    if ((await moderationSettings(sourceEntity)) == 1) {
+                        return await mainMenu(sourceEntity);
+                    } else {
+                        return 0;
+                    }
                     break;
                 case "security":
                     if ((await securitySettings(sourceEntity)) == 1) {
@@ -327,8 +330,11 @@ catch(e) {
                     }
                     break;
                 case "manageCommands":
-                    manageCommands(sourceEntity);
-                    return 0;
+                    if ((await manageCommands(sourceEntity)) == 1) {
+                        return await mainMenu(sourceEntity);
+                    } else {
+                        return 0;
+                    }
                     break;
                 case "itemEditor":
                     try {

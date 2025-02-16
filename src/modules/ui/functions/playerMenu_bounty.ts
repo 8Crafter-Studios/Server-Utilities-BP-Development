@@ -1,0 +1,87 @@
+import { Entity, ObjectiveSortOrder, Player, world } from "@minecraft/server";
+import { ActionFormData, ActionFormResponse, ModalFormData } from "@minecraft/server-ui";
+import { forceShow } from "modules/ui/functions/forceShow";
+import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
+import { showMessage } from "modules/utilities/functions/showMessage";
+import type { playerMenuLeaderboardStatistic } from "../types/playerMenuLeaderboardStatistic";
+import { savedPlayer } from "modules/player_save/classes/savedPlayer";
+import { defaultPlayerMenuLeaderboardStatistics } from "../constants/defaultPlayerMenuLeaderboardStatistics";
+import { numberFormatter } from "modules/utilities/functions/numberFormatter";
+import type { Bounty, TotalBounty } from "modules/main/classes/Bounty";
+import { playerMenu_bounty_individuals } from "./playerMenu_bounty_individuals";
+
+export async function playerMenu_bounty(
+    sourceEntitya: Entity | executeCommandPlayerW | Player,
+    totalBounty: TotalBounty,
+    targetPlayer?: savedPlayer
+): Promise<0 | 1> {
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
+    if (!(sourceEntity instanceof Player)) {
+        throw new TypeError(
+            "Invalid Player. Expected an instance of the Player class, or an instance of the executeCommandPlayerW class with a Player linked to it, but instead got " +
+                (typeof sourceEntity == "object"
+                    ? sourceEntity === null
+                        ? "object[null]"
+                        : "object[" + ((sourceEntity as object).constructor.name ?? "unknown") + "]"
+                    : typeof sourceEntity) +
+                "."
+        );
+    }
+    if (!config.bountySystem.enabled) {
+        const r = await showMessage(
+            sourceEntity as Player,
+            "Bounty System Disabled",
+            "The bounty system is disabled. It must be enabled in Main Menu > Settings > Bounty System.",
+            "Back",
+            "Cancel"
+        );
+        if (r.canceled || r.selection == 0) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+    const target = targetPlayer ?? totalBounty.getLinkedTargetSavedPlayer();
+    const menuConfig = config.ui.menus.playerMenu_leaderboards;
+    // menuConfig.buttons.map(k=>[k, menuButtonIds.mainMenu.buttons[k]])
+    let form = new ActionFormData();
+    form.title(target.name);
+    form.body(
+        `Target: ${target.name}\n${
+            target.isOnline
+                ? "Online"
+                : target.isBanned
+                ? "Banned"
+                : menuConfig.showLastOnlineTimeInPlayerStatsList
+                ? "Last Online: " + new Date(target.lastOnline).formatDateTime(sourceEntity.timeZone, false, true)
+                : "Offline"
+        }\nTotal Reward: ${numberFormatter(totalBounty.totalValue, { prefixWithDollarSign: true, addCommaSeparators: true }, 0)}`
+    );
+    form.button(`View Individual Bounties\n${totalBounty.getBounties().length}`, "textures/ui/arrow_left");
+    form.button("Back", "textures/ui/arrow_left");
+    form.button("Close", "textures/ui/crossout");
+    return await forceShow(form, sourceEntity)
+        .then(async (ra) => {
+            let r = ra as ActionFormResponse;
+            // This will stop the code when the player closes the form
+            if (r.canceled) return 1;
+
+            switch ((["individualBounties", "back", "close"] as const)[r.selection]) {
+                case "individualBounties":
+                    if ((await playerMenu_bounty_individuals(sourceEntity, totalBounty, target)) == 1) {
+                        return await playerMenu_bounty(sourceEntity, totalBounty, target);
+                    } else {
+                        return 0;
+                    }
+                case "back":
+                    return 1;
+                case "close":
+                    return 0;
+                default:
+            }
+        })
+        .catch((e) => {
+            console.error(e, e.stack);
+            return 0;
+        });
+}

@@ -720,10 +720,10 @@ export async function securitySettings_playersWithPermissions_permission_UltraSe
                 }
                 break;
             case 1:
-                return await securitySettings_playersWithPermissions_permission_UltraSecurityMode(sourceEntity, permission, Math.max(0, page - 1));
+                return await securitySettings_playersWithPermissions_permission_UltraSecurityMode(sourceEntity, permission, Math.max(0, page - 1), maxplayersperpage, search);
                 break;
             case 2:
-                return await securitySettings_playersWithPermissions_permission_UltraSecurityMode(sourceEntity, permission, Math.min(numpages - 1, page + 1));
+                return await securitySettings_playersWithPermissions_permission_UltraSecurityMode(sourceEntity, permission, Math.min(numpages - 1, page + 1), maxplayersperpage, search);
                 break;
             case numplayersonpage + 3:
                 return 1;

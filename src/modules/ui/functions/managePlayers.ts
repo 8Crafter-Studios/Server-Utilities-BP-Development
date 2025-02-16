@@ -7,6 +7,8 @@ import { ban } from "modules/ban/classes/ban";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { managePlayers_managePlayer } from "./managePlayers_managePlayer";
 import { savedPlayer } from "modules/player_save/classes/savedPlayer";
+import { securityVariables } from "security/ultraSecurityModeUtils";
+import { showMessage } from "modules/utilities/functions/showMessage";
 
 
 export async function managePlayers(
@@ -26,6 +28,16 @@ export async function managePlayers(
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW
         ? sourceEntitya.player
         : sourceEntitya;
+    if (securityVariables.ultraSecurityModeEnabled) {
+        if(securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.accessManagePlayersUI") == false){
+            const r = await showMessage(sourceEntity as Player, "Access Denied (403)", "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.accessManagePlayersUI", "Okay", "Cancel");
+            if(r.canceled || r.selection == 0){
+                return 1;
+            }else{
+                return 0;
+            }
+        }
+    }
     let form = new ActionFormData();
     const page = Math.max(0, pagen);
     const savedPlayers = savedPlayer
@@ -252,13 +264,17 @@ export async function managePlayers(
                 case 1:
                     return await managePlayers(
                         sourceEntity,
-                        Math.max(0, page - 1)
+                        Math.max(0, page - 1),
+                        maxplayersperpage,
+                        search
                     );
                     break;
                 case 2:
                     return await managePlayers(
                         sourceEntity,
-                        Math.min(numpages - 1, page + 1)
+                        Math.min(numpages - 1, page + 1),
+                        maxplayersperpage,
+                        search
                     );
                     break;
                 case numplayersonpage + 3:

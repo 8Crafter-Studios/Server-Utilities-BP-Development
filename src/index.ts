@@ -71,6 +71,29 @@ import mcMath from "@minecraft/math.js";
 import colorCore, { Color } from "color-core";
 import Decimal from "decimal.js";
 import * as semver from "semver";
+import * as ipc from "ipc";
+import "intl";
+import "intl.locales";
+Object.defineProperties(globalThis, {
+    IPC: {
+        value: ipc.IPC,
+        configurable: false,
+        enumerable: true,
+        writable: false,
+    },
+    IPC_NET: {
+        value: ipc.NET,
+        configurable: false,
+        enumerable: true,
+        writable: false,
+    },
+    IPC_PROTO: {
+        value: ipc.PROTO,
+        configurable: false,
+        enumerable: true,
+        writable: false,
+    },
+});
 // semver
 // import * as main from "legacyModuleAliases/Main";
 // import * as coords from "legacyModuleAliases/coordinates";
@@ -146,6 +169,7 @@ export const modulesMap = {
     Color,
     Decimal,
     semver,
+    ipc,
     ["@minecraft/server"]: mcServer,
     ["@minecraft/server-ui"]: mcServerUi,
     ["@minecraft/server-gametest"]: GameTest /*
@@ -179,7 +203,10 @@ export const modulesMap = {
 globalThis.modules = modulesMap;
 declare global {
     namespace globalThis {
-        var modules: typeof modulesMap;
+        var modules: typeof modulesMap;/* 
+        var IPC: typeof ipc.IPC;
+        var IPC_NET: typeof ipc.NET;
+        var IPC_PROTO: typeof ipc.PROTO; */
     }
 }
 // import "Main";

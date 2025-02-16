@@ -945,14 +945,18 @@ export async function securitySettings_playersWithPermissions_permission_UltraSe
                     return await securitySettings_playersWithPermissions_permission_UltraSecurityMode(
                         sourceEntity,
                         permission,
-                        Math.max(0, page - 1)
+                        Math.max(0, page - 1),
+                        maxplayersperpage,
+                        search
                     );
                     break;
                 case 2:
                     return await securitySettings_playersWithPermissions_permission_UltraSecurityMode(
                         sourceEntity,
                         permission,
-                        Math.min(numpages - 1, page + 1)
+                        Math.min(numpages - 1, page + 1),
+                        maxplayersperpage,
+                        search
                     );
                     break;
                 case numplayersonpage + 3:

@@ -410,12 +410,12 @@ declare global {
 // open brackets that follow a colon or comma or that begin the text. Finally,
 // we look to see that the remaining characters are only whitespace or "]" or
 // "," or ":" or "{" or "}". If that is so, then the text is safe for eval.
-console.log(
+/* console.log(
     text
         .replace(rx_two, "@")
         .replace(rx_three_b, "]")
         .replace(rx_four, "")
-)
+) */
             if (
                 rx_one.test(
                     text

@@ -168,6 +168,7 @@ import "./eventSubscriptions/beforeEvents/worldInitialize";
 import "./eventSubscriptions/events/scriptInitialize";
 import "./intervals/debugSticksCooldownCounter";
 import "./intervals/everyTickAutoEval";
+import "./intervals/playerMenuItemNameSetter";
 import "./intervals/rankNameTags_editorStickActionbar_artificialLagMS";
 import "./intervals/worldBorderSystem";
 import "./systems/ban_checker";

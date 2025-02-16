@@ -1,7 +1,7 @@
 import { EquipmentSlot, type Enchantment, type Vector3, Dimension, type Vector2, type DimensionLocation, GameMode, MemoryTier, PlatformType, Player, ItemStack } from "@minecraft/server";
 import type { PlayerPermissions } from "init/classes/PlayerPermissions";
 import { ban } from "modules/ban/classes/ban";
-export type SavedPlayerOnJoinAction = SavedPlayerOnJoinAction_add_tag | SavedPlayerOnJoinAction_remove_tag | SavedPlayerOnJoinAction_add_tags | SavedPlayerOnJoinAction_remove_tags | SavedPlayerOnJoinAction_remove_item_in_slot | SavedPlayerOnJoinAction_clear_inventory | SavedPlayerOnJoinAction_set_permission<keyof ReturnType<PlayerPermissions["toJSON"]>>;
+export type SavedPlayerOnJoinAction = SavedPlayerOnJoinAction_add_tag | SavedPlayerOnJoinAction_remove_tag | SavedPlayerOnJoinAction_add_tags | SavedPlayerOnJoinAction_remove_tags | SavedPlayerOnJoinAction_remove_item_in_slot | SavedPlayerOnJoinAction_clear_inventory | SavedPlayerOnJoinAction_set_permission<keyof ReturnType<PlayerPermissions["toJSON"]>> | SavedPlayerOnJoinAction_send_message;
 export interface SavedPlayerOnJoinAction_add_tag {
     type: "add_tag";
     tag: string;
@@ -29,6 +29,10 @@ export interface SavedPlayerOnJoinAction_set_permission<P extends keyof ReturnTy
     type: "set_permission";
     permission: P;
     value: ReturnType<PlayerPermissions["toJSON"]>[P];
+}
+export interface SavedPlayerOnJoinAction_send_message {
+    type: "send_message";
+    message: string;
 }
 export type SavedPlayerOnJoinActions = SavedPlayerOnJoinAction[];
 export interface savedItem {
@@ -66,6 +70,7 @@ export interface savedPlayerData {
     spawnPoint?: DimensionLocation;
     gameMode?: GameMode | string;
     selectedSlotIndex?: number;
+    scoreboardIdentity?: number;
     format_version?: string;
     player_save_format_version?: string;
     saveId?: string;
@@ -211,6 +216,9 @@ export declare class savedPlayer {
         34?: ItemStack | undefined;
         35?: ItemStack | undefined;
     };
+    addOnJoinAction(action: SavedPlayerOnJoinAction): this;
+    addOnJoinActions(actions: SavedPlayerOnJoinActions): this;
+    removeOnJoinActionsOfType(type: SavedPlayerOnJoinAction["type"]): this;
     executeOnJoinActions(): Promise<void>;
     get isOnline(): boolean;
     get isBanned(): boolean;

@@ -55,6 +55,12 @@ export async function managePlayers_managePlayer(
                       false,
                       true
                   )
+        }\nFirst Joined: ${
+            new Date(player.firstJoined).formatDateTime(
+                sourceEntity.timeZone,
+                false,
+                true
+            )
         }\nData Format Version: ${player.format_version}${
             ban.testForIdBannedPlayer(player)
                 ? "ID BANNED"
@@ -336,6 +342,7 @@ export async function managePlayers_managePlayer(
                                 )
                                 .forceShow(sourceEntity as Player)
                                 .then(async (r) => {
+                                    if(r.canceled) return 1;
                                     if (!!r.formValues[0].toBigInt()) {
                                         MoneySystem.get(player.id).setMoney(
                                             r.formValues[0].toBigInt()

@@ -1,6 +1,9 @@
 import { world, StructureSaveMode, type DimensionLocation, Dimension } from "@minecraft/server";
 import { gwdp } from "init/functions/gwdp";
+import type { Warp } from "modules/coordinates/interfaces/Warp";
+import { defaultPlayerMenuLeaderboardStatistics } from "modules/ui/constants/defaultPlayerMenuLeaderboardStatistics";
 import { menuButtonIds } from "modules/ui/constants/menuButtonIds";
+import type { playerMenuLeaderboardStatistic } from "modules/ui/types/playerMenuLeaderboardStatistic";
 
 /**
  * A class containing the configuration information for the add-on.
@@ -81,6 +84,17 @@ export class config {
                 dimension: spawnCommandLocation?.dimension ?? overworld,
             })
         );
+    }
+    /**
+     * Whether or not players can teleport to spawn using the `\spawn` command when they are in a different dimension than the spawn.
+     * 
+     * Defaults to true.
+     */
+    static get spawnCommandAllowCrossDimensionalTeleport(): boolean {
+        return Boolean(world.getDynamicProperty("andexdbSettings:spawnCommandAllowCrossDimensionalTeleport") ?? true);
+    }
+    static set spawnCommandAllowCrossDimensionalTeleport(enabled: boolean | undefined) {
+        world.setDynamicProperty("andexdbSettings:spawnCommandAllowCrossDimensionalTeleport", enabled ?? true);
     }
     static get worldBorder() {
         return {
@@ -547,13 +561,44 @@ export class config {
             },
         };
     }
+    static get teleportSystems() {
+        return {
+            /**
+             * Whether or not cross-dimensional teleports are allowed.
+             * 
+             * Affects all types of teleports that regular players can use, including but not limited to the home system, TPA system, and the `\spawn` command.
+             * 
+             * Overrides the `allowCrossDimensionalTeleport` options for the home system, TPA system, and `\spawn` command.
+             * 
+             * Defaults to true.
+             */
+            get allowCrossDimensionalTeleport(): boolean {
+                return Boolean(world.getDynamicProperty("teleportSystemsSettings:allowCrossDimensionalTeleport") ?? true);
+            },
+            set allowCrossDimensionalTeleport(enabled: boolean | undefined) {
+                world.setDynamicProperty("teleportSystemsSettings:allowCrossDimensionalTeleport", enabled ?? true);
+            },
+            get teleportCooldown(): number {
+                return Number(world.getDynamicProperty("homeSystemSettings:teleportCooldown") ?? 0);
+            },
+            set teleportCooldown(maxHomes: number | undefined) {
+                world.setDynamicProperty("homeSystemSettings:teleportCooldown", maxHomes ?? 0);
+            },
+            get standStillTimeToTeleport(): number {
+                return Number(world.getDynamicProperty("homeSystemSettings:standStillTimeToTeleport") ?? 0);
+            },
+            set standStillTimeToTeleport(maxHomes: number | undefined) {
+                world.setDynamicProperty("homeSystemSettings:standStillTimeToTeleport", maxHomes ?? 0);
+            },
+        };
+    }
     static get homeSystem() {
         return {
             get homeSystemEnabled(): boolean {
-                return Boolean(world.getDynamicProperty("homeSystemSettings:homeSystemEnabled") ?? false);
+                return Boolean(world.getDynamicProperty("homeSystemSettings:homeSystemEnabled") ?? true);
             },
             set homeSystemEnabled(enabled: boolean | undefined) {
-                world.setDynamicProperty("homeSystemSettings:homeSystemEnabled", enabled ?? false);
+                world.setDynamicProperty("homeSystemSettings:homeSystemEnabled", enabled ?? true);
             },
             get maxHomesPerPlayer(): number {
                 return world.getDynamicProperty("homeSystemSettings:maxHomesPerPlayer") == -1
@@ -563,20 +608,44 @@ export class config {
             set maxHomesPerPlayer(maxHomes: number | undefined) {
                 world.setDynamicProperty("homeSystemSettings:maxHomesPerPlayer", (maxHomes ?? Infinity) == Infinity ? -1 : maxHomes);
             },
+            /**
+             * Whether or not you can teleport to a home that is in a different dimension than you.
+             * 
+             * Defaults to true.
+             */
+            get allowCrossDimensionalTeleport(): boolean {
+                return Boolean(world.getDynamicProperty("homeSystemSettings:allowCrossDimensionalTeleport") ?? true);
+            },
+            set allowCrossDimensionalTeleport(enabled: boolean | undefined) {
+                world.setDynamicProperty("homeSystemSettings:allowCrossDimensionalTeleport", enabled ?? true);
+            },
+            /**
+             * Whether or not homes are allowed in dimensions other than the overworld.
+             * 
+             * Defaults to true.
+             */
+            get allowHomesInOtherDimensions(): boolean {
+                return Boolean(world.getDynamicProperty("homeSystemSettings:allowHomesInOtherDimensions") ?? true);
+            },
+            set allowHomesInOtherDimensions(enabled: boolean | undefined) {
+                world.setDynamicProperty("homeSystemSettings:allowHomesInOtherDimensions", enabled ?? true);
+            },
         };
     }
     static get tpaSystem() {
         return {
             get tpaSystemEnabled(): boolean {
                 return Boolean(
-                    world.getDynamicProperty("tpaSystemSettings:tpaSystemEnabled") ?? world.getDynamicProperty("rtpSystemSettings:rtpSystemEnabled") ?? false
+                    world.getDynamicProperty("tpaSystemSettings:tpaSystemEnabled") ?? world.getDynamicProperty("rtpSystemSettings:rtpSystemEnabled") ?? true
                 );
             },
             set tpaSystemEnabled(enabled: boolean | undefined) {
-                world.setDynamicProperty("tpaSystemSettings:tpaSystemEnabled", enabled ?? false);
+                world.setDynamicProperty("tpaSystemSettings:tpaSystemEnabled", enabled ?? true);
             },
             /**
              * The number of seconds after a teleport request is sent before it will time out.
+             * 
+             * Defaults to 60.
              */
             get timeoutDuration(): number {
                 return isNaN(Number(world.getDynamicProperty("tpaSystemSettings:timeoutDuration")))
@@ -585,6 +654,17 @@ export class config {
             },
             set timeoutDuration(timeoutDuration: number | undefined) {
                 world.setDynamicProperty("tpaSystemSettings:timeoutDuration", timeoutDuration ?? 60);
+            },
+            /**
+             * Whether or not you can teleport to a player who is in a different dimension than you.
+             * 
+             * Defaults to true.
+             */
+            get allowCrossDimensionalTeleport(): boolean {
+                return Boolean(world.getDynamicProperty("tpaSystemSettings:allowCrossDimensionalTeleport") ?? true);
+            },
+            set allowCrossDimensionalTeleport(enabled: boolean | undefined) {
+                world.setDynamicProperty("tpaSystemSettings:allowCrossDimensionalTeleport", enabled ?? true);
             },
         };
     }
@@ -767,6 +847,89 @@ export class config {
             },
         };
     }
+    static get bountySystem() {
+        return {
+            /**
+             * Whether or not the bounty system is enabled.
+             * 
+             * Default: true.
+             * 
+             * Dynamic Property ID: andexdbSettings:bountySystem.enabled
+             */
+            get enabled(): boolean {
+                return Boolean(world.getDynamicProperty("andexdbSettings:bountySystem.enabled") ?? true);
+            },
+            set enabled(enabled: boolean | undefined) {
+                world.setDynamicProperty("andexdbSettings:bountySystem.enabled", enabled ?? true);
+            },
+            /**
+             * Whether to show the time that a player was last online in the stats list that is shown when a player clicks on the bounty for another player in the bounty list.
+             * 
+             * Defaults to false.
+             */
+            get showLastOnlineTimeInBountyDetailsList(): boolean {
+                return Boolean(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.showLastOnlineTimeInPlayerStatsList") ?? false);
+            },
+            set showLastOnlineTimeInBountyDetailsList(show: boolean | undefined) {
+                world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.showLastOnlineTimeInPlayerStatsList", show ?? false);
+            },
+        };
+    }
+    static get warpsSystem() {
+        return {
+            /**
+             * Whether or not the warps system is enabled.
+             * 
+             * Default: true.
+             * 
+             * Dynamic Property ID: andexdbSettings:warpsSystem.enabled
+             */
+            get enabled(): boolean {
+                return Boolean(world.getDynamicProperty("warpsSystem:bountySystem.enabled") ?? true);
+            },
+            set enabled(enabled: boolean | undefined) {
+                world.setDynamicProperty("andexdbSettings:warpsSystem.enabled", enabled ?? true);
+            },
+            /**
+             * List of saved warps.
+             * 
+             * Default: [].
+             * 
+             * Dynamic Property ID: andexdbSettings:warpsSystem.warps
+             * 
+             * @throws The setter throws if the input is not an array of warp interface objects or undefined.
+             */
+            get warps(): Warp[] {
+                return JSONB.parse(world.getStringFromDynamicProperties("warpsSystem:warpsSystem.warps", "[]"));
+            },
+            set warps(warps: Warp[] | undefined) {
+                if(warps === undefined){
+                    world.saveStringToDynamicProperties("warpsSystem:warpsSystem.warps", "[]");
+                }else if(warps instanceof Array){
+                    world.saveStringToDynamicProperties("warpsSystem:warpsSystem.warps", JSONB.stringify(warps));
+                }else{
+                    throw new TypeError("Invalid warps list provided, expected an array of warp interface objects or undefined, but instead got " + (typeof warps == "object" ? warps === null ? "object[null]" : "object[" + ((warps as object).constructor.name ?? "unknown") + "]" : typeof warps) + ".")
+                }
+            },
+        };
+    }
+    static get moneyTransferSystem() {
+        return {
+            /**
+             * Whether or not the money transfer system is enabled.
+             * 
+             * Default: true.
+             * 
+             * Dynamic Property ID: andexdbSettings:moneyTransferSystem.enabled
+             */
+            get enabled(): boolean {
+                return Boolean(world.getDynamicProperty("andexdbSettings:moneyTransferSystem.enabled") ?? true);
+            },
+            set enabled(enabled: boolean | undefined) {
+                world.setDynamicProperty("andexdbSettings:moneyTransferSystem.enabled", enabled ?? true);
+            },
+        };
+    }
     static get antiSpamSystem() {
         return {
             get antispamEnabled(): boolean {
@@ -835,14 +998,13 @@ export class config {
                                 world.setDynamicProperty(
                                     "andexdbSettings:ui.menus.mainMenu.buttons",
                                     JSON.stringify(
-                                        buttonList ?? JSON.stringify(
+                                        buttonList ?? 
                                             (Object.keys(menuButtonIds.mainMenu.buttons) as (keyof typeof menuButtonIds.mainMenu.buttons)[]).sort(
                                                 (a, b)=>
                                                     menuButtonIds.mainMenu.buttons[a].defaultButtonIndex > menuButtonIds.mainMenu.buttons[b].defaultButtonIndex
                                                     ? 1
                                                     : menuButtonIds.mainMenu.buttons[a].defaultButtonIndex < menuButtonIds.mainMenu.buttons[b].defaultButtonIndex ? -1 : 0
                                             )
-                                        )
                                     )
                                 );
                             },
@@ -906,34 +1068,55 @@ export class config {
                     get playerMenu() {
                         return {
                             /**
+                             * Whether or not the player menu is enabled.
+                             * 
+                             * Defaults to true.
+                             */
+                            get enabled(): boolean {
+                                return Boolean(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu.enabled") ?? true);
+                            },
+                            set enabled(enabled: boolean | undefined) {
+                                world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu.enabled", enabled ?? true);
+                            },
+                            /**
                              * 
                              */
-                            get buttons(): (keyof typeof menuButtonIds.mainMenu.buttons)[] {
+                            get buttons(): (keyof typeof menuButtonIds.playerMenu.buttons)[] {
                                 return JSON.parse(
                                     String(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu.buttons") ?? JSON.stringify(
-                                        (Object.keys(menuButtonIds.mainMenu.buttons) as (keyof typeof menuButtonIds.mainMenu.buttons)[]).sort(
+                                        (Object.keys(menuButtonIds.playerMenu.buttons) as (keyof typeof menuButtonIds.playerMenu.buttons)[]).sort(
                                             (a, b)=>
-                                                menuButtonIds.mainMenu.buttons[a].defaultButtonIndex > menuButtonIds.mainMenu.buttons[b].defaultButtonIndex
+                                                menuButtonIds.playerMenu.buttons[a].defaultButtonIndex > menuButtonIds.playerMenu.buttons[b].defaultButtonIndex
                                                 ? 1
-                                                : menuButtonIds.mainMenu.buttons[a].defaultButtonIndex < menuButtonIds.mainMenu.buttons[b].defaultButtonIndex ? -1 : 0
+                                                : menuButtonIds.playerMenu.buttons[a].defaultButtonIndex < menuButtonIds.playerMenu.buttons[b].defaultButtonIndex ? -1 : 0
                                         ))
                                     )
                                 );
                             },
-                            set buttons(buttonList: (keyof typeof menuButtonIds.mainMenu.buttons)[] | undefined) {
+                            set buttons(buttonList: (keyof typeof menuButtonIds.playerMenu.buttons)[] | undefined) {
                                 world.setDynamicProperty(
                                     "andexdbSettings:ui.menus.playerMenu.buttons",
                                     JSON.stringify(
-                                        buttonList ?? JSON.stringify(
-                                            (Object.keys(menuButtonIds.mainMenu.buttons) as (keyof typeof menuButtonIds.mainMenu.buttons)[]).sort(
+                                        buttonList ?? 
+                                            (Object.keys(menuButtonIds.playerMenu.buttons) as (keyof typeof menuButtonIds.playerMenu.buttons)[]).sort(
                                                 (a, b)=>
-                                                    menuButtonIds.mainMenu.buttons[a].defaultButtonIndex > menuButtonIds.mainMenu.buttons[b].defaultButtonIndex
+                                                    menuButtonIds.playerMenu.buttons[a].defaultButtonIndex > menuButtonIds.playerMenu.buttons[b].defaultButtonIndex
                                                     ? 1
-                                                    : menuButtonIds.mainMenu.buttons[a].defaultButtonIndex < menuButtonIds.mainMenu.buttons[b].defaultButtonIndex ? -1 : 0
+                                                    : menuButtonIds.playerMenu.buttons[a].defaultButtonIndex < menuButtonIds.playerMenu.buttons[b].defaultButtonIndex ? -1 : 0
                                             )
-                                        )
                                     )
                                 );
+                            },
+                            /**
+                             * The item name for the item that opens the player menu.
+                             * 
+                             * Defaults to "Menu".
+                             */
+                            get itemName(): string {
+                                return String(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu.itemName") ?? "§r§fMenu");
+                            },
+                            set itemName(itemName: string | undefined) {
+                                world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu.itemName", itemName ?? "§r§fMenu");
                             },
                             /**
                              * Whether to show the buttons marked as deprecated on the player menu.
@@ -989,6 +1172,121 @@ export class config {
                             },
                             set showNonFunctionalButtons(show: boolean | undefined) {
                                 world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu.showNonFunctionalButtons", show ?? false);
+                            },
+                        };
+                    },
+                    get playerMenu_leaderboards() {
+                        return {
+                            /**
+                             * The settings for the built-in leaderboard statistics.
+                             */
+                            get builtInStats() {
+                                return {
+                                    get money() {
+                                        return {
+                                            /**
+                                             * Whether or not this built-in statictic is enabled.
+                                             * 
+                                             * Defaults to true.
+                                             */
+                                            get enabled(): boolean {
+                                                return Boolean(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu.enabled") ?? true);
+                                            },
+                                            set enabled(enabled: boolean | undefined) {
+                                                world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu.enabled", enabled ?? true);
+                                            },
+                                        }
+                                    },
+                                }
+                            },
+                            /**
+                             * 
+                             */
+                            get customStats(): playerMenuLeaderboardStatistic<"custom"|"customAdvanced">[] {
+                                return JSON.parse(
+                                    String(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.customStats") ?? JSON.stringify(
+                                        (Object.keys(menuButtonIds.playerMenu.buttons) as (keyof typeof menuButtonIds.playerMenu.buttons)[]).sort(
+                                            (a, b)=>
+                                                menuButtonIds.playerMenu.buttons[a].defaultButtonIndex > menuButtonIds.playerMenu.buttons[b].defaultButtonIndex
+                                                ? 1
+                                                : menuButtonIds.playerMenu.buttons[a].defaultButtonIndex < menuButtonIds.playerMenu.buttons[b].defaultButtonIndex ? -1 : 0
+                                        ))
+                                    )
+                                );
+                            },
+                            set customStats(buttonList: playerMenuLeaderboardStatistic<"custom"|"customAdvanced">[] | undefined) {
+                                world.setDynamicProperty(
+                                    "andexdbSettings:ui.menus.playerMenu_leaderboards.customStats",
+                                    JSON.stringify(
+                                        buttonList ?? []
+                                    )
+                                );
+                            },
+                            /**
+                             * The statistics that are displayed when a player clicks on another player inside of the player menu leaderboard, they will be displayed in the order they are in this array.
+                             * 
+                             * It should be an array of ids of leaderboard statistics, including both custom and built-in ones.
+                             * 
+                             * Defaults to the list of the built-in leaderboard statistics from the `defaultPlayerMenuLeaderboardStatistics` array, in the same order that they appear in the array.
+                             */
+                            get trackedStats(): string[] {
+                                return JSON.parse(
+                                    String(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.trackedStats") ??
+                                        JSON.stringify(defaultPlayerMenuLeaderboardStatistics.map(s=>s.id))
+                                    )
+                                );
+                            },
+                            set trackedStats(buttonList: string[] | undefined) {
+                                world.setDynamicProperty(
+                                    "andexdbSettings:ui.menus.playerMenu_leaderboards.trackedStats",
+                                    JSON.stringify(
+                                        buttonList ?? defaultPlayerMenuLeaderboardStatistics.map(s=>s.id)
+                                    )
+                                );
+                            },
+                            /**
+                             * The list of statistics that have their own leaderboards, they will be displayed in the order they are in this array.
+                             * 
+                             * It should be an array of ids of leaderboard statistics, including both custom and built-in ones.
+                             * 
+                             * Defaults to the list of the built-in leaderboard statistics from the `defaultPlayerMenuLeaderboardStatistics` array, in the same order that they appear in the array.
+                             */
+                            get leaderboards(): string[] {
+                                return JSON.parse(
+                                    String(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.trackedStats") ??
+                                        JSON.stringify(defaultPlayerMenuLeaderboardStatistics.map(s=>s.id))
+                                    )
+                                );
+                            },
+                            set leaderboards(buttonList: string[] | undefined) {
+                                world.setDynamicProperty(
+                                    "andexdbSettings:ui.menus.playerMenu_leaderboards.trackedStats",
+                                    JSON.stringify(
+                                        buttonList ?? defaultPlayerMenuLeaderboardStatistics.map(s=>s.id)
+                                    )
+                                );
+                            },
+                            /**
+                             * Whether to show the time that a player was last online in the stats list that is shown when a player click on another player in a leaderboard.
+                             * 
+                             * Defaults to false.
+                             */
+                            get showLastOnlineTimeInPlayerStatsList(): boolean {
+                                return Boolean(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.showLastOnlineTimeInPlayerStatsList") ?? false);
+                            },
+                            set showLastOnlineTimeInPlayerStatsList(show: boolean | undefined) {
+                                world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.showLastOnlineTimeInPlayerStatsList", show ?? false);
+                            },
+                            /**
+                             * Whether to show banned players inside of the leaderboards.
+                             * 
+                             * Defaults to false.
+                             */
+                            get showBannedPlayersInLeaderboards(): boolean {
+                                return Boolean(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.showBannedPlayersInLeaderboards") ?? false);
+                            },
+                            set showBannedPlayersInLeaderboards(show: boolean | undefined) {
+                                world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.showBannedPlayersInLeaderboards", show ?? false);
                             },
                         };
                     },

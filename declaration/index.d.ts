@@ -18,6 +18,9 @@ import mcMath from "@minecraft/math.js";
 import colorCore from "color-core";
 import Decimal from "decimal.js";
 import * as semver from "semver";
+import * as ipc from "ipc";
+import "intl";
+import "intl.locales";
 import * as shopmain from "ExtraFeatures/shop_main";
 import * as servershop from "ExtraFeatures/server_shop";
 import * as playershop from "ExtraFeatures/player_shop";
@@ -44,6 +47,7 @@ export declare const modulesMap: {
     Color: typeof colorCore.Color;
     Decimal: typeof Decimal;
     semver: typeof semver;
+    ipc: typeof ipc;
     "@minecraft/server": typeof mcServer;
     "@minecraft/server-ui": typeof mcServerUi;
     "@minecraft/server-gametest": typeof GameTest;

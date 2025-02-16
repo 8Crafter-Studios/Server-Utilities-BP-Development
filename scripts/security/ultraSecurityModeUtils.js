@@ -6,6 +6,7 @@ import { showMessage } from "modules/utilities/functions/showMessage";
 import { ActionFormData } from "@minecraft/server-ui";
 import { CharacterSetConverter } from "modules/utilities/classes/CharacterSetConverter";
 import { saveStringToDynamicProperties } from "modules/utilities/functions/saveStringToDynamicProperties";
+import { mainMenu } from "modules/ui/functions/mainMenu";
 import { commandCategoriesDisplay } from "modules/ui/functions/commandCategoriesDisplay";
 let ownerUsingDiablePermissionsDebug = false;
 const deepFreeze = (obj) => {
@@ -401,6 +402,22 @@ Note: Unless the player has the 'andexdb.fullControl' permission, the player can
         additionalPrompts: [],
     },
     /**
+     * Allows the player to access the manage warps UI.
+     * This allows the player to add, remove, and reorder the warps that are in the Warps section of the player menu.
+     * This permission is included in the `andexdb.headAdmin` permission.
+     * This permission is included in the `andexdb.admin` permission.
+     */
+    "andexdb.accessManageWarpsUI": {
+        id: "andexdb.accessManageWarpsUI",
+        default: false,
+        includedInPermissions: [],
+        description: `Allows the player to access the manage warps UI.
+    This allows the player to add, remove, and reorder the warps that are in the Warps section of the player menu.
+    This permission is included in the 'andexdb.headAdmin' permission.
+    This permission is included in the 'andexdb.admin' permission.`,
+        additionalPrompts: [],
+    },
+    /**
      * Allows the player to access the manage players UI.
      * Note: This permission SHOULD be given to moderators that you want to be able to ban people, because it is a lot easier to ban players through this UI.
      * This permission is included in the `andexdb.headAdmin` permission.
@@ -710,6 +727,7 @@ const playerPermissionsDefault = Object.freeze({
         "andexdb.accessExtraFeaturesSettings",
         "andexdb.accessAdvancedSettings",
         "andexdb.accessSettings",
+        "andexdb.accessManageWarpsUI",
         "andexdb.accessManagePlayersUI",
         "andexdb.UIs.managePlayersUI.deleteSavedPlayerData",
         "andexdb.UIs.managePlayersUI.manageHomes",
@@ -742,6 +760,7 @@ const playerPermissionsDefault = Object.freeze({
         "andexdb.accessExtraFeaturesSettings",
         "andexdb.accessAdvancedSettings",
         "andexdb.accessSettings",
+        "andexdb.accessManageWarpsUI",
         "andexdb.accessManagePlayersUI",
         "andexdb.UIs.managePlayersUI.deleteSavedPlayerData",
         "andexdb.UIs.managePlayersUI.manageHomes",
@@ -788,7 +807,7 @@ if (ultraSecurityModeEnabled && !securityConfiguratorPackIsActive) {
                 }
                 await waitTick();
             }
-            const r = await showMessage(world.getPlayers({ name: owner })[0], "§l§cWARNING!", "Ultra security mode is enabled, but the security configurator pack is not active, §cultra security mode is now disabled. §aPlease add back the security configurator pack to re-enable ultra security mode. Once you add it, you will have to go back into security settings and enable ultra security mode again.", "I understand", "Close");
+            const r = await showMessage(world.getPlayers({ name: owner })[0], "§l§cWARNING! §rMissing Required Pack (424)", "Ultra security mode is enabled, but the security configurator pack is not active, §cultra security mode is now disabled. §aPlease add back the security configurator pack to re-enable ultra security mode. Once you add it, you will have to go back into security settings and enable ultra security mode again.", "I understand", "Close");
             if (r.canceled) {
                 return;
             }
@@ -813,13 +832,12 @@ else if (!ultraSecurityModeEnabled && securityConfiguratorPackIsActive) {
                 }
                 await waitTick();
             }
-            const r = await showMessage(world.getPlayers({ name: owner })[0], "§l§cWARNING! §rMissing Required Behavior Pack (424)", "Ultra security mode is enabled, but the security configurator pack is not active, §cultra security mode is now disabled. §aPlease add back the security configurator pack to re-enable ultra security mode. Once you add it, you will have to go back into security settings and enable ultra security mode again.", "I understand", "Close");
+            const r = await showMessage(world.getPlayers({ name: owner })[0], "§l§dINFO! §rEnable Ultra Security Mode", "Security configurator pack has been detected, but you haven't enabled Ultra Security Mode yet. To enable ultra security mode, go to Main Menu > Security > Settings > Security Mode. Note: Only the owner defined in the security configurator pack can enable ultra security mode. If you are seeing this, then you are the defined owner, if you are not the owner, please let the owner know about this so that they can generate a new security configurator pack.", "Open Main Menu", "Close");
             if (r.canceled) {
                 return;
             }
             if (r.selection == 0) {
-                owner = undefined;
-                world.setDynamicProperty("owner");
+                mainMenu(world.getPlayers({ name: owner })[0]);
             }
         }
     });
@@ -1210,9 +1228,9 @@ form.button("Debug Screen", "textures/ui/ui_debug_glyph_color");*/
             world.setDynamicProperty("ultraSecurityModeEnabled", false);
             return;
         case 1:
-            ultraSecurityModeEnabled = true;
-            world.setDynamicProperty("ultraSecurityModeEnabled", true);
             if (!ultraSecurityModeEnabled) {
+                ultraSecurityModeEnabled = true;
+                world.setDynamicProperty("ultraSecurityModeEnabled", true);
                 const rc = await showMessage(player, "Restart Required", 'A restart or reload of this world/realm/server is required to fully enable this option, if this is a world you can just run the /reload command, but if it is a realm/server please click the restart button below. Until you restart, changes to player\'s permissions will not be able to be saved, players will be able to id-spoof, and some security features may be entirely non-functional, so please restart as soon as possible. When you click the restart button below, it will shut down the world/server/realm with an error messages saying that "The server was shut down due to exceeding the scripting memory limit.".', "Restart", "Not Now");
                 if (rc.selection == 0) {
                     let buffer = new ArrayBuffer(250000000); // Uses all of the currently available scripting memory, forcefully shutting down the world/realm/server.

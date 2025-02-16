@@ -1,5 +1,6 @@
-import { Entity, world } from "@minecraft/server";
+import { Entity, Scoreboard, ScoreboardObjective, world } from "@minecraft/server";
 import { savedPlayer } from "modules/player_save/classes/savedPlayer";
+import * as ipc from "ipc";
 export class MoneySystem {
     playerID;
     get money() {
@@ -119,6 +120,23 @@ export class MoneySystem {
             catch { }
         }
     }
+    transferFromScoreboard(scoreboard) {
+        const identity = tryget(() => world.getAllPlayers().find(p => p.id === this.playerID).scoreboardIdentity) ?? tryget(() => world.scoreboard.getParticipants().find(p => p?.id === savedPlayer.getSavedPlayer("player: " + this.playerID).scoreboardIdentity));
+        if (identity !== undefined) {
+            const score = scoreboard.getScore(identity);
+            if (score !== undefined) {
+                this.addMoney(score);
+                scoreboard.removeParticipant(identity);
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        else {
+            return false;
+        }
+    }
     constructor(playerID) {
         this.playerID = playerID;
         if (world.scoreboard
@@ -141,4 +159,22 @@ export class MoneySystem {
                     : player.id);
     }
 }
+ipc.IPC.handle("andexdbRequestPlayerMoneyAmount", ipc.PROTO.Object({ playerID: ipc.PROTO.String }), ipc.PROTO.Object({ playerID: ipc.PROTO.String, money: ipc.PROTO.String }), v => {
+    return {
+        playerID: v.playerID,
+        money: new MoneySystem(v.playerID).money.toString(),
+    };
+});
+ipc.IPC.handle("andexdbRequestPlayerMoneySet", ipc.PROTO.Object({ playerID: ipc.PROTO.String, money: ipc.PROTO.String }), ipc.PROTO.Boolean, v => {
+    new MoneySystem(v.playerID).setMoney(BigInt(v.money));
+    return true;
+});
+ipc.IPC.handle("andexdbRequestPlayerMoneyAdd", ipc.PROTO.Object({ playerID: ipc.PROTO.String, money: ipc.PROTO.String }), ipc.PROTO.Boolean, v => {
+    new MoneySystem(v.playerID).addMoney(BigInt(v.money));
+    return true;
+});
+ipc.IPC.handle("andexdbRequestPlayerMoneyRemove", ipc.PROTO.Object({ playerID: ipc.PROTO.String, money: ipc.PROTO.String }), ipc.PROTO.Boolean, v => {
+    new MoneySystem(v.playerID).removeMoney(BigInt(v.money));
+    return true;
+});
 //# sourceMappingURL=money.js.map

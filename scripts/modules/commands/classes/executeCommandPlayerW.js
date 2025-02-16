@@ -462,6 +462,9 @@ export class executeCommandPlayerW {
     extinguishFire(useEffects) {
         return this.player?.extinguishFire(useEffects);
     }
+    getAimAssist() {
+        return this.player?.getAimAssist();
+    }
     getBlockFromViewDirection(options) {
         return this.player?.getBlockFromViewDirection(options);
     }
@@ -540,6 +543,9 @@ export class executeCommandPlayerW {
     }
     setDynamicProperty(identifier, value) {
         return this.player?.setDynamicProperty(identifier, value);
+    }
+    setDynamicProperties(values) {
+        return this.player?.setDynamicProperties(values);
     }
     setOnFire(seconds, useEffects) {
         return this.player?.setOnFire(seconds, useEffects);

@@ -18,6 +18,7 @@ import { securityVariables } from "security/ultraSecurityModeUtils";
 import { BlockMask } from "modules/commands/classes/BlockMask";
 import { fillSphere } from "modules/block_generation_utilities/functions/fillSphere";
 import { fillArea } from "modules/block_generation_utilities/functions/fillArea";
+import { playerMenu } from "modules/ui/functions/playerMenu";
 
 subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe((event) => {
     if (!!event?.itemStack?.getDynamicProperty("code")) {
@@ -554,6 +555,18 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe((event) =>
         // Don't bother adding a permissions checker because it will check when opening the main menu.
         try {
             srun(() => mainMenu(event.source));
+        } catch (e) {
+            // Do something
+            console.error(e, e.stack);
+        }
+        // ...
+        // Output: [ <TextField Input>, <Dropdown Input>, <Slider Input>, <Toggle Input> ]
+    }
+    if (event.itemStack?.typeId === "andexdb:player_menu") {
+        event.cancel = true;
+        // Permissions check is not necessary because this menu is made for regular players to access it.
+        try {
+            srun(() => playerMenu(event.source));
         } catch (e) {
             // Do something
             console.error(e, e.stack);

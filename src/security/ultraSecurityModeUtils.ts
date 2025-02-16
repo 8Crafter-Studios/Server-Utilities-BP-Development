@@ -424,6 +424,22 @@ Note: Unless the player has the 'andexdb.fullControl' permission, the player can
             additionalPrompts: [],
         },
         /**
+         * Allows the player to access the manage warps UI.
+         * This allows the player to add, remove, and reorder the warps that are in the Warps section of the player menu.
+         * This permission is included in the `andexdb.headAdmin` permission.
+         * This permission is included in the `andexdb.admin` permission.
+         */
+        "andexdb.accessManageWarpsUI": {
+            id: "andexdb.accessManageWarpsUI",
+            default: false,
+            includedInPermissions: [],
+            description: `Allows the player to access the manage warps UI.
+    This allows the player to add, remove, and reorder the warps that are in the Warps section of the player menu.
+    This permission is included in the 'andexdb.headAdmin' permission.
+    This permission is included in the 'andexdb.admin' permission.`,
+            additionalPrompts: [],
+        },
+        /**
          * Allows the player to access the manage players UI.
          * Note: This permission SHOULD be given to moderators that you want to be able to ban people, because it is a lot easier to ban players through this UI.
          * This permission is included in the `andexdb.headAdmin` permission.
@@ -742,6 +758,7 @@ const playerPermissionsDefault = Object.freeze({
         "andexdb.accessExtraFeaturesSettings",
         "andexdb.accessAdvancedSettings",
         "andexdb.accessSettings",
+        "andexdb.accessManageWarpsUI",
         "andexdb.accessManagePlayersUI",
         "andexdb.UIs.managePlayersUI.deleteSavedPlayerData",
         "andexdb.UIs.managePlayersUI.manageHomes",
@@ -774,6 +791,7 @@ const playerPermissionsDefault = Object.freeze({
         "andexdb.accessExtraFeaturesSettings",
         "andexdb.accessAdvancedSettings",
         "andexdb.accessSettings",
+        "andexdb.accessManageWarpsUI",
         "andexdb.accessManagePlayersUI",
         "andexdb.UIs.managePlayersUI.deleteSavedPlayerData",
         "andexdb.UIs.managePlayersUI.manageHomes",
@@ -875,7 +893,7 @@ if (ultraSecurityModeEnabled && !securityConfiguratorPackIsActive) {
             }
             const r = await showMessage(
                 world.getPlayers({ name: owner })[0],
-                "§l§dINFO! §rUltra Security Mode Not Enabled",
+                "§l§dINFO! §rEnable Ultra Security Mode",
                 "Security configurator pack has been detected, but you haven't enabled Ultra Security Mode yet. To enable ultra security mode, go to Main Menu > Security > Settings > Security Mode. Note: Only the owner defined in the security configurator pack can enable ultra security mode. If you are seeing this, then you are the defined owner, if you are not the owner, please let the owner know about this so that they can generate a new security configurator pack.",
                 "Open Main Menu",
                 "Close"

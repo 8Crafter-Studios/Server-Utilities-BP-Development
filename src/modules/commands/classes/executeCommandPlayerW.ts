@@ -498,6 +498,9 @@ export class executeCommandPlayerW {
     extinguishFire(useEffects?: boolean) {
         return this.player?.extinguishFire(useEffects);
     }
+    getAimAssist() {
+        return this.player?.getAimAssist();
+    }
     getBlockFromViewDirection(options?: BlockRaycastOptions) {
         return this.player?.getBlockFromViewDirection(options);
     }
@@ -588,6 +591,9 @@ export class executeCommandPlayerW {
     }
     setDynamicProperty(identifier: string, value?: string | number | boolean | Vector3) {
         return this.player?.setDynamicProperty(identifier, value);
+    }
+    setDynamicProperties(values: Record<string, boolean | number | string | Vector3>) {
+        return this.player?.setDynamicProperties(values);
     }
     setOnFire(seconds: number, useEffects?: boolean) {
         return this.player?.setOnFire(seconds, useEffects);

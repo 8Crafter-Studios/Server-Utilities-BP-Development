@@ -322,6 +322,19 @@ Note: Unless the player has the 'andexdb.fullControl' permission, the player can
         readonly additionalPrompts: [];
     };
     /**
+     * Allows the player to access the manage warps UI.
+     * This allows the player to add, remove, and reorder the warps that are in the Warps section of the player menu.
+     * This permission is included in the `andexdb.headAdmin` permission.
+     * This permission is included in the `andexdb.admin` permission.
+     */
+    readonly "andexdb.accessManageWarpsUI": {
+        readonly id: "andexdb.accessManageWarpsUI";
+        readonly default: false;
+        readonly includedInPermissions: [];
+        readonly description: "Allows the player to access the manage warps UI.\n    This allows the player to add, remove, and reorder the warps that are in the Warps section of the player menu.\n    This permission is included in the 'andexdb.headAdmin' permission.\n    This permission is included in the 'andexdb.admin' permission.";
+        readonly additionalPrompts: [];
+    };
+    /**
      * Allows the player to access the manage players UI.
      * Note: This permission SHOULD be given to moderators that you want to be able to ban people, because it is a lot easier to ban players through this UI.
      * This permission is included in the `andexdb.headAdmin` permission.

@@ -66,6 +66,7 @@ export class savedPlayer {
         this.dimension = data.dimension;
         this.rotation = data.rotation;
         this.selectedSlotIndex = data.selectedSlotIndex;
+        this.scoreboardIdentity = data.scoreboardIdentity;
         this.saveId = data.saveId ?? "player:" + this.id;
         if (semver.satisfies(data.player_save_format_version ?? "0.0.0", ">=1.4.0 <2.0.0", { includePrerelease: true })) {
             this.memoryTier = data.memoryTier;
@@ -93,6 +94,21 @@ export class savedPlayer {
             bypassParameterTypeChecks: true,
             rethrowErrorInFinally: false,
         });
+    }
+    addOnJoinAction(action) {
+        this.onJoinActions.push(action);
+        this.save();
+        return this;
+    }
+    addOnJoinActions(actions) {
+        this.onJoinActions.push(...actions);
+        this.save();
+        return this;
+    }
+    removeOnJoinActionsOfType(type) {
+        this.onJoinActions = this.onJoinActions.filter(a => a.type !== type);
+        this.save();
+        return this;
     }
     async executeOnJoinActions() {
         const player = getPlayerById(this.id);
@@ -490,6 +506,7 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
             isOp: player.isOp(),
             tags: player.getTags(),
             selectedSlotIndex: player.selectedSlotIndex,
+            scoreboardIdentity: player.scoreboardIdentity?.id,
             format_version: format_version,
             player_save_format_version: player_save_format_version,
             lastOnline: Date.now(),
@@ -708,6 +725,7 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
             isOp: player.isOp(),
             tags: player.getTags(),
             selectedSlotIndex: player.selectedSlotIndex,
+            scoreboardIdentity: player.scoreboardIdentity?.id,
             format_version: format_version,
             player_save_format_version: player_save_format_version,
             lastOnline: Date.now(),

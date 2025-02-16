@@ -32,7 +32,8 @@ export type SavedPlayerOnJoinAction =
     | SavedPlayerOnJoinAction_remove_tags
     | SavedPlayerOnJoinAction_remove_item_in_slot
     | SavedPlayerOnJoinAction_clear_inventory
-    | SavedPlayerOnJoinAction_set_permission<keyof ReturnType<PlayerPermissions["toJSON"]>>;
+    | SavedPlayerOnJoinAction_set_permission<keyof ReturnType<PlayerPermissions["toJSON"]>>
+    | SavedPlayerOnJoinAction_send_message;
 export interface SavedPlayerOnJoinAction_add_tag {
     type: "add_tag";
     tag: string;
@@ -60,6 +61,10 @@ export interface SavedPlayerOnJoinAction_set_permission<P extends keyof ReturnTy
     type: "set_permission";
     permission: P;
     value: ReturnType<PlayerPermissions["toJSON"]>[P];
+}
+export interface SavedPlayerOnJoinAction_send_message {
+    type: "send_message";
+    message: string;
 }
 export type SavedPlayerOnJoinActions = SavedPlayerOnJoinAction[];
 export interface savedItem {
@@ -97,6 +102,7 @@ export interface savedPlayerData {
     spawnPoint?: DimensionLocation;
     gameMode?: GameMode | string;
     selectedSlotIndex?: number;
+    scoreboardIdentity?: number;
     format_version?: string;
     player_save_format_version?: string;
     saveId?: string;
@@ -228,6 +234,7 @@ export class savedPlayer {
         this.dimension = data.dimension;
         this.rotation = data.rotation;
         this.selectedSlotIndex = data.selectedSlotIndex;
+        this.scoreboardIdentity = data.scoreboardIdentity;
         this.saveId = data.saveId ?? "player:" + this.id;
         if (
             semver.satisfies(
@@ -273,6 +280,21 @@ export class savedPlayer {
             bypassParameterTypeChecks: true,
             rethrowErrorInFinally: false,
         });
+    }
+    addOnJoinAction(action: SavedPlayerOnJoinAction): this {
+        this.onJoinActions.push(action);
+        this.save();
+        return this;
+    }
+    addOnJoinActions(actions: SavedPlayerOnJoinActions): this {
+        this.onJoinActions.push(...actions);
+        this.save();
+        return this;
+    }
+    removeOnJoinActionsOfType(type: SavedPlayerOnJoinAction["type"]): this {
+        this.onJoinActions = this.onJoinActions.filter(a=>a.type !== type);
+        this.save();
+        return this;
     }
     async executeOnJoinActions() {
         const player = getPlayerById(this.id);
@@ -834,6 +856,7 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
             isOp: player.isOp(),
             tags: player.getTags(),
             selectedSlotIndex: player.selectedSlotIndex,
+            scoreboardIdentity: player.scoreboardIdentity?.id,
             format_version: format_version,
             player_save_format_version: player_save_format_version,
             lastOnline: Date.now(),
@@ -1115,6 +1138,7 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
             isOp: player.isOp(),
             tags: player.getTags(),
             selectedSlotIndex: player.selectedSlotIndex,
+            scoreboardIdentity: player.scoreboardIdentity?.id,
             format_version: format_version,
             player_save_format_version: player_save_format_version,
             lastOnline: Date.now(),

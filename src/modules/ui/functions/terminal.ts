@@ -2,51 +2,52 @@ import { Entity, Player, system } from "@minecraft/server";
 import { ModalFormData, ModalFormResponse } from "@minecraft/server-ui";
 import { forceShow } from "modules/ui/functions/forceShow";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
+import { showMessage } from "modules/utilities/functions/showMessage";
 
-export function terminal(
+/**
+ * Displays a modal form to the player for running a command with an optional delay.
+ * 
+ * @param sourceEntitya - The entity that will receive the form. It can be an instance of `Entity`, `executeCommandPlayerW`, or `Player`.
+ * @returns A promise that resolves to `0` if the previous menu should not be re-opened, or `1` if the previous menu should be re-opened.
+ * @throws {TypeError} If the provided entity is not an instance of `Player` or `executeCommandPlayerW` with a linked `Player`.
+ */
+export async function terminal(
     sourceEntitya: Entity | executeCommandPlayerW | Player
-) {
+): Promise<0 | 1> {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW
         ? sourceEntitya.player
-        : sourceEntitya;
-    system.run(() => {
-        let form = new ModalFormData();
-        form.title("Command Runner / Terminal");
-        form.textField("Run Command", "Run Command");
-        form.textField("Run Delay", "Run Delay");
-        form.toggle("Debug", false);
-        form.submitButton("Run");
-        forceShow(form, sourceEntity as any)
-            .then((ra) => {
-                let r = ra as ModalFormResponse;
-                // This will stop the code when the player closes the form
-                if (r.canceled) return;
-                // This will assign every input their own variable
-                let [commandId, commandDelay, debug] = r.formValues; /*
-        console.warn(r.formValues);*/
+        : sourceEntitya as Player;
+    if(!(sourceEntity instanceof Player)){
+        throw new TypeError("Invalid Player. Expected an instance of the Player class, or an instance of the executeCommandPlayerW class with a Player linked to it, but instead got " + (typeof sourceEntity == "object" ? sourceEntity === null ? "object[null]" : "object[" + ((sourceEntity as object).constructor.name ?? "unknown") + "]" : typeof sourceEntity) + ".")
+    }
+    let form = new ModalFormData();
+    form.title("Command Runner / Terminal");
+    form.textField("Run Command", "Run Command");
+    form.textField("Run Delay", "Run Delay");
+    // form.toggle("Debug", false);
+    form.submitButton("Run");
+    return await forceShow(form, sourceEntity)
+        .then((ra) => {
+            let r = ra as ModalFormResponse;
+            if (r.canceled) return 1 as const;
+            let [commandId, commandDelay/* , debug */] = r.formValues;
 
-                system.runTimeout(() => {
+            system.runTimeout(() => {
+                try{
                     (sourceEntity as Player).sendMessage(
                         String(
                             sourceEntity.runCommand(String(commandId))
                                 .successCount
                         )
                     );
-                }, Number(commandDelay));
-                // Do something
-            })
-            .catch((e) => {
-                console.error(e, e.stack);
-            });
-    }); /*
-    try { (sourceEntity).runCommand(String("/scriptevent andexdb:commandRunner hisa")); }
-    // Do something
-catch(e) {
-    console.error(e, e.stack);
-};*/
-
-
-
-
-
+                }catch(e){
+                    sourceEntity.sendMessage("§cAn error occured while running the commmand through the command runner: " + e + e.stack);
+                }
+            }, Number(commandDelay));
+            return 1;
+        })
+        .catch(async (e) => {
+            console.error(e, e.stack);
+            return ((await showMessage(sourceEntity, "Error", e + e.stack, "Back", "Close")).selection==0).toNumber();
+        });
 }
