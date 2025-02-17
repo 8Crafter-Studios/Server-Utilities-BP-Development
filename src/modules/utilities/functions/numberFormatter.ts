@@ -13,7 +13,7 @@ export function numberFormatter_compact(number: string | number | bigint | boole
         { suffix: 'UDc', threshold: 10n**36n },
         { suffix: 'Dc', threshold: 10n**33n },
         { suffix: 'No', threshold: 10n**30n },
-        { suffix: 'Op', threshold: 10n**27n },
+        { suffix: 'Oc', threshold: 10n**27n },
         { suffix: 'Sp', threshold: 10n**24n },
         { suffix: 'Sx', threshold: 10n**21n },
         { suffix: 'Qi', threshold: 10n**18n },
