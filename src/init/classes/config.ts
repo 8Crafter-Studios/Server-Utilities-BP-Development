@@ -58,7 +58,7 @@ export class config {
                 x: v.x,
                 y: v.y,
                 z: v.z,
-                dimension: (dimensionsb as {[id: string]: Dimension})[String(v.dimension)] ?? overworld,
+                dimension: (dimensionsb as { [id: string]: Dimension })[String(v.dimension)] ?? overworld,
             })) ?? ({ x: null, y: null, z: null, dimension: overworld } as DimensionLocation | { x: null; y: null; z: null; dimension: Dimension })
         );
     }
@@ -75,7 +75,7 @@ export class config {
     }
     /**
      * Whether or not players can teleport to spawn using the `\spawn` command when they are in a different dimension than the spawn.
-     * 
+     *
      * Defaults to true.
      */
     static get spawnCommandAllowCrossDimensionalTeleport(): boolean {
@@ -553,11 +553,11 @@ export class config {
         return {
             /**
              * Whether or not cross-dimensional teleports are allowed.
-             * 
+             *
              * Affects all types of teleports that regular players can use, including but not limited to the home system, TPA system, and the `\spawn` command.
-             * 
+             *
              * Overrides the `allowCrossDimensionalTeleport` options for the home system, TPA system, and `\spawn` command.
-             * 
+             *
              * @default true
              */
             get allowCrossDimensionalTeleport(): boolean {
@@ -568,9 +568,9 @@ export class config {
             },
             /**
              * How long in seconds after teleporting that the player has to wait before they can teleport again.
-             * 
+             *
              * Set it to 0 to have no teleport cooldown.
-             * 
+             *
              * @default 30
              */
             get teleportCooldown(): number {
@@ -581,9 +581,9 @@ export class config {
             },
             /**
              * How long in seconds that the player has to stand still before they can teleport, if they move during this time period, the teleportation is canceled.
-             * 
+             *
              * Set it to 0 to have players teleport instantly.
-             * 
+             *
              * @default 5
              */
             get standStillTimeToTeleport(): number {
@@ -594,9 +594,9 @@ export class config {
             },
             /**
              * How long in seconds after getting damaged by another player that the player has to wait before they can teleport with the player menu or commands such as `\spawn`, `\home`, `\gohome`, `\tpa`, and `\rtp`.
-             * 
+             *
              * Set it to 0 to have no PVP cooldown.
-             * 
+             *
              * @default 15
              */
             get pvpCooldownToTeleport(): number {
@@ -627,7 +627,7 @@ export class config {
             },
             /**
              * Whether or not you can teleport to a home that is in a different dimension than you.
-             * 
+             *
              * Defaults to true.
              */
             get allowCrossDimensionalTeleport(): boolean {
@@ -638,7 +638,7 @@ export class config {
             },
             /**
              * Whether or not homes are allowed in dimensions other than the overworld.
-             * 
+             *
              * Defaults to true.
              */
             get allowHomesInOtherDimensions(): boolean {
@@ -661,7 +661,7 @@ export class config {
             },
             /**
              * The number of seconds after a teleport request is sent before it will time out.
-             * 
+             *
              * Defaults to 60.
              */
             get timeoutDuration(): number {
@@ -674,7 +674,7 @@ export class config {
             },
             /**
              * Whether or not you can teleport to a player who is in a different dimension than you.
-             * 
+             *
              * Defaults to true.
              */
             get allowCrossDimensionalTeleport(): boolean {
@@ -783,7 +783,8 @@ export class config {
             set nameTagTemplateString(nameTagTemplateString: string | undefined) {
                 world.setDynamicProperty(
                     "andexdbSettings:nameTagTemplateString",
-                    nameTagTemplateString ?? '${(showDimension ? `[${dimension}§r§f] ` : "")}${rank} ${nameFormatting}${nameb}${(showHealth ? `§r§f [${currentHealth}/${maxHealth}]` : "")}'
+                    nameTagTemplateString ??
+                        '${(showDimension ? `[${dimension}§r§f] ` : "")}${rank} ${nameFormatting}${nameb}${(showHealth ? `§r§f [${currentHealth}/${maxHealth}]` : "")}'
                 );
             },
             get defaultRankTemplateString(): string {
@@ -846,13 +847,13 @@ export class config {
         return {
             /**
              * Whether or not to use a scoreboard-based money system instead of a dynamic property-based one.
-             * 
+             *
              * Enabling this option will cause the money system to max out at the 32-bit integer limit (approximately 2.1 billion), but will allow for modifying a player's money with the /scoreboard command instead of having to use the main menu or use script eval.
-             * 
+             *
              * When this option is disabled the limit is 10^32767. So basically infinite.
-             * 
+             *
              * Default: false.
-             * 
+             *
              * Dynamic Property ID: andexdbSettings:moneySystem.useScoreboardBasedMoneySystem
              */
             get useScoreboardBasedMoneySystem(): boolean {
@@ -863,9 +864,9 @@ export class config {
             },
             /**
              * The name of the scoreboard to use for the money system.
-             * 
+             *
              * Default: "andexdb:money".
-             * 
+             *
              * Dynamic Property ID: andexdbSettings:moneySystem.scoreboardName
              */
             get scoreboardName(): string {
@@ -880,9 +881,9 @@ export class config {
         return {
             /**
              * Whether or not the bounty system is enabled.
-             * 
+             *
              * Default: true.
-             * 
+             *
              * Dynamic Property ID: andexdbSettings:bountySystem.enabled
              */
             get enabled(): boolean {
@@ -893,7 +894,7 @@ export class config {
             },
             /**
              * Whether to show the time that a player was last online in the stats list that is shown when a player clicks on the bounty for another player in the bounty list.
-             * 
+             *
              * Defaults to false.
              */
             get showLastOnlineTimeInBountyDetailsList(): boolean {
@@ -908,9 +909,9 @@ export class config {
         return {
             /**
              * Whether or not the warps system is enabled.
-             * 
+             *
              * Default: true.
-             * 
+             *
              * Dynamic Property ID: andexdbSettings:warpsSystem.enabled
              */
             get enabled(): boolean {
@@ -921,23 +922,31 @@ export class config {
             },
             /**
              * List of saved warps.
-             * 
+             *
              * Default: [].
-             * 
+             *
              * Dynamic Property ID: andexdbSettings:warpsSystem.warps
-             * 
+             *
              * @throws The setter throws if the input is not an array of warp interface objects or undefined.
              */
             get warps(): Warp[] {
                 return JSONB.parse(world.getStringFromDynamicProperties("warpsSystem:warpsSystem.warps", "[]"));
             },
             set warps(warps: Warp[] | undefined) {
-                if(warps === undefined){
+                if (warps === undefined) {
                     world.saveStringToDynamicProperties("[]", "warpsSystem:warpsSystem.warps");
-                }else if(warps instanceof Array){
+                } else if (warps instanceof Array) {
                     world.saveStringToDynamicProperties(JSONB.stringify(warps), "warpsSystem:warpsSystem.warps");
-                }else{
-                    throw new TypeError("Invalid warps list provided, expected an array of warp interface objects or undefined, but instead got " + (typeof warps == "object" ? warps === null ? "object[null]" : "object[" + ((warps as object).constructor.name ?? "unknown") + "]" : typeof warps) + ".")
+                } else {
+                    throw new TypeError(
+                        "Invalid warps list provided, expected an array of warp interface objects or undefined, but instead got " +
+                            (typeof warps == "object"
+                                ? warps === null
+                                    ? "object[null]"
+                                    : "object[" + ((warps as object).constructor.name ?? "unknown") + "]"
+                                : typeof warps) +
+                            "."
+                    );
                 }
             },
         };
@@ -946,9 +955,9 @@ export class config {
         return {
             /**
              * Whether or not the money transfer system is enabled.
-             * 
+             *
              * Default: true.
-             * 
+             *
              * Dynamic Property ID: andexdbSettings:moneyTransferSystem.enabled
              */
             get enabled(): boolean {
@@ -1009,17 +1018,22 @@ export class config {
                     get mainMenu() {
                         return {
                             /**
-                             * 
+                             *
                              */
                             get buttons(): (keyof typeof menuButtonIds.mainMenu.buttons)[] {
                                 return JSON.parse(
-                                    String(world.getDynamicProperty("andexdbSettings:ui.menus.mainMenu.buttons") ?? JSON.stringify(
-                                        (Object.keys(menuButtonIds.mainMenu.buttons) as (keyof typeof menuButtonIds.mainMenu.buttons)[]).sort(
-                                            (a, b)=>
-                                                menuButtonIds.mainMenu.buttons[a].defaultButtonIndex > menuButtonIds.mainMenu.buttons[b].defaultButtonIndex
-                                                ? 1
-                                                : menuButtonIds.mainMenu.buttons[a].defaultButtonIndex < menuButtonIds.mainMenu.buttons[b].defaultButtonIndex ? -1 : 0
-                                        ))
+                                    String(
+                                        world.getDynamicProperty("andexdbSettings:ui.menus.mainMenu.buttons") ??
+                                            JSON.stringify(
+                                                (Object.keys(menuButtonIds.mainMenu.buttons) as (keyof typeof menuButtonIds.mainMenu.buttons)[]).sort((a, b) =>
+                                                    menuButtonIds.mainMenu.buttons[a].defaultButtonIndex > menuButtonIds.mainMenu.buttons[b].defaultButtonIndex
+                                                        ? 1
+                                                        : menuButtonIds.mainMenu.buttons[a].defaultButtonIndex <
+                                                          menuButtonIds.mainMenu.buttons[b].defaultButtonIndex
+                                                        ? -1
+                                                        : 0
+                                                )
+                                            )
                                     )
                                 );
                             },
@@ -1027,19 +1041,21 @@ export class config {
                                 world.setDynamicProperty(
                                     "andexdbSettings:ui.menus.mainMenu.buttons",
                                     JSON.stringify(
-                                        buttonList ?? 
-                                            (Object.keys(menuButtonIds.mainMenu.buttons) as (keyof typeof menuButtonIds.mainMenu.buttons)[]).sort(
-                                                (a, b)=>
-                                                    menuButtonIds.mainMenu.buttons[a].defaultButtonIndex > menuButtonIds.mainMenu.buttons[b].defaultButtonIndex
+                                        buttonList ??
+                                            (Object.keys(menuButtonIds.mainMenu.buttons) as (keyof typeof menuButtonIds.mainMenu.buttons)[]).sort((a, b) =>
+                                                menuButtonIds.mainMenu.buttons[a].defaultButtonIndex > menuButtonIds.mainMenu.buttons[b].defaultButtonIndex
                                                     ? 1
-                                                    : menuButtonIds.mainMenu.buttons[a].defaultButtonIndex < menuButtonIds.mainMenu.buttons[b].defaultButtonIndex ? -1 : 0
+                                                    : menuButtonIds.mainMenu.buttons[a].defaultButtonIndex <
+                                                      menuButtonIds.mainMenu.buttons[b].defaultButtonIndex
+                                                    ? -1
+                                                    : 0
                                             )
                                     )
                                 );
                             },
                             /**
                              * Whether to show the buttons marked as deprecated on the main menu.
-                             * 
+                             *
                              * Defaults to false.
                              */
                             get showDeprecatedButtons(): boolean {
@@ -1050,7 +1066,7 @@ export class config {
                             },
                             /**
                              * Whether to show the buttons marked as deprecated on the main menu.
-                             * 
+                             *
                              * Defaults to true.
                              */
                             get showExperimentalButtons(): boolean {
@@ -1061,7 +1077,7 @@ export class config {
                             },
                             /**
                              * Whether to show the buttons marked as deprecated on the main menu.
-                             * 
+                             *
                              * Defaults to false.
                              */
                             get showUnusedButtons(): boolean {
@@ -1072,7 +1088,7 @@ export class config {
                             },
                             /**
                              * Whether to show the buttons for features that are planned to be added in a future update on the main menu.
-                             * 
+                             *
                              * Defaults to false.
                              */
                             get showUpcomingButtons(): boolean {
@@ -1083,7 +1099,7 @@ export class config {
                             },
                             /**
                              * Whether to show the buttons for features that are non-functional on the main menu.
-                             * 
+                             *
                              * Defaults to false.
                              */
                             get showNonFunctionalButtons(): boolean {
@@ -1098,7 +1114,7 @@ export class config {
                         return {
                             /**
                              * Whether or not the player menu is enabled.
-                             * 
+                             *
                              * Defaults to true.
                              */
                             get enabled(): boolean {
@@ -1108,17 +1124,24 @@ export class config {
                                 world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu.enabled", enabled ?? true);
                             },
                             /**
-                             * 
+                             *
                              */
                             get buttons(): (keyof typeof menuButtonIds.playerMenu.buttons)[] {
                                 return JSON.parse(
-                                    String(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu.buttons") ?? JSON.stringify(
-                                        (Object.keys(menuButtonIds.playerMenu.buttons) as (keyof typeof menuButtonIds.playerMenu.buttons)[]).sort(
-                                            (a, b)=>
-                                                menuButtonIds.playerMenu.buttons[a].defaultButtonIndex > menuButtonIds.playerMenu.buttons[b].defaultButtonIndex
-                                                ? 1
-                                                : menuButtonIds.playerMenu.buttons[a].defaultButtonIndex < menuButtonIds.playerMenu.buttons[b].defaultButtonIndex ? -1 : 0
-                                        ))
+                                    String(
+                                        world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu.buttons") ??
+                                            JSON.stringify(
+                                                (Object.keys(menuButtonIds.playerMenu.buttons) as (keyof typeof menuButtonIds.playerMenu.buttons)[]).sort(
+                                                    (a, b) =>
+                                                        menuButtonIds.playerMenu.buttons[a].defaultButtonIndex >
+                                                        menuButtonIds.playerMenu.buttons[b].defaultButtonIndex
+                                                            ? 1
+                                                            : menuButtonIds.playerMenu.buttons[a].defaultButtonIndex <
+                                                              menuButtonIds.playerMenu.buttons[b].defaultButtonIndex
+                                                            ? -1
+                                                            : 0
+                                                )
+                                            )
                                     )
                                 );
                             },
@@ -1126,19 +1149,21 @@ export class config {
                                 world.setDynamicProperty(
                                     "andexdbSettings:ui.menus.playerMenu.buttons",
                                     JSON.stringify(
-                                        buttonList ?? 
-                                            (Object.keys(menuButtonIds.playerMenu.buttons) as (keyof typeof menuButtonIds.playerMenu.buttons)[]).sort(
-                                                (a, b)=>
-                                                    menuButtonIds.playerMenu.buttons[a].defaultButtonIndex > menuButtonIds.playerMenu.buttons[b].defaultButtonIndex
+                                        buttonList ??
+                                            (Object.keys(menuButtonIds.playerMenu.buttons) as (keyof typeof menuButtonIds.playerMenu.buttons)[]).sort((a, b) =>
+                                                menuButtonIds.playerMenu.buttons[a].defaultButtonIndex > menuButtonIds.playerMenu.buttons[b].defaultButtonIndex
                                                     ? 1
-                                                    : menuButtonIds.playerMenu.buttons[a].defaultButtonIndex < menuButtonIds.playerMenu.buttons[b].defaultButtonIndex ? -1 : 0
+                                                    : menuButtonIds.playerMenu.buttons[a].defaultButtonIndex <
+                                                      menuButtonIds.playerMenu.buttons[b].defaultButtonIndex
+                                                    ? -1
+                                                    : 0
                                             )
                                     )
                                 );
                             },
                             /**
                              * The item name for the item that opens the player menu.
-                             * 
+                             *
                              * Defaults to "Menu".
                              */
                             get itemName(): string {
@@ -1149,7 +1174,7 @@ export class config {
                             },
                             /**
                              * Whether to show the buttons marked as deprecated on the player menu.
-                             * 
+                             *
                              * Defaults to false.
                              */
                             get showDeprecatedButtons(): boolean {
@@ -1160,7 +1185,7 @@ export class config {
                             },
                             /**
                              * Whether to show the buttons marked as deprecated on the player menu.
-                             * 
+                             *
                              * Defaults to true.
                              */
                             get showExperimentalButtons(): boolean {
@@ -1171,7 +1196,7 @@ export class config {
                             },
                             /**
                              * Whether to show the buttons marked as deprecated on the player menu.
-                             * 
+                             *
                              * Defaults to false.
                              */
                             get showUnusedButtons(): boolean {
@@ -1182,7 +1207,7 @@ export class config {
                             },
                             /**
                              * Whether to show the buttons for features that are planned to be added in a future update on the player menu.
-                             * 
+                             *
                              * Defaults to false.
                              */
                             get showUpcomingButtons(): boolean {
@@ -1193,7 +1218,7 @@ export class config {
                             },
                             /**
                              * Whether to show the buttons for features that are non-functional on the player menu.
-                             * 
+                             *
                              * Defaults to false.
                              */
                             get showNonFunctionalButtons(): boolean {
@@ -1215,54 +1240,75 @@ export class config {
                                         return {
                                             /**
                                              * Whether or not this built-in statictic is enabled.
-                                             * 
+                                             *
                                              * Defaults to true.
                                              */
                                             get enabled(): boolean {
-                                                return Boolean(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.builtInStats.money.enabled") ?? true);
+                                                return Boolean(
+                                                    world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.builtInStats.money.enabled") ??
+                                                        true
+                                                );
                                             },
                                             set enabled(enabled: boolean | undefined) {
-                                                world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.builtInStats.money.enabled", enabled ?? true);
+                                                world.setDynamicProperty(
+                                                    "andexdbSettings:ui.menus.playerMenu_leaderboards.builtInStats.money.enabled",
+                                                    enabled ?? true
+                                                );
                                             },
                                             get displayOptions() {
                                                 return {
                                                     /**
                                                      * Whether or not to prefix the displayed value for this statistic with a dollar sign.
-                                                     * 
+                                                     *
                                                      * Defaults to true.
                                                      */
                                                     get prefixWithDollarSign(): boolean {
-                                                        return Boolean(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.builtInStats.money.displayOptions.prefixWithDollarSign") ?? true);
+                                                        return Boolean(
+                                                            world.getDynamicProperty(
+                                                                "andexdbSettings:ui.menus.playerMenu_leaderboards.builtInStats.money.displayOptions.prefixWithDollarSign"
+                                                            ) ?? true
+                                                        );
                                                     },
                                                     set prefixWithDollarSign(prefixWithDollarSign: boolean | undefined) {
-                                                        world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.builtInStats.money.displayOptions.prefixWithDollarSign", prefixWithDollarSign ?? true);
+                                                        world.setDynamicProperty(
+                                                            "andexdbSettings:ui.menus.playerMenu_leaderboards.builtInStats.money.displayOptions.prefixWithDollarSign",
+                                                            prefixWithDollarSign ?? true
+                                                        );
                                                     },
                                                     /**
                                                      * Whether or not to add comma separators to the displayed value for this statistic.
-                                                     * 
+                                                     *
                                                      * Defaults to true.
                                                      */
                                                     get addCommaSeparators(): boolean {
-                                                        return Boolean(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.builtInStats.money.displayOptions.addCommaSeparators") ?? true);
+                                                        return Boolean(
+                                                            world.getDynamicProperty(
+                                                                "andexdbSettings:ui.menus.playerMenu_leaderboards.builtInStats.money.displayOptions.addCommaSeparators"
+                                                            ) ?? true
+                                                        );
                                                     },
                                                     set addCommaSeparators(addCommaSeparators: boolean | undefined) {
-                                                        world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.builtInStats.money.displayOptions.addCommaSeparators", addCommaSeparators ?? true);
+                                                        world.setDynamicProperty(
+                                                            "andexdbSettings:ui.menus.playerMenu_leaderboards.builtInStats.money.displayOptions.addCommaSeparators",
+                                                            addCommaSeparators ?? true
+                                                        );
                                                     },
-                                                }
+                                                };
                                             },
-                                        }
+                                        };
                                     },
-                                }
+                                };
                             },
                             /**
-                             * 
+                             *
                              */
-                            get customStats(): playerMenuLeaderboardStatistic<"custom"|"customAdvanced">[] {
-                                return (JSONB.parse(
-                                    String(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.customStats") ?? "[]"
-                                    )
-                                ) as playerMenuLeaderboardStatistic_JSONB<"custom"|"customAdvanced">[]).map(s=>{
-                                    if(s.type === "custom"){
+                            get customStats(): playerMenuLeaderboardStatistic<"custom" | "customAdvanced">[] {
+                                return (
+                                    JSONB.parse(
+                                        String(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.customStats") ?? "[]")
+                                    ) as playerMenuLeaderboardStatistic_JSONB<"custom" | "customAdvanced">[]
+                                ).map((s) => {
+                                    if (s.type === "custom") {
                                         return {
                                             buttonDisplayName: s.buttonDisplayName,
                                             buttonIcon: s.buttonIcon,
@@ -1271,8 +1317,14 @@ export class config {
                                                 prefixWithDollarSign: s.displayOptions?.prefixWithDollarSign ?? false,
                                                 toFixed: s.displayOptions?.toFixed,
                                                 valueDisplayColor: s.displayOptions?.valueDisplayColor,
-                                                valueDisplayTransformer_button: s.displayOptions?.valueDisplayTransformer_button !== undefined ? eval?.(s.displayOptions.valueDisplayTransformer_button) : undefined,
-                                                valueDisplayTransformer_statsList: s.displayOptions?.valueDisplayTransformer_button !== undefined ? eval?.(s.displayOptions.valueDisplayTransformer_statsList) : undefined,
+                                                valueDisplayTransformer_button:
+                                                    s.displayOptions?.valueDisplayTransformer_button !== undefined
+                                                        ? eval?.(s.displayOptions.valueDisplayTransformer_button)
+                                                        : undefined,
+                                                valueDisplayTransformer_statsList:
+                                                    s.displayOptions?.valueDisplayTransformer_button !== undefined
+                                                        ? eval?.(s.displayOptions.valueDisplayTransformer_statsList)
+                                                        : undefined,
                                             },
                                             id: s.id,
                                             menuTitle: s.menuTitle,
@@ -1281,9 +1333,9 @@ export class config {
                                             statsListDisplayName: s.statsListDisplayName,
                                             type: s.type,
                                             valueType: s.valueType,
-                                        } as playerMenuLeaderboardStatistic<"custom">
+                                        } as playerMenuLeaderboardStatistic<"custom">;
                                     } else if (s.type === "customAdvanced") {
-                                        if(s.sortType === "function"){
+                                        if (s.sortType === "function") {
                                             return {
                                                 buttonDisplayName: s.buttonDisplayName,
                                                 buttonIcon: s.buttonIcon,
@@ -1292,8 +1344,14 @@ export class config {
                                                     prefixWithDollarSign: s.displayOptions?.prefixWithDollarSign ?? false,
                                                     toFixed: s.displayOptions?.toFixed,
                                                     valueDisplayColor: s.displayOptions?.valueDisplayColor,
-                                                    valueDisplayTransformer_button: s.displayOptions?.valueDisplayTransformer_button !== undefined ? eval?.(s.displayOptions.valueDisplayTransformer_button) : undefined,
-                                                    valueDisplayTransformer_statsList: s.displayOptions?.valueDisplayTransformer_button !== undefined ? eval?.(s.displayOptions.valueDisplayTransformer_statsList) : undefined,
+                                                    valueDisplayTransformer_button:
+                                                        s.displayOptions?.valueDisplayTransformer_button !== undefined
+                                                            ? eval?.(s.displayOptions.valueDisplayTransformer_button)
+                                                            : undefined,
+                                                    valueDisplayTransformer_statsList:
+                                                        s.displayOptions?.valueDisplayTransformer_button !== undefined
+                                                            ? eval?.(s.displayOptions.valueDisplayTransformer_statsList)
+                                                            : undefined,
                                                 },
                                                 getterFunction: eval?.(s.getterFunction),
                                                 id: s.id,
@@ -1303,8 +1361,8 @@ export class config {
                                                 statsListDisplayName: s.statsListDisplayName,
                                                 type: s.type,
                                                 valueType: s.valueType,
-                                            } as playerMenuLeaderboardStatistic<"customAdvanced", "function">
-                                        }else{
+                                            } as playerMenuLeaderboardStatistic<"customAdvanced", "function">;
+                                        } else {
                                             return {
                                                 buttonDisplayName: s.buttonDisplayName,
                                                 buttonIcon: s.buttonIcon,
@@ -1313,8 +1371,14 @@ export class config {
                                                     prefixWithDollarSign: s.displayOptions?.prefixWithDollarSign ?? false,
                                                     toFixed: s.displayOptions?.toFixed,
                                                     valueDisplayColor: s.displayOptions?.valueDisplayColor,
-                                                    valueDisplayTransformer_button: s.displayOptions?.valueDisplayTransformer_button !== undefined ? eval?.(s.displayOptions.valueDisplayTransformer_button) : undefined,
-                                                    valueDisplayTransformer_statsList: s.displayOptions?.valueDisplayTransformer_button !== undefined ? eval?.(s.displayOptions.valueDisplayTransformer_statsList) : undefined,
+                                                    valueDisplayTransformer_button:
+                                                        s.displayOptions?.valueDisplayTransformer_button !== undefined
+                                                            ? eval?.(s.displayOptions.valueDisplayTransformer_button)
+                                                            : undefined,
+                                                    valueDisplayTransformer_statsList:
+                                                        s.displayOptions?.valueDisplayTransformer_button !== undefined
+                                                            ? eval?.(s.displayOptions.valueDisplayTransformer_statsList)
+                                                            : undefined,
                                                 },
                                                 getterFunction: eval?.(s.getterFunction),
                                                 id: s.id,
@@ -1324,17 +1388,17 @@ export class config {
                                                 statsListDisplayName: s.statsListDisplayName,
                                                 type: s.type,
                                                 valueType: s.valueType,
-                                            } as playerMenuLeaderboardStatistic<"customAdvanced", "order">
+                                            } as playerMenuLeaderboardStatistic<"customAdvanced", "order">;
                                         }
                                     }
                                 });
                             },
-                            set customStats(buttonList: playerMenuLeaderboardStatistic<"custom"|"customAdvanced">[] | undefined) {
+                            set customStats(buttonList: playerMenuLeaderboardStatistic<"custom" | "customAdvanced">[] | undefined) {
                                 world.setDynamicProperty(
                                     "andexdbSettings:ui.menus.playerMenu_leaderboards.customStats",
                                     JSONB.stringify(
-                                        buttonList.map(s=>{
-                                            if(s.type === "custom"){
+                                        buttonList.map((s) => {
+                                            if (s.type === "custom") {
                                                 return {
                                                     buttonDisplayName: s.buttonDisplayName,
                                                     buttonIcon: s.buttonIcon,
@@ -1343,8 +1407,14 @@ export class config {
                                                         prefixWithDollarSign: s.displayOptions?.prefixWithDollarSign ?? false,
                                                         toFixed: s.displayOptions?.toFixed,
                                                         valueDisplayColor: s.displayOptions?.valueDisplayColor,
-                                                        valueDisplayTransformer_button: s.displayOptions?.valueDisplayTransformer_button !== undefined ? s.displayOptions.valueDisplayTransformer_button.toString() : undefined,
-                                                        valueDisplayTransformer_statsList: s.displayOptions?.valueDisplayTransformer_button !== undefined ? s.displayOptions.valueDisplayTransformer_statsList.toString() : undefined,
+                                                        valueDisplayTransformer_button:
+                                                            s.displayOptions?.valueDisplayTransformer_button !== undefined
+                                                                ? s.displayOptions.valueDisplayTransformer_button.toString()
+                                                                : undefined,
+                                                        valueDisplayTransformer_statsList:
+                                                            s.displayOptions?.valueDisplayTransformer_button !== undefined
+                                                                ? s.displayOptions.valueDisplayTransformer_statsList.toString()
+                                                                : undefined,
                                                     },
                                                     id: s.id,
                                                     menuTitle: s.menuTitle,
@@ -1353,9 +1423,9 @@ export class config {
                                                     statsListDisplayName: s.statsListDisplayName,
                                                     type: s.type,
                                                     valueType: s.valueType,
-                                                } as playerMenuLeaderboardStatistic_JSONB<"custom">
+                                                } as playerMenuLeaderboardStatistic_JSONB<"custom">;
                                             } else if (s.type === "customAdvanced") {
-                                                if(s.sortType === "function"){
+                                                if (s.sortType === "function") {
                                                     return {
                                                         buttonDisplayName: s.buttonDisplayName,
                                                         buttonIcon: s.buttonIcon,
@@ -1364,8 +1434,14 @@ export class config {
                                                             prefixWithDollarSign: s.displayOptions?.prefixWithDollarSign ?? false,
                                                             toFixed: s.displayOptions?.toFixed,
                                                             valueDisplayColor: s.displayOptions?.valueDisplayColor,
-                                                            valueDisplayTransformer_button: s.displayOptions?.valueDisplayTransformer_button !== undefined ? s.displayOptions.valueDisplayTransformer_button.toString() : undefined,
-                                                            valueDisplayTransformer_statsList: s.displayOptions?.valueDisplayTransformer_button !== undefined ? s.displayOptions.valueDisplayTransformer_statsList.toString() : undefined,
+                                                            valueDisplayTransformer_button:
+                                                                s.displayOptions?.valueDisplayTransformer_button !== undefined
+                                                                    ? s.displayOptions.valueDisplayTransformer_button.toString()
+                                                                    : undefined,
+                                                            valueDisplayTransformer_statsList:
+                                                                s.displayOptions?.valueDisplayTransformer_button !== undefined
+                                                                    ? s.displayOptions.valueDisplayTransformer_statsList.toString()
+                                                                    : undefined,
                                                         },
                                                         getterFunction: s.getterFunction.toString(),
                                                         id: s.id,
@@ -1375,8 +1451,8 @@ export class config {
                                                         statsListDisplayName: s.statsListDisplayName,
                                                         type: s.type,
                                                         valueType: s.valueType,
-                                                    } as playerMenuLeaderboardStatistic_JSONB<"customAdvanced", "function">
-                                                }else{
+                                                    } as playerMenuLeaderboardStatistic_JSONB<"customAdvanced", "function">;
+                                                } else {
                                                     return {
                                                         buttonDisplayName: s.buttonDisplayName,
                                                         buttonIcon: s.buttonIcon,
@@ -1385,8 +1461,14 @@ export class config {
                                                             prefixWithDollarSign: s.displayOptions?.prefixWithDollarSign ?? false,
                                                             toFixed: s.displayOptions?.toFixed,
                                                             valueDisplayColor: s.displayOptions?.valueDisplayColor,
-                                                            valueDisplayTransformer_button: s.displayOptions?.valueDisplayTransformer_button !== undefined ? s.displayOptions.valueDisplayTransformer_button.toString() : undefined,
-                                                            valueDisplayTransformer_statsList: s.displayOptions?.valueDisplayTransformer_button !== undefined ? s.displayOptions.valueDisplayTransformer_statsList.toString() : undefined,
+                                                            valueDisplayTransformer_button:
+                                                                s.displayOptions?.valueDisplayTransformer_button !== undefined
+                                                                    ? s.displayOptions.valueDisplayTransformer_button.toString()
+                                                                    : undefined,
+                                                            valueDisplayTransformer_statsList:
+                                                                s.displayOptions?.valueDisplayTransformer_button !== undefined
+                                                                    ? s.displayOptions.valueDisplayTransformer_statsList.toString()
+                                                                    : undefined,
                                                         },
                                                         getterFunction: s.getterFunction.toString(),
                                                         id: s.id,
@@ -1396,7 +1478,7 @@ export class config {
                                                         statsListDisplayName: s.statsListDisplayName,
                                                         type: s.type,
                                                         valueType: s.valueType,
-                                                    } as playerMenuLeaderboardStatistic_JSONB<"customAdvanced", "order">
+                                                    } as playerMenuLeaderboardStatistic_JSONB<"customAdvanced", "order">;
                                                 }
                                             }
                                         }) ?? []
@@ -1405,66 +1487,68 @@ export class config {
                             },
                             /**
                              * The statistics that are displayed when a player clicks on another player inside of the player menu leaderboard, they will be displayed in the order they are in this array.
-                             * 
+                             *
                              * It should be an array of ids of leaderboard statistics, including both custom and built-in ones.
-                             * 
+                             *
                              * Defaults to the list of the built-in leaderboard statistics from the `defaultPlayerMenuLeaderboardStatistics` array, in the same order that they appear in the array.
                              */
                             get trackedStats(): string[] {
                                 return JSON.parse(
-                                    String(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.trackedStats") ??
-                                        JSON.stringify(defaultPlayerMenuLeaderboardStatistics.map(s=>s.id))
+                                    String(
+                                        world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.trackedStats") ??
+                                            JSON.stringify(defaultPlayerMenuLeaderboardStatistics.map((s) => s.id))
                                     )
                                 );
                             },
                             set trackedStats(buttonList: string[] | undefined) {
                                 world.setDynamicProperty(
                                     "andexdbSettings:ui.menus.playerMenu_leaderboards.trackedStats",
-                                    JSON.stringify(
-                                        buttonList ?? defaultPlayerMenuLeaderboardStatistics.map(s=>s.id)
-                                    )
+                                    JSON.stringify(buttonList ?? defaultPlayerMenuLeaderboardStatistics.map((s) => s.id))
                                 );
                             },
                             /**
                              * The list of statistics that have their own leaderboards, they will be displayed in the order they are in this array.
-                             * 
+                             *
                              * It should be an array of ids of leaderboard statistics, including both custom and built-in ones.
-                             * 
+                             *
                              * Defaults to the list of the built-in leaderboard statistics from the `defaultPlayerMenuLeaderboardStatistics` array, in the same order that they appear in the array.
                              */
                             get leaderboards(): string[] {
                                 return JSON.parse(
-                                    String(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.trackedStats") ??
-                                        JSON.stringify(defaultPlayerMenuLeaderboardStatistics.map(s=>s.id))
+                                    String(
+                                        world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.trackedStats") ??
+                                            JSON.stringify(defaultPlayerMenuLeaderboardStatistics.map((s) => s.id))
                                     )
                                 );
                             },
                             set leaderboards(buttonList: string[] | undefined) {
                                 world.setDynamicProperty(
                                     "andexdbSettings:ui.menus.playerMenu_leaderboards.trackedStats",
-                                    JSON.stringify(
-                                        buttonList ?? defaultPlayerMenuLeaderboardStatistics.map(s=>s.id)
-                                    )
+                                    JSON.stringify(buttonList ?? defaultPlayerMenuLeaderboardStatistics.map((s) => s.id))
                                 );
                             },
                             /**
                              * Whether to show the time that a player was last online in the stats list that is shown when a player click on another player in a leaderboard.
-                             * 
+                             *
                              * Defaults to false.
                              */
                             get showLastOnlineTimeInPlayerStatsList(): boolean {
-                                return Boolean(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.showLastOnlineTimeInPlayerStatsList") ?? false);
+                                return Boolean(
+                                    world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.showLastOnlineTimeInPlayerStatsList") ?? false
+                                );
                             },
                             set showLastOnlineTimeInPlayerStatsList(show: boolean | undefined) {
                                 world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.showLastOnlineTimeInPlayerStatsList", show ?? false);
                             },
                             /**
                              * Whether to show banned players inside of the leaderboards.
-                             * 
+                             *
                              * Defaults to false.
                              */
                             get showBannedPlayersInLeaderboards(): boolean {
-                                return Boolean(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.showBannedPlayersInLeaderboards") ?? false);
+                                return Boolean(
+                                    world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.showBannedPlayersInLeaderboards") ?? false
+                                );
                             },
                             set showBannedPlayersInLeaderboards(show: boolean | undefined) {
                                 world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.showBannedPlayersInLeaderboards", show ?? false);
@@ -1694,22 +1778,24 @@ export class config {
         function resetProperties(obj: any) {
             const descriptors = Object.getOwnPropertyDescriptors(obj);
             for (const [key, descriptor] of Object.entries(descriptors)) {
-            if (descriptor?.get && descriptor.set) {
-                obj[key] = undefined;
-            } else if (descriptor?.get && typeof descriptor.get() === 'object' && descriptor.get() !== null) {
-                resetProperties(descriptor.get());
-            }
+                if (descriptor?.get && descriptor.set) {
+                    obj[key] = undefined;
+                } else if (descriptor?.get && typeof descriptor.get() === "object" && descriptor.get() !== null) {
+                    resetProperties(descriptor.get());
+                }
             }
         }
         resetProperties(subsection ?? config);
     }
-    static applySettings(settings: DeepPartial<ReturnType<typeof modules.utils.filterProperties<typeof config, ["prototype", "reset", "applySettings", "toJSON"]>>>): void {
+    static applySettings(
+        settings: DeepPartial<ReturnType<typeof modules.utils.filterProperties<typeof config, ["prototype", "reset", "applySettings", "toJSON"]>>>
+    ): void {
         function applySettingsRecursive(settings: any, target: any) {
             for (const key in settings) {
                 if (settings.hasOwnProperty(key)) {
                     const descriptor = Object.getOwnPropertyDescriptor(target, key);
                     if (descriptor?.get && descriptor.set) {
-                        if (typeof settings[key] === 'object' && settings[key] !== null && !Array.isArray(settings[key])) {
+                        if (typeof settings[key] === "object" && settings[key] !== null && !Array.isArray(settings[key])) {
                             applySettingsRecursive(settings[key], target[key]);
                         } else {
                             target[key] = settings[key];
@@ -1724,7 +1810,22 @@ export class config {
         // modules.utils.filterProperties(modules.utils.filterProperties(config, ["addCommaSeparators", "spawnCommandAllowCrossDimensionalTeleport", "allowWatchdogTerminationCrash", "spawnCommandLocation", "allowChatEscapeCodes"], {}), ["toJSON"], {}).antiSpamSystem.antispamEnabled;
         return Object.fromEntries(
             Object.getOwnPropertyNames(config)
-                .filter((n) => !["constructor", "toString", "toLocaleString", "valueOf", "hasOwnProperty", "name", "prototype", "reset", "applySettings", "length", "toJSON"].includes(n))
+                .filter(
+                    (n) =>
+                        ![
+                            "constructor",
+                            "toString",
+                            "toLocaleString",
+                            "valueOf",
+                            "hasOwnProperty",
+                            "name",
+                            "prototype",
+                            "reset",
+                            "applySettings",
+                            "length",
+                            "toJSON",
+                        ].includes(n)
+                )
                 .map((n) => [n, config[n as keyof typeof config]])
         );
     }
