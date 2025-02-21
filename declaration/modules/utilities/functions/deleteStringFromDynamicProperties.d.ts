@@ -1,7 +1,7 @@
 /**
  * Deletes a string from dynamic properties.
  *
- * @param {string} propertyName - The name of the property to save the string under.
+ * @param {string} propertyName - The name of the property the string is saved under.
  *
  * @throws {TypeError} If `propertyName` is not a string.
  */

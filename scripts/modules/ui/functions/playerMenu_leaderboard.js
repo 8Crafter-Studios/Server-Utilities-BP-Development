@@ -32,17 +32,21 @@ export async function playerMenu_leaderboard(sourceEntitya, leaderboard, pagen =
     if (!menuConfig.showBannedPlayersInLeaderboards) {
         savedPlayers = savedPlayers.filter(p => !p.isBanned);
     }
-    const sorterFunction = (typeof leaderboard.sorter == "function" ? (a, b) => leaderboard.sorter(a[1], b[1]) : undefined) ??
-        ((typeof leaderboard.sorter == "number" ? leaderboard.sorter : ObjectiveSortOrder.Descending) == ObjectiveSortOrder.Descending ? ((a, b) => (a[1] > b[1] ? -1 : a[1] < b[1] ? 1 : 0)) : ((a, b) => (a[1] > b[1] ? 1 : a[1] < b[1] ? -1 : 0)));
+    const sorterFunction = ((typeof leaderboard.sorter == "function" ? (a, b) => leaderboard.sorter(a[1], b[1]) : undefined) ??
+        leaderboard.valueType === "bigint")
+        ? ((typeof leaderboard.sorter == "number" ? leaderboard.sorter : ObjectiveSortOrder.Descending) == ObjectiveSortOrder.Descending ? ((a, b) => (BigInt(a[1]) > BigInt(b[1]) ? -1 : BigInt(a[1]) < BigInt(b[1]) ? 1 : 0)) : ((a, b) => (a[1] > b[1] ? 1 : a[1] < b[1] ? -1 : 0)))
+        : leaderboard.valueType === "number"
+            ? ((typeof leaderboard.sorter == "number" ? leaderboard.sorter : ObjectiveSortOrder.Descending) == ObjectiveSortOrder.Descending ? ((a, b) => (Number(a[1]) > Number(b[1]) ? -1 : Number(a[1]) < Number(b[1]) ? 1 : 0)) : ((a, b) => (a[1] > b[1] ? 1 : a[1] < b[1] ? -1 : 0)))
+            : ((typeof leaderboard.sorter == "number" ? leaderboard.sorter : ObjectiveSortOrder.Descending) == ObjectiveSortOrder.Descending ? ((a, b) => (a[1] > b[1] ? -1 : a[1] < b[1] ? 1 : 0)) : ((a, b) => (a[1] > b[1] ? 1 : a[1] < b[1] ? -1 : 0)));
     let displayPlayers = savedPlayers
         .filter((p) => !!search
         ? search.caseSensitive == true
             ? p.name.includes(search.value)
             : p.name.toLowerCase().includes(search.value.toLowerCase())
-        : true).map(p => [p, "getterFunction" in leaderboard ? leaderboard.getterFunction(p) : world.scoreboard.getObjective(leaderboard.scoreboardObjective).getScore(world.scoreboard.getParticipants().find((v) => tryget(() => v.getEntity()?.id) == p.id) ??
+        : true).map(p => [p, leaderboard.getterFunction != undefined ? leaderboard.getterFunction(p) : tryget(() => world.scoreboard.getObjective(leaderboard.scoreboardObjective).getScore(world.scoreboard.getParticipants().find((v) => tryget(() => v.getEntity()?.id) == p.id) ??
             world.scoreboard
                 .getParticipants()
-                .find((v) => v.id == p.scoreboardIdentity))?.toString()])
+                .find((v) => v.id == p.scoreboardIdentity)))?.toString()])
         .filter(p => p[1] !== undefined)
         .sort(sorterFunction);
     const numsavedplayers = displayPlayers.length;
@@ -54,8 +58,9 @@ export async function playerMenu_leaderboard(sourceEntitya, leaderboard, pagen =
     form.button("Search", "textures/ui/spyglass_flat");
     form.button((page != 0 ? "§0" : "§8") + "Previous Page", "textures/ui/arrow_left");
     form.button((page < numpages - 1 ? "§0" : "§8") + "Next Page", "textures/ui/arrow_right");
-    displayPlayers.slice(page * maxplayersperpage, (page + 1) * maxplayersperpage).forEach((p, i) => {
-        let text = `${((leaderboard.valueType == "bigint" || leaderboard.valueType == "number") ? numberFormatter_compact(p[1], leaderboard.displayOptions.prefixWithDollarSign) : p[1]).slice(0, 19)}\n#${i + 1 + page * maxplayersperpage}: ${p[0].name}`;
+    const displayPlayersB = displayPlayers.slice(page * maxplayersperpage, (page + 1) * maxplayersperpage);
+    displayPlayersB.forEach((p, i) => {
+        let text = `${((leaderboard.valueType == "bigint" || leaderboard.valueType == "number") ? numberFormatter_compact(p[1], leaderboard.displayOptions.prefixWithDollarSign ?? false) : p[1]).slice(0, 19)}\n#${i + 1 + page * maxplayersperpage}: ${p[0].name}`;
         if (leaderboard.displayOptions.valueDisplayTransformer_button !== undefined) {
             text = leaderboard.displayOptions.valueDisplayTransformer_button(text);
         }
@@ -73,7 +78,7 @@ export async function playerMenu_leaderboard(sourceEntitya, leaderboard, pagen =
         // This will stop the code when the player closes the form
         if (r.canceled)
             return 1;
-        switch (["search", "previous", "next"][r.selection] ?? (!!displayPlayers[r.selection - 3] ? "player" : undefined) ?? ["back", "close"][r.selection - displayPlayers.length - 3]) {
+        switch (["search", "previous", "next"][r.selection] ?? (!!displayPlayersB[r.selection - 3] ? "player" : undefined) ?? ["back", "close"][r.selection - displayPlayersB.length - 3]) {
             case "search":
                 {
                     const rb = await tryget(async () => await new ModalFormData()

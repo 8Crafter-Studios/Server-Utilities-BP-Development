@@ -17,7 +17,7 @@ import { editCustomFormUI } from "modules/ui/functions/editCustomFormUI";
 import { editorStickB } from "modules/ui/functions/editorStickB";
 import { editorStickMenuB } from "modules/ui/functions/editorStickMenuB";
 import { forceShow } from "modules/ui/functions/forceShow";
-import { globalSettings } from "modules/ui/functions/globalSettings";
+import { generalSettings } from "modules/ui/functions/generalSettings";
 import { mainMenu } from "modules/ui/functions/mainMenu";
 import { personalSettings } from "modules/ui/functions/personalSettings";
 import { settings } from "modules/ui/functions/settings";
@@ -7590,7 +7590,7 @@ break;*/ /*
         let players = world.getPlayers();
     form.title("Settings");
     form.body("Choose menu to open. ");
-    form.button("Global Settings", "textures/ui/settings_glyph_color_2x");
+    form.button("General Settings", "textures/ui/settings_glyph_color_2x");
     form.button("Eval Auto Execute Settings", "textures/ui/settings_glyph_color_2x");
     form.button("Personal Settings", "textures/ui/settings_glyph_color_2x");*/ /*
                     form.button("Debug Screen", "textures/ui/ui_debug_glyph_color");*/ /*
@@ -7602,7 +7602,7 @@ break;*/ /*
                 switch (response) {
                     case 0:
                         
-                    try { (sourceEntity).runCommand(String("/scriptevent andexdb:globalSettings saqw")); }
+                    try { (sourceEntity).runCommand(String("/scriptevent andexdb:generalSettings saqw")); }
                     // Do something
                 catch(e) {
                     console.error(e, e.stack);
@@ -7640,7 +7640,7 @@ break;*/ /*
             });*/
             settings(sourceEntity);
         }
-        if (id == "andexdb:globalSettings") {
+        if (id == "andexdb:generalSettings") {
             /*
         let form2 = new ModalFormData();
         let players = world.getAllPlayers();
@@ -7652,7 +7652,7 @@ break;*/ /*
         }"andexdbSettings:autoEscapeChatMessages"
         "andexdbSettings:autoURIEscapeChatMessages"
         "andexdbSettings:allowChatEscapeCodes"
-        form2.title("Global Settings")
+        form2.title("General Settings")
         form2.textField("§l§fchatCommandPrefix§r§f\nThis is what you type before a chat command, the default is \\. ", "string", String(world.getDynamicProperty("andexdbSettings:chatCommandPrefix") ?? "\\"));
         form2.textField("§l§fvalidChatCommandPrefixes§r§f\nList of valid prefixes for chat commands, use this if you have other add-ons with chat commands in them active, messages that start with any of these will not be sent and will not be modified by this add-on so it will work for you other packs, default is blank", "Comma-Separated List of Strings", String(world.getDynamicProperty("andexdbSettings:validChatCommandPrefixes") ?? ""));
         form2.textField("§l§fchatRankPrefix§r§f\nPrefix for chat ranks, default is rank:", "string", String(world.getDynamicProperty("andexdbSettings:chatRankPrefix") ?? "rank:"));
@@ -7689,7 +7689,7 @@ break;*/ /*
     }).catch(e => {
         console.error(e, e.stack);
     });*/
-            globalSettings(sourceEntity);
+            generalSettings(sourceEntity);
         }
         if (id == "andexdb:personalSettings") {
             /*
@@ -11768,11 +11768,11 @@ break;*/ /*
                 if ((initiator ?? sourceEntity) == undefined) {
                     if (sourceType == ScriptEventSource.Server) {
                         console.error(
-                            '§cERROR: Default GameTest structure spawn location is currently not set or is invalid, please set it with the spawn_without_behaviors_internal option at "Main Menu>Settings>Global Settings" or specify a location in the fourth parameter. '
+                            '§cERROR: Default GameTest structure spawn location is currently not set or is invalid, please set it with the spawn_without_behaviors_internal option at "Main Menu>Settings>General Settings" or specify a location in the fourth parameter. '
                         );
                     } else {
                         console.error(
-                            '§cERROR: Default GameTest structure spawn location is currently not set or is invalid, please set it with the spawn_without_behaviors_internal option at "Main Menu>Settings>Global Settings" or specify a location in the fourth parameter. Block Location: ' +
+                            '§cERROR: Default GameTest structure spawn location is currently not set or is invalid, please set it with the spawn_without_behaviors_internal option at "Main Menu>Settings>General Settings" or specify a location in the fourth parameter. Block Location: ' +
                             JSON.stringify(sourceBlock.location) +
                             ", Block Dimension: " +
                             sourceBlock.dimension
@@ -11780,7 +11780,7 @@ break;*/ /*
                     }
                 } else {
                     ((initiator ?? sourceEntity) as Player).sendMessage(
-                        '§cERROR: Default GameTest structure spawn location is currently not set or is invalid, please set it with the spawn_without_behaviors_internal option at "Main Menu>Settings>Global Settings" or specify a location in the fourth parameter. '
+                        '§cERROR: Default GameTest structure spawn location is currently not set or is invalid, please set it with the spawn_without_behaviors_internal option at "Main Menu>Settings>General Settings" or specify a location in the fourth parameter. '
                     );
                 }
                 return;
@@ -11938,11 +11938,11 @@ break;*/ /*
                 if ((initiator ?? sourceEntity) == undefined) {
                     if (sourceType == ScriptEventSource.Server) {
                         console.error(
-                            '§cERROR: Default GameTest structure spawn location is currently not set or is invalid, please set it with the spawn_without_behaviors_internal option at "Main Menu>Settings>Global Settings" or specify a location in the fourth parameter. '
+                            '§cERROR: Default GameTest structure spawn location is currently not set or is invalid, please set it with the spawn_without_behaviors_internal option at "Main Menu>Settings>General Settings" or specify a location in the fourth parameter. '
                         );
                     } else {
                         console.error(
-                            '§cERROR: Default GameTest structure spawn location is currently not set or is invalid, please set it with the spawn_without_behaviors_internal option at "Main Menu>Settings>Global Settings" or specify a location in the fourth parameter. Block Location: ' +
+                            '§cERROR: Default GameTest structure spawn location is currently not set or is invalid, please set it with the spawn_without_behaviors_internal option at "Main Menu>Settings>General Settings" or specify a location in the fourth parameter. Block Location: ' +
                             JSON.stringify(sourceBlock.location) +
                             ", Block Dimension: " +
                             sourceBlock.dimension
@@ -11950,7 +11950,7 @@ break;*/ /*
                     }
                 } else {
                     ((initiator ?? sourceEntity) as Player).sendMessage(
-                        '§cERROR: Default GameTest structure spawn location is currently not set or is invalid, please set it with the spawn_without_behaviors_internal option at "Main Menu>Settings>Global Settings" or specify a location in the fourth parameter. '
+                        '§cERROR: Default GameTest structure spawn location is currently not set or is invalid, please set it with the spawn_without_behaviors_internal option at "Main Menu>Settings>General Settings" or specify a location in the fourth parameter. '
                     );
                 }
                 return;
@@ -12108,11 +12108,11 @@ break;*/ /*
                 if ((initiator ?? sourceEntity) == undefined) {
                     if (sourceType == ScriptEventSource.Server) {
                         console.error(
-                            '§cERROR: Default GameTest structure spawn location is currently not set or is invalid, please set it with the spawn_without_behaviors_internal option at "Main Menu>Settings>Global Settings" or specify a location in the fourth parameter. '
+                            '§cERROR: Default GameTest structure spawn location is currently not set or is invalid, please set it with the spawn_without_behaviors_internal option at "Main Menu>Settings>General Settings" or specify a location in the fourth parameter. '
                         );
                     } else {
                         console.error(
-                            '§cERROR: Default GameTest structure spawn location is currently not set or is invalid, please set it with the spawn_without_behaviors_internal option at "Main Menu>Settings>Global Settings" or specify a location in the fourth parameter. Block Location: ' +
+                            '§cERROR: Default GameTest structure spawn location is currently not set or is invalid, please set it with the spawn_without_behaviors_internal option at "Main Menu>Settings>General Settings" or specify a location in the fourth parameter. Block Location: ' +
                             JSON.stringify(sourceBlock.location) +
                             ", Block Dimension: " +
                             sourceBlock.dimension
@@ -12120,7 +12120,7 @@ break;*/ /*
                     }
                 } else {
                     ((initiator ?? sourceEntity) as Player).sendMessage(
-                        '§cERROR: Default GameTest structure spawn location is currently not set or is invalid, please set it with the spawn_without_behaviors_internal option at "Main Menu>Settings>Global Settings" or specify a location in the fourth parameter. '
+                        '§cERROR: Default GameTest structure spawn location is currently not set or is invalid, please set it with the spawn_without_behaviors_internal option at "Main Menu>Settings>General Settings" or specify a location in the fourth parameter. '
                     );
                 }
                 return;

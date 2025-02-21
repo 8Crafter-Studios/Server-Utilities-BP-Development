@@ -104,6 +104,22 @@ declare const permissionTypes: Readonly<{
         }];
     };
     /**
+     * Allows the player to use head admin-level custom commands, which includes most of the custom commands.
+     * This permission is included in the `andexdb.headAdmin` permission.
+     * @danger This permission should only be given to trusted staff members. It is DANGEROUS to give this permission to anyone else.
+     */
+    readonly "andexdb.useHeadAdminLevelCommands": {
+        readonly id: "andexdb.useHeadAdminLevelCommands";
+        readonly default: false;
+        readonly includedInPermissions: ["andexdb.useHeadAdminLevelCommands", "andexdb.useOwnerLevelCommands"];
+        readonly description: "Allows the player to use head admin-level custom commands.\n    This permission is included in the 'andexdb.headAdmin' permission.\n    This permission is included in the 'andexdb.useOwnerLevelCommands' permission.\n    §cDANGER!: This permission should only be given to trusted staff members. It is DANGEROUS to give this permission to anyone else.";
+        readonly additionalPrompts: [{
+            readonly title: "§l§cWARNING!";
+            readonly prompt: "Are you sure you want to give this player the ability to use ALL HEAD ADMIN-LEVEL COMMANDS?";
+            readonly default: false;
+        }];
+    };
+    /**
      * Allows the player to use admin-level custom commands, which includes most of the custom commands.
      * This permission is included in the `andexdb.headAdmin` permission.
      * This permission is included in the `andexdb.admin` permission.
@@ -113,7 +129,7 @@ declare const permissionTypes: Readonly<{
         readonly id: "andexdb.useAdminLevelCommands";
         readonly default: false;
         readonly includedInPermissions: ["andexdb.useOwnerLevelCommands"];
-        readonly description: "Allows the player to use moderator-level custom commands.\n    This permission is included in the 'andexdb.admin' permission.\n    This permission is included in the 'andexdb.headAdmin' permission.\n    This permission is included in the 'andexdb.useOwnerLevelCommands' permission.\n    §cDANGER!: This permission should only be given to trusted staff members. It is DANGEROUS to give this permission to anyone else.";
+        readonly description: "Allows the player to use admin-level custom commands.\n    This permission is included in the 'andexdb.admin' permission.\n    This permission is included in the 'andexdb.headAdmin' permission.\n    This permission is included in the 'andexdb.useOwnerLevelCommands' permission.\n    §cDANGER!: This permission should only be given to trusted staff members. It is DANGEROUS to give this permission to anyone else.";
         readonly additionalPrompts: [{
             readonly title: "§l§cWARNING!";
             readonly prompt: "Are you sure you want to give this player the ability to use ALL ADMIN-LEVEL COMMANDS?";
@@ -332,6 +348,19 @@ Note: Unless the player has the 'andexdb.fullControl' permission, the player can
         readonly default: false;
         readonly includedInPermissions: [];
         readonly description: "Allows the player to access the manage warps UI.\n    This allows the player to add, remove, and reorder the warps that are in the Warps section of the player menu.\n    This permission is included in the 'andexdb.headAdmin' permission.\n    This permission is included in the 'andexdb.admin' permission.";
+        readonly additionalPrompts: [];
+    };
+    /**
+     * Allows the player to access the manage redeemable codes UI.
+     * This allows the player to add, remove, and reorder the redeemable codes that are in the redeemable codes section of the player menu.
+     * This permission is included in the `andexdb.headAdmin` permission.
+     * This permission is included in the `andexdb.admin` permission.
+     */
+    readonly "andexdb.accessManageRedeemableCodesUI": {
+        readonly id: "andexdb.accessManageRedeemableCodesUI";
+        readonly default: false;
+        readonly includedInPermissions: [];
+        readonly description: "Allows the player to access the manage redeemable codes UI.\n    This allows the player to add, remove, and reorder the redeemable codes that are in the redeemable codes section of the player menu.\n    This permission is included in the 'andexdb.headAdmin' permission.\n    This permission is included in the 'andexdb.admin' permission.";
         readonly additionalPrompts: [];
     };
     /**

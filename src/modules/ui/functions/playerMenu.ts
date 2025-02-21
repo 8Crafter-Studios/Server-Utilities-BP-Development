@@ -14,6 +14,7 @@ import { playerMenu_TPA } from "./playerMenu_TPA";
 import { playerMenu_bounties } from "./playerMenu_bounties";
 import { playerMenu_warps } from "./playerMenu_warps";
 import { playerMenu_moneyTransfer } from "./playerMenu_moneyTransfer";
+import { playerMenu_redeemCode } from "./playerMenu_redeemCode";
 
 export async function playerMenu(
     sourceEntitya: Entity | executeCommandPlayerW | Player
@@ -190,14 +191,14 @@ form.button("Entity Debugger", "textures/ui/debug_glyph_color");*/ /*
                     } else {
                         return 0;
                     }
-                    break;
+                    break; */
                 case "redeemCode":
                     if ((await playerMenu_redeemCode(sourceEntity)) == 1) {
                         return await playerMenu(sourceEntity);
                     } else {
                         return 0;
                     }
-                    break; */
+                    break;
                 case "about":
                     if ((await playerMenu_about(sourceEntity)) == 1) {
                         return await playerMenu(sourceEntity);

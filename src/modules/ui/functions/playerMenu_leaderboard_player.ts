@@ -10,7 +10,7 @@ import { numberFormatter } from "modules/utilities/functions/numberFormatter";
 
 export async function playerMenu_leaderboard_player(
     sourceEntitya: Entity | executeCommandPlayerW | Player,
-    leaderboard: playerMenuLeaderboardStatistic<any>,
+    leaderboard: playerMenuLeaderboardStatistic<"built-in"|"custom"|"customAdvanced">,
     player: savedPlayer
 ): Promise<0 | 1> {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
@@ -47,10 +47,10 @@ export async function playerMenu_leaderboard_player(
         k,
         defaultPlayerMenuLeaderboardStatistics.find((s) => s.id === k && menuConfig.builtInStats[k as keyof typeof menuConfig.builtInStats].enabled) ??
             menuConfig.customStats.find((s) => s.id === k),
-    ]) as [string, playerMenuLeaderboardStatistic<any>][];
+    ]) as [string, playerMenuLeaderboardStatistic<"built-in"|"custom"|"customAdvanced">][];
     const statsDisplay = stats.map(([k, s]) => {
         let value =
-            "getterFunction" in s
+            s.getterFunction != undefined
                 ? s.getterFunction(player)
                 : world.scoreboard
                       .getObjective(s.scoreboardObjective)
@@ -67,9 +67,7 @@ export async function playerMenu_leaderboard_player(
             );
         }
         let out = `${s.statsListDisplayName}§r: ${
-            "0123456789abcdefghijklmnopqrstuvwxyz".includes(s.displayOptions.valueDisplayColor?.toLowerCase() as string)
-                ? "§" + s.displayOptions.valueDisplayColor
-                : ""
+            (s.displayOptions.valueDisplayColor?.toLowerCase()?.split("") ?? []).filter(s=>"0123456789abcdefghijklmnopqrstuvwxyz".includes(s)).map(s=>"§" + s).join("")
         }${value}`;
         if (leaderboard.displayOptions.valueDisplayTransformer_statsList !== undefined) {
             out = leaderboard.displayOptions.valueDisplayTransformer_statsList(out);

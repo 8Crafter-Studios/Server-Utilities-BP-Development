@@ -1,4 +1,4 @@
-import { Entity, Scoreboard, ScoreboardObjective, world } from "@minecraft/server";
+import { Entity, Scoreboard, ScoreboardIdentity, ScoreboardObjective, world } from "@minecraft/server";
 import { savedPlayer } from "modules/player_save/classes/savedPlayer";
 import * as ipc from "ipc";
 
@@ -189,6 +189,16 @@ export class MoneySystem {
                 : (player.id as `${number}`)
         );
     }
+    static transferFromScoreboard(scoreboard: ScoreboardObjective){
+        const players = savedPlayer.getSavedPlayers().filter(p=>p.scoreboardIdentity !== undefined).map(p=>([p, tryget(()=>world.scoreboard.getParticipants().find(pa=>pa?.id === p.scoreboardIdentity))] as [player: savedPlayer, identity: ScoreboardIdentity])).filter(p=>p[1] !== undefined);
+        players.forEach(p=>{
+            const score = scoreboard.getScore(p[1])
+            if(score !== undefined){
+                MoneySystem.get(p[0].id).addMoney(score.toBigInt());
+                scoreboard.removeParticipant(p[1])
+            }
+        })
+    }
 }
 
 ipc.IPC.handle("andexdbRequestPlayerMoneyAmount", ipc.PROTO.Object({playerID: ipc.PROTO.String}), ipc.PROTO.Object({playerID: ipc.PROTO.String, money: ipc.PROTO.String}), v=>{
@@ -212,3 +222,5 @@ ipc.IPC.handle("andexdbRequestPlayerMoneyRemove", ipc.PROTO.Object({playerID: ip
     new MoneySystem(v.playerID as any).removeMoney(BigInt(v.money));
     return true;
 });
+
+// ipc.IPC.invoke("andexdbRequestPlayerMoneyAmount", ipc.PROTO.Object({playerID: ipc.PROTO.String}), {playerID: world.getPlayers({name: "Andexter8"})[0].id}, ipc.PROTO.Object({playerID: ipc.PROTO.String, money: ipc.PROTO.String}))

@@ -6,7 +6,7 @@ import { savedPlayer } from "modules/player_save/classes/savedPlayer";
 import { numberFormatter_compact } from "modules/utilities/functions/numberFormatter";
 
 let activeBounties: Bounty[] = [];
-let currentId = 0n;
+let currentId = BigInt((gwdp("lastBountyID") as string) ?? 0n);
 
 export class Bounty {
     readonly id: bigint;
@@ -15,18 +15,43 @@ export class Bounty {
     value: bigint;
     creationTime: number;
     valid: boolean = true;
-    status: "none"|"deleted"|"claimed"|"canceled" = "none";
-    private constructor(playerId: string, targetId: string, creationTime: number = Date.now()) {
-        this.playerId = playerId;
-        this.targetId = targetId;
-        this.creationTime = creationTime;
-        Object.defineProperty(this, "id", {
-            value: currentId++,
-            configurable: true,
-            enumerable: true,
-            writable: false,
-        });
-        this.init();
+    status: "none" | "deleted" | "claimed" | "canceled" = "none";
+    private constructor(
+        properties:
+            | { playerId: string; targetId: string; value: bigint; creationTime?: number; new?: true; valid?: undefined; status?: undefined; id?: undefined }
+            | {
+                  readonly id: bigint;
+                  playerId: string;
+                  targetId: string;
+                  value: bigint;
+                  creationTime: number;
+                  new: false;
+                  valid: boolean;
+                  status: "none" | "deleted" | "claimed" | "canceled";
+              }
+    ) {
+        this.playerId = properties.playerId;
+        this.targetId = properties.targetId;
+        this.value = properties.value;
+        this.creationTime = properties.creationTime ?? Date.now();
+        if (properties.new === false) {
+            this.valid = properties.valid;
+            this.status = properties.status;
+            Object.defineProperty(this, "id", {
+                value: properties.id,
+                configurable: true,
+                enumerable: true,
+                writable: false,
+            });
+        } else {
+            Object.defineProperty(this, "id", {
+                value: currentId++,
+                configurable: true,
+                enumerable: true,
+                writable: false,
+            });
+            this.init();
+        }
     }
     private async init() {
         activeBounties.push(this);
@@ -34,7 +59,7 @@ export class Bounty {
     }
     delete() {
         if (this.valid) {
-            if(this.status === "none"){
+            if (this.status === "none") {
                 this.status = "deleted";
             }
             this.valid = false;
@@ -74,11 +99,34 @@ export class Bounty {
     getLinkedSourceSavedPlayer(): savedPlayer | undefined {
         return savedPlayer.getSavedPlayer("player:" + this.playerId);
     }
+    toJSONB(): {
+        readonly id: bigint;
+        playerId: string;
+        targetId: string;
+        value: bigint;
+        creationTime: number;
+        valid: boolean;
+        status: "none" | "deleted" | "claimed" | "canceled";
+    } {
+        return {
+            id: this.id,
+            playerId: this.playerId,
+            targetId: this.targetId,
+            value: this.value,
+            creationTime: this.creationTime,
+            valid: this.valid,
+            status: this.status,
+        };
+    }
     static loadBounties() {
-        activeBounties = JSONB.parse(world.getStringFromDynamicProperties("activeBounties", "[]"));
+        activeBounties = JSONB.parse(world.getStringFromDynamicProperties("activeBounties", "[]")).map(
+            (v: ReturnType<Bounty["toJSONB"]>) => new Bounty({ new: false, ...v })
+        );
+        currentId = BigInt((gwdp("lastBountyID") as string) ?? 0n);
     }
     static saveBounties() {
         world.saveStringToDynamicProperties(JSONB.stringify(activeBounties), "activeBounties");
+        swdp("lastBountyID", currentId.toString());
     }
     static placeBountyOnPlayer(
         value: bigint,
@@ -93,16 +141,16 @@ export class Bounty {
         if (!!activeBounties.find((r) => r.playerId === playerId && r.targetId === targetId)) {
             throw new Error("Duplicate Bounty");
         }
-        if(chargePlayer){
+        if (chargePlayer) {
             let playerMoney = new MoneySystem(playerId as any);
-            if(playerMoney.money >= value){
+            if (playerMoney.money >= value) {
                 playerMoney.removeMoney(value);
-            }else{
+            } else {
                 throw new Error("Insufficient Funds");
             }
         }
         if (silent) {
-            new Bounty(playerId, targetId, creationTime);
+            new Bounty({ playerId, targetId, creationTime, value });
         } else {
             const playerName =
                 playerDisplayName ??
@@ -112,8 +160,8 @@ export class Bounty {
                 targetDisplayName ??
                 world.getAllPlayers().find((p) => p.id === targetId)?.id ??
                 tryget(() => savedPlayer.getSavedPlayer("player:" + targetId)?.id);
-            new Bounty(playerId, targetId, creationTime);
-            world.sendMessage(`§e${playerName} has just placed a ${numberFormatter_compact(value, true, 0)} bounty on ${targetName}.`);
+            new Bounty({ playerId, targetId, creationTime, value });
+            world.sendMessage(`§e${playerName} has just placed a ${numberFormatter_compact(value, true, undefined, 0)} bounty on ${targetName}.`);
         }
     }
     static getBountiesFromPlayer(playerId: string): Bounty[] {
@@ -123,16 +171,16 @@ export class Bounty {
         return activeBounties.filter((r) => r.targetId === targetId);
     }
     static getMergedBounties(): Bounty[] {
-        return activeBounties.filter(b=>b.valid);
+        return activeBounties.filter((b) => b.valid);
     }
     static getAllBounties(): Bounty[] {
-        return activeBounties.filter(b=>b.valid);
+        return activeBounties.filter((b) => b.valid);
     }
 }
 
 export class TotalBounty {
     readonly targetId: string;
-    constructor(targetId: string){
+    constructor(targetId: string) {
         Object.defineProperty(this, "targetId", {
             value: targetId,
             configurable: true,
@@ -142,7 +190,7 @@ export class TotalBounty {
     }
     get totalValue(): bigint {
         let total = 0n;
-        this.getBounties().forEach(b=>total += b.value)
+        this.getBounties().forEach((b) => (total += b.value));
         return total;
     }
     getLinkedTargetSavedPlayer(): savedPlayer | undefined {
@@ -151,17 +199,17 @@ export class TotalBounty {
     getBounties(): Bounty[] {
         return Bounty.getBountiesOnPlayer(this.targetId);
     }
-    static getTotalBountyOnPlayer(player: { id: string; [k: string | number | symbol ]: any; }): TotalBounty {
+    static getTotalBountyOnPlayer(player: { id: string; [k: string | number | symbol]: any }): TotalBounty {
         return new TotalBounty(player.id);
     }
     static getAll(): TotalBounty[] {
-        const playerIds = [...new Set(Bounty.getAllBounties().map(b=>b.targetId))];
-        return playerIds.map(p=>new TotalBounty(p));
+        const playerIds = [...new Set(Bounty.getAllBounties().map((b) => b.targetId))];
+        return playerIds.map((p) => new TotalBounty(p));
     }
-    static claimBounty(claimer: Player, targetId: string){
+    static claimBounty(claimer: Player, targetId: string) {
         const totalBounty = new TotalBounty(targetId);
         const applicableBounties = totalBounty.getBounties();
-        applicableBounties.forEach(b=>b.claim(claimer));
+        applicableBounties.forEach((b) => b.claim(claimer));
     }
 }
 

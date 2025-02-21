@@ -8,7 +8,7 @@ export declare const defaultPlayerMenuLeaderboardStatistics: [{
     readonly getterFunction: (player: import("../../player_save/classes/savedPlayer").savedPlayer) => string;
     readonly sorter: (a: string, b: string) => 0 | 1 | -1;
     readonly displayOptions: {
-        readonly prefixWithDollarSign: true;
-        readonly addCommaSeparators: true;
+        readonly prefixWithDollarSign: boolean;
+        readonly addCommaSeparators: boolean;
     };
 }];

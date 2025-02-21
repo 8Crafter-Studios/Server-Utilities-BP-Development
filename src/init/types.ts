@@ -19,6 +19,8 @@ export type NoRepetition<U extends string, ResultT extends any[] = []> = ResultT
 
 export type LooseAutocomplete<T extends string> = T | Omit<string, T>
 
+export type LooseAutocompleteB<U extends string | number | symbol, T extends U> = T | Omit<U, T>
+
 export type Split<S extends string> = S extends ''
   ? []
   : S extends `${infer C}${infer R}`
@@ -57,6 +59,10 @@ export type ReadonlyDeep<T> = {
   readonly [P in keyof T]: ReadonlyDeep<T[P]>;
 };
 
+export type DeepPartial<T> = T extends object ? {
+  [P in keyof T]?: DeepPartial<T[P]>;
+} : T;
+
 export type test1a = [name: number, id: `ID:${number}`, hi: "text"];
 
 declare global {
@@ -80,6 +86,7 @@ declare global {
     }[U];
     // Source: https://www.totaltypescript.com/tips/create-autocomplete-helper-which-allows-for-arbitrary-values
     type LooseAutocomplete<T extends string> = T | Omit<string, T> & string
+    type LooseAutocompleteB<U extends string | number | symbol, T extends U> = T | Omit<U, T> & U
     type Split<S extends string> = S extends ''
   ? []
   : S extends `${infer C}${infer R}`
@@ -117,4 +124,8 @@ declare global {
     type ReadonlyDeep<T> = {
       readonly [P in keyof T]: ReadonlyDeep<T[P]>;
     };
+
+    type DeepPartial<T> = T extends object ? {
+      [P in keyof T]?: DeepPartial<T[P]>;
+  } : T;
 }

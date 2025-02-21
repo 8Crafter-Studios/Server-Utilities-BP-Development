@@ -1,3 +1,4 @@
+import { ScoreboardObjective } from "@minecraft/server";
 export declare class ScoreboardV2 {
     static addObjective(objectiveId: string, displayName?: string): ScoreboardV2Objective;
     static getObjective(objectiveId: string): ScoreboardV2Objective | undefined;
@@ -19,6 +20,7 @@ export declare class ScoreboardV2Objective {
     }[];
     hasParticipant(participant: string): boolean;
     isValid(): boolean;
+    transferFromScoreboard(scoreboard: ScoreboardObjective): void;
     removeParticipant(participant: string): boolean;
     setScore(participant: string, score: bigint): void;
     private save;

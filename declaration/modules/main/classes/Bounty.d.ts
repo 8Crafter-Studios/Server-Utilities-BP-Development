@@ -15,6 +15,15 @@ export declare class Bounty {
     claim(claimer: Player): boolean;
     getLinkedTargetSavedPlayer(): savedPlayer | undefined;
     getLinkedSourceSavedPlayer(): savedPlayer | undefined;
+    toJSONB(): {
+        readonly id: bigint;
+        playerId: string;
+        targetId: string;
+        value: bigint;
+        creationTime: number;
+        valid: boolean;
+        status: "none" | "deleted" | "claimed" | "canceled";
+    };
     static loadBounties(): void;
     static saveBounties(): void;
     static placeBountyOnPlayer(value: bigint, playerId: string, targetId: string, playerDisplayName?: string, targetDisplayName?: string, silent?: boolean, chargePlayer?: boolean, creationTime?: number): void;

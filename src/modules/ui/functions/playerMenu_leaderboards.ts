@@ -26,9 +26,10 @@ export async function playerMenu_leaderboards(
     }
     const menuConfig = config.ui.menus.playerMenu_leaderboards;
     // menuConfig.buttons.map(k=>[k, menuButtonIds.mainMenu.buttons[k]])
-    const buttons = (menuConfig.leaderboards.map(k=>[k, defaultPlayerMenuLeaderboardStatistics.find(s=>s.id === k && menuConfig.builtInStats[k as keyof typeof menuConfig.builtInStats].enabled) ?? menuConfig.customStats.find(s=>s.id === k)]) as [string, playerMenuLeaderboardStatistic<any>][]);
+    const buttons = (menuConfig.leaderboards.map(k=>[k, defaultPlayerMenuLeaderboardStatistics.find(s=>s.id === k && menuConfig.builtInStats[k as keyof typeof menuConfig.builtInStats].enabled) ?? menuConfig.customStats.find(s=>s.id === k)]) as [string, playerMenuLeaderboardStatistic<"built-in"|"custom"|"customAdvanced">][]);
     let form = new ActionFormData();
     form.title("Leaderboards");
+    form.body("Select a leaderboard.");
     buttons.forEach(([k, b])=>{
         form.button(b.buttonDisplayName, b.buttonIcon);
     });
@@ -49,7 +50,7 @@ export async function playerMenu_leaderboards(
                 case "close":
                     return 0;
                 default:
-                    if ((await playerMenu_leaderboard(sourceEntity, buttons[r.selection]?.[1] as playerMenuLeaderboardStatistic<any>)) == 1) {
+                    if ((await playerMenu_leaderboard(sourceEntity, buttons[r.selection]?.[1] as playerMenuLeaderboardStatistic<"built-in"|"custom"|"customAdvanced">)) == 1) {
                         return await playerMenu_leaderboards(sourceEntity);
                     } else {
                         return 0;

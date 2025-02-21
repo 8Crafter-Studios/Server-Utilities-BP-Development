@@ -1,4 +1,5 @@
 import { World } from "@minecraft/server";
+import { deleteStringFromDynamicProperties } from "modules/utilities/functions/deleteStringFromDynamicProperties";
 import { getStringFromDynamicProperties } from "modules/utilities/functions/getStringFromDynamicProperties";
 import { saveStringToDynamicProperties } from "modules/utilities/functions/saveStringToDynamicProperties";
 
@@ -11,6 +12,12 @@ Object.defineProperties(World.prototype, {
     },
     getStringFromDynamicProperties: {
         value: getStringFromDynamicProperties,
+        configurable: false,
+        enumerable: true,
+        writable: true,
+    },
+    deleteStringFromDynamicProperties: {
+        value: deleteStringFromDynamicProperties,
         configurable: false,
         enumerable: true,
         writable: true,
@@ -39,5 +46,13 @@ declare module "@minecraft/server" {
          * @throws {TypeError} If the provided propertyName is not a string.
          */
         getStringFromDynamicProperties(propertyName: string, zeroLengthPlaceholder?: string): string;
+        /**
+         * Deletes a string from dynamic properties.
+         *
+         * @param {string} propertyName - The name of the property the string is saved under.
+         *
+         * @throws {TypeError} If `propertyName` is not a string.
+         */
+        deleteStringFromDynamicProperties(propertyName: string): void;
     }
 }

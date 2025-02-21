@@ -1,5 +1,5 @@
 import type { Player, Entity } from "@minecraft/server";
-import type { command_formats_type_list } from "legacyModuleAliases/commands";
+import type { command_formats_type_list } from "modules/commands/types/command_formats_type_list";
 import { command } from "modules/commands/classes/command";
 import type { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { commandflags } from "modules/commands_documentation/constants/commandflags";

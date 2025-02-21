@@ -38,19 +38,6 @@ export class config {
     static set invalidChatCommandAction(invalidChatCommandAction) {
         world.setDynamicProperty("andexdbSettings:invalidChatCommandAction", invalidChatCommandAction ?? 3);
     }
-    /**
-     * How long in seconds after getting damaged by another player that the player has to wait before they can teleport with commands such as `\spawn`, `\home`, `\gohome`, `\tpa`, and `\rtp`.
-     *
-     * It defaults to 0.
-     */
-    static get pvpCooldownToTeleport() {
-        return isNaN(Number(world.getDynamicProperty("andexdbSettings:pvpCooldownToTeleport")))
-            ? 0
-            : Number(world.getDynamicProperty("andexdbSettings:pvpCooldownToTeleport") ?? 0);
-    }
-    static set pvpCooldownToTeleport(invalidChatCommandAction) {
-        world.setDynamicProperty("andexdbSettings:pvpCooldownToTeleport", invalidChatCommandAction ?? 0);
-    }
     static get undoClipboardMode() {
         return String(world.getDynamicProperty("andexdbSettings:undoClipboardMode") ?? StructureSaveMode.Memory);
     }
@@ -496,7 +483,7 @@ export class config {
              *
              * Overrides the `allowCrossDimensionalTeleport` options for the home system, TPA system, and `\spawn` command.
              *
-             * Defaults to true.
+             * @default true
              */
             get allowCrossDimensionalTeleport() {
                 return Boolean(world.getDynamicProperty("teleportSystemsSettings:allowCrossDimensionalTeleport") ?? true);
@@ -504,17 +491,46 @@ export class config {
             set allowCrossDimensionalTeleport(enabled) {
                 world.setDynamicProperty("teleportSystemsSettings:allowCrossDimensionalTeleport", enabled ?? true);
             },
+            /**
+             * How long in seconds after teleporting that the player has to wait before they can teleport again.
+             *
+             * Set it to 0 to have no teleport cooldown.
+             *
+             * @default 30
+             */
             get teleportCooldown() {
-                return Number(world.getDynamicProperty("homeSystemSettings:teleportCooldown") ?? 0);
+                return Number(world.getDynamicProperty("homeSystemSettings:teleportCooldown") ?? 30);
             },
             set teleportCooldown(maxHomes) {
-                world.setDynamicProperty("homeSystemSettings:teleportCooldown", maxHomes ?? 0);
+                world.setDynamicProperty("homeSystemSettings:teleportCooldown", maxHomes ?? 30);
             },
+            /**
+             * How long in seconds that the player has to stand still before they can teleport, if they move during this time period, the teleportation is canceled.
+             *
+             * Set it to 0 to have players teleport instantly.
+             *
+             * @default 5
+             */
             get standStillTimeToTeleport() {
-                return Number(world.getDynamicProperty("homeSystemSettings:standStillTimeToTeleport") ?? 0);
+                return Number(world.getDynamicProperty("homeSystemSettings:standStillTimeToTeleport") ?? 5);
             },
             set standStillTimeToTeleport(maxHomes) {
-                world.setDynamicProperty("homeSystemSettings:standStillTimeToTeleport", maxHomes ?? 0);
+                world.setDynamicProperty("homeSystemSettings:standStillTimeToTeleport", maxHomes ?? 5);
+            },
+            /**
+             * How long in seconds after getting damaged by another player that the player has to wait before they can teleport with the player menu or commands such as `\spawn`, `\home`, `\gohome`, `\tpa`, and `\rtp`.
+             *
+             * Set it to 0 to have no PVP cooldown.
+             *
+             * @default 15
+             */
+            get pvpCooldownToTeleport() {
+                return isNaN(Number(world.getDynamicProperty("andexdbSettings:pvpCooldownToTeleport")))
+                    ? 15
+                    : Number(world.getDynamicProperty("andexdbSettings:pvpCooldownToTeleport") ?? 15);
+            },
+            set pvpCooldownToTeleport(invalidChatCommandAction) {
+                world.setDynamicProperty("andexdbSettings:pvpCooldownToTeleport", invalidChatCommandAction ?? 15);
             },
         };
     }
@@ -594,6 +610,18 @@ export class config {
     }
     static get chatRanks() {
         return {
+            get chatRankPrefix() {
+                return String(world.getDynamicProperty("andexdbSettings:chatRankPrefix") ?? "rank:");
+            },
+            set chatRankPrefix(chatRankPrefix) {
+                world.setDynamicProperty("andexdbSettings:chatRankPrefix", chatRankPrefix ?? "rank:");
+            },
+            get chatSudoPrefix() {
+                return String(world.getDynamicProperty("andexdbSettings:chatSudoPrefix") ?? "sudo:");
+            },
+            set chatSudoPrefix(chatSudoPrefix) {
+                world.setDynamicProperty("andexdbSettings:chatSudoPrefix", chatSudoPrefix ?? "sudo:");
+            },
             get chatDisplayTimeStamp() {
                 return Boolean(world.getDynamicProperty("andexdbSettings:chatDisplayTimeStamp") ?? false);
             },
@@ -666,10 +694,10 @@ export class config {
             },
             get nameTagTemplateString() {
                 return String(world.getDynamicProperty("andexdbSettings:nameTagTemplateString") ??
-                    '${(showDimension ? `[${dimension}§r§f] ` : "")}${rank} ${nameb}${(showHealth ? `§r§f [${currentHealth}/${maxHealth}]` : "")}');
+                    '${(showDimension ? `[${dimension}§r§f] ` : "")}${rank} ${nameFormatting}${nameb}${(showHealth ? `§r§f [${currentHealth}/${maxHealth}]` : "")}');
             },
             set nameTagTemplateString(nameTagTemplateString) {
-                world.setDynamicProperty("andexdbSettings:nameTagTemplateString", nameTagTemplateString ?? '${(showDimension ? `[${dimension}§r§f] ` : "")}${rank} ${nameb}${(showHealth ? `§r§f [${currentHealth}/${maxHealth}]` : "")}');
+                world.setDynamicProperty("andexdbSettings:nameTagTemplateString", nameTagTemplateString ?? '${(showDimension ? `[${dimension}§r§f] ` : "")}${rank} ${nameFormatting}${nameb}${(showHealth ? `§r§f [${currentHealth}/${maxHealth}]` : "")}');
             },
             get defaultRankTemplateString() {
                 return String(world.getDynamicProperty("andexdbSettings:defaultRankTemplateString") ?? "");
@@ -782,10 +810,10 @@ export class config {
              * Defaults to false.
              */
             get showLastOnlineTimeInBountyDetailsList() {
-                return Boolean(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.showLastOnlineTimeInPlayerStatsList") ?? false);
+                return Boolean(world.getDynamicProperty("andexdbSettings:bountySystem.showLastOnlineTimeInPlayerStatsList") ?? false);
             },
             set showLastOnlineTimeInBountyDetailsList(show) {
-                world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.showLastOnlineTimeInPlayerStatsList", show ?? false);
+                world.setDynamicProperty("andexdbSettings:bountySystem.showLastOnlineTimeInPlayerStatsList", show ?? false);
             },
         };
     }
@@ -818,10 +846,10 @@ export class config {
             },
             set warps(warps) {
                 if (warps === undefined) {
-                    world.saveStringToDynamicProperties("warpsSystem:warpsSystem.warps", "[]");
+                    world.saveStringToDynamicProperties("[]", "warpsSystem:warpsSystem.warps");
                 }
                 else if (warps instanceof Array) {
-                    world.saveStringToDynamicProperties("warpsSystem:warpsSystem.warps", JSONB.stringify(warps));
+                    world.saveStringToDynamicProperties(JSONB.stringify(warps), "warpsSystem:warpsSystem.warps");
                 }
                 else {
                     throw new TypeError("Invalid warps list provided, expected an array of warp interface objects or undefined, but instead got " + (typeof warps == "object" ? warps === null ? "object[null]" : "object[" + (warps.constructor.name ?? "unknown") + "]" : typeof warps) + ".");
@@ -1073,10 +1101,36 @@ export class config {
                                              * Defaults to true.
                                              */
                                             get enabled() {
-                                                return Boolean(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu.enabled") ?? true);
+                                                return Boolean(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.builtInStats.money.enabled") ?? true);
                                             },
                                             set enabled(enabled) {
-                                                world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu.enabled", enabled ?? true);
+                                                world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.builtInStats.money.enabled", enabled ?? true);
+                                            },
+                                            get displayOptions() {
+                                                return {
+                                                    /**
+                                                     * Whether or not to prefix the displayed value for this statistic with a dollar sign.
+                                                     *
+                                                     * Defaults to true.
+                                                     */
+                                                    get prefixWithDollarSign() {
+                                                        return Boolean(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.builtInStats.money.displayOptions.prefixWithDollarSign") ?? true);
+                                                    },
+                                                    set prefixWithDollarSign(prefixWithDollarSign) {
+                                                        world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.builtInStats.money.displayOptions.prefixWithDollarSign", prefixWithDollarSign ?? true);
+                                                    },
+                                                    /**
+                                                     * Whether or not to add comma separators to the displayed value for this statistic.
+                                                     *
+                                                     * Defaults to true.
+                                                     */
+                                                    get addCommaSeparators() {
+                                                        return Boolean(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.builtInStats.money.displayOptions.addCommaSeparators") ?? true);
+                                                    },
+                                                    set addCommaSeparators(addCommaSeparators) {
+                                                        world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.builtInStats.money.displayOptions.addCommaSeparators", addCommaSeparators ?? true);
+                                                    },
+                                                };
                                             },
                                         };
                                     },
@@ -1086,12 +1140,146 @@ export class config {
                              *
                              */
                             get customStats() {
-                                return JSON.parse(String(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.customStats") ?? JSON.stringify(Object.keys(menuButtonIds.playerMenu.buttons).sort((a, b) => menuButtonIds.playerMenu.buttons[a].defaultButtonIndex > menuButtonIds.playerMenu.buttons[b].defaultButtonIndex
-                                    ? 1
-                                    : menuButtonIds.playerMenu.buttons[a].defaultButtonIndex < menuButtonIds.playerMenu.buttons[b].defaultButtonIndex ? -1 : 0))));
+                                return JSONB.parse(String(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.customStats") ?? "[]")).map(s => {
+                                    if (s.type === "custom") {
+                                        return {
+                                            buttonDisplayName: s.buttonDisplayName,
+                                            buttonIcon: s.buttonIcon,
+                                            displayOptions: {
+                                                addCommaSeparators: s.displayOptions?.addCommaSeparators ?? true,
+                                                prefixWithDollarSign: s.displayOptions?.prefixWithDollarSign ?? false,
+                                                toFixed: s.displayOptions?.toFixed,
+                                                valueDisplayColor: s.displayOptions?.valueDisplayColor,
+                                                valueDisplayTransformer_button: s.displayOptions?.valueDisplayTransformer_button !== undefined ? eval?.(s.displayOptions.valueDisplayTransformer_button) : undefined,
+                                                valueDisplayTransformer_statsList: s.displayOptions?.valueDisplayTransformer_button !== undefined ? eval?.(s.displayOptions.valueDisplayTransformer_statsList) : undefined,
+                                            },
+                                            id: s.id,
+                                            menuTitle: s.menuTitle,
+                                            scoreboardObjective: s.scoreboardObjective,
+                                            sorter: s.sorter,
+                                            statsListDisplayName: s.statsListDisplayName,
+                                            type: s.type,
+                                            valueType: s.valueType,
+                                        };
+                                    }
+                                    else if (s.type === "customAdvanced") {
+                                        if (s.sortType === "function") {
+                                            return {
+                                                buttonDisplayName: s.buttonDisplayName,
+                                                buttonIcon: s.buttonIcon,
+                                                displayOptions: {
+                                                    addCommaSeparators: s.displayOptions?.addCommaSeparators ?? true,
+                                                    prefixWithDollarSign: s.displayOptions?.prefixWithDollarSign ?? false,
+                                                    toFixed: s.displayOptions?.toFixed,
+                                                    valueDisplayColor: s.displayOptions?.valueDisplayColor,
+                                                    valueDisplayTransformer_button: s.displayOptions?.valueDisplayTransformer_button !== undefined ? eval?.(s.displayOptions.valueDisplayTransformer_button) : undefined,
+                                                    valueDisplayTransformer_statsList: s.displayOptions?.valueDisplayTransformer_button !== undefined ? eval?.(s.displayOptions.valueDisplayTransformer_statsList) : undefined,
+                                                },
+                                                getterFunction: eval?.(s.getterFunction),
+                                                id: s.id,
+                                                menuTitle: s.menuTitle,
+                                                sorter: eval?.(s.sorter),
+                                                sortType: s.sortType,
+                                                statsListDisplayName: s.statsListDisplayName,
+                                                type: s.type,
+                                                valueType: s.valueType,
+                                            };
+                                        }
+                                        else {
+                                            return {
+                                                buttonDisplayName: s.buttonDisplayName,
+                                                buttonIcon: s.buttonIcon,
+                                                displayOptions: {
+                                                    addCommaSeparators: s.displayOptions?.addCommaSeparators ?? true,
+                                                    prefixWithDollarSign: s.displayOptions?.prefixWithDollarSign ?? false,
+                                                    toFixed: s.displayOptions?.toFixed,
+                                                    valueDisplayColor: s.displayOptions?.valueDisplayColor,
+                                                    valueDisplayTransformer_button: s.displayOptions?.valueDisplayTransformer_button !== undefined ? eval?.(s.displayOptions.valueDisplayTransformer_button) : undefined,
+                                                    valueDisplayTransformer_statsList: s.displayOptions?.valueDisplayTransformer_button !== undefined ? eval?.(s.displayOptions.valueDisplayTransformer_statsList) : undefined,
+                                                },
+                                                getterFunction: eval?.(s.getterFunction),
+                                                id: s.id,
+                                                menuTitle: s.menuTitle,
+                                                sorter: s.sorter,
+                                                sortType: s.sortType,
+                                                statsListDisplayName: s.statsListDisplayName,
+                                                type: s.type,
+                                                valueType: s.valueType,
+                                            };
+                                        }
+                                    }
+                                });
                             },
                             set customStats(buttonList) {
-                                world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.customStats", JSON.stringify(buttonList ?? []));
+                                world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.customStats", JSONB.stringify(buttonList.map(s => {
+                                    if (s.type === "custom") {
+                                        return {
+                                            buttonDisplayName: s.buttonDisplayName,
+                                            buttonIcon: s.buttonIcon,
+                                            displayOptions: {
+                                                addCommaSeparators: s.displayOptions?.addCommaSeparators ?? true,
+                                                prefixWithDollarSign: s.displayOptions?.prefixWithDollarSign ?? false,
+                                                toFixed: s.displayOptions?.toFixed,
+                                                valueDisplayColor: s.displayOptions?.valueDisplayColor,
+                                                valueDisplayTransformer_button: s.displayOptions?.valueDisplayTransformer_button !== undefined ? s.displayOptions.valueDisplayTransformer_button.toString() : undefined,
+                                                valueDisplayTransformer_statsList: s.displayOptions?.valueDisplayTransformer_button !== undefined ? s.displayOptions.valueDisplayTransformer_statsList.toString() : undefined,
+                                            },
+                                            id: s.id,
+                                            menuTitle: s.menuTitle,
+                                            scoreboardObjective: s.scoreboardObjective,
+                                            sorter: s.sorter,
+                                            statsListDisplayName: s.statsListDisplayName,
+                                            type: s.type,
+                                            valueType: s.valueType,
+                                        };
+                                    }
+                                    else if (s.type === "customAdvanced") {
+                                        if (s.sortType === "function") {
+                                            return {
+                                                buttonDisplayName: s.buttonDisplayName,
+                                                buttonIcon: s.buttonIcon,
+                                                displayOptions: {
+                                                    addCommaSeparators: s.displayOptions?.addCommaSeparators ?? true,
+                                                    prefixWithDollarSign: s.displayOptions?.prefixWithDollarSign ?? false,
+                                                    toFixed: s.displayOptions?.toFixed,
+                                                    valueDisplayColor: s.displayOptions?.valueDisplayColor,
+                                                    valueDisplayTransformer_button: s.displayOptions?.valueDisplayTransformer_button !== undefined ? s.displayOptions.valueDisplayTransformer_button.toString() : undefined,
+                                                    valueDisplayTransformer_statsList: s.displayOptions?.valueDisplayTransformer_button !== undefined ? s.displayOptions.valueDisplayTransformer_statsList.toString() : undefined,
+                                                },
+                                                getterFunction: s.getterFunction.toString(),
+                                                id: s.id,
+                                                menuTitle: s.menuTitle,
+                                                sorter: s.sorter.toString(),
+                                                sortType: s.sortType,
+                                                statsListDisplayName: s.statsListDisplayName,
+                                                type: s.type,
+                                                valueType: s.valueType,
+                                            };
+                                        }
+                                        else {
+                                            return {
+                                                buttonDisplayName: s.buttonDisplayName,
+                                                buttonIcon: s.buttonIcon,
+                                                displayOptions: {
+                                                    addCommaSeparators: s.displayOptions?.addCommaSeparators ?? true,
+                                                    prefixWithDollarSign: s.displayOptions?.prefixWithDollarSign ?? false,
+                                                    toFixed: s.displayOptions?.toFixed,
+                                                    valueDisplayColor: s.displayOptions?.valueDisplayColor,
+                                                    valueDisplayTransformer_button: s.displayOptions?.valueDisplayTransformer_button !== undefined ? s.displayOptions.valueDisplayTransformer_button.toString() : undefined,
+                                                    valueDisplayTransformer_statsList: s.displayOptions?.valueDisplayTransformer_button !== undefined ? s.displayOptions.valueDisplayTransformer_statsList.toString() : undefined,
+                                                },
+                                                getterFunction: s.getterFunction.toString(),
+                                                id: s.id,
+                                                menuTitle: s.menuTitle,
+                                                sorter: s.sorter,
+                                                sortType: s.sortType,
+                                                statsListDisplayName: s.statsListDisplayName,
+                                                type: s.type,
+                                                valueType: s.valueType,
+                                            };
+                                        }
+                                    }
+                                }) ?? []));
                             },
                             /**
                              * The statistics that are displayed when a player clicks on another player inside of the player menu leaderboard, they will be displayed in the order they are in this array.
@@ -1346,12 +1534,42 @@ export class config {
             },
         };
     }
-    static reset() {
-        // Object.entries(Object.getOwnPropertyDescriptors(this)).filter(v=>v[1].hasOwnProperty("get")).flatMap(v=>v[1].hasOwnProperty("set")?v[1]:v[1]["get"]())
+    static reset(subsection) {
+        function resetProperties(obj) {
+            const descriptors = Object.getOwnPropertyDescriptors(obj);
+            for (const [key, descriptor] of Object.entries(descriptors)) {
+                if (descriptor?.get && descriptor.set) {
+                    obj[key] = undefined;
+                }
+                else if (descriptor?.get && typeof descriptor.get() === 'object' && descriptor.get() !== null) {
+                    resetProperties(descriptor.get());
+                }
+            }
+        }
+        resetProperties(subsection ?? config);
+    }
+    static applySettings(settings) {
+        function applySettingsRecursive(settings, target) {
+            for (const key in settings) {
+                if (settings.hasOwnProperty(key)) {
+                    const descriptor = Object.getOwnPropertyDescriptor(target, key);
+                    if (descriptor?.get && descriptor.set) {
+                        if (typeof settings[key] === 'object' && settings[key] !== null && !Array.isArray(settings[key])) {
+                            applySettingsRecursive(settings[key], target[key]);
+                        }
+                        else {
+                            target[key] = settings[key];
+                        }
+                    }
+                }
+            }
+        }
+        applySettingsRecursive(settings, config);
     }
     static toJSON() {
+        // modules.utils.filterProperties(modules.utils.filterProperties(config, ["addCommaSeparators", "spawnCommandAllowCrossDimensionalTeleport", "allowWatchdogTerminationCrash", "spawnCommandLocation", "allowChatEscapeCodes"], {}), ["toJSON"], {}).antiSpamSystem.antispamEnabled;
         return Object.fromEntries(Object.getOwnPropertyNames(config)
-            .filter((n) => !["constructor", "toString", "toLocaleString", "valueOf", "hasOwnProperty", "name", "prototype", "reset", "length"].includes(n))
+            .filter((n) => !["constructor", "toString", "toLocaleString", "valueOf", "hasOwnProperty", "name", "prototype", "reset", "applySettings", "length", "toJSON"].includes(n))
             .map((n) => [n, config[n]]));
     }
 }

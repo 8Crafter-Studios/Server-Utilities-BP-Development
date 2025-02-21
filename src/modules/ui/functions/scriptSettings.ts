@@ -98,7 +98,7 @@ export async function scriptSettings(
             config.system.hideWatchdogTerminationCrashEnabledWarningsOnStartup
         );
         form2.toggle(
-            "§l§fspreadPlayerInventoryDataSavesOverMultipleTicks§r\nWhether or not to spread player inventory data saving over multiple ticks to reduce lag, this only applies when §bGlobal Settings>useLegacyPlayerInventoryDataSaveSystem§r is disabled, the default is true",
+            "§l§fspreadPlayerInventoryDataSavesOverMultipleTicks§r\nWhether or not to spread player inventory data saving over multiple ticks to reduce lag, this only applies when §bGeneral Settings>useLegacyPlayerInventoryDataSaveSystem§r is disabled, the default is true",
             config.system.spreadPlayerInventoryDataSavesOverMultipleTicks
         );
     }

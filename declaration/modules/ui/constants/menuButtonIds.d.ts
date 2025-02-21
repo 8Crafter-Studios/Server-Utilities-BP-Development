@@ -345,6 +345,7 @@ export declare const menuButtonIds: {
                 readonly advanced: false;
                 readonly defaultButtonIndex: 1;
                 readonly extraVisibilityConditionsCheck: () => boolean;
+                readonly extraVisibilityConditionsCheckFailedReason: () => string;
             };
             readonly TPA: {
                 readonly displayName: "TPA";
@@ -357,6 +358,7 @@ export declare const menuButtonIds: {
                 readonly advanced: false;
                 readonly defaultButtonIndex: 2;
                 readonly extraVisibilityConditionsCheck: () => boolean;
+                readonly extraVisibilityConditionsCheckFailedReason: () => string;
             };
             readonly warps: {
                 readonly displayName: "Warps";
@@ -369,6 +371,7 @@ export declare const menuButtonIds: {
                 readonly advanced: false;
                 readonly defaultButtonIndex: 3;
                 readonly extraVisibilityConditionsCheck: () => boolean;
+                readonly extraVisibilityConditionsCheckFailedReason: () => string;
             };
             readonly bounties: {
                 readonly displayName: "Bounties";
@@ -381,6 +384,7 @@ export declare const menuButtonIds: {
                 readonly advanced: false;
                 readonly defaultButtonIndex: 4;
                 readonly extraVisibilityConditionsCheck: () => boolean;
+                readonly extraVisibilityConditionsCheckFailedReason: () => string;
             };
             readonly serverShops: {
                 readonly displayName: "Server Shops";
@@ -393,6 +397,7 @@ export declare const menuButtonIds: {
                 readonly advanced: false;
                 readonly defaultButtonIndex: 5;
                 readonly extraVisibilityConditionsCheck: () => boolean;
+                readonly extraVisibilityConditionsCheckFailedReason: () => string;
             };
             readonly playerShops: {
                 readonly displayName: "Player Shops";
@@ -405,6 +410,7 @@ export declare const menuButtonIds: {
                 readonly advanced: false;
                 readonly defaultButtonIndex: 5;
                 readonly extraVisibilityConditionsCheck: () => boolean;
+                readonly extraVisibilityConditionsCheckFailedReason: () => string;
             };
             readonly moneyTransfer: {
                 readonly displayName: "Money Transfer";
@@ -417,6 +423,7 @@ export declare const menuButtonIds: {
                 readonly advanced: false;
                 readonly defaultButtonIndex: 6;
                 readonly extraVisibilityConditionsCheck: () => boolean;
+                readonly extraVisibilityConditionsCheckFailedReason: () => string;
             };
             readonly dailyRewards: {
                 readonly displayName: "Daily Rewards";
@@ -435,8 +442,8 @@ export declare const menuButtonIds: {
                 readonly deprecated: false;
                 readonly experimental: false;
                 readonly unused: false;
-                readonly upcoming: true;
-                readonly functional: false;
+                readonly upcoming: false;
+                readonly functional: true;
                 readonly advanced: false;
                 readonly defaultButtonIndex: 8;
             };

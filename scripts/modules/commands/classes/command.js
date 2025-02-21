@@ -198,22 +198,22 @@ export class command {
         }
         if (securityVariables.ultraSecurityModeEnabled) {
             if ((securityVariables.commandsUltraSecurityModeSecurityLevelOverrides[this.type == "custom" ? "customCommandOverrides" : "commandOverrides"][this.commandName] ?? securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][this.categories?.find(c => !!securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][c])] ?? (this.type == "built-in" ? commands.find(c => c.commandName == this.commandName)?.ultraSecurityModeSecurityLevel : undefined)) == "owner") {
-                if (!securityVariables.testPlayerForPermission(playerE, "andexdb.fullControl")) {
+                if (!securityVariables.testPlayerForPermission(playerE, "andexdb.fullControl") && !securityVariables.testPlayerForPermission(playerE, "andexdb.useOwnerLevelCommands")) {
                     return false;
                 }
             }
             else if ((securityVariables.commandsUltraSecurityModeSecurityLevelOverrides[this.type == "custom" ? "customCommandOverrides" : "commandOverrides"][this.commandName] ?? securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][this.categories?.find(c => !!securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][c])] ?? (this.type == "built-in" ? commands.find(c => c.commandName == this.commandName)?.ultraSecurityModeSecurityLevel : undefined)) == "headAdmin") {
-                if (!securityVariables.testPlayerForPermission(playerE, "andexdb.headAdmin")) {
+                if (!securityVariables.testPlayerForPermission(playerE, "andexdb.headAdmin") && !securityVariables.testPlayerForPermission(playerE, "andexdb.useHeadAdminLevelCommands")) {
                     return false;
                 }
             }
             else if ((securityVariables.commandsUltraSecurityModeSecurityLevelOverrides[this.type == "custom" ? "customCommandOverrides" : "commandOverrides"][this.commandName] ?? securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][this.categories?.find(c => !!securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][c])] ?? (this.type == "built-in" ? commands.find(c => c.commandName == this.commandName)?.ultraSecurityModeSecurityLevel : undefined)) == "admin") {
-                if (!securityVariables.testPlayerForPermission(playerE, "andexdb.admin")) {
+                if (!securityVariables.testPlayerForPermission(playerE, "andexdb.admin") && !securityVariables.testPlayerForPermission(playerE, "andexdb.useAdminLevelCommands")) {
                     return false;
                 }
             }
             else if ((securityVariables.commandsUltraSecurityModeSecurityLevelOverrides[this.type == "custom" ? "customCommandOverrides" : "commandOverrides"][this.commandName] ?? securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][this.categories?.find(c => !!securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][c])] ?? (this.type == "built-in" ? commands.find(c => c.commandName == this.commandName)?.ultraSecurityModeSecurityLevel : undefined)) == "moderator") {
-                if (!securityVariables.testPlayerForPermission(playerE, "andexdb.moderator")) {
+                if (!securityVariables.testPlayerForPermission(playerE, "andexdb.moderator") && !securityVariables.testPlayerForPermission(playerE, "andexdb.useModeratorLevelCommands")) {
                     return false;
                 }
             }

@@ -1,4 +1,16 @@
-import { Entity, EntityInventoryComponent, EntityEquippableComponent, PlayerCursorInventoryComponent, ItemStack, EquipmentSlot, ContainerSlot, type Vector2, type VectorYZ, type VectorXZ, type Vector3 } from "@minecraft/server";
+import {
+    Entity,
+    EntityInventoryComponent,
+    EntityEquippableComponent,
+    PlayerCursorInventoryComponent,
+    ItemStack,
+    EquipmentSlot,
+    ContainerSlot,
+    type Vector2,
+    type VectorYZ,
+    type VectorXZ,
+    type Vector3,
+} from "@minecraft/server";
 import { MoneySystem } from "ExtraFeatures/money";
 import type { RotationLocation } from "modules/coordinates/interfaces/RotationLocation";
 import type { PlayerNotifications } from "init/classes/PlayerNotifications";
@@ -8,6 +20,7 @@ import type { PlayerPermissions } from "init/classes/PlayerPermissions";
 import type { WorldEditSelection } from "init/classes/WorldEditSelection";
 import { saveStringToEntityDynamicProperties } from "modules/utilities/functions/saveStringToEntityDynamicProperties";
 import { getStringFromEntityDynamicProperties } from "modules/utilities/functions/getStringFromEntityDynamicProperties";
+import { deleteStringFromEntityDynamicProperties } from "modules/utilities/functions/deleteStringFromEntityDynamicProperties";
 
 Object.defineProperties(Entity.prototype, {
     inventory: {
@@ -25,9 +38,7 @@ Object.defineProperties(Entity.prototype, {
         enumerable: true,
     },
     cursorInventory: {
-        get: function cursorInventory():
-            | PlayerCursorInventoryComponent
-            | undefined {
+        get: function cursorInventory(): PlayerCursorInventoryComponent | undefined {
             return (this as Entity).getComponent("cursor_inventory");
         },
         configurable: true,
@@ -38,9 +49,7 @@ Object.defineProperties(Entity.prototype, {
             if (!!!(this as Entity).getComponent("equippable")) {
                 return undefined;
             } else {
-                return (this as Entity)
-                    .getComponent("equippable")
-                    .getEquipment(EquipmentSlot.Mainhand);
+                return (this as Entity).getComponent("equippable").getEquipment(EquipmentSlot.Mainhand);
             }
         },
         configurable: true,
@@ -51,9 +60,7 @@ Object.defineProperties(Entity.prototype, {
             if (!!!(this as Entity).getComponent("equippable")) {
                 return undefined;
             } else {
-                return (this as Entity)
-                    .getComponent("equippable")
-                    .getEquipmentSlot(EquipmentSlot.Mainhand);
+                return (this as Entity).getComponent("equippable").getEquipmentSlot(EquipmentSlot.Mainhand);
             }
         },
         configurable: true,
@@ -163,20 +170,10 @@ Object.defineProperties(Entity.prototype, {
     },
     timeZone: {
         get: function timeZone() {
-            return (
-                this.getDynamicProperty("andexdbPersonalSettings:timeZone") ??
-                config.system.timeZone
-            )
-                .toString()
-                .toNumber();
+            return (this.getDynamicProperty("andexdbPersonalSettings:timeZone") ?? config.system.timeZone).toString().toNumber();
         },
-        set: function timeZone(
-            timezone: number | string | boolean | null | undefined
-        ) {
-            this.setDynamicProperty(
-                "andexdbPersonalSettings:timeZone",
-                !!timezone ? timezone.toString() : undefined
-            );
+        set: function timeZone(timezone: number | string | boolean | null | undefined) {
+            this.setDynamicProperty("andexdbPersonalSettings:timeZone", !!timezone ? timezone.toString() : undefined);
         },
         configurable: true,
         enumerable: true,
@@ -196,20 +193,36 @@ Object.defineProperties(Entity.prototype, {
         enumerable: true,
     },
     saveStringToDynamicProperties: {
-        value: function saveStringToDynamicProperties(string: string, propertyName: string, clearOldProperties: boolean = true, chunkSize: number | bigint = 32760): void {return saveStringToEntityDynamicProperties(this as Entity, string, propertyName, clearOldProperties, chunkSize)},
+        value: function saveStringToDynamicProperties(
+            string: string,
+            propertyName: string,
+            clearOldProperties: boolean = true,
+            chunkSize: number | bigint = 32760
+        ): void {
+            return saveStringToEntityDynamicProperties(this as Entity, string, propertyName, clearOldProperties, chunkSize);
+        },
         configurable: false,
         enumerable: true,
         writable: true,
     },
     getStringFromDynamicProperties: {
-        value: function getStringFromDynamicProperties(propertyName: string, zeroLengthPlaceholder: string = ""): string {return getStringFromEntityDynamicProperties(this as Entity, propertyName, zeroLengthPlaceholder)},
+        value: function getStringFromDynamicProperties(propertyName: string, zeroLengthPlaceholder: string = ""): string {
+            return getStringFromEntityDynamicProperties(this as Entity, propertyName, zeroLengthPlaceholder);
+        },
+        configurable: false,
+        enumerable: true,
+        writable: true,
+    },
+    deleteStringFromDynamicProperties: {
+        value: function deleteStringFromDynamicProperties(propertyName: string): void {
+            return deleteStringFromEntityDynamicProperties(this as Entity, propertyName);
+        },
         configurable: false,
         enumerable: true,
         writable: true,
     },
 });
-export const exports_5603749806156139082470132985463298047098135609812364098: undefined =
-    undefined;
+export const exports_5603749806156139082470132985463298047098135609812364098: undefined = undefined;
 declare module "@minecraft/server" {
     interface Entity {
         /*
@@ -299,7 +312,7 @@ declare module "@minecraft/server" {
          * @throws {TypeError} If `propertyName` is not a string.
          * @throws {TypeError} If `clearOldProperties` is not a boolean.
          */
-        saveStringToDynamicProperties(string: string, propertyName: string, clearOldProperties?: boolean, chunkSize?: number | bigint): void
+        saveStringToDynamicProperties(string: string, propertyName: string, clearOldProperties?: boolean, chunkSize?: number | bigint): void;
         /**
          * Retrieves a concatenated string from an entity's dynamic properties.
          *
@@ -308,6 +321,15 @@ declare module "@minecraft/server" {
          * @returns {string} The concatenated string from the entity's dynamic properties, or the zeroLengthPlaceholder if the length is zero.
          * @throws {TypeError} If the propertyName is not a string.
          */
-        getStringFromDynamicProperties(propertyName: string, zeroLengthPlaceholder?: string): string
+        getStringFromDynamicProperties(propertyName: string, zeroLengthPlaceholder?: string): string;
+        /**
+         * Deletes a string from an entity's dynamic properties.
+         *
+         * @param {Entity} entity - The entity from which the string will be deleted.
+         * @param {string} propertyName - The name of the property the string is saved under.
+         *
+         * @throws {TypeError} If `propertyName` is not a string.
+         */
+        deleteStringFromDynamicProperties(propertyName: string): void;
     }
 }

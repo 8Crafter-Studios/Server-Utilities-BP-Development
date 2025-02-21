@@ -148,6 +148,27 @@ const permissionTypes = Object.freeze(
             ],
         },
         /**
+         * Allows the player to use head admin-level custom commands, which includes most of the custom commands.
+         * This permission is included in the `andexdb.headAdmin` permission.
+         * @danger This permission should only be given to trusted staff members. It is DANGEROUS to give this permission to anyone else.
+         */
+        "andexdb.useHeadAdminLevelCommands": {
+            id: "andexdb.useHeadAdminLevelCommands",
+            default: false,
+            includedInPermissions: ["andexdb.useHeadAdminLevelCommands", "andexdb.useOwnerLevelCommands"],
+            description: `Allows the player to use head admin-level custom commands.
+    This permission is included in the 'andexdb.headAdmin' permission.
+    This permission is included in the 'andexdb.useOwnerLevelCommands' permission.
+    §cDANGER!: This permission should only be given to trusted staff members. It is DANGEROUS to give this permission to anyone else.`,
+            additionalPrompts: [
+                {
+                    title: "§l§cWARNING!",
+                    prompt: "Are you sure you want to give this player the ability to use ALL HEAD ADMIN-LEVEL COMMANDS?",
+                    default: false,
+                },
+            ],
+        },
+        /**
          * Allows the player to use admin-level custom commands, which includes most of the custom commands.
          * This permission is included in the `andexdb.headAdmin` permission.
          * This permission is included in the `andexdb.admin` permission.
@@ -157,7 +178,7 @@ const permissionTypes = Object.freeze(
             id: "andexdb.useAdminLevelCommands",
             default: false,
             includedInPermissions: ["andexdb.useOwnerLevelCommands"],
-            description: `Allows the player to use moderator-level custom commands.
+            description: `Allows the player to use admin-level custom commands.
     This permission is included in the 'andexdb.admin' permission.
     This permission is included in the 'andexdb.headAdmin' permission.
     This permission is included in the 'andexdb.useOwnerLevelCommands' permission.
@@ -435,6 +456,22 @@ Note: Unless the player has the 'andexdb.fullControl' permission, the player can
             includedInPermissions: [],
             description: `Allows the player to access the manage warps UI.
     This allows the player to add, remove, and reorder the warps that are in the Warps section of the player menu.
+    This permission is included in the 'andexdb.headAdmin' permission.
+    This permission is included in the 'andexdb.admin' permission.`,
+            additionalPrompts: [],
+        },
+        /**
+         * Allows the player to access the manage redeemable codes UI.
+         * This allows the player to add, remove, and reorder the redeemable codes that are in the redeemable codes section of the player menu.
+         * This permission is included in the `andexdb.headAdmin` permission.
+         * This permission is included in the `andexdb.admin` permission.
+         */
+        "andexdb.accessManageRedeemableCodesUI": {
+            id: "andexdb.accessManageRedeemableCodesUI",
+            default: false,
+            includedInPermissions: [],
+            description: `Allows the player to access the manage redeemable codes UI.
+    This allows the player to add, remove, and reorder the redeemable codes that are in the redeemable codes section of the player menu.
     This permission is included in the 'andexdb.headAdmin' permission.
     This permission is included in the 'andexdb.admin' permission.`,
             additionalPrompts: [],
@@ -725,7 +762,6 @@ const securityConfiguratorPackIsActive = !!tryget(() => new ItemStack("andexsc:s
 const playerPermissionsDefault = Object.freeze({
     everyone: [],
     moderator: [
-        "andexdb.useAdminLevelCommands",
         "andexdb.useModeratorLevelCommands",
         "andexdb.banPlayers",
         "andexdb.unbanPlayers",
@@ -759,6 +795,7 @@ const playerPermissionsDefault = Object.freeze({
         "andexdb.accessAdvancedSettings",
         "andexdb.accessSettings",
         "andexdb.accessManageWarpsUI",
+        "andexdb.accessManageRedeemableCodesUI",
         "andexdb.accessManagePlayersUI",
         "andexdb.UIs.managePlayersUI.deleteSavedPlayerData",
         "andexdb.UIs.managePlayersUI.manageHomes",
@@ -776,6 +813,7 @@ const playerPermissionsDefault = Object.freeze({
     headAdmin: [
         "andexdb.admin",
         "andexdb.moderator",
+        "andexdb.useHeadAdminLevelCommands",
         "andexdb.useAdminLevelCommands",
         "andexdb.useModeratorLevelCommands",
         "andexdb.useScriptEvalEscapeSequence",
@@ -792,6 +830,7 @@ const playerPermissionsDefault = Object.freeze({
         "andexdb.accessAdvancedSettings",
         "andexdb.accessSettings",
         "andexdb.accessManageWarpsUI",
+        "andexdb.accessManageRedeemableCodesUI",
         "andexdb.accessManagePlayersUI",
         "andexdb.UIs.managePlayersUI.deleteSavedPlayerData",
         "andexdb.UIs.managePlayersUI.manageHomes",

@@ -195,6 +195,9 @@ Please enter the amount of money you would like to place on the bounty below.`, 
                     if(amount === 0n){
                         return ((await showMessage(sourceEntity, "Invalid Money Amount", "You may not place a $0 bounty.", "Back", "Close")).selection !== 1).toNumber();
                     }
+                    if(amount > sourceEntity.moneySystem.money){
+                        return ((await showMessage(sourceEntity, "Insufficient Funds", `You do not have ${numberFormatter(amount, {addCommaSeparators: true, prefixWithDollarSign: true})}.`, "Back", "Close")).selection !== 1).toNumber();
+                    }
                     if(((await showMessage(sourceEntity, "Are you sure?", `Are you sure you want to place a ${numberFormatter(amount, {addCommaSeparators: true, prefixWithDollarSign: true})} bounty on ${player.name}`, "Cancel", "Confirm")).selection === 1).toNumber()){
                         Bounty.placeBountyOnPlayer(BigInt(ra.formValues[0]), sourceEntity.id, player.id, sourceEntity.name, player.name);
                         return ((await showMessage(sourceEntity, "Bounty Placed", `Successfully placed a ${numberFormatter(amount, {addCommaSeparators: true, prefixWithDollarSign: true})} bounty on ${player.name}.`, "Okay", "Close")).selection !== 1).toNumber();

@@ -1,6 +1,6 @@
 import type { ChatSendBeforeEvent, Player } from "@minecraft/server";
-import type { command, executeCommandPlayerW } from "modules/commands";
-import type { commands } from "modules/commands_list";
+import type { command } from "modules/commands/classes/command";
+import type { commands } from "modules/commands_list/constants/commands";
 
 export const cmdsmetaimport = import.meta;
 //globalThis.modules={main, coords, cmds, bans, uis, playersave, spawnprot, mcMath}

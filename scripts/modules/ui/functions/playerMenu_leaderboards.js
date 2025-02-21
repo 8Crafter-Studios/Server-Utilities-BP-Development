@@ -26,6 +26,7 @@ export async function playerMenu_leaderboards(sourceEntitya) {
     const buttons = menuConfig.leaderboards.map(k => [k, defaultPlayerMenuLeaderboardStatistics.find(s => s.id === k && menuConfig.builtInStats[k].enabled) ?? menuConfig.customStats.find(s => s.id === k)]);
     let form = new ActionFormData();
     form.title("Leaderboards");
+    form.body("Select a leaderboard.");
     buttons.forEach(([k, b]) => {
         form.button(b.buttonDisplayName, b.buttonIcon);
     });

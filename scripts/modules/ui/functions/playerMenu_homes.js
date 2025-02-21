@@ -28,7 +28,6 @@ export async function playerMenu_homes(sourceEntitya) {
     }
     let form = new ActionFormData();
     form.title("Homes");
-    form.body("Hello " + sourceEntity.name);
     const homes = HomeSystem.getHomesForPlayer(sourceEntity.id);
     homes.forEach((h) => form.button(`${h.name}\n${dimensionTypeDisplayFormatting[dimensionse[dimensions.indexOf(h.location.dimension)]]}§r ${vTStr(Vector.floor(h.location))}`));
     form.button("New Home", "textures/ui/color_plus");
@@ -70,8 +69,8 @@ export async function playerMenu_homes(sourceEntitya) {
                             }
                         }
                         // Check for PVP cooldown before starting the teleport countdown.
-                        if (Number(sourceEntity.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 > Date.now()) {
-                            sourceEntity.sendMessage(`§cSorry but you have to wait another ${Math.round((Number(sourceEntity.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on PVP cooldown.`);
+                        if (Number(sourceEntity.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 > Date.now()) {
+                            sourceEntity.sendMessage(`§cSorry but you have to wait another ${Math.round((Number(sourceEntity.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on PVP cooldown.`);
                             return 0;
                         }
                         // Check for teleport cooldown before starting the teleport countdown.
@@ -96,8 +95,8 @@ export async function playerMenu_homes(sourceEntitya) {
                             await waitTicks(20);
                         }
                         // Check for PVP cooldown again after ending the teleport countdown.
-                        if (Number(sourceEntity.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 > Date.now()) {
-                            sourceEntity.sendMessage(`§cSorry but you have to wait another ${Math.round((Number(sourceEntity.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on PVP cooldown.`);
+                        if (Number(sourceEntity.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 > Date.now()) {
+                            sourceEntity.sendMessage(`§cSorry but you have to wait another ${Math.round((Number(sourceEntity.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on PVP cooldown.`);
                             successful = false;
                             return 0;
                         }

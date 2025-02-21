@@ -50,12 +50,13 @@ export async function tpaSettings(
     }
     let form2 = new ModalFormData();
     form2.title("TPA System Settings [§cExperimental§r]");
-    form2.toggle("§l§fEnable TPA System", config.tpaSystem.tpaSystemEnabled);
+    form2.toggle("§l§fEnable TPA System§r§o\ndefault is enabled", config.tpaSystem.tpaSystemEnabled);
     form2.textField(
         "§l§fSeconds Until Request Times Out§r§o\ndefault is 60",
         "int",
         config.tpaSystem.timeoutDuration.toString()
     );
+    form2.toggle("§l§fAllow Cross-Dimensional Teleport§r§o\ndefault is enabled", config.tpaSystem.allowCrossDimensionalTeleport);
     //form2.textField("§l§fMaximum Homes Per Player§r§f", "Int|Infinity", String(config.homeSystem.maxHomesPerPlayer));
     form2.submitButton("Save");
     return await forceShow(form2, sourceEntity as Player)
@@ -69,12 +70,14 @@ export async function tpaSettings(
 
 
 
-            let [tpaSystemEnabled, timeoutDuration] = t.formValues as [
+            let [tpaSystemEnabled, timeoutDuration, allowCrossDimensionalTeleport] = t.formValues as [
                 tpaSystemEnabled: boolean,
-                timeoutDuration: string
+                timeoutDuration: string,
+                allowCrossDimensionalTeleport: boolean,
             ];
             config.tpaSystem.tpaSystemEnabled = tpaSystemEnabled;
             config.tpaSystem.timeoutDuration = timeoutDuration.toNumber();
+            config.tpaSystem.allowCrossDimensionalTeleport = allowCrossDimensionalTeleport;
             //config.homeSystem.maxHomesPerPlayer=String(maxHomesPerPlayer).toLowerCase()=="infinity"?Infinity:Number(maxHomesPerPlayer)
             return 1;
         })

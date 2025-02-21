@@ -370,14 +370,6 @@ declare global {
         }>;
         function waitTick(): Promise<void>;
         function waitTicks(ticks?: number): Promise<void>;
-        function testForObjectExtension(
-            objectToTest: object,
-            base: object
-        ): boolean;
-        function testForObjectTypeExtension(
-            objectToTest: object,
-            base: object
-        ): boolean;
         function twoWayModulo(number: number, modulo: number): number;
         function clamp24HoursTo12Hours(hours: number): number;
         /**
@@ -671,7 +663,6 @@ declare global {
         static get gt(): typeof globalThis;
         /**
          * This is an alias of {@link system.run}.
-         * @see {@link modules.main.srun}
          * @remarks
          * Runs a specified function at the next available future time.
          * This is frequently used to implement delayed behaviors and

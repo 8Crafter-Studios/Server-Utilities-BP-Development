@@ -16,6 +16,7 @@ export type menuButtonIdsType = {
                 functional: boolean,
                 advanced: boolean,
                 extraVisibilityConditionsCheck?: ()=>boolean,
+                extraVisibilityConditionsCheckFailedReason?: ()=>string,
                 
                 defaultButtonIndex: number,
             },

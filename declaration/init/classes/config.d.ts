@@ -14,16 +14,9 @@ export declare class config {
     static set validChatCommandPrefixes(prefixes: string | undefined);
     static get invalidChatCommandAction(): number;
     static set invalidChatCommandAction(invalidChatCommandAction: number | undefined);
-    /**
-     * How long in seconds after getting damaged by another player that the player has to wait before they can teleport with commands such as `\spawn`, `\home`, `\gohome`, `\tpa`, and `\rtp`.
-     *
-     * It defaults to 0.
-     */
-    static get pvpCooldownToTeleport(): number;
-    static set pvpCooldownToTeleport(invalidChatCommandAction: number | undefined);
     static get undoClipboardMode(): StructureSaveMode;
     static set undoClipboardMode(undoClipboardMode: StructureSaveMode | undefined);
-    static get spawnCommandLocation(): {
+    static get spawnCommandLocation(): DimensionLocation | {
         x: null;
         y: null;
         z: null;
@@ -225,11 +218,33 @@ export declare class config {
          *
          * Overrides the `allowCrossDimensionalTeleport` options for the home system, TPA system, and `\spawn` command.
          *
-         * Defaults to true.
+         * @default true
          */
         allowCrossDimensionalTeleport: boolean;
+        /**
+         * How long in seconds after teleporting that the player has to wait before they can teleport again.
+         *
+         * Set it to 0 to have no teleport cooldown.
+         *
+         * @default 30
+         */
         teleportCooldown: number;
+        /**
+         * How long in seconds that the player has to stand still before they can teleport, if they move during this time period, the teleportation is canceled.
+         *
+         * Set it to 0 to have players teleport instantly.
+         *
+         * @default 5
+         */
         standStillTimeToTeleport: number;
+        /**
+         * How long in seconds after getting damaged by another player that the player has to wait before they can teleport with the player menu or commands such as `\spawn`, `\home`, `\gohome`, `\tpa`, and `\rtp`.
+         *
+         * Set it to 0 to have no PVP cooldown.
+         *
+         * @default 15
+         */
+        pvpCooldownToTeleport: number;
     };
     static get homeSystem(): {
         homeSystemEnabled: boolean;
@@ -263,6 +278,8 @@ export declare class config {
         allowCrossDimensionalTeleport: boolean;
     };
     static get chatRanks(): {
+        chatRankPrefix: string;
+        chatSudoPrefix: string;
         chatDisplayTimeStamp: boolean;
         showRanksOnPlayerNameTags: boolean;
         rankMode: string;
@@ -461,6 +478,20 @@ export declare class config {
                          * Defaults to true.
                          */
                         enabled: boolean;
+                        readonly displayOptions: {
+                            /**
+                             * Whether or not to prefix the displayed value for this statistic with a dollar sign.
+                             *
+                             * Defaults to true.
+                             */
+                            prefixWithDollarSign: boolean;
+                            /**
+                             * Whether or not to add comma separators to the displayed value for this statistic.
+                             *
+                             * Defaults to true.
+                             */
+                            addCommaSeparators: boolean;
+                        };
                     };
                 };
                 /**
@@ -560,9 +591,10 @@ export declare class config {
          */
         allowConnectingToBlueModsAnticheat: boolean;
     };
-    static reset(): void;
+    static reset(subsection?: any): void;
+    static applySettings(settings: DeepPartial<ReturnType<typeof modules.utils.filterProperties<typeof config, ["prototype", "reset", "applySettings", "toJSON"]>>>): void;
     static toJSON(): {
-        [k: string]: string | number | boolean | config | {
+        [k: string]: string | number | boolean | DimensionLocation | config | {
             /**
              * Whether or not to use a scoreboard-based money system instead of a dynamic property-based one.
              *
@@ -583,6 +615,172 @@ export declare class config {
              * Dynamic Property ID: andexdbSettings:moneySystem.scoreboardName
              */
             scoreboardName: string;
+        } | {
+            readonly menus: {
+                readonly mainMenu: {
+                    /**
+                     *
+                     */
+                    buttons: (keyof typeof menuButtonIds.mainMenu.buttons)[];
+                    /**
+                     * Whether to show the buttons marked as deprecated on the main menu.
+                     *
+                     * Defaults to false.
+                     */
+                    showDeprecatedButtons: boolean;
+                    /**
+                     * Whether to show the buttons marked as deprecated on the main menu.
+                     *
+                     * Defaults to true.
+                     */
+                    showExperimentalButtons: boolean;
+                    /**
+                     * Whether to show the buttons marked as deprecated on the main menu.
+                     *
+                     * Defaults to false.
+                     */
+                    showUnusedButtons: boolean;
+                    /**
+                     * Whether to show the buttons for features that are planned to be added in a future update on the main menu.
+                     *
+                     * Defaults to false.
+                     */
+                    showUpcomingButtons: boolean;
+                    /**
+                     * Whether to show the buttons for features that are non-functional on the main menu.
+                     *
+                     * Defaults to false.
+                     */
+                    showNonFunctionalButtons: boolean;
+                };
+                readonly playerMenu: {
+                    /**
+                     * Whether or not the player menu is enabled.
+                     *
+                     * Defaults to true.
+                     */
+                    enabled: boolean;
+                    /**
+                     *
+                     */
+                    buttons: (keyof typeof menuButtonIds.playerMenu.buttons)[];
+                    /**
+                     * The item name for the item that opens the player menu.
+                     *
+                     * Defaults to "Menu".
+                     */
+                    itemName: string;
+                    /**
+                     * Whether to show the buttons marked as deprecated on the player menu.
+                     *
+                     * Defaults to false.
+                     */
+                    showDeprecatedButtons: boolean;
+                    /**
+                     * Whether to show the buttons marked as deprecated on the player menu.
+                     *
+                     * Defaults to true.
+                     */
+                    showExperimentalButtons: boolean;
+                    /**
+                     * Whether to show the buttons marked as deprecated on the player menu.
+                     *
+                     * Defaults to false.
+                     */
+                    showUnusedButtons: boolean;
+                    /**
+                     * Whether to show the buttons for features that are planned to be added in a future update on the player menu.
+                     *
+                     * Defaults to false.
+                     */
+                    showUpcomingButtons: boolean;
+                    /**
+                     * Whether to show the buttons for features that are non-functional on the player menu.
+                     *
+                     * Defaults to false.
+                     */
+                    showNonFunctionalButtons: boolean;
+                };
+                readonly playerMenu_leaderboards: {
+                    /**
+                     * The settings for the built-in leaderboard statistics.
+                     */
+                    readonly builtInStats: {
+                        readonly money: {
+                            /**
+                             * Whether or not this built-in statictic is enabled.
+                             *
+                             * Defaults to true.
+                             */
+                            enabled: boolean;
+                            readonly displayOptions: {
+                                /**
+                                 * Whether or not to prefix the displayed value for this statistic with a dollar sign.
+                                 *
+                                 * Defaults to true.
+                                 */
+                                prefixWithDollarSign: boolean;
+                                /**
+                                 * Whether or not to add comma separators to the displayed value for this statistic.
+                                 *
+                                 * Defaults to true.
+                                 */
+                                addCommaSeparators: boolean;
+                            };
+                        };
+                    };
+                    /**
+                     *
+                     */
+                    customStats: playerMenuLeaderboardStatistic<"custom" | "customAdvanced">[];
+                    /**
+                     * The statistics that are displayed when a player clicks on another player inside of the player menu leaderboard, they will be displayed in the order they are in this array.
+                     *
+                     * It should be an array of ids of leaderboard statistics, including both custom and built-in ones.
+                     *
+                     * Defaults to the list of the built-in leaderboard statistics from the `defaultPlayerMenuLeaderboardStatistics` array, in the same order that they appear in the array.
+                     */
+                    trackedStats: string[];
+                    /**
+                     * The list of statistics that have their own leaderboards, they will be displayed in the order they are in this array.
+                     *
+                     * It should be an array of ids of leaderboard statistics, including both custom and built-in ones.
+                     *
+                     * Defaults to the list of the built-in leaderboard statistics from the `defaultPlayerMenuLeaderboardStatistics` array, in the same order that they appear in the array.
+                     */
+                    leaderboards: string[];
+                    /**
+                     * Whether to show the time that a player was last online in the stats list that is shown when a player click on another player in a leaderboard.
+                     *
+                     * Defaults to false.
+                     */
+                    showLastOnlineTimeInPlayerStatsList: boolean;
+                    /**
+                     * Whether to show banned players inside of the leaderboards.
+                     *
+                     * Defaults to false.
+                     */
+                    showBannedPlayersInLeaderboards: boolean;
+                };
+            };
+            readonly main: {};
+            readonly pages: {
+                /**
+                 * Moved from {@link config} to {@link config.ui.pages} in version 1.23.0-preview.20+BUILD.1 on 10/04/2024 at 3:10:37 PM PDT.
+                 */
+                maxPlayersPerManagePlayersPage: number;
+                /**
+                 * Moved from {@link config} to {@link config.ui.pages} in version 1.23.0-preview.20+BUILD.1 on 10/04/2024 at 3:10:37 PM PDT.
+                 */
+                maxBansPerManageBansPage: number;
+                /**
+                 * Moved from {@link config} to {@link config.ui.pages} in version 1.23.0-preview.20+BUILD.1 on 10/04/2024 at 3:10:37 PM PDT.
+                 */
+                maxHomesPerManageHomesPage: number;
+            };
+            readonly other: {
+                useStarWarsReference404Page: boolean | undefined;
+            };
         } | {
             homeSystemEnabled: boolean;
             maxHomesPerPlayer: number;
@@ -841,12 +1039,36 @@ export declare class config {
              *
              * Overrides the `allowCrossDimensionalTeleport` options for the home system, TPA system, and `\spawn` command.
              *
-             * Defaults to true.
+             * @default true
              */
             allowCrossDimensionalTeleport: boolean;
+            /**
+             * How long in seconds after teleporting that the player has to wait before they can teleport again.
+             *
+             * Set it to 0 to have no teleport cooldown.
+             *
+             * @default 30
+             */
             teleportCooldown: number;
+            /**
+             * How long in seconds that the player has to stand still before they can teleport, if they move during this time period, the teleportation is canceled.
+             *
+             * Set it to 0 to have players teleport instantly.
+             *
+             * @default 5
+             */
             standStillTimeToTeleport: number;
+            /**
+             * How long in seconds after getting damaged by another player that the player has to wait before they can teleport with the player menu or commands such as `\spawn`, `\home`, `\gohome`, `\tpa`, and `\rtp`.
+             *
+             * Set it to 0 to have no PVP cooldown.
+             *
+             * @default 15
+             */
+            pvpCooldownToTeleport: number;
         } | {
+            chatRankPrefix: string;
+            chatSudoPrefix: string;
             chatDisplayTimeStamp: boolean;
             showRanksOnPlayerNameTags: boolean;
             rankMode: string;
@@ -877,158 +1099,6 @@ export declare class config {
             waitTimeAfterAntispamActivation: number;
             maxTimeBewteenMessagesToTriggerAntiSpam: number;
             antispamTriggerMessageCount: number;
-        } | {
-            readonly menus: {
-                readonly mainMenu: {
-                    /**
-                     *
-                     */
-                    buttons: (keyof typeof menuButtonIds.mainMenu.buttons)[];
-                    /**
-                     * Whether to show the buttons marked as deprecated on the main menu.
-                     *
-                     * Defaults to false.
-                     */
-                    showDeprecatedButtons: boolean;
-                    /**
-                     * Whether to show the buttons marked as deprecated on the main menu.
-                     *
-                     * Defaults to true.
-                     */
-                    showExperimentalButtons: boolean;
-                    /**
-                     * Whether to show the buttons marked as deprecated on the main menu.
-                     *
-                     * Defaults to false.
-                     */
-                    showUnusedButtons: boolean;
-                    /**
-                     * Whether to show the buttons for features that are planned to be added in a future update on the main menu.
-                     *
-                     * Defaults to false.
-                     */
-                    showUpcomingButtons: boolean;
-                    /**
-                     * Whether to show the buttons for features that are non-functional on the main menu.
-                     *
-                     * Defaults to false.
-                     */
-                    showNonFunctionalButtons: boolean;
-                };
-                readonly playerMenu: {
-                    /**
-                     * Whether or not the player menu is enabled.
-                     *
-                     * Defaults to true.
-                     */
-                    enabled: boolean;
-                    /**
-                     *
-                     */
-                    buttons: (keyof typeof menuButtonIds.playerMenu.buttons)[];
-                    /**
-                     * The item name for the item that opens the player menu.
-                     *
-                     * Defaults to "Menu".
-                     */
-                    itemName: string;
-                    /**
-                     * Whether to show the buttons marked as deprecated on the player menu.
-                     *
-                     * Defaults to false.
-                     */
-                    showDeprecatedButtons: boolean;
-                    /**
-                     * Whether to show the buttons marked as deprecated on the player menu.
-                     *
-                     * Defaults to true.
-                     */
-                    showExperimentalButtons: boolean;
-                    /**
-                     * Whether to show the buttons marked as deprecated on the player menu.
-                     *
-                     * Defaults to false.
-                     */
-                    showUnusedButtons: boolean;
-                    /**
-                     * Whether to show the buttons for features that are planned to be added in a future update on the player menu.
-                     *
-                     * Defaults to false.
-                     */
-                    showUpcomingButtons: boolean;
-                    /**
-                     * Whether to show the buttons for features that are non-functional on the player menu.
-                     *
-                     * Defaults to false.
-                     */
-                    showNonFunctionalButtons: boolean;
-                };
-                readonly playerMenu_leaderboards: {
-                    /**
-                     * The settings for the built-in leaderboard statistics.
-                     */
-                    readonly builtInStats: {
-                        readonly money: {
-                            /**
-                             * Whether or not this built-in statictic is enabled.
-                             *
-                             * Defaults to true.
-                             */
-                            enabled: boolean;
-                        };
-                    };
-                    /**
-                     *
-                     */
-                    customStats: playerMenuLeaderboardStatistic<"custom" | "customAdvanced">[];
-                    /**
-                     * The statistics that are displayed when a player clicks on another player inside of the player menu leaderboard, they will be displayed in the order they are in this array.
-                     *
-                     * It should be an array of ids of leaderboard statistics, including both custom and built-in ones.
-                     *
-                     * Defaults to the list of the built-in leaderboard statistics from the `defaultPlayerMenuLeaderboardStatistics` array, in the same order that they appear in the array.
-                     */
-                    trackedStats: string[];
-                    /**
-                     * The list of statistics that have their own leaderboards, they will be displayed in the order they are in this array.
-                     *
-                     * It should be an array of ids of leaderboard statistics, including both custom and built-in ones.
-                     *
-                     * Defaults to the list of the built-in leaderboard statistics from the `defaultPlayerMenuLeaderboardStatistics` array, in the same order that they appear in the array.
-                     */
-                    leaderboards: string[];
-                    /**
-                     * Whether to show the time that a player was last online in the stats list that is shown when a player click on another player in a leaderboard.
-                     *
-                     * Defaults to false.
-                     */
-                    showLastOnlineTimeInPlayerStatsList: boolean;
-                    /**
-                     * Whether to show banned players inside of the leaderboards.
-                     *
-                     * Defaults to false.
-                     */
-                    showBannedPlayersInLeaderboards: boolean;
-                };
-            };
-            readonly main: {};
-            readonly pages: {
-                /**
-                 * Moved from {@link config} to {@link config.ui.pages} in version 1.23.0-preview.20+BUILD.1 on 10/04/2024 at 3:10:37 PM PDT.
-                 */
-                maxPlayersPerManagePlayersPage: number;
-                /**
-                 * Moved from {@link config} to {@link config.ui.pages} in version 1.23.0-preview.20+BUILD.1 on 10/04/2024 at 3:10:37 PM PDT.
-                 */
-                maxBansPerManageBansPage: number;
-                /**
-                 * Moved from {@link config} to {@link config.ui.pages} in version 1.23.0-preview.20+BUILD.1 on 10/04/2024 at 3:10:37 PM PDT.
-                 */
-                maxHomesPerManageHomesPage: number;
-            };
-            readonly other: {
-                useStarWarsReference404Page: boolean | undefined;
-            };
         } | {
             artificialLagMS: number;
             timeZone: number;
@@ -1072,6 +1142,6 @@ export declare class config {
              * @warning It is HIGHLY DISCOURAGED to disable this option.
              */
             allowConnectingToBlueModsAnticheat: boolean;
-        } | typeof config.reset | typeof config.toJSON;
+        } | typeof config.reset | typeof config.applySettings | typeof config.toJSON;
     };
 }

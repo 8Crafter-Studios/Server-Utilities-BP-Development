@@ -211,9 +211,6 @@
          "path" : "declaration/Main/utilities.d.ts"
       },
       {
-         "path" : "declaration/directoryTree copy.d.ts"
-      },
-      {
          "path" : "declaration/directoryTree.d.ts"
       },
       {
@@ -706,43 +703,7 @@
          "path" : "declaration/initializeMainGlobalVariables.d.ts"
       },
       {
-         "path" : "declaration/legacyModuleAliases/Main.d.ts"
-      },
-      {
-         "path" : "declaration/legacyModuleAliases/ban.d.ts"
-      },
-      {
-         "path" : "declaration/legacyModuleAliases/chat.d.ts"
-      },
-      {
-         "path" : "declaration/legacyModuleAliases/command_utilities.d.ts"
-      },
-      {
-         "path" : "declaration/legacyModuleAliases/commands.d.ts"
-      },
-      {
-         "path" : "declaration/legacyModuleAliases/commands_documentation.d.ts"
-      },
-      {
-         "path" : "declaration/legacyModuleAliases/commands_list.d.ts"
-      },
-      {
-         "path" : "declaration/legacyModuleAliases/coordinates.d.ts"
-      },
-      {
-         "path" : "declaration/legacyModuleAliases/errors.d.ts"
-      },
-      {
-         "path" : "declaration/legacyModuleAliases/player_save.d.ts"
-      },
-      {
-         "path" : "declaration/legacyModuleAliases/spawn_protection.d.ts"
-      },
-      {
-         "path" : "declaration/legacyModuleAliases/ui.d.ts"
-      },
-      {
-         "path" : "declaration/legacyModuleAliases/utilities.d.ts"
+         "path" : "declaration/ipc.d.ts"
       },
       {
          "path" : "declaration/modules/ban/classes/ban.d.ts"
@@ -752,9 +713,6 @@
       },
       {
          "path" : "declaration/modules/ban/functions/checkingForBannedPlayers.d.ts"
-      },
-      {
-         "path" : "declaration/modules/ban/index.d.ts"
       },
       {
          "path" : "declaration/modules/block_generation_utilities/functions/fillArea.d.ts"
@@ -833,9 +791,6 @@
       },
       {
          "path" : "declaration/modules/chat/functions/requestConditionalChatInput.d.ts"
-      },
-      {
-         "path" : "declaration/modules/chat/index.d.ts"
       },
       {
          "path" : "declaration/modules/command_utilities/constants/EquipmentSlots.d.ts"
@@ -965,9 +920,6 @@
       },
       {
          "path" : "declaration/modules/command_utilities/functions/targetSelectorB.d.ts"
-      },
-      {
-         "path" : "declaration/modules/command_utilities/index.d.ts"
       },
       {
          "path" : "declaration/modules/commands/classes/BlockMask.d.ts"
@@ -1189,9 +1141,6 @@
          "path" : "declaration/modules/commands/functions/vTV3.d.ts"
       },
       {
-         "path" : "declaration/modules/commands/index.d.ts"
-      },
-      {
          "path" : "declaration/modules/commands/types/LowercaseLetter.d.ts"
       },
       {
@@ -1276,19 +1225,16 @@
          "path" : "declaration/modules/commands_documentation/functions/listCommandsWithMissingDocumentation.d.ts"
       },
       {
-         "path" : "declaration/modules/commands_documentation/index.d.ts"
-      },
-      {
          "path" : "declaration/modules/commands_list/constants/commands.d.ts"
-      },
-      {
-         "path" : "declaration/modules/commands_list/index.d.ts"
       },
       {
          "path" : "declaration/modules/coordinates/classes/AreaBackup.d.ts"
       },
       {
          "path" : "declaration/modules/coordinates/classes/AreaBackups.d.ts"
+      },
+      {
+         "path" : "declaration/modules/coordinates/classes/TeleportRequest.d.ts"
       },
       {
          "path" : "declaration/modules/coordinates/classes/WorldPosition.d.ts"
@@ -1585,9 +1531,6 @@
          "path" : "declaration/modules/coordinates/functions/splitRange.d.ts"
       },
       {
-         "path" : "declaration/modules/coordinates/index.d.ts"
-      },
-      {
          "path" : "declaration/modules/coordinates/interfaces/DimensionRotationLocation.d.ts"
       },
       {
@@ -1601,6 +1544,9 @@
       },
       {
          "path" : "declaration/modules/coordinates/interfaces/Vector5.d.ts"
+      },
+      {
+         "path" : "declaration/modules/coordinates/interfaces/Warp.d.ts"
       },
       {
          "path" : "declaration/modules/errors/classes/ExpireError.d.ts"
@@ -1630,7 +1576,13 @@
          "path" : "declaration/modules/errors/index.d.ts"
       },
       {
-         "path" : "declaration/modules/index.d.ts"
+         "path" : "declaration/modules/main/classes/Bounty.d.ts"
+      },
+      {
+         "path" : "declaration/modules/main/classes/RedeemableCode.d.ts"
+      },
+      {
+         "path" : "declaration/modules/main/classes/ScoreboardV2.d.ts"
       },
       {
          "path" : "declaration/modules/main/classes/SemVerString.d.ts"
@@ -1834,9 +1786,6 @@
          "path" : "declaration/modules/main/functions/v3Multiply.d.ts"
       },
       {
-         "path" : "declaration/modules/main/index.d.ts"
-      },
-      {
          "path" : "declaration/modules/player_save/classes/savedPlayer.d.ts"
       },
       {
@@ -1844,9 +1793,6 @@
       },
       {
          "path" : "declaration/modules/player_save/functions/player_save_format_version.d.ts"
-      },
-      {
-         "path" : "declaration/modules/player_save/index.d.ts"
       },
       {
          "path" : "declaration/modules/spawn_protection/functions/convertToCompoundBlockVolume.d.ts"
@@ -1874,9 +1820,6 @@
       },
       {
          "path" : "declaration/modules/spawn_protection/functions/testIsWithinRanges.d.ts"
-      },
-      {
-         "path" : "declaration/modules/spawn_protection/index.d.ts"
       },
       {
          "path" : "declaration/modules/ui/constants/defaultPlayerMenuLeaderboardStatistics.d.ts"
@@ -1978,10 +1921,10 @@
          "path" : "declaration/modules/ui/functions/forceShow.d.ts"
       },
       {
-         "path" : "declaration/modules/ui/functions/getAllBuiltInCommandsCategories.d.ts"
+         "path" : "declaration/modules/ui/functions/generalSettings.d.ts"
       },
       {
-         "path" : "declaration/modules/ui/functions/globalSettings.d.ts"
+         "path" : "declaration/modules/ui/functions/getAllBuiltInCommandsCategories.d.ts"
       },
       {
          "path" : "declaration/modules/ui/functions/homeSystemSettings.d.ts"
@@ -2041,6 +1984,12 @@
          "path" : "declaration/modules/ui/functions/managePlayers_managePlayer_manageHomes.d.ts"
       },
       {
+         "path" : "declaration/modules/ui/functions/manageRedeemableCodes.d.ts"
+      },
+      {
+         "path" : "declaration/modules/ui/functions/manageWarps.d.ts"
+      },
+      {
          "path" : "declaration/modules/ui/functions/mapArtGenerator.d.ts"
       },
       {
@@ -2074,6 +2023,54 @@
          "path" : "declaration/modules/ui/functions/playerMenu.d.ts"
       },
       {
+         "path" : "declaration/modules/ui/functions/playerMenu_TPA.d.ts"
+      },
+      {
+         "path" : "declaration/modules/ui/functions/playerMenu_TPA_incoming.d.ts"
+      },
+      {
+         "path" : "declaration/modules/ui/functions/playerMenu_TPA_outgoing.d.ts"
+      },
+      {
+         "path" : "declaration/modules/ui/functions/playerMenu_about.d.ts"
+      },
+      {
+         "path" : "declaration/modules/ui/functions/playerMenu_about_contributors.d.ts"
+      },
+      {
+         "path" : "declaration/modules/ui/functions/playerMenu_bounties.d.ts"
+      },
+      {
+         "path" : "declaration/modules/ui/functions/playerMenu_bounties_list.d.ts"
+      },
+      {
+         "path" : "declaration/modules/ui/functions/playerMenu_bounties_list_from.d.ts"
+      },
+      {
+         "path" : "declaration/modules/ui/functions/playerMenu_bounties_list_on.d.ts"
+      },
+      {
+         "path" : "declaration/modules/ui/functions/playerMenu_bounty.d.ts"
+      },
+      {
+         "path" : "declaration/modules/ui/functions/playerMenu_bounty_from_individual.d.ts"
+      },
+      {
+         "path" : "declaration/modules/ui/functions/playerMenu_bounty_individual.d.ts"
+      },
+      {
+         "path" : "declaration/modules/ui/functions/playerMenu_bounty_individuals.d.ts"
+      },
+      {
+         "path" : "declaration/modules/ui/functions/playerMenu_bounty_new.d.ts"
+      },
+      {
+         "path" : "declaration/modules/ui/functions/playerMenu_bounty_on_individual.d.ts"
+      },
+      {
+         "path" : "declaration/modules/ui/functions/playerMenu_homes.d.ts"
+      },
+      {
          "path" : "declaration/modules/ui/functions/playerMenu_leaderboard.d.ts"
       },
       {
@@ -2081,6 +2078,15 @@
       },
       {
          "path" : "declaration/modules/ui/functions/playerMenu_leaderboards.d.ts"
+      },
+      {
+         "path" : "declaration/modules/ui/functions/playerMenu_moneyTransfer.d.ts"
+      },
+      {
+         "path" : "declaration/modules/ui/functions/playerMenu_redeemCode.d.ts"
+      },
+      {
+         "path" : "declaration/modules/ui/functions/playerMenu_warps.d.ts"
       },
       {
          "path" : "declaration/modules/ui/functions/rankModes.d.ts"
@@ -2107,6 +2113,9 @@
          "path" : "declaration/modules/ui/functions/showCustomFormUI.d.ts"
       },
       {
+         "path" : "declaration/modules/ui/functions/teleportSystemsSettings.d.ts"
+      },
+      {
          "path" : "declaration/modules/ui/functions/terminal.d.ts"
       },
       {
@@ -2116,6 +2125,45 @@
          "path" : "declaration/modules/ui/functions/uiSettings.d.ts"
       },
       {
+         "path" : "declaration/modules/ui/functions/uiSettings_main.d.ts"
+      },
+      {
+         "path" : "declaration/modules/ui/functions/uiSettings_menuConfigurations.d.ts"
+      },
+      {
+         "path" : "declaration/modules/ui/functions/uiSettings_menuConfigurations_playerMenu.d.ts"
+      },
+      {
+         "path" : "declaration/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_editButtons.d.ts"
+      },
+      {
+         "path" : "declaration/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_editButtons_addRemovedButtons.d.ts"
+      },
+      {
+         "path" : "declaration/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_leaderboardsSettings.d.ts"
+      },
+      {
+         "path" : "declaration/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_displayedLeaderboards.d.ts"
+      },
+      {
+         "path" : "declaration/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_displayedLeaderboards_addLeaderboard.d.ts"
+      },
+      {
+         "path" : "declaration/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_displayedStatistics.d.ts"
+      },
+      {
+         "path" : "declaration/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_displayedStatistics_addStatistic.d.ts"
+      },
+      {
+         "path" : "declaration/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics.d.ts"
+      },
+      {
+         "path" : "declaration/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics_builtIn.d.ts"
+      },
+      {
+         "path" : "declaration/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_mainSettings.d.ts"
+      },
+      {
          "path" : "declaration/modules/ui/functions/ui_format_version.d.ts"
       },
       {
@@ -2123,9 +2171,6 @@
       },
       {
          "path" : "declaration/modules/ui/functions/worldBorderSettingsDimensionSelector.d.ts"
-      },
-      {
-         "path" : "declaration/modules/ui/index.d.ts"
       },
       {
          "path" : "declaration/modules/ui/types/menuButtonIdsType.d.ts"
@@ -2159,6 +2204,12 @@
       },
       {
          "path" : "declaration/modules/utilities/functions/customModulo.d.ts"
+      },
+      {
+         "path" : "declaration/modules/utilities/functions/deleteStringFromDynamicProperties.d.ts"
+      },
+      {
+         "path" : "declaration/modules/utilities/functions/deleteStringFromEntityDynamicProperties.d.ts"
       },
       {
          "path" : "declaration/modules/utilities/functions/escapeRegExp.d.ts"
@@ -2227,7 +2278,13 @@
          "path" : "declaration/modules/utilities/functions/mcRGBToColorCoreRGB.d.ts"
       },
       {
+         "path" : "declaration/modules/utilities/functions/numberFormatter.d.ts"
+      },
+      {
          "path" : "declaration/modules/utilities/functions/objectify.d.ts"
+      },
+      {
+         "path" : "declaration/modules/utilities/functions/parseDuration.d.ts"
       },
       {
          "path" : "declaration/modules/utilities/functions/regenerateBlocks.d.ts"
@@ -2276,9 +2333,6 @@
       },
       {
          "path" : "declaration/modules/utilities/functions/toBase.d.ts"
-      },
-      {
-         "path" : "declaration/modules/utilities/index.d.ts"
       },
       {
          "path" : "declaration/security/ultraSecurityModeUtils.d.ts"
@@ -2372,6 +2426,9 @@
       },
       {
          "path" : "entities/player_shop_recieved_shop_items_storage.json"
+      },
+      {
+         "path" : "entities/saved_item.json"
       },
       {
          "path" : "entities/saved_shop_item.json"
@@ -11356,6 +11413,48 @@
          "path" : "node_modules/loose-envify/replace.js"
       },
       {
+         "path" : "node_modules/mcbe-ipc/LICENSE"
+      },
+      {
+         "path" : "node_modules/mcbe-ipc/README.md"
+      },
+      {
+         "path" : "node_modules/mcbe-ipc/dist/direct.ipc.d.ts"
+      },
+      {
+         "path" : "node_modules/mcbe-ipc/dist/direct.ipc.js"
+      },
+      {
+         "path" : "node_modules/mcbe-ipc/dist/ipc.d.ts"
+      },
+      {
+         "path" : "node_modules/mcbe-ipc/dist/ipc.js"
+      },
+      {
+         "path" : "node_modules/mcbe-ipc/dist/proto.d.ts"
+      },
+      {
+         "path" : "node_modules/mcbe-ipc/dist/proto.js"
+      },
+      {
+         "path" : "node_modules/mcbe-ipc/node_modules/@minecraft/server/.eslintrc.json"
+      },
+      {
+         "path" : "node_modules/mcbe-ipc/node_modules/@minecraft/server/README.md"
+      },
+      {
+         "path" : "node_modules/mcbe-ipc/node_modules/@minecraft/server/index.d.ts"
+      },
+      {
+         "path" : "node_modules/mcbe-ipc/node_modules/@minecraft/server/package.json"
+      },
+      {
+         "path" : "node_modules/mcbe-ipc/node_modules/@minecraft/server/tsconfig.json"
+      },
+      {
+         "path" : "node_modules/mcbe-ipc/package.json"
+      },
+      {
          "path" : "node_modules/mime-db/HISTORY.md"
       },
       {
@@ -18511,85 +18610,13 @@
          "path" : "scripts/intlc.js"
       },
       {
+         "path" : "scripts/ipc.js"
+      },
+      {
+         "path" : "scripts/ipc.js.map"
+      },
+      {
          "path" : "scripts/ironFireSword.ts"
-      },
-      {
-         "path" : "scripts/legacyModuleAliases/Main.js"
-      },
-      {
-         "path" : "scripts/legacyModuleAliases/Main.js.map"
-      },
-      {
-         "path" : "scripts/legacyModuleAliases/ban.js"
-      },
-      {
-         "path" : "scripts/legacyModuleAliases/ban.js.map"
-      },
-      {
-         "path" : "scripts/legacyModuleAliases/chat.js"
-      },
-      {
-         "path" : "scripts/legacyModuleAliases/chat.js.map"
-      },
-      {
-         "path" : "scripts/legacyModuleAliases/command_utilities.js"
-      },
-      {
-         "path" : "scripts/legacyModuleAliases/command_utilities.js.map"
-      },
-      {
-         "path" : "scripts/legacyModuleAliases/commands.js"
-      },
-      {
-         "path" : "scripts/legacyModuleAliases/commands.js.map"
-      },
-      {
-         "path" : "scripts/legacyModuleAliases/commands_documentation.js"
-      },
-      {
-         "path" : "scripts/legacyModuleAliases/commands_documentation.js.map"
-      },
-      {
-         "path" : "scripts/legacyModuleAliases/commands_list.js"
-      },
-      {
-         "path" : "scripts/legacyModuleAliases/commands_list.js.map"
-      },
-      {
-         "path" : "scripts/legacyModuleAliases/coordinates.js"
-      },
-      {
-         "path" : "scripts/legacyModuleAliases/coordinates.js.map"
-      },
-      {
-         "path" : "scripts/legacyModuleAliases/errors.js"
-      },
-      {
-         "path" : "scripts/legacyModuleAliases/errors.js.map"
-      },
-      {
-         "path" : "scripts/legacyModuleAliases/player_save.js"
-      },
-      {
-         "path" : "scripts/legacyModuleAliases/player_save.js.map"
-      },
-      {
-         "path" : "scripts/legacyModuleAliases/spawn_protection.js"
-      },
-      {
-         "path" : "scripts/legacyModuleAliases/spawn_protection.js.map"
-      },
-      {
-         "path" : "scripts/legacyModuleAliases/ui.js"
-      },
-      {
-         "path" : "scripts/legacyModuleAliases/ui.js.map"
-      },
-      {
-         "path" : "scripts/legacyModuleAliases/utilities.js"
-      },
-      {
-         "path" : "scripts/legacyModuleAliases/utilities.js.map"
       },
       {
          "path" : "scripts/modules/ban/classes/ban.js"
@@ -18608,12 +18635,6 @@
       },
       {
          "path" : "scripts/modules/ban/functions/checkingForBannedPlayers.js.map"
-      },
-      {
-         "path" : "scripts/modules/ban/index.js"
-      },
-      {
-         "path" : "scripts/modules/ban/index.js.map"
       },
       {
          "path" : "scripts/modules/block_generation_utilities/functions/fillArea.js"
@@ -18770,12 +18791,6 @@
       },
       {
          "path" : "scripts/modules/chat/functions/requestConditionalChatInput.js.map"
-      },
-      {
-         "path" : "scripts/modules/chat/index.js"
-      },
-      {
-         "path" : "scripts/modules/chat/index.js.map"
       },
       {
          "path" : "scripts/modules/command_utilities/constants/EquipmentSlots.js"
@@ -19034,12 +19049,6 @@
       },
       {
          "path" : "scripts/modules/command_utilities/functions/targetSelectorB.js.map"
-      },
-      {
-         "path" : "scripts/modules/command_utilities/index.js"
-      },
-      {
-         "path" : "scripts/modules/command_utilities/index.js.map"
       },
       {
          "path" : "scripts/modules/commands/classes/BlockMask.js"
@@ -19480,12 +19489,6 @@
          "path" : "scripts/modules/commands/functions/vTV3.js.map"
       },
       {
-         "path" : "scripts/modules/commands/index.js"
-      },
-      {
-         "path" : "scripts/modules/commands/index.js.map"
-      },
-      {
          "path" : "scripts/modules/commands/types/LowercaseLetter.js"
       },
       {
@@ -19654,22 +19657,10 @@
          "path" : "scripts/modules/commands_documentation/functions/listCommandsWithMissingDocumentation.js.map"
       },
       {
-         "path" : "scripts/modules/commands_documentation/index.js"
-      },
-      {
-         "path" : "scripts/modules/commands_documentation/index.js.map"
-      },
-      {
          "path" : "scripts/modules/commands_list/constants/commands.js"
       },
       {
          "path" : "scripts/modules/commands_list/constants/commands.js.map"
-      },
-      {
-         "path" : "scripts/modules/commands_list/index.js"
-      },
-      {
-         "path" : "scripts/modules/commands_list/index.js.map"
       },
       {
          "path" : "scripts/modules/coordinates/classes/AreaBackup.js"
@@ -19682,6 +19673,12 @@
       },
       {
          "path" : "scripts/modules/coordinates/classes/AreaBackups.js.map"
+      },
+      {
+         "path" : "scripts/modules/coordinates/classes/TeleportRequest.js"
+      },
+      {
+         "path" : "scripts/modules/coordinates/classes/TeleportRequest.js.map"
       },
       {
          "path" : "scripts/modules/coordinates/classes/WorldPosition.js"
@@ -20272,12 +20269,6 @@
          "path" : "scripts/modules/coordinates/functions/splitRange.js.map"
       },
       {
-         "path" : "scripts/modules/coordinates/index.js"
-      },
-      {
-         "path" : "scripts/modules/coordinates/index.js.map"
-      },
-      {
          "path" : "scripts/modules/coordinates/interfaces/DimensionRotationLocation.js"
       },
       {
@@ -20306,6 +20297,12 @@
       },
       {
          "path" : "scripts/modules/coordinates/interfaces/Vector5.js.map"
+      },
+      {
+         "path" : "scripts/modules/coordinates/interfaces/Warp.js"
+      },
+      {
+         "path" : "scripts/modules/coordinates/interfaces/Warp.js.map"
       },
       {
          "path" : "scripts/modules/errors/classes/ExpireError.js"
@@ -20362,10 +20359,22 @@
          "path" : "scripts/modules/errors/index.js.map"
       },
       {
-         "path" : "scripts/modules/index.js"
+         "path" : "scripts/modules/main/classes/Bounty.js"
       },
       {
-         "path" : "scripts/modules/index.js.map"
+         "path" : "scripts/modules/main/classes/Bounty.js.map"
+      },
+      {
+         "path" : "scripts/modules/main/classes/RedeemableCode.js"
+      },
+      {
+         "path" : "scripts/modules/main/classes/RedeemableCode.js.map"
+      },
+      {
+         "path" : "scripts/modules/main/classes/ScoreboardV2.js"
+      },
+      {
+         "path" : "scripts/modules/main/classes/ScoreboardV2.js.map"
       },
       {
          "path" : "scripts/modules/main/classes/SemVerString.js"
@@ -20770,12 +20779,6 @@
          "path" : "scripts/modules/main/functions/v3Multiply.js.map"
       },
       {
-         "path" : "scripts/modules/main/index.js"
-      },
-      {
-         "path" : "scripts/modules/main/index.js.map"
-      },
-      {
          "path" : "scripts/modules/player_save/classes/savedPlayer.js"
       },
       {
@@ -20792,12 +20795,6 @@
       },
       {
          "path" : "scripts/modules/player_save/functions/player_save_format_version.js.map"
-      },
-      {
-         "path" : "scripts/modules/player_save/index.js"
-      },
-      {
-         "path" : "scripts/modules/player_save/index.js.map"
       },
       {
          "path" : "scripts/modules/spawn_protection/functions/convertToCompoundBlockVolume.js"
@@ -20852,12 +20849,6 @@
       },
       {
          "path" : "scripts/modules/spawn_protection/functions/testIsWithinRanges.js.map"
-      },
-      {
-         "path" : "scripts/modules/spawn_protection/index.js"
-      },
-      {
-         "path" : "scripts/modules/spawn_protection/index.js.map"
       },
       {
          "path" : "scripts/modules/ui/constants/defaultPlayerMenuLeaderboardStatistics.js"
@@ -21058,16 +21049,16 @@
          "path" : "scripts/modules/ui/functions/forceShow.js.map"
       },
       {
+         "path" : "scripts/modules/ui/functions/generalSettings.js"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/generalSettings.js.map"
+      },
+      {
          "path" : "scripts/modules/ui/functions/getAllBuiltInCommandsCategories.js"
       },
       {
          "path" : "scripts/modules/ui/functions/getAllBuiltInCommandsCategories.js.map"
-      },
-      {
-         "path" : "scripts/modules/ui/functions/globalSettings.js"
-      },
-      {
-         "path" : "scripts/modules/ui/functions/globalSettings.js.map"
       },
       {
          "path" : "scripts/modules/ui/functions/homeSystemSettings.js"
@@ -21184,6 +21175,18 @@
          "path" : "scripts/modules/ui/functions/managePlayers_managePlayer_manageHomes.js.map"
       },
       {
+         "path" : "scripts/modules/ui/functions/manageRedeemableCodes.js"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/manageRedeemableCodes.js.map"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/manageWarps.js"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/manageWarps.js.map"
+      },
+      {
          "path" : "scripts/modules/ui/functions/mapArtGenerator.js"
       },
       {
@@ -21250,6 +21253,102 @@
          "path" : "scripts/modules/ui/functions/playerMenu.js.map"
       },
       {
+         "path" : "scripts/modules/ui/functions/playerMenu_TPA.js"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/playerMenu_TPA.js.map"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/playerMenu_TPA_incoming.js"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/playerMenu_TPA_incoming.js.map"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/playerMenu_TPA_outgoing.js"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/playerMenu_TPA_outgoing.js.map"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/playerMenu_about.js"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/playerMenu_about.js.map"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/playerMenu_about_contributors.js"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/playerMenu_about_contributors.js.map"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/playerMenu_bounties.js"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/playerMenu_bounties.js.map"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/playerMenu_bounties_list.js"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/playerMenu_bounties_list.js.map"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/playerMenu_bounties_list_from.js"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/playerMenu_bounties_list_from.js.map"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/playerMenu_bounties_list_on.js"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/playerMenu_bounties_list_on.js.map"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/playerMenu_bounty.js"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/playerMenu_bounty.js.map"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/playerMenu_bounty_from_individual.js"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/playerMenu_bounty_from_individual.js.map"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/playerMenu_bounty_individual.js"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/playerMenu_bounty_individual.js.map"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/playerMenu_bounty_individuals.js"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/playerMenu_bounty_individuals.js.map"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/playerMenu_bounty_new.js"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/playerMenu_bounty_new.js.map"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/playerMenu_bounty_on_individual.js"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/playerMenu_bounty_on_individual.js.map"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/playerMenu_homes.js"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/playerMenu_homes.js.map"
+      },
+      {
          "path" : "scripts/modules/ui/functions/playerMenu_leaderboard.js"
       },
       {
@@ -21266,6 +21365,24 @@
       },
       {
          "path" : "scripts/modules/ui/functions/playerMenu_leaderboards.js.map"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/playerMenu_moneyTransfer.js"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/playerMenu_moneyTransfer.js.map"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/playerMenu_redeemCode.js"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/playerMenu_redeemCode.js.map"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/playerMenu_warps.js"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/playerMenu_warps.js.map"
       },
       {
          "path" : "scripts/modules/ui/functions/rankModes.js"
@@ -21316,6 +21433,12 @@
          "path" : "scripts/modules/ui/functions/showCustomFormUI.js.map"
       },
       {
+         "path" : "scripts/modules/ui/functions/teleportSystemsSettings.js"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/teleportSystemsSettings.js.map"
+      },
+      {
          "path" : "scripts/modules/ui/functions/terminal.js"
       },
       {
@@ -21334,6 +21457,84 @@
          "path" : "scripts/modules/ui/functions/uiSettings.js.map"
       },
       {
+         "path" : "scripts/modules/ui/functions/uiSettings_main.js"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/uiSettings_main.js.map"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/uiSettings_menuConfigurations.js"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/uiSettings_menuConfigurations.js.map"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/uiSettings_menuConfigurations_playerMenu.js"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/uiSettings_menuConfigurations_playerMenu.js.map"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_editButtons.js"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_editButtons.js.map"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_editButtons_addRemovedButtons.js"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_editButtons_addRemovedButtons.js.map"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_leaderboardsSettings.js"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_leaderboardsSettings.js.map"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_displayedLeaderboards.js"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_displayedLeaderboards.js.map"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_displayedLeaderboards_addLeaderboard.js"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_displayedLeaderboards_addLeaderboard.js.map"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_displayedStatistics.js"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_displayedStatistics.js.map"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_displayedStatistics_addStatistic.js"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_displayedStatistics_addStatistic.js.map"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics.js"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics.js.map"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics_builtIn.js"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics_builtIn.js.map"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_mainSettings.js"
+      },
+      {
+         "path" : "scripts/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_mainSettings.js.map"
+      },
+      {
          "path" : "scripts/modules/ui/functions/ui_format_version.js"
       },
       {
@@ -21350,12 +21551,6 @@
       },
       {
          "path" : "scripts/modules/ui/functions/worldBorderSettingsDimensionSelector.js.map"
-      },
-      {
-         "path" : "scripts/modules/ui/index.js"
-      },
-      {
-         "path" : "scripts/modules/ui/index.js.map"
       },
       {
          "path" : "scripts/modules/ui/types/menuButtonIdsType.js"
@@ -21422,6 +21617,18 @@
       },
       {
          "path" : "scripts/modules/utilities/functions/customModulo.js.map"
+      },
+      {
+         "path" : "scripts/modules/utilities/functions/deleteStringFromDynamicProperties.js"
+      },
+      {
+         "path" : "scripts/modules/utilities/functions/deleteStringFromDynamicProperties.js.map"
+      },
+      {
+         "path" : "scripts/modules/utilities/functions/deleteStringFromEntityDynamicProperties.js"
+      },
+      {
+         "path" : "scripts/modules/utilities/functions/deleteStringFromEntityDynamicProperties.js.map"
       },
       {
          "path" : "scripts/modules/utilities/functions/escapeRegExp.js"
@@ -21556,10 +21763,22 @@
          "path" : "scripts/modules/utilities/functions/mcRGBToColorCoreRGB.js.map"
       },
       {
+         "path" : "scripts/modules/utilities/functions/numberFormatter.js"
+      },
+      {
+         "path" : "scripts/modules/utilities/functions/numberFormatter.js.map"
+      },
+      {
          "path" : "scripts/modules/utilities/functions/objectify.js"
       },
       {
          "path" : "scripts/modules/utilities/functions/objectify.js.map"
+      },
+      {
+         "path" : "scripts/modules/utilities/functions/parseDuration.js"
+      },
+      {
+         "path" : "scripts/modules/utilities/functions/parseDuration.js.map"
       },
       {
          "path" : "scripts/modules/utilities/functions/regenerateBlocks.js"
@@ -21656,12 +21875,6 @@
       },
       {
          "path" : "scripts/modules/utilities/functions/toBase.js.map"
-      },
-      {
-         "path" : "scripts/modules/utilities/index.js"
-      },
-      {
-         "path" : "scripts/modules/utilities/index.js.map"
       },
       {
          "path" : "scripts/security/ultraSecurityModeUtils.js"
@@ -22351,43 +22564,7 @@
          "path" : "src/initializeMainGlobalVariables.ts"
       },
       {
-         "path" : "src/legacyModuleAliases/Main.ts"
-      },
-      {
-         "path" : "src/legacyModuleAliases/ban.ts"
-      },
-      {
-         "path" : "src/legacyModuleAliases/chat.ts"
-      },
-      {
-         "path" : "src/legacyModuleAliases/command_utilities.ts"
-      },
-      {
-         "path" : "src/legacyModuleAliases/commands.ts"
-      },
-      {
-         "path" : "src/legacyModuleAliases/commands_documentation.ts"
-      },
-      {
-         "path" : "src/legacyModuleAliases/commands_list.ts"
-      },
-      {
-         "path" : "src/legacyModuleAliases/coordinates.ts"
-      },
-      {
-         "path" : "src/legacyModuleAliases/errors.ts"
-      },
-      {
-         "path" : "src/legacyModuleAliases/player_save.ts"
-      },
-      {
-         "path" : "src/legacyModuleAliases/spawn_protection.ts"
-      },
-      {
-         "path" : "src/legacyModuleAliases/ui.ts"
-      },
-      {
-         "path" : "src/legacyModuleAliases/utilities.ts"
+         "path" : "src/ipc.ts"
       },
       {
          "path" : "src/modules/ban/classes/ban.ts"
@@ -22918,6 +23095,9 @@
          "path" : "src/modules/coordinates/classes/AreaBackups.ts"
       },
       {
+         "path" : "src/modules/coordinates/classes/TeleportRequest.ts"
+      },
+      {
          "path" : "src/modules/coordinates/classes/WorldPosition.ts"
       },
       {
@@ -23227,6 +23407,9 @@
          "path" : "src/modules/coordinates/interfaces/Vector5.ts"
       },
       {
+         "path" : "src/modules/coordinates/interfaces/Warp.ts"
+      },
+      {
          "path" : "src/modules/errors/classes/ExpireError.ts"
       },
       {
@@ -23249,6 +23432,18 @@
       },
       {
          "path" : "src/modules/errors/classes/TimeoutError.ts"
+      },
+      {
+         "path" : "src/modules/errors/index.ts"
+      },
+      {
+         "path" : "src/modules/main/classes/Bounty.ts"
+      },
+      {
+         "path" : "src/modules/main/classes/RedeemableCode.ts"
+      },
+      {
+         "path" : "src/modules/main/classes/ScoreboardV2.ts"
       },
       {
          "path" : "src/modules/main/classes/SemVerString.ts"
@@ -23587,10 +23782,10 @@
          "path" : "src/modules/ui/functions/forceShow.ts"
       },
       {
-         "path" : "src/modules/ui/functions/getAllBuiltInCommandsCategories.ts"
+         "path" : "src/modules/ui/functions/generalSettings.ts"
       },
       {
-         "path" : "src/modules/ui/functions/globalSettings.ts"
+         "path" : "src/modules/ui/functions/getAllBuiltInCommandsCategories.ts"
       },
       {
          "path" : "src/modules/ui/functions/homeSystemSettings.ts"
@@ -23650,6 +23845,12 @@
          "path" : "src/modules/ui/functions/managePlayers_managePlayer_manageHomes.ts"
       },
       {
+         "path" : "src/modules/ui/functions/manageRedeemableCodes.ts"
+      },
+      {
+         "path" : "src/modules/ui/functions/manageWarps.ts"
+      },
+      {
          "path" : "src/modules/ui/functions/mapArtGenerator.ts"
       },
       {
@@ -23683,10 +23884,49 @@
          "path" : "src/modules/ui/functions/playerMenu.ts"
       },
       {
+         "path" : "src/modules/ui/functions/playerMenu_TPA.ts"
+      },
+      {
+         "path" : "src/modules/ui/functions/playerMenu_TPA_incoming.ts"
+      },
+      {
+         "path" : "src/modules/ui/functions/playerMenu_TPA_outgoing.ts"
+      },
+      {
          "path" : "src/modules/ui/functions/playerMenu_about.ts"
       },
       {
          "path" : "src/modules/ui/functions/playerMenu_about_contributors.ts"
+      },
+      {
+         "path" : "src/modules/ui/functions/playerMenu_bounties.ts"
+      },
+      {
+         "path" : "src/modules/ui/functions/playerMenu_bounties_list.ts"
+      },
+      {
+         "path" : "src/modules/ui/functions/playerMenu_bounties_list_from.ts"
+      },
+      {
+         "path" : "src/modules/ui/functions/playerMenu_bounties_list_on.ts"
+      },
+      {
+         "path" : "src/modules/ui/functions/playerMenu_bounty.ts"
+      },
+      {
+         "path" : "src/modules/ui/functions/playerMenu_bounty_from_individual.ts"
+      },
+      {
+         "path" : "src/modules/ui/functions/playerMenu_bounty_individual.ts"
+      },
+      {
+         "path" : "src/modules/ui/functions/playerMenu_bounty_individuals.ts"
+      },
+      {
+         "path" : "src/modules/ui/functions/playerMenu_bounty_new.ts"
+      },
+      {
+         "path" : "src/modules/ui/functions/playerMenu_bounty_on_individual.ts"
       },
       {
          "path" : "src/modules/ui/functions/playerMenu_homes.ts"
@@ -23699,6 +23939,15 @@
       },
       {
          "path" : "src/modules/ui/functions/playerMenu_leaderboards.ts"
+      },
+      {
+         "path" : "src/modules/ui/functions/playerMenu_moneyTransfer.ts"
+      },
+      {
+         "path" : "src/modules/ui/functions/playerMenu_redeemCode.ts"
+      },
+      {
+         "path" : "src/modules/ui/functions/playerMenu_warps.ts"
       },
       {
          "path" : "src/modules/ui/functions/rankModes.ts"
@@ -23725,6 +23974,9 @@
          "path" : "src/modules/ui/functions/showCustomFormUI.ts"
       },
       {
+         "path" : "src/modules/ui/functions/teleportSystemsSettings.ts"
+      },
+      {
          "path" : "src/modules/ui/functions/terminal.ts"
       },
       {
@@ -23732,6 +23984,45 @@
       },
       {
          "path" : "src/modules/ui/functions/uiSettings.ts"
+      },
+      {
+         "path" : "src/modules/ui/functions/uiSettings_main.ts"
+      },
+      {
+         "path" : "src/modules/ui/functions/uiSettings_menuConfigurations.ts"
+      },
+      {
+         "path" : "src/modules/ui/functions/uiSettings_menuConfigurations_playerMenu.ts"
+      },
+      {
+         "path" : "src/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_editButtons.ts"
+      },
+      {
+         "path" : "src/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_editButtons_addRemovedButtons.ts"
+      },
+      {
+         "path" : "src/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_leaderboardsSettings.ts"
+      },
+      {
+         "path" : "src/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_displayedLeaderboards.ts"
+      },
+      {
+         "path" : "src/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_displayedLeaderboards_addLeaderboard.ts"
+      },
+      {
+         "path" : "src/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_displayedStatistics.ts"
+      },
+      {
+         "path" : "src/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_displayedStatistics_addStatistic.ts"
+      },
+      {
+         "path" : "src/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics.ts"
+      },
+      {
+         "path" : "src/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics_builtIn.ts"
+      },
+      {
+         "path" : "src/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_mainSettings.ts"
       },
       {
          "path" : "src/modules/ui/functions/ui_format_version.ts"
@@ -23774,6 +24065,12 @@
       },
       {
          "path" : "src/modules/utilities/functions/customModulo.ts"
+      },
+      {
+         "path" : "src/modules/utilities/functions/deleteStringFromDynamicProperties.ts"
+      },
+      {
+         "path" : "src/modules/utilities/functions/deleteStringFromEntityDynamicProperties.ts"
       },
       {
          "path" : "src/modules/utilities/functions/escapeRegExp.ts"
@@ -23842,7 +24139,13 @@
          "path" : "src/modules/utilities/functions/mcRGBToColorCoreRGB.ts"
       },
       {
+         "path" : "src/modules/utilities/functions/numberFormatter.ts"
+      },
+      {
          "path" : "src/modules/utilities/functions/objectify.ts"
+      },
+      {
+         "path" : "src/modules/utilities/functions/parseDuration.ts"
       },
       {
          "path" : "src/modules/utilities/functions/regenerateBlocks.ts"

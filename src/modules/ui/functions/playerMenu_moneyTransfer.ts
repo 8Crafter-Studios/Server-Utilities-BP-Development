@@ -73,10 +73,10 @@ export async function playerMenu_moneyTransfer(
                 search.value
             )}\nCase Sensitive: ${JSON.stringify(
                 search.caseSensitive ?? false
-            )}\n\nPlease select a player to put a bounty on.`
+            )}\n\nPlease select a player to transfer money to.`
         );
     }else{
-        form.body("Please select a player to put a bounty on.");
+        form.body("Please select a player to transfser money to.");
     }
     form.button("Search", "textures/ui/spyglass_flat");
     form.button(
@@ -199,6 +199,9 @@ Please enter the amount of money you would like to transfer to ${player.name}.`,
                     }
                     if(amount === 0n){
                         return ((await showMessage(sourceEntity, "Invalid Money Amount", "You may not send $0.", "Back", "Close")).selection !== 1).toNumber();
+                    }
+                    if(amount > sourceEntity.moneySystem.money){
+                        return ((await showMessage(sourceEntity, "Insufficient Funds", `You do not have ${numberFormatter(amount, {addCommaSeparators: true, prefixWithDollarSign: true})}.`, "Back", "Close")).selection !== 1).toNumber();
                     }
                     if(((await showMessage(sourceEntity, "Are you sure?", `Are you sure you want to send ${numberFormatter(amount, {addCommaSeparators: true, prefixWithDollarSign: true})} to ${player.name}`, "Cancel", "Confirm")).selection === 1).toNumber()){
                             const playerMoney = MoneySystem.get(player.id);

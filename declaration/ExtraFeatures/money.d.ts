@@ -10,4 +10,5 @@ export declare class MoneySystem {
     static get(player: `${number}` | Entity | {
         id: string | `${number}`;
     } | number | bigint | string): MoneySystem;
+    static transferFromScoreboard(scoreboard: ScoreboardObjective): void;
 }

@@ -344,7 +344,10 @@ export const menuButtonIds = {
                 functional: true,
                 advanced: false,
                 defaultButtonIndex: 1,
-                extraVisibilityConditionsCheck: () => config.homeSystem.homeSystemEnabled
+                extraVisibilityConditionsCheck: () => config.homeSystem.homeSystemEnabled,
+                extraVisibilityConditionsCheckFailedReason() {
+                    return "the home system is disabled";
+                },
             },
             TPA: {
                 displayName: "TPA",
@@ -356,7 +359,10 @@ export const menuButtonIds = {
                 functional: true,
                 advanced: false,
                 defaultButtonIndex: 2,
-                extraVisibilityConditionsCheck: () => config.tpaSystem.tpaSystemEnabled
+                extraVisibilityConditionsCheck: () => config.tpaSystem.tpaSystemEnabled,
+                extraVisibilityConditionsCheckFailedReason() {
+                    return "the TPA system is disabled";
+                },
             },
             warps: {
                 displayName: "Warps",
@@ -368,7 +374,10 @@ export const menuButtonIds = {
                 functional: true,
                 advanced: false,
                 defaultButtonIndex: 3,
-                extraVisibilityConditionsCheck: () => config.warpsSystem.enabled
+                extraVisibilityConditionsCheck: () => config.warpsSystem.enabled,
+                extraVisibilityConditionsCheckFailedReason() {
+                    return "the warps system is disabled";
+                },
             },
             bounties: {
                 displayName: "Bounties",
@@ -381,6 +390,9 @@ export const menuButtonIds = {
                 advanced: false,
                 defaultButtonIndex: 4,
                 extraVisibilityConditionsCheck: () => config.bountySystem.enabled,
+                extraVisibilityConditionsCheckFailedReason() {
+                    return "the bounty system is disabled";
+                },
             },
             serverShops: {
                 displayName: "Server Shops",
@@ -393,6 +405,9 @@ export const menuButtonIds = {
                 advanced: false,
                 defaultButtonIndex: 5,
                 extraVisibilityConditionsCheck: () => config.shopSystem.server.enabled,
+                extraVisibilityConditionsCheckFailedReason() {
+                    return "the server shop system is disabled";
+                },
             },
             playerShops: {
                 displayName: "Player Shops",
@@ -405,6 +420,9 @@ export const menuButtonIds = {
                 advanced: false,
                 defaultButtonIndex: 5,
                 extraVisibilityConditionsCheck: () => config.shopSystem.player.enabled,
+                extraVisibilityConditionsCheckFailedReason() {
+                    return "the player shop system is disabled";
+                },
             },
             moneyTransfer: {
                 displayName: "Money Transfer",
@@ -417,6 +435,9 @@ export const menuButtonIds = {
                 advanced: false,
                 defaultButtonIndex: 6,
                 extraVisibilityConditionsCheck: () => config.moneyTransferSystem.enabled,
+                extraVisibilityConditionsCheckFailedReason() {
+                    return "the money transfer system is disabled";
+                },
             },
             dailyRewards: {
                 displayName: "Daily Rewards",
@@ -435,8 +456,8 @@ export const menuButtonIds = {
                 deprecated: false,
                 experimental: false,
                 unused: false,
-                upcoming: true,
-                functional: false,
+                upcoming: false,
+                functional: true,
                 advanced: false,
                 defaultButtonIndex: 8,
             },
@@ -451,7 +472,7 @@ export const menuButtonIds = {
                 advanced: false,
                 defaultButtonIndex: 9,
             },
-        }
-    }
+        },
+    },
 };
 //# sourceMappingURL=menuButtonIds.js.map

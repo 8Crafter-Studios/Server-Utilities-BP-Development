@@ -42,6 +42,7 @@ import { WorldPosition } from "modules/coordinates/classes/WorldPosition";
 import { anglesToDirectionVectorDeg } from "modules/coordinates/functions/anglesToDirectionVectorDeg";
 import { getChunkIndexD } from "modules/coordinates/functions/getChunkIndexD";
 import type { RotationLocation } from "modules/coordinates/interfaces/RotationLocation";
+import { deleteStringFromEntityDynamicProperties } from "modules/utilities/functions/deleteStringFromEntityDynamicProperties";
 import { getStringFromEntityDynamicProperties } from "modules/utilities/functions/getStringFromEntityDynamicProperties";
 import { saveStringToEntityDynamicProperties } from "modules/utilities/functions/saveStringToEntityDynamicProperties";
 
@@ -614,9 +615,12 @@ export class executeCommandPlayerW {
         return this.player?.tryTeleport(location, teleportOptions);
     }
     saveStringToDynamicProperties(string: string, propertyName: string, clearOldProperties: boolean = true, chunkSize: number | bigint = 32760): void {
-        return saveStringToEntityDynamicProperties(this.player as Entity, string, propertyName, clearOldProperties, chunkSize);
+        saveStringToEntityDynamicProperties(this.player as Entity, string, propertyName, clearOldProperties, chunkSize);
     }
     getStringFromDynamicProperties(propertyName: string, zeroLengthPlaceholder: string = ""): string {
         return getStringFromEntityDynamicProperties(this.player as Entity, propertyName, zeroLengthPlaceholder);
+    }
+    deleteStringFromDynamicProperties(propertyName: string): void {
+        deleteStringFromEntityDynamicProperties(this.player as Entity, propertyName);
     }
 }

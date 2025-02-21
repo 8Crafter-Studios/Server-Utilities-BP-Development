@@ -47,10 +47,10 @@ export async function playerMenu_moneyTransfer(sourceEntitya, pagen = 0, maxplay
     form.title(`${!!search ? "Search Results" : "Select Player"} ${Math.min(numsavedplayers, page * maxplayersperpage + 1)}-${Math.min(numsavedplayers, (page + 1) * maxplayersperpage)} of ${numsavedplayers}`);
     const numpages = Math.ceil(numsavedplayers / maxplayersperpage);
     if (!!search) {
-        form.body(`Searching for: ${JSON.stringify(search.value)}\nCase Sensitive: ${JSON.stringify(search.caseSensitive ?? false)}\n\nPlease select a player to put a bounty on.`);
+        form.body(`Searching for: ${JSON.stringify(search.value)}\nCase Sensitive: ${JSON.stringify(search.caseSensitive ?? false)}\n\nPlease select a player to transfer money to.`);
     }
     else {
-        form.body("Please select a player to put a bounty on.");
+        form.body("Please select a player to transfser money to.");
     }
     form.button("Search", "textures/ui/spyglass_flat");
     form.button((page != 0 ? "§0" : "§8") + "Previous Page", "textures/ui/arrow_left");
@@ -127,6 +127,9 @@ Please enter the amount of money you would like to transfer to ${player.name}.`,
                 }
                 if (amount === 0n) {
                     return ((await showMessage(sourceEntity, "Invalid Money Amount", "You may not send $0.", "Back", "Close")).selection !== 1).toNumber();
+                }
+                if (amount > sourceEntity.moneySystem.money) {
+                    return ((await showMessage(sourceEntity, "Insufficient Funds", `You do not have ${numberFormatter(amount, { addCommaSeparators: true, prefixWithDollarSign: true })}.`, "Back", "Close")).selection !== 1).toNumber();
                 }
                 if (((await showMessage(sourceEntity, "Are you sure?", `Are you sure you want to send ${numberFormatter(amount, { addCommaSeparators: true, prefixWithDollarSign: true })} to ${player.name}`, "Cancel", "Confirm")).selection === 1).toNumber()) {
                     const playerMoney = MoneySystem.get(player.id);

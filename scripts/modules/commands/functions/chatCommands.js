@@ -7364,11 +7364,11 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                             case "go":
                             case "warp":
                             case "teleport":
-                                if (Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 > Date.now()) {
-                                    player.sendMessageB(`§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on PVP cooldown.`);
+                                if (Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 > Date.now()) {
+                                    player.sendMessageB(`§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on PVP cooldown.`);
                                 }
                                 else if (Number(player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 > Date.now()) {
-                                    player.sendMessageB(`§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on cooldown.`);
+                                    player.sendMessageB(`§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on cooldown.`);
                                 }
                                 else if (!!HomeSystem.getHomesForPlayer(player).find((h) => h.name == args[2])) {
                                     const home = HomeSystem.getHomesForPlayer(player).find((h) => h.name == args[2]);
@@ -7400,8 +7400,8 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                                 await waitTicks(20);
                                             }
                                             // Check for PVP cooldown again after ending the teleport countdown.
-                                            if (Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 > Date.now()) {
-                                                player.sendMessageB(`§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on PVP cooldown.`);
+                                            if (Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 > Date.now()) {
+                                                player.sendMessageB(`§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on PVP cooldown.`);
                                                 successful = false;
                                                 return 0;
                                             }
@@ -7457,11 +7457,11 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                         let argsa = evaluateParameters(switchTestB, [
                             "presetText",
                         ]);
-                        if (Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 > Date.now()) {
-                            player.sendMessageB(`§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on PVP cooldown.`);
+                        if (Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 > Date.now()) {
+                            player.sendMessageB(`§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on PVP cooldown.`);
                         }
                         else if (Number(player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 > Date.now()) {
-                            player.sendMessageB(`§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on cooldown.`);
+                            player.sendMessageB(`§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on cooldown.`);
                         }
                         else if (!!HomeSystem.getHomesForPlayer(player).find((h) => h.name == argsa.extra)) {
                             const home = HomeSystem.getHomesForPlayer(player).find((h) => h.name == argsa.extra);
@@ -7493,8 +7493,8 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                         await waitTicks(20);
                                     }
                                     // Check for PVP cooldown again after ending the teleport countdown.
-                                    if (Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 > Date.now()) {
-                                        player.sendMessageB(`§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on PVP cooldown.`);
+                                    if (Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 > Date.now()) {
+                                        player.sendMessageB(`§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on PVP cooldown.`);
                                         successful = false;
                                         return 0;
                                     }
@@ -7532,7 +7532,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                 {
                     eventData.cancel = true;
                     if (config.spawnCommandLocation.x == undefined) {
-                        player.sendMessageB('§cError: This command cannot be used becuase no spawn teleport location has been set. It can be enabled at "Main Menu>Settings>Global Settings>spawnCommandLocation"');
+                        player.sendMessageB('§cError: This command cannot be used becuase no spawn teleport location has been set. It can be configured at "Main Menu>Settings>General Settings>spawnCommandLocation"');
                     }
                     else if (config.spawnCommandLocation.dimension !== player.dimension && !config.teleportSystems.allowCrossDimensionalTeleport) {
                         player.sendMessageB('§cSorry but you cannot teleport to spawn because you are in a different dimension than spawn and all cross-dimensional teleports have been disabled.');
@@ -7540,8 +7540,8 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                     else if (config.spawnCommandLocation.dimension !== player.dimension && !config.spawnCommandAllowCrossDimensionalTeleport) {
                         player.sendMessageB('§cSorry but you cannot teleport to spawn because you are in a different dimension than spawn and cross-dimensional spawn teleports have been disabled.');
                     }
-                    else if (Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 > Date.now()) {
-                        player.sendMessageB(`§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on PVP cooldown.`);
+                    else if (Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 > Date.now()) {
+                        player.sendMessageB(`§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on PVP cooldown.`);
                     }
                     else if (Number(player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 > Date.now()) {
                         player.sendMessage(`§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on cooldown.`);
@@ -7565,8 +7565,8 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                 await waitTicks(20);
                             }
                             // Check for PVP cooldown again after ending the teleport countdown.
-                            if (Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 > Date.now()) {
-                                player.sendMessageB(`§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on PVP cooldown.`);
+                            if (Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 > Date.now()) {
+                                player.sendMessageB(`§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on PVP cooldown.`);
                                 successful = false;
                                 return 0;
                             }
@@ -7597,8 +7597,8 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                     eventData.cancel = true;
                     // /scriptevent andexdb:spawnSimulatedPlayer t§ee§as§ft §4P§dl§layer|~~~|overworld|~~~
                     if (config.tpaSystem.tpaSystemEnabled) {
-                        if (Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 > Date.now()) {
-                            player.sendMessageB(`§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on PVP cooldown.`);
+                        if (Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 > Date.now()) {
+                            player.sendMessageB(`§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on PVP cooldown.`);
                         }
                         else if (Number(player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 > Date.now()) {
                             player.sendMessage(`§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on cooldown.`);
@@ -7654,13 +7654,13 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                     })
                                         .then(async (t) => {
                                         if (t.toLowerCase().trim() == "y") {
-                                            if (Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 > Date.now()) {
-                                                target.sendMessage(`§cAccepted teleport request from "${player.name}", but they can't teleport to you right now because they have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 - Date.now()) / 1000)} seconds before they can teleport again because they are still on PVP cooldown.`);
-                                                player.sendMessageB(`§c"${target.name}" accepted your teleport request, but you can't teleport to them right now because you have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on PVP cooldown.`);
+                                            if (Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 > Date.now()) {
+                                                target.sendMessage(`§cAccepted teleport request from "${player.name}", but they can't teleport to you right now because they have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 - Date.now()) / 1000)} seconds before they can teleport again because they are still on PVP cooldown.`);
+                                                player.sendMessageB(`§c"${target.name}" accepted your teleport request, but you can't teleport to them right now because you have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on PVP cooldown.`);
                                             }
                                             else if (Number(player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 > Date.now()) {
-                                                target.sendMessage(`§cAccepted teleport request from "${player.name}", but they can't teleport to you right now because they have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 - Date.now()) / 1000)} seconds before they can teleport again because they are still on cooldown.`);
-                                                player.sendMessageB(`§c"${target.name}" accepted your teleport request, but you can't teleport to them right now because you have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on cooldown.`);
+                                                target.sendMessage(`§cAccepted teleport request from "${player.name}", but they can't teleport to you right now because they have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 - Date.now()) / 1000)} seconds before they can teleport again because they are still on cooldown.`);
+                                                player.sendMessageB(`§c"${target.name}" accepted your teleport request, but you can't teleport to them right now because you have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on cooldown.`);
                                             }
                                             else if (target.dimension !== player.dimension && !config.teleportSystems.allowCrossDimensionalTeleport) {
                                                 target.sendMessage(`§cAccepted teleport request from "${player.name}", but they can't teleport to you right now because you are in a different dimension than that player and all cross-dimensional teleports have been disabled.`);
@@ -7704,8 +7704,8 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                                     await waitTicks(20);
                                                 }
                                                 // Check for PVP cooldown again after ending the teleport countdown.
-                                                if (Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 > Date.now()) {
-                                                    player.sendMessageB(`§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on PVP cooldown, as a result of you entering PVP cooldown, your teleport to "${target.name}" was canceled.`);
+                                                if (Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 > Date.now()) {
+                                                    player.sendMessageB(`§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on PVP cooldown, as a result of you entering PVP cooldown, your teleport to "${target.name}" was canceled.`);
                                                     target.sendMessage(`§c"${player.name}" entered PVP cooldown so their teleport to you was canceled.`);
                                                     successful = false;
                                                     return 0;

@@ -10,7 +10,7 @@ GameTest.register("AllayTests", "allay_pickup_item", (test) => {
   const startPosAllay = { x: 1, y: 2, z: 1 };
   const startPosPlayer = { x: 3, y: 2, z: 1 };
   const torchItem = new ItemStack("torch", 1);
-  test.spawnItem(torchItem, { x: 4.5, y: 2.5, z: 4.5 });
+  test.spawnItem(torchItem as any, { x: 4.5, y: 2.5, z: 4.5 });
   let playerSim = test.spawnSimulatedPlayer(startPosPlayer, "playerSim_allay");
   let allay = test.spawn("minecraft:allay", startPosAllay);
   const testEx = new GameTestExtensions(test);

@@ -96,6 +96,22 @@ Object.defineProperties(Boolean.prototype, {
         enumerable: true,
         writable: true,
     },
+    toFormattedStringYN: {
+        value: function (): "§aYes" | "§cNo" {
+            return this.valueOf() ? "§aYes" : "§cNo";
+        },
+        configurable: true,
+        enumerable: true,
+        writable: true,
+    },
+    toFormattedStringYNB: {
+        value: function (): "§2Yes" | "§4No" {
+            return this.valueOf() ? "§2Yes" : "§4No";
+        },
+        configurable: true,
+        enumerable: true,
+        writable: true,
+    },
 });
 export const exports_5603749806156139082470132985463298047098135609812364098: undefined =
     undefined;
@@ -109,6 +125,8 @@ declare global {
         toFormattedStringIOB(): "§2ON" | "§4OFF";
         toFormattedStringIOL(): "§aOn" | "§cOff";
         toFormattedStringIOLB(): "§2On" | "§4Off";
+        toFormattedStringYN(): "§aYes" | "§cNo";
+        toFormattedStringYNB(): "§2Yes" | "§4No";
 
         /** Returns a number representation of an object. */
         toNumber(): 0 | 1;

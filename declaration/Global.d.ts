@@ -253,8 +253,6 @@ declare global {
         }>;
         function waitTick(): Promise<void>;
         function waitTicks(ticks?: number): Promise<void>;
-        function testForObjectExtension(objectToTest: object, base: object): boolean;
-        function testForObjectTypeExtension(objectToTest: object, base: object): boolean;
         function twoWayModulo(number: number, modulo: number): number;
         function clamp24HoursTo12Hours(hours: number): number;
         /**

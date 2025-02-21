@@ -95,17 +95,17 @@ export class TeleportRequest {
         this.player.sendMessage(`§c${this.target.name} denied your teleport request.`);
     }
     async teleportSequence() {
-        if (Number(this.player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 > Date.now()) {
+        if (Number(this.player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 > Date.now()) {
             this.target.sendMessage(
                 `§cAccepted teleport request from "${
                     this.player.name
                 }", but they can't teleport to you right now because they have to wait another ${Math.round(
-                    (Number(this.player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 - Date.now()) / 1000
+                    (Number(this.player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 - Date.now()) / 1000
                 )} seconds before they can teleport again because they are still on PVP cooldown.`
             );
             this.player.sendMessage(
                 `§c${this.target.name} accepted your teleport request, but you can't teleport to them right now because you have to wait another ${Math.round(
-                    (Number(this.player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 - Date.now()) / 1000
+                    (Number(this.player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 - Date.now()) / 1000
                 )} seconds before you can teleport again because you are still on PVP cooldown.`
             );
         } else if (Number(this.player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 > Date.now()) {
@@ -113,12 +113,12 @@ export class TeleportRequest {
                 `§cAccepted teleport request from "${
                     this.player.name
                 }", but they can't teleport to you right now because they have to wait another ${Math.round(
-                    (Number(this.player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 - Date.now()) / 1000
+                    (Number(this.player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 - Date.now()) / 1000
                 )} seconds before they can teleport again because they are still on cooldown.`
             );
             this.player.sendMessage(
                 `§c${this.target.name} accepted your teleport request, but you can't teleport to them right now because you have to wait another ${Math.round(
-                    (Number(this.player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 - Date.now()) / 1000
+                    (Number(this.player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 - Date.now()) / 1000
                 )} seconds before you can teleport again because you are still on cooldown.`
             );
         } else if (this.target.dimension !== this.player.dimension && !config.teleportSystems.allowCrossDimensionalTeleport) {
@@ -168,10 +168,10 @@ export class TeleportRequest {
                 await waitTicks(20);
             }
             // Check for PVP cooldown again after ending the teleport countdown.
-            if (Number(this.player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 > Date.now()) {
+            if (Number(this.player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 > Date.now()) {
                 this.player.sendMessage(
                     `§cSorry but you have to wait another ${Math.round(
-                        (Number(this.player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.pvpCooldownToTeleport * 1000 - Date.now()) / 1000
+                        (Number(this.player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 - Date.now()) / 1000
                     )} seconds before you can teleport again because you are still on PVP cooldown, as a result of you entering PVP cooldown, your teleport to "${
                         this.target.name
                     }" was canceled.`

@@ -16,18 +16,13 @@ export class ScoreboardV2 {
         return this.getObjectives().map(v => v.id);
     }
     static removeObjective(objectiveId) {
-        if (objectiveId instanceof ScoreboardV2Objective) {
-            const objective = objectiveId;
-            if (objective.isValid()) {
-                objective.delete();
-                return true;
-            }
-            else {
-                return false;
-            }
+        const objective = objectiveId instanceof ScoreboardV2Objective ? objectiveId : new ScoreboardV2Objective(objectiveId);
+        if (objective.isValid()) {
+            objective.delete();
+            return true;
         }
         else {
-            const objective = new ScoreboardV2Objective(objectiveId);
+            return false;
         }
     }
 }
@@ -62,6 +57,16 @@ export class ScoreboardV2Objective {
     isValid() {
         return (world.getStringFromDynamicProperties("scoreboardV2:" + this.id) ?? "") !== "";
     }
+    transferFromScoreboard(scoreboard) {
+        const players = savedPlayer.getSavedPlayers().filter(p => p.scoreboardIdentity !== undefined).map(p => [p, tryget(() => world.scoreboard.getParticipants().find(pa => pa?.id === p.scoreboardIdentity))]).filter(p => p[1] !== undefined);
+        players.forEach(p => {
+            const score = scoreboard.getScore(p[1]);
+            if (score !== undefined) {
+                this.addScore(p[0].id, score.toBigInt());
+                scoreboard.removeParticipant(p[1]);
+            }
+        });
+    }
     removeParticipant(participant) {
         let successful = this.scores[participant] !== undefined;
         delete this.scores[participant];
@@ -76,7 +81,7 @@ export class ScoreboardV2Objective {
         this.save();
     }
     save() {
-        world.saveStringToDynamicProperties("scoreboardV2:" + this.id, JSONB.stringify(this.toJSON()), true);
+        world.saveStringToDynamicProperties(JSONB.stringify(this.toJSON()), "scoreboardV2:" + this.id, true);
     }
     /**
      * @throws Throws if the scoreboard has not been saved.
