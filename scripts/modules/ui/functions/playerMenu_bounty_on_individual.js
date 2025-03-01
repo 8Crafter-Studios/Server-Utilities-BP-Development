@@ -29,7 +29,7 @@ export async function playerMenu_bounty_on_individual(sourceEntitya, bounty, sou
     const source = sourcePlayer ?? bounty.getLinkedSourceSavedPlayer();
     let form = new ActionFormData();
     form.title(sourceEntity.name);
-    form.body(`Target: ${sourceEntity.name}\nPlaced By: ${source.name}\nPlaced On: ${new Date(bounty.creationTime).formatDateTime(sourceEntity.timeZone, false, true)}\nReward: ${numberFormatter(bounty.value, { prefixWithDollarSign: true, addCommaSeparators: true }, 0)}`);
+    form.body(`Target: ${sourceEntity.name}\nPlaced By: ${source.name}\nPlaced On: ${new Date(bounty.creationTime).formatDateTime(sourceEntity.timeZone, false, true)}\nReward: ${numberFormatter(bounty.value, { currencyPrefix: config.ui.menus.playerMenu_leaderboards.builtInStats.money.displayOptions.currencyPrefix, addCommaSeparators: true }, 0)}`);
     form.button("Back", "textures/ui/arrow_left");
     form.button("Close", "textures/ui/crossout");
     return await forceShow(form, sourceEntity)

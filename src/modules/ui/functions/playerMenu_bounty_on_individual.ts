@@ -46,7 +46,7 @@ export async function playerMenu_bounty_on_individual(
             sourceEntity.timeZone,
             false,
             true
-        )}\nReward: ${numberFormatter(bounty.value, { prefixWithDollarSign: true, addCommaSeparators: true }, 0)}`
+        )}\nReward: ${numberFormatter(bounty.value, { currencyPrefix: config.ui.menus.playerMenu_leaderboards.builtInStats.money.displayOptions.currencyPrefix, addCommaSeparators: true }, 0)}`
     );
     form.button("Back", "textures/ui/arrow_left");
     form.button("Close", "textures/ui/crossout");

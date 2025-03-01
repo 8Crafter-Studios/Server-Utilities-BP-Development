@@ -1,5 +1,5 @@
 import type { Entity, Player, StructureSaveMode } from "@minecraft/server";
-import { ModalFormData, ModalFormResponse } from "@minecraft/server-ui";
+import { ModalFormData, type ModalFormResponse } from "@minecraft/server-ui";
 import { config } from "init/classes/config";
 import { forceShow } from "modules/ui/functions/forceShow";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
@@ -85,20 +85,20 @@ export async function scriptSettings(
     );
     if (config.system.debugMode) {
         form2.textField(
-            "§l§cartificialLagMS§r§c\nThe number of milliseconds of artificial lag to cause each tick. §eWARNING!: THIS IS VERY DANGEROUS AND COULD RESULT IN YOUR WORLD BEING SOFT-LOCKED IF SET TO AN EXTREMELY HIGH VALUE, BECAUSE OF THIS, THIS INPUT WILL ONLY ALLOW VALUES UP TO 10000 MILLISECONDS, TO SET IT HIGHER YOU MUST USE THE SCRIPT EVAL TO SET THE §bconfig.system.artificialLagMS§e PROPERTY TO THE DESIRED VALUE",
+            "§l§cartificialLagMS§r§c (Only visible in debug mode)\nThe number of milliseconds of artificial lag to cause each tick. §eWARNING!: THIS IS VERY DANGEROUS AND COULD RESULT IN YOUR WORLD BEING SOFT-LOCKED IF SET TO AN EXTREMELY HIGH VALUE, BECAUSE OF THIS, THIS INPUT WILL ONLY ALLOW VALUES UP TO 10000 MILLISECONDS, TO SET IT HIGHER YOU MUST USE THE SCRIPT EVAL TO SET THE §bconfig.system.artificialLagMS§e PROPERTY TO THE DESIRED VALUE",
             "int",
             String(config.system.artificialLagMS)
         );
         form2.toggle(
-            "§l§callowWatchdogTerminationCrash§r§c\nWhether or not to allow script spikes and error to crash this world/realm/server. §eWARNING!: THIS IS VERY DANGEROUS AND MAY RESULT IN YOUR WORLD/REALM/SERVER CRASHING A LOT!§r\nThe default is false",
+            "§l§callowWatchdogTerminationCrash§r§c (Only visible in debug mode)\nWhether or not to allow script spikes and error to crash this world/realm/server. §eWARNING!: THIS IS VERY DANGEROUS AND MAY RESULT IN YOUR WORLD/REALM/SERVER CRASHING A LOT!§r\nThe default is false",
             config.system.allowWatchdogTerminationCrash
         );
         form2.toggle(
-            "§l§chideWatchdogTerminationCrashEnabledWarningsOnStartup§r§c\nWhether or not to hide the warning that appears on startup when allowWatchdogTerminationCrash is enabled. §eWARNING!: ENABLING THIS IS HIGHLY DISCOURAGED!§r\nThe default is false",
+            "§l§chideWatchdogTerminationCrashEnabledWarningsOnStartup§r§c (Only visible in debug mode)\nWhether or not to hide the warning that appears on startup when allowWatchdogTerminationCrash is enabled. §eWARNING!: ENABLING THIS IS HIGHLY DISCOURAGED!§r\nThe default is false",
             config.system.hideWatchdogTerminationCrashEnabledWarningsOnStartup
         );
         form2.toggle(
-            "§l§fspreadPlayerInventoryDataSavesOverMultipleTicks§r\nWhether or not to spread player inventory data saving over multiple ticks to reduce lag, this only applies when §bGeneral Settings>useLegacyPlayerInventoryDataSaveSystem§r is disabled, the default is true",
+            "§l§cspreadPlayerInventoryDataSavesOverMultipleTicks§r§c (Only visible in debug mode)\nWhether or not to spread player inventory data saving over multiple ticks to reduce lag, this only applies when §bGeneral Settings>useLegacyPlayerInventoryDataSaveSystem§r is disabled, the default is true",
             config.system.spreadPlayerInventoryDataSavesOverMultipleTicks
         );
     }

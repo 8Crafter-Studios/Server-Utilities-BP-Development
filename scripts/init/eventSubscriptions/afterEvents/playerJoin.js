@@ -83,17 +83,20 @@ subscribedEvents.afterPlayerJoin = world.afterEvents.playerJoin.subscribe((event
             }
             await waitTick();
         }
-        savedPlayer.getSavedPlayer("player:" + event.playerId).executeOnJoinActions().catch((e) => {
-            console.error(e, e.stack);
-            world.getPlayers({ tags: ["getSavedPlayerOnJoinActionsDebugErrors"] }).forEach((currentplayer) => {
-                currentplayer.sendMessage(`§cAn error occured when executing ${event.playerName}'s on join actions: ${e} ${e.stack}`);
+        const player = savedPlayer.getSavedPlayer("player:" + event.playerId);
+        if (player !== undefined) {
+            player.executeOnJoinActions().catch((e) => {
+                console.error(e, e.stack);
+                world.getPlayers({ tags: ["getSavedPlayerOnJoinActionsDebugErrors"] }).forEach((currentplayer) => {
+                    currentplayer.sendMessage(`§cAn error occurred when executing ${event.playerName}'s on join actions: ${e} ${e.stack}`);
+                });
             });
-        });
+        }
     }
     executePlayerOnJoinActions().catch((e) => {
         console.error(e, e.stack);
         world.getPlayers({ tags: ["getSavedPlayerOnJoinActionsDebugErrors"] }).forEach((currentplayer) => {
-            currentplayer.sendMessage(`§cAn error occured when executing ${event.playerName}'s on join actions: ${e} ${e.stack}`);
+            currentplayer.sendMessage(`§cAn error occurred when executing ${event.playerName}'s on join actions: ${e} ${e.stack}`);
         });
     });
     try {

@@ -1,3 +1,5 @@
 import { startPlayerDataAutoSave } from "modules/player_save/functions/playerDataAutoSave";
 
-startPlayerDataAutoSave();
+if (Boolean(world.getDynamicProperty("andexdbSettings:autoSavePlayerData") ?? true) === true) {
+    startPlayerDataAutoSave();
+}

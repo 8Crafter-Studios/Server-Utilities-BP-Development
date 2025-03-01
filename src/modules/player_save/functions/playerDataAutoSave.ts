@@ -12,6 +12,10 @@ export async function playerDataAutoSaveAsyncInstance() {
                 // globalThis.stopPlayerDataAutoSaveAsync = false;
                 return;
             }
+            if(!p.isValid()){
+                console.warn(`Player inventory save skipped for ${p.id} because the player is no longer valid, likely because they left during the save process.`);
+                continue;
+            }
             await savedPlayer.savePlayerAsync(p);
             await waitTick();
         }
@@ -29,12 +33,16 @@ export async function playerDataAutoSaveAsyncInstance() {
 export async function playerDataAutoSaveAsync() {
     try{
         while(true){
-            if (globalThis.stopPlayerDataAutoSaveAsync == true) {
+            if (globalThis.stopPlayerDataAutoSaveAsync === true || (world.getDynamicProperty(
+                "andexdbSettings:autoSavePlayerData"
+                ) ?? true !== true)) {
                 globalThis.stopPlayerDataAutoSaveAsync = false;
                 break;
             }
             await playerDataAutoSaveAsyncInstance();
-            if (globalThis.stopPlayerDataAutoSaveAsync as boolean == true) {
+            if ((globalThis.stopPlayerDataAutoSaveAsync as boolean) === true || (world.getDynamicProperty(
+                "andexdbSettings:autoSavePlayerData"
+                ) ?? true !== true)) {
                 globalThis.stopPlayerDataAutoSaveAsync = false;
                 break;
             }

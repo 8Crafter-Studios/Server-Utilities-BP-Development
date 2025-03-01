@@ -93,7 +93,7 @@ export async function uiSettings_menuConfigurations_playerMenu_mainSettings(sour
     })
         .catch(async (e) => {
         console.error(e, e.stack);
-        return ((await showMessage(sourceEntity, "An Error Occured", `An error occured: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
+        return ((await showMessage(sourceEntity, "An Error occurred", `An error occurred: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
     });
 }
 //# sourceMappingURL=uiSettings_menuConfigurations_playerMenu_mainSettings.js.map

@@ -323,7 +323,7 @@ export async function securitySettings_playersWithPermissions_permission(
     permission: [permissionKey: keyof savedPlayer["playerPermissions"], permissionValue: any],
     pagen: number = 0,
     maxplayersperpage: number = config.ui.pages
-        .maxPlayersPerManagePlayersPage ?? 10,
+        .maxPlayersPerManagePlayersPage ?? 9,
     search?: {
         value: string;
         caseSensitive?: boolean;

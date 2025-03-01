@@ -18,6 +18,7 @@ export async function playerMenu_redeemCode(sourceEntitya) {
     let form = new ModalFormData();
     form.title("Redeem Code");
     form.textField("Enter your code below", "Code");
+    form.submitButton("Redeem Code");
     return await forceShow(form, sourceEntity)
         .then(async (r) => {
         if (r.canceled)
@@ -33,12 +34,12 @@ export async function playerMenu_redeemCode(sourceEntitya) {
             if (e instanceof Error && e.message === "This player has already redeemed this code.") {
                 return ((await showMessage(sourceEntity, "Already Redeemed", `You have already redeemed the code ${JSON.stringify(r.formValues?.[0])}.`, "Back", "Close")).selection !== 1).toNumber();
             }
-            return ((await showMessage(sourceEntity, "An Error Occured", `An error occured while redeeming the code ${JSON.stringify(r.formValues?.[0])}: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
+            return ((await showMessage(sourceEntity, "An Error occurred", `An error occurred while redeeming the code ${JSON.stringify(r.formValues?.[0])}: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
         }
     })
         .catch(async (e) => {
         console.error(e, e.stack);
-        return ((await showMessage(sourceEntity, "An Error Occured", `An error occured: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
+        return ((await showMessage(sourceEntity, "An Error occurred", `An error occurred: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
     });
 }
 //# sourceMappingURL=playerMenu_redeemCode.js.map

@@ -7,6 +7,7 @@ import { HomeSystem } from "modules/commands/classes/HomeSystem";
 import { vTStr } from "modules/commands/functions/vTStr";
 import { showMessage } from "modules/utilities/functions/showMessage";
 import { Home } from "modules/commands/classes/Home";
+import { customFormUICodes } from "../constants/customFormUICodes";
 
 export async function playerMenu_homes(sourceEntitya: Entity | executeCommandPlayerW | Player): Promise<0 | 1> {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
@@ -35,18 +36,17 @@ export async function playerMenu_homes(sourceEntitya: Entity | executeCommandPla
         }
     }
     let form = new ActionFormData();
-    form.title("Homes");
+    form.title(customFormUICodes.action.titles.formStyles.general + "Homes");
     const homes = HomeSystem.getHomesForPlayer(sourceEntity.id);
     homes.forEach((h) =>
-        form.button(`${h.name}\n${dimensionTypeDisplayFormatting[dimensionse[dimensions.indexOf(h.location.dimension)]]}§r ${vTStr(Vector.floor(h.location))}`)
+        form.button(`${customFormUICodes.action.buttons.positions.main_only}${h.name}\n${dimensionTypeDisplayFormatting[dimensionse[dimensions.indexOf(h.location.dimension)]]}§r ${vTStr(Vector.floor(h.location))}`)
     );
-    form.button("New Home", "textures/ui/color_plus");
-    form.button("Back", "textures/ui/arrow_left");
-    form.button("Close", "textures/ui/crossout");
+    form.button(customFormUICodes.action.buttons.positions.main_only + "New Home", "textures/ui/color_plus");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
     return await forceShow(form, sourceEntity)
         .then(async (ra) => {
             let r = ra as ActionFormResponse;
-            // This will stop the code when the player closes the form
             if (r.canceled) return 1;
 
             switch ((!!homes[r.selection] ? "home" : undefined) ?? (["newHome", "back", "close"] as const)[r.selection - homes.length]) {
@@ -159,7 +159,7 @@ export async function playerMenu_homes(sourceEntitya: Entity | executeCommandPla
                                     sourceEntity.setDynamicProperty("lastTeleportTime", Date.now());
                                     sourceEntity.sendMessage("§aSuccessfully teleported.")
                                 }catch(e){
-                                    sourceEntity.sendMessage("§cAn error occured while trying to teleport you to your home: " + e + e.stack);
+                                    sourceEntity.sendMessage("§cAn error occurred while trying to teleport you to your home: " + e + e.stack);
                                 }
                             }else{
                                 sourceEntity.sendMessage("§cTeleport canceled.")

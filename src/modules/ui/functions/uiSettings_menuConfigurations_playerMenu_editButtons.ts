@@ -48,7 +48,7 @@ export async function uiSettings_menuConfigurations_playerMenu_editButtons(sourc
         form.button(button.displayName + appendedDisplayNameText, button.icon);
     });
     form.button("Add Removed Buttons", "textures/ui/color_plus");
-    form.button("Reset To Defaults", "textures/ui/wysiwyg_reset");
+    form.button("Reset To Defaults", "textures/ui/reset_white");
     form.button("Back", "textures/ui/arrow_left");
     form.button("Close", "textures/ui/crossout");
 
@@ -181,6 +181,6 @@ Default Button Index: ${button.defaultButtonIndex}${button.deprecated ? "\n§pTh
         })
         .catch(async (e) => {
             console.error(e, e.stack);
-            return ((await showMessage(sourceEntity, "An Error Occured", `An error occured: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
+            return ((await showMessage(sourceEntity, "An Error occurred", `An error occurred: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
         });
 }

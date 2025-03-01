@@ -54,7 +54,7 @@ export async function playerMenu_bounty_from_individual(
             sourceEntity.timeZone,
             false,
             true
-        )}\nReward: ${numberFormatter(bounty.value, { prefixWithDollarSign: true, addCommaSeparators: true }, 0)}`
+        )}\nReward: ${numberFormatter(bounty.value, { currencyPrefix: config.ui.menus.playerMenu_leaderboards.builtInStats.money.displayOptions.currencyPrefix, addCommaSeparators: true }, 0)}`
     );
     form.button("Cancel Bounty", "textures/ui/arrow_left");
     form.button("Back", "textures/ui/arrow_left");
@@ -76,7 +76,7 @@ export async function playerMenu_bounty_from_individual(
                                 "Bounty Canceled Successfully",
                                 `The bounty on ${target.name} has been canceled successfully, and your ${numberFormatter(bounty.value, {
                                     addCommaSeparators: true,
-                                    prefixWithDollarSign: true,
+                                    currencyPrefix: config.ui.menus.playerMenu_leaderboards.builtInStats.money.displayOptions.currencyPrefix,
                                 })} have been refunded.`,
                                 "Back",
                                 "Cancel"
@@ -165,11 +165,11 @@ export async function playerMenu_bounty_from_individual(
                             }
                         }
                     } catch (e) {
-                        // If an error occured.
+                        // If an error occurred.
                         const r = await showMessage(
                             sourceEntity as Player,
-                            "An Error Occured",
-                            `An error occured while canceling the bounty on ${target.name}. The following error was triggered: §c${e}${e?.stack}`,
+                            "An Error occurred",
+                            `An error occurred while canceling the bounty on ${target.name}. The following error was triggered: §c${e}${e?.stack}`,
                             "Back",
                             "Cancel"
                         );

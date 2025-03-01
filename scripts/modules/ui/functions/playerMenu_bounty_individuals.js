@@ -10,7 +10,7 @@ import { Bounty, TotalBounty } from "modules/main/classes/Bounty";
 import { playerMenu_bounty } from "./playerMenu_bounty";
 import { playerMenu_bounty_individual } from "./playerMenu_bounty_individual";
 export async function playerMenu_bounty_individuals(sourceEntitya, totalBounty, targetPlayer, pagen = 0, maxplayersperpage = config.ui.pages
-    .maxPlayersPerManagePlayersPage ?? 10, search) {
+    .maxPlayersPerManagePlayersPage ?? 9, search) {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW
         ? sourceEntitya.player
         : sourceEntitya;

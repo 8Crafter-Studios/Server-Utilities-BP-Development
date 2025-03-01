@@ -50,7 +50,7 @@ export async function playerMenu_leaderboard_player(
     ]) as [string, playerMenuLeaderboardStatistic<"built-in"|"custom"|"customAdvanced">][];
     const statsDisplay = stats.map(([k, s]) => {
         let value =
-            s.getterFunction != undefined
+            tryget(()=>s.getterFunction != undefined
                 ? s.getterFunction(player)
                 : world.scoreboard
                       .getObjective(s.scoreboardObjective)
@@ -58,11 +58,14 @@ export async function playerMenu_leaderboard_player(
                           world.scoreboard.getParticipants().find((v) => tryget(() => v.getEntity()?.id) == player.id) ??
                               (world.scoreboard.getParticipants().find((v) => v.id == player.scoreboardIdentity) as any)
                       )
-                      ?.toString();
+                      ?.toString());
+        if(value === undefined){
+            return `${s.statsListDisplayName}§r: §cError§r`;
+        }
         if (s.valueType == "bigint" || s.valueType == "number") {
             value = numberFormatter(
                 value,
-                { addCommaSeparators: s.displayOptions.addCommaSeparators ?? true, prefixWithDollarSign: s.displayOptions.prefixWithDollarSign ?? false },
+                { addCommaSeparators: s.displayOptions.addCommaSeparators ?? true, currencyPrefix: s.displayOptions.currencyPrefix },
                 s.displayOptions.toFixed
             );
         }

@@ -1,6 +1,7 @@
 import { EquipmentSlot, type Enchantment, type Vector3, Dimension, type Vector2, type DimensionLocation, GameMode, MemoryTier, PlatformType, Player, ItemStack } from "@minecraft/server";
 import type { PlayerPermissions } from "init/classes/PlayerPermissions";
 import { ban } from "modules/ban/classes/ban";
+export type PlayerDataSaveMode = "full" | "medium" | "lite";
 export type SavedPlayerOnJoinAction = SavedPlayerOnJoinAction_add_tag | SavedPlayerOnJoinAction_remove_tag | SavedPlayerOnJoinAction_add_tags | SavedPlayerOnJoinAction_remove_tags | SavedPlayerOnJoinAction_remove_item_in_slot | SavedPlayerOnJoinAction_clear_inventory | SavedPlayerOnJoinAction_set_permission<keyof ReturnType<PlayerPermissions["toJSON"]>> | SavedPlayerOnJoinAction_send_message;
 export interface SavedPlayerOnJoinAction_add_tag {
     type: "add_tag";
@@ -118,6 +119,11 @@ export interface savedPlayerData {
      * @since v1.28.0-preview.20+BUILD.1
      */
     onJoinActions?: SavedPlayerOnJoinActions;
+    /**
+     * @since format version 1.6.0
+     * @since v1.33.0-preview.20+BUILD.4
+     */
+    saveMode?: PlayerDataSaveMode;
 }
 export declare class savedPlayer {
     name: string;
@@ -168,6 +174,7 @@ export declare class savedPlayer {
      * @since v1.28.0-preview.20+BUILD.1
      */
     onJoinActions: SavedPlayerOnJoinActions;
+    saveMode: PlayerDataSaveMode;
     constructor(data: savedPlayerData);
     save(): void;
     remove(): void;
@@ -297,9 +304,9 @@ export declare class savedPlayer {
         34?: ItemStack | undefined;
         35?: ItemStack | undefined;
     };
-    static savePlayer(player: Player): string;
-    static savePlayerAsync(player: Player): Promise<string>;
-    static getSavedPlayer(savedPlayerId: string): savedPlayer;
+    static savePlayer(player: Player): string | undefined;
+    static savePlayerAsync(player: Player): Promise<string | undefined>;
+    static getSavedPlayer(savedPlayerId: string): savedPlayer | undefined;
     static getSavedPlayers(): savedPlayer[];
     static getSavedPlayersAlphabeticalOrder(): savedPlayer[];
 }

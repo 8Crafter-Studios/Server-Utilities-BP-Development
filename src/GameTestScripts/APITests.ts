@@ -634,7 +634,7 @@ GameTest.registerAsync("APITests", "lever_event_player", async (test) => {
   await test.idle(5);
   simulatedPlayer.interactWithBlock(leverLoc);
   world.afterEvents.leverAction.unsubscribe(leverCallback);
-  test.assert(testSucceed, "An assert failure occured during callback");
+  test.assert(testSucceed, "An assert failure occurred during callback");
   test.succeed();
 })
   .structureName("ComponentTests:platform")
@@ -663,7 +663,7 @@ GameTest.registerAsync("APITests", "lever_event_player", async (test) => {
   test.setBlockPermutation(buttonPermutation, buttonLoc);
   test.pressButton(buttonLoc);
   world.afterEvents.buttonPush.unsubscribe(buttonCallback);
-  test.assert(testSucceed, "An assert failure occured during callback");
+  test.assert(testSucceed, "An assert failure occurred during callback");
   test.succeed();
 })
   .structureName("ComponentTests:platform")
@@ -693,7 +693,7 @@ GameTest.registerAsync("APITests", "button_event_player", async (test) => {
   test.setBlockPermutation(buttonPermutation, buttonLoc);
   simulatedPlayer.interactWithBlock(buttonLoc);
   world.afterEvents.buttonPush.unsubscribe(buttonCallback);
-  test.assert(testSucceed, "An assert failure occured during callback");
+  test.assert(testSucceed, "An assert failure occurred during callback");
   test.succeed();
 })
   .structureName("ComponentTests:platform")
@@ -724,7 +724,7 @@ GameTest.registerAsync("APITests", "button_event_player", async (test) => {
   spawnedArrow = test.spawnAtLocation("minecraft:arrow", { x: 1.5, y: 2.5, z: 1.5 });
   await test.idle(20); //give the arrow time to fall
   world.afterEvents.buttonPush.unsubscribe(buttonCallback);
-  test.assert(testSucceed, "An assert failure occured during callback");
+  test.assert(testSucceed, "An assert failure occurred during callback");
   test.succeed();
 })
   .structureName("ComponentTests:platform")

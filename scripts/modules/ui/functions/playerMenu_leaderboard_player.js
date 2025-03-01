@@ -36,15 +36,18 @@ export async function playerMenu_leaderboard_player(sourceEntitya, leaderboard, 
             menuConfig.customStats.find((s) => s.id === k),
     ]);
     const statsDisplay = stats.map(([k, s]) => {
-        let value = s.getterFunction != undefined
+        let value = tryget(() => s.getterFunction != undefined
             ? s.getterFunction(player)
             : world.scoreboard
                 .getObjective(s.scoreboardObjective)
                 .getScore(world.scoreboard.getParticipants().find((v) => tryget(() => v.getEntity()?.id) == player.id) ??
                 world.scoreboard.getParticipants().find((v) => v.id == player.scoreboardIdentity))
-                ?.toString();
+                ?.toString());
+        if (value === undefined) {
+            return `${s.statsListDisplayName}§r: §cError§r`;
+        }
         if (s.valueType == "bigint" || s.valueType == "number") {
-            value = numberFormatter(value, { addCommaSeparators: s.displayOptions.addCommaSeparators ?? true, prefixWithDollarSign: s.displayOptions.prefixWithDollarSign ?? false }, s.displayOptions.toFixed);
+            value = numberFormatter(value, { addCommaSeparators: s.displayOptions.addCommaSeparators ?? true, currencyPrefix: s.displayOptions.currencyPrefix }, s.displayOptions.toFixed);
         }
         let out = `${s.statsListDisplayName}§r: ${(s.displayOptions.valueDisplayColor?.toLowerCase()?.split("") ?? []).filter(s => "0123456789abcdefghijklmnopqrstuvwxyz".includes(s)).map(s => "§" + s).join("")}${value}`;
         if (leaderboard.displayOptions.valueDisplayTransformer_statsList !== undefined) {

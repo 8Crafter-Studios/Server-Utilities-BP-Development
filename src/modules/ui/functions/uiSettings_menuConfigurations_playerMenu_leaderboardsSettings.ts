@@ -8,6 +8,7 @@ import { defaultPlayerMenuLeaderboardStatistics } from "../constants/defaultPlay
 import type { playerMenuLeaderboardStatistic } from "../types/playerMenuLeaderboardStatistic";
 import { showActions } from "modules/utilities/functions/showActions";
 import type { savedPlayer } from "modules/player_save/classes/savedPlayer";
+import { customFormUICodes } from "../constants/customFormUICodes";
 
 export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSettings(sourceEntitya: Entity | executeCommandPlayerW | Player): Promise<0 | 1> {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
@@ -28,13 +29,13 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
         }
     }
     let form = new ActionFormData();
-    form.title("Loaderboards Settings");
-    form.button("Main Settings\nTO-DO", "textures/ui/settings_glyph_color_2x");
-    form.button("Manage Statistics", "textures/ui/trophy");
-    form.button("Displayed Leaderboards", "textures/ui/icon_best3");
-    form.button("Displayed Statistics", "textures/items/text_color_paintbrush");
-    form.button("Back", "textures/ui/arrow_left");
-    form.button("Close", "textures/ui/crossout");
+    form.title(customFormUICodes.action.titles.formStyles.gridMenu + "Loaderboards Settings");
+    form.button(customFormUICodes.action.buttons.positions.main_only + "Main Settings\nTO-DO", "textures/ui/settings_glyph_color_2x");
+    form.button(customFormUICodes.action.buttons.positions.main_only + "Manage Statistics", "textures/ui/trophy");
+    form.button(customFormUICodes.action.buttons.positions.main_only + "Displayed Leaderboards", "textures/ui/icon_best3");
+    form.button(customFormUICodes.action.buttons.positions.main_only + "Displayed Statistics", "textures/items/text_color_paintbrush");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
 
     return await forceShow(form, sourceEntity as Player)
         .then(async (ra) => {
@@ -79,7 +80,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
         })
         .catch(async (e) => {
             console.error(e, e.stack);
-            return ((await showMessage(sourceEntity, "An Error Occured", `An error occured: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
+            return ((await showMessage(sourceEntity, "An Error occurred", `An error occurred: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
         });
 }
 
@@ -107,12 +108,12 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
     const statistics = [...defaultPlayerMenuLeaderboardStatistics, ...menuConfig.customStats] as const satisfies playerMenuLeaderboardStatistic<"built-in"|"custom"|"customAdvanced">[];
     const leaderboards = menuConfig.leaderboards;
     let form = new ActionFormData();
-    form.title("Edit Displayed Leaderboards");
+    form.title(customFormUICodes.action.titles.formStyles.general + " Edit Displayed Leaderboards");
     form.body("This menu allows you to customize what leaderboards are displayed in the leaderboards section of the player menu.");
     leaderboards.forEach((l) => {
         const button = statistics.find((s) => s.id === l);
         form.button(
-            button !== undefined
+            customFormUICodes.action.buttons.positions.main_only + button !== undefined
                 ? typeof button?.buttonDisplayName === "string"
                     ? button?.buttonDisplayName
                     : "INVALID NAME TYPE: " + typeof (button as any)?.buttonDisplayName
@@ -120,10 +121,10 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
             button === undefined ? "bug_pack_icon" : undefined
         );
     });
-    form.button("Add Leaderboard", "textures/ui/color_plus");
-    form.button("Reset To Defaults", "textures/ui/wysiwyg_reset");
-    form.button("Back", "textures/ui/arrow_left");
-    form.button("Close", "textures/ui/crossout");
+    form.button(customFormUICodes.action.buttons.positions.main_only + "Add Leaderboard", "textures/ui/color_plus");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Reset To Defaults", "textures/ui/reset_white");
 
     return await forceShow(form, sourceEntity as Player)
         .then(async (ra) => {
@@ -133,7 +134,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
             switch (
                 r.selection < leaderboards.length
                     ? ("button" as const)
-                    : (["addLeaderboard", "reset", "back", "close"] as const)[r.selection - leaderboards.length]
+                    : (["addLeaderboard", "back", "close", "reset"] as const)[r.selection - leaderboards.length]
             ) {
                 case "button": {
                     const leaderboardID = leaderboards[r.selection];
@@ -274,7 +275,7 @@ Default Button Index: ${leaderboard.type === "built-in" ? defaultPlayerMenuLeade
         })
         .catch(async (e) => {
             console.error(e, e.stack);
-            return ((await showMessage(sourceEntity, "An Error Occured", `An error occured: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
+            return ((await showMessage(sourceEntity, "An Error occurred", `An error occurred: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
         });
 }
 
@@ -305,7 +306,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
             [...defaultPlayerMenuLeaderboardStatistics, ...menuConfig.customStats] as const satisfies playerMenuLeaderboardStatistic<"built-in"|"custom"|"customAdvanced">[]
         ).filter((b) => !currentButtonsA.includes(b.id));
         const form = new ActionFormData();
-        form.title("Add Leaderboard");
+        form.title(customFormUICodes.action.titles.formStyles.general + "Add Leaderboard");
         form.body(
             buttons.length === 0
                 ? 'No other statistics found. To add a new leaderboard statistic, go to "Main Menu > Settings > UI Settings > Menu Configurations > Player Menu > Leaderboards Settings > Manage Statistics"'
@@ -313,16 +314,16 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
         );
         buttons.forEach((l) => {
             form.button(
-                l !== undefined
+                customFormUICodes.action.buttons.positions.main_only + (l !== undefined
                     ? typeof l?.buttonDisplayName === "string"
                         ? l?.buttonDisplayName
                         : "INVALID NAME TYPE: " + typeof (l as any)?.buttonDisplayName
-                    : "MISSING: " + l,
+                    : "MISSING: " + l),
                 l === undefined ? "bug_pack_icon" : undefined
             );
         });
-        form.button("Back", "textures/ui/arrow_left");
-        form.button("Close", "textures/ui/crossout");
+        form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
+        form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
         const r = await form.forceShow(sourceEntity);
         if (r.canceled || r.selection === buttons.length) {
             return 1;
@@ -357,7 +358,7 @@ Default Button Index: ${button.type === "built-in" ? defaultPlayerMenuLeaderboar
         return await uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_displayedLeaderboards_addLeaderboard(sourceEntity);
     } catch (e) {
         console.error(e, e.stack);
-        return ((await showMessage(sourceEntity, "An Error Occured", `An error occured: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
+        return ((await showMessage(sourceEntity, "An Error occurred", `An error occurred: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
     }
 }
 
@@ -385,25 +386,25 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
     const statistics = [...defaultPlayerMenuLeaderboardStatistics, ...menuConfig.customStats] as const satisfies playerMenuLeaderboardStatistic<"built-in"|"custom"|"customAdvanced">[];
     const trackedStats = menuConfig.trackedStats;
     let form = new ActionFormData();
-    form.title("Edit Displayed Statistics");
+    form.title(customFormUICodes.action.titles.formStyles.general + "Edit Displayed Statistics");
     form.body(
         "This menu allows you to customize what statistics are displayed for a player when a player clicks on that player's name in the leaderboards section of the player menu."
     );
     trackedStats.forEach((l) => {
         const button = statistics.find((s) => s.id === l);
         form.button(
-            button !== undefined
+            customFormUICodes.action.buttons.positions.main_only + (button !== undefined
                 ? typeof button?.buttonDisplayName === "string"
                     ? button?.buttonDisplayName
                     : "INVALID NAME TYPE: " + typeof (button as any)?.buttonDisplayName
-                : "MISSING: " + l,
+                : "MISSING: " + l),
             button === undefined ? "bug_pack_icon" : undefined
         );
     });
-    form.button("Add Leaderboard", "textures/ui/color_plus");
-    form.button("Reset To Defaults", "textures/ui/wysiwyg_reset");
-    form.button("Back", "textures/ui/arrow_left");
-    form.button("Close", "textures/ui/crossout");
+    form.button(customFormUICodes.action.buttons.positions.main_only + "Add Leaderboard", "textures/ui/color_plus");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Reset To Defaults", "textures/ui/reset_white");
 
     return await forceShow(form, sourceEntity as Player)
         .then(async (ra) => {
@@ -413,7 +414,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
             switch (
                 r.selection < trackedStats.length
                     ? ("button" as const)
-                    : (["addLeaderboard", "reset", "back", "close"] as const)[r.selection - trackedStats.length]
+                    : (["addLeaderboard", "back", "close", "reset"] as const)[r.selection - trackedStats.length]
             ) {
                 case "button": {
                     const leaderboardID = trackedStats[r.selection];
@@ -554,7 +555,7 @@ Default Button Index: ${leaderboard.type === "built-in" ? defaultPlayerMenuLeade
         })
         .catch(async (e) => {
             console.error(e, e.stack);
-            return ((await showMessage(sourceEntity, "An Error Occured", `An error occured: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
+            return ((await showMessage(sourceEntity, "An Error occurred", `An error occurred: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
         });
 }
 
@@ -585,7 +586,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
             [...defaultPlayerMenuLeaderboardStatistics, ...menuConfig.customStats] as const satisfies playerMenuLeaderboardStatistic<"built-in"|"custom"|"customAdvanced">[]
         ).filter((b) => !currentButtonsA.includes(b.id));
         const form = new ActionFormData();
-        form.title("Add Leaderboard");
+        form.title(customFormUICodes.action.titles.formStyles.general + "Add Leaderboard");
         form.body(
             buttons.length === 0
                 ? 'No other statistics found. To add a new leaderboard statistic, go to "Main Menu > Settings > UI Settings > Menu Configurations > Player Menu > Leaderboards Settings > Manage Statistics"'
@@ -593,16 +594,16 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
         );
         buttons.forEach((l) => {
             form.button(
-                l !== undefined
+                customFormUICodes.action.buttons.positions.main_only + (l !== undefined
                     ? typeof l?.buttonDisplayName === "string"
                         ? l?.buttonDisplayName
                         : "INVALID NAME TYPE: " + typeof (l as any)?.buttonDisplayName
-                    : "MISSING: " + l,
+                    : "MISSING: " + l),
                 l === undefined ? "bug_pack_icon" : undefined
             );
         });
-        form.button("Back", "textures/ui/arrow_left");
-        form.button("Close", "textures/ui/crossout");
+        form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
+        form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
         const r = await form.forceShow(sourceEntity);
         if (r.canceled || r.selection === buttons.length) {
             return 1;
@@ -637,7 +638,7 @@ Default Button Index: ${button.type === "built-in" ? defaultPlayerMenuLeaderboar
         return await uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_displayedStatistics_addStatistic(sourceEntity);
     } catch (e) {
         console.error(e, e.stack);
-        return ((await showMessage(sourceEntity, "An Error Occured", `An error occured: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
+        return ((await showMessage(sourceEntity, "An Error occurred", `An error occurred: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
     }
 }
 
@@ -662,11 +663,11 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
         }
     }
     let form = new ActionFormData();
-    form.title("Manage Statistics");
-    form.button("Built-In Statistics", "textures/ui/debug_glyph_color");
-    form.button("Custom Statistics", "textures/gui/newgui/bundle/PaintBrush");
-    form.button("Back", "textures/ui/arrow_left");
-    form.button("Close", "textures/ui/crossout");
+    form.title(customFormUICodes.action.titles.formStyles.gridMenu + "Manage Statistics");
+    form.button(customFormUICodes.action.buttons.positions.main_only + "Built-In Statistics", "textures/ui/debug_glyph_color");
+    form.button(customFormUICodes.action.buttons.positions.main_only + "Custom Statistics", "textures/gui/newgui/bundle/PaintBrush");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
 
     return await forceShow(form, sourceEntity as Player)
         .then(async (ra) => {
@@ -697,7 +698,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
         })
         .catch(async (e) => {
             console.error(e, e.stack);
-            return ((await showMessage(sourceEntity, "An Error Occured", `An error occured: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
+            return ((await showMessage(sourceEntity, "An Error occurred", `An error occurred: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
         });
 }
 
@@ -724,55 +725,26 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
     const menuConfig = config.ui.menus.playerMenu_leaderboards;
     const statistics = defaultPlayerMenuLeaderboardStatistics;
     let form = new ActionFormData();
-    form.title("Manage Built-In Statistics");
-    form.body("This menu allows you to customize the built-in leaderboard statisticse.");
+    form.title(customFormUICodes.action.titles.formStyles.general + "Manage Built-In Statistics");
+    form.body("This menu allows you to customize the built-in leaderboard statistics.");
     statistics.forEach((s) => {
-        form.button(s.buttonDisplayName);
+        form.button(customFormUICodes.action.buttons.positions.main_only + s.buttonDisplayName);
     });
-    form.button("Reset To Defaults", "textures/ui/wysiwyg_reset");
-    form.button("Back", "textures/ui/arrow_left");
-    form.button("Close", "textures/ui/crossout");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Reset To Defaults", "textures/ui/reset_white");
 
     return await forceShow(form, sourceEntity as Player)
         .then(async (ra) => {
             let r = ra as ActionFormResponse;
             if (r.canceled) return 1;
 
-            switch (r.selection < statistics.length ? ("button" as const) : (["reset", "back", "close"] as const)[r.selection - statistics.length]) {
+            switch (r.selection < statistics.length ? ("button" as const) : (["back", "close", "reset"] as const)[r.selection - statistics.length]) {
                 case "button": {
-                    const statistic = statistics[r.selection];
-                    const rb = await new ActionFormData()
-                        .title("Edit Built-In Statistic")
-                        .body(
-                            `ID: ${statistic.id}
-Menu Title: ${statistic.menuTitle}§r
-Display Name: ${statistic.buttonDisplayName}§r
-Stats List Display Name: ${statistic.statsListDisplayName}§r
-Type: ${statistic.type}§r
-Default Button Index: ${statistic.type === "built-in" ? defaultPlayerMenuLeaderboardStatistics.indexOf(statistic) : "None"}`
-                        )
-                        .button("Settings", "textures/ui/icon_setting")
-                        .button("Remove", "textures/ui/trash_default")
-                        .button("Back", "textures/ui/arrow_left")
-                        .button("Close", "textures/ui/crossout")
-                        .forceShow(sourceEntity);
-                    if (rb.canceled || rb.selection === 2)
+                    if ((await uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics_builtIn_statistic(sourceEntity, statistics[r.selection])) == 1) {
                         return await uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics_builtIn(sourceEntity);
-                    if (rb.selection === 3) return 0;
-                    if (rb.selection === 0) {
-                        if (
-                            (await uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics_builtIn_editStatistic(
-                                sourceEntity,
-                                statistic.id
-                            )) == 1
-                        ) {
-                            return await uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics_builtIn(sourceEntity);
-                        } else {
-                            return 0;
-                        }
                     } else {
-                        menuConfig.leaderboards = menuConfig.leaderboards.filter((b) => b !== statistic.id);
-                        return await uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics_builtIn(sourceEntity);
+                        return 0;
                     }
                 }
                 case "reset": {
@@ -781,19 +753,19 @@ Default Button Index: ${statistic.type === "built-in" ? defaultPlayerMenuLeaderb
                             await showMessage(
                                 sourceEntity as Player,
                                 "Are You Sure?",
-                                "Are you sure you want to reset the button arrangement back to the default!?\nThis action cannot be undone!",
+                                "Are you sure you want to reset the settings for the built-in leaderboard statistics to the factory settings!?\nThis action cannot be undone!",
                                 "Cancel",
                                 "Confirm"
                             )
                         ).selection == 1
                     ) {
-                        menuConfig.leaderboards = undefined;
+                        config.reset(menuConfig.builtInStats);
                         if (
                             (
                                 await showMessage(
                                     sourceEntity,
                                     "Reset Successful",
-                                    `You have successfully reset the button arrangement for the player menu to the factory settings.`,
+                                    `You have successfully reset the settings for the built-in leaderboard statistics to the factory settings.`,
                                     "Okay",
                                     "Close"
                                 )
@@ -809,7 +781,7 @@ Default Button Index: ${statistic.type === "built-in" ? defaultPlayerMenuLeaderb
                                 await showMessage(
                                     sourceEntity,
                                     "Reset Canceled",
-                                    `The reset of the button arrangement for the player menu to the factory settings has been canceled.`,
+                                    `The reset of the settings for the built-in leaderboard statistics to the factory settings has been canceled.`,
                                     "Okay",
                                     "Close"
                                 )
@@ -832,8 +804,66 @@ Default Button Index: ${statistic.type === "built-in" ? defaultPlayerMenuLeaderb
         .catch(async (e) => {
             console.error(e, e.stack);
             // Present the error to the user, and return 1 if they select "Back", and 0 if they select "Close".
-            return ((await showMessage(sourceEntity, "An Error Occured", `An error occured: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
+            return ((await showMessage(sourceEntity, "An Error occurred", `An error occurred: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
         });
+}
+
+export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics_builtIn_statistic(
+    sourceEntitya: Entity | executeCommandPlayerW | Player,
+    statistic: typeof defaultPlayerMenuLeaderboardStatistics[number]
+): Promise<0 | 1> {
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
+    if (securityVariables.ultraSecurityModeEnabled) {
+        if (securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.accessSettings") == false) {
+            const r = await showMessage(
+                sourceEntity as Player,
+                "Access Denied (403)",
+                "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.accessSettings",
+                "Back",
+                "Cancel"
+            );
+            if (r.canceled || r.selection == 0) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+    }
+    try {
+        const rb = await new ActionFormData()
+            .title("Edit Built-In Statistic")
+            .body(
+                `ID: ${statistic.id}
+Menu Title: ${statistic.menuTitle}§r
+Display Name: ${statistic.buttonDisplayName}§r
+Stats List Display Name: ${statistic.statsListDisplayName}§r
+Type: ${statistic.type}§r
+Default Button Index: ${statistic.type === "built-in" ? defaultPlayerMenuLeaderboardStatistics.indexOf(statistic) : "None"}`
+            )
+            .button("Settings", "textures/ui/icon_setting")
+            .button("Back", "textures/ui/arrow_left")
+            .button("Close", "textures/ui/crossout")
+            .forceShow(sourceEntity);
+        if (rb.canceled || rb.selection === 1)
+            return await uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics_builtIn(sourceEntity);
+        if (rb.selection === 2) return 0;
+        if (rb.selection === 0) {
+            if (
+                (await uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics_builtIn_editStatistic(
+                    sourceEntity,
+                    statistic
+                )) == 1
+            ) {
+                return await uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics_builtIn(sourceEntity);
+            } else {
+                return 0;
+            }
+        }
+    } catch (e) {
+        console.error(e, e.stack);
+        // Present the error to the user, and return 1 if they select "Back", and 0 if they select "Close".
+        return ((await showMessage(sourceEntity, "An Error occurred", `An error occurred: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
+    }
 }
 
 /**
@@ -854,7 +884,7 @@ Default Button Index: ${statistic.type === "built-in" ? defaultPlayerMenuLeaderb
  */
 export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics_builtIn_editStatistic(
     sourceEntitya: Entity | executeCommandPlayerW | Player,
-    statistic: keyof typeof config.ui.menus.playerMenu_leaderboards.builtInStats
+    statistic: typeof defaultPlayerMenuLeaderboardStatistics[number]
 ): Promise<1 | 0> {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
     if (securityVariables.ultraSecurityModeEnabled) {
@@ -873,13 +903,13 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
             }
         }
     }
-    const menuConfig = config.ui.menus.playerMenu_leaderboards.builtInStats[statistic];
+    const menuConfig = config.ui.menus.playerMenu_leaderboards.builtInStats[statistic.id];
     type optionsList = {
         enabled: boolean;
         addCommaSeparators: boolean;
-        prefixWithDollarSign: boolean;
+        currencyPrefix: string;
     };
-    const includedOptions = ["enabled", "addCommaSeparators", "prefixWithDollarSign"] as (keyof optionsList)[];
+    const includedOptions = ["enabled", "addCommaSeparators", "currencyPrefix"] as (keyof optionsList)[];
     const form = new ModalFormData();
     form.title("Edit Built-In Statistic");
     const formOptionsMap = {
@@ -889,10 +919,11 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
                 "§l§fAdd Comma Separators§r§f\nWhether or not to add comma separators in the displayed value. ex. 1327401 would become 1,327,401. Defaults to true.",
                 menuConfig.displayOptions.addCommaSeparators
             ),
-        prefixWithDollarSign: () =>
-            form.toggle(
-                '§l§fPrefix With Dollar Sign§r§f\nWhether or to prefix the displayed value with a dollar sign. ex. 1327401 would become $1327401 and -1234781 would become -$1234781. (Can be combined with "Add Comma Separators" to make it display like -$1,234,781.). Defaults to true.',
-                menuConfig.displayOptions.prefixWithDollarSign
+        currencyPrefix: () =>
+            form.textField(
+                `§l§fCurrency Prefix§r§f\nA currency symbol to prefix the displayed value with. For example, if this is set to "$", then 1327401 would become $1327401 and -1234781 would become -$1234781. (Can be combined with "Add Comma Separators" to make it display like -$1,234,781.). Leave it blank to have no currency symbol. Defaults to ${JSON.stringify(statistic.displayOptions.currencyPrefix)}.`,
+                "Currency Symbol",
+                menuConfig.displayOptions.currencyPrefix
             ),
     } as { [key in keyof optionsList]: () => any };
     includedOptions.forEach((o) => formOptionsMap[o]());
@@ -911,8 +942,8 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
                     case "addCommaSeparators":
                         menuConfig.displayOptions.addCommaSeparators = options[v];
                         break;
-                    case "prefixWithDollarSign":
-                        menuConfig.displayOptions.prefixWithDollarSign = options[v];
+                    case "currencyPrefix":
+                        menuConfig.displayOptions.currencyPrefix = options[v];
                         break;
                     default:
                         throw new Error(`Save action for setting ${JSON.stringify(v)} was not defined.`);
@@ -923,7 +954,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
         .catch(async (e) => {
             console.error(e, e.stack);
             // Present the error to the user, and return 1 if they select "Back", and 0 if they select "Close".
-            return ((await showMessage(sourceEntity, "An Error Occured", `An error occured: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
+            return ((await showMessage(sourceEntity, "An Error occurred", `An error occurred: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
         });
 }
 
@@ -961,22 +992,22 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
     const menuConfig = config.ui.menus.playerMenu_leaderboards;
     const statistics = menuConfig.customStats;
     let form = new ActionFormData();
-    form.title("Manage Custom Statistics");
+    form.title(customFormUICodes.action.titles.formStyles.general + "Manage Custom Statistics");
     form.body("This menu allows you to manage your custom leaderboard statistics.");
     statistics.forEach((s) => {
-        form.button(s.buttonDisplayName, s.buttonIcon);
+        form.button(customFormUICodes.action.buttons.positions.main_only + s.buttonDisplayName, s.buttonIcon);
     });
-    form.button("New Statistic", "textures/ui/color_plus");
-    form.button("Reset To Defaults", "textures/ui/wysiwyg_reset");
-    form.button("Back", "textures/ui/arrow_left");
-    form.button("Close", "textures/ui/crossout");
+    form.button(customFormUICodes.action.buttons.positions.main_only + "New Statistic", "textures/ui/color_plus");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Reset To Defaults", "textures/ui/reset_white");
 
     return await forceShow(form, sourceEntity as Player)
         .then(async (ra) => {
             let r = ra as ActionFormResponse;
             if (r.canceled) return 1;
 
-            switch (r.selection < statistics.length ? ("button" as const) : (["new", "reset", "back", "close"] as const)[r.selection - statistics.length]) {
+            switch (r.selection < statistics.length ? ("button" as const) : (["new", "back", "close", "reset"] as const)[r.selection - statistics.length]) {
                 case "button":
                     if (
                         (await uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics_custom_statistic(
@@ -1051,7 +1082,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
         .catch(async (e) => {
             console.error(e, e.stack);
             // Present the error to the user, and return 1 if they select "Back", and 0 if they select "Close".
-            return ((await showMessage(sourceEntity, "An Error Occured", `An error occured: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
+            return ((await showMessage(sourceEntity, "An Error occurred", `An error occurred: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
         });
 }
 
@@ -1079,7 +1110,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
     try {
         const menuConfig = config.ui.menus.playerMenu_leaderboards;
         const form = new ActionFormData()
-            .title(`Edit ${statistic.type === "customAdvanced" ? "Advanced" : ""} Custom Statistic`)
+            .title(`${customFormUICodes.action.titles.formStyles.general}Edit ${statistic.type === "customAdvanced" ? "Advanced" : ""} Custom Statistic`)
             .body(
                 `ID: ${statistic.id}
 Menu Title: ${statistic.menuTitle}§r
@@ -1087,15 +1118,17 @@ Display Name: ${statistic.buttonDisplayName}§r
 Stats List Display Name: ${statistic.statsListDisplayName}§r
 Type: ${statistic.type}§r`
             )
-            .button("Edit", "textures/ui/pencil_edit_icon")
-            .button("Formatting Options", "textures/ui/text_color_paintbrush");
+            .button(customFormUICodes.action.buttons.positions.main_only + "Edit", "textures/ui/pencil_edit_icon")
+            .button(customFormUICodes.action.buttons.positions.main_only + "Formatting Options", "textures/ui/text_color_paintbrush");
         if (statistic.type === "customAdvanced") {
-            form.button("Advanced Options", "textures/ui/icon_creator");
+            form.button(customFormUICodes.action.buttons.positions.main_only + "Advanced Options", "textures/ui/icon_creator");
         }
-        form.button("Remove", "textures/ui/trash_default").button("Back", "textures/ui/arrow_left").button("Close", "textures/ui/crossout");
+        form.button(customFormUICodes.action.buttons.positions.main_only + "Remove", "textures/ui/trash_default")
+            .button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left")
+            .button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
         const rb = await form.forceShow(sourceEntity);
         if (rb.canceled || rb.selection === 3 + +(statistic.type === "customAdvanced"))
-            return await uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics_custom_statistic(sourceEntity, statistic);
+            return 1;
         if (rb.selection === 4 + +(statistic.type === "customAdvanced")) return 0;
         if (rb.selection === 0) {
             if ((await uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics_custom_editStatistic(sourceEntity, statistic)) == 1) {
@@ -1127,12 +1160,12 @@ Type: ${statistic.type}§r`
             }
         } else {
             menuConfig.customStats = menuConfig.customStats.filter((s) => s.id !== statistic.id);
-            return await uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics_custom_statistic(sourceEntity, statistic);
+            return 1;
         }
     } catch (e) {
         console.error(e, e.stack);
         // Present the error to the user, and return 1 if they select "Back", and 0 if they select "Close".
-        return ((await showMessage(sourceEntity, "An Error Occured", `An error occured: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
+        return ((await showMessage(sourceEntity, "An Error occurred", `An error occurred: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
     }
 }
 
@@ -1187,7 +1220,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
     const statisticID = statistic.id;
     type optionsList = {
         addCommaSeparators: boolean;
-        prefixWithDollarSign: boolean;
+        currencyPrefix: string;
         valueDisplayColor: string;
         sorter: 0 | 1;
     };
@@ -1205,10 +1238,11 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
                 "§l§fAdd Comma Separators§r§f\nWhether or not to add comma separators in the displayed value. ex. 1327401 would become 1,327,401. Defaults to true.",
                 statistic.displayOptions.addCommaSeparators ?? true
             ),
-        prefixWithDollarSign: () =>
-            form.toggle(
-                '§l§fPrefix With Dollar Sign§r§f\nWhether or to prefix the displayed value with a dollar sign. ex. 1327401 would become $1327401 and -1234781 would become -$1234781. (Can be combined with "Add Comma Separators" to make it display like -$1,234,781.). Defaults to false.',
-                statistic.displayOptions.addCommaSeparators ?? false
+        currencyPrefix: () =>
+            form.textField(
+                `§l§fCurrency Prefix§r§f\nA currency symbol to prefix the displayed value with. For example, if this is set to "$", then 1327401 would become $1327401 and -1234781 would become -$1234781. (Can be combined with "Add Comma Separators" to make it display like -$1,234,781.). Leave it blank to have no currency symbol. Defaults to "".`,
+                "Currency Prefix",
+                statistic.displayOptions.currencyPrefix ?? ""
             ),
         valueDisplayColor: () =>
             form.textField(
@@ -1236,8 +1270,8 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
                     case "addCommaSeparators":
                         statistic.displayOptions.addCommaSeparators = options[v];
                         break;
-                    case "prefixWithDollarSign":
-                        statistic.displayOptions.prefixWithDollarSign = options[v];
+                    case "currencyPrefix":
+                        statistic.displayOptions.currencyPrefix = options[v];
                         break;
                     case "valueDisplayColor":
                         statistic.displayOptions.valueDisplayColor = options[v] === "" ? undefined : options[v];
@@ -1262,7 +1296,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
         .catch(async (e) => {
             console.error(e, e.stack);
             // Present the error to the user, and return 1 if they select "Back", and 0 if they select "Close".
-            return ((await showMessage(sourceEntity, "An Error Occured", `An error occured: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
+            return ((await showMessage(sourceEntity, "An Error occurred", `An error occurred: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
         });
 }
 
@@ -1411,7 +1445,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
         .catch(async (e) => {
             console.error(e, e.stack);
             // Present the error to the user, and return 1 if they select "Back", and 0 if they select "Close".
-            return ((await showMessage(sourceEntity, "An Error Occured", `An error occured: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
+            return ((await showMessage(sourceEntity, "An Error occurred", `An error occurred: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
         });
 }
 
@@ -1612,7 +1646,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
         .catch(async (e) => {
             console.error(e, e.stack);
             // Present the error to the user, and return 1 if they select "Back", and 0 if they select "Close".
-            return ((await showMessage(sourceEntity, "An Error Occured", `An error occured: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
+            return ((await showMessage(sourceEntity, "An Error occurred", `An error occurred: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
         });
 }
 /**
@@ -1665,12 +1699,12 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
     let type: "custom" | "customAdvanced" = undefined as undefined;
     const typeSelection = await showActions(
         sourceEntity,
-        "New Statistic",
+        customFormUICodes.action.titles.formStyles.general + "New Statistic",
         "Would you like to create a simple or advanced leaderboard statistic? Unless you are good at JavaScript, it is not recommended for you to create an advanced statistic.",
-        ["Simple"],
-        ["Advanced"],
-        ["Back", "textures/ui/arrow_left"],
-        ["Close", "textures/ui/crossout"]
+        [customFormUICodes.action.buttons.positions.main_only + "Simple"],
+        [customFormUICodes.action.buttons.positions.main_only + "Advanced"],
+        [customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left"],
+        [customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout"]
     );
     if (typeSelection.canceled || typeSelection.selection === 2) {
         return 1;
@@ -1768,7 +1802,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
     includedOptions.forEachB((o) => formOptionsMap[o]());
     form.submitButton("Save");
     return await forceShow(form, sourceEntity as Player)
-        .then((r) => {
+        .then(async (r) => {
             if (r.canceled) {
                 return 1 as const;
             }
@@ -1845,11 +1879,15 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
                 throw new Error("Duplicate leaderboard statistic ID.")
             }
             config.ui.menus.playerMenu_leaderboards.customStats = newStatsList;
-            return 1;
+            if ((await uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics_custom_statistic(sourceEntity, statistic)) == 1) {
+                return 1;
+            } else {
+                return 0;
+            }
         })
         .catch(async (e) => {
             console.error(e, e.stack);
             // Present the error to the user, and return 1 if they select "Back", and 0 if they select "Close".
-            return ((await showMessage(sourceEntity, "An Error Occured", `An error occured: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
+            return ((await showMessage(sourceEntity, "An Error occurred", `An error occurred: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
         });
 }

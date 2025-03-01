@@ -136,7 +136,7 @@ export declare const menuButtonIds: {
                 readonly upcoming: false;
                 readonly functional: true;
                 readonly advanced: false;
-                readonly defaultButtonIndex: 11;
+                readonly defaultButtonIndex: 13;
             };
             readonly fillBlocks: {
                 readonly displayName: "§4Fill Blocks(§cComing Soon!§f)§b";
@@ -147,7 +147,7 @@ export declare const menuButtonIds: {
                 readonly upcoming: true;
                 readonly functional: false;
                 readonly advanced: false;
-                readonly defaultButtonIndex: 12;
+                readonly defaultButtonIndex: 14;
             };
             readonly worldDebug: {
                 readonly displayName: "§4World Debug§f(§cComing Soon!§f)§b";
@@ -158,7 +158,7 @@ export declare const menuButtonIds: {
                 readonly upcoming: true;
                 readonly functional: false;
                 readonly advanced: false;
-                readonly defaultButtonIndex: 13;
+                readonly defaultButtonIndex: 15;
             };
             readonly dimensionDebug: {
                 readonly displayName: "§4Dimension Debug§f(§cComing Soon!§f)§b";
@@ -169,7 +169,7 @@ export declare const menuButtonIds: {
                 readonly upcoming: true;
                 readonly functional: false;
                 readonly advanced: false;
-                readonly defaultButtonIndex: 14;
+                readonly defaultButtonIndex: 16;
             };
             readonly inventoryTransfer: {
                 readonly displayName: "Inventory Transfer§f(§nDEPRECATED§f)";
@@ -180,7 +180,7 @@ export declare const menuButtonIds: {
                 readonly upcoming: false;
                 readonly functional: true;
                 readonly advanced: false;
-                readonly defaultButtonIndex: 15;
+                readonly defaultButtonIndex: 16;
             };
             readonly runCommand: {
                 readonly displayName: "Run Command";
@@ -191,7 +191,7 @@ export declare const menuButtonIds: {
                 readonly upcoming: false;
                 readonly functional: true;
                 readonly advanced: false;
-                readonly defaultButtonIndex: 16;
+                readonly defaultButtonIndex: 11;
             };
             readonly scriptEval: {
                 readonly displayName: "Script Eval";
@@ -202,7 +202,7 @@ export declare const menuButtonIds: {
                 readonly upcoming: false;
                 readonly functional: true;
                 readonly advanced: false;
-                readonly defaultButtonIndex: 17;
+                readonly defaultButtonIndex: 12;
             };
             readonly manageRestrictedAreas: {
                 readonly displayName: "Mange Restricted Areas";
@@ -224,7 +224,7 @@ export declare const menuButtonIds: {
                 readonly upcoming: false;
                 readonly functional: true;
                 readonly advanced: false;
-                readonly defaultButtonIndex: 19;
+                readonly defaultButtonIndex: -5;
             };
             readonly moderation: {
                 readonly displayName: "Moderation";
@@ -279,7 +279,7 @@ export declare const menuButtonIds: {
                 readonly upcoming: false;
                 readonly functional: true;
                 readonly advanced: false;
-                readonly defaultButtonIndex: 24;
+                readonly defaultButtonIndex: -6;
             };
             readonly itemEditor: {
                 readonly displayName: "§eItem Editor §f[§cAlpha§f]";

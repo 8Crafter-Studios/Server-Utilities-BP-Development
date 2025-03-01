@@ -1,5 +1,6 @@
 import { StructureSaveMode, type DimensionLocation, Dimension } from "@minecraft/server";
 import type { Warp } from "modules/coordinates/interfaces/Warp";
+import type { PlayerDataSaveMode } from "modules/player_save/classes/savedPlayer";
 import { menuButtonIds } from "modules/ui/constants/menuButtonIds";
 import type { playerMenuLeaderboardStatistic } from "modules/ui/types/playerMenuLeaderboardStatistic";
 /**
@@ -480,11 +481,11 @@ export declare class config {
                         enabled: boolean;
                         readonly displayOptions: {
                             /**
-                             * Whether or not to prefix the displayed value for this statistic with a dollar sign.
+                             * A currency symbol to prefix the displayed value with.
                              *
-                             * Defaults to true.
+                             * Defaults to "$".
                              */
-                            prefixWithDollarSign: boolean;
+                            currencyPrefix: string;
                             /**
                              * Whether or not to add comma separators to the displayed value for this statistic.
                              *
@@ -552,7 +553,22 @@ export declare class config {
         timeZone: number;
         playerDataRefreshRate: number;
         protectedAreasRefreshRate: number;
+        /**
+         * How often to check for banned players.
+         *
+         * Dynamic Property ID: andexdbSettings:bannedPlayersRefreshRate
+         *
+         * @default 20
+         */
         bannedPlayersRefreshRate: number;
+        /**
+         * How long it has to be since the last ban refresh before the bans list will be automatically refreshed, when getting the bans list or checking if a player is banned.
+         *
+         * Dynamic Property ID: andexdbSettings:bansMinimumAutoRefresh
+         *
+         * @default 1000
+         */
+        bansMinimumAutoRefresh: number;
         debugMode: boolean;
         /**
          * It is reccommended to leave this set to false.
@@ -562,6 +578,7 @@ export declare class config {
          * It is reccommended to leave this set to false.
          */
         hideWatchdogTerminationCrashEnabledWarningsOnStartup: boolean;
+        autoSavePlayerData: boolean;
         /**
          * It is recommended to leave this set to false.
          * @default false
@@ -572,6 +589,7 @@ export declare class config {
         useLegacyPlayerInventoryDataSaveSystem: boolean;
         playerInventoryDataSaveSystemEnabled: boolean;
         spreadPlayerInventoryDataSavesOverMultipleTicks: boolean;
+        playerDataSavePerformanceMode: PlayerDataSaveMode;
         showEntityScaleNotFoundConsoleLog: boolean;
         showEntityScaleFoundConsoleLog: boolean;
         showEntityScaleNotFoundChatLog: boolean;
@@ -715,11 +733,11 @@ export declare class config {
                             enabled: boolean;
                             readonly displayOptions: {
                                 /**
-                                 * Whether or not to prefix the displayed value for this statistic with a dollar sign.
+                                 * A currency symbol to prefix the displayed value with.
                                  *
-                                 * Defaults to true.
+                                 * Defaults to "$".
                                  */
-                                prefixWithDollarSign: boolean;
+                                currencyPrefix: string;
                                 /**
                                  * Whether or not to add comma separators to the displayed value for this statistic.
                                  *
@@ -1104,7 +1122,22 @@ export declare class config {
             timeZone: number;
             playerDataRefreshRate: number;
             protectedAreasRefreshRate: number;
+            /**
+             * How often to check for banned players.
+             *
+             * Dynamic Property ID: andexdbSettings:bannedPlayersRefreshRate
+             *
+             * @default 20
+             */
             bannedPlayersRefreshRate: number;
+            /**
+             * How long it has to be since the last ban refresh before the bans list will be automatically refreshed, when getting the bans list or checking if a player is banned.
+             *
+             * Dynamic Property ID: andexdbSettings:bansMinimumAutoRefresh
+             *
+             * @default 1000
+             */
+            bansMinimumAutoRefresh: number;
             debugMode: boolean;
             /**
              * It is reccommended to leave this set to false.
@@ -1114,6 +1147,7 @@ export declare class config {
              * It is reccommended to leave this set to false.
              */
             hideWatchdogTerminationCrashEnabledWarningsOnStartup: boolean;
+            autoSavePlayerData: boolean;
             /**
              * It is recommended to leave this set to false.
              * @default false
@@ -1124,6 +1158,7 @@ export declare class config {
             useLegacyPlayerInventoryDataSaveSystem: boolean;
             playerInventoryDataSaveSystemEnabled: boolean;
             spreadPlayerInventoryDataSavesOverMultipleTicks: boolean;
+            playerDataSavePerformanceMode: PlayerDataSaveMode;
             showEntityScaleNotFoundConsoleLog: boolean;
             showEntityScaleFoundConsoleLog: boolean;
             showEntityScaleNotFoundChatLog: boolean;

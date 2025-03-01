@@ -7417,7 +7417,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                                     player.sendMessageB(`Successfully teleported to the home "${argsa.extra}§r§f". `);
                                                 }
                                                 catch (e) {
-                                                    player.sendMessageB("§cAn error occured while trying to teleport you to your home: " + e + e.stack);
+                                                    player.sendMessageB("§cAn error occurred while trying to teleport you to your home: " + e + e.stack);
                                                 }
                                             }
                                             else {
@@ -7510,7 +7510,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                             player.sendMessageB(`Successfully teleported to the home "${argsa.extra}§r§f". `);
                                         }
                                         catch (e) {
-                                            player.sendMessageB("§cAn error occured while trying to teleport you to your home: " + e + e.stack);
+                                            player.sendMessageB("§cAn error occurred while trying to teleport you to your home: " + e + e.stack);
                                         }
                                     }
                                     else {
@@ -7582,7 +7582,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                     player.sendMessageB(`Successfully teleported to spawn.`);
                                 }
                                 catch (e) {
-                                    player.sendMessageB("§cAn error occured while trying to teleport you to spawn: " + e + e.stack);
+                                    player.sendMessageB("§cAn error occurred while trying to teleport you to spawn: " + e + e.stack);
                                 }
                             }
                             else {
@@ -7723,8 +7723,8 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                                         player.sendMessageB(`§aSuccessfully teleported to "${target.name}".`);
                                                     }
                                                     catch (e) {
-                                                        player.sendMessageB("§cAn error occured while trying to teleport you to your home: " + e + e.stack);
-                                                        target.sendMessage(`§cAn error occured while "${target.name}" was trying to teleport to you.`);
+                                                        player.sendMessageB("§cAn error occurred while trying to teleport you to your home: " + e + e.stack);
+                                                        target.sendMessage(`§cAn error occurred while "${target.name}" was trying to teleport to you.`);
                                                     }
                                                 }
                                                 else {
@@ -17331,7 +17331,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                 }
                             });
                             if (successes.length == 0) {
-                                player.sendError(`§cError: Some other error occured and no inventories were successfully shuffled. `, true);
+                                player.sendError(`§cError: Some other error occurred and no inventories were successfully shuffled. `, true);
                             }
                             else {
                                 player.sendMessageB(`Successfully shuffled the ${successes.length == 1

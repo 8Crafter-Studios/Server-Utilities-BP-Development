@@ -4,6 +4,7 @@ import { forceShow } from "modules/ui/functions/forceShow";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { showMessage } from "modules/utilities/functions/showMessage";
 import { manageWarps } from "./manageWarps";
+import { customFormUICodes } from "../constants/customFormUICodes";
 export async function playerMenu_warps(sourceEntitya) {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
     if (!(sourceEntity instanceof Player)) {
@@ -24,14 +25,14 @@ export async function playerMenu_warps(sourceEntitya) {
         }
     }
     let form = new ActionFormData();
-    form.title("Warps");
+    form.title(customFormUICodes.action.titles.formStyles.general + "Warps");
     const warps = config.warpsSystem.warps;
-    warps.forEach((w) => form.button(w.displayName, w.icon));
+    warps.forEach((w) => form.button(customFormUICodes.action.buttons.positions.main_only + w.displayName, w.icon));
     if (sourceEntity.hasTag("admin")) {
-        form.button("Manage Warps (§cAdmin Only§r)", "textures/ui/pencil_edit_icon");
+        form.button(customFormUICodes.action.buttons.positions.main_only + "Manage Warps (§cAdmin Only§r)", "textures/ui/pencil_edit_icon");
     }
-    form.button("Back", "textures/ui/arrow_left");
-    form.button("Close", "textures/ui/crossout");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
     return await forceShow(form, sourceEntity)
         .then(async (ra) => {
         let r = ra;
@@ -99,7 +100,7 @@ export async function playerMenu_warps(sourceEntitya) {
                         sourceEntity.sendMessage("§aSuccessfully teleported.");
                     }
                     catch (e) {
-                        sourceEntity.sendMessage("§cAn error occured while trying to teleport you to the selected warp: " + e + e.stack);
+                        sourceEntity.sendMessage("§cAn error occurred while trying to teleport you to the selected warp: " + e + e.stack);
                     }
                 }
                 else {

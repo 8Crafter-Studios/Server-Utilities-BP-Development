@@ -697,7 +697,8 @@ export class config {
                     '${(showDimension ? `[${dimension}§r§f] ` : "")}${rank} ${nameFormatting}${nameb}${(showHealth ? `§r§f [${currentHealth}/${maxHealth}]` : "")}');
             },
             set nameTagTemplateString(nameTagTemplateString) {
-                world.setDynamicProperty("andexdbSettings:nameTagTemplateString", nameTagTemplateString ?? '${(showDimension ? `[${dimension}§r§f] ` : "")}${rank} ${nameFormatting}${nameb}${(showHealth ? `§r§f [${currentHealth}/${maxHealth}]` : "")}');
+                world.setDynamicProperty("andexdbSettings:nameTagTemplateString", nameTagTemplateString ??
+                    '${(showDimension ? `[${dimension}§r§f] ` : "")}${rank} ${nameFormatting}${nameb}${(showHealth ? `§r§f [${currentHealth}/${maxHealth}]` : "")}');
             },
             get defaultRankTemplateString() {
                 return String(world.getDynamicProperty("andexdbSettings:defaultRankTemplateString") ?? "");
@@ -852,7 +853,13 @@ export class config {
                     world.saveStringToDynamicProperties(JSONB.stringify(warps), "warpsSystem:warpsSystem.warps");
                 }
                 else {
-                    throw new TypeError("Invalid warps list provided, expected an array of warp interface objects or undefined, but instead got " + (typeof warps == "object" ? warps === null ? "object[null]" : "object[" + (warps.constructor.name ?? "unknown") + "]" : typeof warps) + ".");
+                    throw new TypeError("Invalid warps list provided, expected an array of warp interface objects or undefined, but instead got " +
+                        (typeof warps == "object"
+                            ? warps === null
+                                ? "object[null]"
+                                : "object[" + (warps.constructor.name ?? "unknown") + "]"
+                            : typeof warps) +
+                        ".");
                 }
             },
         };
@@ -924,15 +931,22 @@ export class config {
                              *
                              */
                             get buttons() {
-                                return JSON.parse(String(world.getDynamicProperty("andexdbSettings:ui.menus.mainMenu.buttons") ?? JSON.stringify(Object.keys(menuButtonIds.mainMenu.buttons).sort((a, b) => menuButtonIds.mainMenu.buttons[a].defaultButtonIndex > menuButtonIds.mainMenu.buttons[b].defaultButtonIndex
-                                    ? 1
-                                    : menuButtonIds.mainMenu.buttons[a].defaultButtonIndex < menuButtonIds.mainMenu.buttons[b].defaultButtonIndex ? -1 : 0))));
+                                return JSON.parse(String(world.getDynamicProperty("andexdbSettings:ui.menus.mainMenu.buttons") ??
+                                    JSON.stringify(Object.keys(menuButtonIds.mainMenu.buttons).sort((a, b) => menuButtonIds.mainMenu.buttons[a].defaultButtonIndex > menuButtonIds.mainMenu.buttons[b].defaultButtonIndex
+                                        ? 1
+                                        : menuButtonIds.mainMenu.buttons[a].defaultButtonIndex <
+                                            menuButtonIds.mainMenu.buttons[b].defaultButtonIndex
+                                            ? -1
+                                            : 0))));
                             },
                             set buttons(buttonList) {
                                 world.setDynamicProperty("andexdbSettings:ui.menus.mainMenu.buttons", JSON.stringify(buttonList ??
                                     Object.keys(menuButtonIds.mainMenu.buttons).sort((a, b) => menuButtonIds.mainMenu.buttons[a].defaultButtonIndex > menuButtonIds.mainMenu.buttons[b].defaultButtonIndex
                                         ? 1
-                                        : menuButtonIds.mainMenu.buttons[a].defaultButtonIndex < menuButtonIds.mainMenu.buttons[b].defaultButtonIndex ? -1 : 0)));
+                                        : menuButtonIds.mainMenu.buttons[a].defaultButtonIndex <
+                                            menuButtonIds.mainMenu.buttons[b].defaultButtonIndex
+                                            ? -1
+                                            : 0)));
                             },
                             /**
                              * Whether to show the buttons marked as deprecated on the main menu.
@@ -1008,15 +1022,23 @@ export class config {
                              *
                              */
                             get buttons() {
-                                return JSON.parse(String(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu.buttons") ?? JSON.stringify(Object.keys(menuButtonIds.playerMenu.buttons).sort((a, b) => menuButtonIds.playerMenu.buttons[a].defaultButtonIndex > menuButtonIds.playerMenu.buttons[b].defaultButtonIndex
-                                    ? 1
-                                    : menuButtonIds.playerMenu.buttons[a].defaultButtonIndex < menuButtonIds.playerMenu.buttons[b].defaultButtonIndex ? -1 : 0))));
+                                return JSON.parse(String(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu.buttons") ??
+                                    JSON.stringify(Object.keys(menuButtonIds.playerMenu.buttons).sort((a, b) => menuButtonIds.playerMenu.buttons[a].defaultButtonIndex >
+                                        menuButtonIds.playerMenu.buttons[b].defaultButtonIndex
+                                        ? 1
+                                        : menuButtonIds.playerMenu.buttons[a].defaultButtonIndex <
+                                            menuButtonIds.playerMenu.buttons[b].defaultButtonIndex
+                                            ? -1
+                                            : 0))));
                             },
                             set buttons(buttonList) {
                                 world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu.buttons", JSON.stringify(buttonList ??
                                     Object.keys(menuButtonIds.playerMenu.buttons).sort((a, b) => menuButtonIds.playerMenu.buttons[a].defaultButtonIndex > menuButtonIds.playerMenu.buttons[b].defaultButtonIndex
                                         ? 1
-                                        : menuButtonIds.playerMenu.buttons[a].defaultButtonIndex < menuButtonIds.playerMenu.buttons[b].defaultButtonIndex ? -1 : 0)));
+                                        : menuButtonIds.playerMenu.buttons[a].defaultButtonIndex <
+                                            menuButtonIds.playerMenu.buttons[b].defaultButtonIndex
+                                            ? -1
+                                            : 0)));
                             },
                             /**
                              * The item name for the item that opens the player menu.
@@ -1101,7 +1123,8 @@ export class config {
                                              * Defaults to true.
                                              */
                                             get enabled() {
-                                                return Boolean(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.builtInStats.money.enabled") ?? true);
+                                                return Boolean(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.builtInStats.money.enabled") ??
+                                                    true);
                                             },
                                             set enabled(enabled) {
                                                 world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.builtInStats.money.enabled", enabled ?? true);
@@ -1109,15 +1132,15 @@ export class config {
                                             get displayOptions() {
                                                 return {
                                                     /**
-                                                     * Whether or not to prefix the displayed value for this statistic with a dollar sign.
+                                                     * A currency symbol to prefix the displayed value with.
                                                      *
-                                                     * Defaults to true.
+                                                     * Defaults to "$".
                                                      */
-                                                    get prefixWithDollarSign() {
-                                                        return Boolean(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.builtInStats.money.displayOptions.prefixWithDollarSign") ?? true);
+                                                    get currencyPrefix() {
+                                                        return String(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.builtInStats.money.displayOptions.currencyPrefix") ?? "$");
                                                     },
-                                                    set prefixWithDollarSign(prefixWithDollarSign) {
-                                                        world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.builtInStats.money.displayOptions.prefixWithDollarSign", prefixWithDollarSign ?? true);
+                                                    set currencyPrefix(prefixWithDollarSign) {
+                                                        world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.builtInStats.money.displayOptions.currencyPrefix", prefixWithDollarSign ?? "$");
                                                     },
                                                     /**
                                                      * Whether or not to add comma separators to the displayed value for this statistic.
@@ -1140,18 +1163,22 @@ export class config {
                              *
                              */
                             get customStats() {
-                                return JSONB.parse(String(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.customStats") ?? "[]")).map(s => {
+                                return JSONB.parse(String(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.customStats") ?? "[]")).map((s) => {
                                     if (s.type === "custom") {
                                         return {
                                             buttonDisplayName: s.buttonDisplayName,
                                             buttonIcon: s.buttonIcon,
                                             displayOptions: {
                                                 addCommaSeparators: s.displayOptions?.addCommaSeparators ?? true,
-                                                prefixWithDollarSign: s.displayOptions?.prefixWithDollarSign ?? false,
+                                                currencyPrefix: s.displayOptions?.currencyPrefix ?? "",
                                                 toFixed: s.displayOptions?.toFixed,
                                                 valueDisplayColor: s.displayOptions?.valueDisplayColor,
-                                                valueDisplayTransformer_button: s.displayOptions?.valueDisplayTransformer_button !== undefined ? eval?.(s.displayOptions.valueDisplayTransformer_button) : undefined,
-                                                valueDisplayTransformer_statsList: s.displayOptions?.valueDisplayTransformer_button !== undefined ? eval?.(s.displayOptions.valueDisplayTransformer_statsList) : undefined,
+                                                valueDisplayTransformer_button: s.displayOptions?.valueDisplayTransformer_button !== undefined
+                                                    ? eval?.(s.displayOptions.valueDisplayTransformer_button)
+                                                    : undefined,
+                                                valueDisplayTransformer_statsList: s.displayOptions?.valueDisplayTransformer_button !== undefined
+                                                    ? eval?.(s.displayOptions.valueDisplayTransformer_statsList)
+                                                    : undefined,
                                             },
                                             id: s.id,
                                             menuTitle: s.menuTitle,
@@ -1169,11 +1196,15 @@ export class config {
                                                 buttonIcon: s.buttonIcon,
                                                 displayOptions: {
                                                     addCommaSeparators: s.displayOptions?.addCommaSeparators ?? true,
-                                                    prefixWithDollarSign: s.displayOptions?.prefixWithDollarSign ?? false,
+                                                    currencyPrefix: s.displayOptions?.currencyPrefix ?? "",
                                                     toFixed: s.displayOptions?.toFixed,
                                                     valueDisplayColor: s.displayOptions?.valueDisplayColor,
-                                                    valueDisplayTransformer_button: s.displayOptions?.valueDisplayTransformer_button !== undefined ? eval?.(s.displayOptions.valueDisplayTransformer_button) : undefined,
-                                                    valueDisplayTransformer_statsList: s.displayOptions?.valueDisplayTransformer_button !== undefined ? eval?.(s.displayOptions.valueDisplayTransformer_statsList) : undefined,
+                                                    valueDisplayTransformer_button: s.displayOptions?.valueDisplayTransformer_button !== undefined
+                                                        ? eval?.(s.displayOptions.valueDisplayTransformer_button)
+                                                        : undefined,
+                                                    valueDisplayTransformer_statsList: s.displayOptions?.valueDisplayTransformer_button !== undefined
+                                                        ? eval?.(s.displayOptions.valueDisplayTransformer_statsList)
+                                                        : undefined,
                                                 },
                                                 getterFunction: eval?.(s.getterFunction),
                                                 id: s.id,
@@ -1191,11 +1222,15 @@ export class config {
                                                 buttonIcon: s.buttonIcon,
                                                 displayOptions: {
                                                     addCommaSeparators: s.displayOptions?.addCommaSeparators ?? true,
-                                                    prefixWithDollarSign: s.displayOptions?.prefixWithDollarSign ?? false,
+                                                    currencyPrefix: s.displayOptions?.currencyPrefix ?? "",
                                                     toFixed: s.displayOptions?.toFixed,
                                                     valueDisplayColor: s.displayOptions?.valueDisplayColor,
-                                                    valueDisplayTransformer_button: s.displayOptions?.valueDisplayTransformer_button !== undefined ? eval?.(s.displayOptions.valueDisplayTransformer_button) : undefined,
-                                                    valueDisplayTransformer_statsList: s.displayOptions?.valueDisplayTransformer_button !== undefined ? eval?.(s.displayOptions.valueDisplayTransformer_statsList) : undefined,
+                                                    valueDisplayTransformer_button: s.displayOptions?.valueDisplayTransformer_button !== undefined
+                                                        ? eval?.(s.displayOptions.valueDisplayTransformer_button)
+                                                        : undefined,
+                                                    valueDisplayTransformer_statsList: s.displayOptions?.valueDisplayTransformer_button !== undefined
+                                                        ? eval?.(s.displayOptions.valueDisplayTransformer_statsList)
+                                                        : undefined,
                                                 },
                                                 getterFunction: eval?.(s.getterFunction),
                                                 id: s.id,
@@ -1211,18 +1246,22 @@ export class config {
                                 });
                             },
                             set customStats(buttonList) {
-                                world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.customStats", JSONB.stringify(buttonList.map(s => {
+                                world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.customStats", JSONB.stringify((buttonList ?? []).map((s) => {
                                     if (s.type === "custom") {
                                         return {
                                             buttonDisplayName: s.buttonDisplayName,
                                             buttonIcon: s.buttonIcon,
                                             displayOptions: {
                                                 addCommaSeparators: s.displayOptions?.addCommaSeparators ?? true,
-                                                prefixWithDollarSign: s.displayOptions?.prefixWithDollarSign ?? false,
+                                                currencyPrefix: s.displayOptions?.currencyPrefix ?? "",
                                                 toFixed: s.displayOptions?.toFixed,
                                                 valueDisplayColor: s.displayOptions?.valueDisplayColor,
-                                                valueDisplayTransformer_button: s.displayOptions?.valueDisplayTransformer_button !== undefined ? s.displayOptions.valueDisplayTransformer_button.toString() : undefined,
-                                                valueDisplayTransformer_statsList: s.displayOptions?.valueDisplayTransformer_button !== undefined ? s.displayOptions.valueDisplayTransformer_statsList.toString() : undefined,
+                                                valueDisplayTransformer_button: s.displayOptions?.valueDisplayTransformer_button !== undefined
+                                                    ? s.displayOptions.valueDisplayTransformer_button.toString()
+                                                    : undefined,
+                                                valueDisplayTransformer_statsList: s.displayOptions?.valueDisplayTransformer_button !== undefined
+                                                    ? s.displayOptions.valueDisplayTransformer_statsList.toString()
+                                                    : undefined,
                                             },
                                             id: s.id,
                                             menuTitle: s.menuTitle,
@@ -1240,11 +1279,15 @@ export class config {
                                                 buttonIcon: s.buttonIcon,
                                                 displayOptions: {
                                                     addCommaSeparators: s.displayOptions?.addCommaSeparators ?? true,
-                                                    prefixWithDollarSign: s.displayOptions?.prefixWithDollarSign ?? false,
+                                                    currencyPrefix: s.displayOptions?.currencyPrefix ?? "",
                                                     toFixed: s.displayOptions?.toFixed,
                                                     valueDisplayColor: s.displayOptions?.valueDisplayColor,
-                                                    valueDisplayTransformer_button: s.displayOptions?.valueDisplayTransformer_button !== undefined ? s.displayOptions.valueDisplayTransformer_button.toString() : undefined,
-                                                    valueDisplayTransformer_statsList: s.displayOptions?.valueDisplayTransformer_button !== undefined ? s.displayOptions.valueDisplayTransformer_statsList.toString() : undefined,
+                                                    valueDisplayTransformer_button: s.displayOptions?.valueDisplayTransformer_button !== undefined
+                                                        ? s.displayOptions.valueDisplayTransformer_button.toString()
+                                                        : undefined,
+                                                    valueDisplayTransformer_statsList: s.displayOptions?.valueDisplayTransformer_button !== undefined
+                                                        ? s.displayOptions.valueDisplayTransformer_statsList.toString()
+                                                        : undefined,
                                                 },
                                                 getterFunction: s.getterFunction.toString(),
                                                 id: s.id,
@@ -1262,11 +1305,15 @@ export class config {
                                                 buttonIcon: s.buttonIcon,
                                                 displayOptions: {
                                                     addCommaSeparators: s.displayOptions?.addCommaSeparators ?? true,
-                                                    prefixWithDollarSign: s.displayOptions?.prefixWithDollarSign ?? false,
+                                                    currencyPrefix: s.displayOptions?.currencyPrefix ?? "",
                                                     toFixed: s.displayOptions?.toFixed,
                                                     valueDisplayColor: s.displayOptions?.valueDisplayColor,
-                                                    valueDisplayTransformer_button: s.displayOptions?.valueDisplayTransformer_button !== undefined ? s.displayOptions.valueDisplayTransformer_button.toString() : undefined,
-                                                    valueDisplayTransformer_statsList: s.displayOptions?.valueDisplayTransformer_button !== undefined ? s.displayOptions.valueDisplayTransformer_statsList.toString() : undefined,
+                                                    valueDisplayTransformer_button: s.displayOptions?.valueDisplayTransformer_button !== undefined
+                                                        ? s.displayOptions.valueDisplayTransformer_button.toString()
+                                                        : undefined,
+                                                    valueDisplayTransformer_statsList: s.displayOptions?.valueDisplayTransformer_button !== undefined
+                                                        ? s.displayOptions.valueDisplayTransformer_statsList.toString()
+                                                        : undefined,
                                                 },
                                                 getterFunction: s.getterFunction.toString(),
                                                 id: s.id,
@@ -1279,7 +1326,7 @@ export class config {
                                             };
                                         }
                                     }
-                                }) ?? []));
+                                })));
                             },
                             /**
                              * The statistics that are displayed when a player clicks on another player inside of the player menu leaderboard, they will be displayed in the order they are in this array.
@@ -1290,10 +1337,10 @@ export class config {
                              */
                             get trackedStats() {
                                 return JSON.parse(String(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.trackedStats") ??
-                                    JSON.stringify(defaultPlayerMenuLeaderboardStatistics.map(s => s.id))));
+                                    JSON.stringify(defaultPlayerMenuLeaderboardStatistics.map((s) => s.id))));
                             },
                             set trackedStats(buttonList) {
-                                world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.trackedStats", JSON.stringify(buttonList ?? defaultPlayerMenuLeaderboardStatistics.map(s => s.id)));
+                                world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.trackedStats", JSON.stringify(buttonList ?? defaultPlayerMenuLeaderboardStatistics.map((s) => s.id)));
                             },
                             /**
                              * The list of statistics that have their own leaderboards, they will be displayed in the order they are in this array.
@@ -1303,11 +1350,11 @@ export class config {
                              * Defaults to the list of the built-in leaderboard statistics from the `defaultPlayerMenuLeaderboardStatistics` array, in the same order that they appear in the array.
                              */
                             get leaderboards() {
-                                return JSON.parse(String(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.trackedStats") ??
-                                    JSON.stringify(defaultPlayerMenuLeaderboardStatistics.map(s => s.id))));
+                                return JSON.parse(String(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.leaderboards") ??
+                                    JSON.stringify(defaultPlayerMenuLeaderboardStatistics.map((s) => s.id))));
                             },
                             set leaderboards(buttonList) {
-                                world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.trackedStats", JSON.stringify(buttonList ?? defaultPlayerMenuLeaderboardStatistics.map(s => s.id)));
+                                world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.leaderboards", JSON.stringify(buttonList ?? defaultPlayerMenuLeaderboardStatistics.map((s) => s.id)));
                             },
                             /**
                              * Whether to show the time that a player was last online in the stats list that is shown when a player click on another player in a leaderboard.
@@ -1344,10 +1391,10 @@ export class config {
                      * Moved from {@link config} to {@link config.ui.pages} in version 1.23.0-preview.20+BUILD.1 on 10/04/2024 at 3:10:37 PM PDT.
                      */
                     get maxPlayersPerManagePlayersPage() {
-                        return Number(world.getDynamicProperty("andexdbSettings:maxPlayersPerManagePlayersPage") ?? 10);
+                        return Number(world.getDynamicProperty("andexdbSettings:maxPlayersPerManagePlayersPage") ?? 9);
                     },
                     set maxPlayersPerManagePlayersPage(maxPlayersPerManagePlayersPage) {
-                        world.setDynamicProperty("andexdbSettings:maxPlayersPerManagePlayersPage", Math.min(1000, Math.max(1, maxPlayersPerManagePlayersPage ?? 10)));
+                        world.setDynamicProperty("andexdbSettings:maxPlayersPerManagePlayersPage", Math.min(1000, Math.max(1, maxPlayersPerManagePlayersPage ?? 9)));
                     },
                     /**
                      * Moved from {@link config} to {@link config.ui.pages} in version 1.23.0-preview.20+BUILD.1 on 10/04/2024 at 3:10:37 PM PDT.
@@ -1409,11 +1456,31 @@ export class config {
             set protectedAreasRefreshRate(protectedAreasRefreshRate) {
                 world.setDynamicProperty("andexdbSettings:protectedAreasRefreshRate", Number.isNaN(Number(protectedAreasRefreshRate)) ? 200 : Math.min(1000000, Math.max(1, Number(protectedAreasRefreshRate ?? 200))));
             },
+            /**
+             * How often to check for banned players.
+             *
+             * Dynamic Property ID: andexdbSettings:bannedPlayersRefreshRate
+             *
+             * @default 20
+             */
             get bannedPlayersRefreshRate() {
                 return Number(world.getDynamicProperty("andexdbSettings:bannedPlayersRefreshRate") ?? 20);
             },
             set bannedPlayersRefreshRate(bannedPlayersRefreshRate) {
                 world.setDynamicProperty("andexdbSettings:bannedPlayersRefreshRate", Number.isNaN(Number(bannedPlayersRefreshRate)) ? 20 : Math.min(1000, Math.max(1, Number(bannedPlayersRefreshRate ?? 20))));
+            },
+            /**
+             * How long it has to be since the last ban refresh before the bans list will be automatically refreshed, when getting the bans list or checking if a player is banned.
+             *
+             * Dynamic Property ID: andexdbSettings:bansMinimumAutoRefresh
+             *
+             * @default 1000
+             */
+            get bansMinimumAutoRefresh() {
+                return Number(world.getDynamicProperty("andexdbSettings:bansMinimumAutoRefresh") ?? 1000);
+            },
+            set bansMinimumAutoRefresh(bansMinimumAutoRefresh) {
+                world.setDynamicProperty("andexdbSettings:bansMinimumAutoRefresh", Number.isNaN(Number(bansMinimumAutoRefresh)) ? 1000 : Number(bansMinimumAutoRefresh ?? 1000));
             },
             get debugMode() {
                 return Boolean(world.getDynamicProperty("andexdbSettings:debugMode") ?? false);
@@ -1439,6 +1506,12 @@ export class config {
             set hideWatchdogTerminationCrashEnabledWarningsOnStartup(hideWatchdogTerminationCrashEnabledWarningsOnStartup) {
                 world.setDynamicProperty("andexdbSettings:hideWatchdogTerminationCrashEnabledWarningsOnStartup", hideWatchdogTerminationCrashEnabledWarningsOnStartup ?? false);
             },
+            get autoSavePlayerData() {
+                return Boolean(world.getDynamicProperty("andexdbSettings:autoSavePlayerData") ?? true);
+            },
+            set autoSavePlayerData(autoSavePlayerData) {
+                world.setDynamicProperty("andexdbSettings:autoSavePlayerData", autoSavePlayerData ?? true);
+            },
             /**
              * It is recommended to leave this set to false.
              * @default false
@@ -1463,6 +1536,12 @@ export class config {
             },
             set spreadPlayerInventoryDataSavesOverMultipleTicks(spreadPlayerInventoryDataSavesOverMultipleTicks) {
                 world.setDynamicProperty("andexdbSettings:spreadPlayerInventoryDataSavesOverMultipleTicks", spreadPlayerInventoryDataSavesOverMultipleTicks ?? true);
+            },
+            get playerDataSavePerformanceMode() {
+                return String(world.getDynamicProperty("andexdbSettings:playerDataSavePerformanceMode") ?? "full");
+            },
+            set playerDataSavePerformanceMode(playerDataSavePerformanceMode) {
+                world.setDynamicProperty("andexdbSettings:playerDataSavePerformanceMode", playerDataSavePerformanceMode ?? "full");
             },
             get showEntityScaleNotFoundConsoleLog() {
                 return Boolean(world.getDynamicProperty("andexdbSettings:showEntityScaleNotFoundConsoleLog") ?? true);
@@ -1541,7 +1620,7 @@ export class config {
                 if (descriptor?.get && descriptor.set) {
                     obj[key] = undefined;
                 }
-                else if (descriptor?.get && typeof descriptor.get() === 'object' && descriptor.get() !== null) {
+                else if (descriptor?.get && typeof descriptor.get() === "object" && descriptor.get() !== null) {
                     resetProperties(descriptor.get());
                 }
             }
@@ -1554,7 +1633,7 @@ export class config {
                 if (settings.hasOwnProperty(key)) {
                     const descriptor = Object.getOwnPropertyDescriptor(target, key);
                     if (descriptor?.get && descriptor.set) {
-                        if (typeof settings[key] === 'object' && settings[key] !== null && !Array.isArray(settings[key])) {
+                        if (typeof settings[key] === "object" && settings[key] !== null && !Array.isArray(settings[key])) {
                             applySettingsRecursive(settings[key], target[key]);
                         }
                         else {
@@ -1569,7 +1648,19 @@ export class config {
     static toJSON() {
         // modules.utils.filterProperties(modules.utils.filterProperties(config, ["addCommaSeparators", "spawnCommandAllowCrossDimensionalTeleport", "allowWatchdogTerminationCrash", "spawnCommandLocation", "allowChatEscapeCodes"], {}), ["toJSON"], {}).antiSpamSystem.antispamEnabled;
         return Object.fromEntries(Object.getOwnPropertyNames(config)
-            .filter((n) => !["constructor", "toString", "toLocaleString", "valueOf", "hasOwnProperty", "name", "prototype", "reset", "applySettings", "length", "toJSON"].includes(n))
+            .filter((n) => ![
+            "constructor",
+            "toString",
+            "toLocaleString",
+            "valueOf",
+            "hasOwnProperty",
+            "name",
+            "prototype",
+            "reset",
+            "applySettings",
+            "length",
+            "toJSON",
+        ].includes(n))
             .map((n) => [n, config[n]]));
     }
 }

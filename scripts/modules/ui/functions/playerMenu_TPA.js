@@ -6,6 +6,7 @@ import { playerMenu_TPA_outgoing } from "./playerMenu_TPA_outgoing";
 import { TeleportRequest } from "modules/coordinates/classes/TeleportRequest";
 import { showMessage } from "modules/utilities/functions/showMessage";
 import { playerMenu_TPA_incoming } from "./playerMenu_TPA_incoming";
+import { customFormUICodes } from "../constants/customFormUICodes";
 export async function playerMenu_TPA(sourceEntitya) {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
     if (!(sourceEntity instanceof Player)) {
@@ -26,12 +27,12 @@ export async function playerMenu_TPA(sourceEntitya) {
         }
     }
     let form = new ActionFormData();
-    form.title("TPA");
-    form.button("Send Teleport Request", "textures/ui/chat_send");
-    form.button("Outgoing", "textures/ui/upload_glyph");
-    form.button("Incoming", "textures/ui/invite_base");
-    form.button("Back", "textures/ui/arrow_left");
-    form.button("Close", "textures/ui/crossout");
+    form.title(customFormUICodes.action.titles.formStyles.gridMenu + "TPA");
+    form.button(customFormUICodes.action.buttons.positions.main_only + "Send Teleport Request", "textures/ui/chat_send");
+    form.button(customFormUICodes.action.buttons.positions.main_only + "Outgoing", "textures/ui/upload_glyph");
+    form.button(customFormUICodes.action.buttons.positions.main_only + "Incoming", "textures/ui/invite_base");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
     return await forceShow(form, sourceEntity)
         .then(async (ra) => {
         let r = ra;
@@ -40,13 +41,16 @@ export async function playerMenu_TPA(sourceEntitya) {
         switch (["send", "outgoing", "incoming", "back", "close"][r.selection]) {
             case "send": {
                 let form = new ActionFormData();
-                form.title("Select Player");
-                let playerslist = world.getAllPlayers().filter(p => p !== sourceEntity);
+                form.title(customFormUICodes.action.titles.formStyles.general + "Select Player");
+                let playerslist = world.getAllPlayers().filter((p) => p !== sourceEntity);
                 playerslist.forEach((p) => {
-                    form.button(`${p.name}` /*, "textures/ui/online"*/);
+                    form.button(customFormUICodes.action.buttons.positions.main_only + p.name /*, "textures/ui/online"*/);
                 });
-                form.button("Back", "textures/ui/arrow_left");
-                form.button("Close", "textures/ui/crossout");
+                if (playerslist.length === 0) {
+                    form.body("No players available to send a teleport request to.");
+                }
+                form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
+                form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
                 const r = await form.forceShow(sourceEntity);
                 if (r.canceled || r.selection === playerslist.length)
                     return await playerMenu_TPA(sourceEntity);
@@ -61,7 +65,7 @@ export async function playerMenu_TPA(sourceEntitya) {
                         sourceEntity.sendMessage(`§cYou have already sent a teleport request to ${target.name}.`);
                     }
                     else {
-                        sourceEntity.sendMessage(`§cAn error occured while sending a teleport request to ${target.name}: ${e}${e.stack}`);
+                        sourceEntity.sendMessage(`§cAn error occurred while sending a teleport request to ${target.name}: ${e}${e.stack}`);
                     }
                 }
                 sourceEntity.sendMessage(`§aSent a teleport request to ${target.name}.`);
@@ -89,9 +93,9 @@ export async function playerMenu_TPA(sourceEntitya) {
                 return 1;
         }
     })
-        .catch((e) => {
+        .catch(async (e) => {
         console.error(e, e.stack);
-        return 0;
+        return ((await showMessage(sourceEntity, "An Error occurred", `An error occurred: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
     });
 }
 //# sourceMappingURL=playerMenu_TPA.js.map

@@ -29,8 +29,6 @@
 			"minecraft:dyeable": {},
 			"minecraft:storage_item": {
 				"allow_nested_storage_items": true,
-				"weight_in_storage_item": 1,
-				"max_weight_limit": 64,
 				"max_slots": 64
 			},
 			"minecraft:bundle_interaction": {

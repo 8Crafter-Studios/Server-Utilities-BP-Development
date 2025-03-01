@@ -138,7 +138,7 @@ export const menuButtonIds = {
                 upcoming: false,
                 functional: true,
                 advanced: false,
-                defaultButtonIndex: 11,
+                defaultButtonIndex: 13,
             },
             fillBlocks: {
                 displayName: "§4Fill Blocks(§cComing Soon!§f)§b",
@@ -149,7 +149,7 @@ export const menuButtonIds = {
                 upcoming: true,
                 functional: false,
                 advanced: false,
-                defaultButtonIndex: 12,
+                defaultButtonIndex: 14,
             },
             worldDebug: {
                 displayName: "§4World Debug§f(§cComing Soon!§f)§b",
@@ -160,7 +160,7 @@ export const menuButtonIds = {
                 upcoming: true,
                 functional: false,
                 advanced: false,
-                defaultButtonIndex: 13,
+                defaultButtonIndex: 15,
             },
             dimensionDebug: {
                 displayName: "§4Dimension Debug§f(§cComing Soon!§f)§b",
@@ -171,7 +171,7 @@ export const menuButtonIds = {
                 upcoming: true,
                 functional: false,
                 advanced: false,
-                defaultButtonIndex: 14,
+                defaultButtonIndex: 16,
             },
             inventoryTransfer: {
                 displayName: "Inventory Transfer§f(§nDEPRECATED§f)",
@@ -182,7 +182,7 @@ export const menuButtonIds = {
                 upcoming: false,
                 functional: true,
                 advanced: false,
-                defaultButtonIndex: 15,
+                defaultButtonIndex: 16,
             },
             runCommand: {
                 displayName: "Run Command",
@@ -193,7 +193,7 @@ export const menuButtonIds = {
                 upcoming: false,
                 functional: true,
                 advanced: false,
-                defaultButtonIndex: 16,
+                defaultButtonIndex: 11,
             },
             scriptEval: {
                 displayName: "Script Eval",
@@ -204,7 +204,7 @@ export const menuButtonIds = {
                 upcoming: false,
                 functional: true,
                 advanced: false,
-                defaultButtonIndex: 17,
+                defaultButtonIndex: 12,
             },
             manageRestrictedAreas: {
                 displayName: "Mange Restricted Areas",
@@ -226,7 +226,7 @@ export const menuButtonIds = {
                 upcoming: false,
                 functional: true,
                 advanced: false,
-                defaultButtonIndex: 19,
+                defaultButtonIndex: -5,
             },
             moderation: {
                 displayName: "Moderation",
@@ -281,7 +281,7 @@ export const menuButtonIds = {
                 upcoming: false,
                 functional: true,
                 advanced: false,
-                defaultButtonIndex: 24,
+                defaultButtonIndex: -6,
             },
             itemEditor: {
                 displayName: "§eItem Editor §f[§cAlpha§f]",

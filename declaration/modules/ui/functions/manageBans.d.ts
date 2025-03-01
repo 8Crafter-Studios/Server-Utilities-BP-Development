@@ -8,7 +8,7 @@ import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPl
  *
  * @returns A promise that resolves to one of the following values:
  * - `1` if the operation was successful or canceled by the user.
- * - `0` if the user does not have the required permissions.
+ * - `0` if the user does not have the required permissions, or the player hit the close button.
  * - `-2` if an error occurred during the operation.
  */
 export declare function manageBans(sourceEntitya: Entity | executeCommandPlayerW | Player): Promise<1 | 0 | -2>;

@@ -84,7 +84,7 @@ subscribedEvents.beforeExplosion = world.beforeEvents.explosion.subscribe(
                         } ${
                             !!event.source
                                 ? "Triggered explosion"
-                                : "Explosion occured"
+                                : "Explosion occurred"
                         } in ${
                             dimensionTypeDisplayFormatting[event.dimension.id as keyof typeof dimensionTypeDisplayFormatting]
                         }${

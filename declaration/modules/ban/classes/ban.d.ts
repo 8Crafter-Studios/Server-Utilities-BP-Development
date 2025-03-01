@@ -41,6 +41,8 @@ export declare class ban {
         seconds: number;
         milliseconds: number;
     };
+    get isTemporary(): boolean;
+    get isPermanent(): boolean;
     save(): void;
     remove(): void;
     static getBanIds(banType?: string): string[];
@@ -78,8 +80,39 @@ export declare class ban {
         nameBans: ban[];
         allBans: ban[];
     };
+    static getBansAutoRefresh(): {
+        idBans: ban[];
+        nameBans: ban[];
+        allBans: ban[];
+    };
+    static getValidBansAutoRefresh(): {
+        idBans: ban[];
+        nameBans: ban[];
+        allBans: ban[];
+    };
+    static getExpiredBansAutoRefresh(): {
+        idBans: ban[];
+        nameBans: ban[];
+        allBans: ban[];
+    };
+    static getBansNoRefresh(): {
+        idBans: ban[];
+        nameBans: ban[];
+        allBans: ban[];
+    };
+    static getValidBansNoRefresh(): {
+        idBans: ban[];
+        nameBans: ban[];
+        allBans: ban[];
+    };
+    static getExpiredBansNoRefresh(): {
+        idBans: ban[];
+        nameBans: ban[];
+        allBans: ban[];
+    };
     static testForBannedPlayer(player: Player | savedPlayer | savedPlayerData): boolean;
     static testForNameBannedPlayer(player: Player | savedPlayer | savedPlayerData): boolean;
     static testForIdBannedPlayer(player: Player | savedPlayer | savedPlayerData): boolean;
     static executeOnBannedPlayers(callbackfn: (player: Player, index: number, array: any[]) => unknown): any[];
+    static refreshBans(): void;
 }

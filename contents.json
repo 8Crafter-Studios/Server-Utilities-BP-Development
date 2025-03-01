@@ -2218,6 +2218,9 @@
          "path" : "declaration/modules/utilities/functions/extractJSONStrings.d.ts"
       },
       {
+         "path" : "declaration/modules/utilities/functions/filterProperties.d.ts"
+      },
+      {
          "path" : "declaration/modules/utilities/functions/fixedPositionNumberObject.d.ts"
       },
       {
@@ -21493,42 +21496,6 @@
          "path" : "scripts/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_leaderboardsSettings.js.map"
       },
       {
-         "path" : "scripts/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_displayedLeaderboards.js"
-      },
-      {
-         "path" : "scripts/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_displayedLeaderboards.js.map"
-      },
-      {
-         "path" : "scripts/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_displayedLeaderboards_addLeaderboard.js"
-      },
-      {
-         "path" : "scripts/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_displayedLeaderboards_addLeaderboard.js.map"
-      },
-      {
-         "path" : "scripts/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_displayedStatistics.js"
-      },
-      {
-         "path" : "scripts/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_displayedStatistics.js.map"
-      },
-      {
-         "path" : "scripts/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_displayedStatistics_addStatistic.js"
-      },
-      {
-         "path" : "scripts/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_displayedStatistics_addStatistic.js.map"
-      },
-      {
-         "path" : "scripts/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics.js"
-      },
-      {
-         "path" : "scripts/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics.js.map"
-      },
-      {
-         "path" : "scripts/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics_builtIn.js"
-      },
-      {
-         "path" : "scripts/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics_builtIn.js.map"
-      },
-      {
          "path" : "scripts/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_mainSettings.js"
       },
       {
@@ -21641,6 +21608,12 @@
       },
       {
          "path" : "scripts/modules/utilities/functions/extractJSONStrings.js.map"
+      },
+      {
+         "path" : "scripts/modules/utilities/functions/filterProperties.js"
+      },
+      {
+         "path" : "scripts/modules/utilities/functions/filterProperties.js.map"
       },
       {
          "path" : "scripts/modules/utilities/functions/fixedPositionNumberObject.js"
@@ -24004,24 +23977,6 @@
          "path" : "src/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_leaderboardsSettings.ts"
       },
       {
-         "path" : "src/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_displayedLeaderboards.ts"
-      },
-      {
-         "path" : "src/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_displayedLeaderboards_addLeaderboard.ts"
-      },
-      {
-         "path" : "src/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_displayedStatistics.ts"
-      },
-      {
-         "path" : "src/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_displayedStatistics_addStatistic.ts"
-      },
-      {
-         "path" : "src/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics.ts"
-      },
-      {
-         "path" : "src/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics_builtIn.ts"
-      },
-      {
          "path" : "src/modules/ui/functions/uiSettings_menuConfigurations_playerMenu_mainSettings.ts"
       },
       {
@@ -24077,6 +24032,9 @@
       },
       {
          "path" : "src/modules/utilities/functions/extractJSONStrings.ts"
+      },
+      {
+         "path" : "src/modules/utilities/functions/filterProperties.ts"
       },
       {
          "path" : "src/modules/utilities/functions/fixedPositionNumberObject.ts"

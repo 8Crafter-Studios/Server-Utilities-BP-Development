@@ -48,7 +48,7 @@ export async function playerMenu_bounty_individual(
                 : "Offline"
         }\nPlaced By: ${source.name}\nPlaced On: ${new Date(bounty.creationTime).formatDateTime(sourceEntity.timeZone, false, true)}\nReward: ${numberFormatter(
             bounty.value,
-            { prefixWithDollarSign: true, addCommaSeparators: true },
+            { currencyPrefix: config.ui.menus.playerMenu_leaderboards.builtInStats.money.displayOptions.currencyPrefix, addCommaSeparators: true },
             0
         )}`
     );

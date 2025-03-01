@@ -9,6 +9,7 @@ import { uiSettings_menuConfigurations_playerMenu_editButtons } from "./uiSettin
 import { manageWarps } from "./manageWarps";
 import { manageRedeemableCodes } from "./manageRedeemableCodes";
 import { uiSettings_menuConfigurations_playerMenu_leaderboardsSettings } from "./uiSettings_menuConfigurations_playerMenu_leaderboardsSettings";
+import { customFormUICodes } from "../constants/customFormUICodes";
 
 export async function uiSettings_menuConfigurations_playerMenu(
     sourceEntitya: Entity | executeCommandPlayerW | Player
@@ -28,14 +29,14 @@ export async function uiSettings_menuConfigurations_playerMenu(
         }
     }
     let form = new ActionFormData();
-    form.title("Player Menu Settings");
-    form.button("Main Settings", "textures/ui/settings_glyph_color_2x");
-    form.button("Edit Buttons", "textures/ui/pencil_edit_icon");
-    form.button("Leaderboards Settings", "textures/ui/icon_best3");
-    form.button("Edit Warps", "textures/items/ender_pearl");
-    form.button("Edit Redeemable Codes", "textures/ui/icon_blackfriday");
-    form.button("Back", "textures/ui/arrow_left");
-    form.button("Close", "textures/ui/crossout");
+    form.title(customFormUICodes.action.titles.formStyles.gridMenu + "Player Menu Settings");
+    form.button(customFormUICodes.action.buttons.positions.main_only + "Main Settings", "textures/ui/settings_glyph_color_2x");
+    form.button(customFormUICodes.action.buttons.positions.main_only + "Edit Buttons", "textures/ui/pencil_edit_icon");
+    form.button(customFormUICodes.action.buttons.positions.main_only + "Leaderboards Settings", "textures/ui/icon_best3");
+    form.button(customFormUICodes.action.buttons.positions.main_only + "Edit Warps", "textures/items/ender_pearl");
+    form.button(customFormUICodes.action.buttons.positions.main_only + "Edit Redeemable Codes", "textures/ui/icon_blackfriday");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
 
     return await forceShow(form, sourceEntity as Player)
         .then(async (ra) => {
@@ -84,6 +85,6 @@ export async function uiSettings_menuConfigurations_playerMenu(
         })
         .catch(async (e) => {
             console.error(e, e.stack);
-            return ((await showMessage(sourceEntity, "An Error Occured", `An error occured: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
+            return ((await showMessage(sourceEntity, "An Error occurred", `An error occurred: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
         });
 }

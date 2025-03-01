@@ -698,17 +698,17 @@ declare global {
          * printEveryMinute();
          * ```
          */
-        static get srun(): typeof import("init/functions/srun").srun;
+        static get srun(): typeof import("./init/functions/srun").srun;
         /**
          * A class containing the configuration information for the add-on.
          * @see {@link modules.main.config}
          */
-        static get config(): typeof import("init/classes/config").config;
+        static get config(): typeof import("./init/classes/config").config;
         /**
          * A class containing configuration detailing which functions, classes, and constants from the modules to import into their respective properties on the global modules object.
          * @see {@link modules.main.moduleImportsConfig}
          */
-        static get moduleImportsConfig(): typeof import("init/classes/moduleImportsConfig").moduleImportsConfig;
+        static get moduleImportsConfig(): typeof import("./init/classes/moduleImportsConfig").moduleImportsConfig;
         /**
          * If this is set to true it will stop all instances of {@link modules.playersave.playerDataAutoSaveAsync}.
          */

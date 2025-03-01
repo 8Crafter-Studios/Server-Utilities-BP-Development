@@ -38,7 +38,7 @@ export async function playerMenu_bounty(sourceEntitya, totalBounty, targetPlayer
             ? "Banned"
             : menuConfig.showLastOnlineTimeInPlayerStatsList
                 ? "Last Online: " + new Date(target.lastOnline).formatDateTime(sourceEntity.timeZone, false, true)
-                : "Offline"}\nTotal Reward: ${numberFormatter(totalBounty.totalValue, { prefixWithDollarSign: true, addCommaSeparators: true }, 0)}`);
+                : "Offline"}\nTotal Reward: ${numberFormatter(totalBounty.totalValue, { currencyPrefix: config.ui.menus.playerMenu_leaderboards.builtInStats.money.displayOptions.currencyPrefix, addCommaSeparators: true }, 0)}`);
     form.button(`View Individual Bounties\n${totalBounty.getBounties().length}`, "textures/ui/arrow_left");
     form.button("Back", "textures/ui/arrow_left");
     form.button("Close", "textures/ui/crossout");

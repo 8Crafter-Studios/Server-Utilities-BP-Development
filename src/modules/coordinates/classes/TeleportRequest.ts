@@ -196,8 +196,8 @@ export class TeleportRequest {
                     this.player.setDynamicProperty("lastTeleportTime", Date.now());
                     this.player.sendMessage(`§aSuccessfully teleported to ${this.target.name}.`);
                 } catch (e) {
-                    this.player.sendMessage("§cAn error occured while trying to teleport you to your home: " + e + e.stack);
-                    this.target.sendMessage(`§cAn error occured while ${this.target.name} was trying to teleport to you.`);
+                    this.player.sendMessage("§cAn error occurred while trying to teleport you to your home: " + e + e.stack);
+                    this.target.sendMessage(`§cAn error occurred while ${this.target.name} was trying to teleport to you.`);
                 }
             } else {
                 this.player.sendMessage("§cTeleport canceled.");

@@ -38,7 +38,7 @@ export async function uiSettings_main(sourceEntitya) {
     }
     let form2 = new ModalFormData();
     form2.title("UI Settings");
-    form2.textField("§l§fmaxPlayersPerManagePlayersPage§r§f\nThe maximum number of players to display at once on the manage players menu, the default is 10", "integer from 1-1000", String(config.ui.pages.maxPlayersPerManagePlayersPage));
+    form2.textField("§l§fmaxPlayersPerManagePlayersPage§r§f\nThe maximum number of players to display at once on the manage players menu, the default is 9", "integer from 1-1000", String(config.ui.pages.maxPlayersPerManagePlayersPage));
     form2.toggle("§l§fuseStarWarsReference404Page§r§f\nWhether or not to use the Star Wars reference version of the 404 page, the default is false", config.ui.other.useStarWarsReference404Page);
     form2.submitButton("Save");
     return await forceShow(form2, sourceEntity)

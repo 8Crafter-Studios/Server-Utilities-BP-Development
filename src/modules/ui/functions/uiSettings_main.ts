@@ -42,7 +42,7 @@ export async function uiSettings_main(
     let form2 = new ModalFormData();
     form2.title("UI Settings");
     form2.textField(
-        "§l§fmaxPlayersPerManagePlayersPage§r§f\nThe maximum number of players to display at once on the manage players menu, the default is 10",
+        "§l§fmaxPlayersPerManagePlayersPage§r§f\nThe maximum number of players to display at once on the manage players menu, the default is 9",
         "integer from 1-1000",
         String(config.ui.pages.maxPlayersPerManagePlayersPage)
     );

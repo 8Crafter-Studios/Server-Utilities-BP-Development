@@ -17,7 +17,7 @@ export async function playerMenu_bounty_individuals(
     targetPlayer?: savedPlayer,
     pagen: number = 0,
     maxplayersperpage: number = config.ui.pages
-        .maxPlayersPerManagePlayersPage ?? 10,
+        .maxPlayersPerManagePlayersPage ?? 9,
     search?: {
         value: string;
         caseSensitive?: boolean;

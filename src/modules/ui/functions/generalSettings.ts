@@ -88,17 +88,20 @@ export async function generalSettings(sourceEntitya: Entity | executeCommandPlay
     form2.toggle("§l§fchatDisplayTimeStamp§r§f\nSets whether or not to put a timestamp before every chat message, default is false", config.chatRanks.chatDisplayTimeStamp);*/
 
     form2.toggle(
-        "§l§fautoSavePlayerData§r§f\nSets whether or not to automatically save player data, default is true",
-        Boolean(world.getDynamicProperty("andexdbSettings:autoSavePlayerData") ?? true)
+        "§l§fautoSavePlayerData§r§f\nSets whether or not to automatically save player data, if playerInventoryDataSaveSystemEnabled is disabled then disabling this will have little to no performance improvement, so it is recommended to leave this enabled, if you need better performance just disable the playerInventoryDataSaveSystemEnabled option, default is true",
+        config.system.autoSavePlayerData
     );
     form2.toggle(
-        "§l§fplayerInventoryDataSaveSystemEnabled§r\nWhether or not to save the player's inventory data when saving player data, disabling this will result in being unable to check the inventories of offline players, this only applies when §bautoSavePlayerData§r is enabled, the default is true",
+        "§l§fplayerInventoryDataSaveSystemEnabled§r\nWhether or not to save the player's inventory data when saving player data, disabling this will improve performance but will result in being unable to check the inventories of offline players, this only applies when §bautoSavePlayerData§r is enabled, the default is true",
         config.system.playerInventoryDataSaveSystemEnabled
     );
-    form2.toggle(
-        "§l§fuseLegacyPlayerInventoryDataSaveSystem§r\nWhether or not to use the pre-1.26 player inventory data save system, enabling this will result in only being able to see general details about the items that were in an offline player's inventory, as well as increasing lag, this only applies when §bautoSavePlayerData§r and §bplayerInventoryDataSaveSystemEnabled§r are enabled, the default is false",
-        config.system.useLegacyPlayerInventoryDataSaveSystem
-    );
+    const debugModeEnabled = config.system.debugMode;
+    if(debugModeEnabled) {
+        form2.toggle(
+            "§l§cuseLegacyPlayerInventoryDataSaveSystem§r§c (Only visible in debug mode)\nWhether or not to use the pre-1.26 player inventory data save system, enabling this will result in only being able to see general details about the items that were in an offline player's inventory, as well as increasing lag, this only applies when §bautoSavePlayerData§r and §bplayerInventoryDataSaveSystemEnabled§r are enabled, the default is false",
+            config.system.useLegacyPlayerInventoryDataSaveSystem
+        );
+    }
     form2.submitButton("Save");
     return await forceShow(form2, sourceEntity as Player)
         .then((to) => {
@@ -170,9 +173,11 @@ export async function generalSettings(sourceEntitya: Entity | executeCommandPlay
     world.setDynamicProperty("andexdbSettings:allowChatEscapeCodes", allowChatEscapeCodes)
     world.setDynamicProperty("andexdbSettings:chatDisplayTimeStamp", chatDisplayTimeStamp)*/
 
-            world.setDynamicProperty("andexdbSettings:autoSavePlayerData", autoSavePlayerData);
+            config.system.autoSavePlayerData = autoSavePlayerData as boolean;
             config.system.playerInventoryDataSaveSystemEnabled = playerInventoryDataSaveSystemEnabled as boolean;
-            config.system.useLegacyPlayerInventoryDataSaveSystem = useLegacyPlayerInventoryDataSaveSystem as boolean;
+            if(debugModeEnabled){
+                config.system.useLegacyPlayerInventoryDataSaveSystem = useLegacyPlayerInventoryDataSaveSystem as boolean;
+            }
             return 1;
         })
         .catch((e) => {

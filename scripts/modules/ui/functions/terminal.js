@@ -35,7 +35,7 @@ export async function terminal(sourceEntitya) {
                     .successCount));
             }
             catch (e) {
-                sourceEntity.sendMessage("§cAn error occured while running the commmand through the command runner: " + e + e.stack);
+                sourceEntity.sendMessage("§cAn error occurred while running the commmand through the command runner: " + e + e.stack);
             }
         }, Number(commandDelay));
         return 1;

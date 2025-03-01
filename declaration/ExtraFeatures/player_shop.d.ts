@@ -107,7 +107,7 @@ export declare class PlayerShop {
     constructor(config: playerShopConfig);
     save(): void;
     openShop(player: Player, mode?: "buy" | "sell" | "both" | "none", showBackButton?: boolean): Promise<0 | 1>;
-    openShopPage<mode extends "buy" | "sell">(player: Player, data: (mode extends "buy" ? PlayerBuyableShopElement[] : PlayerSellableShopElement[]), path: [mode, ...string[]]): Promise<0 | 1>;
+    openShopPage<mode extends "buy" | "sell">(player: Player, data: mode extends "buy" ? PlayerBuyableShopElement[] : PlayerSellableShopElement[], path: [mode, ...string[]]): Promise<0 | 1>;
     editShopElements<T extends "buy" | "sell">(mode: T, data: (T extends "buy" ? PlayerBuyableShopElement : PlayerSellableShopElement)[]): void;
     get buyData(): PlayerBuyableShopElement[];
     set buyData(data: PlayerBuyableShopElement[]);
@@ -127,7 +127,7 @@ export declare class PlayerShop {
      * @param sourceEntitya
      * @returns
      */
-    static openPublicShopsSelector(sourceEntitya: Entity | executeCommandPlayerW | Player): Promise<0 | 1>;
+    static openPublicShopsSelector(sourceEntitya: Entity | executeCommandPlayerW | Player, showBackButton?: boolean): Promise<0 | 1>;
 }
 export declare class PlayerShopManager {
     static playerShopItemTextureHints: string[];
@@ -148,7 +148,7 @@ export declare class PlayerShopManager {
     static managePlayerShop(sourceEntitya: Entity | executeCommandPlayerW | Player, shop: PlayerShop): Promise<0 | 1>;
     static managePlayerShop_settings(sourceEntitya: Entity | executeCommandPlayerW | Player, shop: PlayerShop): Promise<0 | 1>;
     static managePlayerShop_contents(sourceEntitya: Entity | executeCommandPlayerW | Player, shop: PlayerShop, mode?: "buy" | "sell"): Promise<0 | 1>;
-    static managePlayerShop_manageItem<mode extends "buy" | "sell">(sourceEntitya: Entity | executeCommandPlayerW | Player, shop: PlayerShop, item: (mode extends "buy" ? PlayerSavedShopItem : PlayerSellableShopItem), itemIndex: number, mode: mode): Promise<0 | 1>;
+    static managePlayerShop_manageItem<mode extends "buy" | "sell">(sourceEntitya: Entity | executeCommandPlayerW | Player, shop: PlayerShop, item: mode extends "buy" ? PlayerSavedShopItem : PlayerSellableShopItem, itemIndex: number, mode: mode): Promise<0 | 1>;
     /**
      * Opens the UI for editing a player shop item.
      * @see {@link ServerShopManager.manageServerShop_editItem}
@@ -159,7 +159,7 @@ export declare class PlayerShopManager {
      * @param mode Whether this is a buy or sell shop.
      * @returns The chosen options in the edit item screen.
      */
-    static managePlayerShop_editItem<mode extends "buy" | "sell">(sourceEntitya: Entity | executeCommandPlayerW | Player, shop: PlayerShop, item: (mode extends "buy" ? PlayerSavedShopItem : PlayerSellableShopItem), itemIndex: number, mode: mode): Promise<import("@minecraft/server-ui").ModalFormResponse>;
+    static managePlayerShop_editItem<mode extends "buy" | "sell">(sourceEntitya: Entity | executeCommandPlayerW | Player, shop: PlayerShop, item: mode extends "buy" ? PlayerSavedShopItem : PlayerSellableShopItem, itemIndex: number, mode: mode): Promise<import("@minecraft/server-ui").ModalFormResponse>;
     /**
      * Opens the UI for editing a player shop item.
      * @param sourceEntitya The player editing the shop item.
@@ -183,8 +183,8 @@ export declare class PlayerShopManager {
     static managePlayerShop_editPage<mode extends "buy" | "sell">(sourceEntitya: Entity | executeCommandPlayerW | Player, shop: PlayerShop, page: PlayerShopPage, pageIndex: number, mode: mode): Promise<1>;
     static managePlayerShop_addPage<mode extends "buy" | "sell">(sourceEntitya: Entity | executeCommandPlayerW | Player, shop: PlayerShop, mode: mode): Promise<1>;
     static managePlayerShopPage_contents<mode extends "buy" | "sell">(sourceEntitya: Entity | executeCommandPlayerW | Player, shop: PlayerShop, path: [mode, ...string[]]): Promise<0 | 1>;
-    static managePlayerShopPage_manageItem<mode extends "buy" | "sell">(sourceEntitya: Entity | executeCommandPlayerW | Player, shop: PlayerShop, path: [mode, ...string[]], item: (mode extends "buy" ? PlayerSavedShopItem : PlayerSellableShopItem), itemIndex: number): Promise<0 | 1>;
-    static managePlayerShopPage_editItem<mode extends "buy" | "sell">(sourceEntitya: Entity | executeCommandPlayerW | Player, shop: PlayerShop, path: [mode, ...string[]], item: (mode extends "buy" ? PlayerSavedShopItem : PlayerSellableShopItem), itemIndex: number): Promise<1>;
+    static managePlayerShopPage_manageItem<mode extends "buy" | "sell">(sourceEntitya: Entity | executeCommandPlayerW | Player, shop: PlayerShop, path: [mode, ...string[]], item: mode extends "buy" ? PlayerSavedShopItem : PlayerSellableShopItem, itemIndex: number): Promise<0 | 1>;
+    static managePlayerShopPage_editItem<mode extends "buy" | "sell">(sourceEntitya: Entity | executeCommandPlayerW | Player, shop: PlayerShop, path: [mode, ...string[]], item: mode extends "buy" ? PlayerSavedShopItem : PlayerSellableShopItem, itemIndex: number): Promise<1>;
     static managePlayerShopPage_addItem<mode extends "buy" | "sell">(sourceEntitya: Entity | executeCommandPlayerW | Player, shop: PlayerShop, path: [mode, ...string[]], type: "player_shop_sellable"): Promise<1>;
     static managePlayerShopPage_managePage<mode extends "buy" | "sell">(sourceEntitya: Entity | executeCommandPlayerW | Player, shop: PlayerShop, path: [mode, ...string[]], page: PlayerShopPage, pageIndex: number): Promise<0 | 1>;
     static managePlayerShopPage_editPage<mode extends "buy" | "sell">(sourceEntitya: Entity | executeCommandPlayerW | Player, shop: PlayerShop, path: [mode, ...string[]], page: PlayerShopPage, pageIndex: number): Promise<1>;

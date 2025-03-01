@@ -20,6 +20,7 @@ import { showMessage } from "modules/utilities/functions/showMessage";
 import { moneySystemSettings } from "./moneySystemSettings";
 import { uiSettings_menuConfigurations_playerMenu } from "./uiSettings_menuConfigurations_playerMenu";
 import { teleportSystemsSettings } from "./teleportSystemsSettings";
+import { customFormUICodes } from "../constants/customFormUICodes";
 export async function settings(sourceEntitya) {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW
         ? sourceEntitya.player
@@ -37,26 +38,26 @@ export async function settings(sourceEntitya) {
     }
     let form = new ActionFormData();
     let players = world.getPlayers();
-    form.title("Settings");
+    form.title(customFormUICodes.action.titles.formStyles.gridMenu + "Settings");
     form.body("Choose menu to open. ");
-    form.button("General Settings", "textures/ui/worldsIcon");
-    form.button("Chat Ranks Settings", "textures/ui/message");
-    form.button("Script Settings", "textures/ui/debug_glyph_color");
-    form.button("UI Settings", "textures/ui/feedIcon");
-    form.button("Eval Auto Execute Settings", "textures/ui/automation_glyph_color");
-    form.button("Personal Settings", "textures/ui/profile_glyph_color");
-    form.button("Notifications Settings", "textures/ui/icon_bell");
-    form.button("Teleport Systems Settings", "textures/gui/newgui/mob_effects\\invisibility_effect");
-    form.button("Home System Settings", "textures/ui/store_home_icon");
-    form.button("TPA System Settings", "textures/items/ender_pearl");
-    form.button("Money System Settings", "textures/items/emerald");
-    form.button("Player Menu Settings", "textures/items/player_menu_1");
-    form.button("Module Imports", "textures/ui/import");
-    form.button("Manage Game Rules", "textures/ui/controller_glyph_color");
-    form.button("Extra Features", "textures/ui/color_plus");
-    form.button("Advanced", "textures/ui/creator_glyph_color");
-    form.button("Back", "textures/ui/arrow_left");
-    form.button("Close", "textures/ui/crossout"); /*
+    form.button(customFormUICodes.action.buttons.positions.main_only + "General Settings", "textures/ui/worldsIcon");
+    form.button(customFormUICodes.action.buttons.positions.main_only + "Chat Ranks Settings", "textures/ui/message");
+    form.button(customFormUICodes.action.buttons.positions.main_only + "Script Settings", "textures/ui/debug_glyph_color");
+    form.button(customFormUICodes.action.buttons.positions.main_only + "UI Settings", "textures/ui/feedIcon");
+    form.button(customFormUICodes.action.buttons.positions.main_only + "Eval Auto Execute Settings", "textures/ui/automation_glyph_color");
+    form.button(customFormUICodes.action.buttons.positions.main_only + "Personal Settings", "textures/ui/profile_glyph_color");
+    form.button(customFormUICodes.action.buttons.positions.main_only + "Notifications Settings", "textures/ui/icon_bell");
+    form.button(customFormUICodes.action.buttons.positions.main_only + "Teleport Systems Settings", "textures/gui/newgui/mob_effects\\invisibility_effect");
+    form.button(customFormUICodes.action.buttons.positions.main_only + "Home System Settings", "textures/ui/store_home_icon");
+    form.button(customFormUICodes.action.buttons.positions.main_only + "TPA System Settings", "textures/items/ender_pearl");
+    form.button(customFormUICodes.action.buttons.positions.main_only + "Money System Settings", "textures/items/emerald");
+    form.button(customFormUICodes.action.buttons.positions.main_only + "Player Menu Settings", "textures/items/player_menu_2");
+    form.button(customFormUICodes.action.buttons.positions.main_only + "Module Imports", "textures/ui/import");
+    form.button(customFormUICodes.action.buttons.positions.main_only + "Manage Game Rules", "textures/ui/controller_glyph_color");
+    form.button(customFormUICodes.action.buttons.positions.main_only + "Extra Features", "textures/ui/color_plus");
+    form.button(customFormUICodes.action.buttons.positions.main_only + "Advanced", "textures/ui/creator_glyph_color");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout"); /*
 form.button("Debug Screen", "textures/ui/ui_debug_glyph_color");*/
     return await forceShow(form, sourceEntity)
         .then(async (ra) => {

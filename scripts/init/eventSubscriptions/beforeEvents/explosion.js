@@ -57,7 +57,7 @@ eval(String(world.getDynamicProperty("scriptEvalBeforeEventsExplosion")))*/
                     "]"
                 : ""} ${!!event.source
                 ? "Triggered explosion"
-                : "Explosion occured"} in ${dimensionTypeDisplayFormatting[event.dimension.id]}${event.getImpactedBlocks().length == 0
+                : "Explosion occurred"} in ${dimensionTypeDisplayFormatting[event.dimension.id]}${event.getImpactedBlocks().length == 0
                 ? ""
                 : " around " +
                     vTStr((() => {

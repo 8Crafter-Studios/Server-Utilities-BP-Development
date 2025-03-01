@@ -28,7 +28,7 @@ import type { ReplaceTypeOfKey } from "modules/utilities/functions/filterPropert
  */
 export interface playerMenuLeaderboardStatistic<T extends "built-in" | "custom" | "customAdvanced", SortType extends "function" | "order" | never = "function" | "order"> {
     /**
-     * The type of the statistic, which is "built-in".
+     * The type of the statistic, which can be "built-in", "custom", or "customAdvanced".
      */
     type: T;
     /**
@@ -71,11 +71,11 @@ export interface playerMenuLeaderboardStatistic<T extends "built-in" | "custom" 
          */
         addCommaSeparators?: boolean;
         /**
-         * Whether to prefix the value with a dollar sign when displayed.
+         * A currency symbol to prefix the displayed value with.
          *
-         * @default false
+         * @default ""
          */
-        prefixWithDollarSign?: boolean;
+        currencyPrefix?: string;
         /**
          * The number of decimal places to display.
          */

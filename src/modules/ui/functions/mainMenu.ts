@@ -21,6 +21,7 @@ import { securityVariables } from "security/ultraSecurityModeUtils";
 import { showMessage } from "modules/utilities/functions/showMessage";
 import { menuButtonIds } from "../constants/menuButtonIds";
 import type { menuButtonIdsType } from "../types/menuButtonIdsType";
+import { customFormUICodes } from "../constants/customFormUICodes";
 
 export async function mainMenu(
     sourceEntitya: Entity | executeCommandPlayerW | Player
@@ -63,10 +64,10 @@ export async function mainMenu(
     });
     let form = new ActionFormData();
     let players = world.getPlayers();
-    form.title("Main Menu");
+    form.title(customFormUICodes.action.titles.formStyles.gridMenu + "Main Menu");
     form.body("Choose menu to open. ");
     buttons.forEach(([k, b])=>{
-        form.button(b.displayName, b.icon);
+        form.button(customFormUICodes.action.buttons.positions.main_only + b.displayName, b.icon);
     });/* 
     form.button("Editor Stick", "textures/items/stick");
     form.button("Editor Stick Menu B", "textures/items/stick");
@@ -125,7 +126,7 @@ form.button("Entity Debugger", "textures/ui/debug_glyph_color");*/ /*
         "§eJava NBT Structure Loader §f[§cAlpha§f]",
         "textures/ui/xyz_axis"
     ); */
-    form.button("Close", "textures/ui/crossout");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
     return await forceShow(
         form,
         players[players.findIndex((x) => x == sourceEntity)]
@@ -260,9 +261,11 @@ catch(e) {
                     return 0;
                     break;
                 case "createExplosion":
-                    createExplosion(sourceEntity);
-                    return 0;
-                    break;
+                    if ((await createExplosion(sourceEntity)) == 1) {
+                        return await mainMenu(sourceEntity);
+                    } else {
+                        return 0;
+                    }
                 case "fillBlocks":
                     try {
                         sourceEntity.runCommand(
@@ -286,17 +289,23 @@ catch(e) {
                     return 0;
                     break;
                 case "runCommand":
-                    terminal(sourceEntity);
-                    return 0;
-                    break;
+                    if ((await terminal(sourceEntity)) == 1) {
+                        return await mainMenu(sourceEntity);
+                    } else {
+                        return 0;
+                    }
                 case "scriptEval":
-                    scriptEvalRunWindow(sourceEntity);
-                    return 0;
-                    break;
+                    if ((await scriptEvalRunWindow(sourceEntity)) == 1) {
+                        return await mainMenu(sourceEntity);
+                    } else {
+                        return 0;
+                    }
                 case "manageRestrictedAreas":
-                    editAreasMainMenu(sourceEntity);
-                    return 0;
-                    break;
+                    if ((await editAreasMainMenu(sourceEntity)) == 1) {
+                        return await mainMenu(sourceEntity);
+                    } else {
+                        return 0;
+                    }
                 case "manageCustomUIs":
                     customFormListSelectionMenu(sourceEntity as Player);
                     return 0;

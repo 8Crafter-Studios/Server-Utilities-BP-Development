@@ -6,6 +6,7 @@ import { ban } from "modules/ban/classes/ban";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { showMessage } from "modules/utilities/functions/showMessage";
 import { securityVariables } from "security/ultraSecurityModeUtils";
+import { customFormUICodes } from "../constants/customFormUICodes";
 /**
  * Manages the bans for a given source entity. This function displays a UI for managing bans,
  * including viewing valid and expired bans, adding new bans by ID or name, and unbanning players.
@@ -14,7 +15,7 @@ import { securityVariables } from "security/ultraSecurityModeUtils";
  *
  * @returns A promise that resolves to one of the following values:
  * - `1` if the operation was successful or canceled by the user.
- * - `0` if the user does not have the required permissions.
+ * - `0` if the user does not have the required permissions, or the player hit the close button.
  * - `-2` if an error occurred during the operation.
  */
 export async function manageBans(sourceEntitya) {
@@ -33,27 +34,29 @@ export async function manageBans(sourceEntitya) {
         }
     }
     let form6 = new ActionFormData();
-    form6.title("Manage Bans");
-    ban.getValidBans().idBans.forEach((p) => {
+    form6.title(customFormUICodes.action.titles.formStyles.gridMenu + "Manage Bans");
+    // Have auto refresh enabled only for the first method call to get the bans.
+    ban.getValidBansAutoRefresh().idBans.forEach((p) => {
         form6.button(`${p.playerId}\nValid`, "textures/ui/online");
     });
-    ban.getExpiredBans().idBans.forEach((p) => {
+    ban.getExpiredBansNoRefresh().idBans.forEach((p) => {
         form6.button(`${p.playerId}\nExpired`, "textures/ui/Ping_Offline_Red");
     });
-    ban.getValidBans().nameBans.forEach((p) => {
+    ban.getValidBansNoRefresh().nameBans.forEach((p) => {
         form6.button(`${p.playerName}\nValid`, "textures/ui/online");
     });
-    ban.getExpiredBans().nameBans.forEach((p) => {
-        form6.button(`${p.playerName}\nExpired`, "textures/ui/Ping_Offline_Red");
+    ban.getExpiredBansNoRefresh().nameBans.forEach((p) => {
+        form6.button(`${customFormUICodes.action.buttons.positions.main_only}${p.playerName}\nExpired`, "textures/ui/Ping_Offline_Red");
     });
     let banList = ban
-        .getValidBans()
-        .idBans.concat(ban.getExpiredBans().idBans)
-        .concat(ban.getValidBans().nameBans)
-        .concat(ban.getExpiredBans().nameBans);
-    form6.button("Add ID Ban");
-    form6.button("Add Name Ban");
-    form6.button("Back");
+        .getValidBansNoRefresh()
+        .idBans.concat(ban.getExpiredBansNoRefresh().idBans)
+        .concat(ban.getValidBansNoRefresh().nameBans)
+        .concat(ban.getExpiredBansNoRefresh().nameBans);
+    form6.button(customFormUICodes.action.buttons.positions.left_side_only + customFormUICodes.action.buttons.styles.display_icon_as_text + "Add ID Ban", "Ban\nID");
+    form6.button(customFormUICodes.action.buttons.positions.left_side_only + customFormUICodes.action.buttons.styles.display_icon_as_text + "Add Name Ban", "Ban\nName");
+    form6.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
+    form6.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
     return await forceShow(form6, sourceEntity)
         .then(async (ga) => {
         let g = ga;
@@ -76,8 +79,8 @@ export async function manageBans(sourceEntitya) {
                 let form5 = new ModalFormData();
                 form5.title(`Add ID Ban`);
                 form5.textField("Player UUID\nThis is the uuid of the player. ", "Integer");
-                form5.textField("Ban Time (In Minutes)", "Decimal");
-                form5.textField("Reason", "JavaScript Object ex. `\nDate: ${new Date(D\nate\n.now()).toLo\ncaleString()}`", '"§cYOU HAVE BEEN BANNED BY THE BAN HAMMER\\nBanned By: {bannedByName}\\nBanned Until: {unbanDate}\\nBanned On: {banDate}\\nTime Remaining: {timeRemaining}"');
+                form5.textField("Ban Time (In Minutes)\nLeave blank to make the ban duration permanent.", "Decimal");
+                form5.textField("Reason", "§cYOU HAVE BEEN BANNED BY THE BAN HAMMER", '');
                 form5.submitButton("Ban");
                 return await forceShow(form5, sourceEntity)
                     .then((ha) => {
@@ -98,11 +101,11 @@ export async function manageBans(sourceEntitya) {
                         banId: "banId:" +
                             Date.now() +
                             ":" +
-                            String(h.formValues[0]),
-                        unbanDate: Number(h.formValues[1]) * 60000 +
+                            h.formValues[0],
+                        unbanDate: h.formValues[1].trim() === "" ? Infinity : Number(h.formValues[1].trim()) * 60000 +
                             Date.now(),
                         format_version: format_version,
-                        reason: String(h.formValues[2]),
+                        reason: JSON.stringify(h.formValues[2] === "" ? "§cYOU HAVE BEEN BANNED BY THE BAN HAMMER" : h.formValues[2]).slice(0, -1) + '\\n§r§cBanned By: {bannedByName}\\nBanned Until: {unbanDate}\\nBanned On: {banDate}\\nTime Remaining: {timeRemaining}"',
                     });
                     return 1;
                 })
@@ -132,7 +135,7 @@ export async function manageBans(sourceEntitya) {
                 form6.title(`Add Name Ban`);
                 form6.textField("Player Name\nThis is the name of the player. ", "String");
                 form6.textField("Ban Time (In Minutes)", "Decimal");
-                form6.textField("Reason", "JavaScript Object ex. `Date:\n ${new\n Date(Date.now()).to\nLoca\nleString()}`", '"§cYOU HAVE BEEN BANNED BY THE BAN HAMMER\\nBanned By: {bannedByName}\\nBanned Until: {unbanDate}\\nBanned On: {banDate}\\nTime Remaining: {timeRemaining}"');
+                form6.textField("Reason", "§cYOU HAVE BEEN BANNED BY THE BAN HAMMER", '');
                 form6.submitButton("Ban");
                 return await forceShow(form6, sourceEntity)
                     .then((ha) => {
@@ -154,11 +157,13 @@ export async function manageBans(sourceEntitya) {
                             Date.now() +
                             ":" +
                             String(h.formValues[0]),
-                        unbanDate: Number(h.formValues[1]) * 60000 +
+                        unbanDate: h.formValues[1].trim() === "" ? Infinity : Number(h.formValues[1].trim()) * 60000 +
                             Date.now(),
                         format_version: format_version,
-                        reason: String(h.formValues[2]),
+                        reason: JSON.stringify(h.formValues[2] === "" ? "§cYOU HAVE BEEN BANNED BY THE BAN HAMMER" : h.formValues[2]).slice(0, -1) + '\\n§r§cBanned By: {bannedByName}\\nBanned Until: {unbanDate}\\nBanned On: {banDate}\\nTime Remaining: {timeRemaining}"',
                     });
+                    // Manually refresh the ban list after adding the ban so the player will be kicked as soon as possible if they are online, and so the ban will show in the manage bans menu immediately'.
+                    ban.refreshBans();
                     return 1;
                 })
                     .catch(async (e) => {
@@ -180,9 +185,12 @@ export async function manageBans(sourceEntitya) {
     case banList.length+4:
     backMenuFunction(sourceEntity)*/
                 break;
+            case banList.length + 3:
+                return 0;
+                break;
             default:
                 let form4 = new ActionFormData();
-                form4.title(`Manage Ban`);
+                form4.title(customFormUICodes.action.titles.formStyles.general + `Manage Ban`);
                 let ba = banList[g.selection];
                 let timeRemaining = ba.timeRemaining;
                 form4.body(`§bformat_version: §e${ba.format_version}\n§r§bban_format_version: §e${ba.ban_format_version}\n§r§bbanId: §6${ba.banId}\n§r§btype: §a${ba.type}\ntimeRemaining: ${timeRemaining.days}d, ${timeRemaining.hours}h ${timeRemaining.minutes}m ${timeRemaining.seconds}s ${timeRemaining.milliseconds}ms\n§r§bbanDate: §q${new Date(Number(ba.banDate) +
@@ -215,8 +223,9 @@ export async function manageBans(sourceEntitya) {
                     ? ba.originalPlayerName
                     : ba.playerName}\n§r§bbannedByName: §a${ba.bannedByName}\n§r§bbannedById: §6${ba.bannedById}\n§r§bremoveAfterBanExpires: §d${ba.removeAfterBanExpires}\n§r§breason: §r§f${ba.reason}\n§r§b${
                 /*JSON.stringify(banList[g.selection]).replaceAll(/(?<!\\)(?![},:](\"|{\"))\"/g, "§r§f\"")*/ ""}`);
-                form4.button("Unban");
-                form4.button("Back");
+                form4.button(customFormUICodes.action.buttons.positions.main_only + "Unban", "textures/ui/trash_default");
+                form4.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
+                form4.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
                 return await forceShow(form4, sourceEntity)
                     .then(async (ha) => {
                     let h = ha;
@@ -226,8 +235,8 @@ export async function manageBans(sourceEntitya) {
                     if (h.selection == 0) {
                         if (securityVariables.ultraSecurityModeEnabled) {
                             if (securityVariables.testPlayerForPermission(sourceEntity, "andexdb.unbanPlayers") == false) {
-                                const r = await showMessage(sourceEntity, "Access Denied (403)", "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.unbanPlayers", "Okay", "Cancel");
-                                if (r.canceled || r.selection == 0) {
+                                const r = await showMessage(sourceEntity, "Access Denied (403)", "You do not have permission to unban players. You need the following permission to unban players: andexdb.unbanPlayers", "Okay", "Cancel");
+                                if (r.canceled || r.selection === 0) {
                                     return 1;
                                 }
                                 else {
@@ -235,11 +244,20 @@ export async function manageBans(sourceEntitya) {
                                 }
                             }
                         }
-                        banList[g.selection].remove();
+                        const r = await showMessage(sourceEntity, "Are you sure?", `Are you sure you want to unban ${banList[g.selection].playerName ?? banList[g.selection].originalPlayerName}<${banList[g.selection].playerId ?? banList[g.selection].originalPlayerId}>?`, "Unban", "Cancel");
+                        if (r.canceled || r.selection === 1) {
+                            return 0;
+                        }
+                        else {
+                            banList[g.selection].remove();
+                            return 1;
+                        }
+                    }
+                    if (h.selection === 1) {
                         return 1;
                     }
-                    if (h.selection == 1) {
-                        return 1;
+                    if (h.selection === 2) {
+                        return 0;
                     }
                 })
                     .catch(async (e) => {

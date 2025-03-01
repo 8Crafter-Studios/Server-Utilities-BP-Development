@@ -1,10 +1,11 @@
-import { Entity, Player, world } from "@minecraft/server";
+import { Entity, Player } from "@minecraft/server";
 import { ActionFormData, ActionFormResponse } from "@minecraft/server-ui";
 import { forceShow } from "modules/ui/functions/forceShow";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { showMessage } from "modules/utilities/functions/showMessage";
 import { defaultPlayerMenuLeaderboardStatistics } from "../constants/defaultPlayerMenuLeaderboardStatistics";
 import { playerMenu_leaderboard } from "./playerMenu_leaderboard";
+import { customFormUICodes } from "../constants/customFormUICodes";
 export async function playerMenu_leaderboards(sourceEntitya) {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW
         ? sourceEntitya.player
@@ -25,13 +26,13 @@ export async function playerMenu_leaderboards(sourceEntitya) {
     // menuConfig.buttons.map(k=>[k, menuButtonIds.mainMenu.buttons[k]])
     const buttons = menuConfig.leaderboards.map(k => [k, defaultPlayerMenuLeaderboardStatistics.find(s => s.id === k && menuConfig.builtInStats[k].enabled) ?? menuConfig.customStats.find(s => s.id === k)]);
     let form = new ActionFormData();
-    form.title("Leaderboards");
+    form.title(customFormUICodes.action.titles.formStyles.general + "Leaderboards");
     form.body("Select a leaderboard.");
     buttons.forEach(([k, b]) => {
-        form.button(b.buttonDisplayName, b.buttonIcon);
+        form.button(customFormUICodes.action.buttons.positions.main_only + b.buttonDisplayName, b.buttonIcon);
     });
-    form.button("Back", "textures/ui/arrow_left");
-    form.button("Close", "textures/ui/crossout");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
     return await forceShow(form, sourceEntity)
         .then(async (ra) => {
         let r = ra;
@@ -52,9 +53,9 @@ export async function playerMenu_leaderboards(sourceEntitya) {
                 }
         }
     })
-        .catch((e) => {
+        .catch(async (e) => {
         console.error(e, e.stack);
-        return 0;
+        return ((await showMessage(sourceEntity, "An Error occurred", `An error occurred: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
     });
 }
 //# sourceMappingURL=playerMenu_leaderboards.js.map

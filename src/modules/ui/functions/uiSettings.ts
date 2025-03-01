@@ -6,6 +6,7 @@ import { uiSettings_main } from "./uiSettings_main";
 import { securityVariables } from "security/ultraSecurityModeUtils";
 import { showMessage } from "modules/utilities/functions/showMessage";
 import { uiSettings_menuConfigurations } from "./uiSettings_menuConfigurations";
+import { customFormUICodes } from "../constants/customFormUICodes";
 
 export async function uiSettings(
     sourceEntitya: Entity | executeCommandPlayerW | Player
@@ -26,12 +27,12 @@ export async function uiSettings(
     }
     let form = new ActionFormData();
     let players = world.getPlayers();
-    form.title("UI Settings");
-    form.button("Main", "textures/ui/debug_glyph_color");
-    form.button("Menu Configurations", "textures/ui/automation_glyph_color");
-    form.button("Advanced", "textures/ui/creator_glyph_color");
-    form.button("Back", "textures/ui/arrow_left");
-    form.button("Close", "textures/ui/crossout");
+    form.title(customFormUICodes.action.titles.formStyles.gridMenu + "UI Settings");
+    form.button(customFormUICodes.action.buttons.positions.main_only + "Main", "textures/ui/debug_glyph_color");
+    form.button(customFormUICodes.action.buttons.positions.main_only + "Menu Configurations", "textures/ui/automation_glyph_color");
+    form.button(customFormUICodes.action.buttons.positions.main_only + "Advanced", "textures/ui/creator_glyph_color");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
 
     return await forceShow(form, sourceEntity as Player)
         .then(async (ra) => {
@@ -68,6 +69,6 @@ export async function uiSettings(
         })
         .catch(async (e) => {
             console.error(e, e.stack);
-            return ((await showMessage(sourceEntity, "An Error Occured", `An error occured: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
+            return ((await showMessage(sourceEntity, "An Error occurred", `An error occurred: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
         });
 }

@@ -294,7 +294,7 @@ form.button("Debug Screen", "textures/ui/ui_debug_glyph_color");*/
     });
 }
 export async function securitySettings_playersWithPermissions_permission(sourceEntitya, permission, pagen = 0, maxplayersperpage = config.ui.pages
-    .maxPlayersPerManagePlayersPage ?? 10, search) {
+    .maxPlayersPerManagePlayersPage ?? 9, search) {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW
         ? sourceEntitya.player
         : sourceEntitya;

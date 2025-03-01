@@ -6,168 +6,181 @@ import { showMessage } from "modules/utilities/functions/showMessage";
 import { savedPlayer } from "modules/player_save/classes/savedPlayer";
 import { numberFormatter_compact } from "modules/utilities/functions/numberFormatter";
 import { Bounty } from "modules/main/classes/Bounty";
-import { playerMenu_bounty_individual } from "./playerMenu_bounty_individual";
 import { playerMenu_bounty_from_individual } from "./playerMenu_bounty_from_individual";
+import { customFormUICodes } from "../constants/customFormUICodes";
 
 export async function playerMenu_bounties_list_from(
     sourceEntitya: Entity | executeCommandPlayerW | Player,
     pagen: number = 0,
-    maxplayersperpage: number = config.ui.pages
-        .maxPlayersPerManagePlayersPage ?? 10,
+    maxbountiesperpage: number = config.ui.pages.maxPlayersPerManagePlayersPage ?? 9,
     search?: {
         value: string;
         caseSensitive?: boolean;
-    }
+    },
+    cachedBounties?: [bounty: Bounty, target: savedPlayer][]
 ): Promise<0 | 1> {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW
-        ? sourceEntitya.player
-        : sourceEntitya as Player;
-    if(!(sourceEntity instanceof Player)){
-        throw new TypeError("Invalid Player. Expected an instance of the Player class, or an instance of the executeCommandPlayerW class with a Player linked to it, but instead got " + (typeof sourceEntity == "object" ? sourceEntity === null ? "object[null]" : "object[" + ((sourceEntity as object).constructor.name ?? "unknown") + "]" : typeof sourceEntity) + ".")
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
+    if (!(sourceEntity instanceof Player)) {
+        throw new TypeError(
+            "Invalid Player. Expected an instance of the Player class, or an instance of the executeCommandPlayerW class with a Player linked to it, but instead got " +
+                (typeof sourceEntity == "object"
+                    ? sourceEntity === null
+                        ? "object[null]"
+                        : "object[" + ((sourceEntity as object).constructor.name ?? "unknown") + "]"
+                    : typeof sourceEntity) +
+                "."
+        );
     }
     if (!config.bountySystem.enabled) {
-        const r = await showMessage(sourceEntity as Player, "Bounty System Disabled", "The bounty system is disabled. It must be enabled in Main Menu > Settings > Bounty System.", "Back", "Cancel");
-        if(r.canceled || r.selection == 0){
+        const r = await showMessage(
+            sourceEntity as Player,
+            "Bounty System Disabled",
+            "The bounty system is disabled. It must be enabled in Main Menu > Settings > Bounty System.",
+            "Back",
+            "Cancel"
+        );
+        if (r.canceled || r.selection == 0) {
             return 1;
-        }else{
+        } else {
             return 0;
         }
     }
     let form = new ActionFormData();
     const page = Math.max(0, pagen);
-    let bounties = Bounty.getBountiesFromPlayer(sourceEntity.id).map(b=>[b, b.getLinkedTargetSavedPlayer()] as [bounty: Bounty, target: savedPlayer])
-        .filter(b=>!b[1].isBanned);
-    let displayPlayers = bounties
-    .filter((p) => !!search
-        ? search.caseSensitive == true
-            ? p[1].name.includes(search.value)
-            : p[1].name.toLowerCase().includes(search.value.toLowerCase())
-        : true
-    ).sort(((a: [Bounty, savedPlayer], b: [Bounty, savedPlayer]) => (a[0].value > b[0].value ? -1 : a[0].value < b[0].value ? 1 : a[1].name > b[1].name ? -1 : a[1].name < b[1].name ? 1 : 0)));
-    const numsavedplayers = displayPlayers.length;
+    let displayBounties: [bounty: Bounty, target: savedPlayer][] = cachedBounties ?? [];
+    if (cachedBounties === undefined) {
+        let bounties = Bounty.getBountiesFromPlayer(sourceEntity.id)
+            .map((b) => [b, b.getLinkedTargetSavedPlayer()] as [bounty: Bounty, target: savedPlayer])
+            .filter((b) => !b[1].isBanned);
+        displayBounties = bounties
+            .filter((p) =>
+                !!search
+                    ? search.caseSensitive == true
+                        ? p[1].name.includes(search.value)
+                        : p[1].name.toLowerCase().includes(search.value.toLowerCase())
+                    : true
+            )
+            .sort((a: [Bounty, savedPlayer], b: [Bounty, savedPlayer]) =>
+                a[0].value > b[0].value ? -1 : a[0].value < b[0].value ? 1 : a[1].name > b[1].name ? -1 : a[1].name < b[1].name ? 1 : 0
+            );
+    }
+    const numsavedplayers = displayBounties.length;
     form.title(
-        `${!!search ? "Search Results" : "Bounties Placed By Me"} ${Math.min(
+        `${customFormUICodes.action.titles.formStyles.gridMenu}${!!search ? "Search Results" : "Bounties Placed By Me"} ${Math.min(
             numsavedplayers,
-            page * maxplayersperpage + 1
-        )}-${Math.min(
-            numsavedplayers,
-            (page + 1) * maxplayersperpage
-        )} of ${numsavedplayers}`
+            page * maxbountiesperpage + 1
+        )}-${Math.min(numsavedplayers, (page + 1) * maxbountiesperpage)} of ${numsavedplayers}`
     );
-    const numpages = Math.ceil(numsavedplayers / maxplayersperpage);
+    const numpages = Math.ceil(numsavedplayers / maxbountiesperpage);
     if (!!search) {
-        form.body(
-            `Searching for: ${JSON.stringify(
-                search.value
-            )}\nCase Sensitive: ${JSON.stringify(
-                search.caseSensitive ?? false
-            )}`
-        );
-    }else{
+        form.body(`Searching for: ${JSON.stringify(search.value)}\nCase Sensitive: ${JSON.stringify(search.caseSensitive ?? false)}`);
+    } else {
         form.body(`There ${numsavedplayers === 1 ? "is" : "are"} ${numsavedplayers} active bount${numsavedplayers === 1 ? "y" : "ies"} that you have placed.`);
     }
-    form.button("Search", "textures/ui/spyglass_flat");
+    form.button(customFormUICodes.action.buttons.positions.left_side_only + "Search", "textures/ui/spyglass_flat");
     form.button(
-        (page != 0 ? "§0" : "§8") + "Previous Page",
+        customFormUICodes.action.buttons.positions.left_side_only +
+            (page != 0 ? "" : customFormUICodes.action.buttons.options.disabled + "§8") +
+            "Previous Page",
         "textures/ui/arrow_left"
     );
     form.button(
-        (page < numpages - 1 ? "§0" : "§8") + "Next Page",
+        customFormUICodes.action.buttons.positions.left_side_only +
+            (numpages > 1 ? "" : customFormUICodes.action.buttons.options.disabled + "§8") +
+            "Go To Page",
+        "textures/ui/page"
+    );
+    form.button(
+        customFormUICodes.action.buttons.positions.left_side_only +
+            (page < numpages - 1 ? "" : customFormUICodes.action.buttons.options.disabled + "§8") +
+            "Next Page",
         "textures/ui/arrow_right"
     );
-    displayPlayers.slice(page * maxplayersperpage, (page + 1) * maxplayersperpage).forEach((p, i) => {
+    // Padding
+    form.button("");
+    form.button("");
+    let displayBountiesB = displayBounties.slice(page * maxbountiesperpage, (page + 1) * maxbountiesperpage);
+    displayBountiesB.forEach((p, i) => {
         let text = `${numberFormatter_compact(p[0].value, true)}\n${p[1].name}`;
-        form.button(
-            text,
-            p[1].isOnline
-                ? "textures/ui/online"
-                : p[1].isBanned
-                    ? "textures/ui/Ping_Offline_Red_Dark"
-                    : "textures/ui/offline"
-        );
+        form.button(text, p[1].isOnline ? "textures/ui/online" : p[1].isBanned ? "textures/ui/Ping_Offline_Red_Dark" : "textures/ui/offline");
     });
-    form.button("Back", "textures/ui/arrow_left");
-    form.button("Close", "textures/ui/crossout");
-    return await forceShow(
-        form,
-        sourceEntity,
-    )
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Refresh", "textures/ui/refresh");
+    return await forceShow(form, sourceEntity)
         .then(async (ra) => {
             let r = ra as ActionFormResponse;
             // This will stop the code when the player closes the form
             if (r.canceled) return 1;
 
-            switch ((["search", "previous", "next"] as const)[r.selection] ?? (!!displayPlayers[r.selection-3] ? "bounty" : undefined) ?? (["back", "close"] as const)[r.selection-displayPlayers.length-3]) {
+            switch (
+                (["search", "previous", "go", "next", "", ""] as const)[r.selection] ??
+                (!!displayBountiesB[r.selection - 6] ? "bounty" : undefined) ??
+                (["back", "close", "refresh"] as const)[r.selection - displayBountiesB.length - 6]
+            ) {
                 case "search":
                     {
                         const rb = await tryget(
-                            async () => await new ModalFormData()
-                                .title("Search")
-                                .textField(
-                                    "",
-                                    "Search",
-                                    search?.value ?? ""
-                                )
-                                .toggle(
-                                    "Case Sensitive",
-                                    search?.caseSensitive ?? false
-                                )
-                                .submitButton("Search")
-                                .forceShow(sourceEntity as Player)
+                            async () =>
+                                await new ModalFormData()
+                                    .title("Search")
+                                    .textField("", "Search", search?.value ?? "")
+                                    .toggle("Case Sensitive", search?.caseSensitive ?? false)
+                                    .submitButton("Search")
+                                    .forceShow(sourceEntity as Player)
                         );
                         if (!!!rb || rb?.canceled == true) {
-                            return await playerMenu_bounties_list_from(
-                                sourceEntity,
-                                page,
-                                maxplayersperpage,
-                                search
-                            );
+                            return await playerMenu_bounties_list_from(sourceEntity, page, maxbountiesperpage, search, cachedBounties);
                         }
                         return await playerMenu_bounties_list_from(
                             sourceEntity,
                             undefined,
-                            maxplayersperpage,
+                            maxbountiesperpage,
                             {
                                 value: rb.formValues[0] as string,
                                 caseSensitive: rb.formValues[1] as boolean,
-                            }
+                            },
+                            undefined
                         ); /*
             return await showMessage(sourceEntity as Player, undefined, "§cSorry, the search feature has not been implemented yet.", "Back", "Close").then(async r=>{
                 if(r.selection==0){
-                    return await managePlayers(sourceEntity, page, maxplayersperpage, search);
+                    return await managePlayers(sourceEntity, page, maxbountiesperpage, search);
                 }else{
                     return 0;
                 }
             })*/
                     }
-                    break;
                 case "previous":
+                    return await playerMenu_bounties_list_from(sourceEntity, Math.max(0, page - 1), maxbountiesperpage, search, cachedBounties);
+                case "go": {
+                    const rb = await tryget(
+                        async () =>
+                            await new ModalFormData()
+                                .title("Go To Page")
+                                .textField(`Current Page: ${page + 1}\nPage # (Between 1 and ${numpages})`, "Page #")
+                                .submitButton("Go To Page")
+                                .forceShow(sourceEntity as Player)
+                    );
                     return await playerMenu_bounties_list_from(
                         sourceEntity,
-                        Math.max(0, page - 1),
-                        maxplayersperpage,
-                        search
+                        Math.max(1, Math.min(numpages, (rb.formValues?.[0] as string)?.toNumber() ?? page + 1)) - 1,
+                        maxbountiesperpage,
+                        search,
+                        displayBounties
                     );
-                    break;
+                }
                 case "next":
-                    return await playerMenu_bounties_list_from(
-                        sourceEntity,
-                        Math.min(numpages - 1, page + 1),
-                        maxplayersperpage,
-                        search
-                    );
-                    break;
+                    return await playerMenu_bounties_list_from(sourceEntity, Math.min(numpages - 1, page + 1), maxbountiesperpage, search, cachedBounties);
                 case "bounty":
-                    if ((await playerMenu_bounty_from_individual(sourceEntity, bounties[r.selection-3][0], bounties[r.selection-3][1])) == 1) {
-                        return await playerMenu_bounties_list_from(
-                            sourceEntity,
-                            page,
-                            maxplayersperpage,
-                            search
-                        );
+                    if (
+                        (await playerMenu_bounty_from_individual(sourceEntity, displayBountiesB[r.selection - 6][0], displayBountiesB[r.selection - 6][1])) == 1
+                    ) {
+                        return await playerMenu_bounties_list_from(sourceEntity, page, maxbountiesperpage, search, cachedBounties);
                     } else {
                         return 0;
                     }
+                case "refresh":
+                    return await playerMenu_bounties_list_from(sourceEntity, page, maxbountiesperpage, search, undefined);
                 case "back":
                     return 1;
                 case "close":
@@ -175,8 +188,8 @@ export async function playerMenu_bounties_list_from(
                 default:
             }
         })
-        .catch((e) => {
+        .catch(async (e) => {
             console.error(e, e.stack);
-            return 0;
+            return ((await showMessage(sourceEntity, "An Error occurred", `An error occurred: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
         });
 }

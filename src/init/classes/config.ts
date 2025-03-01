@@ -1,6 +1,7 @@
 import { world, StructureSaveMode, type DimensionLocation, Dimension } from "@minecraft/server";
 import { gwdp } from "init/functions/gwdp";
 import type { Warp } from "modules/coordinates/interfaces/Warp";
+import type { PlayerDataSaveMode } from "modules/player_save/classes/savedPlayer";
 import { defaultPlayerMenuLeaderboardStatistics } from "modules/ui/constants/defaultPlayerMenuLeaderboardStatistics";
 import { menuButtonIds } from "modules/ui/constants/menuButtonIds";
 import type { playerMenuLeaderboardStatistic, playerMenuLeaderboardStatistic_JSONB } from "modules/ui/types/playerMenuLeaderboardStatistic";
@@ -1258,21 +1259,21 @@ export class config {
                                             get displayOptions() {
                                                 return {
                                                     /**
-                                                     * Whether or not to prefix the displayed value for this statistic with a dollar sign.
+                                                     * A currency symbol to prefix the displayed value with.
                                                      *
-                                                     * Defaults to true.
+                                                     * Defaults to "$".
                                                      */
-                                                    get prefixWithDollarSign(): boolean {
-                                                        return Boolean(
+                                                    get currencyPrefix(): string {
+                                                        return String(
                                                             world.getDynamicProperty(
-                                                                "andexdbSettings:ui.menus.playerMenu_leaderboards.builtInStats.money.displayOptions.prefixWithDollarSign"
-                                                            ) ?? true
+                                                                "andexdbSettings:ui.menus.playerMenu_leaderboards.builtInStats.money.displayOptions.currencyPrefix"
+                                                            ) ?? "$"
                                                         );
                                                     },
-                                                    set prefixWithDollarSign(prefixWithDollarSign: boolean | undefined) {
+                                                    set currencyPrefix(prefixWithDollarSign: string | undefined) {
                                                         world.setDynamicProperty(
-                                                            "andexdbSettings:ui.menus.playerMenu_leaderboards.builtInStats.money.displayOptions.prefixWithDollarSign",
-                                                            prefixWithDollarSign ?? true
+                                                            "andexdbSettings:ui.menus.playerMenu_leaderboards.builtInStats.money.displayOptions.currencyPrefix",
+                                                            prefixWithDollarSign ?? "$"
                                                         );
                                                     },
                                                     /**
@@ -1314,7 +1315,7 @@ export class config {
                                             buttonIcon: s.buttonIcon,
                                             displayOptions: {
                                                 addCommaSeparators: s.displayOptions?.addCommaSeparators ?? true,
-                                                prefixWithDollarSign: s.displayOptions?.prefixWithDollarSign ?? false,
+                                                currencyPrefix: s.displayOptions?.currencyPrefix ?? "",
                                                 toFixed: s.displayOptions?.toFixed,
                                                 valueDisplayColor: s.displayOptions?.valueDisplayColor,
                                                 valueDisplayTransformer_button:
@@ -1341,7 +1342,7 @@ export class config {
                                                 buttonIcon: s.buttonIcon,
                                                 displayOptions: {
                                                     addCommaSeparators: s.displayOptions?.addCommaSeparators ?? true,
-                                                    prefixWithDollarSign: s.displayOptions?.prefixWithDollarSign ?? false,
+                                                    currencyPrefix: s.displayOptions?.currencyPrefix ?? "",
                                                     toFixed: s.displayOptions?.toFixed,
                                                     valueDisplayColor: s.displayOptions?.valueDisplayColor,
                                                     valueDisplayTransformer_button:
@@ -1368,7 +1369,7 @@ export class config {
                                                 buttonIcon: s.buttonIcon,
                                                 displayOptions: {
                                                     addCommaSeparators: s.displayOptions?.addCommaSeparators ?? true,
-                                                    prefixWithDollarSign: s.displayOptions?.prefixWithDollarSign ?? false,
+                                                    currencyPrefix: s.displayOptions?.currencyPrefix ?? "",
                                                     toFixed: s.displayOptions?.toFixed,
                                                     valueDisplayColor: s.displayOptions?.valueDisplayColor,
                                                     valueDisplayTransformer_button:
@@ -1397,14 +1398,14 @@ export class config {
                                 world.setDynamicProperty(
                                     "andexdbSettings:ui.menus.playerMenu_leaderboards.customStats",
                                     JSONB.stringify(
-                                        buttonList.map((s) => {
+                                        (buttonList ?? []).map((s) => {
                                             if (s.type === "custom") {
                                                 return {
                                                     buttonDisplayName: s.buttonDisplayName,
                                                     buttonIcon: s.buttonIcon,
                                                     displayOptions: {
                                                         addCommaSeparators: s.displayOptions?.addCommaSeparators ?? true,
-                                                        prefixWithDollarSign: s.displayOptions?.prefixWithDollarSign ?? false,
+                                                        currencyPrefix: s.displayOptions?.currencyPrefix ?? "",
                                                         toFixed: s.displayOptions?.toFixed,
                                                         valueDisplayColor: s.displayOptions?.valueDisplayColor,
                                                         valueDisplayTransformer_button:
@@ -1431,7 +1432,7 @@ export class config {
                                                         buttonIcon: s.buttonIcon,
                                                         displayOptions: {
                                                             addCommaSeparators: s.displayOptions?.addCommaSeparators ?? true,
-                                                            prefixWithDollarSign: s.displayOptions?.prefixWithDollarSign ?? false,
+                                                            currencyPrefix: s.displayOptions?.currencyPrefix ?? "",
                                                             toFixed: s.displayOptions?.toFixed,
                                                             valueDisplayColor: s.displayOptions?.valueDisplayColor,
                                                             valueDisplayTransformer_button:
@@ -1458,7 +1459,7 @@ export class config {
                                                         buttonIcon: s.buttonIcon,
                                                         displayOptions: {
                                                             addCommaSeparators: s.displayOptions?.addCommaSeparators ?? true,
-                                                            prefixWithDollarSign: s.displayOptions?.prefixWithDollarSign ?? false,
+                                                            currencyPrefix: s.displayOptions?.currencyPrefix ?? "",
                                                             toFixed: s.displayOptions?.toFixed,
                                                             valueDisplayColor: s.displayOptions?.valueDisplayColor,
                                                             valueDisplayTransformer_button:
@@ -1481,7 +1482,7 @@ export class config {
                                                     } as playerMenuLeaderboardStatistic_JSONB<"customAdvanced", "order">;
                                                 }
                                             }
-                                        }) ?? []
+                                        })
                                     )
                                 );
                             },
@@ -1516,14 +1517,14 @@ export class config {
                             get leaderboards(): string[] {
                                 return JSON.parse(
                                     String(
-                                        world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.trackedStats") ??
+                                        world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.leaderboards") ??
                                             JSON.stringify(defaultPlayerMenuLeaderboardStatistics.map((s) => s.id))
                                     )
                                 );
                             },
                             set leaderboards(buttonList: string[] | undefined) {
                                 world.setDynamicProperty(
-                                    "andexdbSettings:ui.menus.playerMenu_leaderboards.trackedStats",
+                                    "andexdbSettings:ui.menus.playerMenu_leaderboards.leaderboards",
                                     JSON.stringify(buttonList ?? defaultPlayerMenuLeaderboardStatistics.map((s) => s.id))
                                 );
                             },
@@ -1566,12 +1567,12 @@ export class config {
                      * Moved from {@link config} to {@link config.ui.pages} in version 1.23.0-preview.20+BUILD.1 on 10/04/2024 at 3:10:37 PM PDT.
                      */
                     get maxPlayersPerManagePlayersPage(): number {
-                        return Number(world.getDynamicProperty("andexdbSettings:maxPlayersPerManagePlayersPage") ?? 10);
+                        return Number(world.getDynamicProperty("andexdbSettings:maxPlayersPerManagePlayersPage") ?? 9);
                     },
                     set maxPlayersPerManagePlayersPage(maxPlayersPerManagePlayersPage: number | undefined) {
                         world.setDynamicProperty(
                             "andexdbSettings:maxPlayersPerManagePlayersPage",
-                            Math.min(1000, Math.max(1, maxPlayersPerManagePlayersPage ?? 10))
+                            Math.min(1000, Math.max(1, maxPlayersPerManagePlayersPage ?? 9))
                         );
                     },
                     /**
@@ -1640,6 +1641,13 @@ export class config {
                     Number.isNaN(Number(protectedAreasRefreshRate)) ? 200 : Math.min(1000000, Math.max(1, Number(protectedAreasRefreshRate ?? 200)))
                 );
             },
+            /**
+             * How often to check for banned players.
+             * 
+             * Dynamic Property ID: andexdbSettings:bannedPlayersRefreshRate
+             * 
+             * @default 20
+             */
             get bannedPlayersRefreshRate(): number {
                 return Number(world.getDynamicProperty("andexdbSettings:bannedPlayersRefreshRate") ?? 20);
             },
@@ -1647,6 +1655,22 @@ export class config {
                 world.setDynamicProperty(
                     "andexdbSettings:bannedPlayersRefreshRate",
                     Number.isNaN(Number(bannedPlayersRefreshRate)) ? 20 : Math.min(1000, Math.max(1, Number(bannedPlayersRefreshRate ?? 20)))
+                );
+            },
+            /**
+             * How long it has to be since the last ban refresh before the bans list will be automatically refreshed, when getting the bans list or checking if a player is banned.
+             * 
+             * Dynamic Property ID: andexdbSettings:bansMinimumAutoRefresh
+             * 
+             * @default 1000
+             */
+            get bansMinimumAutoRefresh(): number {
+                return Number(world.getDynamicProperty("andexdbSettings:bansMinimumAutoRefresh") ?? 1000);
+            },
+            set bansMinimumAutoRefresh(bansMinimumAutoRefresh: number | undefined) {
+                world.setDynamicProperty(
+                    "andexdbSettings:bansMinimumAutoRefresh",
+                    Number.isNaN(Number(bansMinimumAutoRefresh)) ? 1000 : Number(bansMinimumAutoRefresh ?? 1000)
                 );
             },
             get debugMode(): boolean {
@@ -1676,6 +1700,12 @@ export class config {
                     hideWatchdogTerminationCrashEnabledWarningsOnStartup ?? false
                 );
             },
+            get autoSavePlayerData(): boolean {
+                return Boolean(world.getDynamicProperty("andexdbSettings:autoSavePlayerData") ?? true);
+            },
+            set autoSavePlayerData(autoSavePlayerData: boolean | undefined) {
+                world.setDynamicProperty("andexdbSettings:autoSavePlayerData", autoSavePlayerData ?? true);
+            },
             /**
              * It is recommended to leave this set to false.
              * @default false
@@ -1702,6 +1732,15 @@ export class config {
                 world.setDynamicProperty(
                     "andexdbSettings:spreadPlayerInventoryDataSavesOverMultipleTicks",
                     spreadPlayerInventoryDataSavesOverMultipleTicks ?? true
+                );
+            },
+            get playerDataSavePerformanceMode(): PlayerDataSaveMode {
+                return String(world.getDynamicProperty("andexdbSettings:playerDataSavePerformanceMode") ?? "full") as PlayerDataSaveMode;
+            },
+            set playerDataSavePerformanceMode(playerDataSavePerformanceMode: PlayerDataSaveMode | undefined) {
+                world.setDynamicProperty(
+                    "andexdbSettings:playerDataSavePerformanceMode",
+                    playerDataSavePerformanceMode ?? "full"
                 );
             },
             get showEntityScaleNotFoundConsoleLog(): boolean {

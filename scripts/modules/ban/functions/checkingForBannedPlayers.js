@@ -31,36 +31,36 @@ export function startCheckingForBannedPlayers() {
                 let reason = b?.reason;
                 try {
                     reason = String(eval(b?.reason
-                        ?.replaceAll("{timeRemaining}", `${b?.timeRemaining.days}d, ${b?.timeRemaining.hours}h ${b?.timeRemaining.minutes}m ${b?.timeRemaining.seconds}s ${b?.timeRemaining.milliseconds}ms`)
-                        ?.replaceAll("{timeRemainingDays}", String(b?.timeRemaining.days))
-                        ?.replaceAll("{timeRemainingHours}", String(b?.timeRemaining.hours))
-                        ?.replaceAll("{timeRemainingMinutes}", String(b?.timeRemaining.minutes))
-                        ?.replaceAll("{timeRemainingSeconds}", String(b?.timeRemaining.seconds))
-                        ?.replaceAll("{timeRemainingMilliseconds}", String(b?.timeRemaining.milliseconds))
+                        ?.replaceAll("{timeRemaining}", b.unbanDate === Infinity ? "Infinity" : `${b?.timeRemaining.days}d, ${b?.timeRemaining.hours}h ${b?.timeRemaining.minutes}m ${b?.timeRemaining.seconds}s ${b?.timeRemaining.milliseconds}ms`)
+                        ?.replaceAll("{timeRemainingDays}", b.unbanDate === Infinity ? "Infinity" : String(b?.timeRemaining.days))
+                        ?.replaceAll("{timeRemainingHours}", b.unbanDate === Infinity ? "Infinity" : String(b?.timeRemaining.hours))
+                        ?.replaceAll("{timeRemainingMinutes}", b.unbanDate === Infinity ? "Infinity" : String(b?.timeRemaining.minutes))
+                        ?.replaceAll("{timeRemainingSeconds}", b.unbanDate === Infinity ? "Infinity" : String(b?.timeRemaining.seconds))
+                        ?.replaceAll("{timeRemainingMilliseconds}", b.unbanDate === Infinity ? "Infinity" : String(b?.timeRemaining.milliseconds))
                         ?.replaceAll("{bannedBy}", String(b?.bannedByName))
                         ?.replaceAll("{bannedByName}", String(b?.bannedByName))
                         ?.replaceAll("{bannedById}", String(b?.bannedById))
                         ?.replaceAll("{banDate}", String(new Date(Number(b?.banDate)).toLocaleString() + " GMT"))
-                        ?.replaceAll("{unbanDate}", String(new Date(Number(b?.unbanDate)).toLocaleString() + " GMT"))
+                        ?.replaceAll("{unbanDate}", b.unbanDate === Infinity ? "Never" : String(new Date(Number(b?.unbanDate)).toLocaleString() + " GMT"))
                         ?.replaceAll("{type}", String(b?.type))
-                        ?.replaceAll("{timeRemainingRaw}", String(b?.timeRemainingRaw))));
+                        ?.replaceAll("{timeRemainingRaw}", b.unbanDate === Infinity ? "Infinity" : String(b?.timeRemainingRaw))));
                 }
                 catch (e) {
                     reason = b?.reason
-                        ?.replaceAll("{timeRemaining}", `${b?.timeRemaining.days}d, ${b?.timeRemaining.hours}h ${b?.timeRemaining.minutes}m ${b?.timeRemaining.seconds}s ${b?.timeRemaining.milliseconds}ms`)
-                        ?.replaceAll("{timeRemainingDays}", String(b?.timeRemaining.days))
-                        ?.replaceAll("{timeRemainingHours}", String(b?.timeRemaining.hours))
-                        ?.replaceAll("{timeRemainingMinutes}", String(b?.timeRemaining.minutes))
-                        ?.replaceAll("{timeRemainingSeconds}", String(b?.timeRemaining.seconds))
-                        ?.replaceAll("{timeRemainingMilliseconds}", String(b?.timeRemaining.milliseconds))
+                        ?.replaceAll("{timeRemaining}", b.unbanDate === Infinity ? "Infinity" : `${b?.timeRemaining.days}d, ${b?.timeRemaining.hours}h ${b?.timeRemaining.minutes}m ${b?.timeRemaining.seconds}s ${b?.timeRemaining.milliseconds}ms`)
+                        ?.replaceAll("{timeRemainingDays}", b.unbanDate === Infinity ? "Infinity" : String(b?.timeRemaining.days))
+                        ?.replaceAll("{timeRemainingHours}", b.unbanDate === Infinity ? "Infinity" : String(b?.timeRemaining.hours))
+                        ?.replaceAll("{timeRemainingMinutes}", b.unbanDate === Infinity ? "Infinity" : String(b?.timeRemaining.minutes))
+                        ?.replaceAll("{timeRemainingSeconds}", b.unbanDate === Infinity ? "Infinity" : String(b?.timeRemaining.seconds))
+                        ?.replaceAll("{timeRemainingMilliseconds}", b.unbanDate === Infinity ? "Infinity" : String(b?.timeRemaining.milliseconds))
                         ?.replaceAll("{bannedBy}", String(b?.bannedByName))
                         ?.replaceAll("{bannedByName}", String(b?.bannedByName))
                         ?.replaceAll("{bannedById}", String(b?.bannedById))
                         ?.replaceAll("{banDate}", String(new Date(Number(b?.banDate)).toLocaleString() +
                         " GMT"))
-                        ?.replaceAll("{unbanDate}", String(new Date(Number(b?.unbanDate)).toLocaleString() + " GMT"))
+                        ?.replaceAll("{unbanDate}", b.unbanDate === Infinity ? "Never" : String(new Date(Number(b?.unbanDate)).toLocaleString() + " GMT"))
                         ?.replaceAll("{type}", String(b?.type))
-                        ?.replaceAll("{timeRemainingRaw}", String(b?.timeRemainingRaw))
+                        ?.replaceAll("{timeRemainingRaw}", b.unbanDate === Infinity ? "Infinity" : String(b?.timeRemainingRaw))
                         ?.escapeCharactersB(true)?.v;
                 }
                 p.runCommand(`/kick ${JSON.stringify(p.name)} ${reason}`);

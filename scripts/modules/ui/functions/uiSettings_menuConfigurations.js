@@ -5,6 +5,7 @@ import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPl
 import { securityVariables } from "security/ultraSecurityModeUtils";
 import { showMessage } from "modules/utilities/functions/showMessage";
 import { uiSettings_menuConfigurations_playerMenu } from "./uiSettings_menuConfigurations_playerMenu";
+import { customFormUICodes } from "../constants/customFormUICodes";
 export async function uiSettings_menuConfigurations(sourceEntitya) {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW
         ? sourceEntitya.player
@@ -21,11 +22,11 @@ export async function uiSettings_menuConfigurations(sourceEntitya) {
         }
     }
     let form = new ActionFormData();
-    form.title("Menu Configurations");
-    form.button("Main Menu", "textures/ui/sidebar_icons/menu_threebars");
-    form.button("Player Menu", "textures/items/player_menu_1");
-    form.button("Back", "textures/ui/arrow_left");
-    form.button("Close", "textures/ui/crossout");
+    form.title(customFormUICodes.action.titles.formStyles.gridMenu + "Menu Configurations");
+    form.button(customFormUICodes.action.buttons.positions.main_only + "Main Menu", "textures/ui/sidebar_icons/menu_threebars");
+    form.button(customFormUICodes.action.buttons.positions.main_only + "Player Menu", "textures/items/player_menu_2");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
     return await forceShow(form, sourceEntity)
         .then(async (ra) => {
         let r = ra;
@@ -58,7 +59,7 @@ export async function uiSettings_menuConfigurations(sourceEntitya) {
     })
         .catch(async (e) => {
         console.error(e, e.stack);
-        return ((await showMessage(sourceEntity, "An Error Occured", `An error occured: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
+        return ((await showMessage(sourceEntity, "An Error occurred", `An error occurred: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
     });
 }
 //# sourceMappingURL=uiSettings_menuConfigurations.js.map

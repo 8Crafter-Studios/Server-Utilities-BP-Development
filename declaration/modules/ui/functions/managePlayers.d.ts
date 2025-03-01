@@ -1,5 +1,6 @@
 import { Entity, Player } from "@minecraft/server";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
+import { savedPlayer } from "modules/player_save/classes/savedPlayer";
 export declare function managePlayers(sourceEntitya: Entity | executeCommandPlayerW | Player, pagen?: number, maxplayersperpage?: number, search?: {
     value: string;
     caseSensitive?: boolean;
@@ -7,4 +8,4 @@ export declare function managePlayers(sourceEntitya: Entity | executeCommandPlay
     searchLastOnlineTimes?: boolean;
     searchNames?: boolean;
     searchIds?: boolean;
-}): Promise<0 | 1>;
+}, cachedPlayers?: [online: savedPlayer[], offline: savedPlayer[], banned: savedPlayer[]]): Promise<0 | 1>;

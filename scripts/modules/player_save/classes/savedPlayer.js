@@ -44,6 +44,7 @@ export class savedPlayer {
      * @since v1.28.0-preview.20+BUILD.1
      */
     onJoinActions = [];
+    saveMode = "full";
     constructor(data) {
         if (!!data.format_version &&
             semver.gt(data.player_save_format_version ?? "0.0.0", player_save_format_version)) {
@@ -67,21 +68,40 @@ export class savedPlayer {
         this.rotation = data.rotation;
         this.selectedSlotIndex = data.selectedSlotIndex;
         this.scoreboardIdentity = data.scoreboardIdentity;
-        this.saveId = data.saveId ?? "player:" + this.id;
-        if (semver.satisfies(data.player_save_format_version ?? "0.0.0", ">=1.4.0 <2.0.0", { includePrerelease: true })) {
-            this.memoryTier = data.memoryTier;
-            this.maxRenderDistance = data.maxRenderDistance;
-            this.platformType = data.platformType;
-        }
-        if (semver.satisfies(data.player_save_format_version ?? "0.0.0", ">=1.6.0 <2.0.0", { includePrerelease: true })) {
-            this.inputPermissions = data.inputPermissions;
-            this.inputInfo = data.inputInfo;
-            this.playerPermissions = data.playerPermissions;
-            this.onJoinActions = data.onJoinActions;
-        }
-        if (semver.satisfies(data.player_save_format_version ?? "0.0.0", "<1.5.0", { includePrerelease: true })) {
-            this.items = data.items;
-        }
+        this.saveId = data.saveId ?? "player:" + this.id; /*
+        if (
+            semver.satisfies(
+                data.player_save_format_version ?? "0.0.0",
+                ">=1.4.0 <2.0.0",
+                { includePrerelease: true }
+            )
+        ) { */
+        this.memoryTier = data.memoryTier;
+        this.maxRenderDistance = data.maxRenderDistance;
+        this.platformType = data.platformType; /*
+    } */ /*
+        if (
+            semver.satisfies(
+                data.player_save_format_version ?? "0.0.0",
+                ">=1.6.0 <2.0.0",
+                { includePrerelease: true }
+            )
+        ) { */
+        this.inputPermissions = data.inputPermissions;
+        this.inputInfo = data.inputInfo;
+        this.playerPermissions = data.playerPermissions;
+        this.onJoinActions = data.onJoinActions ?? []; /*
+    } */ /*
+        if (
+            semver.satisfies(
+                data.player_save_format_version ?? "0.0.0",
+                "<1.5.0",
+                { includePrerelease: true }
+            )
+        ) { */
+        this.items = data.items; /*
+    } */
+        this.saveMode = data.saveMode ?? "full";
     }
     save() {
         world.setDynamicProperty(this.saveId, JSON.stringify(this));
@@ -157,7 +177,7 @@ export class savedPlayer {
             throw new ReferenceError("Player not found");
     }
     get isOnline() {
-        return world.getAllPlayers().find((_) => _.id == this.id) != undefined;
+        return world.getAllPlayers().find((_) => _.id === this.id) !== undefined;
     }
     get isBanned() {
         return ban.testForBannedPlayer(this);
@@ -180,7 +200,7 @@ export class savedPlayer {
     }
     get nameBans() {
         let bans = ban
-            .getBans()
+            .getBansAutoRefresh()
             .nameBans.filter((b) => b.playerName == this.name);
         return {
             all: bans,
@@ -189,7 +209,7 @@ export class savedPlayer {
         };
     }
     get idBans() {
-        let bans = ban.getBans().idBans.filter((b) => b.playerId == this.id);
+        let bans = ban.getBansAutoRefresh().idBans.filter((b) => b.playerId == this.id);
         return {
             all: bans,
             valid: bans.filter((b) => b.isValid),
@@ -229,6 +249,11 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
                     : typeof player}} instead.`);
             }
         }
+        let playerHasBecomeInvalid = false;
+        if (!player.isValid()) {
+            console.warn(`Async player inventory save canceled for ${player.id} because the player is no longer valid, likely because they left during the save process.`);
+            return;
+        }
         const entity = player.dimension.spawnEntity("andexdb:player_inventory_save_storage", {
             x: player.x.floor() + 0.5,
             y: player.dimension.heightRange.max - 1.5,
@@ -243,6 +268,10 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
             for (let i = 0; i < player.inventory.inventorySize; i++) {
                 if (Date.now() - t > 0) {
                     await waitTick();
+                    if (!player.isValid()) {
+                        playerHasBecomeInvalid = true;
+                        break;
+                    }
                     t = Date.now();
                 }
                 try {
@@ -250,52 +279,65 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
                 }
                 catch (e) { }
             }
-            for (let i = 0; i < 6; i++) {
-                if (Date.now() - t > 0) {
-                    await waitTick();
-                    t = Date.now();
+            if (!playerHasBecomeInvalid) {
+                for (let i = 0; i < 6; i++) {
+                    if (Date.now() - t > 0) {
+                        await waitTick();
+                        if (!player.isValid()) {
+                            playerHasBecomeInvalid = true;
+                            break;
+                        }
+                        t = Date.now();
+                    }
+                    try {
+                        ei.setItem(36 + i, pe.getEquipment(EquipmentSlots[i]));
+                    }
+                    catch (e) { }
                 }
+            }
+            if (!playerHasBecomeInvalid) {
                 try {
-                    ei.setItem(36 + i, pe.getEquipment(EquipmentSlots[i]));
+                    ei.setItem(42, player.cursorInventory.item);
                 }
                 catch (e) { }
             }
-            try {
-                ei.setItem(42, player.cursorInventory.item);
-            }
-            catch (e) { }
         }
         catch (e) { }
         try {
-            /**
-             * This makes the script temporarily teleport the other entities away so that when it saves the storage entity, it can't save and possibly duplicate other entities.
-             */
-            var otherEntities = tryget(() => player.dimension
-                .getEntitiesAtBlockLocation({
-                x: player.x.floor() + 0.5,
-                y: player.dimension.heightRange.max - 1.5,
-                z: player.z.floor() + 0.5,
-            })
-                .filter((v) => v.id != entity.id && !(v instanceof Player))) ?? [];
-            var locs = otherEntities.map((v) => v.location);
-            otherEntities.forEach((v) => tryrun(() => v.teleport(Vector.add(v.location, { x: 0, y: 50, z: 0 }))));
-            try {
-                world.structureManager.delete("player_inventory_save_storage:" + player.id);
+            if (!player.isValid()) {
+                playerHasBecomeInvalid = true;
             }
-            catch { }
-            world.structureManager.createFromWorld("player_inventory_save_storage:" + player.id, player.dimension, {
-                x: player.x.floor(),
-                y: player.dimension.heightRange.max - 2,
-                z: player.z.floor(),
-            }, {
-                x: player.x.floor(),
-                y: player.dimension.heightRange.max - 2,
-                z: player.z.floor(),
-            }, {
-                includeBlocks: false,
-                includeEntities: true,
-                saveMode: StructureSaveMode.World,
-            });
+            if (!playerHasBecomeInvalid) {
+                /**
+                 * This makes the script temporarily teleport the other entities away so that when it saves the storage entity, it can't save and possibly duplicate other entities.
+                 */
+                var otherEntities = tryget(() => player.dimension
+                    .getEntitiesAtBlockLocation({
+                    x: player.x.floor() + 0.5,
+                    y: player.dimension.heightRange.max - 1.5,
+                    z: player.z.floor() + 0.5,
+                })
+                    .filter((v) => v.id != entity.id && !(v instanceof Player))) ?? [];
+                var locs = otherEntities.map((v) => v.location);
+                otherEntities.forEach((v) => tryrun(() => v.teleport(Vector.add(v.location, { x: 0, y: 50, z: 0 }))));
+                try {
+                    world.structureManager.delete("player_inventory_save_storage:" + player.id);
+                }
+                catch { }
+                world.structureManager.createFromWorld("player_inventory_save_storage:" + player.id, player.dimension, {
+                    x: player.x.floor(),
+                    y: player.dimension.heightRange.max - 2,
+                    z: player.z.floor(),
+                }, {
+                    x: player.x.floor(),
+                    y: player.dimension.heightRange.max - 2,
+                    z: player.z.floor(),
+                }, {
+                    includeBlocks: false,
+                    includeEntities: true,
+                    saveMode: StructureSaveMode.World,
+                });
+            }
         }
         catch (e) {
             var error = e;
@@ -309,6 +351,9 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
                 entity.remove();
             }
             catch { }
+            if (playerHasBecomeInvalid) {
+                console.warn(`Async player inventory save canceled for ${player.id} because the player is no longer valid, likely because they left during the save process.`);
+            }
             if ((options.rethrowErrorInFinally ?? true) && !!error) {
                 throw error;
             }
@@ -329,6 +374,10 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
                         "?"
                     : typeof player}} instead.`);
             }
+        }
+        if (!player.isValid()) {
+            console.warn(`Player inventory save canceled for ${player.id} because the player is no longer valid, likely because they left during the save process.`);
+            return;
         }
         const entity = player.dimension.spawnEntity("andexdb:player_inventory_save_storage", {
             x: player.x.floor() + 0.5,
@@ -497,48 +546,194 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
         return items;
     }
     static savePlayer(player) {
+        if (!player.isValid()) {
+            console.warn(`Player data save canceled for ${player.id} because the player is no longer valid, likely because they left during the save process.`);
+            return undefined;
+        } /*
+        // playerDataSaveDebug
+        world.getAllPlayers().filter(p=>p.hasTag("playerDataSaveDebug")).forEach(p=>p.sendMessage(`§r[${formatTime(new Date(Date.now() + (Number(p.getDynamicProperty("andexdbPersonalSettings:timeZone") ?? world.getDynamicProperty("andexdbSettings:timeZone") ?? 0) * 3600000)))}] §r[§l§bplayerDataSaveDebug§r] savePlayer() for player ${tryget(()=>player?.name??"undefined")??"ERROR"}<${tryget(()=>player?.id??"undefined")??"ERROR"}>`)) */
         const origData = this.getSavedPlayer("player:" + player.id);
         let savedPlayerData;
-        savedPlayerData = {
-            name: player.name,
-            nameTag: player.nameTag,
-            id: player.id,
-            isOp: player.isOp(),
-            tags: player.getTags(),
-            selectedSlotIndex: player.selectedSlotIndex,
-            scoreboardIdentity: player.scoreboardIdentity?.id,
-            format_version: format_version,
-            player_save_format_version: player_save_format_version,
-            lastOnline: Date.now(),
-            firstJoined: origData.firstJoined ?? Date.now(),
-            location: player.location,
-            dimension: player.dimension,
-            rotation: player.getRotation(),
-            gameMode: player.getGameMode(),
-            spawnPoint: player.getSpawnPoint(),
-            memoryTier: player.clientSystemInfo.memoryTier,
-            maxRenderDistance: player.clientSystemInfo.maxRenderDistance,
-            platformType: player.clientSystemInfo.platformType,
-            inputPermissions: {
-                Camera: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.Camera),
-                Movement: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.Movement),
-                LateralMovement: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.LateralMovement),
-                Sneak: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.Sneak),
-                Jump: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.Jump),
-                Mount: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.Mount),
-                Dismount: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.Dismount),
-                MoveForward: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.MoveForward),
-                MoveBackward: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.MoveBackward),
-                MoveLeft: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.MoveLeft),
-                MoveRight: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.MoveRight),
-            },
-            inputInfo: {
-                lastInputModeUsed: player.inputInfo.lastInputModeUsed,
-                touchOnlyAffectsHotbar: player.inputInfo.touchOnlyAffectsHotbar,
-            },
-            playerPermissions: player.playerPermissions.toJSON(),
-            onJoinActions: origData.onJoinActions ?? [],
-        };
+        if (config.system.playerDataSavePerformanceMode === "full") {
+            savedPlayerData = {
+                // ms for 1000 runs: 1
+                name: player.name,
+                // ms for 1000 runs: 1-2
+                nameTag: player.nameTag,
+                // ms for 1000 runs: 0
+                id: player.id,
+                // ms for 1000 runs: 1
+                isOp: player.isOp(),
+                // ms for 1000 runs: 4
+                tags: player.getTags(),
+                // ms for 1000 runs: 1
+                selectedSlotIndex: player.selectedSlotIndex,
+                // ms for 1000 runs: 1
+                scoreboardIdentity: player.scoreboardIdentity?.id,
+                // ms for 1000 runs: 0
+                format_version: format_version,
+                // ms for 1000 runs: 0
+                player_save_format_version: player_save_format_version,
+                // ms for 1000 runs: 0
+                lastOnline: Date.now(),
+                // ms for 1000 runs: 0
+                firstJoined: origData.firstJoined ?? Date.now(),
+                // ms for 1000 runs: 2-3
+                location: player.location,
+                // ms for 1000 runs: 1
+                dimension: player.dimension,
+                // ms for 1000 runs: 2
+                rotation: player.getRotation(),
+                // ms for 1000 runs: 1-2
+                gameMode: player.getGameMode(),
+                // ms for 1000 runs: 1
+                spawnPoint: player.getSpawnPoint(),
+                // ms for 1000 runs: 1
+                memoryTier: player.clientSystemInfo.memoryTier,
+                // ms for 1000 runs: 1
+                maxRenderDistance: player.clientSystemInfo.maxRenderDistance,
+                // ms for 1000 runs: 1
+                platformType: player.clientSystemInfo.platformType,
+                // ms for 1000 runs: 22
+                inputPermissions: {
+                    // ms for 1000 runs: 2
+                    Camera: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.Camera),
+                    // ms for 1000 runs: 2
+                    Movement: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.Movement),
+                    // ms for 1000 runs: 2
+                    LateralMovement: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.LateralMovement),
+                    // ms for 1000 runs: 2
+                    Sneak: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.Sneak),
+                    // ms for 1000 runs: 2
+                    Jump: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.Jump),
+                    // ms for 1000 runs: 2
+                    Mount: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.Mount),
+                    // ms for 1000 runs: 2
+                    Dismount: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.Dismount),
+                    // ms for 1000 runs: 2
+                    MoveForward: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.MoveForward),
+                    // ms for 1000 runs: 2
+                    MoveBackward: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.MoveBackward),
+                    // ms for 1000 runs: 2
+                    MoveLeft: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.MoveLeft),
+                    // ms for 1000 runs: 2
+                    MoveRight: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.MoveRight),
+                },
+                // ms for 1000 runs: 2
+                inputInfo: {
+                    // ms for 1000 runs: 1
+                    lastInputModeUsed: player.inputInfo.lastInputModeUsed,
+                    // ms for 1000 runs: 1
+                    touchOnlyAffectsHotbar: player.inputInfo.touchOnlyAffectsHotbar,
+                },
+                // ms for 1000 runs: 20
+                playerPermissions: player.playerPermissions.toJSON(),
+                // ms for 1000 runs: 0
+                onJoinActions: origData.onJoinActions ?? [],
+                // ms for 1000 runs: 0
+                saveMode: "full",
+            };
+        }
+        else if (config.system.playerDataSavePerformanceMode === "medium") {
+            savedPlayerData = {
+                // ms for 1000 runs: 1
+                name: player.name,
+                // ms for 1000 runs: 1-2
+                nameTag: player.nameTag,
+                // ms for 1000 runs: 0
+                id: player.id,
+                // ms for 1000 runs: 1
+                isOp: player.isOp(),
+                // ms for 1000 runs: 4
+                tags: player.getTags(),
+                // ms for 1000 runs: 1
+                selectedSlotIndex: player.selectedSlotIndex,
+                // ms for 1000 runs: 1
+                scoreboardIdentity: player.scoreboardIdentity?.id,
+                // ms for 1000 runs: 0
+                format_version: format_version,
+                // ms for 1000 runs: 0
+                player_save_format_version: player_save_format_version,
+                // ms for 1000 runs: 0
+                lastOnline: Date.now(),
+                // ms for 1000 runs: 0
+                firstJoined: origData.firstJoined ?? Date.now(),
+                // ms for 1000 runs: 2-3
+                location: player.location,
+                // ms for 1000 runs: 1
+                dimension: player.dimension,
+                // ms for 1000 runs: 2
+                rotation: player.getRotation(),
+                // ms for 1000 runs: 1-2
+                gameMode: player.getGameMode(),
+                // ms for 1000 runs: 1
+                spawnPoint: player.getSpawnPoint(),
+                // ms for 1000 runs: 1
+                memoryTier: player.clientSystemInfo.memoryTier,
+                // ms for 1000 runs: 1
+                maxRenderDistance: player.clientSystemInfo.maxRenderDistance,
+                // ms for 1000 runs: 1
+                platformType: player.clientSystemInfo.platformType,
+                // ms for 1000 runs: 2
+                inputInfo: {
+                    // ms for 1000 runs: 1
+                    lastInputModeUsed: player.inputInfo.lastInputModeUsed,
+                    // ms for 1000 runs: 1
+                    touchOnlyAffectsHotbar: player.inputInfo.touchOnlyAffectsHotbar,
+                },
+                // ms for 1000 runs: 0
+                onJoinActions: origData.onJoinActions ?? [],
+                // ms for 1000 runs: 0
+                saveMode: "medium",
+            };
+        }
+        else {
+            savedPlayerData = {
+                // ms for 1000 runs: 1
+                name: player.name,
+                // ms for 1000 runs: 1-2
+                nameTag: player.nameTag,
+                // ms for 1000 runs: 0
+                id: player.id,
+                // ms for 1000 runs: 1
+                scoreboardIdentity: player.scoreboardIdentity?.id,
+                // ms for 1000 runs: 0
+                format_version: format_version,
+                // ms for 1000 runs: 0
+                player_save_format_version: player_save_format_version,
+                // ms for 1000 runs: 0
+                lastOnline: Date.now(),
+                // ms for 1000 runs: 0
+                firstJoined: origData.firstJoined ?? Date.now(),
+                // ms for 1000 runs: 2-3
+                location: player.location,
+                // ms for 1000 runs: 1
+                dimension: player.dimension,
+                // ms for 1000 runs: 2
+                rotation: player.getRotation(),
+                // ms for 1000 runs: 1-2
+                gameMode: player.getGameMode(),
+                // ms for 1000 runs: 1
+                spawnPoint: player.getSpawnPoint(),
+                // ms for 1000 runs: 1
+                memoryTier: player.clientSystemInfo.memoryTier,
+                // ms for 1000 runs: 1
+                maxRenderDistance: player.clientSystemInfo.maxRenderDistance,
+                // ms for 1000 runs: 1
+                platformType: player.clientSystemInfo.platformType,
+                // ms for 1000 runs: 2
+                inputInfo: {
+                    // ms for 1000 runs: 1
+                    lastInputModeUsed: player.inputInfo.lastInputModeUsed,
+                    // ms for 1000 runs: 1
+                    touchOnlyAffectsHotbar: player.inputInfo.touchOnlyAffectsHotbar,
+                },
+                // ms for 1000 runs: 0
+                onJoinActions: origData.onJoinActions ?? [],
+                // ms for 1000 runs: 0
+                saveMode: "lite",
+            };
+        }
         savedPlayerData.saveId =
             savedPlayerData.saveId ?? "player:" + savedPlayerData.id;
         savedPlayerData.format_version =
@@ -715,49 +910,196 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
         return savedPlayerData.saveId ?? `player:${savedPlayerData.id}`;
     }
     static async savePlayerAsync(player) {
+        // let t1 = Date.now();
+        if (!player.isValid()) {
+            console.warn(`Player data save canceled for ${player.id} because the player is no longer valid, likely because they left during the save process.`);
+            return undefined;
+        } /*
+        // playerDataSaveDebug
+        world.getAllPlayers().filter(p=>p.hasTag("playerDataSaveDebug")).forEach(p=>p.sendMessage(`§r[${formatTime(new Date(Date.now() + (Number(p.getDynamicProperty("andexdbPersonalSettings:timeZone") ?? world.getDynamicProperty("andexdbSettings:timeZone") ?? 0) * 3600000)))}] §r[§l§bplayerDataSaveDebug§r] savePlayerAsync() for player ${tryget(()=>player?.name??"undefined")??"ERROR"}<${tryget(()=>player?.id??"undefined")??"ERROR"}>`)) */
         const origData = tryget(() => this.getSavedPlayer("player:" + player.id)) ??
             {};
         let savedPlayerData;
-        savedPlayerData = {
-            name: player.name,
-            nameTag: player.nameTag,
-            id: player.id,
-            isOp: player.isOp(),
-            tags: player.getTags(),
-            selectedSlotIndex: player.selectedSlotIndex,
-            scoreboardIdentity: player.scoreboardIdentity?.id,
-            format_version: format_version,
-            player_save_format_version: player_save_format_version,
-            lastOnline: Date.now(),
-            firstJoined: origData.firstJoined ?? Date.now(),
-            location: player.location,
-            dimension: player.dimension,
-            rotation: player.getRotation(),
-            gameMode: player.getGameMode(),
-            spawnPoint: player.getSpawnPoint(),
-            memoryTier: player.clientSystemInfo.memoryTier,
-            maxRenderDistance: player.clientSystemInfo.maxRenderDistance,
-            platformType: player.clientSystemInfo.platformType,
-            inputPermissions: {
-                Camera: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.Camera),
-                Movement: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.Movement),
-                LateralMovement: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.LateralMovement),
-                Sneak: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.Sneak),
-                Jump: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.Jump),
-                Mount: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.Mount),
-                Dismount: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.Dismount),
-                MoveForward: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.MoveForward),
-                MoveBackward: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.MoveBackward),
-                MoveLeft: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.MoveLeft),
-                MoveRight: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.MoveRight),
-            },
-            inputInfo: {
-                lastInputModeUsed: player.inputInfo.lastInputModeUsed,
-                touchOnlyAffectsHotbar: player.inputInfo.touchOnlyAffectsHotbar,
-            },
-            playerPermissions: player.playerPermissions.toJSON(),
-            onJoinActions: origData.onJoinActions ?? [],
-        };
+        if (config.system.playerDataSavePerformanceMode === "full") {
+            savedPlayerData = {
+                // ms for 1000 runs: 1
+                name: player.name,
+                // ms for 1000 runs: 1-2
+                nameTag: player.nameTag,
+                // ms for 1000 runs: 0
+                id: player.id,
+                // ms for 1000 runs: 1
+                isOp: player.isOp(),
+                // ms for 1000 runs: 4
+                tags: player.getTags(),
+                // ms for 1000 runs: 1
+                selectedSlotIndex: player.selectedSlotIndex,
+                // ms for 1000 runs: 1
+                scoreboardIdentity: player.scoreboardIdentity?.id,
+                // ms for 1000 runs: 0
+                format_version: format_version,
+                // ms for 1000 runs: 0
+                player_save_format_version: player_save_format_version,
+                // ms for 1000 runs: 0
+                lastOnline: Date.now(),
+                // ms for 1000 runs: 0
+                firstJoined: origData.firstJoined ?? Date.now(),
+                // ms for 1000 runs: 2-3
+                location: player.location,
+                // ms for 1000 runs: 1
+                dimension: player.dimension,
+                // ms for 1000 runs: 2
+                rotation: player.getRotation(),
+                // ms for 1000 runs: 1-2
+                gameMode: player.getGameMode(),
+                // ms for 1000 runs: 1
+                spawnPoint: player.getSpawnPoint(),
+                // ms for 1000 runs: 1
+                memoryTier: player.clientSystemInfo.memoryTier,
+                // ms for 1000 runs: 1
+                maxRenderDistance: player.clientSystemInfo.maxRenderDistance,
+                // ms for 1000 runs: 1
+                platformType: player.clientSystemInfo.platformType,
+                // ms for 1000 runs: 22
+                inputPermissions: {
+                    // ms for 1000 runs: 2
+                    Camera: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.Camera),
+                    // ms for 1000 runs: 2
+                    Movement: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.Movement),
+                    // ms for 1000 runs: 2
+                    LateralMovement: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.LateralMovement),
+                    // ms for 1000 runs: 2
+                    Sneak: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.Sneak),
+                    // ms for 1000 runs: 2
+                    Jump: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.Jump),
+                    // ms for 1000 runs: 2
+                    Mount: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.Mount),
+                    // ms for 1000 runs: 2
+                    Dismount: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.Dismount),
+                    // ms for 1000 runs: 2
+                    MoveForward: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.MoveForward),
+                    // ms for 1000 runs: 2
+                    MoveBackward: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.MoveBackward),
+                    // ms for 1000 runs: 2
+                    MoveLeft: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.MoveLeft),
+                    // ms for 1000 runs: 2
+                    MoveRight: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.MoveRight),
+                },
+                // ms for 1000 runs: 2
+                inputInfo: {
+                    // ms for 1000 runs: 1
+                    lastInputModeUsed: player.inputInfo.lastInputModeUsed,
+                    // ms for 1000 runs: 1
+                    touchOnlyAffectsHotbar: player.inputInfo.touchOnlyAffectsHotbar,
+                },
+                // ms for 1000 runs: 20
+                playerPermissions: player.playerPermissions.toJSON(),
+                // ms for 1000 runs: 0
+                onJoinActions: origData.onJoinActions ?? [],
+                // ms for 1000 runs: 0
+                saveMode: "full",
+            };
+        }
+        else if (config.system.playerDataSavePerformanceMode === "medium") {
+            savedPlayerData = {
+                // ms for 1000 runs: 1
+                name: player.name,
+                // ms for 1000 runs: 1-2
+                nameTag: player.nameTag,
+                // ms for 1000 runs: 0
+                id: player.id,
+                // ms for 1000 runs: 1
+                isOp: player.isOp(),
+                // ms for 1000 runs: 4
+                tags: player.getTags(),
+                // ms for 1000 runs: 1
+                selectedSlotIndex: player.selectedSlotIndex,
+                // ms for 1000 runs: 1
+                scoreboardIdentity: player.scoreboardIdentity?.id,
+                // ms for 1000 runs: 0
+                format_version: format_version,
+                // ms for 1000 runs: 0
+                player_save_format_version: player_save_format_version,
+                // ms for 1000 runs: 0
+                lastOnline: Date.now(),
+                // ms for 1000 runs: 0
+                firstJoined: origData.firstJoined ?? Date.now(),
+                // ms for 1000 runs: 2-3
+                location: player.location,
+                // ms for 1000 runs: 1
+                dimension: player.dimension,
+                // ms for 1000 runs: 2
+                rotation: player.getRotation(),
+                // ms for 1000 runs: 1-2
+                gameMode: player.getGameMode(),
+                // ms for 1000 runs: 1
+                spawnPoint: player.getSpawnPoint(),
+                // ms for 1000 runs: 1
+                memoryTier: player.clientSystemInfo.memoryTier,
+                // ms for 1000 runs: 1
+                maxRenderDistance: player.clientSystemInfo.maxRenderDistance,
+                // ms for 1000 runs: 1
+                platformType: player.clientSystemInfo.platformType,
+                // ms for 1000 runs: 2
+                inputInfo: {
+                    // ms for 1000 runs: 1
+                    lastInputModeUsed: player.inputInfo.lastInputModeUsed,
+                    // ms for 1000 runs: 1
+                    touchOnlyAffectsHotbar: player.inputInfo.touchOnlyAffectsHotbar,
+                },
+                // ms for 1000 runs: 0
+                onJoinActions: origData.onJoinActions ?? [],
+                // ms for 1000 runs: 0
+                saveMode: "medium",
+            };
+        }
+        else {
+            savedPlayerData = {
+                // ms for 1000 runs: 1
+                name: player.name,
+                // ms for 1000 runs: 1-2
+                nameTag: player.nameTag,
+                // ms for 1000 runs: 0
+                id: player.id,
+                // ms for 1000 runs: 1
+                scoreboardIdentity: player.scoreboardIdentity?.id,
+                // ms for 1000 runs: 0
+                format_version: format_version,
+                // ms for 1000 runs: 0
+                player_save_format_version: player_save_format_version,
+                // ms for 1000 runs: 0
+                lastOnline: Date.now(),
+                // ms for 1000 runs: 0
+                firstJoined: origData.firstJoined ?? Date.now(),
+                // ms for 1000 runs: 2-3
+                location: player.location,
+                // ms for 1000 runs: 1
+                dimension: player.dimension,
+                // ms for 1000 runs: 2
+                rotation: player.getRotation(),
+                // ms for 1000 runs: 1-2
+                gameMode: player.getGameMode(),
+                // ms for 1000 runs: 1
+                spawnPoint: player.getSpawnPoint(),
+                // ms for 1000 runs: 1
+                memoryTier: player.clientSystemInfo.memoryTier,
+                // ms for 1000 runs: 1
+                maxRenderDistance: player.clientSystemInfo.maxRenderDistance,
+                // ms for 1000 runs: 1
+                platformType: player.clientSystemInfo.platformType,
+                // ms for 1000 runs: 2
+                inputInfo: {
+                    // ms for 1000 runs: 1
+                    lastInputModeUsed: player.inputInfo.lastInputModeUsed,
+                    // ms for 1000 runs: 1
+                    touchOnlyAffectsHotbar: player.inputInfo.touchOnlyAffectsHotbar,
+                },
+                // ms for 1000 runs: 0
+                onJoinActions: origData.onJoinActions ?? [],
+                // ms for 1000 runs: 0
+                saveMode: "lite",
+            };
+        }
         savedPlayerData.saveId =
             savedPlayerData.saveId ?? "player:" + savedPlayerData.id;
         savedPlayerData.format_version =
@@ -925,18 +1267,31 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
             else if (!config.system.useLegacyPlayerInventoryDataSaveSystem &&
                 semver.satisfies(savedPlayerData.player_save_format_version ?? "0.0.0", ">=1.5.0", { includePrerelease: true })) {
                 await waitTick();
+                if (!player.isValid()) {
+                    console.warn(`Player data save canceled for ${player.id} because the player is no longer valid, likely because they left during the save process.`);
+                    return undefined;
+                }
                 await this.saveInventoryAsync(player, {
                     rethrowErrorInFinally: false,
                     bypassParameterTypeChecks: true,
                 });
             }
         }
+        if (!player.isValid()) {
+            console.warn(`Player data save canceled for ${player.id} because the player is no longer valid, likely because they left during the save process.`);
+            return undefined;
+        }
         world.setDynamicProperty(savedPlayerData.saveId ?? `player:${savedPlayerData.id}`, JSON.stringify(savedPlayerData));
+        // let t2 = Date.now();
+        // console.log(`player_save: Saved player ${player.id} in ${t2 - t1}ms`);
         return savedPlayerData.saveId ?? `player:${savedPlayerData.id}`;
     } /*
 getBan(banId: string){let banString = String(world.getDynamicProperty(banId)).split("||"); this.removeAfterBanExpires=Boolean(Number(banString[0])); this.unbanDate=new Date(Number(banString[1])); this.banDate=new Date(Number(banString[2])); if(banId.startsWith("ban")){this.originalPlayerId=Number(banString[3]); this.playerName=banId.split(":").slice(1).join(":"); }else{if(banId.startsWith("idBan")){this.originalPlayerName=Number(banString[3]); this.playerName=Number(playerId.split(":")[1]); }else{}}; this.bannedById=Number(banString[4]); this.bannedByName=banString[5].replaceAll("\\|", "|"); this.playerName=banString.slice(6).join("||"); return this as ban}*/
     static getSavedPlayer(savedPlayerId) {
         let playerString = String(world.getDynamicProperty(savedPlayerId));
+        if (playerString === "undefined") {
+            return undefined;
+        }
         return new savedPlayer(JSON.parse(playerString));
     }
     static getSavedPlayers() {

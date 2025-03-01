@@ -3,24 +3,24 @@ import { ActionFormData, ActionFormResponse } from "@minecraft/server-ui";
 import { forceShow } from "modules/ui/functions/forceShow";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { addonDebugUI } from "./addonDebugUI";
+import { customFormUICodes } from "../constants/customFormUICodes";
+import { showMessage } from "modules/utilities/functions/showMessage";
 
 export async function advancedSettings(
     sourceEntitya: Entity | executeCommandPlayerW | Player
 ): Promise<0 | 1> {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW
         ? sourceEntitya.player
-        : sourceEntitya;
+        : sourceEntitya as Player;
     let form = new ActionFormData();
-    form.title("Advanced Settings");
-    form.button("Debug", "textures/ui/icon_setting");
-    form.button("Back", "textures/ui/arrow_left");
-    form.button("Close", "textures/ui/crossout"); /*
-    form.button("Debug Screen", "textures/ui/ui_debug_glyph_color");*/
+    form.title(customFormUICodes.action.titles.formStyles.gridMenu + "Advanced Settings");
+    form.button(customFormUICodes.action.buttons.positions.main_only + "Debug", "textures/ui/icon_setting");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
 
     return await forceShow(form, sourceEntity as Player)
         .then(async (ra) => {
             let r = ra as ActionFormResponse;
-            // This will stop the code when the player closes the form
             if (r.canceled) return 1;
 
             let response = r.selection;
@@ -31,7 +31,6 @@ export async function advancedSettings(
                     } else {
                         return 0;
                     }
-                    break;
                 case 1:
                     return 1;
                 case 2:
@@ -40,8 +39,8 @@ export async function advancedSettings(
                     return 1;
             }
         })
-        .catch((e) => {
+        .catch(async (e) => {
             console.error(e, e.stack);
-            return 0;
+            return ((await showMessage(sourceEntity, "An Error occurred", `An error occurred: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
         });
 }

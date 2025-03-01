@@ -1,14 +1,11 @@
 import { Entity, Player } from "@minecraft/server";
-import { ActionFormData, ActionFormResponse, ModalFormData } from "@minecraft/server-ui";
+import { ActionFormData, ActionFormResponse } from "@minecraft/server-ui";
 import { forceShow } from "modules/ui/functions/forceShow";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { showActions } from "modules/utilities/functions/showActions";
-import { playerMenu_about_contributors } from "./playerMenu_about_contributors";
-import { HomeSystem } from "modules/commands/classes/HomeSystem";
-import { vTStr } from "modules/commands/functions/vTStr";
 import { showMessage } from "modules/utilities/functions/showMessage";
-import { Home } from "modules/commands/classes/Home";
 import { TeleportRequest } from "modules/coordinates/classes/TeleportRequest";
+import { customFormUICodes } from "../constants/customFormUICodes";
 
 export async function playerMenu_TPA_outgoing(sourceEntitya: Entity | executeCommandPlayerW | Player): Promise<0 | 1> {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
@@ -24,32 +21,28 @@ export async function playerMenu_TPA_outgoing(sourceEntitya: Entity | executeCom
         );
     }
     if (!config.tpaSystem.tpaSystemEnabled) {
-        if((await showMessage(
-            sourceEntity,
-            "Error",
-            `§cSorry but the TPA system is currently disabled.`,
-            "Back",
-            "Close"
-        )).selection === 0) {
+        if ((await showMessage(sourceEntity, "Error", `§cSorry but the TPA system is currently disabled.`, "Back", "Close")).selection === 0) {
             return 1;
         } else {
             return 0;
         }
     }
     let form = new ActionFormData();
-    form.title("Outgoing Teleport Requests");
+    form.title(customFormUICodes.action.titles.formStyles.general + "Outgoing Teleport Requests");
     const requests = TeleportRequest.getRequestsFromPlayer(sourceEntity);
-    requests.forEach((h) =>
-        form.button(`${h.target.name}`)
-    );
-    form.button("Back", "textures/ui/arrow_left");
-    form.button("Close", "textures/ui/crossout");
+    requests.forEach((h) => form.button(customFormUICodes.action.buttons.positions.main_only + h.target.name));
+    if (requests.length === 0) {
+        form.body("No outgoing teleport requests.");
+    }
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Refresh", "textures/ui/refresh");
     return await forceShow(form, sourceEntity)
         .then(async (ra) => {
             let r = ra as ActionFormResponse;
             if (r.canceled) return 1;
 
-            switch ((!!requests[r.selection] ? "request" : undefined) ?? (["back", "close"] as const)[r.selection - requests.length]) {
+            switch ((!!requests[r.selection] ? "request" : undefined) ?? (["back", "close", "refresh"] as const)[r.selection - requests.length]) {
                 case "request":
                     const request = requests[r.selection];
                     switch (
@@ -57,11 +50,11 @@ export async function playerMenu_TPA_outgoing(sourceEntitya: Entity | executeCom
                             (
                                 await showActions(
                                     sourceEntity,
-                                    "Teleport Request Details",
+                                    customFormUICodes.action.titles.formStyles.general + "Teleport Request Details",
                                     `To: ${request.target.name}`,
-                                    ["Cancel Request", "textures/ui/trash_default"],
-                                    ["Back", "textures/ui/arrow_left"],
-                                    ["Close", "textures/ui/crossout"]
+                                    [customFormUICodes.action.buttons.positions.main_only + "Cancel Request", "textures/ui/trash_default"],
+                                    [customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left"],
+                                    [customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout"]
                                 )
                             ).selection
                         ]
@@ -74,6 +67,8 @@ export async function playerMenu_TPA_outgoing(sourceEntitya: Entity | executeCom
                         case "close":
                             return 0;
                     }
+                case "refresh":
+                    return await playerMenu_TPA_outgoing(sourceEntity);
                 case "back":
                     return 1;
                 case "close":
@@ -82,8 +77,8 @@ export async function playerMenu_TPA_outgoing(sourceEntitya: Entity | executeCom
                     return 1;
             }
         })
-        .catch((e) => {
+        .catch(async (e) => {
             console.error(e, e.stack);
-            return 0;
+            return ((await showMessage(sourceEntity, "An Error occurred", `An error occurred: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
         });
 }
