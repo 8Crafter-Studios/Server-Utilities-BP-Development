@@ -5,7 +5,7 @@ import { type PlayerShopPage, type PlayerSavedShopItem, type PlayerSellableShopE
  *
  * @see {@link serverShopConfig}
  */
-export type playerShopConfig = {
+export interface playerShopConfig {
     /**
      * The id of the player shop.
      */
@@ -52,7 +52,7 @@ export type playerShopConfig = {
      * The name of the player who owns this player shop.
      */
     playerName?: string;
-};
+}
 /**
  *
  * @see {@link ServerShop}

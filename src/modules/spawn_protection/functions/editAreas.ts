@@ -1,32 +1,77 @@
 import { Player, world } from "@minecraft/server";
 import { ActionFormData, ModalFormData, ActionFormResponse, ModalFormResponse } from "@minecraft/server-ui";
 import { forceShow } from "modules/ui/functions/forceShow";
-import { editAreasMainMenu } from "./editAreasMainMenu";
 import { customFormUICodes } from "modules/ui/constants/customFormUICodes";
+import { protectedAreaCategories, ProtectedAreas } from "init/variables/protectedAreaVariables";
+import { getDetailedType } from "modules/utilities/functions/getDetailedType";
+import { securityVariables } from "security/ultraSecurityModeUtils";
+import { showMessage } from "modules/utilities/functions/showMessage";
 
-export async function editAreas(player: Player, prefix: string): Promise<0 | 1> {
-    let a = world.getDynamicPropertyIds().filter((dpi) => dpi.startsWith("v2:" + prefix));
-    let b = world.getDynamicPropertyIds().filter((dpi) => dpi.startsWith("v2:" + prefix));
+/**
+ * 
+ * @todo Make this menu have pages.
+ * @param player 
+ * @param prefix 
+ * @returns 
+ */
+export async function editAreas(player: Player, prefix: typeof protectedAreaCategories[number]): Promise<0 | 1> {
+    if (arguments.length !== 1) {
+        throw new TypeError(
+            `Incorrect number of arguments to function. Expected 1, received ${arguments.length}.`
+        );
+    }
+    if (!(player instanceof Player)) {
+        throw new TypeError(
+            "Invalid Player. Function argument [0] (player) expected an instance of the Player class, but instead got " +
+                getDetailedType(player) +
+                "."
+        );
+    }
+    if (securityVariables.ultraSecurityModeEnabled) {
+        if (securityVariables.testPlayerForPermission(player, "andexdb.manageProtectedAreas") == false) {
+            const r = await showMessage(
+                player,
+                "Access Denied (403)",
+                "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.manageProtectedAreas",
+                "Back",
+                "Cancel"
+            );
+            if (r.canceled || r.selection == 0) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+    }
+    const areas = [...ProtectedAreas.areas[prefix].overworld, ...ProtectedAreas.areas[prefix].nether, ...ProtectedAreas.areas[prefix].the_end];
+    // let a = world.getDynamicPropertyIds().filter((dpi) => dpi.startsWith("v2:" + prefix));
+    // let b = world.getDynamicPropertyIds().filter((dpi) => dpi.startsWith("v2:" + prefix));
     let form1234 = new ActionFormData();
     let form12345 = new ModalFormData();
     let form1234567 = new ActionFormData();
     let form123456 = new ModalFormData();
-    a.forEach((aelement, i) => {
+    areas.forEach((a, i) => {
         /*console.warn(aelement.slice(22)); */ form1234.button(
-            aelement.slice(prefix.length + 3),
-            tryget(() => JSON.parse(String(world?.getDynamicProperty(aelement))).icon_path) ?? "textures/ui/area_xyz"
+            customFormUICodes.action.buttons.positions.main_only + a.id,
+            a.icon_path ?? "textures/ui/area_xyz"
         );
-        b[i] = String(world.getDynamicProperty(aelement));
+        // b[i] = String(world.getDynamicProperty("v2:" + prefix + ":" + a.id));
     });
+    if(areas.length === 0){
+        form1234.body("No areas in this built-in category were found.");
+    }
     form1234.button(customFormUICodes.action.buttons.positions.main_only + "Add New", /*"textures/ui/check_mark"*/ "textures/ui/color_plus");
     form1234.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", /*"textures/ui/chat_return_back_arrow"*/ "textures/ui/arrow_left");
     form1234.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
-    form1234.button(customFormUICodes.action.buttons.positions.title_bar_only + "Refresh", "textures/ui/refresh");
-    form1234.title(customFormUICodes.action.titles.formStyles.fullscreen + prefix);
+    form1234.button(customFormUICodes.action.buttons.positions.title_bar_only + "Refresh All Categories And Areas", "textures/ui/refresh");
+    form1234.title(customFormUICodes.action.titles.formStyles.medium + prefix);
     return await forceShow(form1234, player).then(async (t) => {
         if (t.canceled) return 1;
-        switch (true) {
-            case (t as ActionFormResponse).selection == a.length:
+        switch (
+                (!!areas[t.selection] ? "area" : undefined) ??
+                (["new", "back", "close", "refresh"] as const)[t.selection - areas.length]
+        ) {
+            case "new":
                 form12345.title("New Protected Area");
                 form12345.textField("Identifier Name", "myArea");
                 form12345.textField("From", "x1, y1, z1");
@@ -38,36 +83,42 @@ export async function editAreas(player: Player, prefix: string): Promise<0 | 1> 
 
                 return await forceShow(form12345, player).then(async (q) => {
                     if (q.canceled) return await editAreas(player, prefix);
-                    const [id, from, to, dimension, mode, icon_path] = (q as ModalFormResponse).formValues;
+                    const [id, from, to, dimension, mode, icon_path] = (q as ModalFormResponse).formValues as [id: string, from: string, to: string, dimension: 0 | 1 | 2, mode: 0 | 1, icon_path: string];
+                    const newValue = {
+                        from: {
+                            x: Number(String(from).split(",")[0]),
+                            y: Number(String(from).split(",")[1]),
+                            z: Number(String(from).split(",")[2]),
+                        },
+                        to: {
+                            x: Number(String(to).split(",")[0]),
+                            y: Number(String(to).split(",")[1]),
+                            z: Number(String(to).split(",")[2]),
+                        },
+                        dimension: dimension,
+                        mode: mode,
+                        icon_path: (icon_path ?? "") == "" ? undefined : icon_path as string,
+                    };
                     world.setDynamicProperty(
                         "v2:" + prefix + id,
-                        JSON.stringify({
-                            from: {
-                                x: Number(String(from).split(",")[0]),
-                                y: Number(String(from).split(",")[1]),
-                                z: Number(String(from).split(",")[2]),
-                            },
-                            to: {
-                                x: Number(String(to).split(",")[0]),
-                                y: Number(String(to).split(",")[1]),
-                                z: Number(String(to).split(",")[2]),
-                            },
-                            dimension: Number(dimension),
-                            mode: Number(mode),
-                            icon_path: (icon_path ?? "") == "" ? undefined : icon_path,
-                        })
+                        JSON.stringify(newValue)
                     );
+                    ProtectedAreas.areas[prefix][dimensionse[dimension]].push({ id, ...newValue});
                     return await editAreas(player, prefix);
                 });
-            case (t as ActionFormResponse).selection == a.length + 1 /*
+            case "back": /*
     editPistonExtensionAreas(player)*/ /*
-            screenForm123(); */:
+            screenForm123(); */
                 return 1;
-            case (t as ActionFormResponse).selection == a.length + 2:
+            case "close":
                 return 0;
-            case (t as ActionFormResponse).selection == a.length + 3:
+            case "refresh":
+                ProtectedAreas.load();
                 return await editAreas(player, prefix);
-            default:
+            case "area":
+                const currentArea = areas[t.selection];
+                form1234567.title(customFormUICodes.action.titles.formStyles.medium + currentArea.id);
+                form1234567.body(currentArea.id);
                 form1234567.button(customFormUICodes.action.buttons.positions.main_only + "Edit", "textures/ui/book_edit_default");
                 form1234567.button(customFormUICodes.action.buttons.positions.main_only + "Delete", /*"textures/ui/trash_can"*/ "textures/ui/trash_default");
                 form1234567.button(
@@ -77,12 +128,11 @@ export async function editAreas(player: Player, prefix: string): Promise<0 | 1> 
                 form1234567.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
                 return await forceShow(form1234567, player).then(async (w) => {
                     if (w.canceled) {
-                        editAreas(player, prefix);
-                        return;
+                        return await editAreas(player, prefix);
                     }
                     switch ((w as ActionFormResponse).selection) {
                         case 0: {
-                            const defaults = JSON.parse(String(world.getDynamicProperty(String(a[Number((t as ActionFormResponse).selection)]))));
+                            const defaults = areas[Number((t as ActionFormResponse).selection)];
                             form12345.title("Edit Protected Area");
                             form123456.textField("From", "x1, y1, z1", `${defaults.from.x}, ${defaults.from.y}, ${defaults.from.z}`);
                             form123456.textField("To", "x2, y2, z2", `${defaults.to.x}, ${defaults.to.y}, ${defaults.to.z}`);
@@ -94,29 +144,43 @@ export async function editAreas(player: Player, prefix: string): Promise<0 | 1> 
                             return await forceShow(form123456, player).then(async (q) => {
                                 if (q.canceled) return await editAreas(player, prefix);
                                 const [from, to, dimension, mode, icon_path] = (q as ModalFormResponse).formValues;
+                                const newValue = {
+                                    from: {
+                                        x: Number(String(from).split(",")[0]),
+                                        y: Number(String(from).split(",")[1]),
+                                        z: Number(String(from).split(",")[2]),
+                                    },
+                                    to: {
+                                        x: Number(String(to).split(",")[0]),
+                                        y: Number(String(to).split(",")[1]),
+                                        z: Number(String(to).split(",")[2]),
+                                    },
+                                    dimension: dimension as 0 | 1 | 2,
+                                    mode: mode as 0 | 1,
+                                    icon_path: (icon_path ?? "") == "" ? undefined : icon_path as string,
+                                };
+                                if(defaults.dimension === dimension){
+                                    ProtectedAreas.areas[prefix][dimensionse[dimension as number]].splice(ProtectedAreas.areas[prefix][dimensionse[dimension as number]].findIndex(a=>a.id === defaults.id), 1, {
+                                        id: defaults.id,
+                                        ...newValue,
+                                    });
+                                }else{
+                                    ProtectedAreas.areas[prefix][dimensionse[defaults.dimension]].splice(ProtectedAreas.areas[prefix][dimensionse[defaults.dimension as number]].findIndex(a=>a.id === defaults.id), 1);
+                                    ProtectedAreas.areas[prefix][dimensionse[dimension as number]].push({
+                                        id: defaults.id,
+                                        ...newValue,
+                                    });
+                                }
                                 world.setDynamicProperty(
-                                    a[(t as ActionFormResponse).selection],
-                                    JSON.stringify({
-                                        from: {
-                                            x: Number(String(from).split(",")[0]),
-                                            y: Number(String(from).split(",")[1]),
-                                            z: Number(String(from).split(",")[2]),
-                                        },
-                                        to: {
-                                            x: Number(String(to).split(",")[0]),
-                                            y: Number(String(to).split(",")[1]),
-                                            z: Number(String(to).split(",")[2]),
-                                        },
-                                        dimension: Number(dimension),
-                                        mode: Number(mode),
-                                        icon_path: (icon_path ?? "") == "" ? undefined : icon_path,
-                                    })
+                                    "v2:" + prefix + ":" + defaults.id,
+                                    JSON.stringify(newValue)
                                 );
                                 return await editAreas(player, prefix);
                             });
                         }
                         case 1:
-                            world.setDynamicProperty(a[(t as ActionFormResponse).selection], undefined);
+                            world.setDynamicProperty(areas[t.selection].id, undefined);
+                            ProtectedAreas.areas[prefix][dimensionse[areas[t.selection].dimension]].splice(ProtectedAreas.areas[prefix][dimensionse[areas[t.selection].dimension as number]].findIndex(a=>a.id === areas[t.selection].id), 1);
                             return await editAreas(player, prefix);
                         case 2:
                             return await editAreas(player, prefix);
@@ -124,6 +188,8 @@ export async function editAreas(player: Player, prefix: string): Promise<0 | 1> 
                             return 0;
                     }
                 });
+            default:
+                return 1;
         }
     });
 }

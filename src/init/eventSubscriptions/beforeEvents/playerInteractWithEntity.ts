@@ -1,5 +1,6 @@
 import { Vector3Utils } from "@minecraft/math.js";
 import { world, Player } from "@minecraft/server";
+import { ProtectedAreaTester } from "init/variables/protectedAreaVariables";
 import { securityVariables } from "security/ultraSecurityModeUtils";
 
 subscribedEvents.beforePlayerInteractWithEntity =
@@ -49,6 +50,10 @@ subscribedEvents.beforePlayerInteractWithEntity =
                     currentplayer.sendMessage(e + e.stack);
                 }
             });
+        }
+        if(new ProtectedAreaTester("playerInteractWithEntity").testIsInArea(event, event.target.location, event.target.dimension)){
+            event.cancel = true;
+            return;
         }
         if (event.itemStack?.typeId == "andexdb:entity_debug_stick") {
             event.cancel = true;

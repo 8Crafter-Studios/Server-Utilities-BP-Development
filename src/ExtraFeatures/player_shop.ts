@@ -20,19 +20,19 @@ import {
     type PlayerBuyableShopElement,
     type PlayerSellableShopItem,
     type PlayerSellableAdvancedShopItem,
-    selectTexturePreset,
 } from "./shop_main";
 import { MoneySystem } from "./money";
 import { StorageFullError } from "modules/errors/classes/StorageFullError";
 import type { ServerShop, ServerShopManager, serverShopConfig } from "./server_shop";
 import { securityVariables } from "security/ultraSecurityModeUtils";
 import { customFormUICodes } from "modules/ui/constants/customFormUICodes";
+import { selectTexturePreset } from "modules/ui/functions/selectTexturePreset";
 
 /**
  *
  * @see {@link serverShopConfig}
  */
-export type playerShopConfig = {
+export interface playerShopConfig {
     /**
      * The id of the player shop.
      */
@@ -1332,7 +1332,7 @@ ${
     }
 }
 export class PlayerShopManager {
-    static playerShopItemTextureHints = ["textures/items/stick", "textures/blocks/gravel", "textures/blocks/reactor_core_stage_0"];
+    static playerShopItemTextureHints = ["textures/items/stick", "textures/blocks/gravel", "textures/items/diamond_pickaxe", "textures/blocks/reactor_core_stage_0"];
     static playerShopPageTextureHints = ["textures/ui/arrowRight"];
     static get playerShopItemTextureHint() {
         return this.playerShopItemTextureHints[Math.floor(Math.random() * this.playerShopItemTextureHints.length)];
@@ -1543,10 +1543,14 @@ export class PlayerShopManager {
                                     customFormUICodes.action.buttons.options.disabled +
                                     "Select Offline Player",
                             ],
-                            [customFormUICodes.action.buttons.positions.main_only + "Manual"]
+                            [customFormUICodes.action.buttons.positions.main_only + "Manual"],
+                            [customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left"],
+                            [customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout"]
                         );
-                        if (rb.canceled) {
+                        if (rb.canceled || rb.selection === 3) {
                             return await PlayerShopManager.managePlayerShops(sourceEntity, all);
+                        } else if (rb.selection == 4) {
+                            return 0;
                         } else if (rb.selection == 0) {
                             const player = await onlinePlayerSelector(sourceEntity, () => {});
                             if (!!!player) {

@@ -144,6 +144,7 @@ import { fillCylinder } from "modules/block_generation_utilities/functions/fillC
 import { fillStretchedSphere } from "modules/block_generation_utilities/functions/fillStretchedSphere";
 import { fillOutline } from "modules/block_generation_utilities/functions/fillOutline";
 import { playerMenu } from "modules/ui/functions/playerMenu";
+import { ProtectedAreas } from "init/variables/protectedAreaVariables";
 export function chatCommands(params) {
     let returnBeforeChatSend = params.returnBeforeChatSend ?? false;
     let playerab = params.player ?? params.eventData?.sender ?? params.event?.sender;
@@ -21787,7 +21788,8 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                     "number",
                                     "string",
                                 ]).args;
-                                if (!spawnProtectionTypeList.includes(args[1])) {
+                                if (!spawnProtectionTypeList.includes(args[1])
+                                    && !ProtectedAreas.areas.advancedAreaCategories.some((c) => c.id === args[1])) {
                                     player.sendError(`§cError: "${args[1]}" is not a valid protected area type, please use one of the following protected area types: ${JSON.stringify(spawnProtectionTypeList)}.`, true);
                                     return;
                                 }
@@ -21812,7 +21814,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                     player.sendMessageB("§cError: pos2 is not set.");
                                 }
                                 else {
-                                    world.setDynamicProperty("v2:" + args[1] + args[2], JSON.stringify({
+                                    world.setDynamicProperty(spawnProtectionTypeList.includes(args[1]) ? "v2:" + args[1] + args[2] : "advancedProtectedArea:" + args[1] + ":" + args[2], JSON.stringify({
                                         from: ca,
                                         to: cb,
                                         dimension: dimensions.indexOf(dimensiona),

@@ -1,6 +1,6 @@
 import { VECTOR3_ZERO, Vector3Utils } from "@minecraft/math.js";
 import { world, Player } from "@minecraft/server";
-import { protectedAreaVariables } from "init/variables/protectedAreaVariables";
+import { ProtectedAreaTester, protectedAreaVariables } from "init/variables/protectedAreaVariables";
 import { disconnectingPlayers } from "modules/commands/constants/disconnectingPlayers";
 import { getPlayersWithAnyOfTags } from "modules/commands/functions/getPlayersWithAnyOfTags";
 import { vTStr } from "modules/commands/functions/vTStr";
@@ -136,7 +136,7 @@ subscribedEvents.beforeExplosion = world.beforeEvents.explosion.subscribe(
         if (
             !!!event.source?.location
                 ? false
-                : ((testIsWithinRanges(
+                : new ProtectedAreaTester("explosion").testIsInArea(event, event.source.location, event.source.dimension)/* ((testIsWithinRanges(
                       protectedAreaVariables.noExplosionAreas.positive.filter(
                           (v) =>
                               v.dimension == dimensions.indexOf(event.dimension)
@@ -165,7 +165,7 @@ subscribedEvents.beforeExplosion = world.beforeEvents.explosion.subscribe(
                                   dimensions.indexOf(event.dimension)
                           ),
                           event.source.location
-                      ) ?? false) == false)
+                      ) ?? false) == false) */
         ) {
             event.cancel = true; /*
         console.warn(event.isExpanding);
@@ -177,7 +177,7 @@ subscribedEvents.beforeExplosion = world.beforeEvents.explosion.subscribe(
             event.setImpactedBlocks(
                 event.getImpactedBlocks().filter(
                     (blockselected) =>
-                        !(
+                        !new ProtectedAreaTester("explosion").testIsInArea(event, blockselected.location, event.dimension, {block: blockselected})/* (
                             ((testIsWithinRanges(
                                 protectedAreaVariables.noExplosionAreas.positive.filter(
                                     (v) =>
@@ -210,7 +210,7 @@ subscribedEvents.beforeExplosion = world.beforeEvents.explosion.subscribe(
                                     ),
                                     blockselected.location
                                 ) ?? false) == false)
-                        )
+                        ) */
                 )
             );
         }

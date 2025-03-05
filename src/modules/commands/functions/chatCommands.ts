@@ -196,6 +196,7 @@ import { fillCylinder } from "modules/block_generation_utilities/functions/fillC
 import { fillStretchedSphere } from "modules/block_generation_utilities/functions/fillStretchedSphere";
 import { fillOutline } from "modules/block_generation_utilities/functions/fillOutline";
 import { playerMenu } from "modules/ui/functions/playerMenu";
+import { ProtectedAreas } from "init/variables/protectedAreaVariables";
 
 export function chatCommands(params: {
     returnBeforeChatSend: boolean | undefined;
@@ -34392,6 +34393,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 ];
                                 if (
                                     !spawnProtectionTypeList.includes(args[1])
+                                    && !ProtectedAreas.areas.advancedAreaCategories.some((c) => c.id === args[1])
                                 ) {
                                     player.sendError(
                                         `§cError: "${
@@ -34433,7 +34435,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                     );
                                 } else {
                                     world.setDynamicProperty(
-                                        "v2:" + args[1] + args[2],
+                                        spawnProtectionTypeList.includes(args[1]) ? "v2:" + args[1] + args[2] : "advancedProtectedArea:" + args[1] + ":" + args[2],
                                         JSON.stringify({
                                             from: ca,
                                             to: cb,

@@ -1,5 +1,5 @@
 import { world } from "@minecraft/server";
-import { protectedAreaVariables } from "init/variables/protectedAreaVariables";
+import { ProtectedAreaTester, protectedAreaVariables } from "init/variables/protectedAreaVariables";
 import { testIsWithinRanges } from "modules/spawn_protection/functions/testIsWithinRanges";
 import { securityVariables } from "security/ultraSecurityModeUtils";
 
@@ -94,7 +94,7 @@ if (event.itemStack?.typeId === "andexdb:selection_tool") {
                 );
             });
         if ((securityVariables.ultraSecurityModeEnabled ? securityVariables.testPlayerForPermission(event.source, permissionType["andexdb.bypassProtectedAreas"]) : event.source.hasTag("canBypassProtectedAreas")) != true &&
-            (((testIsWithinRanges(
+            new ProtectedAreaTester("itemUseOn").testIsInArea(event, event.block.location, event.block.dimension)/* (((testIsWithinRanges(
                 protectedAreaVariables.noBlockInteractAreas.positive.filter(
                     (v) => v.dimension == dimensions.indexOf(event.block.dimension)
                 ),
@@ -120,7 +120,7 @@ if (event.itemStack?.typeId === "andexdb:selection_tool") {
                                 dimensions.indexOf(event.block.dimension)
                         ),
                         event.block.location
-                    ) ?? false) == false))) {
+                    ) ?? false) == false)) */) {
             event.cancel = true;
         } else {
             const borderSettings = Object.fromEntries(

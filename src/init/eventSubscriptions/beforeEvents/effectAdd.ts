@@ -1,4 +1,5 @@
 import { world } from "@minecraft/server";
+import { ProtectedAreaTester } from "init/variables/protectedAreaVariables";
 
 subscribedEvents.beforeEffectAdd = world.beforeEvents.effectAdd.subscribe(
     (event) => {
@@ -13,6 +14,10 @@ subscribedEvents.beforeEffectAdd = world.beforeEvents.effectAdd.subscribe(
                     currentplayer.sendMessage(e + e.stack);
                 }
             });
+        }
+        if(new ProtectedAreaTester("effectAdd").testIsInArea(event, event.entity.location, event.entity.dimension)){
+            event.cancel = true;
+            return;
         }
     }
 );

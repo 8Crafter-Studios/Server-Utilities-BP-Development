@@ -9,6 +9,7 @@ import { commands } from "modules/commands_list/constants/commands";
 import { chatSend } from "./chatSend";
 import { cmdsEval } from "../../../Main/commands";
 import { securityVariables } from "security/ultraSecurityModeUtils";
+import { ProtectedAreaTester } from "init/variables/protectedAreaVariables";
 
 export function chatMessage(
     eventData: ChatSendBeforeEvent,
@@ -502,6 +503,7 @@ export function chatMessage(
     if (Boolean(runreturn) == true) {
         return;
     }
+    const noChat = new ProtectedAreaTester("chatSend").testIsInArea(eventData, eventData.sender.location, eventData.sender.dimension);
     if (
         config.chatCommandsEnabled != false &&
         (newMessage.startsWith(
@@ -522,13 +524,17 @@ export function chatMessage(
                       }§r§c. Please check that the command exists and that you have permission to use it.`
                   ))
                 : config.invalidChatCommandAction == 1
-                ? chatSend({
-                      returnBeforeChatSend,
-                      player,
-                      eventData,
-                      event,
-                      newMessage,
-                  })
+                ? (()=>{
+                    if (!noChat) {
+                        chatSend({
+                            returnBeforeChatSend,
+                            player,
+                            eventData,
+                            event,
+                            newMessage,
+                        });
+                    }
+                })()
                 : undefined
             : chatCommands({
                   returnBeforeChatSend,
@@ -560,14 +566,20 @@ export function chatMessage(
                 ) ?? false) == false
             ) {
             } else {
-                chatSend({
-                    returnBeforeChatSend,
-                    player,
-                    eventData,
-                    event,
-                    newMessage,
-                });
+                if (!noChat) {
+                    chatSend({
+                        returnBeforeChatSend,
+                        player,
+                        eventData,
+                        event,
+                        newMessage,
+                    });
+                }
             }
+        }
+        if (noChat) {
+            event.cancel = true;
+            return;
         }
     }
 }

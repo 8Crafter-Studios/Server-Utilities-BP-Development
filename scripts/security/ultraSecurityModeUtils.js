@@ -521,6 +521,56 @@ Note: Unless the player has the 'andexdb.fullControl' permission, the player can
         ],
     },
     /**
+     * Allows the player to manage protected areas.
+     * This permission is included in the `andexdb.headAdmin` permission.
+     * This permission is included in the `andexdb.admin` permission.
+     */
+    "andexdb.manageProtectedAreas": {
+        id: "andexdb.manageProtectedAreas",
+        default: false,
+        includedInPermissions: [],
+        description: `Allows the player to manage protected areas.
+    This permission is included in the 'andexdb.headAdmin' permission.
+    This permission is included in the 'andexdb.admin' permission.`,
+        additionalPrompts: [],
+    },
+    /**
+     * Allows the player to create new custom protected area categories.
+     * This permission is included in the `andexdb.headAdmin` permission.
+     */
+    "andexdb.createCustomProtectedAreaCategories": {
+        id: "andexdb.createCustomProtectedAreaCategories",
+        default: false,
+        includedInPermissions: [],
+        description: `Allows the player to create new custom protected area categories.
+    This permission is included in the 'andexdb.headAdmin' permission.`,
+        additionalPrompts: [],
+    },
+    /**
+     * Allows the player to edit existing custom protected area categories.
+     * This permission is included in the `andexdb.headAdmin` permission.
+     */
+    "andexdb.editCustomProtectedAreaCategories": {
+        id: "andexdb.editCustomProtectedAreaCategories",
+        default: false,
+        includedInPermissions: [],
+        description: `Allows the player to edit existing custom protected area categories.
+    This permission is included in the 'andexdb.headAdmin' permission.`,
+        additionalPrompts: [],
+    },
+    /**
+     * Allows the player to delete custom protected area categories.
+     * This permission is included in the `andexdb.headAdmin` permission.
+     */
+    "andexdb.deleteCustomProtectedAreaCategories": {
+        id: "andexdb.deleteCustomProtectedAreaCategories",
+        default: false,
+        includedInPermissions: [],
+        description: `Allows the player to delete custom protected area categories.
+    This permission is included in the 'andexdb.headAdmin' permission.`,
+        additionalPrompts: [],
+    },
+    /**
      * Allows the player to use the Debug Stick.
      * This permission is included in the `andexdb.headAdmin` permission.
      * This permission is included in the `andexdb.admin` permission.
@@ -801,6 +851,10 @@ const playerPermissionsDefault = Object.freeze({
         "andexdb.accessManageWarpsUI",
         "andexdb.accessManageRedeemableCodesUI",
         "andexdb.accessManagePlayersUI",
+        "andexdb.manageProtectedAreas",
+        "andexdb.createCustomProtectedAreaCategories",
+        "andexdb.editCustomProtectedAreaCategories",
+        "andexdb.deleteCustomProtectedAreaCategories",
         "andexdb.UIs.managePlayersUI.deleteSavedPlayerData",
         "andexdb.UIs.managePlayersUI.manageHomes",
         "andexdb.canUseDebugStick",

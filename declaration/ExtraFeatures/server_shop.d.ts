@@ -4,7 +4,7 @@ import { type SellableShopElement, type BuyableShopElement, type ShopItem, type 
 /**
  * @see {@link playerShopConfig}
  */
-export type serverShopConfig = {
+export interface serverShopConfig {
     /**
      * The id of the server shop.
      */
@@ -43,7 +43,7 @@ export type serverShopConfig = {
      * Whether or not this shop can be accessed by any player through the use of the \viewservershops command.
      */
     publicShop?: boolean | null;
-};
+}
 /**
  * @todo Convert the functions to async functions that return Promise<0|1>.
  * @see {@link PlayerShop}
@@ -183,19 +183,38 @@ export declare class ServerShopManager {
      */
     static get serverShopPageTextureHint(): string;
     /**
-     * @todo Copy over the updated code from {@link PlayerShopManager.playerShopSystemSettings}.
+     * Handles the server shop system settings interface and its interactions.
+     *
      * @see {@link PlayerShopManager.playerShopSystemSettings}
-     * @param sourceEntitya
+     *
+     * @param sourceEntitya - The entity that initiated the request. It can be an `Entity`, `executeCommandPlayerW`, or `Player`.
+     * @returns A promise that resolves to `0` or `1` based on the user's interaction with the interface.
+     *
+     * - `0`: Indicates that the user chose to close the interface.
+     * - `1`: Indicates that the user chose to go back or an action was completed successfully.
+     *
+     * The function performs the following steps:
+     * 1. Checks if the `sourceEntitya` is an instance of `executeCommandPlayerW` and extracts the player.
+     * 2. Asserts that the `sourceEntity` is defined.
+     * 3. If `ultraSecurityModeEnabled` is true, checks if the player has the required permission to access the settings.
+     *    - If the player lacks permission, shows an "Access Denied" message and returns based on the user's choice.
+     * 4. Creates an `ActionFormData` form with options to manage shops, main settings, and shop item settings.
+     * 5. Displays the form to the player and handles the user's selection:
+     *    - `manageShops`: Calls `ServerShopManager.manageServerShops` and recursively calls `serverShopSystemSettings` if needed.
+     *    - `mainSettings`: Calls `ServerShopManager.serverShopSystemSettings_main` and recursively calls `serverShopSystemSettings` if needed.
+     *    - `shopItemSettings`: Shows a message indicating that the shop item does not exist yet and recursively calls `serverShopSystemSettings` if needed.
+     *    - `back`: Returns `1`.
+     *    - `close`: Returns `0`.
+     * 6. Catches any errors that occur during the process, logs them, and shows an error message to the player.
      */
     static serverShopSystemSettings(sourceEntitya: Entity | executeCommandPlayerW | Player): Promise<0 | 1>;
     /**
-     * @todo Copy over the updated code from {@link PlayerShopManager.playerShopSystemSettings_main}.
      * @see {@link PlayerShopManager.playerShopSystemSettings_main}
      * @param sourceEntitya
      */
-    static serverShopSystemSettings_main(sourceEntitya: Entity | executeCommandPlayerW | Player): Promise<1>;
+    static serverShopSystemSettings_main(sourceEntitya: Entity | executeCommandPlayerW | Player): Promise<0 | 1>;
     /**
-     * @todo Copy over the updated code from {@link PlayerShopManager.managePlayerShops}.
+     * @todo Add pages to this menu.
      * @param sourceEntitya
      */
     static manageServerShops(sourceEntitya: Entity | executeCommandPlayerW | Player): Promise<0 | 1>;

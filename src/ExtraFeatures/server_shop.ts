@@ -11,16 +11,17 @@ import { showActions } from "modules/utilities/functions/showActions";
 import { showMessage } from "modules/utilities/functions/showMessage";
 import { getStringFromDynamicProperties } from "modules/utilities/functions/getStringFromDynamicProperties";
 import { saveStringToDynamicProperties } from "modules/utilities/functions/saveStringToDynamicProperties";
-import { type SellableShopElement, type BuyableShopElement, type ShopItem, type SellableShopItem, type ShopPage, selectTexturePreset } from "./shop_main";
+import { type SellableShopElement, type BuyableShopElement, type ShopItem, type SellableShopItem, type ShopPage } from "./shop_main";
 import { MoneySystem } from "./money";
 import { PlayerShopManager, type PlayerShop, type playerShopConfig } from "./player_shop";
 import { securityVariables } from "security/ultraSecurityModeUtils";
 import { customFormUICodes } from "modules/ui/constants/customFormUICodes";
+import { selectTexturePreset } from "modules/ui/functions/selectTexturePreset";
 
 /**
  * @see {@link playerShopConfig}
  */
-export type serverShopConfig = {
+export interface serverShopConfig {
     /**
      * The id of the server shop.
      */

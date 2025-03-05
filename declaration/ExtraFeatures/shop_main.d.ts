@@ -1,6 +1,5 @@
 import { Player, Entity, ItemLockMode, ItemStack, ItemEnchantableComponent, ItemDurabilityComponent } from "@minecraft/server";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
-import { texturePresets } from "Assets/constants/texturePresets";
 /**
  * Main function to handle the shop system settings interface.
  *
@@ -23,11 +22,6 @@ import { texturePresets } from "Assets/constants/texturePresets";
  * If an error occurs during the execution, it logs the error and returns `-2`.
  */
 export declare function mainShopSystemSettings(sourceEntitya: Entity | executeCommandPlayerW | Player): Promise<-2 | 0 | 1>;
-export declare function selectTexturePreset(sourceEntitya: Entity | executeCommandPlayerW | Player): Promise<0 | 1 | string>;
-export declare function selectTexturePresetInCategory<C extends keyof typeof texturePresets>(sourceEntitya: Entity | executeCommandPlayerW | Player, category: C, pagen?: number, search?: {
-    value: string;
-    caseSensitive?: boolean;
-}, cachedTextures?: [displayName: string, icon: string][]): Promise<0 | 1 | string>;
 export type ShopElement = SellableShopElement | BuyableShopElement;
 export type PlayerShopElement = PlayerShopPage | PlayerSavedShopItem | PlayerSellableShopItem | PlayerSellableAdvancedShopItem;
 export type PlayerSellableShopElement = PlayerShopPage | PlayerSellableShopItem | PlayerSellableAdvancedShopItem;

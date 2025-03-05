@@ -13,11 +13,13 @@ import { showActions } from "modules/utilities/functions/showActions";
 import { showMessage } from "modules/utilities/functions/showMessage";
 import { getStringFromDynamicProperties } from "modules/utilities/functions/getStringFromDynamicProperties";
 import { saveStringToDynamicProperties } from "modules/utilities/functions/saveStringToDynamicProperties";
-import { selectTexturePreset, } from "./shop_main";
+import {} from "./shop_main";
 import { MoneySystem } from "./money";
 import { StorageFullError } from "modules/errors/classes/StorageFullError";
 import { securityVariables } from "security/ultraSecurityModeUtils";
 import { customFormUICodes } from "modules/ui/constants/customFormUICodes";
+import { selectTexturePreset } from "modules/ui/functions/selectTexturePreset";
+;
 /**
  *
  * @see {@link ServerShop}
@@ -1137,7 +1139,7 @@ ${item.itemDetails.enchantments instanceof Array
     }
 }
 export class PlayerShopManager {
-    static playerShopItemTextureHints = ["textures/items/stick", "textures/blocks/gravel", "textures/blocks/reactor_core_stage_0"];
+    static playerShopItemTextureHints = ["textures/items/stick", "textures/blocks/gravel", "textures/items/diamond_pickaxe", "textures/blocks/reactor_core_stage_0"];
     static playerShopPageTextureHints = ["textures/ui/arrowRight"];
     static get playerShopItemTextureHint() {
         return this.playerShopItemTextureHints[Math.floor(Math.random() * this.playerShopItemTextureHints.length)];
@@ -1302,9 +1304,16 @@ export class PlayerShopManager {
                         return 0;
                     }
                 case "newShopAsPlayer":
-                    const rb = await showActions(sourceEntity, customFormUICodes.action.titles.formStyles.medium + "Choose Player", undefined, [customFormUICodes.action.buttons.positions.main_only + "Select Online Player"], [customFormUICodes.action.buttons.positions.main_only + customFormUICodes.action.buttons.options.disabled + "Select Offline Player"], [customFormUICodes.action.buttons.positions.main_only + customFormUICodes.action.buttons.options.startSelected + "Manual"]);
-                    if (rb.canceled) {
-                        return 1;
+                    const rb = await showActions(sourceEntity, customFormUICodes.action.titles.formStyles.medium + "Choose Player", undefined, [customFormUICodes.action.buttons.positions.main_only + "Select Online Player"], [
+                        customFormUICodes.action.buttons.positions.main_only +
+                            customFormUICodes.action.buttons.options.disabled +
+                            "Select Offline Player",
+                    ], [customFormUICodes.action.buttons.positions.main_only + "Manual"], [customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left"], [customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout"]);
+                    if (rb.canceled || rb.selection === 3) {
+                        return await PlayerShopManager.managePlayerShops(sourceEntity, all);
+                    }
+                    else if (rb.selection == 4) {
+                        return 0;
                     }
                     else if (rb.selection == 0) {
                         const player = await onlinePlayerSelector(sourceEntity, () => { });
@@ -1317,15 +1326,33 @@ export class PlayerShopManager {
                         else {
                             return 0;
                         }
-                    } /*else if(rb.selection==1){
-                    const player = await offlinePlayerSelector(sourceEntity, ()=>{})
-                    if(!!!player){return 1;}
-                    if((await PlayerShopManager.addPlayerShopAsPlayer(sourceEntity, player.id as `${number}`, player.name??player.nameTag) as 0|1)!=0){
-                        return await PlayerShopManager.managePlayerShops(sourceEntity, all);
-                    }else{
-                        return 0;
                     }
-                }*/
+                    else if (rb.selection == 1) {
+                        /**
+                         * @todo Add the code for the offlinePlayerSelector function.
+                         */
+                        return await showMessage(sourceEntity, undefined, "§cSorry, the shop item does not exist yet.", "Back", "Close").then(async (r) => {
+                            if (r.selection !== 1) {
+                                return await PlayerShopManager.managePlayerShops(sourceEntity, all);
+                            }
+                            else {
+                                return 0;
+                            }
+                        }); /*
+                        const player = await offlinePlayerSelector(sourceEntity, () => {});
+                        if (!!!player) {
+                            return 1;
+                        }
+                        if (
+                            ((await PlayerShopManager.addPlayerShopAsPlayer(sourceEntity, player.id as `${number}`, player.name ?? player.nameTag)) as
+                                | 0
+                                | 1) != 0
+                        ) {
+                            return await PlayerShopManager.managePlayerShops(sourceEntity, all);
+                        } else {
+                            return 0;
+                        } */
+                    }
                     else {
                         const rc = await new ModalFormData()
                             .textField("Player UUID§c*", "UUID")
@@ -1958,7 +1985,16 @@ ${mode == "buy" ? "Price" : "Value"}: ${mode == "buy" ? item.price : item.value}
         return await forceShow(form, sourceEntity).then(async (r) => {
             if (r.canceled)
                 return 1;
-            switch (cullUndefined(["move", "edit", "delete", "applyTexturePreset", showRestockButton ? "restock" : undefined, ...(debugMode ? ["rawData", "editRaw", "editJSON", mode == "buy" ? "loadStructure" : undefined] : []), "back", "close"])[r.selection]) {
+            switch (cullUndefined([
+                "move",
+                "edit",
+                "delete",
+                "applyTexturePreset",
+                showRestockButton ? "restock" : undefined,
+                ...(debugMode ? ["rawData", "editRaw", "editJSON", mode == "buy" ? "loadStructure" : undefined] : []),
+                "back",
+                "close",
+            ])[r.selection]) {
                 case "move":
                     const form2 = new ModalFormData();
                     form2.textField("New Position\nThe position is zero-indexed.", "index", String(itemIndex));
@@ -2512,7 +2548,16 @@ Texture: ${page.texture}`);
         return await forceShow(form, sourceEntity).then(async (r) => {
             if (r.canceled)
                 return 1;
-            switch (cullUndefined(["contents", "move", "edit", "delete", "applyTexturePreset", ...(debugMode ? ["rawData", "editRaw", "editJSON"] : []), "back", "close"])[r.selection]) {
+            switch (cullUndefined([
+                "contents",
+                "move",
+                "edit",
+                "delete",
+                "applyTexturePreset",
+                ...(debugMode ? ["rawData", "editRaw", "editJSON"] : []),
+                "back",
+                "close",
+            ])[r.selection]) {
                 case "contents":
                     if ((await PlayerShopManager.managePlayerShopPage_contents(sourceEntity, shop, [mode, String(pageIndex)])) === 1) {
                         return await PlayerShopManager.managePlayerShop_managePage(sourceEntity, shop, page, pageIndex, mode);
@@ -2920,7 +2965,16 @@ Texture: ${page.texture}`);
         return await forceShow(form, sourceEntity).then(async (r) => {
             if (r.canceled)
                 return 1;
-            switch (cullUndefined(["move", "edit", "delete", "applyTexturePreset", showRestockButton ? "restock" : undefined, ...(debugMode ? ["rawData", "editRaw", "editJSON", mode == "buy" ? "loadStructure" : undefined] : []), "back", "close"])[r.selection]) {
+            switch (cullUndefined([
+                "move",
+                "edit",
+                "delete",
+                "applyTexturePreset",
+                showRestockButton ? "restock" : undefined,
+                ...(debugMode ? ["rawData", "editRaw", "editJSON", mode == "buy" ? "loadStructure" : undefined] : []),
+                "back",
+                "close",
+            ])[r.selection]) {
                 case "move":
                     const form2 = new ModalFormData();
                     form2.textField("New Position\nThe position is zero-indexed.", "index", String(itemIndex));
@@ -3413,7 +3467,16 @@ Texture: ${page.texture}`);
         return await forceShow(form, sourceEntity).then(async (r) => {
             if (r.canceled)
                 return 1;
-            switch (cullUndefined(["contents", "move", "edit", "delete", "applyTexturePreset", ...(debugMode ? ["rawData", "editRaw", "editJSON"] : []), "back", "close"])[r.selection]) {
+            switch (cullUndefined([
+                "contents",
+                "move",
+                "edit",
+                "delete",
+                "applyTexturePreset",
+                ...(debugMode ? ["rawData", "editRaw", "editJSON"] : []),
+                "back",
+                "close",
+            ])[r.selection]) {
                 case "contents":
                     if ((await PlayerShopManager.managePlayerShopPage_contents(sourceEntity, shop, path)) === 1) {
                         return await PlayerShopManager.managePlayerShopPage_managePage(sourceEntity, shop, path, page, pageIndex);

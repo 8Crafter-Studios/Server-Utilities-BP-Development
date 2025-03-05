@@ -51,6 +51,14 @@ Object.defineProperties(Array.prototype, {
         enumerable: false,
         writable: false,
     },
+    randomElement: {
+        value: function randomElement<T>(): T {
+            return this[Math.floor(Math.random() * this.length)];
+        },
+        configurable: true,
+        enumerable: false,
+        writable: false,
+    },
 });
 export const exports_5603749806156139082470132985463298047098135609812364098: undefined =
     undefined;
@@ -82,5 +90,10 @@ declare global {
          */
         awaitEach(
         ): Promise<Awaited<T>[]>;
+        /**
+         * Returns a random element from the array.
+         * @returns {T[number]} The random element.
+         */
+        randomElement(): T;
     }
 }
