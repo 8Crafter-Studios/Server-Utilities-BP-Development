@@ -153,21 +153,53 @@ Icon Path: ${category.icon_path ?? "None"}`
             )[rb.selection]
         ) {
             case "settings":
-                return await editCustomAreaCategorySettings(sourceEntity, categoryID);
+                if((await editCustomAreaCategorySettings(sourceEntity, categoryID)) === 1){
+                    return await editCustomAreaCategory(sourceEntity, categoryID);
+                }else{
+                    return 0;
+                };
             case "playerPlaceBlock":
-                return await editCustomAreaCategorySetting(sourceEntity, categoryID, "playerPlaceBlock");
+                if((await editCustomAreaCategorySetting(sourceEntity, categoryID, "playerPlaceBlock")) === 1){
+                    return await editCustomAreaCategory(sourceEntity, categoryID);
+                }else{
+                    return 0;
+                };
             case "playerBreakBlock":
-                return await editCustomAreaCategorySetting(sourceEntity, categoryID, "playerBreakBlock");
+                if((await editCustomAreaCategorySetting(sourceEntity, categoryID, "playerBreakBlock")) === 1){
+                    return await editCustomAreaCategory(sourceEntity, categoryID);
+                }else{
+                    return 0;
+                };
             case "playerInteractWithBlock":
-                return await editCustomAreaCategorySetting(sourceEntity, categoryID, "playerInteractWithBlock");
+                if((await editCustomAreaCategorySetting(sourceEntity, categoryID, "playerInteractWithBlock")) === 1){
+                    return await editCustomAreaCategory(sourceEntity, categoryID);
+                }else{
+                    return 0;
+                };
             case "explosion":
-                return await editCustomAreaCategorySetting(sourceEntity, categoryID, "explosion");
+                if((await editCustomAreaCategorySetting(sourceEntity, categoryID, "explosion")) === 1){
+                    return await editCustomAreaCategory(sourceEntity, categoryID);
+                }else{
+                    return 0;
+                };
             case "effectAdd":
-                return await editCustomAreaCategorySetting(sourceEntity, categoryID, "effectAdd");
+                if((await editCustomAreaCategorySetting(sourceEntity, categoryID, "effectAdd")) === 1){
+                    return await editCustomAreaCategory(sourceEntity, categoryID);
+                }else{
+                    return 0;
+                };
             case "chatSend":
-                return await editCustomAreaCategorySetting(sourceEntity, categoryID, "chatSend");
+                if((await editCustomAreaCategorySetting(sourceEntity, categoryID, "chatSend")) === 1){
+                    return await editCustomAreaCategory(sourceEntity, categoryID);
+                }else{
+                    return 0;
+                };
             case "playerGameModeChange":
-                return await editCustomAreaCategorySetting(sourceEntity, categoryID, "playerGameModeChange");
+                if((await editCustomAreaCategorySetting(sourceEntity, categoryID, "playerGameModeChange")) === 1){
+                    return await editCustomAreaCategory(sourceEntity, categoryID);
+                }else{
+                    return 0;
+                };
             case "back":
                 return 1;
             case "close":
@@ -777,11 +809,11 @@ export async function editCustomAreaCategorySetting(
             }
             default:
                 throw new Error("Invalid option type.");
-        }
+        }/* 
         form.button(
             `${customFormUICodes.action.buttons.positions.main_only}${!!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled}`,
             !!option && option.enabled ? "textures/ui/toggle_on" : "textures/ui/toggle_off"
-        );
+        ); */
         form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
         form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
         return await form.forceShow(sourceEntity).then(async (rb) => {
@@ -1073,7 +1105,7 @@ export async function editCustomAreaCategorySetting(
                     form.textField(
                         `Block Mask\nA block mask, more information is available at §bhttps://wiki.8crafter.com/andexdb/commands/parameter-types#mask§r.`,
                         "Mask",
-                        catProp.rawmask === "none" ? "" : catProp.rawmask
+                        (catProp.rawmask ?? "") === "none" ? "" : catProp.rawmask ?? ""
                     );
                     const r = await form.forceShow(sourceEntity);
                     if (r.canceled) return await editCustomAreaCategorySetting(sourceEntity, categoryID, setting);
@@ -1156,7 +1188,7 @@ export async function editCustomAreaCategorySetting(
                     return await editCustomAreaCategorySetting(sourceEntity, categoryID, setting);
                 }
                 case "back":
-                    return await editCustomAreaCategorySetting(sourceEntity, categoryID, setting);
+                    return 1;
                 case "close":
                     return 0;
             }
