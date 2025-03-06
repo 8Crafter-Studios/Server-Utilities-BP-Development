@@ -68,7 +68,7 @@ export async function manageCustomAreaCategories(sourceEntitya: executeCommandPl
                 "close",
                 "refresh",
             ] as const
-        )[r.selection]
+        )[r.selection - customAreaCategories.length]
     ) {
         case "edit":
             if ((await editCustomAreaCategory(sourceEntity as Player, customAreaCategories[r.selection].id)) === 1) {
@@ -89,5 +89,7 @@ export async function manageCustomAreaCategories(sourceEntitya: executeCommandPl
         case "refresh":
             ProtectedAreas.load();
             return await manageCustomAreaCategories(sourceEntity);
+        default:
+            throw new Error("Invalid selection: " + r.selection);
     }
 }

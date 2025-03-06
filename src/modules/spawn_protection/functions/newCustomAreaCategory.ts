@@ -64,17 +64,28 @@ export async function newCustomAreaCategory(sourceEntitya: executeCommandPlayerW
             }
         }
     }
-    const category_JSON = JSON.parse(JSON.stringify(AdvancedProtectedAreaCategoryPropertyAllEnabledDefaults_JSON)) as AdvancedProtectedAreaCategory<true>;
+    const category_JSON = {
+        enabled: true,
+        id: "",
+    } as AdvancedProtectedAreaCategory<true>;
+    // const category_JSON = JSON.parse(JSON.stringify(AdvancedProtectedAreaCategoryPropertyAllEnabledDefaults_JSON)) as AdvancedProtectedAreaCategory<true>;
+    // (Object.keys(category_JSON) as (keyof typeof category_JSON)[]).filter((key) => !["enabled", "id", "icon_path"].includes(key)).forEach((key: Exclude<keyof AdvancedProtectedAreaCategory, "icon_path" | "id" | "enabled">) => ((category_JSON[key] as Exclude<typeof category_JSON[typeof key], false>).enabled = false));
     const form = new ModalFormData();
     form.title(customFormUICodes.modal.titles.formStyles.medium + "Create Custom Area Category");
-    form.textField("Category ID§c*§r\nThe ID of this category, this must be unique.", customAreaCategoryIDPlaceholders.randomElement());
+    form.textField(
+        "Category ID§c*§r\nThe ID of this category, this must be unique. It may not contain colons.",
+        customAreaCategoryIDPlaceholders.randomElement()
+    );
     form.textField("Icon Path", "string?");
     form.submitButton("Create Category");
     const r = await form.forceShow(sourceEntity);
     if (r.canceled) return 1;
-    category_JSON.id = r.formValues[0] as string;
+    category_JSON.id = (r.formValues[0] as string).replaceAll(":", "");
     category_JSON.icon_path = r.formValues[1] as string;
-    const category = AdvancedProtectedAreaCategoryPropertyAllEnabledDefaults as AdvancedProtectedAreaCategory<false>;
+    const category = {
+        enabled: true,
+        id: "",
+    } as AdvancedProtectedAreaCategory<false>;
     if (
         ProtectedAreas.areas.advancedAreaCategories.findIndex((c) => c.id === category_JSON.id) !== -1 ||
         world.getDynamicProperty("advancedProtectedAreaCategory:" + category_JSON.id) !== undefined
@@ -98,6 +109,7 @@ export async function newCustomAreaCategory(sourceEntitya: executeCommandPlayerW
         }
     }
     ProtectedAreas.areas.advancedAreaCategories.push({ ...category, id: category_JSON.id, icon_path: category_JSON.icon_path }); // Loads the category.
-    world.setDynamicProperty("advancedProtectedAreaCategory:" + category.id, JSON.stringify(category_JSON)); // Saves the category.
-    return await editCustomAreaCategory(sourceEntity, category.id);
+    ProtectedAreas.areas.advancedArea[category_JSON.id];
+    world.setDynamicProperty("advancedProtectedAreaCategory:" + category_JSON.id, JSON.stringify(category_JSON)); // Saves the category.
+    return await editCustomAreaCategory(sourceEntity, category_JSON.id);
 }

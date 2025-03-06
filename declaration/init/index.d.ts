@@ -170,7 +170,7 @@ import "./intervals/rankNameTags_editorStickActionbar_artificialLagMS";
 import "./intervals/worldBorderSystem";
 import "./systems/ban_checker";
 import "./systems/player_data_auto_save";
-import "./systems/protected_areas_refresher";
+import "./systems/zone_actions_interval";
 import "./types";
 import "./variables/protectedAreaVariables";
 import "modules/errors/index";

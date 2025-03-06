@@ -5,6 +5,7 @@ import { BlockMask } from "modules/commands/classes/BlockMask";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { customFormUICodes } from "modules/ui/constants/customFormUICodes";
 import { getDetailedType } from "modules/utilities/functions/getDetailedType";
+import { showActions } from "modules/utilities/functions/showActions";
 import { showMessage } from "modules/utilities/functions/showMessage";
 import { securityVariables } from "security/ultraSecurityModeUtils";
 export async function editCustomAreaCategory(sourceEntitya, categoryID) {
@@ -35,8 +36,8 @@ export async function editCustomAreaCategory(sourceEntitya, categoryID) {
     if (category === undefined)
         return ((await showMessage(sourceEntity, "Invalid Category ID", `The custom protected area category with ID ${JSON.stringify(categoryID)} does not exist.`, "Back", "Close")).selection !== 1).toNumber();
     try {
-        const rb = await new ActionFormData()
-            .title(customFormUICodes.action.titles.formStyles.medium + "Edit Built-In Category")
+        const form = new ActionFormData()
+            .title(customFormUICodes.action.titles.formStyles.medium + "Edit Custom Category")
             .body(`ID: ${category.id}§r
 Icon Path: ${category.icon_path ?? "None"}`)
             .button(customFormUICodes.action.buttons.positions.main_only + `Settings\n${!!category && category.enabled ? "§aEnabled" : "§cDisabled"}`, "textures/ui/icon_setting")
@@ -48,18 +49,22 @@ Icon Path: ${category.icon_path ?? "None"}`)
             .button(`${customFormUICodes.action.buttons.positions.main_only}${category.enabled ? "" : customFormUICodes.action.buttons.options.disabled}Entity Effect Add Prevention\n${!!category.effectAdd && category.effectAdd.enabled !== false ? "§aEnabled" : "§cDisabled"}`, "textures/ui/pencil_edit_icon")
             .button(`${customFormUICodes.action.buttons.positions.main_only}${category.enabled ? "" : customFormUICodes.action.buttons.options.disabled}Player Chat Message Send Prevention\n${!!category.chatSend && category.chatSend.enabled !== false ? "§aEnabled" : "§cDisabled"}`, "textures/ui/pencil_edit_icon")
             .button(`${customFormUICodes.action.buttons.positions.main_only}${category.enabled ? "" : customFormUICodes.action.buttons.options.disabled}Player Game Mode Change Prevention\n${!!category.playerGameModeChange && category.playerGameModeChange.enabled !== false ? "§aEnabled" : "§cDisabled"}`, "textures/ui/pencil_edit_icon")
-            // .button(`${customFormUICodes.action.buttons.positions.main_only}PVP Prevention\n${!!category.noPVPZone && category.noPVPZone.enabled !== false ? "§aEnabled" : "§cDisabled"}`, "textures/ui/pencil_edit_icon")
-            // .button(`${customFormUICodes.action.buttons.positions.main_only}Tag Area\n${!!category.tagZone && category.tagZone.enabled !== false ? "§aEnabled" : "§cDisabled"}`, "textures/ui/pencil_edit_icon")
+            .button(`${customFormUICodes.action.buttons.positions.main_only}PVP Prevention\n${!!category.noPVPZone && category.noPVPZone.enabled !== false ? "§aEnabled" : "§cDisabled"}`, "textures/ui/pencil_edit_icon")
+            .button(`${customFormUICodes.action.buttons.positions.main_only}Tag Area\n${!!category.tagZone && category.tagZone.enabled !== false ? "§aEnabled" : "§cDisabled"}`, "textures/ui/pencil_edit_icon")
             // .button(`${customFormUICodes.action.buttons.positions.main_only}Effect Area\n${!!category.effectZone && category.effectZone.enabled !== false ? "§aEnabled" : "§cDisabled"}`, "textures/ui/pencil_edit_icon")
             .button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left")
             .button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout")
             .button(customFormUICodes.action.buttons.positions.title_bar_only + "Delete", "textures/ui/trash_default")
             .button(customFormUICodes.action.buttons.positions.title_bar_only + "Duplicate", "textures/ui/copy")
-            .button(customFormUICodes.action.buttons.positions.title_bar_only + "Refresh This Category", "textures/ui/refresh")
-            .forceShow(sourceEntity);
+            .button(customFormUICodes.action.buttons.positions.title_bar_only + "Refresh This Category", "textures/ui/refresh");
+        const debugMode = config.system.debugMode;
+        if (debugMode) {
+            form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Raw Data\n§8(Debug Mode Only)", "textures/ui/debug_glyph_color");
+        }
+        const rb = await form.forceShow(sourceEntity);
         if (rb.canceled)
             return await editCustomAreaCategory(sourceEntity, categoryID);
-        switch ([
+        switch (cullUndefined([
             "settings",
             "playerPlaceBlock",
             "playerBreakBlock",
@@ -68,12 +73,15 @@ Icon Path: ${category.icon_path ?? "None"}`)
             "effectAdd",
             "chatSend",
             "playerGameModeChange",
+            "noPVPZone",
+            "tagZone",
             "back",
             "close",
             "delete",
             "duplicate",
             "refresh",
-        ][rb.selection]) {
+            debugMode ? "rawData" : undefined
+        ])[rb.selection]) {
             case "settings":
                 if ((await editCustomAreaCategorySettings(sourceEntity, categoryID)) === 1) {
                     return await editCustomAreaCategory(sourceEntity, categoryID);
@@ -138,6 +146,22 @@ Icon Path: ${category.icon_path ?? "None"}`)
                     return 0;
                 }
                 ;
+            case "noPVPZone":
+                if ((await editCustomAreaCategorySetting(sourceEntity, categoryID, "noPVPZone")) === 1) {
+                    return await editCustomAreaCategory(sourceEntity, categoryID);
+                }
+                else {
+                    return 0;
+                }
+                ;
+            case "tagZone":
+                if ((await editCustomAreaCategorySetting(sourceEntity, categoryID, "tagZone")) === 1) {
+                    return await editCustomAreaCategory(sourceEntity, categoryID);
+                }
+                else {
+                    return 0;
+                }
+                ;
             case "back":
                 return 1;
             case "close":
@@ -167,7 +191,7 @@ Icon Path: ${category.icon_path ?? "None"}`)
                     world.setDynamicProperty("advancedProtectedAreaCategory:" + categoryID);
                     delete ProtectedAreas.areas.advancedAreaCategories[ProtectedAreas.areas.advancedAreaCategories.findIndex((category) => category.id === categoryID)];
                     if ((await showMessage(sourceEntity, "Category Deleted", "This protected area category has been successfully deleted.", "Back", "Close"))
-                        .selection === 1) {
+                        .selection !== 1) {
                         return 1;
                     }
                     else {
@@ -175,7 +199,7 @@ Icon Path: ${category.icon_path ?? "None"}`)
                     }
                 }
                 else {
-                    if ((await showMessage(sourceEntity, "Deletion Canceled", "The deletion of this protected area category has been successfully cancelled.", "Back", "Close")).selection === 1) {
+                    if ((await showMessage(sourceEntity, "Deletion Canceled", "The deletion of this protected area category has been successfully cancelled.", "Back", "Close")).selection !== 1) {
                         return 1;
                     }
                     else {
@@ -199,7 +223,7 @@ Icon Path: ${category.icon_path ?? "None"}`)
                  * @todo Implement the duplication feature.
                  */
                 return await showMessage(sourceEntity, undefined, "§cSorry, the ability to duplicate custom area categories is not yet implemented.", "Back", "Close").then(async (r) => {
-                    if (r.selection === 0) {
+                    if (r.selection !== 1) {
                         return await editCustomAreaCategory(sourceEntity, categoryID);
                     }
                     else {
@@ -209,6 +233,15 @@ Icon Path: ${category.icon_path ?? "None"}`)
             case "refresh":
                 ProtectedAreas.loadAdvancedCategory(categoryID);
                 return await editCustomAreaCategory(sourceEntity, categoryID);
+            case "rawData":
+                if ((await showActions(sourceEntity, customFormUICodes.action.titles.formStyles.medium + "Raw Data", JSONB.stringify(category, undefined, 4), [customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left"], [customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout"])).selection !== 1) {
+                    return await editCustomAreaCategory(sourceEntity, categoryID);
+                }
+                else {
+                    return 0;
+                }
+            default:
+                throw new Error(`No action defined for button index ${rb.selection}.`);
         }
     }
     catch (e) {
@@ -364,6 +397,41 @@ export async function editCustomAreaCategorySetting(sourceEntitya, categoryID, s
                     : `All Blocks`}`, "textures/ui/pencil_edit_icon");
                 break;
             }
+            case "itemUse": {
+                optionsList = ["allowedBypassTags", "heldItemFilters"];
+                const option = category[setting];
+                form.button(`${customFormUICodes.action.buttons.positions.main_only}${!!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled}Allowed Bypass Tags\n${!!option && !!option.allowedBypassTags
+                    ? option.allowedBypassTags.length === 1
+                        ? "1 tag"
+                        : `${option.allowedBypassTags.length} tags`
+                    : "0 tags"}`, "textures/ui/pencil_edit_icon");
+                form.button(`${customFormUICodes.action.buttons.positions.main_only}${!!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled}Held Item Filters\n${!!option && !!option.heldItemFilters
+                    ? option.heldItemFilters.items.length === 1
+                        ? `1 item ${option.heldItemFilters.mode ?? "exclude"}d`
+                        : `${option.heldItemFilters.items.length} items ${option.heldItemFilters.mode ?? "exclude"}d`
+                    : `0 items excluded`}`, "textures/ui/pencil_edit_icon");
+                break;
+            }
+            case "itemUseOn": {
+                optionsList = ["allowedBypassTags", "heldItemFilters", "mask"];
+                const option = category[setting];
+                form.button(`${customFormUICodes.action.buttons.positions.main_only}${!!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled}Allowed Bypass Tags\n${!!option && !!option.allowedBypassTags
+                    ? option.allowedBypassTags.length === 1
+                        ? "1 tag"
+                        : `${option.allowedBypassTags.length} tags`
+                    : "0 tags"}`, "textures/ui/pencil_edit_icon");
+                form.button(`${customFormUICodes.action.buttons.positions.main_only}${!!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled}Held Item Filters\n${!!option && !!option.heldItemFilters
+                    ? option.heldItemFilters.items.length === 1
+                        ? `1 item ${option.heldItemFilters.mode ?? "exclude"}d`
+                        : `${option.heldItemFilters.items.length} items ${option.heldItemFilters.mode ?? "exclude"}d`
+                    : `0 items excluded`}`, "textures/ui/pencil_edit_icon");
+                form.button(`${customFormUICodes.action.buttons.positions.main_only}${!!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled}Block Mask\n${!!option && !!option.mask && option.mask.blocks.length !== 0
+                    ? option.mask.blocks.length === 1
+                        ? `1 block permutation ${option.mode ?? "exclude"}d`
+                        : `${option.mask.blocks.length} blocks ${option.mode ?? "exclude"}d`
+                    : `All Blocks`}`, "textures/ui/pencil_edit_icon");
+                break;
+            }
             case "explosion": {
                 optionsList = ["allowedBypassTags", "heldItemFilters", "mask", "sourceEntityFilter"];
                 const option = category[setting];
@@ -407,15 +475,38 @@ export async function editCustomAreaCategorySetting(sourceEntitya, categoryID, s
                             : ""}`
                     : "No Filter"}`, "textures/ui/pencil_edit_icon");
                 break;
-            } /*
+            }
             case "playerInteractWithEntity": {
-                optionsList = ["allowedBypassTags", "heldItemFilters", "mask"];
+                optionsList = ["targetEntityFilter", "allowedBypassTags", "heldItemFilters", "mask"];
                 const option = category[setting];
+                form.button(`${customFormUICodes.action.buttons.positions.main_only}${!!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled}Target Entity Filter\n${!!option &&
+                    !!option.targetEntityFilter &&
+                    (option.targetEntityFilter.excludeTags?.length > 0 ||
+                        option.targetEntityFilter.includeTags?.length > 0 ||
+                        option.targetEntityFilter.excludeTypes?.length > 0 ||
+                        option.targetEntityFilter.includeTypes?.length > 0)
+                    ? `${option.targetEntityFilter.excludeTags?.length > 0
+                        ? option.targetEntityFilter.excludeTags.length === 1
+                            ? `1 tag excluded`
+                            : `${option.targetEntityFilter.excludeTags.length} tags excluded`
+                        : option.targetEntityFilter.includeTags?.length > 0
+                            ? option.targetEntityFilter.includeTags?.length === 1
+                                ? `1 tag included`
+                                : `${option.targetEntityFilter.includeTags.length} tags included`
+                            : ""}${option.targetEntityFilter.excludeTypes?.length > 0
+                        ? option.targetEntityFilter.excludeTypes.length === 1
+                            ? `1 type excluded`
+                            : `${option.targetEntityFilter.excludeTypes.length} types excluded`
+                        : option.targetEntityFilter.includeTypes?.length > 0
+                            ? option.targetEntityFilter.includeTypes?.length === 1
+                                ? `1 type included`
+                                : `${option.targetEntityFilter.includeTypes.length} types included`
+                            : ""}`
+                    : "No Filter"}`, "textures/ui/pencil_edit_icon");
                 form.button(`${customFormUICodes.action.buttons.positions.main_only}${!!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled}Allowed Bypass Tags\n${!!option && !!option.allowedBypassTags ? option.allowedBypassTags.length === 1 ? "1 tag" : `${option.allowedBypassTags.length} tags` : "0 tags"}`, "textures/ui/pencil_edit_icon");
                 form.button(`${customFormUICodes.action.buttons.positions.main_only}${!!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled}Held Item Filters\n${!!option && !!option.heldItemFilters ? option.heldItemFilters.items.length === 1 ? `1 item ${option.heldItemFilters.mode ?? "exclude"}d` : `${option.heldItemFilters.items.length} items ${option.heldItemFilters.mode ?? "exclude"}d` : `0 items excluded`}`, "textures/ui/pencil_edit_icon");
-                form.button(`${customFormUICodes.action.buttons.positions.main_only}${!!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled}Block Mask\n${!!option && !!option.mask && option.mask.blocks.length !== 0 ? option.mask.blocks.length === 1 ? `1 block permutation ${option.mode ?? "exclude"}d` : `${option.mask.blocks.length} blocks ${option.mode ?? "exclude"}d` : `All Blocks`}`, "textures/ui/pencil_edit_icon");
                 break;
-            } */
+            }
             case "playerGameModeChange": {
                 optionsList = ["allowedBypassTags", "heldItemFilters", "gameModeFilters"];
                 const option = category[setting];
@@ -503,6 +594,20 @@ export async function editCustomAreaCategorySetting(sourceEntitya, categoryID, s
                     : "No Filter"}`, "textures/ui/pencil_edit_icon");
                 break;
             }
+            case "noPVPZone": {
+                // This one currently has no options.
+                break;
+            }
+            case "tagZone": {
+                optionsList = ["tags"];
+                const option = category[setting];
+                form.button(`${customFormUICodes.action.buttons.positions.main_only}${!!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled}Tags\n${!!option && !!option.tags
+                    ? option.tags.length === 1
+                        ? "1 tag"
+                        : `${option.tags.length} tags`
+                    : "0 tags"}`, "textures/ui/pencil_edit_icon");
+                break;
+            }
             default:
                 throw new Error("Invalid option type.");
         } /*
@@ -536,7 +641,7 @@ export async function editCustomAreaCategorySetting(sourceEntitya, categoryID, s
                             out[setting].enabled = true;
                         }
                         else {
-                            out[setting].enabled = true;
+                            out[setting].enabled = false;
                         }
                     }
                     else {
@@ -559,12 +664,13 @@ export async function editCustomAreaCategorySetting(sourceEntitya, categoryID, s
                     let form = new ModalFormData();
                     form.title("Allowed Bypass Tags");
                     form.textField("Allowed Bypass Tags", "Comma separated list.", category[setting].allowedBypassTags?.join(",") ?? "");
+                    form.submitButton("Save");
                     const r = await form.forceShow(sourceEntity);
                     if (r.canceled)
                         return await editCustomAreaCategorySetting(sourceEntity, categoryID, setting);
-                    category[setting].allowedBypassTags = (r.formValues?.[0]).split(/,\s?/g);
+                    category[setting].allowedBypassTags = !!r.formValues?.[0] ? (r.formValues?.[0]).split(/,\s?/g) : [];
                     const out = JSON.parse(world.getDynamicProperty("advancedProtectedAreaCategory:" + categoryID));
-                    out[setting].allowedBypassTags = (r.formValues?.[0]).split(/,\s?/g);
+                    out[setting].allowedBypassTags = !!r.formValues?.[0] ? (r.formValues?.[0]).split(/,\s?/g) : [];
                     world.setDynamicProperty("advancedProtectedAreaCategory:" + categoryID, JSON.stringify(out));
                     return await editCustomAreaCategorySetting(sourceEntity, categoryID, setting);
                 }
@@ -588,6 +694,7 @@ export async function editCustomAreaCategorySetting(sourceEntitya, categoryID, s
                         : category[setting].effectFilter?.excludeTypes?.join(",") ?? "");
                     form.textField("Minimum Effect Duration\nThis will cause this to only block effects with a duration of at least this many seconds.\nLeave blank to have no minimum.", "int", String(category[setting]?.effectFilter?.minDuration ?? ""));
                     form.textField("Maximum Effect Duration\nThis will cause this to only block effects with a duration of at most this many seconds.\nLeave blank to have no maximum.", "int", String(category[setting]?.effectFilter?.maxDuration ?? ""));
+                    form.submitButton("Save");
                     const r = await form.forceShow(sourceEntity);
                     if (r.canceled)
                         return await editCustomAreaCategorySetting(sourceEntity, categoryID, setting);
@@ -639,6 +746,7 @@ export async function editCustomAreaCategorySetting(sourceEntitya, categoryID, s
                             ? category[setting].fromGameModes?.join(",") ?? ""
                             : ""
                         : category[setting].fromGameModes?.join(",") ?? "");
+                    form.submitButton("Save");
                     const r = await form.forceShow(sourceEntity);
                     if (r.canceled)
                         return await editCustomAreaCategorySetting(sourceEntity, categoryID, setting);
@@ -674,6 +782,7 @@ export async function editCustomAreaCategorySetting(sourceEntitya, categoryID, s
                     form.title("Held Item Filters");
                     form.dropdown("Filter Type\nInclude will cause only players with held items listed below to be blocked, exclude will cause only players who are not holding one of the item types listed below to be blocked.", ["exclude", "include"], catFilters.mode === "exclude" ? 0 : 1);
                     form.textField(`Item Types\nList of item types to allow or block. These should be item namespaced IDs.\nex. minecraft:stick,minecraft:diamond_pickaxe\nComma separated list.`, "Comma separated list.", catFilters?.items?.length === 0 ? "" : catFilters?.items?.join(",") ?? "");
+                    form.submitButton("Save");
                     const r = await form.forceShow(sourceEntity);
                     if (r.canceled)
                         return await editCustomAreaCategorySetting(sourceEntity, categoryID, setting);
@@ -703,7 +812,8 @@ export async function editCustomAreaCategorySetting(sourceEntitya, categoryID, s
                     let form = new ModalFormData();
                     form.title("Block Mask");
                     form.dropdown("Mask Type\nInclude will cause only only blocks matching the block mask below to be blocked, exclude will cause only players who are not holding one of the item types listed below to be blocked.", ["exclude", "include"], +(catProp.mode === "include"));
-                    form.textField(`Block Mask\nA block mask, more information is available at §bhttps://wiki.8crafter.com/andexdb/commands/parameter-types#mask§r.`, "Mask", (catProp.rawmask ?? "") === "none" ? "" : catProp.rawmask ?? "");
+                    form.textField(`Block Mask\nA block mask, more information is available at §bhttps://wiki.8crafter.com/andexdb/commands/parameter-types#mask§r.`, "Mask", (catProp.rawmask ?? "") === "none" ? "" : String(catProp.rawmask ?? ""));
+                    form.submitButton("Save");
                     const r = await form.forceShow(sourceEntity);
                     if (r.canceled)
                         return await editCustomAreaCategorySetting(sourceEntity, categoryID, setting);
@@ -741,6 +851,7 @@ export async function editCustomAreaCategorySetting(sourceEntitya, categoryID, s
                     form.textField(`Entity Tags\nList of entity tags to allow or block.\nComma separated list.`, "Comma separated list.", (category[setting].sourceEntityFilter?.excludeTags?.length ?? 0) === 0
                         ? category[setting].sourceEntityFilter?.includeTags?.join(",") ?? ""
                         : category[setting].sourceEntityFilter?.excludeTags?.join(",") ?? "");
+                    form.submitButton("Save");
                     const r = await form.forceShow(sourceEntity);
                     if (r.canceled)
                         return await editCustomAreaCategorySetting(sourceEntity, categoryID, setting);
@@ -758,6 +869,74 @@ export async function editCustomAreaCategorySetting(sourceEntitya, categoryID, s
                     world.setDynamicProperty("advancedProtectedAreaCategory:" + categoryID, JSON.stringify(out));
                     return await editCustomAreaCategorySetting(sourceEntity, categoryID, setting);
                 }
+                case "targetEntityFilter": {
+                    if (!!!category[setting]) {
+                        if ((await showMessage(sourceEntity, "Event Disabled", `${advancedCategoryPropertyDisplayNames[setting]} is disabled, so this menu cannot be accessed.`, "Back", "Cancel")).selection !== 1) {
+                            return await editCustomAreaCategorySetting(sourceEntity, categoryID, setting);
+                        }
+                        else {
+                            return 0;
+                        }
+                    }
+                    if (!("targetEntityFilter" in category[setting]))
+                        throw new Error("targetEntityFilter is not a property of this event");
+                    const catProp = category[setting];
+                    let form = new ModalFormData();
+                    form.title("Target Entity Filter");
+                    form.dropdown("Entity Type Filter Type\nInclude will cause only entity types listed below to be blocked, exclude will cause all other entity types to be blocked.", ["exclude", "include"], catProp.targetEntityFilter?.includeTypes?.length === 0 ? 0 : 1);
+                    form.textField(`Entity Types\nList of entity types to allow or block.\nShould be entity namespaced IDs.\nComma separated list.`, "Comma separated list.", (catProp.targetEntityFilter?.excludeTypes?.length ?? 0) === 0
+                        ? catProp.targetEntityFilter?.includeTypes?.join(",") ?? ""
+                        : catProp.targetEntityFilter?.excludeTypes?.join(",") ?? "");
+                    form.dropdown("Entity Tags Filter Type\nInclude will cause only entities with at least one of the tags listed below to be blocked, exclude will cause all other entities to be blocked.", ["exclude", "include"], catProp.targetEntityFilter?.includeTags?.length === 0 ? 0 : 1);
+                    form.textField(`Entity Tags\nList of entity tags to allow or block.\nComma separated list.`, "Comma separated list.", (catProp.targetEntityFilter?.excludeTags?.length ?? 0) === 0
+                        ? catProp.targetEntityFilter?.includeTags?.join(",") ?? ""
+                        : catProp.targetEntityFilter?.excludeTags?.join(",") ?? "");
+                    form.submitButton("Save");
+                    const r = await form.forceShow(sourceEntity);
+                    if (r.canceled)
+                        return await editCustomAreaCategorySetting(sourceEntity, categoryID, setting);
+                    const [mode, types, tagsMode, tags] = r.formValues;
+                    catProp.targetEntityFilter.excludeTypes = mode === 0 ? (types === "" ? [] : types.split(/,\s?/g)) : [];
+                    catProp.targetEntityFilter.includeTypes = mode === 1 ? (types === "" ? [] : types.split(/,\s?/g)) : [];
+                    catProp.targetEntityFilter.excludeTags = tagsMode === 0 ? (tags === "" ? [] : tags.split(/,\s?/g)) : [];
+                    catProp.targetEntityFilter.includeTags = tagsMode === 1 ? (tags === "" ? [] : tags.split(/,\s?/g)) : [];
+                    const out = JSON.parse(world.getDynamicProperty("advancedProtectedAreaCategory:" + categoryID));
+                    const outProp = out[setting];
+                    outProp.targetEntityFilter.excludeTypes = mode === 0 ? (types === "" ? [] : types.split(/,\s?/g)) : [];
+                    outProp.targetEntityFilter.includeTypes = mode === 1 ? (types === "" ? [] : types.split(/,\s?/g)) : [];
+                    outProp.targetEntityFilter.excludeTags = tagsMode === 0 ? (tags === "" ? [] : tags.split(/,\s?/g)) : [];
+                    outProp.targetEntityFilter.includeTags = tagsMode === 1 ? (tags === "" ? [] : tags.split(/,\s?/g)) : [];
+                    world.setDynamicProperty("advancedProtectedAreaCategory:" + categoryID, JSON.stringify(out));
+                    return await editCustomAreaCategorySetting(sourceEntity, categoryID, setting);
+                }
+                case "tags":
+                    if (!!!category[setting]) {
+                        if ((await showMessage(sourceEntity, "Event Disabled", `${advancedCategoryPropertyDisplayNames[setting]} is disabled, so this menu cannot be accessed.`, "Back", "Cancel")).selection !== 1) {
+                            return await editCustomAreaCategorySetting(sourceEntity, categoryID, setting);
+                        }
+                        else {
+                            return 0;
+                        }
+                    }
+                    if (!("tags" in category[setting]))
+                        throw new Error("tags is not a property of this event");
+                    const catProp = category[setting];
+                    let form = new ModalFormData();
+                    form.title("Tag Zone Tags");
+                    form.textField("Tags\nThis is a comma-separated list of tags to will be given to players entering this area.", "Comma separated list.", catProp.tags?.join(",") ?? "");
+                    form.toggle("Remove Tags On Exit\nWhether or not to remove the tags given to players entering this area when they exit.", catProp.removeOnExit ?? false);
+                    form.submitButton("Save");
+                    const r = await form.forceShow(sourceEntity);
+                    if (r.canceled)
+                        return await editCustomAreaCategorySetting(sourceEntity, categoryID, setting);
+                    catProp.tags = !!r.formValues?.[0] ? (r.formValues?.[0]).split(/,\s?/g) : [];
+                    catProp.removeOnExit = r.formValues?.[1];
+                    const out = JSON.parse(world.getDynamicProperty("advancedProtectedAreaCategory:" + categoryID));
+                    const outProp = out[setting];
+                    outProp.tags = !!r.formValues?.[0] ? (r.formValues?.[0]).split(/,\s?/g) : [];
+                    outProp.removeOnExit = r.formValues?.[1];
+                    world.setDynamicProperty("advancedProtectedAreaCategory:" + categoryID, JSON.stringify(out));
+                    return await editCustomAreaCategorySetting(sourceEntity, categoryID, setting);
                 case "back":
                     return 1;
                 case "close":

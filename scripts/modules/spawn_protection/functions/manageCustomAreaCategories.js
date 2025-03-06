@@ -56,7 +56,7 @@ export async function manageCustomAreaCategories(sourceEntitya) {
             "back",
             "close",
             "refresh",
-        ][r.selection]) {
+        ][r.selection - customAreaCategories.length]) {
         case "edit":
             if ((await editCustomAreaCategory(sourceEntity, customAreaCategories[r.selection].id)) === 1) {
                 return await manageCustomAreaCategories(sourceEntity);
@@ -78,6 +78,8 @@ export async function manageCustomAreaCategories(sourceEntitya) {
         case "refresh":
             ProtectedAreas.load();
             return await manageCustomAreaCategories(sourceEntity);
+        default:
+            throw new Error("Invalid selection: " + r.selection);
     }
 }
 //# sourceMappingURL=manageCustomAreaCategories.js.map

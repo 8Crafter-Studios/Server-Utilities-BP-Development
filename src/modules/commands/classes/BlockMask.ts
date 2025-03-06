@@ -37,56 +37,65 @@ export const knownContainerTypes = [
 ] as const;
 
 export const customMaskGroupPresets = {
-    "preset:leaves": BlockTypes.getAll().map(v=>v.id).filter(v=>v.includes("leaves")),
-    "preset:deforest": [...new Set([
-        ...BlockTypes.getAll().map(v=>v.id).filter(v=>v.includes("leaves")),
-        ...BlockTypes.getAll().map(v=>v.id).filter(v=>v.includes("sapling")),
-        "tag:log",
-        "tag:plant",
-        "short_grass",
-        "tall_grass",
-        "vine",
-        "dandelion",
-        "allium",
-        "brown_mushroom_block",
-        "red_mushroom_block",
-        "mushroom_stem",
-        "crimson_roots",
-        "warped_roots",
-        "bee_nest" // TO-DO
-    ])],
-    "preset:ores": [...new Set([
-        ...BlockTypes.getAll().map(v=>v.id).filter(v=>v.includes("ore")),
-        "ancient_debris",
-    ])],
-    "preset:ore_blocks": [...new Set([
-        "coal_block",
-        "copper_block",
-        "exposed_copper",
-        "weathered_copper",
-        "oxidized_copper",
-        "waxed_copper",
-        "waxed_exposed_copper",
-        "waxed_weathered_copper",
-        "waxed_oxidized_copper",
-        "iron_block",
-        "gold_block",
-        "emerald_block",
-        "diamond_block",
-        "netherite_block",
-        "redstone_block",
-        "lapis_block",
-        "raw_copper_block",
-        "raw_iron_block",
-        "raw_gold_block",
-    ])],
-    "preset:liquid": [...new Set([
-        "water",
-        "flowing_water",
-        "lava",
-        "flowing_lava"
-    ])],
-}
+    "preset:leaves": BlockTypes.getAll()
+        .map((v) => v.id)
+        .filter((v) => v.includes("leaves")),
+    "preset:deforest": [
+        ...new Set([
+            ...BlockTypes.getAll()
+                .map((v) => v.id)
+                .filter((v) => v.includes("leaves")),
+            ...BlockTypes.getAll()
+                .map((v) => v.id)
+                .filter((v) => v.includes("sapling")),
+            "tag:log",
+            "tag:plant",
+            "short_grass",
+            "tall_grass",
+            "vine",
+            "dandelion",
+            "allium",
+            "brown_mushroom_block",
+            "red_mushroom_block",
+            "mushroom_stem",
+            "crimson_roots",
+            "warped_roots",
+            "bee_nest", // TO-DO
+        ]),
+    ],
+    "preset:ores": [
+        ...new Set([
+            ...BlockTypes.getAll()
+                .map((v) => v.id)
+                .filter((v) => v.includes("ore")),
+            "ancient_debris",
+        ]),
+    ],
+    "preset:ore_blocks": [
+        ...new Set([
+            "coal_block",
+            "copper_block",
+            "exposed_copper",
+            "weathered_copper",
+            "oxidized_copper",
+            "waxed_copper",
+            "waxed_exposed_copper",
+            "waxed_weathered_copper",
+            "waxed_oxidized_copper",
+            "iron_block",
+            "gold_block",
+            "emerald_block",
+            "diamond_block",
+            "netherite_block",
+            "redstone_block",
+            "lapis_block",
+            "raw_copper_block",
+            "raw_iron_block",
+            "raw_gold_block",
+        ]),
+    ],
+    "preset:liquid": [...new Set(["water", "flowing_water", "lava", "flowing_lava"])],
+};
 
 /* export const customMaskGroupPresetsB = {
     "preset:leaves": new Set([
@@ -110,6 +119,7 @@ export class BlockMask {
         type: string;
         states?: { [id: string]: string | number | boolean };
         get raw(): string;
+        get rawsb(): string;
         get rawns(): string;
     }[] = [];
     #hasStates: boolean;
@@ -123,6 +133,7 @@ export class BlockMask {
         type: string;
         states?: { [id: string]: string | number | boolean };
         get raw(): string;
+        get rawsb(): string;
         get rawns(): string;
     }[] {
         return this.#blocksList;
@@ -137,10 +148,21 @@ export class BlockMask {
             type: v.type,
             states: v.states,
             get raw() {
-                return `${this.type}${!!this.states ? `${JSON.stringify(this.states)}` : ""}`;
+                return `${(this as BlockMask["blocks"][number]).type}${
+                    !!(this as BlockMask["blocks"][number]).states ? `${JSON.stringify((this as BlockMask["blocks"][number]).states)}` : ""
+                }`;
+            },
+            get rawsb() {
+                return `${(this as BlockMask["blocks"][number]).type}${
+                    !!(this as BlockMask["blocks"][number]).states
+                        ? `[${Object.entries((this as BlockMask["blocks"][number]).states)
+                              .map(([k, v]) => JSON.stringify(k) + "=" + JSON.stringify(v))
+                              .join(",")}]`
+                        : ""
+                }`;
             },
             get rawns() {
-                return `${this.type}`;
+                return `${(this as BlockMask["blocks"][number]).type}`;
             },
         }));
         this.#hasStates = !!blocks.find((v) => !!v.states);
@@ -151,6 +173,12 @@ export class BlockMask {
     }
     get blockTypes() {
         return this.#blockTypeIds;
+    }
+    get raw(): string {
+        return (this.type === "exclude" ? "e:" : "i:") + (this.#blocksList.length === 0 ? "none" : this.#blocksList.map((v) => v.rawsb).join(","));
+    }
+    toString() {
+        return this.raw;
     }
     evaluateIds() {
         this.#blocksList = cullEmpty(
@@ -163,10 +191,21 @@ export class BlockMask {
                           type: v.type == "keep" ? "minecraft:air" : tryget(() => BlockTypes.get(v.type).id) ?? v.type,
                           states: v.states,
                           get raw() {
-                              return `${this.type}${!!this.states ? `${JSON.stringify(this.states)}` : ""}`;
+                              return `${(this as BlockMask["blocks"][number]).type}${
+                                  !!(this as BlockMask["blocks"][number]).states ? `${JSON.stringify((this as BlockMask["blocks"][number]).states)}` : ""
+                              }`;
+                          },
+                          get rawsb() {
+                              return `${(this as BlockMask["blocks"][number]).type}${
+                                  !!(this as BlockMask["blocks"][number]).states
+                                      ? `[${Object.entries((this as BlockMask["blocks"][number]).states)
+                                            .map(([k, v]) => JSON.stringify(k) + "=" + JSON.stringify(v))
+                                            .join(",")}]`
+                                      : ""
+                              }`;
                           },
                           get rawns() {
-                              return `${this.type}`;
+                              return `${(this as BlockMask["blocks"][number]).type}`;
                           },
                       }
             )
@@ -177,16 +216,28 @@ export class BlockMask {
             type: string;
             states?: { [id: string]: string | number | boolean };
         }[] = [],
-        type: "include" | "exclude" = "include"
+        type: "include" | "exclude" = "include",
+        rawMatch?: string
     ) {
         this.#blocksList = blocks.map((v) => ({
             type: v.type,
             states: v.states,
             get raw() {
-                return `${this.type}${!!this.states ? `${JSON.stringify(this.states)}` : ""}`;
+                return `${(this as BlockMask["blocks"][number]).type}${
+                    !!(this as BlockMask["blocks"][number]).states ? `${JSON.stringify((this as BlockMask["blocks"][number]).states)}` : ""
+                }`;
+            },
+            get rawsb() {
+                return `${(this as BlockMask["blocks"][number]).type}${
+                    !!(this as BlockMask["blocks"][number]).states
+                        ? `[${Object.entries((this as BlockMask["blocks"][number]).states)
+                              .map(([k, v]) => JSON.stringify(k) + "=" + JSON.stringify(v))
+                              .join(",")}]`
+                        : ""
+                }`;
             },
             get rawns() {
-                return `${this.type}`;
+                return `${(this as BlockMask["blocks"][number]).type}`;
             },
         }));
         this.type = type;
@@ -206,10 +257,21 @@ export class BlockMask {
                 type: v.type,
                 states: v.states,
                 get raw() {
-                    return `${this.type}${!!this.states ? `${JSON.stringify(this.states)}` : ""}`;
+                    return `${(this as BlockMask["blocks"][number]).type}${
+                        !!(this as BlockMask["blocks"][number]).states ? `${JSON.stringify((this as BlockMask["blocks"][number]).states)}` : ""
+                    }`;
+                },
+                get rawsb() {
+                    return `${(this as BlockMask["blocks"][number]).type}${
+                        !!(this as BlockMask["blocks"][number]).states
+                            ? `[${Object.entries((this as BlockMask["blocks"][number]).states)
+                                  .map(([k, v]) => JSON.stringify(k) + "=" + JSON.stringify(v))
+                                  .join(",")}]`
+                            : ""
+                    }`;
                 },
                 get rawns() {
-                    return `${this.type}`;
+                    return `${(this as BlockMask["blocks"][number]).type}`;
                 },
             }))
         );
@@ -223,421 +285,477 @@ export class BlockMask {
         }
         if (block instanceof Block) {
             let resultFound =
-                this.#blocksList.flatMap(v=>v.type in customMaskGroupPresets ? customMaskGroupPresets[v.type as keyof typeof customMaskGroupPresets].map(s=>({type: s, rawns: v.rawns, raw: v.raw} as typeof this.blocks[number])) : v).find((b) => {
-                    switch (b.type) {
-                        case "isAir":
-                            if (block.isAir) {
-                                if (b.states != undefined) {
-                                    return BlockMask.testForStatesMatch(block.permutation.getAllStates(), b.states);
+                this.#blocksList
+                    .flatMap((v) =>
+                        v.type in customMaskGroupPresets
+                            ? customMaskGroupPresets[v.type as keyof typeof customMaskGroupPresets].map(
+                                  (s) => ({ type: s, rawns: v.rawns, raw: v.raw } as (typeof this.blocks)[number])
+                              )
+                            : v
+                    )
+                    .find((b) => {
+                        switch (b.type) {
+                            case "isAir":
+                                if (block.isAir) {
+                                    if (b.states != undefined) {
+                                        return BlockMask.testForStatesMatch(block.permutation.getAllStates(), b.states);
+                                    } else {
+                                        return true;
+                                    }
                                 } else {
-                                    return true;
+                                    return false;
                                 }
-                            } else {
-                                return false;
-                            }
-                        case "isLiquid":
-                            if (block.isLiquid) {
-                                if (b.states != undefined) {
-                                    return BlockMask.testForStatesMatch(block.permutation.getAllStates(), b.states);
+                            case "isLiquid":
+                                if (block.isLiquid) {
+                                    if (b.states != undefined) {
+                                        return BlockMask.testForStatesMatch(block.permutation.getAllStates(), b.states);
+                                    } else {
+                                        return true;
+                                    }
                                 } else {
-                                    return true;
+                                    return false;
                                 }
-                            } else {
-                                return false;
-                            }
-                        case "isSolid":
-                            if (block.isSolid) {
-                                if (b.states != undefined) {
-                                    return BlockMask.testForStatesMatch(block.permutation.getAllStates(), b.states);
+                            case "isSolid":
+                                if (block.isSolid) {
+                                    if (b.states != undefined) {
+                                        return BlockMask.testForStatesMatch(block.permutation.getAllStates(), b.states);
+                                    } else {
+                                        return true;
+                                    }
                                 } else {
-                                    return true;
+                                    return false;
                                 }
-                            } else {
-                                return false;
-                            }
-                        case "isValid":
-                            if (block.isValid()) {
-                                if (b.states != undefined) {
-                                    return BlockMask.testForStatesMatch(block.permutation.getAllStates(), b.states);
+                            case "isValid":
+                                if (block.isValid()) {
+                                    if (b.states != undefined) {
+                                        return BlockMask.testForStatesMatch(block.permutation.getAllStates(), b.states);
+                                    } else {
+                                        return true;
+                                    }
                                 } else {
-                                    return true;
+                                    return false;
                                 }
-                            } else {
-                                return false;
-                            }
-                        case "isWaterlogged":
-                            if (block.isWaterlogged) {
-                                if (b.states != undefined) {
-                                    return BlockMask.testForStatesMatch(block.permutation.getAllStates(), b.states);
+                            case "isWaterlogged":
+                                if (block.isWaterlogged) {
+                                    if (b.states != undefined) {
+                                        return BlockMask.testForStatesMatch(block.permutation.getAllStates(), b.states);
+                                    } else {
+                                        return true;
+                                    }
                                 } else {
-                                    return true;
+                                    return false;
                                 }
-                            } else {
-                                return false;
-                            }
-                        case "canBeWaterlogged":
-                        case "isWaterloggable":
-                        case "waterloggable":
-                            if (block.canContainLiquid(modules.mcServer.LiquidType.Water)) {
-                                if (b.states != undefined) {
-                                    return BlockMask.testForStatesMatch(block.permutation.getAllStates(), b.states);
+                            case "canBeWaterlogged":
+                            case "isWaterloggable":
+                            case "waterloggable":
+                                if (block.canContainLiquid(modules.mcServer.LiquidType.Water)) {
+                                    if (b.states != undefined) {
+                                        return BlockMask.testForStatesMatch(block.permutation.getAllStates(), b.states);
+                                    } else {
+                                        return true;
+                                    }
                                 } else {
-                                    return true;
+                                    return false;
                                 }
-                            } else {
-                                return false;
-                            }
-                        case "keep":
-                            if (block.typeId == "minecraft:air") {
-                                if (b.states != undefined) {
-                                    return BlockMask.testForStatesMatch(block.permutation.getAllStates(), b.states);
+                            case "keep":
+                                if (block.typeId == "minecraft:air") {
+                                    if (b.states != undefined) {
+                                        return BlockMask.testForStatesMatch(block.permutation.getAllStates(), b.states);
+                                    } else {
+                                        return true;
+                                    }
                                 } else {
-                                    return true;
+                                    return false;
                                 }
-                            } else {
-                                return false;
-                            }
-                        case "containers":
-                            if (block.getComponent("inventory") != undefined) {
-                                if (b.states != undefined) {
-                                    return BlockMask.testForStatesMatch(block.permutation.getAllStates(), b.states);
+                            case "containers":
+                                if (block.getComponent("inventory") != undefined) {
+                                    if (b.states != undefined) {
+                                        return BlockMask.testForStatesMatch(block.permutation.getAllStates(), b.states);
+                                    } else {
+                                        return true;
+                                    }
                                 } else {
-                                    return true;
+                                    return false;
                                 }
-                            } else {
+                            case "none":
+                                return this.#blocksList.find((bb) => (bb?.type ?? "none") != "none") != undefined;
+                            case "true":
+                                return true;
+                            case "false":
                                 return false;
-                            }
-                        case "none":
-                            return this.#blocksList.find((bb) => (bb?.type ?? "none") != "none") != undefined;
-                        case "true":
-                            return true;
-                        case "false":
-                            return false;
-                        default:
-                            if (block.typeId == (tryget(() => BlockTypes.get(b.type).id) ?? "invalid")) {
-                                if (b.states != undefined) {
-                                    return BlockMask.testForStatesMatch(block.permutation.getAllStates(), b.states);
+                            default:
+                                if (block.typeId == (tryget(() => BlockTypes.get(b.type).id) ?? "invalid")) {
+                                    if (b.states != undefined) {
+                                        return BlockMask.testForStatesMatch(block.permutation.getAllStates(), b.states);
+                                    } else {
+                                        return true;
+                                    }
                                 } else {
-                                    return true;
+                                    return false;
                                 }
-                            } else {
-                                return false;
-                            }
-                    }
-                }) != undefined;
+                        }
+                    }) != undefined;
             return mode == "exclude" ? !resultFound : resultFound;
         }
         if (block instanceof BlockPermutation) {
             let resultFound =
-                this.#blocksList.flatMap(v=>v.type in customMaskGroupPresets ? customMaskGroupPresets[v.type as keyof typeof customMaskGroupPresets].map(s=>({type: s, rawns: v.rawns, raw: v.raw} as typeof this.blocks[number])) : v).find((b) => {
-                    switch (b.type) {
-                        // only works for the regular vanilla air block when using a BlockPermutation as the parameter
-                        case "isAir":
-                            if (block.type.id == "minecraft:air") {
-                                if (b.states != undefined) {
-                                    return BlockMask.testForStatesMatch(block.getAllStates(), b.states);
+                this.#blocksList
+                    .flatMap((v) =>
+                        v.type in customMaskGroupPresets
+                            ? customMaskGroupPresets[v.type as keyof typeof customMaskGroupPresets].map(
+                                  (s) => ({ type: s, rawns: v.rawns, raw: v.raw } as (typeof this.blocks)[number])
+                              )
+                            : v
+                    )
+                    .find((b) => {
+                        switch (b.type) {
+                            // only works for the regular vanilla air block when using a BlockPermutation as the parameter
+                            case "isAir":
+                                if (block.type.id == "minecraft:air") {
+                                    if (b.states != undefined) {
+                                        return BlockMask.testForStatesMatch(block.getAllStates(), b.states);
+                                    } else {
+                                        return true;
+                                    }
                                 } else {
-                                    return true;
+                                    return false;
                                 }
-                            } else {
-                                return false;
-                            }
-                        // only works for the regular vanilla water, flowing water, lava, and flowing lava blocks when using a BlockPermutation as the parameter
-                        case "isLiquid":
-                            if (["minecraft:water", "minecraft:flowing_water", "minecraft:lava", "minecraft:flowing_lava"].includes(block.type.id)) {
-                                if (b.states != undefined) {
-                                    return BlockMask.testForStatesMatch(block.getAllStates(), b.states);
+                            // only works for the regular vanilla water, flowing water, lava, and flowing lava blocks when using a BlockPermutation as the parameter
+                            case "isLiquid":
+                                if (["minecraft:water", "minecraft:flowing_water", "minecraft:lava", "minecraft:flowing_lava"].includes(block.type.id)) {
+                                    if (b.states != undefined) {
+                                        return BlockMask.testForStatesMatch(block.getAllStates(), b.states);
+                                    } else {
+                                        return true;
+                                    }
                                 } else {
-                                    return true;
+                                    return false;
                                 }
-                            } else {
+                            // does not work when using a BlockPermutation as the parameter
+                            case "isSolid":
                                 return false;
-                            }
-                        // does not work when using a BlockPermutation as the parameter
-                        case "isSolid":
-                            return false;
-                        // does not work when using a BlockPermutation as the parameter
-                        case "isValid":
-                            return false;
-                        // does not work when using a BlockPermutation as the parameter
-                        case "isWaterlogged":
-                            return false;
-                        case "canBeWaterlogged":
-                        case "isWaterloggable":
-                        case "waterloggable":
-                            if (block.canContainLiquid(modules.mcServer.LiquidType.Water)) {
-                                if (b.states != undefined) {
-                                    return BlockMask.testForStatesMatch(block.getAllStates(), b.states);
+                            // does not work when using a BlockPermutation as the parameter
+                            case "isValid":
+                                return false;
+                            // does not work when using a BlockPermutation as the parameter
+                            case "isWaterlogged":
+                                return false;
+                            case "canBeWaterlogged":
+                            case "isWaterloggable":
+                            case "waterloggable":
+                                if (block.canContainLiquid(modules.mcServer.LiquidType.Water)) {
+                                    if (b.states != undefined) {
+                                        return BlockMask.testForStatesMatch(block.getAllStates(), b.states);
+                                    } else {
+                                        return true;
+                                    }
                                 } else {
-                                    return true;
+                                    return false;
                                 }
-                            } else {
-                                return false;
-                            }
-                        case "keep":
-                            if (block.type.id == "minecraft:air") {
-                                if (b.states != undefined) {
-                                    return BlockMask.testForStatesMatch(block.getAllStates(), b.states);
+                            case "keep":
+                                if (block.type.id == "minecraft:air") {
+                                    if (b.states != undefined) {
+                                        return BlockMask.testForStatesMatch(block.getAllStates(), b.states);
+                                    } else {
+                                        return true;
+                                    }
                                 } else {
-                                    return true;
+                                    return false;
                                 }
-                            } else {
-                                return false;
-                            }
-                        // only works for some container types when using a BlockPermutation as the parameter
-                        case "containers":
-                            if (knownContainerTypes.includes(block.type.id as any)) {
-                                if (b.states != undefined) {
-                                    return BlockMask.testForStatesMatch(block.getAllStates(), b.states);
+                            // only works for some container types when using a BlockPermutation as the parameter
+                            case "containers":
+                                if (knownContainerTypes.includes(block.type.id as any)) {
+                                    if (b.states != undefined) {
+                                        return BlockMask.testForStatesMatch(block.getAllStates(), b.states);
+                                    } else {
+                                        return true;
+                                    }
                                 } else {
-                                    return true;
+                                    return false;
                                 }
-                            } else {
+                            case "none":
+                                return this.#blocksList.find((bb) => (bb?.type ?? "none") != "none") != undefined;
+                            case "true":
+                                return true;
+                            case "false":
                                 return false;
-                            }
-                        case "none":
-                            return this.#blocksList.find((bb) => (bb?.type ?? "none") != "none") != undefined;
-                        case "true":
-                            return true;
-                        case "false":
-                            return false;
-                        default:
-                            if(b.type.startsWith("tag:")){
-                                return block.hasTag(b.type.slice(4));
-                            }else if (block.type.id == (tryget(() => BlockTypes.get(b.type).id) ?? "invalid")) {
-                                if (b.states != undefined) {
-                                    return BlockMask.testForStatesMatch(block.getAllStates(), b.states);
+                            default:
+                                if (b.type.startsWith("tag:")) {
+                                    return block.hasTag(b.type.slice(4));
+                                } else if (block.type.id == (tryget(() => BlockTypes.get(b.type).id) ?? "invalid")) {
+                                    if (b.states != undefined) {
+                                        return BlockMask.testForStatesMatch(block.getAllStates(), b.states);
+                                    } else {
+                                        return true;
+                                    }
                                 } else {
-                                    return true;
+                                    return false;
                                 }
-                            } else {
-                                return false;
-                            }
-                    }
-                }) != undefined;
+                        }
+                    }) != undefined;
             return mode == "exclude" ? !resultFound : resultFound;
         }
         if (block instanceof BlockType) {
             let resultFound =
-                this.#blocksList.flatMap(v=>v.type in customMaskGroupPresets ? customMaskGroupPresets[v.type as keyof typeof customMaskGroupPresets].map(s=>({type: s, rawns: v.rawns, raw: v.raw} as typeof this.blocks[number])) : v).find((b) => {
-                    switch (b.type) {
-                        // only works for the regular vanilla air block when using a BlockType as the parameter
-                        case "isAir":
-                            if (block.id == "minecraft:air") {
-                                return true;
-                            } else {
+                this.#blocksList
+                    .flatMap((v) =>
+                        v.type in customMaskGroupPresets
+                            ? customMaskGroupPresets[v.type as keyof typeof customMaskGroupPresets].map(
+                                  (s) => ({ type: s, rawns: v.rawns, raw: v.raw } as (typeof this.blocks)[number])
+                              )
+                            : v
+                    )
+                    .find((b) => {
+                        switch (b.type) {
+                            // only works for the regular vanilla air block when using a BlockType as the parameter
+                            case "isAir":
+                                if (block.id == "minecraft:air") {
+                                    return true;
+                                } else {
+                                    return false;
+                                }
+                            // only works for the regular vanilla water, flowing water, lava, and flowing lava blocks when using a BlockType as the parameter
+                            case "isLiquid":
+                                if (["minecraft:water", "minecraft:flowing_water", "minecraft:lava", "minecraft:flowing_lava"].includes(block.id)) {
+                                    return true;
+                                } else {
+                                    return false;
+                                }
+                            // does not work when using a BlockType as the parameter
+                            case "isSolid":
                                 return false;
-                            }
-                        // only works for the regular vanilla water, flowing water, lava, and flowing lava blocks when using a BlockType as the parameter
-                        case "isLiquid":
-                            if (["minecraft:water", "minecraft:flowing_water", "minecraft:lava", "minecraft:flowing_lava"].includes(block.id)) {
-                                return true;
-                            } else {
+                            // does not work when using a BlockType as the parameter
+                            case "isValid":
                                 return false;
-                            }
-                        // does not work when using a BlockType as the parameter
-                        case "isSolid":
-                            return false;
-                        // does not work when using a BlockType as the parameter
-                        case "isValid":
-                            return false;
-                        // does not work when using a BlockType as the parameter
-                        case "isWaterlogged":
-                            return false;
-                        case "canBeWaterlogged":
-                        case "isWaterloggable":
-                        case "waterloggable":
-                            if (BlockPermutation.resolve(block.id).canContainLiquid(modules.mcServer.LiquidType.Water)) {
-                                return true;
-                            } else {
+                            // does not work when using a BlockType as the parameter
+                            case "isWaterlogged":
                                 return false;
-                            }
-                        case "keep":
-                            if (block.id == "minecraft:air") {
+                            case "canBeWaterlogged":
+                            case "isWaterloggable":
+                            case "waterloggable":
+                                if (BlockPermutation.resolve(block.id).canContainLiquid(modules.mcServer.LiquidType.Water)) {
+                                    return true;
+                                } else {
+                                    return false;
+                                }
+                            case "keep":
+                                if (block.id == "minecraft:air") {
+                                    return true;
+                                } else {
+                                    return false;
+                                }
+                            // only works for some container types when using a BlockType as the parameter
+                            case "containers":
+                                if (knownContainerTypes.includes(block.id as any)) {
+                                    return true;
+                                } else {
+                                    return false;
+                                }
+                            case "none":
+                                return this.#blocksList.find((bb) => (bb?.type ?? "none") != "none") != undefined;
+                            case "true":
                                 return true;
-                            } else {
+                            case "false":
                                 return false;
-                            }
-                        // only works for some container types when using a BlockType as the parameter
-                        case "containers":
-                            if (knownContainerTypes.includes( block.id as any)) {
-                                return true;
-                            } else {
-                                return false;
-                            }
-                        case "none":
-                            return this.#blocksList.find((bb) => (bb?.type ?? "none") != "none") != undefined;
-                        case "true":
-                            return true;
-                        case "false":
-                            return false;
-                        default:
-                            if(b.type.startsWith("tag:")){
-                                return BlockPermutation.resolve(block.id).hasTag(b.type.slice(4));
-                            }else if (block.id == (tryget(() => BlockTypes.get(b.type).id) ?? "invalid")) {
-                                return true;
-                            } else {
-                                return false;
-                            }
-                    }
-                }) != undefined;
+                            default:
+                                if (b.type.startsWith("tag:")) {
+                                    return BlockPermutation.resolve(block.id).hasTag(b.type.slice(4));
+                                } else if (block.id == (tryget(() => BlockTypes.get(b.type).id) ?? "invalid")) {
+                                    return true;
+                                } else {
+                                    return false;
+                                }
+                        }
+                    }) != undefined;
             return mode == "exclude" ? !resultFound : resultFound;
         }
         if (typeof block == "string") {
             let resultFound =
-                this.#blocksList.flatMap(v=>v.type in customMaskGroupPresets ? customMaskGroupPresets[v.type as keyof typeof customMaskGroupPresets].map(s=>({type: s, rawns: v.rawns, raw: v.raw} as typeof this.blocks[number])) : v).find((b) => {
-                    switch (b.type) {
-                        // only works for the regular vanilla air block when using a BlockType as the parameter
-                        case "isAir":
-                            if (block == "minecraft:air") {
-                                return true;
-                            } else {
+                this.#blocksList
+                    .flatMap((v) =>
+                        v.type in customMaskGroupPresets
+                            ? customMaskGroupPresets[v.type as keyof typeof customMaskGroupPresets].map(
+                                  (s) => ({ type: s, rawns: v.rawns, raw: v.raw } as (typeof this.blocks)[number])
+                              )
+                            : v
+                    )
+                    .find((b) => {
+                        switch (b.type) {
+                            // only works for the regular vanilla air block when using a BlockType as the parameter
+                            case "isAir":
+                                if (block == "minecraft:air") {
+                                    return true;
+                                } else {
+                                    return false;
+                                }
+                            // only works for the regular vanilla water, flowing water, lava, and flowing lava blocks when using a BlockType as the parameter
+                            case "isLiquid":
+                                if (["minecraft:water", "minecraft:flowing_water", "minecraft:lava", "minecraft:flowing_lava"].includes(block)) {
+                                    return true;
+                                } else {
+                                    return false;
+                                }
+                            // does not work when using a BlockType as the parameter
+                            case "isSolid":
                                 return false;
-                            }
-                        // only works for the regular vanilla water, flowing water, lava, and flowing lava blocks when using a BlockType as the parameter
-                        case "isLiquid":
-                            if (["minecraft:water", "minecraft:flowing_water", "minecraft:lava", "minecraft:flowing_lava"].includes(block)) {
-                                return true;
-                            } else {
+                            // does not work when using a BlockType as the parameter
+                            case "isValid":
                                 return false;
-                            }
-                        // does not work when using a BlockType as the parameter
-                        case "isSolid":
-                            return false;
-                        // does not work when using a BlockType as the parameter
-                        case "isValid":
-                            return false;
-                        // does not work when using a BlockType as the parameter
-                        case "isWaterlogged":
-                            return false;
-                        // does not work when using a BlockType as the parameter
-                        case "canBeWaterlogged":
-                        case "isWaterloggable":
-                        case "waterloggable":
-                            if (tryget(()=>BlockPermutation.resolve(BlockTypes.get(block).id).canContainLiquid(modules.mcServer.LiquidType.Water)) ?? false) {
-                                return true;
-                            } else {
+                            // does not work when using a BlockType as the parameter
+                            case "isWaterlogged":
                                 return false;
-                            }
-                        case "keep":
-                            if (block == "minecraft:air") {
+                            // does not work when using a BlockType as the parameter
+                            case "canBeWaterlogged":
+                            case "isWaterloggable":
+                            case "waterloggable":
+                                if (
+                                    tryget(() => BlockPermutation.resolve(BlockTypes.get(block).id).canContainLiquid(modules.mcServer.LiquidType.Water)) ??
+                                    false
+                                ) {
+                                    return true;
+                                } else {
+                                    return false;
+                                }
+                            case "keep":
+                                if (block == "minecraft:air") {
+                                    return true;
+                                } else {
+                                    return false;
+                                }
+                            // only works for some container types when using a BlockType as the parameter
+                            case "containers":
+                                if (knownContainerTypes.includes(block as any)) {
+                                    return true;
+                                } else {
+                                    return false;
+                                }
+                            case "none":
+                                return this.#blocksList.find((bb) => (bb?.type ?? "none") != "none") != undefined;
+                            case "true":
                                 return true;
-                            } else {
+                            case "false":
                                 return false;
-                            }
-                        // only works for some container types when using a BlockType as the parameter
-                        case "containers":
-                            if (knownContainerTypes.includes( block as any)) {
-                                return true;
-                            } else {
-                                return false;
-                            }
-                        case "none":
-                            return this.#blocksList.find((bb) => (bb?.type ?? "none") != "none") != undefined;
-                        case "true":
-                            return true;
-                        case "false":
-                            return false;
-                        default:
-                            if(b.type.startsWith("tag:")){
-                                return BlockPermutation.resolve(block).hasTag(b.type.slice(4));
-                            }else if (block == (tryget(() => BlockTypes.get(b.type).id) ?? "invalid")) {
-                                return true;
-                            } else {
-                                return false;
-                            }
-                    }
-                }) != undefined;
+                            default:
+                                if (b.type.startsWith("tag:")) {
+                                    return BlockPermutation.resolve(block).hasTag(b.type.slice(4));
+                                } else if (block == (tryget(() => BlockTypes.get(b.type).id) ?? "invalid")) {
+                                    return true;
+                                } else {
+                                    return false;
+                                }
+                        }
+                    }) != undefined;
             return mode == "exclude" ? !resultFound : resultFound;
         }
         if (typeof block == "object") {
             let resultFound =
-                this.#blocksList.flatMap(v=>v.type in customMaskGroupPresets ? customMaskGroupPresets[v.type as keyof typeof customMaskGroupPresets].map(s=>({type: s, rawns: v.rawns, raw: v.raw} as typeof this.blocks[number])) : v).find((b) => {
-                    switch (b.type) {
-                        // only works for the regular vanilla air block when using a BlockPermutation as the parameter
-                        case "isAir":
-                            if ((block.type instanceof BlockType ? block.type.id : block.type) == "minecraft:air") {
-                                if (b.states != undefined && block.states != undefined) {
-                                    return BlockMask.testForStatesMatch(block.states, b.states);
+                this.#blocksList
+                    .flatMap((v) =>
+                        v.type in customMaskGroupPresets
+                            ? customMaskGroupPresets[v.type as keyof typeof customMaskGroupPresets].map(
+                                  (s) => ({ type: s, rawns: v.rawns, raw: v.raw } as (typeof this.blocks)[number])
+                              )
+                            : v
+                    )
+                    .find((b) => {
+                        switch (b.type) {
+                            // only works for the regular vanilla air block when using a BlockPermutation as the parameter
+                            case "isAir":
+                                if ((block.type instanceof BlockType ? block.type.id : block.type) == "minecraft:air") {
+                                    if (b.states != undefined && block.states != undefined) {
+                                        return BlockMask.testForStatesMatch(block.states, b.states);
+                                    } else {
+                                        return true;
+                                    }
                                 } else {
-                                    return true;
+                                    return false;
                                 }
-                            } else {
-                                return false;
-                            }
-                        // only works for the regular vanilla water, flowing water, lava, and flowing lava blocks when using a BlockPermutation as the parameter
-                        case "isLiquid":
-                            if (["minecraft:water", "minecraft:flowing_water", "minecraft:lava", "minecraft:flowing_lava"].includes(block.type instanceof BlockType ? block.type.id : block.type)) {
-                                if (b.states != undefined && block.states != undefined) {
-                                    return BlockMask.testForStatesMatch(block.states, b.states);
+                            // only works for the regular vanilla water, flowing water, lava, and flowing lava blocks when using a BlockPermutation as the parameter
+                            case "isLiquid":
+                                if (
+                                    ["minecraft:water", "minecraft:flowing_water", "minecraft:lava", "minecraft:flowing_lava"].includes(
+                                        block.type instanceof BlockType ? block.type.id : block.type
+                                    )
+                                ) {
+                                    if (b.states != undefined && block.states != undefined) {
+                                        return BlockMask.testForStatesMatch(block.states, b.states);
+                                    } else {
+                                        return true;
+                                    }
                                 } else {
-                                    return true;
+                                    return false;
                                 }
-                            } else {
+                            // does not work when using a BlockPermutation as the parameter
+                            case "isSolid":
                                 return false;
-                            }
-                        // does not work when using a BlockPermutation as the parameter
-                        case "isSolid":
-                            return false;
-                        // does not work when using a BlockPermutation as the parameter
-                        case "isValid":
-                            return false;
-                        // does not work when using a BlockPermutation as the parameter
-                        case "isWaterlogged":
-                            return false;
-                        case "canBeWaterlogged":
-                        case "isWaterloggable":
-                        case "waterloggable":
-                            if (tryget(()=>block.type instanceof BlockType ? BlockPermutation.resolve(block.type.id).canContainLiquid(modules.mcServer.LiquidType.Water) : BlockPermutation.resolve(BlockTypes.get(block.type).id).canContainLiquid(modules.mcServer.LiquidType.Water)) ?? false) {
-                                if (b.states != undefined && block.states != undefined) {
-                                    return BlockMask.testForStatesMatch(block.states, b.states);
+                            // does not work when using a BlockPermutation as the parameter
+                            case "isValid":
+                                return false;
+                            // does not work when using a BlockPermutation as the parameter
+                            case "isWaterlogged":
+                                return false;
+                            case "canBeWaterlogged":
+                            case "isWaterloggable":
+                            case "waterloggable":
+                                if (
+                                    tryget(() =>
+                                        block.type instanceof BlockType
+                                            ? BlockPermutation.resolve(block.type.id).canContainLiquid(modules.mcServer.LiquidType.Water)
+                                            : BlockPermutation.resolve(BlockTypes.get(block.type).id).canContainLiquid(modules.mcServer.LiquidType.Water)
+                                    ) ??
+                                    false
+                                ) {
+                                    if (b.states != undefined && block.states != undefined) {
+                                        return BlockMask.testForStatesMatch(block.states, b.states);
+                                    } else {
+                                        return true;
+                                    }
                                 } else {
-                                    return true;
+                                    return false;
                                 }
-                            } else {
-                                return false;
-                            }
-                        case "keep":
-                            if ((block.type instanceof BlockType ? block.type.id : block.type) == "minecraft:air") {
-                                if (b.states != undefined && block.states != undefined) {
-                                    return BlockMask.testForStatesMatch(block.states, b.states);
+                            case "keep":
+                                if ((block.type instanceof BlockType ? block.type.id : block.type) == "minecraft:air") {
+                                    if (b.states != undefined && block.states != undefined) {
+                                        return BlockMask.testForStatesMatch(block.states, b.states);
+                                    } else {
+                                        return true;
+                                    }
                                 } else {
-                                    return true;
+                                    return false;
                                 }
-                            } else {
-                                return false;
-                            }
-                        // only works for some container types when using a BlockPermutation as the parameter
-                        case "containers":
-                            if (knownContainerTypes.includes((block.type instanceof BlockType ? block.type.id : block.type) as any)) {
-                                if (b.states != undefined && block.states != undefined) {
-                                    return BlockMask.testForStatesMatch(block.states, b.states);
+                            // only works for some container types when using a BlockPermutation as the parameter
+                            case "containers":
+                                if (knownContainerTypes.includes((block.type instanceof BlockType ? block.type.id : block.type) as any)) {
+                                    if (b.states != undefined && block.states != undefined) {
+                                        return BlockMask.testForStatesMatch(block.states, b.states);
+                                    } else {
+                                        return true;
+                                    }
                                 } else {
-                                    return true;
+                                    return false;
                                 }
-                            } else {
+                            case "none":
+                                return this.#blocksList.find((bb) => (bb?.type ?? "none") != "none") != undefined;
+                            case "true":
+                                return true;
+                            case "false":
                                 return false;
-                            }
-                        case "none":
-                            return this.#blocksList.find((bb) => (bb?.type ?? "none") != "none") != undefined;
-                        case "true":
-                            return true;
-                        case "false":
-                            return false;
-                        default:
-                            if(b.type.startsWith("tag:")){
-                                return BlockPermutation.resolve(block.type instanceof BlockType ? block.type.id : block.type).hasTag(b.type.slice(4));
-                            }else if ((block.type instanceof BlockType ? block.type.id : block.type) == (tryget(() => BlockTypes.get(b.type).id) ?? "invalid")) {
-                                if (b.states != undefined && block.states != undefined) {
-                                    return BlockMask.testForStatesMatch(block.states, b.states);
+                            default:
+                                if (b.type.startsWith("tag:")) {
+                                    return BlockPermutation.resolve(block.type instanceof BlockType ? block.type.id : block.type).hasTag(b.type.slice(4));
+                                } else if (
+                                    (block.type instanceof BlockType ? block.type.id : block.type) == (tryget(() => BlockTypes.get(b.type).id) ?? "invalid")
+                                ) {
+                                    if (b.states != undefined && block.states != undefined) {
+                                        return BlockMask.testForStatesMatch(block.states, b.states);
+                                    } else {
+                                        return true;
+                                    }
                                 } else {
-                                    return true;
+                                    return false;
                                 }
-                            } else {
-                                return false;
-                            }
-                    }
-                }) != undefined;
+                        }
+                    }) != undefined;
             return mode == "exclude" ? !resultFound : resultFound;
         }
     }
@@ -647,11 +765,11 @@ export class BlockMask {
     static parse() {}
     static extractRaw(str: string): string | null {
         return str.match(
-            /(?<=\s|^)([ie]:)?((?:[\"\'])?(?:[a-zA-Z0-9_\-\.]+:(?:[a-zA-Z0-9_\-\.]+:)?)?[a-zA-Z0-9_\-\.]+(?:[\"\'])?(?:[\[\{](?:[^\]\}]*)[\]\}])?(?=[,\s]|$))(,(?:[\"\'])?(?:[a-zA-Z0-9_\-\.]+:(?:[a-zA-Z0-9_\-\.]+:)?)?[a-zA-Z0-9_\-\.]+(?:[\"\'])?(?:[%*]{1,2}\d+)?(?:[\[\{](?:[^\]\}]*)[\]\}])?)*/
-        )[0];
+            /(?<=\s|^)([ie]:)?((?:[\"\'])?(?:[a-zA-Z0-9_\-\.]+:(?:[a-zA-Z0-9_\-\.]+:)?)?[a-zA-Z0-9_\-\.]+(?:[\"\'])?(?:[\[\{](?:[^\]\}]*)[\]\}])?(?=[,\s]|$))(,(?:[\"\'])?(?:[a-zA-Z0-9_\-\.]+:(?:[a-zA-Z0-9_\-\.]+:)?)?[a-zA-Z0-9_\-\.]+(?:[\"\'])?(?:[\[\{](?:[^\]\}]*)[\]\}])?)*/
+        )?.[0];
     }
-    static extract(str: string, extraIdParsingEnabled: boolean = true): BlockMask {
-        if(extraIdParsingEnabled){
+    static extract(str: string, extraIdParsingEnabled: boolean = true, modeOverride?: "include" | "exclude"): BlockMask {
+        if (extraIdParsingEnabled) {
             const result = extractCustomMaskType(str);
             const out = cullEmpty(
                 result.map((v) =>
@@ -665,19 +783,20 @@ export class BlockMask {
                           }
                 )
             );
-            return new BlockMask(out, result.mode);
-        }else{
+            return new BlockMask(out, modeOverride ?? result.mode);
+        } else {
             const result = extractCustomMaskType(str);
-            return new BlockMask(result, result.mode);
+            return new BlockMask(result, modeOverride ?? result.mode);
         }
     }
-    static extractWRaw(str: string, extraIdParsingEnabled: boolean = true): { raw: string; parsed: BlockMask } {
+    static extractWRaw(str: string, extraIdParsingEnabled: boolean = true, modeOverride?: "include" | "exclude"): { raw: string; parsed: BlockMask } {
         let result: {
             type: string;
             states?: Record<string, string | number | boolean>;
         }[];
         let mode: "include" | "exclude" = "include";
-        if(extraIdParsingEnabled){
+        let rawMatch: string;
+        if (extraIdParsingEnabled) {
             const r = extractCustomMaskType(str);
             result = cullEmpty(
                 r.map((v) =>
@@ -692,7 +811,7 @@ export class BlockMask {
                 )
             );
             mode = r.mode;
-        }else{
+        } else {
             const r = extractCustomMaskType(str);
             result = r;
             mode = r.mode;
@@ -701,9 +820,7 @@ export class BlockMask {
             raw: str.match(
                 /(?<=\s|^)([ie]:)?((?:[\"\'])?(?:[a-zA-Z0-9_\-\.]+:(?:[a-zA-Z0-9_\-\.]+:)?)?[a-zA-Z0-9_\-\.]+(?:[\"\'])?(?:[\[\{](?:[^\]\}]*)[\]\}])?(?=[,\s]|$))(,(?:[\"\'])?(?:[a-zA-Z0-9_\-\.]+:(?:[a-zA-Z0-9_\-\.]+:)?)?[a-zA-Z0-9_\-\.]+(?:[\"\'])?(?:[\[\{](?:[^\]\}]*)[\]\}])?)*/
             )[0],
-            parsed: extraIdParsingEnabled
-                    ? new BlockMask(result, mode)
-                    : new BlockMask(result, mode),
+            parsed: extraIdParsingEnabled ? new BlockMask(result, modeOverride ?? mode) : new BlockMask(result, modeOverride ?? mode),
         };
     }
     static extractAllRaw(str: string): string[] | null {
@@ -711,10 +828,29 @@ export class BlockMask {
             /(?<=\s|^)([ie]:)?((?:[\"\'])?(?:[a-zA-Z0-9_\-\.]+:(?:[a-zA-Z0-9_\-\.]+:)?)?[a-zA-Z0-9_\-\.]+(?:[\"\'])?(?:[\[\{](?:[^\]\}]*)[\]\}])?(?=[,\s]|$))(,(?:[\"\'])?(?:[a-zA-Z0-9_\-\.]+:(?:[a-zA-Z0-9_\-\.]+:)?)?[a-zA-Z0-9_\-\.]+(?:[\"\'])?(?:[\[\{](?:[^\]\}]*)[\]\}])?)*/g
         );
     }
-    static extractAll(str: string, extraIdParsingEnabled: boolean = true): BlockMask[] {
-        return extractCustomMaskTypes(str).map((v) => new BlockMask(v, v.mode));
+    static extractAll(str: string, extraIdParsingEnabled: boolean = true, modeOverride?: "include" | "exclude"): BlockMask[] {
+        return extractCustomMaskTypes(str).map(
+            (v) =>
+                new BlockMask(
+                    extraIdParsingEnabled
+                        ? cullEmpty(
+                              v.map((v) =>
+                                  v.type == "none"
+                                      ? undefined
+                                      : v.type == "any"
+                                      ? undefined
+                                      : {
+                                            type: v.type == "keep" ? "air" : v.type,
+                                            states: v.states,
+                                        }
+                              )
+                          )
+                        : v,
+                        modeOverride ?? v.mode
+                )
+        );
     }
-    static extractAllWRaw(str: string, extraIdParsingEnabled: boolean = true): { raw: string[]; parsed: BlockMask[] } {
+    static extractAllWRaw(str: string, extraIdParsingEnabled: boolean = true, modeOverride?: "include" | "exclude"): { raw: string[]; parsed: BlockMask[] } {
         return {
             raw: str.match(
                 /(?<=\s|^)([ie]:)?((?:[\"\'])?(?:[a-zA-Z0-9_\-\.]+:(?:[a-zA-Z0-9_\-\.]+:)?)?[a-zA-Z0-9_\-\.]+(?:[\"\'])?(?:[\[\{](?:[^\]\}]*)[\]\}])?(?=[,\s]|$))(,(?:[\"\'])?(?:[a-zA-Z0-9_\-\.]+:(?:[a-zA-Z0-9_\-\.]+:)?)?[a-zA-Z0-9_\-\.]+(?:[\"\'])?(?:[\[\{](?:[^\]\}]*)[\]\}])?)*/g
@@ -736,7 +872,7 @@ export class BlockMask {
                                   )
                               )
                             : v,
-                        v.mode
+                            modeOverride ?? v.mode
                     )
             ),
         };
@@ -746,11 +882,12 @@ function extractCustomMaskType(str: string) {
     const maskTypes = [] as {
         type: string;
         states?: Record<string, string | number | boolean>;
-    }[] & { mode: "include" | "exclude" };
+    }[] & { mode: "include" | "exclude"; rawMatch: string };
     const regex =
         /(?<=\s|^)([ie]:)?((?:[\"\'])?(?:[a-zA-Z0-9_\-\.]+:(?:[a-zA-Z0-9_\-\.]+:)?)?[a-zA-Z0-9_\-\.]+(?:[\"\'])?(?:[\[\{](?:[^\]\}]*)[\]\}])?(?=[,\s]|$))(,(?:[\"\'])?(?:[a-zA-Z0-9_\-\.]+:(?:[a-zA-Z0-9_\-\.]+:)?)?[a-zA-Z0-9_\-\.]+(?:[\"\'])?(?:[\[\{](?:[^\]\}]*)[\]\}])?)*/;
     const regexb = /([ie]:)?(?:[\"\'])?(?:[a-zA-Z0-9_\-\.]+:(?:[a-zA-Z0-9_\-\.]+:)?)?[a-zA-Z0-9_\-\.]+(?:[\"\'])?(?:[\[\{](?:[^\]\}]*)[\]\}])?(?=[,\s]|$)/g;
-    const matches = str.match(regex)[0].match(regexb);
+    const rawMatch = str.match(regex)[0];
+    const matches = rawMatch.match(regexb);
     let mode: "include" | "exclude" = "include";
     if (matches) {
         matches.forEach((match, index) => {
@@ -804,16 +941,16 @@ function extractCustomMaskType(str: string) {
             });
         });
     }
-    return Object.assign(maskTypes, { mode }) as {
+    return Object.assign(maskTypes, { mode, rawMatch }) as {
         type: string;
         states?: Record<string, string | number | boolean>;
-    }[] & { mode: "include" | "exclude" };
+    }[] & { mode: "include" | "exclude"; rawMatch: string };
 }
 function extractCustomMaskTypes(str: string) {
     const masks = [] as ({
         type: string;
         states?: Record<string, string | number | boolean>;
-    }[] & { mode: "include" | "exclude" })[];
+    }[] & { mode: "include" | "exclude"; rawMatch: string })[];
     const regex =
         /(?<=\s|^)([ie]:)?((?:[\"\'])?(?:[a-zA-Z0-9_\-\.]+:(?:[a-zA-Z0-9_\-\.]+:)?)?[a-zA-Z0-9_\-\.]+(?:[\"\'])?(?:[\[\{](?:[^\]\}]*)[\]\}])?(?=[,\s]|$))(,(?:[\"\'])?(?:[a-zA-Z0-9_\-\.]+:(?:[a-zA-Z0-9_\-\.]+:)?)?[a-zA-Z0-9_\-\.]+(?:[\"\'])?(?:[\[\{](?:[^\]\}]*)[\]\}])?)*/g;
     const regexb = /([ie]:)?(?:[\"\'])?(?:[a-zA-Z0-9_\-\.]+:(?:[a-zA-Z0-9_\-\.]+:)?)?[a-zA-Z0-9_\-\.]+(?:[\"\'])?(?:[\[\{](?:[^\]\}]*)[\]\}])?(?=[,\s]|$)/g;
@@ -876,7 +1013,7 @@ function extractCustomMaskTypes(str: string) {
                     states,
                 });
             });
-            masks.push(Object.assign(maskTypes, { mode: mode }));
+            masks.push(Object.assign(maskTypes, { mode: mode, rawMatch: m }));
         }
     });
     return masks;

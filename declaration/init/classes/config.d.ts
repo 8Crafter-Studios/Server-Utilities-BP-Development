@@ -552,7 +552,17 @@ export declare class config {
         artificialLagMS: number;
         timeZone: number;
         playerDataRefreshRate: number;
+        /**
+         * How often to refresh protected areas.
+         *
+         * Dynamic Property ID: andexdbSettings:protectedAreasRefreshRate
+         *
+         * @default 200
+         */
         protectedAreasRefreshRate: number;
+        protectedAreasZoneActionsEnabled: boolean;
+        protectedAreasZoneActionsInterval: number;
+        protectedAreasZoneRefreshInterval: number;
         /**
          * How often to check for banned players.
          *
@@ -571,11 +581,11 @@ export declare class config {
         bansMinimumAutoRefresh: number;
         debugMode: boolean;
         /**
-         * It is reccommended to leave this set to false.
+         * It is recommended to leave this set to false.
          */
         allowWatchdogTerminationCrash: boolean;
         /**
-         * It is reccommended to leave this set to false.
+         * It is recommended to leave this set to false.
          */
         hideWatchdogTerminationCrashEnabledWarningsOnStartup: boolean;
         autoSavePlayerData: boolean;
@@ -1121,7 +1131,17 @@ export declare class config {
             artificialLagMS: number;
             timeZone: number;
             playerDataRefreshRate: number;
+            /**
+             * How often to refresh protected areas.
+             *
+             * Dynamic Property ID: andexdbSettings:protectedAreasRefreshRate
+             *
+             * @default 200
+             */
             protectedAreasRefreshRate: number;
+            protectedAreasZoneActionsEnabled: boolean;
+            protectedAreasZoneActionsInterval: number;
+            protectedAreasZoneRefreshInterval: number;
             /**
              * How often to check for banned players.
              *
@@ -1140,11 +1160,11 @@ export declare class config {
             bansMinimumAutoRefresh: number;
             debugMode: boolean;
             /**
-             * It is reccommended to leave this set to false.
+             * It is recommended to leave this set to false.
              */
             allowWatchdogTerminationCrash: boolean;
             /**
-             * It is reccommended to leave this set to false.
+             * It is recommended to leave this set to false.
              */
             hideWatchdogTerminationCrashEnabledWarningsOnStartup: boolean;
             autoSavePlayerData: boolean;

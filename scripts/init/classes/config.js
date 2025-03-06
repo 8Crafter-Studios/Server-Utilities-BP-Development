@@ -1450,11 +1450,36 @@ export class config {
             set playerDataRefreshRate(playerDataRefreshRate) {
                 world.setDynamicProperty("andexdbSettings:playerDataRefreshRate", Number.isNaN(Number(playerDataRefreshRate)) ? 5 : Math.min(1000, Math.max(1, Number(playerDataRefreshRate ?? 20))));
             },
+            /**
+             * How often to refresh protected areas.
+             *
+             * Dynamic Property ID: andexdbSettings:protectedAreasRefreshRate
+             *
+             * @default 200
+             */
             get protectedAreasRefreshRate() {
                 return Number(world.getDynamicProperty("andexdbSettings:protectedAreasRefreshRate") ?? 200);
             },
             set protectedAreasRefreshRate(protectedAreasRefreshRate) {
                 world.setDynamicProperty("andexdbSettings:protectedAreasRefreshRate", Number.isNaN(Number(protectedAreasRefreshRate)) ? 200 : Math.min(1000000, Math.max(1, Number(protectedAreasRefreshRate ?? 200))));
+            },
+            get protectedAreasZoneActionsEnabled() {
+                return Boolean(world.getDynamicProperty("andexdbSettings:protectedAreasZoneActionsEnabled") ?? true);
+            },
+            set protectedAreasZoneActionsEnabled(protectedAreasZoneActionsEnabled) {
+                world.setDynamicProperty("andexdbSettings:protectedAreasZoneActionsEnabled", protectedAreasZoneActionsEnabled ?? true);
+            },
+            get protectedAreasZoneActionsInterval() {
+                return Number(world.getDynamicProperty("andexdbSettings:protectedAreasZoneActionsInterval") ?? 5);
+            },
+            set protectedAreasZoneActionsInterval(protectedAreasZoneActionsInterval) {
+                world.setDynamicProperty("andexdbSettings:protectedAreasZoneActionsInterval", Number.isNaN(Number(protectedAreasZoneActionsInterval)) ? 5 : Math.min(1000000, Math.max(1, Number(protectedAreasZoneActionsInterval ?? 5))));
+            },
+            get protectedAreasZoneRefreshInterval() {
+                return Number(world.getDynamicProperty("andexdbSettings:protectedAreasZoneRefreshInterval") ?? 200);
+            },
+            set protectedAreasZoneRefreshInterval(protectedAreasZoneRefreshInterval) {
+                world.setDynamicProperty("andexdbSettings:protectedAreasZoneRefreshInterval", Number.isNaN(Number(protectedAreasZoneRefreshInterval)) ? 200 : Math.min(1000000, Math.max(1, Number(protectedAreasZoneRefreshInterval ?? 200))));
             },
             /**
              * How often to check for banned players.
@@ -1489,7 +1514,7 @@ export class config {
                 world.setDynamicProperty("andexdbSettings:debugMode", debugMode ?? false);
             },
             /**
-             * It is reccommended to leave this set to false.
+             * It is recommended to leave this set to false.
              */
             get allowWatchdogTerminationCrash() {
                 return Boolean(world.getDynamicProperty("andexdbSettings:allowWatchdogTerminationCrash") ?? false);
@@ -1498,7 +1523,7 @@ export class config {
                 world.setDynamicProperty("andexdbSettings:allowWatchdogTerminationCrash", allowWatchdogTerminationCrash ?? false);
             },
             /**
-             * It is reccommended to leave this set to false.
+             * It is recommended to leave this set to false.
              */
             get hideWatchdogTerminationCrashEnabledWarningsOnStartup() {
                 return Boolean(world.getDynamicProperty("andexdbSettings:hideWatchdogTerminationCrashEnabledWarningsOnStartup") ?? false);

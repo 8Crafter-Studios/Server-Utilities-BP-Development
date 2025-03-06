@@ -19,6 +19,7 @@ import { BlockMask } from "modules/commands/classes/BlockMask";
 import { fillSphere } from "modules/block_generation_utilities/functions/fillSphere";
 import { fillArea } from "modules/block_generation_utilities/functions/fillArea";
 import { playerMenu } from "modules/ui/functions/playerMenu";
+import { ProtectedAreaTester } from "init/variables/protectedAreaVariables";
 subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe((event) => {
     if (!!event?.itemStack?.getDynamicProperty("code")) {
         try {
@@ -1430,6 +1431,10 @@ console.error(e, e.stack);
         catch (e) {
             console.error(e, e.stack);
         }
+    }
+    if (new ProtectedAreaTester("itemUse").testIsInArea(event, event.source.location, event.source.dimension)) {
+        event.cancel = true;
+        return;
     }
 });
 //# sourceMappingURL=itemUse.js.map
