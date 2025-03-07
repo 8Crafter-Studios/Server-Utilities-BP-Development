@@ -798,10 +798,14 @@ export class ProtectedAreaTester {
                                                 : !prop.heldItemFilters.items.some((item) => data.source.heldItem?.typeId === (ItemTypes.get(item)?.id ?? item))
                                             : true) &&
                                         ((prop.sourceEntityFilter?.excludeTags ?? []).length === 0
-                                            ? prop.sourceEntityFilter?.includeTags?.length === 0 ? true : prop.sourceEntityFilter?.includeTags?.some((tag) => data.source.hasTag(tag)) ?? true
+                                            ? prop.sourceEntityFilter?.includeTags?.length === 0
+                                                ? true
+                                                : prop.sourceEntityFilter?.includeTags?.some((tag) => data.source.hasTag(tag)) ?? true
                                             : !prop.sourceEntityFilter.excludeTags.some((tag) => data.source.hasTag(tag))) &&
                                         ((prop.sourceEntityFilter?.excludeTypes ?? []).length === 0
-                                            ? prop.sourceEntityFilter?.includeTypes?.length === 0 ? true : prop.sourceEntityFilter?.includeTypes?.some((type) => data.source.typeId === (EntityTypes.get(type)?.id ?? type)) ?? true
+                                            ? prop.sourceEntityFilter?.includeTypes?.length === 0
+                                                ? true
+                                                : prop.sourceEntityFilter?.includeTypes?.some((type) => data.source.typeId === (EntityTypes.get(type)?.id ?? type)) ?? true
                                             : !prop.sourceEntityFilter.excludeTypes.some((type) => data.source.typeId === (EntityTypes.get(type)?.id ?? type)))
                                     : true) && (extraData?.block !== undefined ? prop.mask.testIfMatches(extraData.block, prop.mode) : true);
                             break;
@@ -823,16 +827,29 @@ export class ProtectedAreaTester {
                             const data = event;
                             success =
                                 ((prop.sourceEntityFilter?.excludeTags ?? []).length === 0
-                                    ? prop.sourceEntityFilter?.includeTags?.length === 0 ? true : prop.sourceEntityFilter?.includeTags?.some((tag) => data.entity.hasTag(tag)) ?? true
+                                    ? prop.sourceEntityFilter?.includeTags?.length === 0
+                                        ? true
+                                        : prop.sourceEntityFilter?.includeTags?.some((tag) => data.entity.hasTag(tag)) ?? true
                                     : !prop.sourceEntityFilter.excludeTags.some((tag) => data.entity.hasTag(tag))) &&
                                     ((prop.sourceEntityFilter?.excludeTypes ?? []).length === 0
-                                        ? prop.sourceEntityFilter?.includeTypes?.length === 0 ? true : prop.sourceEntityFilter?.includeTypes?.some((type) => data.entity.typeId === (EntityTypes.get(type)?.id ?? type)) ?? true
+                                        ? prop.sourceEntityFilter?.includeTypes?.length === 0
+                                            ? true
+                                            : prop.sourceEntityFilter?.includeTypes?.some((type) => data.entity.typeId === (EntityTypes.get(type)?.id ?? type)) ?? true
                                         : !prop.sourceEntityFilter.excludeTypes.some((type) => data.entity.typeId === (EntityTypes.get(type)?.id ?? type))) &&
                                     ((prop.effectFilter?.excludeTypes ?? []).length === 0
-                                        ? prop.effectFilter?.includeTypes?.length === 0 ? true : prop.effectFilter?.includeTypes?.some((type) => data.effectType === type) ?? true
-                                        : !prop.effectFilter.excludeTypes.some((type) => data.effectType === type)) &&
-                                    (!Number.isNaN(Number(prop.effectFilter?.minDuration)) && !Number.isNaN(Number(prop.effectFilter?.maxDuration)) ? ((!Number.isNaN(Number(prop.effectFilter?.minDuration)) ? prop.effectFilter.minDuration <= data.duration : true) ||
-                                        (!Number.isNaN(Number(prop.effectFilter?.maxDuration)) ? prop.effectFilter.maxDuration >= data.duration : true)) : true);
+                                        ? prop.effectFilter?.includeTypes?.length === 0
+                                            ? true
+                                            : prop.effectFilter?.includeTypes?.some((type) => data.effectType.toLowerCase() === type.toLowerCase()) ??
+                                                true
+                                        : !prop.effectFilter.excludeTypes.some((type) => data.effectType.toLowerCase() === type.toLowerCase())) &&
+                                    (!Number.isNaN(Number(prop.effectFilter?.minDuration)) || !Number.isNaN(Number(prop.effectFilter?.maxDuration))
+                                        ? (!Number.isNaN(Number(prop.effectFilter?.minDuration))
+                                            ? prop.effectFilter.minDuration / 20 <= data.duration
+                                            : true) ||
+                                            (!Number.isNaN(Number(prop.effectFilter?.maxDuration))
+                                                ? prop.effectFilter.maxDuration / 20 >= data.duration
+                                                : true)
+                                        : true);
                             break;
                         }
                         case "playerGameModeChange": {
@@ -858,7 +875,6 @@ export class ProtectedAreaTester {
                             break;
                         }
                     }
-                    console.log(this.preventableEvent, success);
                     if (!success)
                         return false;
                     return new ProtectedAreaCategory("advancedArea", category.id).testIsInArea(location, dimension);
@@ -939,10 +955,10 @@ export class ProtectedAreaCategory {
      */
     getAreasInDimension(dimension) {
         if (this.category !== "advancedArea") {
-            return ProtectedAreas.areas[this.category]?.[typeof dimension === "string" ? dimension : dimension.id.replace("minecraft:", "")] ?? [];
+            return (ProtectedAreas.areas[this.category]?.[typeof dimension === "string" ? dimension : dimension.id.replace("minecraft:", "")] ?? []);
         }
         else {
-            return ProtectedAreas.areas.advancedArea[this.advancedCategoryID]?.[typeof dimension === "string" ? dimension : dimension.id.replace("minecraft:", "")] ?? [];
+            return (ProtectedAreas.areas.advancedArea[this.advancedCategoryID]?.[typeof dimension === "string" ? dimension : dimension.id.replace("minecraft:", "")] ?? []);
         }
     }
     /**

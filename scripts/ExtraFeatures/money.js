@@ -4,7 +4,7 @@ import * as ipc from "ipc";
 export class MoneySystem {
     playerID;
     get money() {
-        if (world.scoreboard
+        if (config.moneySystem.useScoreboardBasedMoneySystem && world.scoreboard
             .getObjective(config.moneySystem.scoreboardName)
             ?.getParticipants()
             .find((v) => tryget(() => v.getEntity()?.id) == this.playerID) == undefined) {
@@ -32,7 +32,7 @@ export class MoneySystem {
         }
     }
     addMoney(amount) {
-        if (world.scoreboard
+        if (config.moneySystem.useScoreboardBasedMoneySystem && world.scoreboard
             .getObjective(config.moneySystem.scoreboardName)
             ?.getParticipants()
             .find((v) => tryget(() => v.getEntity()?.id) == this.playerID) == undefined) {
@@ -62,7 +62,7 @@ export class MoneySystem {
         }
     }
     removeMoney(amount) {
-        if (world.scoreboard
+        if (config.moneySystem.useScoreboardBasedMoneySystem && world.scoreboard
             .getObjective(config.moneySystem.scoreboardName)
             ?.getParticipants()
             .find((v) => tryget(() => v.getEntity()?.id) == this.playerID) == undefined) {
@@ -139,7 +139,7 @@ export class MoneySystem {
     }
     constructor(playerID) {
         this.playerID = playerID;
-        if (world.scoreboard
+        if (config.moneySystem.useScoreboardBasedMoneySystem && world.scoreboard
             .getObjective(config.moneySystem.scoreboardName)
             ?.getParticipants()
             .find((v) => tryget(() => v.getEntity()?.id) == this.playerID) == undefined) {

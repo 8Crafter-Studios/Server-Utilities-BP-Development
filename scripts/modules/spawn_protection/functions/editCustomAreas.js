@@ -49,7 +49,13 @@ export async function editCustomAreas(sourceEntitya) {
     form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Refresh All Categories And Areas", "textures/ui/refresh");
     return await forceShow(form, sourceEntity).then(async (l) => {
         if (l.selection === customAreaCategories.length) {
-            return await manageCustomAreaCategories(sourceEntity);
+            if ((await manageCustomAreaCategories(sourceEntity)) === 1) {
+                return await editCustomAreas(sourceEntity);
+            }
+            else {
+                return 0;
+            }
+            ;
         }
         ;
         if (l.canceled || l.selection === customAreaCategories.length + 1)

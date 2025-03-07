@@ -38,7 +38,7 @@ export async function manageCustomAreaCategories(sourceEntitya) {
     }
     const customAreaCategories = ProtectedAreas.areas.advancedAreaCategories;
     let form = new ActionFormData();
-    form.title(customFormUICodes.action.titles.formStyles.medium + "Custom Areas");
+    form.title(customFormUICodes.action.titles.formStyles.medium + "Manage Custom Area Categories");
     form.body("Choose custom area category to edit.");
     customAreaCategories.forEach((c) => {
         form.button(customFormUICodes.action.buttons.positions.main_only + c.id, c.icon_path ?? "textures/ui/xyz_axis");

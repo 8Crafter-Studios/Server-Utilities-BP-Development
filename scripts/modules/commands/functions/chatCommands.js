@@ -144,7 +144,7 @@ import { fillCylinder } from "modules/block_generation_utilities/functions/fillC
 import { fillStretchedSphere } from "modules/block_generation_utilities/functions/fillStretchedSphere";
 import { fillOutline } from "modules/block_generation_utilities/functions/fillOutline";
 import { playerMenu } from "modules/ui/functions/playerMenu";
-import { ProtectedAreas } from "init/variables/protectedAreaVariables";
+import { protectedAreaCategories, ProtectedAreas } from "init/variables/protectedAreaVariables";
 export function chatCommands(params) {
     let returnBeforeChatSend = params.returnBeforeChatSend ?? false;
     let playerab = params.player ?? params.eventData?.sender ?? params.event?.sender;
@@ -21783,14 +21783,26 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                             try {
                                 const args = evaluateParameters(switchTestB, [
                                     "presetText",
+                                    "f-o",
                                     "string",
                                     "string",
                                     "number",
                                     "string",
                                 ]).args;
-                                if (!spawnProtectionTypeList.includes(args[1])
-                                    && !ProtectedAreas.areas.advancedAreaCategories.some((c) => c.id === args[1])) {
-                                    player.sendError(`§cError: "${args[1]}" is not a valid protected area type, please use one of the following protected area types: ${JSON.stringify(spawnProtectionTypeList)}.`, true);
+                                if (!spawnProtectionTypeList.includes(args[2])) {
+                                    player.sendError(`§cError: ${JSON.stringify(args[2])} is not a valid protected area category, please use one of the following protected area categories: ${JSON.stringify(spawnProtectionTypeList)}.`, true);
+                                    return;
+                                }
+                                if (!ProtectedAreas.areas.advancedAreaCategories.some((c) => c.id === args[2])) {
+                                    player.sendError(`§cError: The custom protected area category ${JSON.stringify(args[2])} does not exist, please double check your capitalization and spelling.`, true);
+                                    return;
+                                }
+                                if (!args[1].o && [...ProtectedAreas.areas.advancedArea[args[2]].overworld, ...ProtectedAreas.areas.advancedArea[args[2]].nether, ...ProtectedAreas.areas.advancedArea[args[2]].the_end].some((c) => c.id === args[3])) {
+                                    player.sendError(`§cError: The custom protected area category ${JSON.stringify(args[2])} already has an area with the ID ${JSON.stringify(args[3])}, please choose another ID or use the -o flag to overwrite the other area.`, true);
+                                    return;
+                                }
+                                if (args[4] !== 1 && (args[4] ?? 0) !== 0) {
+                                    player.sendError(`§cError: ${JSON.stringify(args[4])} is not a valid mode, the valid values are 0 (Protection) and 1 (Anti-Protection).`, true);
                                     return;
                                 }
                                 const coordinatesa = player.getDynamicProperty("pos1");
@@ -21814,14 +21826,31 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                     player.sendMessageB("§cError: pos2 is not set.");
                                 }
                                 else {
-                                    world.setDynamicProperty(spawnProtectionTypeList.includes(args[1]) ? "v2:" + args[1] + args[2] : "advancedProtectedArea:" + args[1] + ":" + args[2], JSON.stringify({
+                                    const data = {
                                         from: ca,
                                         to: cb,
                                         dimension: dimensions.indexOf(dimensiona),
-                                        mode: args[3] ?? 0,
-                                        icon_path: args[4],
-                                    }));
-                                    player.sendMessageB("The protected area has been saved.");
+                                        mode: args[4] ?? 0,
+                                        icon_path: args[5],
+                                    };
+                                    if (spawnProtectionTypeList.includes(args[2])) {
+                                        const areas = ProtectedAreas.areas[args[2].slice(0, -1)];
+                                        areas.overworld = areas.overworld.filter(v => v.id !== args[3]);
+                                        areas.nether = areas.nether.filter(v => v.id !== args[3]);
+                                        areas.the_end = areas.the_end.filter(v => v.id !== args[3]);
+                                        ProtectedAreas.areas[args[2].slice(0, -1)][dimensionse[dimensions.indexOf(dimensiona)]].push({ id: args[3], ...data });
+                                        world.setDynamicProperty("v2:" + args[2] + args[3], JSON.stringify(data));
+                                        player.sendMessageB("The protected area has been saved.");
+                                    }
+                                    else {
+                                        const areas = ProtectedAreas.areas.advancedArea[args[2]];
+                                        areas.overworld = areas.overworld.filter(v => v.id !== args[3]);
+                                        areas.nether = areas.nether.filter(v => v.id !== args[3]);
+                                        areas.the_end = areas.the_end.filter(v => v.id !== args[3]);
+                                        ProtectedAreas.areas.advancedArea[args[2]][dimensionse[dimensions.indexOf(dimensiona)]].push({ id: args[3], ...data });
+                                        world.setDynamicProperty("advancedProtectedArea:" + args[2] + ":" + args[3], JSON.stringify(data));
+                                        player.sendMessageB("The protected area has been saved.");
+                                    }
                                 }
                             }
                             catch (e) {

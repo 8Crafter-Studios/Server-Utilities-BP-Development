@@ -6,7 +6,7 @@ export class MoneySystem {
     playerID: `${number}`;
     get money() {
         if (
-            world.scoreboard
+            config.moneySystem.useScoreboardBasedMoneySystem && world.scoreboard
                 .getObjective(config.moneySystem.scoreboardName)
                 ?.getParticipants()
                 .find((v) => tryget(() => v.getEntity()?.id) == this.playerID) == undefined
@@ -38,7 +38,7 @@ export class MoneySystem {
     }
     addMoney(amount: number | bigint) {
         if (
-            world.scoreboard
+            config.moneySystem.useScoreboardBasedMoneySystem && world.scoreboard
                 .getObjective(config.moneySystem.scoreboardName)
                 ?.getParticipants()
                 .find((v) => tryget(() => v.getEntity()?.id) == this.playerID) == undefined
@@ -73,7 +73,7 @@ export class MoneySystem {
     }
     removeMoney(amount: number | bigint) {
         if (
-            world.scoreboard
+            config.moneySystem.useScoreboardBasedMoneySystem && world.scoreboard
                 .getObjective(config.moneySystem.scoreboardName)
                 ?.getParticipants()
                 .find((v) => tryget(() => v.getEntity()?.id) == this.playerID) == undefined
@@ -164,7 +164,7 @@ export class MoneySystem {
     constructor(playerID: `${number}`) {
         this.playerID = playerID;
         if (
-            world.scoreboard
+            config.moneySystem.useScoreboardBasedMoneySystem && world.scoreboard
                 .getObjective(config.moneySystem.scoreboardName)
                 ?.getParticipants()
                 .find((v) => tryget(() => v.getEntity()?.id) == this.playerID) == undefined
