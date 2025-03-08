@@ -26,6 +26,8 @@ export async function selectTexturePreset(sourceEntitya: Entity | executeCommand
     keys.forEach((key) => {
         form.button(customFormUICodes.action.buttons.positions.main_only + texturePresets[key].displayName, texturePresets[key].icon);
     });
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
     const r = await forceShow(form, sourceEntitya as Player);
     if (r.canceled || r.selection === keys.length) return 1;
     if (r.selection === keys.length + 1) return 0;

@@ -26892,45 +26892,63 @@ ${command.dp}snapshot list`);
                         const molangVariables = new MolangVariableMap();
                         molangVariables.setFloat("variable.max_lifetime", 10);
                         const dimension = player.worldEditSelection.dimension;
-                        for (let x = Math.min(begin.x, end.x); x <= Math.max(begin.x, end.x); x++) {
-                            for (let y = Math.min(begin.y, end.y); y <= Math.max(begin.y, end.y); y++) {
-                                for (let z = Math.min(begin.z, end.z); z <= Math.max(begin.z, end.z); z++) {
-                                    if (!(
-                                    // Vertical edges (along z-axis)
-                                    ((x == begin.x || x == end.x) && (y == begin.y || y == end.y) && z >= begin.z && z <= end.z) ||
-                                        // Horizontal edges (along x-axis)
-                                        ((y == begin.y || y == end.y) && (z == begin.z || z == end.z) && x >= begin.x && x <= end.x) ||
-                                        // Horizontal edges (along y-axis)
-                                        ((x == begin.x || x == end.x) && (z == begin.z || z == end.z) && y >= begin.y && y <= end.y))) {
-                                        continue;
-                                    }
-                                    const mode = Vector.distance({ x, y, z }, begin) > Vector.distance({ x, y, z }, end);
-                                    dimension.spawnParticle(mode
-                                        ? "andexdb:xz_axis_particle_pos2"
-                                        : "andexdb:xz_axis_particle_pos1", Vector.add({ x, y, z }, { x: 0.5, y: 1.005, z: 0.5 }), molangVariables);
-                                    dimension.spawnParticle(mode
-                                        ? "andexdb:xz_axis_particle_pos2_north"
-                                        : "andexdb:xz_axis_particle_pos1_north", Vector.add({ x, y, z }, { x: 0.5, y: 0.5, z: 1.005 }), molangVariables);
-                                    dimension.spawnParticle(mode
-                                        ? "andexdb:xz_axis_particle_pos2_east"
-                                        : "andexdb:xz_axis_particle_pos1_east", Vector.add({ x, y, z }, { x: -0.005, y: 0.5, z: 0.5 }), molangVariables);
-                                    dimension.spawnParticle(mode
-                                        ? "andexdb:xz_axis_particle_pos2_down"
-                                        : "andexdb:xz_axis_particle_pos1_down", Vector.add({ x, y, z }, { x: 0.5, y: -0.005, z: 0.5 }), molangVariables);
-                                    dimension.spawnParticle(mode
-                                        ? "andexdb:xz_axis_particle_pos2_south"
-                                        : "andexdb:xz_axis_particle_pos1_south", Vector.add({ x, y, z }, { x: 0.5, y: 0.5, z: -0.005 }), molangVariables);
-                                    dimension.spawnParticle(mode
-                                        ? "andexdb:xz_axis_particle_pos2_west"
-                                        : "andexdb:xz_axis_particle_pos1_west", Vector.add({ x, y, z }, { x: 1.005, y: 0.5, z: 0.5 }), molangVariables);
-                                    if (Date.now() - msSinceLastTickWait >= 20) {
-                                        await waitTick();
-                                        msSinceLastTickWait = Date.now();
+                        const ta = await generateTickingAreaFillCoordinatesC(player.location, (() => {
+                            let a = new CompoundBlockVolume();
+                            a.pushVolume({
+                                volume: new BlockVolume(begin, end),
+                            });
+                            return a;
+                        })(), dimension);
+                        try {
+                            for (let x = Math.min(begin.x, end.x); x <= Math.max(begin.x, end.x); x++) {
+                                for (let y = Math.min(begin.y, end.y); y <= Math.max(begin.y, end.y); y++) {
+                                    for (let z = Math.min(begin.z, end.z); z <= Math.max(begin.z, end.z); z++) {
+                                        if (!(
+                                        // Horizontal edges (along z-axis)
+                                        ((x == begin.x || x == end.x) && (y == begin.y || y == end.y) && z >= begin.z && z <= end.z) ||
+                                            // Horizontal edges (along x-axis)
+                                            ((y == begin.y || y == end.y) && (z == begin.z || z == end.z) && x >= begin.x && x <= end.x) ||
+                                            // Vertical edges (along y-axis)
+                                            ((x == begin.x || x == end.x) && (z == begin.z || z == end.z) && y >= begin.y && y <= end.y))) {
+                                            continue;
+                                        }
+                                        const mode = Vector.distance({ x, y, z }, begin) > Vector.distance({ x, y, z }, end);
+                                        try {
+                                            dimension.spawnParticle(mode
+                                                ? "andexdb:xz_axis_particle_pos2"
+                                                : "andexdb:xz_axis_particle_pos1", Vector.add({ x, y, z }, { x: 0.5, y: 1.005, z: 0.5 }), molangVariables);
+                                            dimension.spawnParticle(mode
+                                                ? "andexdb:xz_axis_particle_pos2_north"
+                                                : "andexdb:xz_axis_particle_pos1_north", Vector.add({ x, y, z }, { x: 0.5, y: 0.5, z: 1.005 }), molangVariables);
+                                            dimension.spawnParticle(mode
+                                                ? "andexdb:xz_axis_particle_pos2_east"
+                                                : "andexdb:xz_axis_particle_pos1_east", Vector.add({ x, y, z }, { x: -0.005, y: 0.5, z: 0.5 }), molangVariables);
+                                            dimension.spawnParticle(mode
+                                                ? "andexdb:xz_axis_particle_pos2_down"
+                                                : "andexdb:xz_axis_particle_pos1_down", Vector.add({ x, y, z }, { x: 0.5, y: -0.005, z: 0.5 }), molangVariables);
+                                            dimension.spawnParticle(mode
+                                                ? "andexdb:xz_axis_particle_pos2_south"
+                                                : "andexdb:xz_axis_particle_pos1_south", Vector.add({ x, y, z }, { x: 0.5, y: 0.5, z: -0.005 }), molangVariables);
+                                            dimension.spawnParticle(mode
+                                                ? "andexdb:xz_axis_particle_pos2_west"
+                                                : "andexdb:xz_axis_particle_pos1_west", Vector.add({ x, y, z }, { x: 1.005, y: 0.5, z: 0.5 }), molangVariables);
+                                        }
+                                        catch { }
+                                        if (Date.now() - msSinceLastTickWait >= 20) {
+                                            await waitTick();
+                                            msSinceLastTickWait = Date.now();
+                                        }
                                     }
                                 }
                             }
+                            player.sendMessageB(`Selected area outline has been successfully rendered.`);
                         }
-                        player.sendMessageB(`Selected area outline has been successfully rendered.`);
+                        catch (e) {
+                            player.sendError("§c" + e + e.stack, true);
+                        }
+                        finally {
+                            ta.forEach((tab) => tab?.remove());
+                        }
                     });
                 }
                 break;

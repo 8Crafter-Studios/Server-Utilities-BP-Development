@@ -4,6 +4,7 @@ import { advancedCategoryPropertyDisplayNames, AdvancedProtectedAreaCategoryProp
 import { BlockMask } from "modules/commands/classes/BlockMask";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { customFormUICodes } from "modules/ui/constants/customFormUICodes";
+import { selectTexturePreset } from "modules/ui/functions/selectTexturePreset";
 import { getDetailedType } from "modules/utilities/functions/getDetailedType";
 import { showActions } from "modules/utilities/functions/showActions";
 import { showMessage } from "modules/utilities/functions/showMessage";
@@ -43,6 +44,7 @@ export async function editCustomAreaCategory(sourceEntitya, categoryID) {
                 .body(`ID: ${category.id}§r
     Icon Path: ${category.icon_path ?? "None"}`)
                 .button(customFormUICodes.action.buttons.positions.main_only + `Settings\n${!!category && category.enabled ? "§aEnabled" : "§cDisabled"}`, "textures/ui/icon_setting")
+                .button(customFormUICodes.action.buttons.positions.main_only + "Apply Icon Texture Preset", "textures/items/map_locked")
                 .button(`${customFormUICodes.action.buttons.positions.main_only}${category.enabled ? "" : customFormUICodes.action.buttons.options.disabled}Block Placement Prevention\n${!!category.playerPlaceBlock && category.playerPlaceBlock.enabled !== false ? "§aEnabled" : "§cDisabled"}`, "textures/ui/pencil_edit_icon")
                 .button(`${customFormUICodes.action.buttons.positions.main_only}${category.enabled ? "" : customFormUICodes.action.buttons.options.disabled}Block Breaking Prevention\n${!!category.playerBreakBlock && category.playerBreakBlock.enabled !== false ? "§aEnabled" : "§cDisabled"}`, "textures/ui/pencil_edit_icon")
                 .button(`${customFormUICodes.action.buttons.positions.main_only}${category.enabled ? "" : customFormUICodes.action.buttons.options.disabled}Block Interaction Prevention\n${!!category.playerInteractWithBlock && category.playerInteractWithBlock.enabled !== false ? "§aEnabled" : "§cDisabled"}`, "textures/ui/pencil_edit_icon")
@@ -68,6 +70,7 @@ export async function editCustomAreaCategory(sourceEntitya, categoryID) {
                 return 1;
             switch (cullUndefined([
                 "settings",
+                "applyIconTexturePreset",
                 "playerPlaceBlock",
                 "playerBreakBlock",
                 "playerInteractWithBlock",
@@ -83,7 +86,7 @@ export async function editCustomAreaCategory(sourceEntitya, categoryID) {
                 "delete",
                 "duplicate",
                 "refresh",
-                debugMode ? "rawData" : undefined
+                debugMode ? "rawData" : undefined,
             ])[rb.selection]) {
                 case "settings":
                     if ((await editCustomAreaCategorySettings(sourceEntity, categoryID)) === 1) {
@@ -92,7 +95,22 @@ export async function editCustomAreaCategory(sourceEntitya, categoryID) {
                     else {
                         return 0;
                     }
-                    ;
+                case "applyIconTexturePreset": {
+                    const r = await selectTexturePreset(sourceEntity);
+                    if (r === 1) {
+                        continue;
+                    }
+                    else if (r === 0) {
+                        return 0;
+                    }
+                    else {
+                        category.icon_path = r;
+                        const out = JSON.parse(world.getDynamicProperty("advancedProtectedAreaCategory:" + categoryID));
+                        out.icon_path = r;
+                        world.setDynamicProperty("advancedProtectedAreaCategory:" + categoryID, JSON.stringify(out));
+                        continue;
+                    }
+                }
                 case "playerPlaceBlock":
                     if ((await editCustomAreaCategorySetting(sourceEntity, categoryID, "playerPlaceBlock")) === 1) {
                         continue;
@@ -100,7 +118,6 @@ export async function editCustomAreaCategory(sourceEntitya, categoryID) {
                     else {
                         return 0;
                     }
-                    ;
                 case "playerBreakBlock":
                     if ((await editCustomAreaCategorySetting(sourceEntity, categoryID, "playerBreakBlock")) === 1) {
                         continue;
@@ -108,7 +125,6 @@ export async function editCustomAreaCategory(sourceEntitya, categoryID) {
                     else {
                         return 0;
                     }
-                    ;
                 case "playerInteractWithBlock":
                     if ((await editCustomAreaCategorySetting(sourceEntity, categoryID, "playerInteractWithBlock")) === 1) {
                         continue;
@@ -116,7 +132,6 @@ export async function editCustomAreaCategory(sourceEntitya, categoryID) {
                     else {
                         return 0;
                     }
-                    ;
                 case "playerInteractWithEntity":
                     if ((await editCustomAreaCategorySetting(sourceEntity, categoryID, "playerInteractWithEntity")) === 1) {
                         continue;
@@ -124,7 +139,6 @@ export async function editCustomAreaCategory(sourceEntitya, categoryID) {
                     else {
                         return 0;
                     }
-                    ;
                 case "explosion":
                     if ((await editCustomAreaCategorySetting(sourceEntity, categoryID, "explosion")) === 1) {
                         continue;
@@ -132,7 +146,6 @@ export async function editCustomAreaCategory(sourceEntitya, categoryID) {
                     else {
                         return 0;
                     }
-                    ;
                 case "effectAdd":
                     if ((await editCustomAreaCategorySetting(sourceEntity, categoryID, "effectAdd")) === 1) {
                         continue;
@@ -140,7 +153,6 @@ export async function editCustomAreaCategory(sourceEntitya, categoryID) {
                     else {
                         return 0;
                     }
-                    ;
                 case "chatSend":
                     if ((await editCustomAreaCategorySetting(sourceEntity, categoryID, "chatSend")) === 1) {
                         continue;
@@ -148,7 +160,6 @@ export async function editCustomAreaCategory(sourceEntitya, categoryID) {
                     else {
                         return 0;
                     }
-                    ;
                 case "playerGameModeChange":
                     if ((await editCustomAreaCategorySetting(sourceEntity, categoryID, "playerGameModeChange")) === 1) {
                         continue;
@@ -156,7 +167,6 @@ export async function editCustomAreaCategory(sourceEntitya, categoryID) {
                     else {
                         return 0;
                     }
-                    ;
                 case "noPVPZone":
                     if ((await editCustomAreaCategorySetting(sourceEntity, categoryID, "noPVPZone")) === 1) {
                         continue;
@@ -164,7 +174,6 @@ export async function editCustomAreaCategory(sourceEntitya, categoryID) {
                     else {
                         return 0;
                     }
-                    ;
                 case "tagZone":
                     if ((await editCustomAreaCategorySetting(sourceEntity, categoryID, "tagZone")) === 1) {
                         continue;
@@ -172,7 +181,6 @@ export async function editCustomAreaCategory(sourceEntitya, categoryID) {
                     else {
                         return 0;
                     }
-                    ;
                 case "back":
                     return 1;
                 case "close":
@@ -201,8 +209,7 @@ export async function editCustomAreaCategory(sourceEntitya, categoryID) {
                         delete ProtectedAreas.areas.advancedArea[categoryID];
                         world.setDynamicProperty("advancedProtectedAreaCategory:" + categoryID);
                         delete ProtectedAreas.areas.advancedAreaCategories[ProtectedAreas.areas.advancedAreaCategories.findIndex((category) => category.id === categoryID)];
-                        if ((await showMessage(sourceEntity, "Category Deleted", "This protected area category has been successfully deleted.", "Back", "Close"))
-                            .selection !== 1) {
+                        if ((await showMessage(sourceEntity, "Category Deleted", "This protected area category has been successfully deleted.", "Back", "Close")).selection !== 1) {
                             return 1;
                         }
                         else {
@@ -239,8 +246,7 @@ export async function editCustomAreaCategory(sourceEntitya, categoryID) {
                             return 1;
                         default:
                             throw new Error(`Unknown return value from duplicateCustomAreaCategory: ${r}`);
-                    }
-                    ; /*
+                    } /*
                     return await showMessage(
                         sourceEntity as Player,
                         undefined,
@@ -343,7 +349,6 @@ export async function duplicateCustomAreaCategory(sourceEntitya, categoryID) {
         else {
             return 0;
         }
-        ;
     }
 }
 export async function editCustomAreaCategorySettings(sourceEntitya, categoryID) {
@@ -599,8 +604,16 @@ export async function editCustomAreaCategorySetting(sourceEntitya, categoryID, s
                                 : `${option.targetEntityFilter.includeTypes.length} types included`
                             : ""}`
                     : "No Filter"}`, "textures/ui/pencil_edit_icon");
-                form.button(`${customFormUICodes.action.buttons.positions.main_only}${!!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled}Allowed Bypass Tags\n${!!option && !!option.allowedBypassTags ? option.allowedBypassTags.length === 1 ? "1 tag" : `${option.allowedBypassTags.length} tags` : "0 tags"}`, "textures/ui/pencil_edit_icon");
-                form.button(`${customFormUICodes.action.buttons.positions.main_only}${!!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled}Held Item Filters\n${!!option && !!option.heldItemFilters ? option.heldItemFilters.items.length === 1 ? `1 item ${option.heldItemFilters.mode ?? "exclude"}d` : `${option.heldItemFilters.items.length} items ${option.heldItemFilters.mode ?? "exclude"}d` : `0 items excluded`}`, "textures/ui/pencil_edit_icon");
+                form.button(`${customFormUICodes.action.buttons.positions.main_only}${!!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled}Allowed Bypass Tags\n${!!option && !!option.allowedBypassTags
+                    ? option.allowedBypassTags.length === 1
+                        ? "1 tag"
+                        : `${option.allowedBypassTags.length} tags`
+                    : "0 tags"}`, "textures/ui/pencil_edit_icon");
+                form.button(`${customFormUICodes.action.buttons.positions.main_only}${!!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled}Held Item Filters\n${!!option && !!option.heldItemFilters
+                    ? option.heldItemFilters.items.length === 1
+                        ? `1 item ${option.heldItemFilters.mode ?? "exclude"}d`
+                        : `${option.heldItemFilters.items.length} items ${option.heldItemFilters.mode ?? "exclude"}d`
+                    : `0 items excluded`}`, "textures/ui/pencil_edit_icon");
                 break;
             }
             case "playerGameModeChange": {
@@ -691,17 +704,17 @@ export async function editCustomAreaCategorySetting(sourceEntitya, categoryID, s
                 break;
             }
             case "noPVPZone": {
+                if (entity_scale_format_version === null) {
+                    optionsList = ["ignoredLabelOption"];
+                    form.button(`${customFormUICodes.action.buttons.positions.main_only}${"§e8Crafter's Entity Scale Add-On is required for the no PVP zones to work."}`, "textures/ui/WarningGlyph");
+                }
                 // This one currently has no options.
                 break;
             }
             case "tagZone": {
                 optionsList = ["tags"];
                 const option = category[setting];
-                form.button(`${customFormUICodes.action.buttons.positions.main_only}${!!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled}Tags\n${!!option && !!option.tags
-                    ? option.tags.length === 1
-                        ? "1 tag"
-                        : `${option.tags.length} tags`
-                    : "0 tags"}`, "textures/ui/pencil_edit_icon");
+                form.button(`${customFormUICodes.action.buttons.positions.main_only}${!!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled}Tags\n${!!option && !!option.tags ? (option.tags.length === 1 ? "1 tag" : `${option.tags.length} tags`) : "0 tags"}`, "textures/ui/pencil_edit_icon");
                 break;
             }
             default:
@@ -764,9 +777,14 @@ export async function editCustomAreaCategorySetting(sourceEntitya, categoryID, s
                     const r = await form.forceShow(sourceEntity);
                     if (r.canceled)
                         return await editCustomAreaCategorySetting(sourceEntity, categoryID, setting);
-                    category[setting].allowedBypassTags = !!r.formValues?.[0] ? (r.formValues?.[0]).split(/,\s?/g) : [];
+                    category[setting].allowedBypassTags = !!r
+                        .formValues?.[0]
+                        ? (r.formValues?.[0]).split(/,\s?/g)
+                        : [];
                     const out = JSON.parse(world.getDynamicProperty("advancedProtectedAreaCategory:" + categoryID));
-                    out[setting].allowedBypassTags = !!r.formValues?.[0] ? (r.formValues?.[0]).split(/,\s?/g) : [];
+                    out[setting].allowedBypassTags = !!r.formValues?.[0]
+                        ? (r.formValues?.[0]).split(/,\s?/g)
+                        : [];
                     world.setDynamicProperty("advancedProtectedAreaCategory:" + categoryID, JSON.stringify(out));
                     return await editCustomAreaCategorySetting(sourceEntity, categoryID, setting);
                 }
@@ -785,7 +803,9 @@ export async function editCustomAreaCategorySetting(sourceEntitya, categoryID, s
                     let form = new ModalFormData();
                     form.title(customFormUICodes.modal.titles.formStyles.medium + "Effect Filter");
                     form.dropdown("Effect Filter Type\nInclude will cause only effects listed below to be blocked, exclude will cause all other effects to be blocked.", ["exclude", "include"], catProp.effectFilter?.excludeTypes?.length === 1 ? 0 : 1);
-                    form.textField(`Types\nList of effect types to allow or block.\nValid Effect Types: ${EffectTypes.getAll().map(t => t.getName()).join(", ")}\nComma separated list.`, "Comma separated list.", (category[setting].effectFilter?.excludeTypes?.length ?? 0) === 0
+                    form.textField(`Types\nList of effect types to allow or block.\nValid Effect Types: ${EffectTypes.getAll()
+                        .map((t) => t.getName())
+                        .join(", ")}\nComma separated list.`, "Comma separated list.", (category[setting].effectFilter?.excludeTypes?.length ?? 0) === 0
                         ? category[setting].effectFilter?.includeTypes?.join(",") ?? ""
                         : category[setting].effectFilter?.excludeTypes?.join(",") ?? "");
                     form.textField("Minimum Effect Duration\nThis will cause this to only block effects with a duration of at least this many seconds.\nLeave blank to have no minimum.", "int", String(category[setting]?.effectFilter?.minDuration ?? ""));

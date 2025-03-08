@@ -47,9 +47,9 @@ export async function settings(sourceEntitya) {
     form.button(customFormUICodes.action.buttons.positions.main_only + "Eval Auto Execute Settings", "textures/ui/automation_glyph_color");
     form.button(customFormUICodes.action.buttons.positions.main_only + "Personal Settings", "textures/ui/profile_glyph_color");
     form.button(customFormUICodes.action.buttons.positions.main_only + "Notifications Settings", "textures/ui/icon_bell");
-    form.button(customFormUICodes.action.buttons.positions.main_only + "Teleport Systems Settings", "textures/gui/newgui/mob_effects\\invisibility_effect");
+    form.button(customFormUICodes.action.buttons.positions.main_only + "Teleport Systems Settings", "textures/gui/newgui/mob_effects/invisibility_effect");
     form.button(customFormUICodes.action.buttons.positions.main_only + "Home System Settings", "textures/ui/store_home_icon");
-    form.button(customFormUICodes.action.buttons.positions.main_only + "TPA System Settings", "textures/items/ender_pearl");
+    form.button(customFormUICodes.action.buttons.positions.main_only + "TPA System Settings", "textures/ui/switch_accounts");
     form.button(customFormUICodes.action.buttons.positions.main_only + "Money System Settings", "textures/items/emerald");
     form.button(customFormUICodes.action.buttons.positions.main_only + "Player Menu Settings", "textures/items/player_menu_2");
     form.button(customFormUICodes.action.buttons.positions.main_only + "Module Imports", "textures/ui/import");

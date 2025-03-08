@@ -98,7 +98,7 @@ export function numberFormatter(number, options = { addCommaSeparators: true }, 
             str = options.currencyPrefix + str;
         }
     }
-    if (options.addCommaSeparators) {
+    if (options.addCommaSeparators ?? true) {
         const strs = str.split(".");
         strs[0] = strs[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         str = strs.join(".");

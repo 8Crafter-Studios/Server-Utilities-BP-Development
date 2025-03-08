@@ -1,9 +1,7 @@
-import { Entity, Player, world } from "@minecraft/server";
-import { ActionFormData, ActionFormResponse, ModalFormData, ModalFormResponse, MessageFormData } from "@minecraft/server-ui";
+import { Entity, Player } from "@minecraft/server";
+import { ActionFormData, ActionFormResponse, ModalFormData, MessageFormData } from "@minecraft/server-ui";
 import { config } from "init/classes/config";
 import { forceShow } from "modules/ui/functions/forceShow";
-import { ban_format_version } from "modules/ban/constants/ban_format_version";
-import { ban } from "modules/ban/classes/ban";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { managePlayers_managePlayer } from "./managePlayers_managePlayer";
 import { savedPlayer } from "modules/player_save/classes/savedPlayer";
@@ -11,9 +9,11 @@ import { securityVariables } from "security/ultraSecurityModeUtils";
 import { showMessage } from "modules/utilities/functions/showMessage";
 import { customFormUICodes } from "../constants/customFormUICodes";
 import { manageBans } from "./manageBans";
+import type { loosePlayerType } from "modules/utilities/types/loosePlayerType";
+import { extractPlayerFromLooseEntityType } from "modules/utilities/functions/extractPlayerFromLooseEntityType";
 
 export async function managePlayers(
-    sourceEntitya: Entity | executeCommandPlayerW | Player,
+    sourceEntity: loosePlayerType,
     pagen: number = 0,
     maxplayersperpage: number = config.ui.pages.maxPlayersPerManagePlayersPage ?? 9,
     search?: {
@@ -26,11 +26,11 @@ export async function managePlayers(
     },
     cachedPlayers?: [online: savedPlayer[], offline: savedPlayer[], banned: savedPlayer[]]
 ): Promise<0 | 1> {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
+    const player = extractPlayerFromLooseEntityType(sourceEntity);
     if (securityVariables.ultraSecurityModeEnabled) {
-        if (securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.accessManagePlayersUI") == false) {
+        if (securityVariables.testPlayerForPermission(player, "andexdb.accessManagePlayersUI") == false) {
             const r = await showMessage(
-                sourceEntity as Player,
+                player,
                 "Access Denied (403)",
                 "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.accessManagePlayersUI",
                 "Okay",
@@ -56,7 +56,7 @@ export async function managePlayers(
                             ? ""
                             : (search.searchLastOnlineDates ?? false) || (search.searchLastOnlineTimes ?? false)
                             ? new Date(p.lastOnline)
-                                  .toTimezone(sourceEntity.timeZone)
+                                  .toTimezone(player.timeZone)
                                   [
                                       search.searchLastOnlineDates && search.searchLastOnlineTimes
                                           ? "toTimezoneDateTime"
@@ -76,7 +76,7 @@ export async function managePlayers(
                             ? ""
                             : (search.searchLastOnlineDates ?? false) || (search.searchLastOnlineTimes ?? false)
                             ? new Date(p.lastOnline)
-                                  .toTimezone(sourceEntity.timeZone)
+                                  .toTimezone(player.timeZone)
                                   [
                                       search.searchLastOnlineDates && search.searchLastOnlineTimes
                                           ? "toTimezoneDateTime"
@@ -146,7 +146,7 @@ export async function managePlayers(
     });
     displayPlayersB[1].forEach((p) => {
         form.button(
-            `${customFormUICodes.action.buttons.positions.main_only}${p.name}\n${new Date(p.lastOnline).formatDateTime(sourceEntity.timeZone)}`,
+            `${customFormUICodes.action.buttons.positions.main_only}${p.name}\n${new Date(p.lastOnline).formatDateTime(player.timeZone)}`,
             "textures/ui/offline"
         );
     });
@@ -159,12 +159,10 @@ export async function managePlayers(
     form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
     form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
     form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Refresh", "textures/ui/refresh_hover");
-    return (await forceShow(form, sourceEntity as Player)
+    return await forceShow(form, player)
         .then(async (ra) => {
             let r = ra as ActionFormResponse;
-            if (r.canceled) {
-                return 1;
-            }
+            if (r.canceled) return 1;
             switch (r.selection) {
                 case 0:
                     {
@@ -179,12 +177,12 @@ export async function managePlayers(
                                     .toggle("Search Last Online Dates", search?.searchLastOnlineDates ?? false)
                                     .toggle("Search Last Online Times", search?.searchLastOnlineTimes ?? false)
                                     .submitButton("Search")
-                                    .forceShow(sourceEntity as Player)
+                                    .forceShow(player)
                         );
                         if (!!!rb || rb?.canceled == true) {
-                            return await managePlayers(sourceEntity, page, maxplayersperpage, search, displayPlayers);
+                            return await managePlayers(player, page, maxplayersperpage, search, displayPlayers);
                         }
-                        return await managePlayers(sourceEntity, undefined, maxplayersperpage, {
+                        return await managePlayers(player, undefined, maxplayersperpage, {
                             value: rb.formValues[0] as string,
                             caseSensitive: rb.formValues[1] as boolean,
                             searchNames: rb.formValues[2] as boolean,
@@ -192,18 +190,16 @@ export async function managePlayers(
                             searchLastOnlineDates: rb.formValues[4] as boolean,
                             searchLastOnlineTimes: rb.formValues[5] as boolean,
                         }, undefined); /*
-            return await showMessage(sourceEntity as Player, undefined, "§cSorry, the search feature has not been implemented yet.", "Back", "Close").then(async r=>{
+            return await showMessage(player, undefined, "§cSorry, the search feature has not been implemented yet.", "Back", "Close").then(async r=>{
                 if(r.selection==0){
-                    return await managePlayers(sourceEntity, page, maxplayersperpage, search, displayPlayers);
+                    return await managePlayers(player, page, maxplayersperpage, search, displayPlayers);
                 }else{
                     return 0;
                 }
             })*/
                     }
-                    break;
                 case 1:
-                    return await managePlayers(sourceEntity, Math.max(0, page - 1), maxplayersperpage, search, displayPlayers);
-                    break;
+                    return await managePlayers(player, Math.max(0, page - 1), maxplayersperpage, search, displayPlayers);
                 case 2: {
                     const rb = await tryget(
                         async () =>
@@ -211,10 +207,10 @@ export async function managePlayers(
                                 .title("Go To Page")
                                 .textField(`Current Page: ${page + 1}\nPage # (Between 1 and ${numpages})`, "Page #")
                                 .submitButton("Go To Page")
-                                .forceShow(sourceEntity as Player)
+                                .forceShow(player)
                     );
                     return await managePlayers(
-                        sourceEntity,
+                        player,
                         Math.max(1, Math.min(numpages, (rb.formValues?.[0] as string)?.toNumber() ?? page + 1)) - 1,
                         maxplayersperpage,
                         search,
@@ -222,11 +218,10 @@ export async function managePlayers(
                     );
                 }
                 case 3:
-                    return await managePlayers(sourceEntity, Math.min(numpages - 1, page + 1), maxplayersperpage, search, displayPlayers);
-                    break;
+                    return await managePlayers(player, Math.min(numpages - 1, page + 1), maxplayersperpage, search, displayPlayers);
                 case numplayersonpage + 6:
-                    if ((await manageBans(sourceEntity)) === 1) {
-                        return await managePlayers(sourceEntity, page, maxplayersperpage, search, displayPlayers);
+                    if ((await manageBans(player)) === 1) {
+                        return await managePlayers(player, page, maxplayersperpage, search, displayPlayers);
                     } else {
                         return 0;
                     }
@@ -235,23 +230,18 @@ export async function managePlayers(
                 case numplayersonpage + 8:
                     return 0;
                 case numplayersonpage + 9:
-                    return await managePlayers(sourceEntity, page, maxplayersperpage, search, undefined);
+                    return await managePlayers(player, page, maxplayersperpage, search, undefined);
                 default:
-                    if ((await managePlayers_managePlayer(sourceEntity, players[r.selection - 3])) === 1) {
-                        return await managePlayers(sourceEntity, page, maxplayersperpage, search, displayPlayers);
+                    if ((await managePlayers_managePlayer(player, players[r.selection - 6])) === 1) {
+                        return await managePlayers(player, page, maxplayersperpage, search, displayPlayers);
                     } else {
                         return 0;
                     }
             }
         })
         .catch(async (e) => {
-            let formError = new MessageFormData();
-            formError.body(e + e.stack);
-            formError.title("Error");
-            formError.button1("Done");
-            formError.button2("Close");
-            return await forceShow(formError, sourceEntity as Player).then((r) => {
-                return +(r.selection == 0);
-            });
-        })) as 0 | 1;
+            console.error(e, e.stack);
+            // Present the error to the user, and return 1 if they select "Back", and 0 if they select "Close".
+            return ((await showMessage(player, "An Error occurred", `An error occurred: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
+        });
 }

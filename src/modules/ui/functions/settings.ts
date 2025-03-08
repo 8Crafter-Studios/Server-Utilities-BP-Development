@@ -55,7 +55,7 @@ export async function settings(
     form.button(customFormUICodes.action.buttons.positions.main_only + "Notifications Settings", "textures/ui/icon_bell");
     form.button(
         customFormUICodes.action.buttons.positions.main_only + "Teleport Systems Settings",
-        "textures/gui/newgui/mob_effects\\invisibility_effect"
+        "textures/gui/newgui/mob_effects/invisibility_effect"
     );
     form.button(
         customFormUICodes.action.buttons.positions.main_only + "Home System Settings",
@@ -63,7 +63,7 @@ export async function settings(
     );
     form.button(
         customFormUICodes.action.buttons.positions.main_only + "TPA System Settings",
-        "textures/items/ender_pearl"
+        "textures/ui/switch_accounts"
     );
     form.button(
         customFormUICodes.action.buttons.positions.main_only + "Money System Settings",
