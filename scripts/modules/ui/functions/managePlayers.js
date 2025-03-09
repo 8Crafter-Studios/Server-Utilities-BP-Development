@@ -1,21 +1,17 @@
-import { Entity, Player, world } from "@minecraft/server";
-import { ActionFormData, ActionFormResponse, ModalFormData, ModalFormResponse, MessageFormData } from "@minecraft/server-ui";
+import { ActionFormData, ActionFormResponse, ModalFormData } from "@minecraft/server-ui";
 import { config } from "init/classes/config";
-import { forceShow } from "modules/ui/functions/forceShow";
-import { ban_format_version } from "modules/ban/constants/ban_format_version";
-import { ban } from "modules/ban/classes/ban";
-import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { managePlayers_managePlayer } from "./managePlayers_managePlayer";
 import { savedPlayer } from "modules/player_save/classes/savedPlayer";
 import { securityVariables } from "security/ultraSecurityModeUtils";
 import { showMessage } from "modules/utilities/functions/showMessage";
 import { customFormUICodes } from "../constants/customFormUICodes";
 import { manageBans } from "./manageBans";
-export async function managePlayers(sourceEntitya, pagen = 0, maxplayersperpage = config.ui.pages.maxPlayersPerManagePlayersPage ?? 9, search, cachedPlayers) {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
+import { extractPlayerFromLooseEntityType } from "modules/utilities/functions/extractPlayerFromLooseEntityType";
+export async function managePlayers(sourceEntity, pagen = 0, maxplayersperpage = config.ui.pages.maxPlayersPerManagePlayersPage ?? 9, search, cachedPlayers) {
+    const player = extractPlayerFromLooseEntityType(sourceEntity);
     if (securityVariables.ultraSecurityModeEnabled) {
-        if (securityVariables.testPlayerForPermission(sourceEntity, "andexdb.accessManagePlayersUI") == false) {
-            const r = await showMessage(sourceEntity, "Access Denied (403)", "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.accessManagePlayersUI", "Okay", "Cancel");
+        if (securityVariables.testPlayerForPermission(player, "andexdb.accessManagePlayersUI") == false) {
+            const r = await showMessage(player, "Access Denied (403)", "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.accessManagePlayersUI", "Okay", "Cancel");
             if (r.canceled || r.selection == 0) {
                 return 1;
             }
@@ -35,7 +31,7 @@ export async function managePlayers(sourceEntitya, pagen = 0, maxplayersperpage 
                     ? ""
                     : (search.searchLastOnlineDates ?? false) || (search.searchLastOnlineTimes ?? false)
                         ? new Date(p.lastOnline)
-                            .toTimezone(sourceEntity.timeZone)[search.searchLastOnlineDates && search.searchLastOnlineTimes
+                            .toTimezone(player.timeZone)[search.searchLastOnlineDates && search.searchLastOnlineTimes
                             ? "toTimezoneDateTime"
                             : search.searchLastOnlineDates
                                 ? "toTimezoneDate"
@@ -49,7 +45,7 @@ export async function managePlayers(sourceEntitya, pagen = 0, maxplayersperpage 
                     ? ""
                     : (search.searchLastOnlineDates ?? false) || (search.searchLastOnlineTimes ?? false)
                         ? new Date(p.lastOnline)
-                            .toTimezone(sourceEntity.timeZone)[search.searchLastOnlineDates && search.searchLastOnlineTimes
+                            .toTimezone(player.timeZone)[search.searchLastOnlineDates && search.searchLastOnlineTimes
                             ? "toTimezoneDateTime"
                             : search.searchLastOnlineDates
                                 ? "toTimezoneDate"
@@ -98,7 +94,7 @@ export async function managePlayers(sourceEntitya, pagen = 0, maxplayersperpage 
         form.button(`${customFormUICodes.action.buttons.positions.main_only}${p.name}\nOnline`, "textures/ui/online");
     });
     displayPlayersB[1].forEach((p) => {
-        form.button(`${customFormUICodes.action.buttons.positions.main_only}${p.name}\n${new Date(p.lastOnline).formatDateTime(sourceEntity.timeZone)}`, "textures/ui/offline");
+        form.button(`${customFormUICodes.action.buttons.positions.main_only}${p.name}\n${new Date(p.lastOnline).formatDateTime(player.timeZone)}`, "textures/ui/offline");
     });
     displayPlayersB[2].forEach((p) => {
         form.button(`${customFormUICodes.action.buttons.positions.main_only}${p.name}\nBanned`, "textures/ui/Ping_Offline_Red_Dark");
@@ -109,12 +105,11 @@ export async function managePlayers(sourceEntitya, pagen = 0, maxplayersperpage 
     form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
     form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
     form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Refresh", "textures/ui/refresh_hover");
-    return (await forceShow(form, sourceEntity)
+    return await form.forceShow(player)
         .then(async (ra) => {
         let r = ra;
-        if (r.canceled) {
+        if (r.canceled)
             return 1;
-        }
         switch (r.selection) {
             case 0:
                 {
@@ -127,11 +122,11 @@ export async function managePlayers(sourceEntitya, pagen = 0, maxplayersperpage 
                         .toggle("Search Last Online Dates", search?.searchLastOnlineDates ?? false)
                         .toggle("Search Last Online Times", search?.searchLastOnlineTimes ?? false)
                         .submitButton("Search")
-                        .forceShow(sourceEntity));
+                        .forceShow(player));
                     if (!!!rb || rb?.canceled == true) {
-                        return await managePlayers(sourceEntity, page, maxplayersperpage, search, displayPlayers);
+                        return await managePlayers(player, page, maxplayersperpage, search, displayPlayers);
                     }
-                    return await managePlayers(sourceEntity, undefined, maxplayersperpage, {
+                    return await managePlayers(player, undefined, maxplayersperpage, {
                         value: rb.formValues[0],
                         caseSensitive: rb.formValues[1],
                         searchNames: rb.formValues[2],
@@ -139,32 +134,29 @@ export async function managePlayers(sourceEntitya, pagen = 0, maxplayersperpage 
                         searchLastOnlineDates: rb.formValues[4],
                         searchLastOnlineTimes: rb.formValues[5],
                     }, undefined); /*
-        return await showMessage(sourceEntity as Player, undefined, "§cSorry, the search feature has not been implemented yet.", "Back", "Close").then(async r=>{
+        return await showMessage(player, undefined, "§cSorry, the search feature has not been implemented yet.", "Back", "Close").then(async r=>{
             if(r.selection==0){
-                return await managePlayers(sourceEntity, page, maxplayersperpage, search, displayPlayers);
+                return await managePlayers(player, page, maxplayersperpage, search, displayPlayers);
             }else{
                 return 0;
             }
         })*/
                 }
-                break;
             case 1:
-                return await managePlayers(sourceEntity, Math.max(0, page - 1), maxplayersperpage, search, displayPlayers);
-                break;
+                return await managePlayers(player, Math.max(0, page - 1), maxplayersperpage, search, displayPlayers);
             case 2: {
                 const rb = await tryget(async () => await new ModalFormData()
                     .title("Go To Page")
                     .textField(`Current Page: ${page + 1}\nPage # (Between 1 and ${numpages})`, "Page #")
                     .submitButton("Go To Page")
-                    .forceShow(sourceEntity));
-                return await managePlayers(sourceEntity, Math.max(1, Math.min(numpages, rb.formValues?.[0]?.toNumber() ?? page + 1)) - 1, maxplayersperpage, search, displayPlayers);
+                    .forceShow(player));
+                return await managePlayers(player, Math.max(1, Math.min(numpages, rb.formValues?.[0]?.toNumber() ?? page + 1)) - 1, maxplayersperpage, search, displayPlayers);
             }
             case 3:
-                return await managePlayers(sourceEntity, Math.min(numpages - 1, page + 1), maxplayersperpage, search, displayPlayers);
-                break;
+                return await managePlayers(player, Math.min(numpages - 1, page + 1), maxplayersperpage, search, displayPlayers);
             case numplayersonpage + 6:
-                if ((await manageBans(sourceEntity)) === 1) {
-                    return await managePlayers(sourceEntity, page, maxplayersperpage, search, displayPlayers);
+                if ((await manageBans(player)) === 1) {
+                    return await managePlayers(player, page, maxplayersperpage, search, displayPlayers);
                 }
                 else {
                     return 0;
@@ -174,10 +166,10 @@ export async function managePlayers(sourceEntitya, pagen = 0, maxplayersperpage 
             case numplayersonpage + 8:
                 return 0;
             case numplayersonpage + 9:
-                return await managePlayers(sourceEntity, page, maxplayersperpage, search, undefined);
+                return await managePlayers(player, page, maxplayersperpage, search, undefined);
             default:
-                if ((await managePlayers_managePlayer(sourceEntity, players[r.selection - 3])) === 1) {
-                    return await managePlayers(sourceEntity, page, maxplayersperpage, search, displayPlayers);
+                if ((await managePlayers_managePlayer(player, players[r.selection - 6])) === 1) {
+                    return await managePlayers(player, page, maxplayersperpage, search, displayPlayers);
                 }
                 else {
                     return 0;
@@ -185,14 +177,9 @@ export async function managePlayers(sourceEntitya, pagen = 0, maxplayersperpage 
         }
     })
         .catch(async (e) => {
-        let formError = new MessageFormData();
-        formError.body(e + e.stack);
-        formError.title("Error");
-        formError.button1("Done");
-        formError.button2("Close");
-        return await forceShow(formError, sourceEntity).then((r) => {
-            return +(r.selection == 0);
-        });
-    }));
+        console.error(e, e.stack);
+        // Present the error to the user, and return 1 if they select "Back", and 0 if they select "Close".
+        return ((await showMessage(player, "An Error occurred", `An error occurred: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
+    });
 }
 //# sourceMappingURL=managePlayers.js.map

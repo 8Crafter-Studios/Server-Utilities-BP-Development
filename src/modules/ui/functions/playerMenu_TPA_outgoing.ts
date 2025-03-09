@@ -1,45 +1,41 @@
-import { Entity, Player } from "@minecraft/server";
-import { ActionFormData, ActionFormResponse } from "@minecraft/server-ui";
-import { forceShow } from "modules/ui/functions/forceShow";
-import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
+import { ActionFormData } from "@minecraft/server-ui";
 import { showActions } from "modules/utilities/functions/showActions";
 import { showMessage } from "modules/utilities/functions/showMessage";
 import { TeleportRequest } from "modules/coordinates/classes/TeleportRequest";
 import { customFormUICodes } from "../constants/customFormUICodes";
+import { extractPlayerFromLooseEntityType } from "modules/utilities/functions/extractPlayerFromLooseEntityType";
+import type { loosePlayerType } from "modules/utilities/types/loosePlayerType";
 
-export async function playerMenu_TPA_outgoing(sourceEntitya: Entity | executeCommandPlayerW | Player): Promise<0 | 1> {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
-    if (!(sourceEntity instanceof Player)) {
-        throw new TypeError(
-            "Invalid Player. Expected an instance of the Player class, or an instance of the executeCommandPlayerW class with a Player linked to it, but instead got " +
-                (typeof sourceEntity == "object"
-                    ? sourceEntity === null
-                        ? "object[null]"
-                        : "object[" + ((sourceEntity as object).constructor.name ?? "unknown") + "]"
-                    : typeof sourceEntity) +
-                "."
-        );
-    }
-    if (!config.tpaSystem.tpaSystemEnabled) {
-        if ((await showMessage(sourceEntity, "Error", `§cSorry but the TPA system is currently disabled.`, "Back", "Close")).selection === 0) {
-            return 1;
-        } else {
-            return 0;
-        }
-    }
-    let form = new ActionFormData();
-    form.title(customFormUICodes.action.titles.formStyles.general + "Outgoing Teleport Requests");
-    const requests = TeleportRequest.getRequestsFromPlayer(sourceEntity);
-    requests.forEach((h) => form.button(customFormUICodes.action.buttons.positions.main_only + h.target.name));
-    if (requests.length === 0) {
-        form.body("No outgoing teleport requests.");
-    }
-    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
-    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
-    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Refresh", "textures/ui/refresh");
-    return await forceShow(form, sourceEntity)
-        .then(async (ra) => {
-            let r = ra as ActionFormResponse;
+/**
+ * Shows a UI to manage outgoing teleport requests.
+ *
+ * @async
+ * @param {loosePlayerType} sourceEntity - The player viewing the UI.
+ * @returns {Promise<0 | 1>} A promise that resolves to `0` if the previous menu should be closed, or `1` if the previous menu should be reopened.
+ * @throws {TypeError} If sourceEntity is not an instance of the Player class or an instance of the executeCommandPlayerW class with a Player linked to it.
+ */
+export async function playerMenu_TPA_outgoing(sourceEntity: loosePlayerType): Promise<0 | 1> {
+    const player = extractPlayerFromLooseEntityType(sourceEntity);
+    while (true) {
+        try {
+            if (!config.tpaSystem.tpaSystemEnabled) {
+                if ((await showMessage(player, "Error", `§cSorry but the TPA system is currently disabled.`, "Back", "Close")).selection === 0) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }
+            let form = new ActionFormData();
+            form.title(customFormUICodes.action.titles.formStyles.medium + "Outgoing Teleport Requests");
+            const requests = TeleportRequest.getRequestsFromPlayer(player);
+            requests.forEach((h) => form.button(customFormUICodes.action.buttons.positions.main_only + h.target.name));
+            if (requests.length === 0) {
+                form.body("No outgoing teleport requests.");
+            }
+            form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
+            form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
+            form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Refresh", "textures/ui/refresh");
+            const r = await form.forceShow(player);
             if (r.canceled) return 1;
 
             switch ((!!requests[r.selection] ? "request" : undefined) ?? (["back", "close", "refresh"] as const)[r.selection - requests.length]) {
@@ -49,7 +45,7 @@ export async function playerMenu_TPA_outgoing(sourceEntitya: Entity | executeCom
                         (["cancel", "back", "close"] as const)[
                             (
                                 await showActions(
-                                    sourceEntity,
+                                    player,
                                     customFormUICodes.action.titles.formStyles.general + "Teleport Request Details",
                                     `To: ${request.target.name}`,
                                     [customFormUICodes.action.buttons.positions.main_only + "Cancel Request", "textures/ui/trash_default"],
@@ -61,24 +57,25 @@ export async function playerMenu_TPA_outgoing(sourceEntitya: Entity | executeCom
                     ) {
                         case "cancel":
                             request.cancel();
-                            return await playerMenu_TPA_outgoing(sourceEntity);
+                            continue;
                         case "back":
-                            return await playerMenu_TPA_outgoing(sourceEntity);
+                            continue;
                         case "close":
                             return 0;
                     }
                 case "refresh":
-                    return await playerMenu_TPA_outgoing(sourceEntity);
+                    continue;
                 case "back":
                     return 1;
                 case "close":
                     return 0;
                 default:
-                    return 1;
+                    throw new Error("Invalid selection: " + r.selection);
             }
-        })
-        .catch(async (e) => {
+        } catch (e) {
             console.error(e, e.stack);
-            return ((await showMessage(sourceEntity, "An Error occurred", `An error occurred: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
-        });
+            // Present the error to the user, and return 1 if they select "Back", and 0 if they select "Close".
+            return ((await showMessage(player, "An Error occurred", `An error occurred: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
+        }
+    }
 }

@@ -338,7 +338,7 @@ export function chatMessage(eventData, bypassChatInputRequests = false) {
     }
     else {
         if ((world.getDynamicProperty("andexdbSettings:disableCustomChatMessages") ?? false) != true) {
-            if (world.getDynamicProperty("andexdbSettings:chatCommandsEnbaled") != false &&
+            if (world.getDynamicProperty("andexdbSettings:chatCommandsEnabled") != false &&
                 newMessage.startsWith(String(world.getDynamicProperty("andexdbSettings:chatCommandPrefix") ?? "\\")) &&
                 player.hasTag("canUseChatCommands") &&
                 (world.getDynamicProperty("andexdbSettings:sendMessageOnInvalidChatCommand") ?? false) == false) {

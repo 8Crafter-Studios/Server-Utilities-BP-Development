@@ -1,6 +1,7 @@
 import { Player, Entity } from "@minecraft/server";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { type PlayerShopPage, type PlayerSavedShopItem, type PlayerSellableShopElement, type PlayerBuyableShopElement, type PlayerSellableShopItem, type PlayerSellableAdvancedShopItem } from "./shop_main";
+import type { loosePlayerType } from "modules/utilities/types/loosePlayerType";
 /**
  *
  * @see {@link serverShopConfig}
@@ -24,12 +25,10 @@ export interface playerShopConfig {
     mainPageBodyText?: string | null;
     /**
      * The body text that is displayed on the main buy page of the server shop.
-     * @todo
      */
     mainBuyPageBodyText?: string | null;
     /**
      * The body text that is displayed on the main sell page of the server shop.
-     * @todo
      */
     mainSellPageBodyText?: string | null;
     /**
@@ -76,12 +75,10 @@ export declare class PlayerShop {
     mainPageBodyText?: string | null;
     /**
      * The body text that is displayed on the main buy page of the server shop.
-     * @todo
      */
     mainBuyPageBodyText?: string | null;
     /**
      * The body text that is displayed on the main sell page of the server shop.
-     * @todo
      */
     mainSellPageBodyText?: string | null;
     /**
@@ -122,12 +119,32 @@ export declare class PlayerShop {
     sellItem(player: Player, item: PlayerSellableShopItem | PlayerSellableAdvancedShopItem, path: ["buy" | "sell", ...(string | number)[]], itemIndex: number): Promise<0 | 1>;
     createStorageEntity(player?: Player): Promise<void>;
     /**
-     * @todo Fix the textures for the button icons.
+     * Opens the public shops selector interface for the player.
+     *
      * @see {@link ServerShop.openPublicShopsSelector}
-     * @param sourceEntitya
-     * @returns
+     *
+     * @param {loosePlayerType} sourceEntity - The player viewing the menu, can be an `Entity`, `executeCommandPlayerW`, or `Player`.
+     * @param {boolean} [showBackButton=false] - Optional boolean to indicate if a back button should be displayed.
+     * @returns {Promise<0 | 1>} A promise that resolves to `0` or `1` depending on the user's interaction:
+     * - `0`: Indicates that the previous menu should be closed.
+     * - `1`: Indicates that the previous menu should be re-opened.
+     *
+     * @remarks
+     * The function performs the following actions:
+     * 1. Retrieves the player entity from the source entity.
+     * 2. Asserts that the source entity is defined.
+     * 3. Creates and configures an `ActionFormData` form with options for public player shops.
+     * 4. Displays the form to the player and handles their selection:
+     *    - `manageMyShops`: Opens the manage player shops interface.
+     *    - `manageAllShops`: Opens the manage all shops interface (admin only).
+     *    - `playerShopSystemSettings`: Opens the player shop system settings interface (admin only).
+     *    - `back`: Returns `1`.
+     *    - `close`: Returns `0`.
+     *    - `refresh`: Refreshes the public shops selector interface.
+     *    - `shop`: Opens the selected shop interface.
+     * 5. Handles errors by logging and showing a message to the player.
      */
-    static openPublicShopsSelector(sourceEntitya: Entity | executeCommandPlayerW | Player, showBackButton?: boolean): Promise<0 | 1>;
+    static openPublicShopsSelector(sourceEntity: loosePlayerType, showBackButton?: boolean): Promise<0 | 1>;
 }
 export declare class PlayerShopManager {
     static playerShopItemTextureHints: string[];

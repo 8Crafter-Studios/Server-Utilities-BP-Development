@@ -1,12 +1,11 @@
-import type { Entity, Player } from "@minecraft/server";
-import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
+import type { loosePlayerType } from "modules/utilities/types/loosePlayerType";
 /**
  * Displays and handles the teleport systems settings form for a given entity.
  *
- * @param sourceEntitya - The entity that initiated the request. Can be an instance of `Entity`, `executeCommandPlayerW`, or `Player`.
- * @returns A promise that resolves to:
- * - `1` if the operation was successful or the form was canceled.
- * - `0` if the user selected "Cancel" in the access denied message.
+ * @async
+ * @param {loosePlayerType} sourceEntity - The player viewing the UI.
+ * @returns {Promise<0 | 1>} A promise that resolves to `0` if the previous menu should be closed, or `1` if the previous menu should be reopened.
+ * @throws {TypeError} If sourceEntity is not an instance of the Player class or an instance of the executeCommandPlayerW class with a Player linked to it.
  *
  * The function performs the following steps:
  * 1. Checks if ultra security mode is enabled.
@@ -16,4 +15,4 @@ import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPl
  * 5. Updates the configuration based on the form input.
  * 6. Returns the appropriate status code based on the outcome.
  */
-export declare function teleportSystemsSettings(sourceEntitya: Entity | executeCommandPlayerW | Player): Promise<1 | 0>;
+export declare function teleportSystemsSettings(sourceEntity: loosePlayerType): Promise<1 | 0>;

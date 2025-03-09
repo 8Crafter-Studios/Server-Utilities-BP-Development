@@ -1,20 +1,21 @@
-import type { Entity, Player } from "@minecraft/server";
-import { ModalFormData, ModalFormResponse } from "@minecraft/server-ui";
+import type { Player } from "@minecraft/server";
+import { ModalFormData } from "@minecraft/server-ui";
 import { config } from "init/classes/config";
-import { forceShow } from "modules/ui/functions/forceShow";
-import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { securityVariables } from "security/ultraSecurityModeUtils";
 import { showMessage } from "modules/utilities/functions/showMessage";
+import { customFormUICodes } from "../constants/customFormUICodes";
+import { extractPlayerFromLooseEntityType } from "modules/utilities/functions/extractPlayerFromLooseEntityType";
+import type { loosePlayerType } from "modules/utilities/types/loosePlayerType";
 
 /**
  * Displays and handles the UI settings form for a given entity.
- * 
- * @param sourceEntitya - The entity that initiated the request. Can be an instance of `Entity`, `executeCommandPlayerW`, or `Player`.
- * @returns A promise that resolves to:
- * - `1` if the operation was successful or the form was canceled.
- * - `0` if the user selected "Cancel" in the access denied message.
- * - `-2` if an error occurred.
- * 
+ *
+ * @async
+ * @param {loosePlayerType} sourceEntity - The player viewing the UI.
+ * @returns {Promise<0 | 1>} A promise that resolves to `0` if the previous menu should be closed, or `1` if the previous menu should be reopened.
+ * @throws {TypeError} If sourceEntity is not an instance of the Player class or an instance of the executeCommandPlayerW class with a Player linked to it.
+ *
+ * @remarks
  * The function performs the following steps:
  * 1. Checks if ultra security mode is enabled.
  * 2. If enabled, verifies if the player has the required permission to access the settings.
@@ -23,57 +24,54 @@ import { showMessage } from "modules/utilities/functions/showMessage";
  * 5. Updates the configuration based on the form input.
  * 6. Returns the appropriate status code based on the outcome.
  */
-export async function uiSettings_main(
-    sourceEntitya: Entity | executeCommandPlayerW | Player
-): Promise<1 | 0 | -2> {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW
-        ? sourceEntitya.player
-        : sourceEntitya;
-    if (securityVariables.ultraSecurityModeEnabled) {
-        if(securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.accessSettings") == false){
-            const r = await showMessage(sourceEntity as Player, "Access Denied (403)", "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.accessSettings", "Back", "Cancel");
-            if(r.canceled || r.selection == 0){
-                return 1;
-            }else{
-                return 0;
+export async function uiSettings_main(sourceEntity: loosePlayerType): Promise<0 | 1> {
+    const player = extractPlayerFromLooseEntityType(sourceEntity);
+    try {
+        if (securityVariables.ultraSecurityModeEnabled) {
+            if (securityVariables.testPlayerForPermission(player as Player, "andexdb.accessSettings") == false) {
+                const r = await showMessage(
+                    player as Player,
+                    "Access Denied (403)",
+                    "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.accessSettings",
+                    "Back",
+                    "Cancel"
+                );
+                if (r.canceled || r.selection == 0) {
+                    return 1;
+                } else {
+                    return 0;
+                }
             }
         }
-    }
-    let form2 = new ModalFormData();
-    form2.title("UI Settings");
-    form2.textField(
-        "§l§fmaxPlayersPerManagePlayersPage§r§f\nThe maximum number of players to display at once on the manage players menu, the default is 9",
-        "integer from 1-1000",
-        String(config.ui.pages.maxPlayersPerManagePlayersPage)
-    );
-    form2.toggle(
-        "§l§fuseStarWarsReference404Page§r§f\nWhether or not to use the Star Wars reference version of the 404 page, the default is false",
-        config.ui.other.useStarWarsReference404Page
-    );
-    form2.submitButton("Save");
-    return await forceShow(form2, sourceEntity as Player)
-        .then((to) => {
-            let t = to as ModalFormResponse;
-            if (t.canceled) {
-                return 1 as const;
-            } /*
+        let form = new ModalFormData();
+        form.title(customFormUICodes.modal.titles.formStyles.medium + "UI Settings");
+        form.textField(
+            "§l§fmaxPlayersPerManagePlayersPage§r§f\nThe maximum number of players to display at once on the manage players menu, the default is 9",
+            "integer from 1-1000",
+            String(config.ui.pages.maxPlayersPerManagePlayersPage)
+        );
+        form.toggle(
+            "§l§fuseStarWarsReference404Page§r§f\nWhether or not to use the Star Wars reference version of the 404 page, the default is false",
+            config.ui.other.useStarWarsReference404Page
+        );
+        form.submitButton("Save");
+        const r = await form.forceShow(player);
+        if (r.canceled) {
+            return 1 as const;
+        } /*
     GameTest.Test.prototype.spawnSimulatedPlayer({x: 0, y: 0, z: 0})*/ /*
         ${se}GameTest.Test.prototype.spawnSimulatedPlayer({x: 0, y: 0, z: 0})*/
 
-
-
-            let [maxPlayersPerManagePlayersPage, useStarWarsReference404Page] = t.formValues as [
-                maxPlayersPerManagePlayersPage: string,
-                useStarWarsReference404Page: boolean
-            ];
-            config.ui.pages.maxPlayersPerManagePlayersPage =
-                maxPlayersPerManagePlayersPage.toNumber();
-            config.ui.other.useStarWarsReference404Page =
-                useStarWarsReference404Page;
-            return 1;
-        })
-        .catch((e) => {
-            console.error(e, e.stack);
-            return -2 as const;
-        });
+        let [maxPlayersPerManagePlayersPage, useStarWarsReference404Page] = r.formValues as [
+            maxPlayersPerManagePlayersPage: string,
+            useStarWarsReference404Page: boolean
+        ];
+        config.ui.pages.maxPlayersPerManagePlayersPage = maxPlayersPerManagePlayersPage.toNumber();
+        config.ui.other.useStarWarsReference404Page = useStarWarsReference404Page;
+        return 1;
+    } catch (e) {
+        console.error(e, e.stack);
+        // Present the error to the user, and return 1 if they select "Back", and 0 if they select "Close".
+        return ((await showMessage(player, "An Error occurred", `An error occurred: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
+    }
 }

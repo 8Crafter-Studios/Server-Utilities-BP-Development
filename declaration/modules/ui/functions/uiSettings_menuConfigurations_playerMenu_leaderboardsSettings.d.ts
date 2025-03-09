@@ -2,14 +2,24 @@ import { Entity, Player } from "@minecraft/server";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { defaultPlayerMenuLeaderboardStatistics } from "../constants/defaultPlayerMenuLeaderboardStatistics";
 import type { playerMenuLeaderboardStatistic } from "../types/playerMenuLeaderboardStatistic";
-export declare function uiSettings_menuConfigurations_playerMenu_leaderboardsSettings(sourceEntitya: Entity | executeCommandPlayerW | Player): Promise<0 | 1>;
+import type { loosePlayerType } from "modules/utilities/types/loosePlayerType";
+export declare function uiSettings_menuConfigurations_playerMenu_leaderboardsSettings(sourceEntity: loosePlayerType): Promise<0 | 1>;
+/**
+ * @todo Switch this to use the new UI style: {@link uiSettings_menuConfigurations_playerMenu_leaderboardsSettings}.
+ */
 export declare function uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_displayedLeaderboards(sourceEntitya: Entity | executeCommandPlayerW | Player): Promise<0 | 1>;
+/**
+ * @todo Switch this to use the new UI style: {@link uiSettings_menuConfigurations_playerMenu_leaderboardsSettings}.
+ */
 export declare function uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_displayedLeaderboards_addLeaderboard(sourceEntitya: Entity | executeCommandPlayerW | Player): Promise<0 | 1>;
+/**
+ * @todo Switch this to use the new UI style: {@link uiSettings_menuConfigurations_playerMenu_leaderboardsSettings}.
+ */
 export declare function uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_displayedStatistics(sourceEntitya: Entity | executeCommandPlayerW | Player): Promise<0 | 1>;
 export declare function uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_displayedStatistics_addStatistic(sourceEntitya: Entity | executeCommandPlayerW | Player): Promise<0 | 1>;
 export declare function uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics(sourceEntitya: Entity | executeCommandPlayerW | Player): Promise<0 | 1>;
 export declare function uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics_builtIn(sourceEntitya: Entity | executeCommandPlayerW | Player): Promise<0 | 1>;
-export declare function uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics_builtIn_statistic(sourceEntitya: Entity | executeCommandPlayerW | Player, statistic: typeof defaultPlayerMenuLeaderboardStatistics[number]): Promise<0 | 1>;
+export declare function uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics_builtIn_statistic(sourceEntitya: Entity | executeCommandPlayerW | Player, statistic: (typeof defaultPlayerMenuLeaderboardStatistics)[number]): Promise<0 | 1>;
 /**
  * Displays and handles the edit built-in statistic form for a given entity.
  *
@@ -26,7 +36,7 @@ export declare function uiSettings_menuConfigurations_playerMenu_leaderboardsSet
  * 5. Updates the configuration based on the form input.
  * 6. Returns the appropriate status code based on the outcome.
  */
-export declare function uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics_builtIn_editStatistic(sourceEntitya: Entity | executeCommandPlayerW | Player, statistic: typeof defaultPlayerMenuLeaderboardStatistics[number]): Promise<1 | 0>;
+export declare function uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics_builtIn_editStatistic(sourceEntitya: Entity | executeCommandPlayerW | Player, statistic: (typeof defaultPlayerMenuLeaderboardStatistics)[number]): Promise<1 | 0>;
 export declare function uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics_custom(sourceEntitya: Entity | executeCommandPlayerW | Player): Promise<0 | 1>;
 export declare function uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics_custom_statistic(sourceEntitya: Entity | executeCommandPlayerW | Player, statistic: playerMenuLeaderboardStatistic<"custom" | "customAdvanced">): Promise<0 | 1>;
 /**

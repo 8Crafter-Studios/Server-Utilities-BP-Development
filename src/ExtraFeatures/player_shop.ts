@@ -5,7 +5,6 @@ import { config } from "init/classes/config";
 import { containerToContainerSlotArray } from "modules/command_utilities/functions/containerToContainerSlotArray";
 import { containerToItemStackArray } from "modules/command_utilities/functions/containerToItemStackArray";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
-import { forceShow } from "modules/ui/functions/forceShow";
 import { onlinePlayerSelector } from "modules/ui/functions/onlinePlayerSelector";
 import { itemSelector } from "modules/ui/functions/itemSelector";
 import { getSuperUniqueID } from "modules/utilities/functions/getSuperUniqueID";
@@ -27,6 +26,8 @@ import type { ServerShop, ServerShopManager, serverShopConfig } from "./server_s
 import { securityVariables } from "security/ultraSecurityModeUtils";
 import { customFormUICodes } from "modules/ui/constants/customFormUICodes";
 import { selectTexturePreset } from "modules/ui/functions/selectTexturePreset";
+import { extractPlayerFromLooseEntityType } from "modules/utilities/functions/extractPlayerFromLooseEntityType";
+import type { loosePlayerType } from "modules/utilities/types/loosePlayerType";
 
 /**
  *
@@ -51,12 +52,10 @@ export interface playerShopConfig {
     mainPageBodyText?: string | null;
     /**
      * The body text that is displayed on the main buy page of the server shop.
-     * @todo
      */
     mainBuyPageBodyText?: string | null;
     /**
      * The body text that is displayed on the main sell page of the server shop.
-     * @todo
      */
     mainSellPageBodyText?: string | null;
     /**
@@ -104,12 +103,10 @@ export class PlayerShop {
     mainPageBodyText?: string | null;
     /**
      * The body text that is displayed on the main buy page of the server shop.
-     * @todo
      */
     mainBuyPageBodyText?: string | null;
     /**
      * The body text that is displayed on the main sell page of the server shop.
-     * @todo
      */
     mainSellPageBodyText?: string | null;
     /**
@@ -181,7 +178,7 @@ Shop Owner: ${this.playerName}${!!this?.mainPageBodyText ? "\n§r" + this.mainPa
                 form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
             }
             form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
-            return await forceShow(form, player).then(async (r) => {
+            return await form.forceShow(player).then(async (r) => {
                 if (r.canceled == true || r.selection == (showBackButton ? 2 : -2)) {
                     return 1;
                 }
@@ -221,7 +218,7 @@ Shop Owner: ${this.playerName}${!!this?.mainPageBodyText ? "\n§r" + this.mainPa
                 form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
             }
             form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
-            return await forceShow(form, player).then(async (r) => {
+            return await form.forceShow(player).then(async (r) => {
                 if (r.canceled == true) {
                     return 1;
                 }
@@ -270,7 +267,7 @@ Shop Owner: ${this.playerName}${!!this?.mainPageBodyText ? "\n§r" + this.mainPa
                 form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
             }
             form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
-            return await forceShow(form, player).then(async (r) => {
+            return await form.forceShow(player).then(async (r) => {
                 if (r.canceled == true) {
                     return 1;
                 }
@@ -311,7 +308,7 @@ Shop Owner: ${this.playerName}${!!this?.mainPageBodyText ? "\n§r" + this.mainPa
             );
             form.button1("Ok");
             form.button2("Cancel");
-            return ((await forceShow(form, player)).selection != 1).toNumber();
+            return ((await form.forceShow(player)).selection != 1).toNumber();
         }
         return 0;
     }
@@ -334,7 +331,7 @@ Shop Owner: ${this.playerName}${!!this?.mainPageBodyText ? "\n§r" + this.mainPa
                 );
                 form.button1("Ok");
                 form.button2("Cancel");
-                return ((await forceShow(form, player)).selection != 1).toNumber();
+                return ((await form.forceShow(player)).selection != 1).toNumber();
             }
             if (!!pageData?.pageTitle) {
                 form.title(customFormUICodes.action.titles.formStyles.gridMenu + pageData.pageTitle);
@@ -353,7 +350,7 @@ Shop Owner: ${this.playerName}${!!this?.mainPageBodyText ? "\n§r" + this.mainPa
             });
             form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
             form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
-            return await forceShow(form, player).then(async (r) => {
+            return await form.forceShow(player).then(async (r) => {
                 if (r.canceled == true) {
                     return 1 as const;
                 }
@@ -403,7 +400,7 @@ Shop Owner: ${this.playerName}${!!this?.mainPageBodyText ? "\n§r" + this.mainPa
                 );
                 form.button1("Ok");
                 form.button2("Cancel");
-                return ((await forceShow(form, player)).selection != 1).toNumber();
+                return ((await form.forceShow(player)).selection != 1).toNumber();
             }
             if (!!pageData?.pageTitle) {
                 form.title(customFormUICodes.action.titles.formStyles.gridMenu + pageData.pageTitle);
@@ -422,7 +419,7 @@ Shop Owner: ${this.playerName}${!!this?.mainPageBodyText ? "\n§r" + this.mainPa
             });
             form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
             form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
-            return await forceShow(form, player).then(async (r) => {
+            return await form.forceShow(player).then(async (r) => {
                 if (r.canceled == true) {
                     return 1;
                 }
@@ -526,7 +523,7 @@ ${
             infoForm.button("More Details");
             infoForm.button("Back", "textures/ui/arrow_left");
             infoForm.button("Close", "textures/ui/crossout");
-            const ifr = await forceShow(infoForm, player);
+            const ifr = await infoForm.forceShow(player);
             if (ifr.canceled || ifr.selection == 2) {
                 return 1;
             }
@@ -548,9 +545,9 @@ ${
                 }
                 const itemStack = entity.getComponent("inventory")?.container?.getItem(0);
                 entity.remove();
-                const infoFormB = new ActionFormData();
-                infoFormB.title("Item Details");
-                infoFormB.body(
+                const infoForm = new ActionFormData();
+                infoForm.title("Item Details");
+                infoForm.body(
                     !!!itemStack
                         ? `§a${item.title}
 §r§6Stock: ${item.remainingStock}
@@ -604,10 +601,10 @@ ${
                                   : item.itemDetails.enchantments
                           }`
                 );
-                infoFormB.button("Proceed to buy item");
-                infoFormB.button("Back");
-                infoFormB.button("Close");
-                const ifrb = await forceShow(infoFormB, player);
+                infoForm.button("Proceed to buy item");
+                infoForm.button("Back");
+                infoForm.button("Close");
+                const ifrb = await infoForm.forceShow(player);
                 if (ifrb.canceled || ifrb.selection == 1) {
                     return 1;
                 }
@@ -627,7 +624,7 @@ ${
                 item.step ?? 1,
                 item.step ?? 1
             );
-            const r = await forceShow(form, player);
+            const r = await form.forceShow(player);
             if (r.canceled == true || (r.formValues?.[0] as number) == 0) {
                 return 1;
             }
@@ -662,7 +659,7 @@ ${
                         );
                         form.button1("Go Back");
                         form.button2("Close Shop");
-                        const rb = await forceShow(form, player);
+                        const rb = await form.forceShow(player);
                         if (rb.canceled == true || rb.selection == 1) {
                             return 0;
                         }
@@ -774,7 +771,7 @@ ${
                 );
                 form.button1("Go Back");
                 form.button2("Close Shop");
-                const rb = await forceShow(form, player);
+                const rb = await form.forceShow(player);
                 if (rb.canceled == true || rb.selection == 1) {
                     return 0;
                 }
@@ -821,7 +818,7 @@ ${
             }
             infoForm.button("Back", "textures/ui/arrow_left");
             infoForm.button("Close", "textures/ui/crossout");
-            const ifr = await forceShow(infoForm, player);
+            const ifr = await infoForm.forceShow(player);
             if (ifr.canceled || ifr.selection == 1 + +(item.itemType == "player_shop_sellable_advanced")) {
                 return 1;
             }
@@ -829,9 +826,9 @@ ${
                 return 0;
             }
             if (ifr.selection == (item.itemType == "player_shop_sellable_advanced" ? 1 : -1)) {
-                const infoFormB = new ActionFormData();
-                infoFormB.title("Item Details");
-                infoFormB.body(
+                const infoForm = new ActionFormData();
+                infoForm.title("Item Details");
+                infoForm.body(
                     `§a${item.title}
 §r§6Amount Wanted: ${item.amountWanted}
 §r§gValue: ${item.value}
@@ -928,10 +925,10 @@ ${
                               }`
                     }`
                 );
-                infoFormB.button("Proceed to buy item");
-                infoFormB.button("Back");
-                infoFormB.button("Close");
-                const ifrb = await forceShow(infoFormB, player);
+                infoForm.button("Proceed to buy item");
+                infoForm.button("Back");
+                infoForm.button("Close");
+                const ifrb = await infoForm.forceShow(player);
                 if (ifrb.canceled || ifrb.selection == 1) {
                     return 1;
                 }
@@ -953,7 +950,7 @@ ${
                 Math.min(item.step ?? 1, item.amountWanted),
                 Math.min(item.step ?? 1, item.amountWanted)
             );
-            const r = await forceShow(form, player);
+            const r = await form.forceShow(player);
             if (r.canceled == true || (r.formValues?.[0] as number) == 0) {
                 return 1;
             }
@@ -987,7 +984,7 @@ ${
                     );
                     form.button1("Go Back");
                     form.button2("Close Shop");
-                    const rb = await forceShow(form, player);
+                    const rb = await form.forceShow(player);
                     if (rb.canceled == true || rb.selection == 1) {
                         return 0;
                     }
@@ -1173,7 +1170,7 @@ ${
                 );
                 form.button1("Go Back");
                 form.button2("Close Shop");
-                const rb = await forceShow(form, player);
+                const rb = await form.forceShow(player);
                 if (rb.canceled == true || rb.selection == 1) {
                     return 0;
                 }
@@ -1240,26 +1237,46 @@ ${
             } catch {}
         }
     }
-    /**
-     * @todo Fix the textures for the button icons.
-     * @see {@link ServerShop.openPublicShopsSelector}
-     * @param sourceEntitya
-     * @returns
-     */
-    static async openPublicShopsSelector(sourceEntitya: Entity | executeCommandPlayerW | Player, showBackButton = false): Promise<0 | 1> {
-        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
-        assertIsDefined(sourceEntity);
+/**
+ * Opens the public shops selector interface for the player.
+ *
+ * @see {@link ServerShop.openPublicShopsSelector}
+ * 
+ * @param {loosePlayerType} sourceEntity - The player viewing the menu, can be an `Entity`, `executeCommandPlayerW`, or `Player`.
+ * @param {boolean} [showBackButton=false] - Optional boolean to indicate if a back button should be displayed.
+ * @returns {Promise<0 | 1>} A promise that resolves to `0` or `1` depending on the user's interaction:
+ * - `0`: Indicates that the previous menu should be closed.
+ * - `1`: Indicates that the previous menu should be re-opened.
+ *
+ * @remarks 
+ * The function performs the following actions:
+ * 1. Retrieves the player entity from the source entity.
+ * 2. Asserts that the source entity is defined.
+ * 3. Creates and configures an `ActionFormData` form with options for public player shops.
+ * 4. Displays the form to the player and handles their selection:
+ *    - `manageMyShops`: Opens the manage player shops interface.
+ *    - `manageAllShops`: Opens the manage all shops interface (admin only).
+ *    - `playerShopSystemSettings`: Opens the player shop system settings interface (admin only).
+ *    - `back`: Returns `1`.
+ *    - `close`: Returns `0`.
+ *    - `refresh`: Refreshes the public shops selector interface.
+ *    - `shop`: Opens the selected shop interface.
+ * 5. Handles errors by logging and showing a message to the player.
+ */
+
+    static async openPublicShopsSelector(sourceEntity: loosePlayerType, showBackButton: boolean = false): Promise<0 | 1> {
+        const player = extractPlayerFromLooseEntityType(sourceEntity);
         let form = new ActionFormData();
         form.title(customFormUICodes.action.titles.formStyles.medium + "Player Shops");
         const shopsList = (PlayerShop.getAll() ?? []).filter((s) => s.publicShop == true);
         if (shopsList.length == 0) {
             form.body(`§6----------------------------------------------------
-§aMoney: $${MoneySystem.get(sourceEntity.id).money}
+§aMoney: $${MoneySystem.get(player.id).money}
 §6----------------------------------------------------
 §rThere are currently no player shops.`);
         } else {
             form.body(`§6----------------------------------------------------
-§aMoney: $${MoneySystem.get(sourceEntity.id).money}
+§aMoney: $${MoneySystem.get(player.id).money}
 §6----------------------------------------------------`);
         }
         shopsList.forEach((s) => {
@@ -1271,13 +1288,12 @@ ${
         }
         form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
         form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Refresh", "textures/ui/refresh");
-        if (sourceEntity.hasTag("admin")) {
+        if (player.hasTag("admin")) {
             form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Manage All Shops\n§cAdmins Only", "textures/ui/pencil_edit_icon");
             form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Player Shop System Settings\n§cAdmins Only", "textures/ui/icon_setting");
         }
-        return await forceShow(form, sourceEntity as Player)
+        return await form.forceShow(player)
             .then(async (r) => {
-                // This will stop the code when the player closes the form
                 if (r.canceled) return 1;
 
                 assertIsDefined(r.selection);
@@ -1289,24 +1305,24 @@ ${
                         showBackButton ? "back" : undefined,
                         "close",
                         "refresh",
-                        ...(sourceEntity.hasTag("admin") ? (["manageAllShops", "playerShopSystemSettings"] as const) : ([] as const)),
+                        ...(player.hasTag("admin") ? (["manageAllShops", "playerShopSystemSettings"] as const) : ([] as const)),
                     ] as const)[r.selection - shopsList.length]
                 ) {
                     case "manageMyShops":
-                        if ((await PlayerShopManager.managePlayerShops(sourceEntity, false)) !== 0) {
-                            return await PlayerShop.openPublicShopsSelector(sourceEntity, showBackButton);
+                        if ((await PlayerShopManager.managePlayerShops(player, false)) !== 0) {
+                            return await PlayerShop.openPublicShopsSelector(player, showBackButton);
                         } else {
                             return 0;
                         }
                     case "manageAllShops":
-                        if ((await PlayerShopManager.managePlayerShops(sourceEntity, true)) !== 0) {
-                            return await PlayerShop.openPublicShopsSelector(sourceEntity, showBackButton);
+                        if ((await PlayerShopManager.managePlayerShops(player, true)) !== 0) {
+                            return await PlayerShop.openPublicShopsSelector(player, showBackButton);
                         } else {
                             return 0;
                         }
                     case "playerShopSystemSettings":
-                        if ((await PlayerShopManager.playerShopSystemSettings(sourceEntity)) !== 0) {
-                            return await PlayerShop.openPublicShopsSelector(sourceEntity, showBackButton);
+                        if ((await PlayerShopManager.playerShopSystemSettings(player)) !== 0) {
+                            return await PlayerShop.openPublicShopsSelector(player, showBackButton);
                         } else {
                             return 0;
                         }
@@ -1315,10 +1331,10 @@ ${
                     case "close":
                         return 0;
                     case "refresh":
-                        return await PlayerShop.openPublicShopsSelector(sourceEntity, showBackButton);
+                        return await PlayerShop.openPublicShopsSelector(player, showBackButton);
                     default:
-                        if ((await shopsList[response].openShop(sourceEntity as Player)) != 0) {
-                            return await PlayerShop.openPublicShopsSelector(sourceEntity, showBackButton);
+                        if ((await shopsList[response].openShop(player as Player)) != 0) {
+                            return await PlayerShop.openPublicShopsSelector(player, showBackButton);
                         }
                         return 0;
                 }
@@ -1326,7 +1342,7 @@ ${
             .catch(async (e) => {
                 console.error(e, e.stack);
                 return (
-                    (await showMessage(sourceEntity, "An Error occurred", `An error occurred: ${e}${e?.stack}`, "Back", "Close")).selection !== 1
+                    (await showMessage(player, "An Error occurred", `An error occurred: ${e}${e?.stack}`, "Back", "Close")).selection !== 1
                 ).toNumber();
             });
     }
@@ -1374,7 +1390,7 @@ export class PlayerShopManager {
         form.button(customFormUICodes.action.buttons.positions.main_only + "§cShop Item Settings", "textures/ui/icon_items");
         form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
         form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
-        return await forceShow(form, sourceEntity as Player)
+        return await form.forceShow(sourceEntity as Player)
             .then(async (r) => {
                 if (r.canceled) return 1;
 
@@ -1444,28 +1460,28 @@ export class PlayerShopManager {
                 }
             }
         }
-        let form2 = new ModalFormData();
-        form2.title(`Player Shop System Settings`);
-        form2.toggle(`§l§fEnabled§r§f\nWhether or not the player shop system is enabled, default is false`, config.shopSystem.player.enabled);
-        form2.toggle(
+        let form = new ModalFormData();
+        form.title(`Player Shop System Settings`);
+        form.toggle(`§l§fEnabled§r§f\nWhether or not the player shop system is enabled, default is false`, config.shopSystem.player.enabled);
+        form.toggle(
             `§l§fAllow Selling Slot Locked Items§r§f\nWhether or not players can sell items that are locked to a specific slot in their inventory, default is false`,
             config.shopSystem.player.allowSellingLockInSlotItems
         );
-        form2.toggle(
+        form.toggle(
             `§l§fAllow Selling Inventory Locked Items§r§f\nWhether or not players can sell items that are locked to inventory, default is false`,
             config.shopSystem.player.allowSellingLockInInventoryItems
         );
-        form2.toggle(
+        form.toggle(
             `§l§fAllow Selling Keep On Death Items§r§f\nWhether or not players can sell items that have the keep on death property set to true, default is true`,
             config.shopSystem.player.allowSellingKeepOnDeathItems
         );
-        form2.textField(
+        form.textField(
             `§l§fMax Shops Per Player§r§f\nThe maximum number of shops each player can have, setting it to -1 will result in there being no maximum, default is 5`,
             "5",
             config.shopSystem.player.maxShopsPerPlayer.toString()
         );
-        form2.submitButton("Save");
-        return (await forceShow(form2, sourceEntity as Player)
+        form.submitButton("Save");
+        return (await form.forceShow(sourceEntity as Player)
             .then((t) => {
                 if (t.canceled) {
                     return 1;
@@ -1511,7 +1527,7 @@ export class PlayerShopManager {
         form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
         form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
         form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Refresh", "textures/ui/refresh");
-        return await forceShow(form, sourceEntity as Player)
+        return await form.forceShow(sourceEntity as Player)
             .then(async (r) => {
                 if (r.canceled) return 1;
 
@@ -1637,29 +1653,29 @@ export class PlayerShopManager {
     static async addPlayerShop(sourceEntitya: Entity | executeCommandPlayerW | Player): Promise<0 | 1> {
         const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
         assertIsDefined(sourceEntity);
-        let form2 = new ModalFormData();
-        form2.title(`New Shop`);
-        form2.textField(`§l§fShop ID§r§c*§f\nThe ID of the shop`, "myShop", "myShop");
-        form2.textField(
+        let form = new ModalFormData();
+        form.title(`New Shop`);
+        form.textField(`§l§fShop ID§r§c*§f\nThe ID of the shop`, "myShop", "myShop");
+        form.textField(
             `§l§fButton Title§r§f\nThe title of the button for this shop.`,
             `${(sourceEntity as Player).name ?? sourceEntity.nameTag}'s Shop`,
             `${(sourceEntity as Player).name ?? sourceEntity.nameTag}'s Shop`
         );
-        form2.textField(
+        form.textField(
             `§l§fPage Title§r§f\nThe title that shows at the top of the main page for this shop`,
             `${(sourceEntity as Player).name ?? sourceEntity.nameTag}'s Shop`,
             `${(sourceEntity as Player).name ?? sourceEntity.nameTag}'s Shop`
         );
-        form2.textField(
+        form.textField(
             `§l§fPage Body Text§r§f\nThe message that shows at right above the list of buttons at the top of the main page for this shop`,
             `This is ${(sourceEntity as Player).name ?? sourceEntity.nameTag}'s shop.`,
             `This is ${(sourceEntity as Player).name ?? sourceEntity.nameTag}'s shop.`
         );
-        form2.toggle(`§l§fIs Buy Shop§r§f\nWhether or not players can buy items in this shop, default is true`, true);
-        form2.toggle(`§l§fIs Sell Shop§r§f\nWhether or not players can sell items in this shop, default is true`, true); /*
+        form.toggle(`§l§fIs Buy Shop§r§f\nWhether or not players can buy items in this shop, default is true`, true);
+        form.toggle(`§l§fIs Sell Shop§r§f\nWhether or not players can sell items in this shop, default is true`, true); /*
         form2.toggle(`§l§fPublic Shop§r§f\nWhether or not this shop can be accessed by any player through the use of the \\viewplayershops command, default is true`, true)*/
-        form2.submitButton("Save");
-        return (await forceShow(form2, sourceEntity as Player)
+        form.submitButton("Save");
+        return (await form.forceShow(sourceEntity as Player)
             .then(async (t) => {
                 if (t.canceled) {
                     return 1;
@@ -1700,25 +1716,25 @@ export class PlayerShopManager {
     ): Promise<0 | 1> {
         const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
         assertIsDefined(sourceEntity);
-        let form2 = new ModalFormData();
-        form2.title(`New Shop As Player`);
-        form2.textField(`§l§fShop ID§r§c*§f\nThe ID of the shop`, "myShop", "myShop");
-        form2.textField(
+        let form = new ModalFormData();
+        form.title(`New Shop As Player`);
+        form.textField(`§l§fShop ID§r§c*§f\nThe ID of the shop`, "myShop", "myShop");
+        form.textField(
             `§l§fButton Title§r§f\nThe title of the button for this shop\n§o§7Currently only shows up in the menu to edit the shops.`,
             "My Shop",
             "My Shop"
         );
-        form2.textField(`§l§fPage Title§r§f\nThe title that shows at the top of the main page for this shop`, "My Shop", "My Shop");
-        form2.textField(
+        form.textField(`§l§fPage Title§r§f\nThe title that shows at the top of the main page for this shop`, "My Shop", "My Shop");
+        form.textField(
             `§l§fPage Body Text§r§f\nThe message that shows at right above the list of buttons at the top of the main page for this shop`,
             "This is my shop.",
             "This is my shop."
         );
-        form2.toggle(`§l§fIs Buy Shop§r§f\nWhether or not players can buy items in this shop, default is true`, true);
-        form2.toggle(`§l§fIs Sell Shop§r§f\nWhether or not players can sell items in this shop, default is true`, true); /*
+        form.toggle(`§l§fIs Buy Shop§r§f\nWhether or not players can buy items in this shop, default is true`, true);
+        form.toggle(`§l§fIs Sell Shop§r§f\nWhether or not players can sell items in this shop, default is true`, true); /*
         form2.toggle(`§l§fPublic Shop§r§f\nWhether or not this shop can be accessed by any player through the use of the \\viewplayershops command, default is true`, true)*/
-        form2.submitButton("Save");
-        return (await forceShow(form2, sourceEntity as Player)
+        form.submitButton("Save");
+        return (await form.forceShow(sourceEntity as Player)
             .then(async (t) => {
                 if (t.canceled) {
                     return 1;
@@ -1804,7 +1820,7 @@ Is Buy Shop: ${shop.buyShop ? "§aTrue" : "§cFalse"}
         }
         form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
         form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
-        return (await forceShow(form, sourceEntity as Player)
+        return (await form.forceShow(sourceEntity as Player)
             .then(async (r) => {
                 // This will stop the code when the player closes the form
                 if (r.canceled) return 1;
@@ -2109,42 +2125,42 @@ Is Buy Shop: ${shop.buyShop ? "§aTrue" : "§cFalse"}
     static async managePlayerShop_settings(sourceEntitya: Entity | executeCommandPlayerW | Player, shop: PlayerShop): Promise<0 | 1> {
         const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
         assertIsDefined(sourceEntity);
-        let form2 = new ModalFormData();
-        form2.title(`${shop.title} Settings`);
-        form2.textField(
+        let form = new ModalFormData();
+        form.title(`${shop.title} Settings`);
+        form.textField(
             `§l§fButton Title§r§f\nThe title of the button for this shop`,
             "My Shop",
             JSON.stringify(shop.name ?? "")
                 .slice(1, -1)
                 .replaceAll('\\"', '"')
         );
-        form2.textField(
+        form.textField(
             `§l§fPage Title§r§f\nThe title that shows at the top of the main page for this shop`,
             "My Shop",
             JSON.stringify(shop.title ?? "")
                 .slice(1, -1)
                 .replaceAll('\\"', '"')
         );
-        form2.textField(
+        form.textField(
             `§l§fPage Body Text§r§f\nThe message that shows at right above the list of buttons at the top of the main page for this shop`,
             "My Shop",
             JSON.stringify(shop.mainPageBodyText ?? "")
                 .slice(1, -1)
                 .replaceAll('\\"', '"')
         );
-        form2.toggle(`§l§fIs Buy Shop§r§f\nWhether or not players can buy items in this shop, default is true`, shop.buyShop ?? true);
-        form2.toggle(`§l§fIs Sell Shop§r§f\nWhether or not players can sell items in this shop, default is true`, shop.sellShop ?? true); /*
+        form.toggle(`§l§fIs Buy Shop§r§f\nWhether or not players can buy items in this shop, default is true`, shop.buyShop ?? true);
+        form.toggle(`§l§fIs Sell Shop§r§f\nWhether or not players can sell items in this shop, default is true`, shop.sellShop ?? true); /*
         form2.toggle(`§l§fPublic Shop§r§f\nWhether or not this shop can be accessed by any player through the use of the \\viewplayershops command, default is true`, shop.publicShop??true)*/
         if (config.system.debugMode) {
-            form2.textField(`§l§fOwner ID\n§c(Only Editable By Admins) §8(Only Editable While Debug Mode Is Enabled)`, shop.playerID, shop.playerID);
-            form2.textField(
+            form.textField(`§l§fOwner ID\n§c(Only Editable By Admins) §8(Only Editable While Debug Mode Is Enabled)`, shop.playerID, shop.playerID);
+            form.textField(
                 `§l§fOwner Name\n§c(Only Editable By Admins) §8(Only Editable While Debug Mode Is Enabled)`,
                 JSON.stringify(shop.playerName).slice(1, -1).replaceAll('\\"', '"'),
                 JSON.stringify(shop.playerName).slice(1, -1).replaceAll('\\"', '"')
             );
         }
-        form2.submitButton("Save");
-        return (await forceShow(form2, sourceEntity as Player)
+        form.submitButton("Save");
+        return (await form.forceShow(sourceEntity as Player)
             .then(async (t) => {
                 if (t.canceled) {
                     return 1;
@@ -2202,7 +2218,7 @@ Is Buy Shop: ${shop.buyShop ? "§aTrue" : "§cFalse"}
         form.button(customFormUICodes.action.buttons.positions.left_side_only + "Add Page", "textures/ui/book_addtextpage_default");
         form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
         form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
-        return (await forceShow(form, sourceEntity as Player)
+        return (await form.forceShow(sourceEntity as Player)
             .then(async (r) => {
                 if (r.canceled) return 1;
 
@@ -2285,17 +2301,17 @@ Is Buy Shop: ${shop.buyShop ? "§aTrue" : "§cFalse"}
                                     saveMode: StructureSaveMode.World,
                                 }
                             );
-                            const form2 = new ModalFormData();
-                            form2.textField("§7Buyable Item Type: player_shop_saved\n§fButton Title§c*", "Stick");
-                            form2.textField("Button Icon Texture\n§7Leave blank to use the placeholder loading icon.", "textures/items/stick");
-                            form2.textField(
+                            const form = new ModalFormData();
+                            form.textField("§7Buyable Item Type: player_shop_saved\n§fButton Title§c*", "Stick");
+                            form.textField("Button Icon Texture\n§7Leave blank to use the placeholder loading icon.", "textures/items/stick");
+                            form.textField(
                                 "Button Index§c*",
                                 String(mode == "buy" ? shop.buyData.length : shop.sellData.length),
                                 String(mode == "buy" ? shop.buyData.length : shop.sellData.length)
                             );
-                            form2.textField("Price§c*", "10", "10");
-                            form2.textField("Purchase Amount Step\n§oDefault is 1", "1", "1");
-                            const r = await forceShow(form2, sourceEntity as Player);
+                            form.textField("Price§c*", "10", "10");
+                            form.textField("Purchase Amount Step\n§oDefault is 1", "1", "1");
+                            const r = await form.forceShow(sourceEntity as Player);
                             let [title, texture, itemIndex, price, step] = r.formValues as [
                                 title: string,
                                 texture: string,
@@ -2419,10 +2435,7 @@ ${mode == "buy" ? "Price" : "Value"}: ${mode == "buy" ? (item as PlayerSavedShop
         form.button(customFormUICodes.action.buttons.positions.main_only + "Apply Texture Preset", "textures/items/map_locked");
         const showRestockButton = mode == "buy" && (item as PlayerSavedShopItem)?.remainingStock < (item as PlayerSavedShopItem)?.maxStackSize;
         if (showRestockButton) {
-            /**
-             * @todo Add the correct texture.
-             */
-            form.button(customFormUICodes.action.buttons.positions.main_only + "Restock Item", "textures/ui/restock_item");
+            form.button(customFormUICodes.action.buttons.positions.main_only + "Restock Item", "textures/ui/upload_glyph");
         }
         const debugMode = config.system.debugMode;
         if (debugMode) {
@@ -2447,7 +2460,7 @@ ${mode == "buy" ? "Price" : "Value"}: ${mode == "buy" ? (item as PlayerSavedShop
         }
         form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
         form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
-        return await forceShow(form, sourceEntity as Player).then(async (r) => {
+        return await form.forceShow(sourceEntity as Player).then(async (r) => {
             if (r.canceled) return 1;
 
             switch (
@@ -2462,10 +2475,10 @@ ${mode == "buy" ? "Price" : "Value"}: ${mode == "buy" ? (item as PlayerSavedShop
                     "close",
                 ] as const)[r.selection]
             ) {
-                case "move":
-                    const form2 = new ModalFormData();
-                    form2.textField("New Position\nThe position is zero-indexed.", "index", String(itemIndex));
-                    const r = await forceShow(form2, sourceEntity as Player);
+                case "move": {
+                    const form = new ModalFormData();
+                    form.textField("New Position\nThe position is zero-indexed.", "index", String(itemIndex));
+                    const r = await form.forceShow(sourceEntity as Player);
                     if (r.canceled) return 1;
                     assertIsDefined(r.formValues);
                     if (!Number.isNaN(Number(r.formValues[0]))) {
@@ -2483,6 +2496,7 @@ ${mode == "buy" ? "Price" : "Value"}: ${mode == "buy" ? (item as PlayerSavedShop
                         return await PlayerShopManager.managePlayerShop_manageItem(sourceEntity, shop, item, Number(r.formValues[0]), mode);
                     }
                     return await PlayerShopManager.managePlayerShop_manageItem(sourceEntity, shop, item, itemIndex, mode);
+                }
                 case "edit":
                     // Testing if the function below returns 1 is not neccessary here because the function below does not return a 1 or 0.
                     await PlayerShopManager.managePlayerShop_editItem(sourceEntity, shop, item, itemIndex, mode);
@@ -2958,7 +2972,7 @@ ${mode == "buy" ? "Price" : "Value"}: ${mode == "buy" ? (item as PlayerSavedShop
             form.textField("Item Type§c*", "minecraft:stick", JSON.stringify(item.itemID).slice(1, -1).replaceAll('\\"', '"'));
             // form.textField("Data Value§c*", "0", String(item))
         }
-        return await forceShow(form, sourceEntity as Player).then(async (r) => {
+        return await form.forceShow(sourceEntity as Player).then(async (r) => {
             // This will stop the code when the player closes the form
             if (r.canceled) return r;
 
@@ -3077,7 +3091,7 @@ ${mode == "buy" ? "Price" : "Value"}: ${mode == "buy" ? (item as PlayerSavedShop
                 String(item.extraRestrictions.maximumDurability ?? "")
             );
         }
-        return await forceShow(form, sourceEntity as Player).then(async (r) => {
+        return await form.forceShow(sourceEntity as Player).then(async (r) => {
             // This will stop the code when the player closes the form
             if (r.canceled) return r;
 
@@ -3169,7 +3183,7 @@ ${mode == "buy" ? "Price" : "Value"}: ${mode == "buy" ? (item as PlayerSavedShop
             form.textField("Item Type§c*", "minecraft:stick");
             // form.textField("Data Value§c*", "0", String(item))
         }
-        return await forceShow(form, sourceEntity as Player).then(async (r) => {
+        return await form.forceShow(sourceEntity as Player).then(async (r) => {
             // This will stop the code when the player closes the form
             if (r.canceled) return r;
             assertIsDefined(r.formValues);
@@ -3251,7 +3265,7 @@ Texture: ${page.texture}`
         }
         form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
         form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
-        return await forceShow(form, sourceEntity as Player).then(async (r) => {
+        return await form.forceShow(sourceEntity as Player).then(async (r) => {
             if (r.canceled) return 1;
 
             switch (
@@ -3272,10 +3286,10 @@ Texture: ${page.texture}`
                     } else {
                         return 0;
                     }
-                case "move":
-                    const form2 = new ModalFormData();
-                    form2.textField("New Position\nThe position is zero-indexed.", "index", String(pageIndex));
-                    const r = await forceShow(form2, sourceEntity as Player);
+                case "move": {
+                    const form = new ModalFormData();
+                    form.textField("New Position\nThe position is zero-indexed.", "index", String(pageIndex));
+                    const r = await form.forceShow(sourceEntity as Player);
                     if (r.canceled) return 1;
                     assertIsDefined(r.formValues);
                     if (!Number.isNaN(Number(r.formValues[0]))) {
@@ -3293,6 +3307,7 @@ Texture: ${page.texture}`
                         return await PlayerShopManager.managePlayerShop_managePage(sourceEntity, shop, page, Number(r.formValues[0]), mode);
                     }
                     return await PlayerShopManager.managePlayerShop_managePage(sourceEntity, shop, page, pageIndex, mode);
+                }
                 case "edit":
                     await PlayerShopManager.managePlayerShop_editPage(sourceEntity, shop, page, pageIndex, mode);
                     return await PlayerShopManager.managePlayerShop_managePage(sourceEntity, shop, page, pageIndex, mode);
@@ -3418,7 +3433,7 @@ Texture: ${page.texture}`
             "textures/ui/arrowRight",
             JSON.stringify(page.texture).slice(1, -1).replaceAll('\\"', '"')
         );
-        return (await forceShow(form, sourceEntity as Player).then(async (r) => {
+        return (await form.forceShow(sourceEntity as Player).then(async (r) => {
             // This will stop the code when the player closes the form
             if (r.canceled) return 1;
 
@@ -3458,7 +3473,7 @@ Texture: ${page.texture}`
             String(mode == "buy" ? shop.buyData.length : shop.sellData.length),
             String(mode == "buy" ? shop.buyData.length : shop.sellData.length)
         );
-        return (await forceShow(form, sourceEntity as Player).then(async (r) => {
+        return (await form.forceShow(sourceEntity as Player).then(async (r) => {
             // This will stop the code when the player closes the form
             if (r.canceled) return 1;
             assertIsDefined(r.formValues);
@@ -3518,7 +3533,7 @@ Texture: ${page.texture}`
         form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
         let r: ActionFormResponse = undefined as any;
         try {
-            r = await forceShow(form, sourceEntity as Player);
+            r = await form.forceShow(sourceEntity as Player);
         } catch (e) {
             try {
                 return ((await showMessage(sourceEntity as Player, "§cError", `§c${e} ${e.stack}`, "Back", "Close")).selection != 0).toNumber();
@@ -3606,17 +3621,17 @@ Texture: ${page.texture}`
                             saveMode: StructureSaveMode.World,
                         }
                     );
-                    const form2 = new ModalFormData();
-                    form2.textField("§7Buyable Item Type: player_shop_saved\n§fButton Title§c*", "Stick");
-                    form2.textField("Button Icon Texture\n§7Leave blank to use the placeholder loading icon.", "textures/items/stick");
-                    form2.textField(
+                    const form = new ModalFormData();
+                    form.textField("§7Buyable Item Type: player_shop_saved\n§fButton Title§c*", "Stick");
+                    form.textField("Button Icon Texture\n§7Leave blank to use the placeholder loading icon.", "textures/items/stick");
+                    form.textField(
                         "Button Index§c*",
                         String(mode == "buy" ? shop.buyData.length : shop.sellData.length),
                         String(mode == "buy" ? shop.buyData.length : shop.sellData.length)
                     );
-                    form2.textField("Price§c*", "10", "10");
-                    form2.textField("Purchase Amount Step\n§oDefault is 1", "1", "1");
-                    const r = await forceShow(form2, sourceEntity as Player);
+                    form.textField("Price§c*", "10", "10");
+                    form.textField("Purchase Amount Step\n§oDefault is 1", "1", "1");
+                    const r = await form.forceShow(sourceEntity as Player);
                     let [title, texture, itemIndex, price, step] = r.formValues as [
                         title: string,
                         texture: string,
@@ -3738,10 +3753,7 @@ Texture: ${page.texture}`
         form.button(customFormUICodes.action.buttons.positions.main_only + "Apply Texture Preset", "textures/items/map_locked");
         const showRestockButton = mode == "buy" && (item as PlayerSavedShopItem)?.remainingStock < (item as PlayerSavedShopItem)?.maxStackSize;
         if (showRestockButton) {
-            /**
-             * @todo Add the correct texture.
-             */
-            form.button(customFormUICodes.action.buttons.positions.main_only + "Restock Item", "textures/ui/restock_item");
+            form.button(customFormUICodes.action.buttons.positions.main_only + "Restock Item", "textures/ui/upload_glyph");
         }
         const debugMode = config.system.debugMode;
         if (debugMode) {
@@ -3766,7 +3778,7 @@ Texture: ${page.texture}`
         }
         form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
         form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
-        return await forceShow(form, sourceEntity as Player).then(async (r) => {
+        return await form.forceShow(sourceEntity as Player).then(async (r) => {
             if (r.canceled) return 1;
 
             switch (
@@ -3781,10 +3793,10 @@ Texture: ${page.texture}`
                     "close",
                 ] as const)[r.selection]
             ) {
-                case "move":
-                    const form2 = new ModalFormData();
-                    form2.textField("New Position\nThe position is zero-indexed.", "index", String(itemIndex));
-                    const r = await forceShow(form2, sourceEntity as Player);
+                case "move": {
+                    const form = new ModalFormData();
+                    form.textField("New Position\nThe position is zero-indexed.", "index", String(itemIndex));
+                    const r = await form.forceShow(sourceEntity as Player);
                     if (r.canceled) return 1;
                     assertIsDefined(r.formValues);
                     if (!Number.isNaN(Number(r.formValues[0]))) {
@@ -3804,6 +3816,7 @@ Texture: ${page.texture}`
                         return await PlayerShopManager.managePlayerShopPage_manageItem(sourceEntity, shop, path, item, Number(r.formValues[0]));
                     }
                     return await PlayerShopManager.managePlayerShopPage_manageItem(sourceEntity, shop, path, item, itemIndex);
+                }
                 case "edit":
                     await PlayerShopManager.managePlayerShopPage_editItem(sourceEntity, shop, path, item, itemIndex);
                     return await PlayerShopManager.managePlayerShopPage_manageItem(sourceEntity, shop, path, item, itemIndex);
@@ -4277,7 +4290,7 @@ Texture: ${page.texture}`
             form.textField("Item Type§c*", "minecraft:stick", JSON.stringify(item.itemID).slice(1, -1).replaceAll('\\"', '"'));
             // form.textField("Data Value§c*", "0", String(item))
         }
-        return (await forceShow(form, sourceEntity as Player).then(async (r) => {
+        return (await form.forceShow(sourceEntity as Player).then(async (r) => {
             // This will stop the code when the player closes the form
             if (r.canceled) return 1;
 
@@ -4344,7 +4357,7 @@ Texture: ${page.texture}`
             form.textField("Item Type§c*", "minecraft:stick");
             // form.textField("Data Value§c*", "0", String(item))
         }
-        return (await forceShow(form, sourceEntity as Player).then(async (r) => {
+        return (await form.forceShow(sourceEntity as Player).then(async (r) => {
             // This will stop the code when the player closes the form
             if (r.canceled) return 1;
             assertIsDefined(r.formValues);
@@ -4429,7 +4442,7 @@ Texture: ${page.texture}`
         }
         form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
         form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
-        return await forceShow(form, sourceEntity as Player).then(async (r) => {
+        return await form.forceShow(sourceEntity as Player).then(async (r) => {
             if (r.canceled) return 1;
 
             switch (
@@ -4450,10 +4463,10 @@ Texture: ${page.texture}`
                     } else {
                         return 0;
                     }
-                case "move":
-                    const form2 = new ModalFormData();
-                    form2.textField("New Position\nThe position is zero-indexed.", "index", String(pageIndex));
-                    const r = await forceShow(form2, sourceEntity as Player);
+                case "move": {
+                    const form = new ModalFormData();
+                    form.textField("New Position\nThe position is zero-indexed.", "index", String(pageIndex));
+                    const r = await form.forceShow(sourceEntity as Player);
                     if (r.canceled) return 1;
                     assertIsDefined(r.formValues);
                     if (!Number.isNaN(Number(r.formValues[0]))) {
@@ -4471,6 +4484,7 @@ Texture: ${page.texture}`
                         return await PlayerShopManager.managePlayerShopPage_managePage(sourceEntity, shop, path, page, Number(r.formValues[0]));
                     }
                     return await PlayerShopManager.managePlayerShopPage_managePage(sourceEntity, shop, path, page, pageIndex);
+                }
                 case "edit":
                     if ((await PlayerShopManager.managePlayerShopPage_editPage(sourceEntity, shop, path, page, pageIndex)) === 1) {
                         return await PlayerShopManager.managePlayerShopPage_managePage(sourceEntity, shop, path, page, pageIndex);
@@ -4604,7 +4618,7 @@ Texture: ${page.texture}`
             "textures/ui/arrowRight",
             JSON.stringify(page.texture).slice(1, -1).replaceAll('\\"', '"')
         );
-        return (await forceShow(form, sourceEntity as Player).then(async (r) => {
+        return (await form.forceShow(sourceEntity as Player).then(async (r) => {
             // This will stop the code when the player closes the form
             if (r.canceled) return 1;
 
@@ -4647,7 +4661,7 @@ Texture: ${page.texture}`
             String(getPathInObject(mode == "buy" ? shop.buyData : shop.sellData, path).data.length),
             String(getPathInObject(mode == "buy" ? shop.buyData : shop.sellData, path).data.length)
         );
-        return (await forceShow(form, sourceEntity as Player).then(async (r) => {
+        return (await form.forceShow(sourceEntity as Player).then(async (r) => {
             // This will stop the code when the player closes the form
             if (r.canceled) return 1;
             assertIsDefined(r.formValues);

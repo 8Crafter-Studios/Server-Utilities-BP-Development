@@ -1,77 +1,74 @@
-import { Entity, Player } from "@minecraft/server";
-import { ActionFormData, ActionFormResponse } from "@minecraft/server-ui";
-import { forceShow } from "modules/ui/functions/forceShow";
-import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
+import { ActionFormData } from "@minecraft/server-ui";
 import { showMessage } from "modules/utilities/functions/showMessage";
 import { manageWarps } from "./manageWarps";
 import { customFormUICodes } from "../constants/customFormUICodes";
+import { extractPlayerFromLooseEntityType } from "modules/utilities/functions/extractPlayerFromLooseEntityType";
+import type { loosePlayerType } from "modules/utilities/types/loosePlayerType";
 
-export async function playerMenu_warps(sourceEntitya: Entity | executeCommandPlayerW | Player): Promise<0 | 1> {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
-    if (!(sourceEntity instanceof Player)) {
-        throw new TypeError(
-            "Invalid Player. Expected an instance of the Player class, or an instance of the executeCommandPlayerW class with a Player linked to it, but instead got " +
-                (typeof sourceEntity == "object"
-                    ? sourceEntity === null
-                        ? "object[null]"
-                        : "object[" + ((sourceEntity as object).constructor.name ?? "unknown") + "]"
-                    : typeof sourceEntity) +
-                "."
-        );
-    }
-    if (!config.warpsSystem.enabled) {
-        if ((await showMessage(sourceEntity, "Error", `§cSorry but the warps system is currently disabled.`, "Back", "Close")).selection === 0) {
-            return 1;
-        } else {
-            return 0;
-        }
-    }
-    let form = new ActionFormData();
-    form.title(customFormUICodes.action.titles.formStyles.general + "Warps");
-    const warps = config.warpsSystem.warps;
-    warps.forEach((w) => form.button(customFormUICodes.action.buttons.positions.main_only + w.displayName, w.icon));
-    if (sourceEntity.hasTag("admin")) {
-        form.button(customFormUICodes.action.buttons.positions.main_only + "Manage Warps (§cAdmin Only§r)", "textures/ui/pencil_edit_icon");
-    }
-    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
-    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
-    return await forceShow(form, sourceEntity)
-        .then(async (ra) => {
-            let r = ra as ActionFormResponse;
+/**
+ * Shows the player a menu with all the warps defined in the config, and allows them to teleport to any of them.
+ *
+ * @async
+ * @param {loosePlayerType} sourceEntity - The player viewing the UI.
+ * @returns {Promise<0 | 1>} A promise that resolves to `0` if the previous menu should be closed, or `1` if the previous menu should be reopened.
+ * @throws {TypeError} If sourceEntity is not an instance of the Player class or an instance of the executeCommandPlayerW class with a Player linked to it.
+ */
+export async function playerMenu_warps(sourceEntity: loosePlayerType): Promise<0 | 1> {
+    const player = extractPlayerFromLooseEntityType(sourceEntity);
+    while (true) {
+        try {
+            if (!config.warpsSystem.enabled) {
+                if ((await showMessage(player, "Error", `§cSorry but the warps system is currently disabled.`, "Back", "Close")).selection === 0) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }
+            let form = new ActionFormData();
+            form.title(customFormUICodes.action.titles.formStyles.general + "Warps");
+            const warps = config.warpsSystem.warps;
+            warps.forEach((w) => form.button(customFormUICodes.action.buttons.positions.main_only + w.displayName, w.icon));
+            if (player.hasTag("admin")) {
+                form.button(customFormUICodes.action.buttons.positions.main_only + "Manage Warps (§cAdmin Only§r)", "textures/ui/pencil_edit_icon");
+            }
+            form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
+            form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
+            const r = await form.forceShow(player);
             if (r.canceled) return 1;
 
             switch (
                 (!!warps[r.selection] ? "warp" : undefined) ??
-                cullUndefined([sourceEntity.hasTag("admin") ? "manageWarps" : undefined, "back", "close"] as const)[r.selection - warps.length]
+                cullUndefined([player.hasTag("admin") ? "manageWarps" : undefined, "back", "close"] as const)[r.selection - warps.length]
             ) {
                 case "warp":
                     const warp = warps[r.selection];
-                    if (sourceEntity.dimension !== dimensionsb[warp.dimension] && !config.teleportSystems.allowCrossDimensionalTeleport) {
+                    if (player.dimension !== dimensionsb[warp.dimension] && !config.teleportSystems.allowCrossDimensionalTeleport) {
                         if (
-                            (await showMessage(sourceEntity, "Error", `§cSorry but all cross-dimensional teleports have been disabled.`, "Back", "Close"))
+                            (await showMessage(player, "Error", `§cSorry but all cross-dimensional teleports have been disabled.`, "Back", "Close"))
                                 .selection === 0
                         ) {
-                            return await playerMenu_warps(sourceEntity);
+                            continue;
                         } else {
                             return 0;
                         }
                     }
                     // Check for PVP cooldown before starting the teleport countdown.
-                    if (Number(sourceEntity.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 > Date.now()) {
-                        sourceEntity.sendMessage(
+                    if (Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 > Date.now()) {
+                        player.sendMessage(
                             `§cSorry but you have to wait another ${Math.round(
-                                (Number(sourceEntity.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 - Date.now()) / 1000
+                                (Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) +
+                                    config.teleportSystems.pvpCooldownToTeleport * 1000 -
+                                    Date.now()) /
+                                    1000
                             )} seconds before you can teleport again because you are still on PVP cooldown.`
                         );
                         return 0;
                     }
                     // Check for teleport cooldown before starting the teleport countdown.
-                    if (Number(sourceEntity.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 > Date.now()) {
-                        sourceEntity.sendMessage(
+                    if (Number(player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 > Date.now()) {
+                        player.sendMessage(
                             `§cSorry but you have to wait another ${Math.round(
-                                (Number(sourceEntity.getDynamicProperty("lastTeleportTime") ?? 0) +
-                                    config.teleportSystems.teleportCooldown * 1000 -
-                                    Date.now()) /
+                                (Number(player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 - Date.now()) /
                                     1000
                             )} seconds before you can teleport again because you are still on cooldown.`
                         );
@@ -79,36 +76,37 @@ export async function playerMenu_warps(sourceEntitya: Entity | executeCommandPla
                     }
                     const standStillTime = config.teleportSystems.standStillTimeToTeleport;
                     if (standStillTime > 0) {
-                        sourceEntity.sendMessage("§eStand still for " + standStillTime + " seconds to teleport.");
+                        player.sendMessage("§eStand still for " + standStillTime + " seconds to teleport.");
                         await waitTicks(20);
                     }
-                    const playerPosition = sourceEntity.location;
+                    const playerPosition = player.location;
                     let successful = true;
                     for (let i = 0; i < standStillTime; i++) {
-                        if (!Vector.equals(sourceEntity.location, playerPosition)) {
+                        if (!Vector.equals(player.location, playerPosition)) {
                             successful = false;
                             break;
                         }
-                        sourceEntity.sendMessage("§bTeleporting in " + (standStillTime - i));
+                        player.sendMessage("§bTeleporting in " + (standStillTime - i));
                         await waitTicks(20);
                     }
                     // Check for PVP cooldown again after ending the teleport countdown.
-                    if (Number(sourceEntity.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 > Date.now()) {
-                        sourceEntity.sendMessage(
+                    if (Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 > Date.now()) {
+                        player.sendMessage(
                             `§cSorry but you have to wait another ${Math.round(
-                                (Number(sourceEntity.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 - Date.now()) / 1000
+                                (Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) +
+                                    config.teleportSystems.pvpCooldownToTeleport * 1000 -
+                                    Date.now()) /
+                                    1000
                             )} seconds before you can teleport again because you are still on PVP cooldown.`
                         );
                         successful = false;
                         return 0;
                     }
                     // Check for teleport cooldown again after ending the teleport countdown.
-                    if (Number(sourceEntity.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 > Date.now()) {
-                        sourceEntity.sendMessage(
+                    if (Number(player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 > Date.now()) {
+                        player.sendMessage(
                             `§cSorry but you have to wait another ${Math.round(
-                                (Number(sourceEntity.getDynamicProperty("lastTeleportTime") ?? 0) +
-                                    config.teleportSystems.teleportCooldown * 1000 -
-                                    Date.now()) /
+                                (Number(player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 - Date.now()) /
                                     1000
                             )} seconds before you can teleport again because you are still on cooldown.`
                         );
@@ -116,19 +114,19 @@ export async function playerMenu_warps(sourceEntitya: Entity | executeCommandPla
                     }
                     if (successful) {
                         try {
-                            sourceEntity.teleport(warp.location, { dimension: dimensionsb[warp.dimension] });
-                            sourceEntity.setDynamicProperty("lastTeleportTime", Date.now());
-                            sourceEntity.sendMessage("§aSuccessfully teleported.");
+                            player.teleport(warp.location, { dimension: dimensionsb[warp.dimension] });
+                            player.setDynamicProperty("lastTeleportTime", Date.now());
+                            player.sendMessage("§aSuccessfully teleported.");
                         } catch (e) {
-                            sourceEntity.sendMessage("§cAn error occurred while trying to teleport you to the selected warp: " + e + e.stack);
+                            player.sendMessage("§cAn error occurred while trying to teleport you to the selected warp: " + e + e.stack);
                         }
                     } else {
-                        sourceEntity.sendMessage("§cTeleport canceled.");
+                        player.sendMessage("§cTeleport canceled.");
                     }
                     return 0;
                 case "manageWarps":
-                    if ((await manageWarps(sourceEntity)) == 1) {
-                        return await playerMenu_warps(sourceEntity);
+                    if ((await manageWarps(player)) === 1) {
+                        continue;
                     } else {
                         return 0;
                     }
@@ -139,9 +137,10 @@ export async function playerMenu_warps(sourceEntitya: Entity | executeCommandPla
                 default:
                     return 1;
             }
-        })
-        .catch((e) => {
+        } catch (e) {
             console.error(e, e.stack);
-            return 0;
-        });
+            // Present the error to the user, and return 1 if they select "Back", and 0 if they select "Close".
+            return ((await showMessage(player, "An Error occurred", `An error occurred: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
+        }
+    }
 }

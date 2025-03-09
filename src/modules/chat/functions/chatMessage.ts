@@ -551,7 +551,7 @@ export function chatMessage(
         ) {
             if (
                 world.getDynamicProperty(
-                    "andexdbSettings:chatCommandsEnbaled"
+                    "andexdbSettings:chatCommandsEnabled"
                 ) != false &&
                 newMessage.startsWith(
                     String(

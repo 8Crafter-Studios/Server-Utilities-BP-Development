@@ -1,72 +1,76 @@
-import { Entity, Player } from "@minecraft/server";
-import { ActionFormData, ActionFormResponse, ModalFormData } from "@minecraft/server-ui";
-import { forceShow } from "modules/ui/functions/forceShow";
-import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
+import { Player } from "@minecraft/server";
+import { ActionFormData, ModalFormData } from "@minecraft/server-ui";
 import { showActions } from "modules/utilities/functions/showActions";
 import { vTStr } from "modules/commands/functions/vTStr";
 import { showMessage } from "modules/utilities/functions/showMessage";
 import { coordinatesB } from "modules/coordinates/functions/coordinatesB";
 import { securityVariables } from "security/ultraSecurityModeUtils";
+import { extractPlayerFromLooseEntityType } from "modules/utilities/functions/extractPlayerFromLooseEntityType";
+import type { loosePlayerType } from "modules/utilities/types/loosePlayerType";
 
-export async function manageWarps(sourceEntitya: Entity | executeCommandPlayerW | Player): Promise<0 | 1> {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
-    if (!(sourceEntity instanceof Player)) {
-        throw new TypeError(
-            "Invalid Player. Expected an instance of the Player class, or an instance of the executeCommandPlayerW class with a Player linked to it, but instead got " +
-                (typeof sourceEntity == "object"
-                    ? sourceEntity === null
-                        ? "object[null]"
-                        : "object[" + ((sourceEntity as object).constructor.name ?? "unknown") + "]"
-                    : typeof sourceEntity) +
-                "."
-        );
-    }
-    if (!config.warpsSystem.enabled) {
-        if ((await showMessage(sourceEntity, "Error", `§cSorry but the warps system is currently disabled.`, "Back", "Close")).selection === 0) {
-            return 1;
-        } else {
-            return 0;
-        }
-    }
-    if (securityVariables.ultraSecurityModeEnabled) {
-        if (securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.accessManageWarpsUI") == false) {
-            const r = await showMessage(
-                sourceEntity as Player,
-                "Access Denied (403)",
-                "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.accessManageWarpsUI",
-                "Okay",
-                "Cancel"
-            );
-            if (r.canceled || r.selection == 0) {
-                return 1;
-            } else {
-                return 0;
+/**
+ * Shows the manage warps UI to the player.
+ *
+ * @async
+ * @param {loosePlayerType} sourceEntity - The player viewing the UI.
+ * @returns {Promise<0 | 1>} A promise that resolves to `0` if the previous menu should be closed, or `1` if the previous menu should be reopened.
+ * @throws {TypeError} If sourceEntity is not an instance of the Player class or an instance of the executeCommandPlayerW class with a Player linked to it.
+ *
+ * The function performs the following steps:
+ * 1. Validates the number of arguments and the type of the source entity.
+ * 2. Checks if the player has the necessary permissions to create a custom protected area category.
+ * 3. Checks if the warps system is enabled.
+ * 4. Shows the manage warps UI to the player.
+ * 5. Handles the player's response to the UI, and calls the function according to the response.
+ */
+export async function manageWarps(sourceEntity: loosePlayerType): Promise<0 | 1> {
+    const player = extractPlayerFromLooseEntityType(sourceEntity);
+    while (true) {
+        try {
+            if (!config.warpsSystem.enabled) {
+                if ((await showMessage(player, "Error", `§cSorry but the warps system is currently disabled.`, "Back", "Close")).selection === 0) {
+                    return 1;
+                } else {
+                    return 0;
+                }
             }
-        }
-    } else if (!sourceEntity.hasTag("admin")) {
-        const r = await showMessage(
-            sourceEntity as Player,
-            "Access Denied (403)",
-            "You do not have permission to access this menu. You need the following tag to access this menu: admin",
-            "Okay",
-            "Cancel"
-        );
-        if (r.canceled || r.selection == 0) {
-            return 1;
-        } else {
-            return 0;
-        }
-    }
-    let form = new ActionFormData();
-    form.title("Manage Warps");
-    const warps = config.warpsSystem.warps;
-    warps.forEach((w) => form.button(w.displayName, w.icon));
-    form.button("Add Warp", "textures/ui/color_plus");
-    form.button("Back", "textures/ui/arrow_left");
-    form.button("Close", "textures/ui/crossout");
-    return await forceShow(form, sourceEntity)
-        .then(async (ra) => {
-            let r = ra as ActionFormResponse;
+            if (securityVariables.ultraSecurityModeEnabled) {
+                if (securityVariables.testPlayerForPermission(player as Player, "andexdb.accessManageWarpsUI") == false) {
+                    const r = await showMessage(
+                        player as Player,
+                        "Access Denied (403)",
+                        "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.accessManageWarpsUI",
+                        "Okay",
+                        "Cancel"
+                    );
+                    if (r.canceled || r.selection == 0) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                }
+            } else if (!player.hasTag("admin")) {
+                const r = await showMessage(
+                    player as Player,
+                    "Access Denied (403)",
+                    "You do not have permission to access this menu. You need the following tag to access this menu: admin",
+                    "Okay",
+                    "Cancel"
+                );
+                if (r.canceled || r.selection == 0) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }
+            let form = new ActionFormData();
+            form.title("Manage Warps");
+            const warps = config.warpsSystem.warps;
+            warps.forEach((w) => form.button(w.displayName, w.icon));
+            form.button("Add Warp", "textures/ui/color_plus");
+            form.button("Back", "textures/ui/arrow_left");
+            form.button("Close", "textures/ui/crossout");
+            const r = await form.forceShow(player);
             if (r.canceled) return 1;
 
             switch ((!!warps[r.selection] ? "warp" : undefined) ?? (["newWarp", "back", "close"] as const)[r.selection - warps.length]) {
@@ -77,9 +81,11 @@ export async function manageWarps(sourceEntitya: Entity | executeCommandPlayerW 
                         (["move", "edit", "delete", "back", "close"] as const)[
                             (
                                 await showActions(
-                                    sourceEntity,
+                                    player,
                                     "Warp Details",
-                                    `${warp.displayName}\nDimension: ${dimensionTypeDisplayFormattingD[warp.dimension]}\nLocation: ${vTStr(warp.location)}\nIcon: ${warp.icon}`,
+                                    `${warp.displayName}\nDimension: ${dimensionTypeDisplayFormattingD[warp.dimension]}\nLocation: ${vTStr(
+                                        warp.location
+                                    )}\nIcon: ${warp.icon}`,
                                     ["Move", "textures/ui/move"],
                                     ["Edit", "textures/ui/pencil_edit_icon"],
                                     ["Delete", "textures/ui/trash_default"],
@@ -91,7 +97,7 @@ export async function manageWarps(sourceEntitya: Entity | executeCommandPlayerW 
                     ) {
                         case "move": {
                             const r = await showActions(
-                                sourceEntity,
+                                player,
                                 "Move Warp",
                                 "Would you like to move this warp above or below another warp?",
                                 ["Move Above", "textures/ui/chevron_white_up"],
@@ -100,7 +106,7 @@ export async function manageWarps(sourceEntitya: Entity | executeCommandPlayerW 
                                 ["Close", "textures/ui/crossout"]
                             );
                             if (r.canceled || r.selection === 2) {
-                                return await manageWarps(sourceEntity);
+                                continue;
                             }
                             if (r.selection === 3) {
                                 return 0;
@@ -111,9 +117,9 @@ export async function manageWarps(sourceEntitya: Entity | executeCommandPlayerW 
                             warpsb.forEach((w) => form.button(w.displayName, w.icon));
                             form.button("Back", "textures/ui/arrow_left");
                             form.button("Close", "textures/ui/crossout");
-                            const rb = await form.forceShow(sourceEntity);
+                            const rb = await form.forceShow(player);
                             if (rb.canceled || rb.selection === warpsb.length) {
-                                return await manageWarps(sourceEntity);
+                                continue;
                             }
                             if (rb.selection === warpsb.length + 1) {
                                 return 0;
@@ -126,7 +132,7 @@ export async function manageWarps(sourceEntitya: Entity | executeCommandPlayerW 
                             );
                             currentWarps.splice(destinationIndex, 0, warp);
                             config.warpsSystem.warps = currentWarps;
-                            return await manageWarps(sourceEntity);
+                            continue;
                         }
                         case "edit": {
                             const r = await new ModalFormData()
@@ -140,44 +146,44 @@ export async function manageWarps(sourceEntitya: Entity | executeCommandPlayerW 
                                 )
                                 .textField(`Warp Button Icon Path. (Optional)`, "textures/items/ender_pearl", warp.icon)
                                 .submitButton("Save Changes")
-                                .forceShow(sourceEntity);
+                                .forceShow(player);
                             if (r.canceled) {
-                                return await manageWarps(sourceEntity);
+                                continue;
                             }
                             if (r.formValues?.[0] === "") {
-                                if ((await showMessage(sourceEntity, "Error", `§cPlease specify a name for the warp.`, "Back", "Close")).selection === 0) {
-                                    return await manageWarps(sourceEntity);
+                                if ((await showMessage(player, "Error", `§cPlease specify a name for the warp.`, "Back", "Close")).selection === 0) {
+                                    continue;
                                 } else {
                                     return 0;
                                 }
                             }
                             if (r.formValues?.[1] === "") {
-                                if ((await showMessage(sourceEntity, "Error", `§cPlease specify a location for the warp.`, "Back", "Close")).selection === 0) {
-                                    return await manageWarps(sourceEntity);
+                                if ((await showMessage(player, "Error", `§cPlease specify a location for the warp.`, "Back", "Close")).selection === 0) {
+                                    continue;
                                 } else {
                                     return 0;
                                 }
                             }
                             if (warp.displayName !== r.formValues?.[0] && !!warps.find((w) => w.displayName === r.formValues?.[0])) {
-                                if ((await showMessage(sourceEntity, "Error", `§cYou already have a warp with this name.`, "Back", "Close")).selection === 0) {
-                                    return await manageWarps(sourceEntity);
+                                if ((await showMessage(player, "Error", `§cYou already have a warp with this name.`, "Back", "Close")).selection === 0) {
+                                    continue;
                                 } else {
                                     return 0;
                                 }
                             }
                             warp.dimension = dimensionsd[r.formValues?.[2] as number];
                             warp.displayName = r.formValues?.[0] as string;
-                            warp.location = coordinatesB(r.formValues?.[1] as string, sourceEntity.location, sourceEntity.getViewDirection());
+                            warp.location = coordinatesB(r.formValues?.[1] as string, player.location, player.getViewDirection());
                             warp.icon = (r.formValues?.[3] as string) !== "" ? (r.formValues?.[3] as string) : undefined;
                             config.warpsSystem.warps = warps;
 
-                            return await manageWarps(sourceEntity);
+                            continue;
                         }
                         case "delete": {
                             if (
                                 (
                                     await showMessage(
-                                        sourceEntity as Player,
+                                        player as Player,
                                         "Are You Sure?",
                                         "Are you sure you want to delete this warp!?\nThis action cannot be undone!",
                                         "Cancel",
@@ -187,10 +193,10 @@ export async function manageWarps(sourceEntitya: Entity | executeCommandPlayerW 
                             ) {
                                 config.warpsSystem.warps = warpsb;
                             }
-                            return await manageWarps(sourceEntity);
+                            continue;
                         }
                         case "back":
-                            return await manageWarps(sourceEntity);
+                            continue;
                         case "close":
                             return 0;
                     }
@@ -206,34 +212,34 @@ export async function manageWarps(sourceEntitya: Entity | executeCommandPlayerW 
                         )
                         .textField(`Enter the path to an icon for the warp button below. (Optional)`, "textures/items/ender_pearl")
                         .submitButton("Create Warp")
-                        .forceShow(sourceEntity);
+                        .forceShow(player);
                     if (r.canceled) {
-                        return await manageWarps(sourceEntity);
+                        continue;
                     }
                     if (r.formValues?.[0] === "") {
-                        if ((await showMessage(sourceEntity, "Error", `§cPlease specify a name for the warp.`, "Back", "Close")).selection === 0) {
-                            return await manageWarps(sourceEntity);
+                        if ((await showMessage(player, "Error", `§cPlease specify a name for the warp.`, "Back", "Close")).selection === 0) {
+                            continue;
                         } else {
                             return 0;
                         }
                     }
                     if (r.formValues?.[1] === "") {
-                        if ((await showMessage(sourceEntity, "Error", `§cPlease specify a location for the warp.`, "Back", "Close")).selection === 0) {
-                            return await manageWarps(sourceEntity);
+                        if ((await showMessage(player, "Error", `§cPlease specify a location for the warp.`, "Back", "Close")).selection === 0) {
+                            continue;
                         } else {
                             return 0;
                         }
                     }
                     if (!!warps.find((w) => w.displayName === r.formValues?.[0])) {
-                        if ((await showMessage(sourceEntity, "Error", `§cYou already have a warp with this name.`, "Back", "Close")).selection === 0) {
-                            return await manageWarps(sourceEntity);
+                        if ((await showMessage(player, "Error", `§cYou already have a warp with this name.`, "Back", "Close")).selection === 0) {
+                            continue;
                         } else {
                             return 0;
                         }
                     }
                     const dimension = dimensionsd[r.formValues?.[2] as number];
                     const displayName = r.formValues?.[0] as string;
-                    const location = coordinatesB(r.formValues?.[1] as string, sourceEntity.location, sourceEntity.getViewDirection());
+                    const location = coordinatesB(r.formValues?.[1] as string, player.location, player.getViewDirection());
                     const icon = (r.formValues?.[3] as string) !== "" ? (r.formValues?.[3] as string) : undefined;
                     config.warpsSystem.warps = [
                         ...config.warpsSystem.warps,
@@ -247,7 +253,7 @@ export async function manageWarps(sourceEntitya: Entity | executeCommandPlayerW 
                     if (
                         (
                             await showMessage(
-                                sourceEntity,
+                                player,
                                 "Warp Created",
                                 `You have successfully created a new warp with the name ${JSON.stringify(displayName)}, at ${vTStr(location)} in ${
                                     dimensionTypeDisplayFormatting[dimension]
@@ -257,7 +263,7 @@ export async function manageWarps(sourceEntitya: Entity | executeCommandPlayerW 
                             )
                         ).selection !== 1
                     ) {
-                        return await manageWarps(sourceEntity);
+                        continue;
                     } else {
                         return 0;
                     }
@@ -269,9 +275,10 @@ export async function manageWarps(sourceEntitya: Entity | executeCommandPlayerW 
                 default:
                     return 1;
             }
-        })
-        .catch(async (e) => {
+        } catch (e) {
             console.error(e, e.stack);
-            return ((await showMessage(sourceEntity, "An Error occurred", `An error occurred: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
-        });
+            // Present the error to the user, and return 1 if they select "Back", and 0 if they select "Close".
+            return ((await showMessage(player, "An Error occurred", `An error occurred: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
+        }
+    }
 }

@@ -1,7 +1,5 @@
-import { Entity, Player } from "@minecraft/server";
-import { ActionFormData, ActionFormResponse } from "@minecraft/server-ui";
-import { forceShow } from "modules/ui/functions/forceShow";
-import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
+import { Player } from "@minecraft/server";
+import { ActionFormData } from "@minecraft/server-ui";
 import { showMessage } from "modules/utilities/functions/showMessage";
 import { menuButtonIds } from "../constants/menuButtonIds";
 import type { menuButtonIdsType } from "../types/menuButtonIdsType";
@@ -16,74 +14,69 @@ import { playerMenu_warps } from "./playerMenu_warps";
 import { playerMenu_moneyTransfer } from "./playerMenu_moneyTransfer";
 import { playerMenu_redeemCode } from "./playerMenu_redeemCode";
 import { customFormUICodes } from "../constants/customFormUICodes";
+import type { loosePlayerType } from "modules/utilities/types/loosePlayerType";
+import { extractPlayerFromLooseEntityType } from "modules/utilities/functions/extractPlayerFromLooseEntityType";
 
 /**
- * @description Opens the player menu.
- * @param {Entity | executeCommandPlayerW | Player} sourceEntitya - The entity which should open the player menu.
- * @returns {Promise<0>} A promise which resolves to 0 once the player menu has been closed.
- * @throws TypeError - If the type of sourceEntitya is not an instance of the Player class, or an instance of the executeCommandPlayerW class with a Player linked to it.
+ * Opens the player menu.
+ *
+ * @async
+ * @param {loosePlayerType} sourceEntity - The player viewing the UI.
+ * @returns {Promise<0>} A promise that resolves to `0` once the player menu has been closed.
+ * @throws {TypeError} If sourceEntity is not an instance of the Player class or an instance of the executeCommandPlayerW class with a Player linked to it.
  */
-export async function playerMenu(sourceEntitya: Entity | executeCommandPlayerW | Player): Promise<0> {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
-    if (!(sourceEntity instanceof Player)) {
-        throw new TypeError(
-            "Invalid Player. Expected an instance of the Player class, or an instance of the executeCommandPlayerW class with a Player linked to it, but instead got " +
-                (typeof sourceEntity == "object"
-                    ? sourceEntity === null
-                        ? "object[null]"
-                        : "object[" + ((sourceEntity as object).constructor.name ?? "unknown") + "]"
-                    : typeof sourceEntity) +
-                "."
-        );
-    }
-    if (!config.ui.menus.playerMenu.enabled) {
-        const r = await showMessage(
-            sourceEntity as Player,
-            "Menu Disabled",
-            "The player menu is disabled. It must be enabled in Main Menu > Settings > Player Menu.",
-            "Back",
-            "Cancel"
-        );
-        if (r.canceled || r.selection == 0) {
-            return 0;
-        } else {
-            return 0;
-        }
-    }
-    const menuConfig = config.ui.menus.playerMenu;
-    // menuConfig.buttons.map(k=>[k, menuButtonIds.mainMenu.buttons[k]])
-    const buttons = (
-        menuConfig.buttons.map((k) => [k, menuButtonIds.playerMenu.buttons[k]]) as [
-            keyof typeof menuButtonIds.playerMenu.buttons,
-            (typeof menuButtonIds.playerMenu.buttons)[keyof typeof menuButtonIds.playerMenu.buttons]
-        ][]
-    ).filter(([k, b]) => {
-        if (!menuConfig.showDeprecatedButtons && b.deprecated) {
-            return false;
-        }
-        if (!menuConfig.showExperimentalButtons && b.experimental) {
-            return false;
-        }
-        if (!menuConfig.showNonFunctionalButtons && !b.functional && !(menuConfig.showUpcomingButtons && b.upcoming)) {
-            return false;
-        }
-        if (!menuConfig.showUnusedButtons && b.unused) {
-            return false;
-        }
-        if (!menuConfig.showUpcomingButtons && b.upcoming) {
-            return false;
-        }
-        if ((b as menuButtonIdsType[string]["buttons"][string]).extraVisibilityConditionsCheck !== undefined) {
-            return (b as menuButtonIdsType[string]["buttons"][string]).extraVisibilityConditionsCheck();
-        }
-        return true;
-    });
-    let form = new ActionFormData();
-    form.title(customFormUICodes.action.titles.formStyles.gridMenu + "Player Menu");
-    form.body("Hello " + sourceEntity.name);
-    buttons.forEach(([k, b]) => {
-        form.button(customFormUICodes.action.buttons.positions.main_only + b.displayName, b.icon);
-    }); /* 
+export async function playerMenu(sourceEntity: loosePlayerType): Promise<0> {
+    const player = extractPlayerFromLooseEntityType(sourceEntity);
+    while (true) {
+        try {
+            if (!config.ui.menus.playerMenu.enabled) {
+                const r = await showMessage(
+                    player as Player,
+                    "Menu Disabled",
+                    "The player menu is disabled. It must be enabled in Main Menu > Settings > Player Menu.",
+                    "Back",
+                    "Cancel"
+                );
+                if (r.canceled || r.selection == 0) {
+                    return 0;
+                } else {
+                    return 0;
+                }
+            }
+            const menuConfig = config.ui.menus.playerMenu;
+            // menuConfig.buttons.map(k=>[k, menuButtonIds.mainMenu.buttons[k]])
+            const buttons = (
+                menuConfig.buttons.map((k) => [k, menuButtonIds.playerMenu.buttons[k]]) as [
+                    keyof typeof menuButtonIds.playerMenu.buttons,
+                    (typeof menuButtonIds.playerMenu.buttons)[keyof typeof menuButtonIds.playerMenu.buttons]
+                ][]
+            ).filter(([k, b]) => {
+                if (!menuConfig.showDeprecatedButtons && b.deprecated) {
+                    return false;
+                }
+                if (!menuConfig.showExperimentalButtons && b.experimental) {
+                    return false;
+                }
+                if (!menuConfig.showNonFunctionalButtons && !b.functional && !(menuConfig.showUpcomingButtons && b.upcoming)) {
+                    return false;
+                }
+                if (!menuConfig.showUnusedButtons && b.unused) {
+                    return false;
+                }
+                if (!menuConfig.showUpcomingButtons && b.upcoming) {
+                    return false;
+                }
+                if ((b as menuButtonIdsType[string]["buttons"][string]).extraVisibilityConditionsCheck !== undefined) {
+                    return (b as menuButtonIdsType[string]["buttons"][string]).extraVisibilityConditionsCheck();
+                }
+                return true;
+            });
+            let form = new ActionFormData();
+            form.title(customFormUICodes.action.titles.formStyles.gridMenu + "Player Menu");
+            form.body("Hello " + player.name);
+            buttons.forEach(([k, b]) => {
+                form.button(customFormUICodes.action.buttons.positions.main_only + b.displayName, b.icon);
+            }); /* 
     form.button("Editor Stick", "textures/items/stick");
     form.button("Editor Stick Menu B", "textures/items/stick");
     form.button("Editor Stick Menu C", "textures/items/stick");
@@ -141,58 +134,56 @@ form.button("Entity Debugger", "textures/ui/debug_glyph_color");*/ /*
         "§eJava NBT Structure Loader §f[§cAlpha§f]",
         "textures/ui/xyz_axis"
     ); */
-    // form.button("Close", "textures/ui/crossout");
-    return await forceShow(form, sourceEntity)
-        .then(async (ra) => {
-            let r = ra as ActionFormResponse;
+            // form.button("Close", "textures/ui/crossout");
+            const r = await form.forceShow(player);
             if (r.canceled) return 0;
 
             switch (buttons[r.selection]?.[0] ?? (["close"] as const)[r.selection - buttons.length]) {
                 case "leaderboards":
-                    if ((await playerMenu_leaderboards(sourceEntity)) == 1) {
-                        return await playerMenu(sourceEntity);
+                    if ((await playerMenu_leaderboards(player)) === 1) {
+                        continue;
                     } else {
                         return 0;
                     }
                 case "homes":
-                    if ((await playerMenu_homes(sourceEntity)) == 1) {
-                        return await playerMenu(sourceEntity);
+                    if ((await playerMenu_homes(player)) === 1) {
+                        continue;
                     } else {
                         return 0;
                     }
                 case "TPA":
-                    if ((await playerMenu_TPA(sourceEntity)) == 1) {
-                        return await playerMenu(sourceEntity);
+                    if ((await playerMenu_TPA(player)) === 1) {
+                        continue;
                     } else {
                         return 0;
                     }
                 case "warps":
-                    if ((await playerMenu_warps(sourceEntity)) == 1) {
-                        return await playerMenu(sourceEntity);
+                    if ((await playerMenu_warps(player)) === 1) {
+                        continue;
                     } else {
                         return 0;
                     }
                 case "bounties":
-                    if ((await playerMenu_bounties(sourceEntity)) == 1) {
-                        return await playerMenu(sourceEntity);
+                    if ((await playerMenu_bounties(player)) === 1) {
+                        continue;
                     } else {
                         return 0;
                     }
                 case "serverShops":
-                    if ((await ServerShop.openPublicShopsSelector(sourceEntity, true)) == 1) {
-                        return await playerMenu(sourceEntity);
+                    if ((await ServerShop.openPublicShopsSelector(player, true)) === 1) {
+                        continue;
                     } else {
                         return 0;
                     }
                 case "playerShops":
-                    if ((await PlayerShop.openPublicShopsSelector(sourceEntity, true)) == 1) {
-                        return await playerMenu(sourceEntity);
+                    if ((await PlayerShop.openPublicShopsSelector(player, true)) === 1) {
+                        continue;
                     } else {
                         return 0;
                     }
                 case "moneyTransfer":
-                    if ((await playerMenu_moneyTransfer(sourceEntity)) == 1) {
-                        return await playerMenu(sourceEntity);
+                    if ((await playerMenu_moneyTransfer(player)) === 1) {
+                        continue;
                     } else {
                         return 0;
                     }
@@ -200,29 +191,28 @@ form.button("Entity Debugger", "textures/ui/debug_glyph_color");*/ /*
                     /**
                      * @todo Implement daily rewards system
                      */
-                    return await showMessage(sourceEntity as Player, undefined, "§cSorry, the daily rewards system does not exist yet.", "Back", "Close").then(
-                        async (r) => {
-                            if (r.selection === 0) {
-                                return await playerMenu(sourceEntity);
-                            } else {
-                                return 0;
-                            }
-                        }
-                    ); /* 
-                    if ((await playerMenu_dailyRewards(sourceEntity)) == 1) {
-                        return await playerMenu(sourceEntity);
+                    if (
+                        (await showMessage(player as Player, undefined, "§cSorry, the daily rewards system does not exist yet.", "Back", "Close")).selection !==
+                        1
+                    ) {
+                        continue;
+                    } else {
+                        return 0;
+                    } /* 
+                    if ((await playerMenu_dailyRewards(sourceEntity)) === 1) {
+                        continue;
                     } else {
                         return 0;
                     } */
                 case "redeemCode":
-                    if ((await playerMenu_redeemCode(sourceEntity)) == 1) {
-                        return await playerMenu(sourceEntity);
+                    if ((await playerMenu_redeemCode(player)) === 1) {
+                        continue;
                     } else {
                         return 0;
                     }
                 case "about":
-                    if ((await playerMenu_about(sourceEntity)) == 1) {
-                        return await playerMenu(sourceEntity);
+                    if ((await playerMenu_about(player)) === 1) {
+                        continue;
                     } else {
                         return 0;
                     }
@@ -231,10 +221,11 @@ form.button("Entity Debugger", "textures/ui/debug_glyph_color");*/ /*
                 default:
                     return 0;
             }
-        })
-        .catch(async (e) => {
+        } catch (e) {
             console.error(e, e.stack);
-            return (((await showMessage(sourceEntity, "An Error occurred", `An error occurred: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber() *
+            // Present the error to the user, and return 0 if they select "Back", and 0 if they select "Close".
+            return (((await showMessage(player, "An Error occurred", `An error occurred: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber() *
                 0) as 0;
-        });
+        }
+    }
 }

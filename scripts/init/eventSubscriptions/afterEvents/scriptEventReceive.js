@@ -8,6 +8,7 @@ import { targetSelectorAllListE } from "modules/command_utilities/functions/targ
 import { targetSelectorB } from "modules/command_utilities/functions/targetSelectorB";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { chatCommands } from "modules/commands/functions/chatCommands";
+import { vTStr } from "modules/commands/functions/vTStr";
 import { WorldPosition } from "modules/coordinates/classes/WorldPosition";
 import { coordinates } from "modules/coordinates/functions/coordinates";
 import { evaluateCoordinates } from "modules/coordinates/functions/evaluateCoordinates";
@@ -5273,7 +5274,7 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
         form2.textField("§l§fchatRankPrefix§r§f\nPrefix for chat ranks, default is rank:", "string", String(world.getDynamicProperty("andexdbSettings:chatRankPrefix") ?? "rank:"));
         form2.textField("§l§fchatSudoPrefix§r§f\nPrefix for custom chat names, default is sudo:", "string", String(world.getDynamicProperty("andexdbSettings:chatSudoPrefix") ?? "sudo:"));
         form2.textField("§l§fgametestStructureDefaultSpawnLocation§r§f\nThe default spawn locations for the gametest structure, this is used when spawning in no ai entities or spawning in simulated player", "x, y, z", Object.values(world.getDynamicProperty("andexdbSettings:gametestStructureDefaultSpawnLocation") ?? {}).join(", "));
-        form2.toggle("§l§fchatCommandsEnbaled§r§f\nSets whether or not to enable the chat commands, default is true", Boolean(world.getDynamicProperty("andexdbSettings:chatCommandsEnbaled") ?? true));
+        form2.toggle("§l§fchatCommandsEnabled§r§f\nSets whether or not to enable the chat commands, default is true", Boolean(world.getDynamicProperty("andexdbSettings:chatCommandsEnabled") ?? true));
         form2.toggle("§l§fdisableCustomChatMessages§r§f\nDisables the chat ranks and custom chat names, default is false", Boolean(world.getDynamicProperty("andexdbSettings:disableCustomChatMessages") ?? false));
         form2.toggle("§l§fsendMessageOnInvalidChatCommand§r§f\nMakes the chat command still send as a chat message if that specific chat command does not exist, default is false", Boolean(world.getDynamicProperty("andexdbSettings:sendMessageOnInvalidChatCommand") ?? false));
         form2.toggle("§l§fallowCustomChatMessagesMuting§r§f\nAllows the chat mute button to work on the custom chat messages by using the /tellraw command instead of the world.sendMessage() function, a side-effect of this is that it will cause a 1 tick delay in chat messages, default is false", Boolean(world.getDynamicProperty("andexdbSettings:allowCustomChatMessagesMuting") ?? false));
@@ -5287,13 +5288,13 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
             GameTest.Test.prototype.spawnSimulatedPlayer({x: 0, y: 0, z: 0})*/ /*
             ${se}GameTest.Test.prototype.spawnSimulatedPlayer({x: 0, y: 0, z: 0})*/ /*
         
-            let [ chatCommandPrefix, validChatCommandPrefixes, chatRankPrefix, chatSudoPrefix, gametestStructureDefaultSpawnLocation, chatCommandsEnbaled, disableCustomChatMessages, sendMessageOnInvalidChatCommand, allowCustomChatMessagesMuting, autoEscapeChatMessages, autoURIEscapeChatMessages, allowChatEscapeCodes, autoSavePlayerData, bepl, beppb, aebe, aepl ] = t.formValues;
+            let [ chatCommandPrefix, validChatCommandPrefixes, chatRankPrefix, chatSudoPrefix, gametestStructureDefaultSpawnLocation, chatCommandsEnabled, disableCustomChatMessages, sendMessageOnInvalidChatCommand, allowCustomChatMessagesMuting, autoEscapeChatMessages, autoURIEscapeChatMessages, allowChatEscapeCodes, autoSavePlayerData, bepl, beppb, aebe, aepl ] = t.formValues;
             world.setDynamicProperty("andexdbSettings:chatCommandPrefix", chatCommandPrefix)
             world.setDynamicProperty("andexdbSettings:validChatCommandPrefixes", validChatCommandPrefixes)
             world.setDynamicProperty("andexdbSettings:chatRankPrefix", chatRankPrefix)
             world.setDynamicProperty("andexdbSettings:chatSudoPrefix", chatSudoPrefix)
             if(String(gametestStructureDefaultSpawnLocation) != ""){world.setDynamicProperty("andexdbSettings:gametestStructureDefaultSpawnLocation", {x: Number(String(gametestStructureDefaultSpawnLocation).split(", ")[0]), y: Number(String(gametestStructureDefaultSpawnLocation).split(", ")[1]), z: Number(String(gametestStructureDefaultSpawnLocation).split(", ")[2])})}
-            world.setDynamicProperty("andexdbSettings:chatCommandsEnbaled", chatCommandsEnbaled)
+            world.setDynamicProperty("andexdbSettings:chatCommandsEnabled", chatCommandsEnabled)
             world.setDynamicProperty("andexdbSettings:disableCustomChatMessages", disableCustomChatMessages)
             world.setDynamicProperty("andexdbSettings:sendMessageOnInvalidChatCommand", sendMessageOnInvalidChatCommand)
             world.setDynamicProperty("andexdbSettings:allowCustomChatMessagesMuting", allowCustomChatMessagesMuting)
@@ -5324,7 +5325,7 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
                     form2.textField("§l§fchatRankPrefix§r§f\nPrefix for chat ranks, default is rank:", "string", String(world.getDynamicProperty("andexdbSettings:chatRankPrefix") ?? "rank:"));
                     form2.textField("§l§fchatSudoPrefix§r§f\nPrefix for custom chat names, default is sudo:", "string", String(world.getDynamicProperty("andexdbSettings:chatSudoPrefix") ?? "sudo:"));
                     form2.textField("§l§fgametestStructureDefaultSpawnLocation§r§f\nThe default spawn locations for the gametest structure, this is used when spawning in no ai entities or spawning in simulated player", "x, y, z", Object.values(world.getDynamicProperty("andexdbSettings:gametestStructureDefaultSpawnLocation") ?? {}).join(", "));
-                    form2.toggle("§l§fchatCommandsEnbaled§r§f\nSets whether or not to enable the chat commands, default is true", Boolean(world.getDynamicProperty("andexdbSettings:chatCommandsEnbaled") ?? true));
+                    form2.toggle("§l§fchatCommandsEnabled§r§f\nSets whether or not to enable the chat commands, default is true", Boolean(world.getDynamicProperty("andexdbSettings:chatCommandsEnabled") ?? true));
                     form2.toggle("§l§fdisableCustomChatMessages§r§f\nDisables the chat ranks and custom chat names, default is false", Boolean(world.getDynamicProperty("andexdbSettings:disableCustomChatMessages") ?? false));
                     form2.toggle("§l§fsendMessageOnInvalidChatCommand§r§f\nMakes the chat command still send as a chat message if that specific chat command does not exist, default is false", Boolean(world.getDynamicProperty("andexdbSettings:sendMessageOnInvalidChatCommand") ?? false));
                     form2.toggle("§l§fallowCustomChatMessagesMuting§r§f\nAllows the chat mute button to work on the custom chat messages by using the /tellraw command instead of the world.sendMessage() function, a side-effect of this is that it will cause a 1 tick delay in chat messages, default is false", Boolean(world.getDynamicProperty("andexdbSettings:allowCustomChatMessagesMuting") ?? false));
@@ -5338,13 +5339,13 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
     GameTest.Test.prototype.spawnSimulatedPlayer({x: 0, y: 0, z: 0})*/ /*
                 ${se}GameTest.Test.prototype.spawnSimulatedPlayer({x: 0, y: 0, z: 0})*/ /*
         
-            let [ timeZone, validChatCommandPrefixes, chatRankPrefix, chatSudoPrefix, gametestStructureDefaultSpawnLocation, chatCommandsEnbaled, disableCustomChatMessages, sendMessageOnInvalidChatCommand, allowCustomChatMessagesMuting, autoEscapeChatMessages, autoURIEscapeChatMessages, allowChatEscapeCodes, autoSavePlayerData, bepl, beppb, aebe, aepl ] = t.formValues;
+            let [ timeZone, validChatCommandPrefixes, chatRankPrefix, chatSudoPrefix, gametestStructureDefaultSpawnLocation, chatCommandsEnabled, disableCustomChatMessages, sendMessageOnInvalidChatCommand, allowCustomChatMessagesMuting, autoEscapeChatMessages, autoURIEscapeChatMessages, allowChatEscapeCodes, autoSavePlayerData, bepl, beppb, aebe, aepl ] = t.formValues;
             sourceEntity.setDynamicProperty("andexdbPersonalSettings:timeZone", timeZone)*/ /*
             world.setDynamicProperty("andexdbSettings:validChatCommandPrefixes", validChatCommandPrefixes)
             world.setDynamicProperty("andexdbSettings:chatRankPrefix", chatRankPrefix)
             world.setDynamicProperty("andexdbSettings:chatSudoPrefix", chatSudoPrefix)
             if(String(gametestStructureDefaultSpawnLocation) != ""){world.setDynamicProperty("andexdbSettings:gametestStructureDefaultSpawnLocation", {x: Number(String(gametestStructureDefaultSpawnLocation).split(", ")[0]), y: Number(String(gametestStructureDefaultSpawnLocation).split(", ")[1]), z: Number(String(gametestStructureDefaultSpawnLocation).split(", ")[2])})}
-            world.setDynamicProperty("andexdbSettings:chatCommandsEnbaled", chatCommandsEnbaled)
+            world.setDynamicProperty("andexdbSettings:chatCommandsEnabled", chatCommandsEnabled)
             world.setDynamicProperty("andexdbSettings:disableCustomChatMessages", disableCustomChatMessages)
             world.setDynamicProperty("andexdbSettings:sendMessageOnInvalidChatCommand", sendMessageOnInvalidChatCommand)
             world.setDynamicProperty("andexdbSettings:allowCustomChatMessagesMuting", allowCustomChatMessagesMuting)
@@ -8304,30 +8305,40 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
         if (id == "andexdb:spawnWithNoAI") {
             let parameters = message.split("|"); /*
         console.warn(JSON.parse("{hisa: 1}"))*/
-            if ((world.getDynamicProperty("andexdbSettings:gametestStructureDefaultSpawnLocation") == undefined ||
-                world.getDynamicProperty("andexdbSettings:gametestStructureDefaultSpawnLocation")?.x == undefined) &&
+            /* if ((world.getDynamicProperty(
+                "andexdbSettings:gametestStructureDefaultSpawnLocation"
+            ) == undefined ||
+                (
+                    world.getDynamicProperty(
+                        "andexdbSettings:gametestStructureDefaultSpawnLocation"
+                    ) as Vector3
+                )?.x == undefined) &&
                 String(parameters[3]) == "") {
                 if ((initiator ?? sourceEntity) == undefined) {
                     if (sourceType == ScriptEventSource.Server) {
-                        console.error('§cERROR: Default GameTest structure spawn location is currently not set or is invalid, please set it with the spawn_without_behaviors_internal option at "Main Menu>Settings>General Settings" or specify a location in the fourth parameter. ');
-                    }
-                    else {
-                        console.error('§cERROR: Default GameTest structure spawn location is currently not set or is invalid, please set it with the spawn_without_behaviors_internal option at "Main Menu>Settings>General Settings" or specify a location in the fourth parameter. Block Location: ' +
+                        console.error(
+                            '§cERROR: Default GameTest structure spawn location is currently not set or is invalid, please set it with the spawn_without_behaviors_internal option at "Main Menu>Settings>General Settings" or specify a location in the fourth parameter. '
+                        );
+                    } else {
+                        console.error(
+                            '§cERROR: Default GameTest structure spawn location is currently not set or is invalid, please set it with the spawn_without_behaviors_internal option at "Main Menu>Settings>General Settings" or specify a location in the fourth parameter. Block Location: ' +
                             JSON.stringify(sourceBlock.location) +
                             ", Block Dimension: " +
-                            sourceBlock.dimension);
+                            sourceBlock.dimension
+                        );
                     }
-                }
-                else {
-                    (initiator ?? sourceEntity).sendMessage('§cERROR: Default GameTest structure spawn location is currently not set or is invalid, please set it with the spawn_without_behaviors_internal option at "Main Menu>Settings>General Settings" or specify a location in the fourth parameter. ');
+                } else {
+                    ((initiator ?? sourceEntity) as Player).sendMessage(
+                        '§cERROR: Default GameTest structure spawn location is currently not set or is invalid, please set it with the spawn_without_behaviors_internal option at "Main Menu>Settings>General Settings" or specify a location in the fourth parameter. '
+                    );
                 }
                 return;
-            }
+            } */
             let location = (initiator ?? sourceEntity ?? sourceBlock)
                 ?.location ?? { x: 0, y: 0, z: 0 };
             let location2;
             try {
-                location2 = Object.values(world.getDynamicProperty("andexdbSettings:gametestStructureDefaultSpawnLocation")).join(" ");
+                location2 = vTStr(config.gametestStructureDefaultSpawnLocation);
             }
             catch { }
             try {
@@ -8370,49 +8381,51 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
             catch (e) {
                 console.error(e, e.stack);
             }
-            try {
-                location2 = Object.values(evaluateCoordinates(parameters[3]
-                    .split("~")
-                    .join(" ~")
-                    .split("^")
-                    .join(" ^")
-                    .split("*")
-                    .join(" *")
-                    .replaceAll("  ", " ")
-                    .trimStart()
-                    .split(" ")[0]
-                    .replaceAll(" ", ""), parameters[3]
-                    .split("~")
-                    .join(" ~")
-                    .split("^")
-                    .join(" ^")
-                    .split("*")
-                    .join(" *")
-                    .replaceAll("  ", " ")
-                    .trimStart()
-                    .split(" ")[1]
-                    .replaceAll(" ", ""), parameters[3]
-                    .split("~")
-                    .join(" ~")
-                    .split("^")
-                    .join(" ^")
-                    .split("*")
-                    .join(" *")
-                    .replaceAll("  ", " ")
-                    .trimStart()
-                    .split(" ")[2]
-                    .replaceAll(" ", ""), (initiator ?? sourceEntity ?? sourceBlock)
-                    ?.location ?? { x: 0, y: 0, z: 0 }, (initiator ?? sourceEntity)?.getRotation() ?? {
-                    x: 0,
-                    y: 0,
-                })).join(" ");
-            }
-            catch (e) {
-                console.error(e, e.stack);
+            if (parameters[3] !== "") {
+                try {
+                    location2 = Object.values(evaluateCoordinates(parameters[3]
+                        .split("~")
+                        .join(" ~")
+                        .split("^")
+                        .join(" ^")
+                        .split("*")
+                        .join(" *")
+                        .replaceAll("  ", " ")
+                        .trimStart()
+                        .split(" ")[0]
+                        .replaceAll(" ", ""), parameters[3]
+                        .split("~")
+                        .join(" ~")
+                        .split("^")
+                        .join(" ^")
+                        .split("*")
+                        .join(" *")
+                        .replaceAll("  ", " ")
+                        .trimStart()
+                        .split(" ")[1]
+                        .replaceAll(" ", ""), parameters[3]
+                        .split("~")
+                        .join(" ~")
+                        .split("^")
+                        .join(" ^")
+                        .split("*")
+                        .join(" *")
+                        .replaceAll("  ", " ")
+                        .trimStart()
+                        .split(" ")[2]
+                        .replaceAll(" ", ""), (initiator ?? sourceEntity ?? sourceBlock)
+                        ?.location ?? { x: 0, y: 0, z: 0 }, (initiator ?? sourceEntity)?.getRotation() ?? {
+                        x: 0,
+                        y: 0,
+                    })).join(" ");
+                }
+                catch (e) {
+                    console.error(e, e.stack);
+                }
             }
             world.setDynamicProperty("andexdbGametest:spawnWithoutBehaviorsInternalLocation", location);
             world.setDynamicProperty("andexdbGametest:spawnWithoutBehaviorsInternalType", parameters[0]);
-            console.warn(location2);
+            // console.warn(location2);
             try {
                 world
                     .getDimension(parameters[2] ??
@@ -8436,30 +8449,40 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
         if (id == "andexdb:spawnSimulatedPlayer") {
             let parameters = message.split("|"); /*
         console.warn(JSON.parse("{hisa: 1}"))*/
-            if ((world.getDynamicProperty("andexdbSettings:gametestStructureDefaultSpawnLocation") == undefined ||
-                world.getDynamicProperty("andexdbSettings:gametestStructureDefaultSpawnLocation")?.x == undefined) &&
+            /* if ((world.getDynamicProperty(
+                "andexdbSettings:gametestStructureDefaultSpawnLocation"
+            ) == undefined ||
+                (
+                    world.getDynamicProperty(
+                        "andexdbSettings:gametestStructureDefaultSpawnLocation"
+                    ) as Vector3
+                )?.x == undefined) &&
                 String(parameters[3]) == "") {
                 if ((initiator ?? sourceEntity) == undefined) {
                     if (sourceType == ScriptEventSource.Server) {
-                        console.error('§cERROR: Default GameTest structure spawn location is currently not set or is invalid, please set it with the spawn_without_behaviors_internal option at "Main Menu>Settings>General Settings" or specify a location in the fourth parameter. ');
-                    }
-                    else {
-                        console.error('§cERROR: Default GameTest structure spawn location is currently not set or is invalid, please set it with the spawn_without_behaviors_internal option at "Main Menu>Settings>General Settings" or specify a location in the fourth parameter. Block Location: ' +
+                        console.error(
+                            '§cERROR: Default GameTest structure spawn location is currently not set or is invalid, please set it with the spawn_without_behaviors_internal option at "Main Menu>Settings>General Settings" or specify a location in the fourth parameter. '
+                        );
+                    } else {
+                        console.error(
+                            '§cERROR: Default GameTest structure spawn location is currently not set or is invalid, please set it with the spawn_without_behaviors_internal option at "Main Menu>Settings>General Settings" or specify a location in the fourth parameter. Block Location: ' +
                             JSON.stringify(sourceBlock.location) +
                             ", Block Dimension: " +
-                            sourceBlock.dimension);
+                            sourceBlock.dimension
+                        );
                     }
-                }
-                else {
-                    (initiator ?? sourceEntity).sendMessage('§cERROR: Default GameTest structure spawn location is currently not set or is invalid, please set it with the spawn_without_behaviors_internal option at "Main Menu>Settings>General Settings" or specify a location in the fourth parameter. ');
+                } else {
+                    ((initiator ?? sourceEntity) as Player).sendMessage(
+                        '§cERROR: Default GameTest structure spawn location is currently not set or is invalid, please set it with the spawn_without_behaviors_internal option at "Main Menu>Settings>General Settings" or specify a location in the fourth parameter. '
+                    );
                 }
                 return;
-            }
+            } */
             let location = (initiator ?? sourceEntity ?? sourceBlock)
                 ?.location ?? { x: 0, y: 0, z: 0 };
             let location2;
             try {
-                location2 = Object.values(world.getDynamicProperty("andexdbSettings:gametestStructureDefaultSpawnLocation")).join(" ");
+                location2 = vTStr(config.gametestStructureDefaultSpawnLocation);
             }
             catch { }
             try {
@@ -8502,49 +8525,51 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
             catch (e) {
                 console.error(e, e.stack);
             }
-            try {
-                location2 = Object.values(evaluateCoordinates(parameters[3]
-                    .split("~")
-                    .join(" ~")
-                    .split("^")
-                    .join(" ^")
-                    .split("*")
-                    .join(" *")
-                    .replaceAll("  ", " ")
-                    .trimStart()
-                    .split(" ")[0]
-                    .replaceAll(" ", ""), parameters[3]
-                    .split("~")
-                    .join(" ~")
-                    .split("^")
-                    .join(" ^")
-                    .split("*")
-                    .join(" *")
-                    .replaceAll("  ", " ")
-                    .trimStart()
-                    .split(" ")[1]
-                    .replaceAll(" ", ""), parameters[3]
-                    .split("~")
-                    .join(" ~")
-                    .split("^")
-                    .join(" ^")
-                    .split("*")
-                    .join(" *")
-                    .replaceAll("  ", " ")
-                    .trimStart()
-                    .split(" ")[2]
-                    .replaceAll(" ", ""), (initiator ?? sourceEntity ?? sourceBlock)
-                    ?.location ?? { x: 0, y: 0, z: 0 }, (initiator ?? sourceEntity)?.getRotation() ?? {
-                    x: 0,
-                    y: 0,
-                })).join(" ");
-            }
-            catch (e) {
-                console.error(e, e.stack);
+            if (parameters[3] !== "") {
+                try {
+                    location2 = Object.values(evaluateCoordinates(parameters[3]
+                        .split("~")
+                        .join(" ~")
+                        .split("^")
+                        .join(" ^")
+                        .split("*")
+                        .join(" *")
+                        .replaceAll("  ", " ")
+                        .trimStart()
+                        .split(" ")[0]
+                        .replaceAll(" ", ""), parameters[3]
+                        .split("~")
+                        .join(" ~")
+                        .split("^")
+                        .join(" ^")
+                        .split("*")
+                        .join(" *")
+                        .replaceAll("  ", " ")
+                        .trimStart()
+                        .split(" ")[1]
+                        .replaceAll(" ", ""), parameters[3]
+                        .split("~")
+                        .join(" ~")
+                        .split("^")
+                        .join(" ^")
+                        .split("*")
+                        .join(" *")
+                        .replaceAll("  ", " ")
+                        .trimStart()
+                        .split(" ")[2]
+                        .replaceAll(" ", ""), (initiator ?? sourceEntity ?? sourceBlock)
+                        ?.location ?? { x: 0, y: 0, z: 0 }, (initiator ?? sourceEntity)?.getRotation() ?? {
+                        x: 0,
+                        y: 0,
+                    })).join(" ");
+                }
+                catch (e) {
+                    console.error(e, e.stack);
+                }
             }
             world.setDynamicProperty("andexdbGametest:spawnSimulatedPlayerInternalLocation", location);
             world.setDynamicProperty("andexdbGametest:customSimulatedPlayerInternalName", parameters[0]);
-            console.warn(location2);
+            // console.warn(location2);
             try {
                 world
                     .getDimension(parameters[2] ??
@@ -8568,69 +8593,81 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
         if (id == "andexdb:scriptEvalWithGameTest") {
             let parameters = message.split("|"); /*
         console.warn(JSON.parse("{hisa: 1}"))*/
-            if ((world.getDynamicProperty("andexdbSettings:gametestStructureDefaultSpawnLocation") == undefined ||
-                world.getDynamicProperty("andexdbSettings:gametestStructureDefaultSpawnLocation")?.x == undefined) &&
+            /* if ((world.getDynamicProperty(
+                "andexdbSettings:gametestStructureDefaultSpawnLocation"
+            ) == undefined ||
+                (
+                    world.getDynamicProperty(
+                        "andexdbSettings:gametestStructureDefaultSpawnLocation"
+                    ) as Vector3
+                )?.x == undefined) &&
                 String(parameters[3]) == "") {
                 if ((initiator ?? sourceEntity) == undefined) {
                     if (sourceType == ScriptEventSource.Server) {
-                        console.error('§cERROR: Default GameTest structure spawn location is currently not set or is invalid, please set it with the spawn_without_behaviors_internal option at "Main Menu>Settings>General Settings" or specify a location in the fourth parameter. ');
-                    }
-                    else {
-                        console.error('§cERROR: Default GameTest structure spawn location is currently not set or is invalid, please set it with the spawn_without_behaviors_internal option at "Main Menu>Settings>General Settings" or specify a location in the fourth parameter. Block Location: ' +
+                        console.error(
+                            '§cERROR: Default GameTest structure spawn location is currently not set or is invalid, please set it with the spawn_without_behaviors_internal option at "Main Menu>Settings>General Settings" or specify a location in the fourth parameter. '
+                        );
+                    } else {
+                        console.error(
+                            '§cERROR: Default GameTest structure spawn location is currently not set or is invalid, please set it with the spawn_without_behaviors_internal option at "Main Menu>Settings>General Settings" or specify a location in the fourth parameter. Block Location: ' +
                             JSON.stringify(sourceBlock.location) +
                             ", Block Dimension: " +
-                            sourceBlock.dimension);
+                            sourceBlock.dimension
+                        );
                     }
-                }
-                else {
-                    (initiator ?? sourceEntity).sendMessage('§cERROR: Default GameTest structure spawn location is currently not set or is invalid, please set it with the spawn_without_behaviors_internal option at "Main Menu>Settings>General Settings" or specify a location in the fourth parameter. ');
+                } else {
+                    ((initiator ?? sourceEntity) as Player).sendMessage(
+                        '§cERROR: Default GameTest structure spawn location is currently not set or is invalid, please set it with the spawn_without_behaviors_internal option at "Main Menu>Settings>General Settings" or specify a location in the fourth parameter. '
+                    );
                 }
                 return;
-            }
+            } */
             let location2;
             try {
-                location2 = Object.values(world.getDynamicProperty("andexdbSettings:gametestStructureDefaultSpawnLocation")).join(" ");
+                location2 = vTStr(config.gametestStructureDefaultSpawnLocation);
             }
             catch { }
-            try {
-                location2 = Object.values(evaluateCoordinates(parameters[1]
-                    .split("~")
-                    .join(" ~")
-                    .split("^")
-                    .join(" ^")
-                    .split("*")
-                    .join(" *")
-                    .replaceAll("  ", " ")
-                    .trimStart()
-                    .split(" ")[0]
-                    .replaceAll(" ", ""), parameters[1]
-                    .split("~")
-                    .join(" ~")
-                    .split("^")
-                    .join(" ^")
-                    .split("*")
-                    .join(" *")
-                    .replaceAll("  ", " ")
-                    .trimStart()
-                    .split(" ")[1]
-                    .replaceAll(" ", ""), parameters[1]
-                    .split("~")
-                    .join(" ~")
-                    .split("^")
-                    .join(" ^")
-                    .split("*")
-                    .join(" *")
-                    .replaceAll("  ", " ")
-                    .trimStart()
-                    .split(" ")[2]
-                    .replaceAll(" ", ""), (initiator ?? sourceEntity ?? sourceBlock)
-                    ?.location ?? { x: 0, y: 0, z: 0 }, (initiator ?? sourceEntity)?.getRotation() ?? {
-                    x: 0,
-                    y: 0,
-                })).join(" ");
-            }
-            catch (e) {
-                console.error(e, e.stack);
+            if (parameters[1] !== undefined) {
+                try {
+                    location2 = Object.values(evaluateCoordinates(parameters[1]
+                        .split("~")
+                        .join(" ~")
+                        .split("^")
+                        .join(" ^")
+                        .split("*")
+                        .join(" *")
+                        .replaceAll("  ", " ")
+                        .trimStart()
+                        .split(" ")[0]
+                        .replaceAll(" ", ""), parameters[1]
+                        .split("~")
+                        .join(" ~")
+                        .split("^")
+                        .join(" ^")
+                        .split("*")
+                        .join(" *")
+                        .replaceAll("  ", " ")
+                        .trimStart()
+                        .split(" ")[1]
+                        .replaceAll(" ", ""), parameters[1]
+                        .split("~")
+                        .join(" ~")
+                        .split("^")
+                        .join(" ^")
+                        .split("*")
+                        .join(" *")
+                        .replaceAll("  ", " ")
+                        .trimStart()
+                        .split(" ")[2]
+                        .replaceAll(" ", ""), (initiator ?? sourceEntity ?? sourceBlock)
+                        ?.location ?? { x: 0, y: 0, z: 0 }, (initiator ?? sourceEntity)?.getRotation() ?? {
+                        x: 0,
+                        y: 0,
+                    })).join(" ");
+                }
+                catch (e) {
+                    console.error(e, e.stack);
+                }
             }
             world.setDynamicProperty("andexdbGametest:scriptEvalInternalCode", parameters[0].replaceAll("\\vl", "|"));
             console.warn(location2);

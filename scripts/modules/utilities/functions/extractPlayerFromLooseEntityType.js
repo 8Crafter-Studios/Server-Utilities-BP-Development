@@ -9,13 +9,13 @@ import { getDetailedType } from "./getDetailedType";
  * - index: The index of the function argument in the function's parameter list.
  * - name: The name of the function argument.
  * - customSourceMessage: A custom message to include in the error message.
- * If the functionArgumentDetails parameter is not provided, the function will use default values of `{index: 0, name: "sourceEntitya"}`.
- * @param {executeCommandPlayerW | Entity | Player} looseEntityType The loose entity type to convert to a Player type.
+ * If the functionArgumentDetails parameter is not provided, the function will use default values of `{index: 0, name: "sourceEntity"}`.
+ * @param {loosePlayerType} looseEntityType The loose entity type to convert to a Player type.
  * @param {{index: number, name: string}|{customSourceMessage: string}|"none"} functionArgumentDetails An object containing details about the function argument that the loose entity type is derived from.
  * @returns {Player} A Player instance.
  * @throws {TypeError} If the loose entity type is not an instance of the Player class or an instance of the executeCommandPlayerW class with a Player linked to it.
  */
-export function extractPlayerFromLooseEntityType(looseEntityType, functionArgumentDetails = { index: 0, name: "sourceEntitya" }) {
+export function extractPlayerFromLooseEntityType(looseEntityType, functionArgumentDetails = { index: 0, name: "sourceEntity" }) {
     const player = looseEntityType instanceof executeCommandPlayerW ? looseEntityType.player : looseEntityType;
     if (!(player instanceof Player)) {
         throw new TypeError(`Invalid Player. ${functionArgumentDetails === "none" ? "E" : "customSourceMessage" in functionArgumentDetails ? functionArgumentDetails.customSourceMessage + " e" : `Function argument [${functionArgumentDetails.index ?? 0}] (${functionArgumentDetails.name ?? "sourceEntitya"}) e`}xpected an instance of the Player class, or an instance of the executeCommandPlayerW class with a Player linked to it, but instead got ${getDetailedType(player)}.`);

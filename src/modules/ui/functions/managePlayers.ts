@@ -1,8 +1,5 @@
-import { Entity, Player } from "@minecraft/server";
-import { ActionFormData, ActionFormResponse, ModalFormData, MessageFormData } from "@minecraft/server-ui";
+import { ActionFormData, ActionFormResponse, ModalFormData } from "@minecraft/server-ui";
 import { config } from "init/classes/config";
-import { forceShow } from "modules/ui/functions/forceShow";
-import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { managePlayers_managePlayer } from "./managePlayers_managePlayer";
 import { savedPlayer } from "modules/player_save/classes/savedPlayer";
 import { securityVariables } from "security/ultraSecurityModeUtils";
@@ -159,7 +156,7 @@ export async function managePlayers(
     form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
     form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
     form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Refresh", "textures/ui/refresh_hover");
-    return await forceShow(form, player)
+    return await form.forceShow(player)
         .then(async (ra) => {
             let r = ra as ActionFormResponse;
             if (r.canceled) return 1;

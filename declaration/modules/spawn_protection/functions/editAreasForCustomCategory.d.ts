@@ -3,7 +3,7 @@ import type { loosePlayerType } from "modules/utilities/types/loosePlayerType";
 /**
  * A function that shows a menu of all protected areas for a given custom category. The menu has buttons for each protected area, and a button to add a new protected area.
  * @todo Make this menu have pages.
- * @param {loosePlayerType} sourceEntity The player or CommandSender to show the menu to.
+ * @param {loosePlayerType} sourceEntity - The player viewing the UI.
  * @param {string} prefix The custom category to show the protected areas for.
  * @returns {Promise<0 | 1>} A promise that resolves to 0 or 1. If the promise resolves to 0, the previous menu should closed. If the promise resolves to 1, the previous menu should be reopened.
  * @throws {TypeError} If sourceEntity is not an instance of the Player class or an instance of the executeCommandPlayerW class with a Player linked to it.
@@ -11,9 +11,9 @@ import type { loosePlayerType } from "modules/utilities/types/loosePlayerType";
 export declare function editAreasForCustomCategory(sourceEntity: loosePlayerType, prefix: (typeof ProtectedAreas)["areas"]["advancedAreaCategories"][number]["id"]): Promise<0 | 1>;
 /**
  * Shows a menu for managing a single protected area.
- * @param {loosePlayerType} sourceEntity - A player object or a reference to a player object.
- * @param {string} areaID - The identifier name of the protected area.
- * @param {string} prefix - A prefix for the advanced protected area category.
+ * @param {loosePlayerType} sourceEntity - The player viewing the UI.
+ * @param {string} areaID The identifier name of the protected area.
+ * @param {string} prefix A prefix for the advanced protected area category.
  * @returns {Promise<0 | 1>} A promise that resolves to one of two values: 0 or 1. 0 means the previous menu should be closed. 1 means the previous menu should be reopened.
  * @throws {TypeError} If sourceEntity is not an instance of the Player class or an instance of the executeCommandPlayerW class with a Player linked to it.
  */
@@ -21,7 +21,7 @@ export declare function manageAreaForCustomCategory(sourceEntity: loosePlayerTyp
 /**
  * Edits a protected area for a specified custom category.
  *
- * @param {loosePlayerType} sourceEntity - The entity initiating the edit, can be of type `loosePlayerType`.
+ * @param {loosePlayerType} sourceEntity - The player viewing the UI.
  * @param {string} areaID - The identifier for the area to be edited.
  * @param {string} prefix - The prefix associated with the custom category.
  * @returns {Promise<0 | 1>} A promise that resolves to `0` if the previous menu should be closed, or `1` if the previous menu should be reopened.

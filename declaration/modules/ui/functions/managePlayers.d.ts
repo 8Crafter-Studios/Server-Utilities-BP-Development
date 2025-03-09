@@ -1,7 +1,6 @@
-import { Entity, Player } from "@minecraft/server";
-import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { savedPlayer } from "modules/player_save/classes/savedPlayer";
-export declare function managePlayers(sourceEntitya: Entity | executeCommandPlayerW | Player, pagen?: number, maxplayersperpage?: number, search?: {
+import type { loosePlayerType } from "modules/utilities/types/loosePlayerType";
+export declare function managePlayers(sourceEntity: loosePlayerType, pagen?: number, maxplayersperpage?: number, search?: {
     value: string;
     caseSensitive?: boolean;
     searchLastOnlineDates?: boolean;

@@ -1,3 +1,2 @@
-import { Entity, Player } from "@minecraft/server";
-import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
-export declare function uiSettings_menuConfigurations_playerMenu_editButtons_addRemovedButtons(sourceEntitya: Entity | executeCommandPlayerW | Player): Promise<0 | 1>;
+import type { loosePlayerType } from "modules/utilities/types/loosePlayerType";
+export declare function uiSettings_menuConfigurations_playerMenu_editButtons_addRemovedButtons(sourceEntity: loosePlayerType): Promise<0 | 1>;

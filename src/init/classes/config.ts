@@ -1,3 +1,4 @@
+import type { Vector3 } from "@minecraft/server";
 import { world, StructureSaveMode, type DimensionLocation, Dimension } from "@minecraft/server";
 import { gwdp } from "init/functions/gwdp";
 import type { Warp } from "modules/coordinates/interfaces/Warp";
@@ -50,8 +51,42 @@ export class config {
     static set undoClipboardMode(undoClipboardMode: StructureSaveMode | undefined) {
         world.setDynamicProperty("andexdbSettings:undoClipboardMode", undoClipboardMode ?? StructureSaveMode.Memory);
     }
+    /**
+     * The default spawn location for the gametest structures, this is used when spawning in no AI entities and simulated players.
+     *
+     * Dynamic Property ID: `andexdbSettings:gametestStructureDefaultSpawnLocation`
+     * 
+     * @default { x: 1000000000, y: 100, z: 1000000000 }
+     */
+    static get gametestStructureDefaultSpawnLocation(): Vector3 {
+        const v: Vector3 = (world.getDynamicProperty("andexdbSettings:gametestStructureDefaultSpawnLocation") ?? { x: 1000000000, y: 100, z: 1000000000 }) as Vector3;
+        return (
+            tryget(() => ({
+                x: v.x ?? 1000000000,
+                y: v.y ?? 100,
+                z: v.z ?? 1000000000,
+            })) ?? ({ x: 1000000000, y: 100, z: 1000000000 } as Vector3)
+        );
+    }
+    static set gametestStructureDefaultSpawnLocation(gametestStructureDefaultSpawnLocation: Partial<Vector3> | undefined) {
+        world.setDynamicProperty(
+            "andexdbSettings:gametestStructureDefaultSpawnLocation",
+            {
+                x: gametestStructureDefaultSpawnLocation?.x ?? 1000000000,
+                y: gametestStructureDefaultSpawnLocation?.y ?? 100,
+                z: gametestStructureDefaultSpawnLocation?.z ?? 1000000000,
+            }
+        );
+    }
+    /**
+     * The location to teleport players when they use the \\spawn command.
+     *
+     * Dynamic Property ID: `andexdbSettings:spawnCommandLocation`
+     * 
+     * @default { x: null, y: null, z: null, dimension: overworld }
+     */
     static get spawnCommandLocation(): DimensionLocation | { x: null; y: null; z: null; dimension: Dimension } {
-        const v = tryget(() =>
+        const v: (Vector3 & { dimension: string }) | { x: null; y: null; z: null; dimension: string } = tryget(() =>
             JSON.parse(String(world.getDynamicProperty("andexdbSettings:spawnCommandLocation") ?? '{x: null, y: null, z: null, dimension: "overworld"}'))
         ) ?? { x: null, y: null, z: null, dimension: "overworld" };
         return (
@@ -59,7 +94,7 @@ export class config {
                 x: v.x,
                 y: v.y,
                 z: v.z,
-                dimension: (dimensionsb as { [id: string]: Dimension })[String(v.dimension)] ?? overworld,
+                dimension: (dimensionsf as { [id: string]: Dimension })[String(v.dimension)] ?? overworld,
             })) ?? ({ x: null, y: null, z: null, dimension: overworld } as DimensionLocation | { x: null; y: null; z: null; dimension: Dimension })
         );
     }
@@ -77,7 +112,7 @@ export class config {
     /**
      * Whether or not players can teleport to spawn using the `\spawn` command when they are in a different dimension than the spawn.
      *
-     * Defaults to true.
+     * @default true
      */
     static get spawnCommandAllowCrossDimensionalTeleport(): boolean {
         return Boolean(world.getDynamicProperty("andexdbSettings:spawnCommandAllowCrossDimensionalTeleport") ?? true);
@@ -853,9 +888,9 @@ export class config {
              *
              * When this option is disabled the limit is 10^32767. So basically infinite.
              *
-             * Default: false.
+             * Dynamic Property ID: `andexdbSettings:moneySystem.useScoreboardBasedMoneySystem`
              *
-             * Dynamic Property ID: andexdbSettings:moneySystem.useScoreboardBasedMoneySystem
+             * @default false
              */
             get useScoreboardBasedMoneySystem(): boolean {
                 return Boolean(world.getDynamicProperty("andexdbSettings:moneySystem.useScoreboardBasedMoneySystem") ?? false);
@@ -866,9 +901,9 @@ export class config {
             /**
              * The name of the scoreboard to use for the money system.
              *
-             * Default: "andexdb:money".
+             * Dynamic Property ID: `andexdbSettings:moneySystem.scoreboardName`
              *
-             * Dynamic Property ID: andexdbSettings:moneySystem.scoreboardName
+             * @default "andexdb:money"
              */
             get scoreboardName(): string {
                 return String(world.getDynamicProperty("andexdbSettings:moneySystem.scoreboardName") ?? "andexdb:money");
@@ -883,9 +918,9 @@ export class config {
             /**
              * Whether or not the bounty system is enabled.
              *
-             * Default: true.
+             * Dynamic Property ID: `andexdbSettings:bountySystem.enabled`
              *
-             * Dynamic Property ID: andexdbSettings:bountySystem.enabled
+             * @default true
              */
             get enabled(): boolean {
                 return Boolean(world.getDynamicProperty("andexdbSettings:bountySystem.enabled") ?? true);
@@ -911,9 +946,9 @@ export class config {
             /**
              * Whether or not the warps system is enabled.
              *
-             * Default: true.
+             * Dynamic Property ID: `andexdbSettings:warpsSystem.enabled`
              *
-             * Dynamic Property ID: andexdbSettings:warpsSystem.enabled
+             * @default true
              */
             get enabled(): boolean {
                 return Boolean(world.getDynamicProperty("warpsSystem:bountySystem.enabled") ?? true);
@@ -924,9 +959,9 @@ export class config {
             /**
              * List of saved warps.
              *
-             * Default: [].
+             * Dynamic Property ID: `andexdbSettings:warpsSystem.warps`
              *
-             * Dynamic Property ID: andexdbSettings:warpsSystem.warps
+             * @default []
              *
              * @throws The setter throws if the input is not an array of warp interface objects or undefined.
              */
@@ -957,9 +992,9 @@ export class config {
             /**
              * Whether or not the money transfer system is enabled.
              *
-             * Default: true.
+             * Dynamic Property ID: `andexdbSettings:moneyTransferSystem.enabled`
              *
-             * Dynamic Property ID: andexdbSettings:moneyTransferSystem.enabled
+             * @default true
              */
             get enabled(): boolean {
                 return Boolean(world.getDynamicProperty("andexdbSettings:moneyTransferSystem.enabled") ?? true);
@@ -1020,7 +1055,7 @@ export class config {
                         return {
                             /**
                              *
-                             */
+                             *//* 
                             get buttons(): (keyof typeof menuButtonIds.mainMenu.buttons)[] {
                                 return JSON.parse(
                                     String(
@@ -1053,7 +1088,7 @@ export class config {
                                             )
                                     )
                                 );
-                            },
+                            }, */
                             /**
                              * Whether to show the buttons marked as deprecated on the main menu.
                              *
@@ -1635,7 +1670,7 @@ export class config {
             /**
              * How often to refresh protected areas.
              * 
-             * Dynamic Property ID: andexdbSettings:protectedAreasRefreshRate
+             * Dynamic Property ID: `andexdbSettings:protectedAreasRefreshRate`
              * 
              * @default 200
              */
@@ -1675,7 +1710,7 @@ export class config {
             /**
              * How often to check for banned players.
              * 
-             * Dynamic Property ID: andexdbSettings:bannedPlayersRefreshRate
+             * Dynamic Property ID: `andexdbSettings:bannedPlayersRefreshRate`
              * 
              * @default 20
              */
@@ -1691,7 +1726,7 @@ export class config {
             /**
              * How long it has to be since the last ban refresh before the bans list will be automatically refreshed, when getting the bans list or checking if a player is banned.
              * 
-             * Dynamic Property ID: andexdbSettings:bansMinimumAutoRefresh
+             * Dynamic Property ID: `andexdbSettings:bansMinimumAutoRefresh`
              * 
              * @default 1000
              */
@@ -1842,7 +1877,7 @@ export class config {
             set allowConnectingToBlueModsAnticheat(allowConnectingToBlueModsAnticheat: boolean | undefined) {
                 world.setDynamicProperty("andexdbSettings:allowConnectingToBlueModsAnticheat", allowConnectingToBlueModsAnticheat ?? true);
             },
-        };
+        }
     }
     static reset(subsection?: any) {
         function resetProperties(obj: any) {

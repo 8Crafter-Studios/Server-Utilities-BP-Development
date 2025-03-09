@@ -44,13 +44,42 @@ export class config {
     static set undoClipboardMode(undoClipboardMode) {
         world.setDynamicProperty("andexdbSettings:undoClipboardMode", undoClipboardMode ?? StructureSaveMode.Memory);
     }
+    /**
+     * The default spawn location for the gametest structures, this is used when spawning in no AI entities and simulated players.
+     *
+     * Dynamic Property ID: `andexdbSettings:gametestStructureDefaultSpawnLocation`
+     *
+     * @default { x: 1000000000, y: 100, z: 1000000000 }
+     */
+    static get gametestStructureDefaultSpawnLocation() {
+        const v = (world.getDynamicProperty("andexdbSettings:gametestStructureDefaultSpawnLocation") ?? { x: 1000000000, y: 100, z: 1000000000 });
+        return (tryget(() => ({
+            x: v.x ?? 1000000000,
+            y: v.y ?? 100,
+            z: v.z ?? 1000000000,
+        })) ?? { x: 1000000000, y: 100, z: 1000000000 });
+    }
+    static set gametestStructureDefaultSpawnLocation(gametestStructureDefaultSpawnLocation) {
+        world.setDynamicProperty("andexdbSettings:gametestStructureDefaultSpawnLocation", {
+            x: gametestStructureDefaultSpawnLocation?.x ?? 1000000000,
+            y: gametestStructureDefaultSpawnLocation?.y ?? 100,
+            z: gametestStructureDefaultSpawnLocation?.z ?? 1000000000,
+        });
+    }
+    /**
+     * The location to teleport players when they use the \\spawn command.
+     *
+     * Dynamic Property ID: `andexdbSettings:spawnCommandLocation`
+     *
+     * @default { x: null, y: null, z: null, dimension: overworld }
+     */
     static get spawnCommandLocation() {
         const v = tryget(() => JSON.parse(String(world.getDynamicProperty("andexdbSettings:spawnCommandLocation") ?? '{x: null, y: null, z: null, dimension: "overworld"}'))) ?? { x: null, y: null, z: null, dimension: "overworld" };
         return (tryget(() => ({
             x: v.x,
             y: v.y,
             z: v.z,
-            dimension: dimensionsb[String(v.dimension)] ?? overworld,
+            dimension: dimensionsf[String(v.dimension)] ?? overworld,
         })) ?? { x: null, y: null, z: null, dimension: overworld });
     }
     static set spawnCommandLocation(spawnCommandLocation) {
@@ -64,7 +93,7 @@ export class config {
     /**
      * Whether or not players can teleport to spawn using the `\spawn` command when they are in a different dimension than the spawn.
      *
-     * Defaults to true.
+     * @default true
      */
     static get spawnCommandAllowCrossDimensionalTeleport() {
         return Boolean(world.getDynamicProperty("andexdbSettings:spawnCommandAllowCrossDimensionalTeleport") ?? true);
@@ -765,9 +794,9 @@ export class config {
              *
              * When this option is disabled the limit is 10^32767. So basically infinite.
              *
-             * Default: false.
+             * Dynamic Property ID: `andexdbSettings:moneySystem.useScoreboardBasedMoneySystem`
              *
-             * Dynamic Property ID: andexdbSettings:moneySystem.useScoreboardBasedMoneySystem
+             * @default false
              */
             get useScoreboardBasedMoneySystem() {
                 return Boolean(world.getDynamicProperty("andexdbSettings:moneySystem.useScoreboardBasedMoneySystem") ?? false);
@@ -778,9 +807,9 @@ export class config {
             /**
              * The name of the scoreboard to use for the money system.
              *
-             * Default: "andexdb:money".
+             * Dynamic Property ID: `andexdbSettings:moneySystem.scoreboardName`
              *
-             * Dynamic Property ID: andexdbSettings:moneySystem.scoreboardName
+             * @default "andexdb:money"
              */
             get scoreboardName() {
                 return String(world.getDynamicProperty("andexdbSettings:moneySystem.scoreboardName") ?? "andexdb:money");
@@ -795,9 +824,9 @@ export class config {
             /**
              * Whether or not the bounty system is enabled.
              *
-             * Default: true.
+             * Dynamic Property ID: `andexdbSettings:bountySystem.enabled`
              *
-             * Dynamic Property ID: andexdbSettings:bountySystem.enabled
+             * @default true
              */
             get enabled() {
                 return Boolean(world.getDynamicProperty("andexdbSettings:bountySystem.enabled") ?? true);
@@ -823,9 +852,9 @@ export class config {
             /**
              * Whether or not the warps system is enabled.
              *
-             * Default: true.
+             * Dynamic Property ID: `andexdbSettings:warpsSystem.enabled`
              *
-             * Dynamic Property ID: andexdbSettings:warpsSystem.enabled
+             * @default true
              */
             get enabled() {
                 return Boolean(world.getDynamicProperty("warpsSystem:bountySystem.enabled") ?? true);
@@ -836,9 +865,9 @@ export class config {
             /**
              * List of saved warps.
              *
-             * Default: [].
+             * Dynamic Property ID: `andexdbSettings:warpsSystem.warps`
              *
-             * Dynamic Property ID: andexdbSettings:warpsSystem.warps
+             * @default []
              *
              * @throws The setter throws if the input is not an array of warp interface objects or undefined.
              */
@@ -869,9 +898,9 @@ export class config {
             /**
              * Whether or not the money transfer system is enabled.
              *
-             * Default: true.
+             * Dynamic Property ID: `andexdbSettings:moneyTransferSystem.enabled`
              *
-             * Dynamic Property ID: andexdbSettings:moneyTransferSystem.enabled
+             * @default true
              */
             get enabled() {
                 return Boolean(world.getDynamicProperty("andexdbSettings:moneyTransferSystem.enabled") ?? true);
@@ -929,25 +958,40 @@ export class config {
                         return {
                             /**
                              *
-                             */
-                            get buttons() {
-                                return JSON.parse(String(world.getDynamicProperty("andexdbSettings:ui.menus.mainMenu.buttons") ??
-                                    JSON.stringify(Object.keys(menuButtonIds.mainMenu.buttons).sort((a, b) => menuButtonIds.mainMenu.buttons[a].defaultButtonIndex > menuButtonIds.mainMenu.buttons[b].defaultButtonIndex
-                                        ? 1
-                                        : menuButtonIds.mainMenu.buttons[a].defaultButtonIndex <
-                                            menuButtonIds.mainMenu.buttons[b].defaultButtonIndex
-                                            ? -1
-                                            : 0))));
-                            },
-                            set buttons(buttonList) {
-                                world.setDynamicProperty("andexdbSettings:ui.menus.mainMenu.buttons", JSON.stringify(buttonList ??
-                                    Object.keys(menuButtonIds.mainMenu.buttons).sort((a, b) => menuButtonIds.mainMenu.buttons[a].defaultButtonIndex > menuButtonIds.mainMenu.buttons[b].defaultButtonIndex
-                                        ? 1
-                                        : menuButtonIds.mainMenu.buttons[a].defaultButtonIndex <
-                                            menuButtonIds.mainMenu.buttons[b].defaultButtonIndex
-                                            ? -1
-                                            : 0)));
-                            },
+                             */ /*
+                           get buttons(): (keyof typeof menuButtonIds.mainMenu.buttons)[] {
+                               return JSON.parse(
+                                   String(
+                                       world.getDynamicProperty("andexdbSettings:ui.menus.mainMenu.buttons") ??
+                                           JSON.stringify(
+                                               (Object.keys(menuButtonIds.mainMenu.buttons) as (keyof typeof menuButtonIds.mainMenu.buttons)[]).sort((a, b) =>
+                                                   menuButtonIds.mainMenu.buttons[a].defaultButtonIndex > menuButtonIds.mainMenu.buttons[b].defaultButtonIndex
+                                                       ? 1
+                                                       : menuButtonIds.mainMenu.buttons[a].defaultButtonIndex <
+                                                         menuButtonIds.mainMenu.buttons[b].defaultButtonIndex
+                                                       ? -1
+                                                       : 0
+                                               )
+                                           )
+                                   )
+                               );
+                           },
+                           set buttons(buttonList: (keyof typeof menuButtonIds.mainMenu.buttons)[] | undefined) {
+                               world.setDynamicProperty(
+                                   "andexdbSettings:ui.menus.mainMenu.buttons",
+                                   JSON.stringify(
+                                       buttonList ??
+                                           (Object.keys(menuButtonIds.mainMenu.buttons) as (keyof typeof menuButtonIds.mainMenu.buttons)[]).sort((a, b) =>
+                                               menuButtonIds.mainMenu.buttons[a].defaultButtonIndex > menuButtonIds.mainMenu.buttons[b].defaultButtonIndex
+                                                   ? 1
+                                                   : menuButtonIds.mainMenu.buttons[a].defaultButtonIndex <
+                                                     menuButtonIds.mainMenu.buttons[b].defaultButtonIndex
+                                                   ? -1
+                                                   : 0
+                                           )
+                                   )
+                               );
+                           }, */
                             /**
                              * Whether to show the buttons marked as deprecated on the main menu.
                              *
@@ -1453,7 +1497,7 @@ export class config {
             /**
              * How often to refresh protected areas.
              *
-             * Dynamic Property ID: andexdbSettings:protectedAreasRefreshRate
+             * Dynamic Property ID: `andexdbSettings:protectedAreasRefreshRate`
              *
              * @default 200
              */
@@ -1484,7 +1528,7 @@ export class config {
             /**
              * How often to check for banned players.
              *
-             * Dynamic Property ID: andexdbSettings:bannedPlayersRefreshRate
+             * Dynamic Property ID: `andexdbSettings:bannedPlayersRefreshRate`
              *
              * @default 20
              */
@@ -1497,7 +1541,7 @@ export class config {
             /**
              * How long it has to be since the last ban refresh before the bans list will be automatically refreshed, when getting the bans list or checking if a player is banned.
              *
-             * Dynamic Property ID: andexdbSettings:bansMinimumAutoRefresh
+             * Dynamic Property ID: `andexdbSettings:bansMinimumAutoRefresh`
              *
              * @default 1000
              */

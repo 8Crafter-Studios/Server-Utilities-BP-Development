@@ -23,7 +23,7 @@ import { ban } from "modules/ban/classes/ban";
 import { getSlotFromParsedSlot } from "modules/command_utilities/functions/getSlotFromParsedSlot";
 import { EquipmentSlots } from "modules/command_utilities/constants/EquipmentSlots";
 import { player_save_format_version } from "modules/player_save/functions/player_save_format_version";
-import * as semver from "semver"
+import * as semver from "semver";
 
 export type PlayerDataSaveMode = "full" | "medium" | "lite";
 
@@ -76,10 +76,7 @@ export interface savedItem {
     name?: string;
     lore?: string[];
     enchants?: Enchantment[];
-    properties?: [
-        id: string,
-        value: string | number | Boolean | Vector3 | undefined
-    ][];
+    properties?: [id: string, value: string | number | Boolean | Vector3 | undefined][];
 }
 export interface savedPlayerData {
     name: string;
@@ -91,10 +88,7 @@ export interface savedPlayerData {
         equipment: savedItem[] | undefined;
         ender_chest: savedItem[] | undefined;
     };
-    properties?: [
-        id: string | undefined,
-        value: string | number | Boolean | Vector3 | undefined
-    ][];
+    properties?: [id: string | undefined, value: string | number | Boolean | Vector3 | undefined][];
     lastOnline: number;
     firstJoined?: number;
     location?: Vector3;
@@ -169,10 +163,7 @@ export class savedPlayer {
         equipment: savedItem[] | undefined;
         ender_chest: savedItem[] | undefined;
     };
-    properties?: [
-        id: string | undefined,
-        value: string | number | Boolean | Vector3 | undefined
-    ][];
+    properties?: [id: string | undefined, value: string | number | Boolean | Vector3 | undefined][];
     lastOnline: number;
     firstJoined: number;
     location?: Vector3;
@@ -210,24 +201,15 @@ export class savedPlayer {
     onJoinActions: SavedPlayerOnJoinActions = [];
     saveMode: PlayerDataSaveMode = "full";
     constructor(data: savedPlayerData) {
-        if (
-            !!data.format_version &&
-            semver.gt(
-                data.player_save_format_version ?? "0.0.0",
-                player_save_format_version
-            )
-        ) {
+        if (!!data.format_version && semver.gt(data.player_save_format_version ?? "0.0.0", player_save_format_version)) {
             throw new ParseError(
                 `The saved player data could not be parsed because it was last saved in a newer format version. Data format version: ${JSON.stringify(
                     data.player_save_format_version
-                )}. Current format version: ${JSON.stringify(
-                    player_save_format_version
-                )}.`
+                )}. Current format version: ${JSON.stringify(player_save_format_version)}.`
             );
         }
         this.format_version = data.format_version ?? format_version;
-        this.player_save_format_version =
-            data.player_save_format_version ?? player_save_format_version;
+        this.player_save_format_version = data.player_save_format_version ?? player_save_format_version;
         this.name = data.name;
         this.id = data.id;
         this.nameTag = data.nameTag;
@@ -243,7 +225,7 @@ export class savedPlayer {
         this.rotation = data.rotation;
         this.selectedSlotIndex = data.selectedSlotIndex;
         this.scoreboardIdentity = data.scoreboardIdentity;
-        this.saveId = data.saveId ?? "player:" + this.id;/* 
+        this.saveId = data.saveId ?? "player:" + this.id; /* 
         if (
             semver.satisfies(
                 data.player_save_format_version ?? "0.0.0",
@@ -251,10 +233,10 @@ export class savedPlayer {
                 { includePrerelease: true }
             )
         ) { */
-            this.memoryTier = data.memoryTier;
-            this.maxRenderDistance = data.maxRenderDistance;
-            this.platformType = data.platformType;/* 
-        } *//* 
+        this.memoryTier = data.memoryTier;
+        this.maxRenderDistance = data.maxRenderDistance;
+        this.platformType = data.platformType; /* 
+        } */ /* 
         if (
             semver.satisfies(
                 data.player_save_format_version ?? "0.0.0",
@@ -262,11 +244,11 @@ export class savedPlayer {
                 { includePrerelease: true }
             )
         ) { */
-            this.inputPermissions = data.inputPermissions;
-            this.inputInfo = data.inputInfo;
-            this.playerPermissions = data.playerPermissions;
-            this.onJoinActions = data.onJoinActions ?? [];/* 
-        } *//* 
+        this.inputPermissions = data.inputPermissions;
+        this.inputInfo = data.inputInfo;
+        this.playerPermissions = data.playerPermissions;
+        this.onJoinActions = data.onJoinActions ?? []; /* 
+        } */ /* 
         if (
             semver.satisfies(
                 data.player_save_format_version ?? "0.0.0",
@@ -274,9 +256,9 @@ export class savedPlayer {
                 { includePrerelease: true }
             )
         ) { */
-            this.items = data.items;/* 
+        this.items = data.items; /* 
         } */
-       this.saveMode = data.saveMode ?? "full";
+        this.saveMode = data.saveMode ?? "full";
     }
     save() {
         world.setDynamicProperty(this.saveId, JSON.stringify(this));
@@ -301,7 +283,7 @@ export class savedPlayer {
         return this;
     }
     removeOnJoinActionsOfType(type: SavedPlayerOnJoinAction["type"]): this {
-        this.onJoinActions = this.onJoinActions.filter(a=>a.type !== type);
+        this.onJoinActions = this.onJoinActions.filter((a) => a.type !== type);
         this.save();
         return this;
     }
@@ -317,22 +299,17 @@ export class savedPlayer {
                         getPlayer(this.id).removeTag(action.tag);
                         break;
                     case "add_tags":
-                        action.tags.forEach((tag) =>
-                            getPlayer(this.id).addTag(tag)
-                        );
+                        action.tags.forEach((tag) => getPlayer(this.id).addTag(tag));
                         break;
                     case "remove_tags":
-                        action.tags.forEach((tag) =>
-                            getPlayer(this.id).removeTag(tag)
-                        );
+                        action.tags.forEach((tag) => getPlayer(this.id).removeTag(tag));
                         break;
                     case "remove_item_in_slot":
                         const slot = getSlotFromParsedSlot(action.slot, {
                             container: player.inventory.container,
                             equipment: player.equippable,
                             cursor: player.cursorInventory,
-                            selectedSlotIndex: player
-                                .selectedSlotIndex,
+                            selectedSlotIndex: player.selectedSlotIndex,
                         });
                         if ("item" in slot) {
                             slot.clear();
@@ -344,9 +321,7 @@ export class savedPlayer {
                         player.inventory.container.clearAll();
                         break;
                     case "set_permission":
-                        player.playerPermissions[
-                            action.permission
-                        ] = action.value as never;
+                        player.playerPermissions[action.permission] = action.value as never;
                         break;
                 }
             });
@@ -367,11 +342,7 @@ export class savedPlayer {
         return ban.testForIdBannedPlayer(this);
     }
     get bans() {
-        let bans = ban
-            .getBans()
-            .allBans.filter(
-                (b) => b.playerId == this.id || b.playerName == this.name
-            );
+        let bans = ban.getBans().allBans.filter((b) => b.playerId == this.id || b.playerName == this.name);
         return {
             all: bans,
             valid: bans.filter((b) => b.isValid),
@@ -379,9 +350,7 @@ export class savedPlayer {
         };
     }
     get nameBans() {
-        let bans = ban
-            .getBansAutoRefresh()
-            .nameBans.filter((b) => b.playerName == this.name);
+        let bans = ban.getBansAutoRefresh().nameBans.filter((b) => b.playerName == this.name);
         return {
             all: bans,
             valid: bans.filter((b) => b.isValid),
@@ -396,25 +365,25 @@ export class savedPlayer {
             expired: bans.filter((b) => b.isExpired),
         };
     }
+    /**
+     * Returns true if the player's saved inventory data is using the legacy pre-1.5.0 format, this would be the case if the player's inventory was saved before the 1.5.0 player save format version, or the {@linkcode config.system.useLegacyPlayerInventoryDataSaveSystem} option was set to true when the player's inventory was saved.
+     */
+    get hasLegacyInventorySave(): boolean {
+        return this.items !== undefined;
+    }
+    get hasModernInventorySave(): boolean {
+        return world.structureManager.get("player_inventory_save_storage:" + this.id) !== undefined;
+    }
     static getSavedPlayerIds() {
-        return world
-            .getDynamicPropertyIds()
-            .filter((s) => s.startsWith("player:"));
+        return world.getDynamicPropertyIds().filter((s) => s.startsWith("player:"));
     } /*
 saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playerName}`, `${Number(ban.removeAfterBanExpires)}||${ban.unbanDate.valueOf()}||${ban.banDate.valueOf()}||${ban.originalPlayerId}||${ban.bannedById}||${ban.bannedByName.replaceAll("|", "\\|")}||${ban.reason}`)}else{if(ban.type=="id"){world.setDynamicProperty(`idBan:${ban.playerId}`, `${Number(ban.removeAfterBanExpires)}||${ban.unbanDate.valueOf()}||${ban.banDate.valueOf()}||${ban.originalPlayerName.replaceAll("|", "\\|")}||${ban.bannedById}||${ban.bannedByName.replaceAll("|", "\\|")}||${ban.reason}`)}else{}}}*/
 
     static savePlayerData(savedPlayerData: savedPlayerData) {
-        savedPlayerData.saveId =
-            savedPlayerData.saveId ?? "player:" + savedPlayerData.id;
-        savedPlayerData.format_version =
-            savedPlayerData.format_version ?? format_version;
-        savedPlayerData.player_save_format_version =
-            savedPlayerData.player_save_format_version ??
-            player_save_format_version;
-        world.setDynamicProperty(
-            savedPlayerData.saveId ?? `player:${savedPlayerData.id}`,
-            JSON.stringify(savedPlayerData)
-        );
+        savedPlayerData.saveId = savedPlayerData.saveId ?? "player:" + savedPlayerData.id;
+        savedPlayerData.format_version = savedPlayerData.format_version ?? format_version;
+        savedPlayerData.player_save_format_version = savedPlayerData.player_save_format_version ?? player_save_format_version;
+        world.setDynamicProperty(savedPlayerData.saveId ?? `player:${savedPlayerData.id}`, JSON.stringify(savedPlayerData));
         return savedPlayerData.saveId ?? `player:${savedPlayerData.id}`;
     }
     static async saveInventoryAsync(
@@ -433,39 +402,29 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
                 );
             }
             if (options === null) {
-                throw new SyntaxError(
-                    `Invalid value passed to the options parameter (args[1]), value cannot be null.`
-                );
+                throw new SyntaxError(`Invalid value passed to the options parameter (args[1]), value cannot be null.`);
             }
             if (player?.constructor?.name != "Player") {
                 throw new SyntaxError(
                     `Invalid value passed to the player parameter (args[0]), expected Player but got ${
-                        typeof player == "object"
-                            ? player?.constructor?.name ??
-                              tryget(() => JSON.stringify(player)) ??
-                              "?"
-                            : typeof player
+                        typeof player == "object" ? player?.constructor?.name ?? tryget(() => JSON.stringify(player)) ?? "?" : typeof player
                     }} instead.`
                 );
             }
         }
         let playerHasBecomeInvalid: boolean = false;
-        if(!player.isValid()){
-            console.warn(`Async player inventory save canceled for ${player.id} because the player is no longer valid, likely because they left during the save process.`);
+        if (!player.isValid()) {
+            console.warn(
+                `Async player inventory save canceled for ${player.id} because the player is no longer valid, likely because they left during the save process.`
+            );
             return;
         }
-        const entity = player.dimension.spawnEntity(
-            "andexdb:player_inventory_save_storage",
-            {
-                x: player.x.floor() + 0.5,
-                y: player.dimension.heightRange.max - 1.5,
-                z: player.z.floor() + 0.5,
-            }
-        );
-        entity.setDynamicProperty(
-            "andexdb:playerInventorySaveStoragePlayerID",
-            player.id
-        );
+        const entity = player.dimension.spawnEntity("andexdb:player_inventory_save_storage", {
+            x: player.x.floor() + 0.5,
+            y: player.dimension.heightRange.max - 1.5,
+            z: player.z.floor() + 0.5,
+        });
+        entity.setDynamicProperty("andexdb:playerInventorySaveStoragePlayerID", player.id);
         try {
             var t = Date.now();
             const ei = entity.inventory.container;
@@ -474,7 +433,7 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
             for (let i = 0; i < player.inventory.inventorySize; i++) {
                 if (Date.now() - t > 0) {
                     await waitTick();
-                    if(!player.isValid()){
+                    if (!player.isValid()) {
                         playerHasBecomeInvalid = true;
                         break;
                     }
@@ -484,11 +443,11 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
                     ei.setItem(i, pi.getItem(i));
                 } catch (e) {}
             }
-            if(!playerHasBecomeInvalid){
+            if (!playerHasBecomeInvalid) {
                 for (let i = 0; i < 6; i++) {
                     if (Date.now() - t > 0) {
                         await waitTick();
-                        if(!player.isValid()){
+                        if (!player.isValid()) {
                             playerHasBecomeInvalid = true;
                             break;
                         }
@@ -499,17 +458,17 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
                     } catch (e) {}
                 }
             }
-            if(!playerHasBecomeInvalid){
+            if (!playerHasBecomeInvalid) {
                 try {
                     ei.setItem(42, player.cursorInventory.item);
                 } catch (e) {}
             }
         } catch (e) {}
         try {
-            if(!player.isValid()){
+            if (!player.isValid()) {
                 playerHasBecomeInvalid = true;
             }
-            if(!playerHasBecomeInvalid){
+            if (!playerHasBecomeInvalid) {
                 /**
                  * This makes the script temporarily teleport the other entities away so that when it saves the storage entity, it can't save and possibly duplicate other entities.
                  */
@@ -521,20 +480,12 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
                                 y: player.dimension.heightRange.max - 1.5,
                                 z: player.z.floor() + 0.5,
                             })
-                            .filter(
-                                (v) => v.id != entity.id && !(v instanceof Player)
-                            )
+                            .filter((v) => v.id != entity.id && !(v instanceof Player))
                     ) ?? [];
                 var locs = otherEntities.map((v) => v.location);
-                otherEntities.forEach((v) =>
-                    tryrun(() =>
-                        v.teleport(Vector.add(v.location, { x: 0, y: 50, z: 0 }))
-                    )
-                );
+                otherEntities.forEach((v) => tryrun(() => v.teleport(Vector.add(v.location, { x: 0, y: 50, z: 0 }))));
                 try {
-                    world.structureManager.delete(
-                        "player_inventory_save_storage:" + player.id
-                    );
+                    world.structureManager.delete("player_inventory_save_storage:" + player.id);
                 } catch {}
                 world.structureManager.createFromWorld(
                     "player_inventory_save_storage:" + player.id,
@@ -560,15 +511,15 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
             var error = e;
         } finally {
             try {
-                otherEntities.forEach((v, i) =>
-                    tryrun(() => v.teleport(locs[i], { keepVelocity: false }))
-                );
+                otherEntities.forEach((v, i) => tryrun(() => v.teleport(locs[i], { keepVelocity: false })));
             } catch {}
             try {
                 entity.remove();
             } catch {}
-            if(playerHasBecomeInvalid){
-                console.warn(`Async player inventory save canceled for ${player.id} because the player is no longer valid, likely because they left during the save process.`);
+            if (playerHasBecomeInvalid) {
+                console.warn(
+                    `Async player inventory save canceled for ${player.id} because the player is no longer valid, likely because they left during the save process.`
+                );
             }
             if ((options.rethrowErrorInFinally ?? true) && !!error) {
                 throw error;
@@ -591,38 +542,28 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
                 );
             }
             if (options === null) {
-                throw new SyntaxError(
-                    `Invalid value passed to the options parameter (args[1]), value cannot be null.`
-                );
+                throw new SyntaxError(`Invalid value passed to the options parameter (args[1]), value cannot be null.`);
             }
             if (player?.constructor?.name != "Player") {
                 throw new SyntaxError(
                     `Invalid value passed to the player parameter (args[0]), expected Player but got ${
-                        typeof player == "object"
-                            ? player?.constructor?.name ??
-                              tryget(() => JSON.stringify(player)) ??
-                              "?"
-                            : typeof player
+                        typeof player == "object" ? player?.constructor?.name ?? tryget(() => JSON.stringify(player)) ?? "?" : typeof player
                     }} instead.`
                 );
             }
         }
-        if(!player.isValid()){
-            console.warn(`Player inventory save canceled for ${player.id} because the player is no longer valid, likely because they left during the save process.`);
+        if (!player.isValid()) {
+            console.warn(
+                `Player inventory save canceled for ${player.id} because the player is no longer valid, likely because they left during the save process.`
+            );
             return;
         }
-        const entity = player.dimension.spawnEntity(
-            "andexdb:player_inventory_save_storage",
-            {
-                x: player.x.floor() + 0.5,
-                y: player.dimension.heightRange.max - 1.5,
-                z: player.z.floor() + 0.5,
-            }
-        );
-        entity.setDynamicProperty(
-            "andexdb:playerInventorySaveStoragePlayerID",
-            player.id
-        );
+        const entity = player.dimension.spawnEntity("andexdb:player_inventory_save_storage", {
+            x: player.x.floor() + 0.5,
+            y: player.dimension.heightRange.max - 1.5,
+            z: player.z.floor() + 0.5,
+        });
+        entity.setDynamicProperty("andexdb:playerInventorySaveStoragePlayerID", player.id);
         try {
             const ei = entity.inventory.container;
             const pi = player.inventory.container;
@@ -655,20 +596,12 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
                             y: maxHeight - 1.5,
                             z: player.z.floor() + 0.5,
                         })
-                        .filter(
-                            (v) => v.id != entity.id && !(v instanceof Player)
-                        )
+                        .filter((v) => v.id != entity.id && !(v instanceof Player))
                 ) ?? [];
             var locs = otherEntities.map((v) => v.location);
-            otherEntities.forEach((v) =>
-                tryrun(() =>
-                    v.teleport(Vector.add(v.location, { x: 0, y: 50, z: 0 }))
-                )
-            );
+            otherEntities.forEach((v) => tryrun(() => v.teleport(Vector.add(v.location, { x: 0, y: 50, z: 0 }))));
             try {
-                world.structureManager.delete(
-                    "player_inventory_save_storage:" + player.id
-                );
+                world.structureManager.delete("player_inventory_save_storage:" + player.id);
             } catch {}
             world.structureManager.createFromWorld(
                 "player_inventory_save_storage:" + player.id,
@@ -693,9 +626,7 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
             var error = e;
         } finally {
             try {
-                otherEntities.forEach((v, i) =>
-                    tryrun(() => v.teleport(locs[i], { keepVelocity: false }))
-                );
+                otherEntities.forEach((v, i) => tryrun(() => v.teleport(locs[i], { keepVelocity: false })));
             } catch {}
             try {
                 entity.remove();
@@ -712,7 +643,52 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
             rethrowErrorInFinally?: boolean;
             bypassParameterTypeChecks?: boolean;
         } = { rethrowErrorInFinally: true, bypassParameterTypeChecks: false }
-    ) {
+    ):
+        | {
+              Head?: ItemStack | undefined;
+              Chest?: ItemStack | undefined;
+              Legs?: ItemStack | undefined;
+              Feet?: ItemStack | undefined;
+              Mainhand?: ItemStack | undefined;
+              Offhand?: ItemStack | undefined;
+              Cursor?: ItemStack | undefined;
+              0?: ItemStack | undefined;
+              1?: ItemStack | undefined;
+              2?: ItemStack | undefined;
+              3?: ItemStack | undefined;
+              4?: ItemStack | undefined;
+              5?: ItemStack | undefined;
+              6?: ItemStack | undefined;
+              7?: ItemStack | undefined;
+              8?: ItemStack | undefined;
+              9?: ItemStack | undefined;
+              10?: ItemStack | undefined;
+              11?: ItemStack | undefined;
+              12?: ItemStack | undefined;
+              13?: ItemStack | undefined;
+              14?: ItemStack | undefined;
+              15?: ItemStack | undefined;
+              16?: ItemStack | undefined;
+              17?: ItemStack | undefined;
+              18?: ItemStack | undefined;
+              19?: ItemStack | undefined;
+              20?: ItemStack | undefined;
+              21?: ItemStack | undefined;
+              22?: ItemStack | undefined;
+              23?: ItemStack | undefined;
+              24?: ItemStack | undefined;
+              25?: ItemStack | undefined;
+              26?: ItemStack | undefined;
+              27?: ItemStack | undefined;
+              28?: ItemStack | undefined;
+              29?: ItemStack | undefined;
+              30?: ItemStack | undefined;
+              31?: ItemStack | undefined;
+              32?: ItemStack | undefined;
+              33?: ItemStack | undefined;
+              34?: ItemStack | undefined;
+              35?: ItemStack | undefined;
+          } {
         if (!(options.bypassParameterTypeChecks ?? false)) {
             if (typeof playerId != "string") {
                 throw new SyntaxError(
@@ -722,9 +698,7 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
                 );
             }
             if (playerId === null) {
-                throw new SyntaxError(
-                    `Invalid value passed to the playerId parameter (args[0]), value cannot be null.`
-                );
+                throw new SyntaxError(`Invalid value passed to the playerId parameter (args[0]), value cannot be null.`);
             }
             if (typeof options != "object") {
                 throw new SyntaxError(
@@ -734,9 +708,7 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
                 );
             }
             if (options === null) {
-                throw new SyntaxError(
-                    `Invalid value passed to the options parameter (args[2]), value cannot be null.`
-                );
+                throw new SyntaxError(`Invalid value passed to the options parameter (args[2]), value cannot be null.`);
             }
             if (typeof sourceLoc != "object") {
                 throw new SyntaxError(
@@ -746,9 +718,7 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
                 );
             }
             if (sourceLoc === null) {
-                throw new SyntaxError(
-                    `Invalid value passed to the sourceLoc parameter (args[1]), value cannot be null.`
-                );
+                throw new SyntaxError(`Invalid value passed to the sourceLoc parameter (args[1]), value cannot be null.`);
             }
             if (
                 !testForObjectTypeExtension(sourceLoc, {
@@ -763,15 +733,7 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
                         Object.entries(sourceLoc)
                             .map(
                                 (v) =>
-                                    `${v[0]}: ${
-                                        typeof v[1] == "object"
-                                            ? v[1]?.constructor?.name ??
-                                              tryget(() =>
-                                                  JSON.stringify(v[1])
-                                              ) ??
-                                              "?"
-                                            : typeof v[1]
-                                    }`
+                                    `${v[0]}: ${typeof v[1] == "object" ? v[1]?.constructor?.name ?? tryget(() => JSON.stringify(v[1])) ?? "?" : typeof v[1]}`
                             )
                             .join(", ")
                     )}} instead.`
@@ -824,6 +786,9 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
             35?: ItemStack | undefined;
         } = {};
         const maxHeight = sourceLoc.dimension.heightRange.max;
+        if (world.structureManager.get("player_inventory_save_storage:" + playerId) === undefined) {
+            return {};
+        }
         world.structureManager.place(
             "player_inventory_save_storage:" + playerId,
             sourceLoc.dimension,
@@ -843,16 +808,7 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
                 y: maxHeight - 2,
                 z: sourceLoc.z.floor(),
             })
-            .find(
-                (v) =>
-                    tryget(() =>
-                        String(
-                            v.getDynamicProperty(
-                                "andexdb:playerInventorySaveStoragePlayerID"
-                            )
-                        )
-                    ) == playerId
-            );
+            .find((v) => tryget(() => String(v.getDynamicProperty("andexdb:playerInventorySaveStoragePlayerID"))) == playerId);
         try {
             const ei = entity.inventory.container;
             for (let i = 0; i < 36; i++) {
@@ -883,15 +839,15 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
         return items;
     }
     static savePlayer(player: Player): string | undefined {
-        if(!player.isValid()){
+        if (!player.isValid()) {
             console.warn(`Player data save canceled for ${player.id} because the player is no longer valid, likely because they left during the save process.`);
             return undefined;
-        }/* 
+        } /* 
         // playerDataSaveDebug
         world.getAllPlayers().filter(p=>p.hasTag("playerDataSaveDebug")).forEach(p=>p.sendMessage(`§r[${formatTime(new Date(Date.now() + (Number(p.getDynamicProperty("andexdbPersonalSettings:timeZone") ?? world.getDynamicProperty("andexdbSettings:timeZone") ?? 0) * 3600000)))}] §r[§l§bplayerDataSaveDebug§r] savePlayer() for player ${tryget(()=>player?.name??"undefined")??"ERROR"}<${tryget(()=>player?.id??"undefined")??"ERROR"}>`)) */
         const origData = this.getSavedPlayer("player:" + player.id);
         let savedPlayerData: savedPlayerData;
-        if(config.system.playerDataSavePerformanceMode === "full") {
+        if (config.system.playerDataSavePerformanceMode === "full") {
             savedPlayerData = {
                 // ms for 1000 runs: 1
                 name: player.name,
@@ -934,52 +890,27 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
                 // ms for 1000 runs: 22
                 inputPermissions: {
                     // ms for 1000 runs: 2
-                    Camera: player.inputPermissions.isPermissionCategoryEnabled(
-                        InputPermissionCategory.Camera
-                    ),
+                    Camera: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.Camera),
                     // ms for 1000 runs: 2
-                    Movement: player.inputPermissions.isPermissionCategoryEnabled(
-                        InputPermissionCategory.Movement
-                    ),
+                    Movement: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.Movement),
                     // ms for 1000 runs: 2
-                    LateralMovement:
-                        player.inputPermissions.isPermissionCategoryEnabled(
-                            InputPermissionCategory.LateralMovement
-                        ),
+                    LateralMovement: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.LateralMovement),
                     // ms for 1000 runs: 2
-                    Sneak: player.inputPermissions.isPermissionCategoryEnabled(
-                        InputPermissionCategory.Sneak
-                    ),
+                    Sneak: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.Sneak),
                     // ms for 1000 runs: 2
-                    Jump: player.inputPermissions.isPermissionCategoryEnabled(
-                        InputPermissionCategory.Jump
-                    ),
+                    Jump: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.Jump),
                     // ms for 1000 runs: 2
-                    Mount: player.inputPermissions.isPermissionCategoryEnabled(
-                        InputPermissionCategory.Mount
-                    ),
+                    Mount: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.Mount),
                     // ms for 1000 runs: 2
-                    Dismount: player.inputPermissions.isPermissionCategoryEnabled(
-                        InputPermissionCategory.Dismount
-                    ),
+                    Dismount: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.Dismount),
                     // ms for 1000 runs: 2
-                    MoveForward:
-                        player.inputPermissions.isPermissionCategoryEnabled(
-                            InputPermissionCategory.MoveForward
-                        ),
+                    MoveForward: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.MoveForward),
                     // ms for 1000 runs: 2
-                    MoveBackward:
-                        player.inputPermissions.isPermissionCategoryEnabled(
-                            InputPermissionCategory.MoveBackward
-                        ),
+                    MoveBackward: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.MoveBackward),
                     // ms for 1000 runs: 2
-                    MoveLeft: player.inputPermissions.isPermissionCategoryEnabled(
-                        InputPermissionCategory.MoveLeft
-                    ),
+                    MoveLeft: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.MoveLeft),
                     // ms for 1000 runs: 2
-                    MoveRight: player.inputPermissions.isPermissionCategoryEnabled(
-                        InputPermissionCategory.MoveRight
-                    ),
+                    MoveRight: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.MoveRight),
                 },
                 // ms for 1000 runs: 2
                 inputInfo: {
@@ -995,7 +926,7 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
                 // ms for 1000 runs: 0
                 saveMode: "full",
             };
-        }else if(config.system.playerDataSavePerformanceMode === "medium") {
+        } else if (config.system.playerDataSavePerformanceMode === "medium") {
             savedPlayerData = {
                 // ms for 1000 runs: 1
                 name: player.name,
@@ -1094,57 +1025,29 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
                 saveMode: "lite",
             };
         }
-        savedPlayerData.saveId =
-            savedPlayerData.saveId ?? "player:" + savedPlayerData.id;
-        savedPlayerData.format_version =
-            savedPlayerData.format_version ?? format_version;
+        savedPlayerData.saveId = savedPlayerData.saveId ?? "player:" + savedPlayerData.id;
+        savedPlayerData.format_version = savedPlayerData.format_version ?? format_version;
         if (config.system.playerInventoryDataSaveSystemEnabled) {
             if (
                 config.system.useLegacyPlayerInventoryDataSaveSystem ||
-                semver.satisfies(
-                    savedPlayerData.player_save_format_version ?? "0.0.0",
-                    "<1.5.0-0",
-                    { includePrerelease: true }
-                )
+                semver.satisfies(savedPlayerData.player_save_format_version ?? "0.0.0", "<1.5.0-0", { includePrerelease: true })
             ) {
                 savedPlayerData.items = {
                     inventory: [],
                     equipment: [],
                     ender_chest: [],
                 };
-                for (
-                    let i = 0;
-                    i < player.getComponent("inventory").inventorySize;
-                    i++
-                ) {
-                    if (
-                        player
-                            .getComponent("inventory")
-                            .container.getItem(Number(i)) !== undefined
-                    ) {
+                for (let i = 0; i < player.getComponent("inventory").inventorySize; i++) {
+                    if (player.getComponent("inventory").container.getItem(Number(i)) !== undefined) {
                         savedPlayerData.items.inventory.push({
-                            id: player
-                                .getComponent("inventory")
-                                .container.getItem(Number(i)).typeId,
+                            id: player.getComponent("inventory").container.getItem(Number(i)).typeId,
                             slot: i,
                             enchants:
-                                player
-                                    .getComponent("inventory")
-                                    .container.getItem(Number(i))
-                                    ?.getComponent("enchantable")
-                                    ?.getEnchantments().length != 0
-                                    ? player
-                                          .getComponent("inventory")
-                                          .container.getItem(Number(i))
-                                          ?.getComponent("enchantable")
-                                          ?.getEnchantments()
+                                player.getComponent("inventory").container.getItem(Number(i))?.getComponent("enchantable")?.getEnchantments().length != 0
+                                    ? player.getComponent("inventory").container.getItem(Number(i))?.getComponent("enchantable")?.getEnchantments()
                                     : undefined,
-                            name: player
-                                .getComponent("inventory")
-                                .container.getItem(Number(i))?.nameTag,
-                            count: player
-                                .getComponent("inventory")
-                                .container.getItem(Number(i)).amount,
+                            name: player.getComponent("inventory").container.getItem(Number(i))?.nameTag,
+                            count: player.getComponent("inventory").container.getItem(Number(i)).amount,
                         });
                     } else {
                         savedPlayerData.items.inventory.push({
@@ -1155,142 +1058,58 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
                     }
                 }
                 savedPlayerData.items.inventory.push({
-                    id:
-                        player
-                            .getComponent("equippable")
-                            .getEquipment(EquipmentSlot.Head)?.typeId ?? "",
+                    id: player.getComponent("equippable").getEquipment(EquipmentSlot.Head)?.typeId ?? "",
                     slot: "Head",
                     enchants:
-                        player
-                            .getComponent("equippable")
-                            .getEquipment(EquipmentSlot.Head)
-                            ?.getComponent("enchantable")
-                            ?.getEnchantments().length != 0
-                            ? player
-                                  .getComponent("equippable")
-                                  .getEquipment(EquipmentSlot.Head)
-                                  ?.getComponent("enchantable")
-                                  ?.getEnchantments()
+                        player.getComponent("equippable").getEquipment(EquipmentSlot.Head)?.getComponent("enchantable")?.getEnchantments().length != 0
+                            ? player.getComponent("equippable").getEquipment(EquipmentSlot.Head)?.getComponent("enchantable")?.getEnchantments()
                             : undefined,
-                    name: player
-                        .getComponent("equippable")
-                        .getEquipment(EquipmentSlot.Head)?.nameTag,
-                    count:
-                        player
-                            .getComponent("equippable")
-                            .getEquipment(EquipmentSlot.Head)?.amount ?? 0,
+                    name: player.getComponent("equippable").getEquipment(EquipmentSlot.Head)?.nameTag,
+                    count: player.getComponent("equippable").getEquipment(EquipmentSlot.Head)?.amount ?? 0,
                 });
                 savedPlayerData.items.inventory.push({
-                    id:
-                        player
-                            .getComponent("equippable")
-                            .getEquipment(EquipmentSlot.Chest)?.typeId ?? "",
+                    id: player.getComponent("equippable").getEquipment(EquipmentSlot.Chest)?.typeId ?? "",
                     slot: "Chest",
                     enchants:
-                        player
-                            .getComponent("equippable")
-                            .getEquipment(EquipmentSlot.Chest)
-                            ?.getComponent("enchantable")
-                            ?.getEnchantments().length != 0
-                            ? player
-                                  .getComponent("equippable")
-                                  .getEquipment(EquipmentSlot.Chest)
-                                  ?.getComponent("enchantable")
-                                  ?.getEnchantments()
+                        player.getComponent("equippable").getEquipment(EquipmentSlot.Chest)?.getComponent("enchantable")?.getEnchantments().length != 0
+                            ? player.getComponent("equippable").getEquipment(EquipmentSlot.Chest)?.getComponent("enchantable")?.getEnchantments()
                             : undefined,
-                    name: player
-                        .getComponent("equippable")
-                        .getEquipment(EquipmentSlot.Chest)?.nameTag,
-                    count:
-                        player
-                            .getComponent("equippable")
-                            .getEquipment(EquipmentSlot.Chest)?.amount ?? 0,
+                    name: player.getComponent("equippable").getEquipment(EquipmentSlot.Chest)?.nameTag,
+                    count: player.getComponent("equippable").getEquipment(EquipmentSlot.Chest)?.amount ?? 0,
                 });
                 savedPlayerData.items.inventory.push({
-                    id:
-                        player
-                            .getComponent("equippable")
-                            .getEquipment(EquipmentSlot.Legs)?.typeId ?? "",
+                    id: player.getComponent("equippable").getEquipment(EquipmentSlot.Legs)?.typeId ?? "",
                     slot: "Legs",
                     enchants:
-                        player
-                            .getComponent("equippable")
-                            .getEquipment(EquipmentSlot.Legs)
-                            ?.getComponent("enchantable")
-                            ?.getEnchantments().length != 0
-                            ? player
-                                  .getComponent("equippable")
-                                  .getEquipment(EquipmentSlot.Legs)
-                                  ?.getComponent("enchantable")
-                                  ?.getEnchantments()
+                        player.getComponent("equippable").getEquipment(EquipmentSlot.Legs)?.getComponent("enchantable")?.getEnchantments().length != 0
+                            ? player.getComponent("equippable").getEquipment(EquipmentSlot.Legs)?.getComponent("enchantable")?.getEnchantments()
                             : undefined,
-                    name: player
-                        .getComponent("equippable")
-                        .getEquipment(EquipmentSlot.Legs)?.nameTag,
-                    count:
-                        player
-                            .getComponent("equippable")
-                            .getEquipment(EquipmentSlot.Legs)?.amount ?? 0,
+                    name: player.getComponent("equippable").getEquipment(EquipmentSlot.Legs)?.nameTag,
+                    count: player.getComponent("equippable").getEquipment(EquipmentSlot.Legs)?.amount ?? 0,
                 });
                 savedPlayerData.items.inventory.push({
-                    id:
-                        player
-                            .getComponent("equippable")
-                            .getEquipment(EquipmentSlot.Feet)?.typeId ?? "",
+                    id: player.getComponent("equippable").getEquipment(EquipmentSlot.Feet)?.typeId ?? "",
                     slot: "Feet",
                     enchants:
-                        player
-                            .getComponent("equippable")
-                            .getEquipment(EquipmentSlot.Feet)
-                            ?.getComponent("enchantable")
-                            ?.getEnchantments().length != 0
-                            ? player
-                                  .getComponent("equippable")
-                                  .getEquipment(EquipmentSlot.Feet)
-                                  ?.getComponent("enchantable")
-                                  ?.getEnchantments()
+                        player.getComponent("equippable").getEquipment(EquipmentSlot.Feet)?.getComponent("enchantable")?.getEnchantments().length != 0
+                            ? player.getComponent("equippable").getEquipment(EquipmentSlot.Feet)?.getComponent("enchantable")?.getEnchantments()
                             : undefined,
-                    name: player
-                        .getComponent("equippable")
-                        .getEquipment(EquipmentSlot.Feet)?.nameTag,
-                    count:
-                        player
-                            .getComponent("equippable")
-                            .getEquipment(EquipmentSlot.Feet)?.amount ?? 0,
+                    name: player.getComponent("equippable").getEquipment(EquipmentSlot.Feet)?.nameTag,
+                    count: player.getComponent("equippable").getEquipment(EquipmentSlot.Feet)?.amount ?? 0,
                 });
                 savedPlayerData.items.inventory.push({
-                    id:
-                        player
-                            .getComponent("equippable")
-                            .getEquipment(EquipmentSlot.Offhand)?.typeId ?? "",
+                    id: player.getComponent("equippable").getEquipment(EquipmentSlot.Offhand)?.typeId ?? "",
                     slot: "Offhand",
                     enchants:
-                        player
-                            .getComponent("equippable")
-                            .getEquipment(EquipmentSlot.Offhand)
-                            ?.getComponent("enchantable")
-                            ?.getEnchantments().length != 0
-                            ? player
-                                  .getComponent("equippable")
-                                  .getEquipment(EquipmentSlot.Offhand)
-                                  ?.getComponent("enchantable")
-                                  ?.getEnchantments()
+                        player.getComponent("equippable").getEquipment(EquipmentSlot.Offhand)?.getComponent("enchantable")?.getEnchantments().length != 0
+                            ? player.getComponent("equippable").getEquipment(EquipmentSlot.Offhand)?.getComponent("enchantable")?.getEnchantments()
                             : undefined,
-                    name: player
-                        .getComponent("equippable")
-                        .getEquipment(EquipmentSlot.Offhand)?.nameTag,
-                    count:
-                        player
-                            .getComponent("equippable")
-                            .getEquipment(EquipmentSlot.Offhand)?.amount ?? 0,
+                    name: player.getComponent("equippable").getEquipment(EquipmentSlot.Offhand)?.nameTag,
+                    count: player.getComponent("equippable").getEquipment(EquipmentSlot.Offhand)?.amount ?? 0,
                 });
             } else if (
                 !config.system.useLegacyPlayerInventoryDataSaveSystem &&
-                semver.satisfies(
-                    savedPlayerData.player_save_format_version ?? "0.0.0",
-                    ">=1.5.0",
-                    { includePrerelease: true }
-                )
+                semver.satisfies(savedPlayerData.player_save_format_version ?? "0.0.0", ">=1.5.0", { includePrerelease: true })
             ) {
                 this.saveInventory(player, {
                     rethrowErrorInFinally: false,
@@ -1298,25 +1117,20 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
                 });
             }
         }
-        world.setDynamicProperty(
-            savedPlayerData.saveId ?? `player:${savedPlayerData.id}`,
-            JSON.stringify(savedPlayerData)
-        );
+        world.setDynamicProperty(savedPlayerData.saveId ?? `player:${savedPlayerData.id}`, JSON.stringify(savedPlayerData));
         return savedPlayerData.saveId ?? `player:${savedPlayerData.id}`;
     }
     static async savePlayerAsync(player: Player): Promise<string | undefined> {
         // let t1 = Date.now();
-        if(!player.isValid()){
+        if (!player.isValid()) {
             console.warn(`Player data save canceled for ${player.id} because the player is no longer valid, likely because they left during the save process.`);
             return undefined;
-        }/* 
+        } /* 
         // playerDataSaveDebug
         world.getAllPlayers().filter(p=>p.hasTag("playerDataSaveDebug")).forEach(p=>p.sendMessage(`§r[${formatTime(new Date(Date.now() + (Number(p.getDynamicProperty("andexdbPersonalSettings:timeZone") ?? world.getDynamicProperty("andexdbSettings:timeZone") ?? 0) * 3600000)))}] §r[§l§bplayerDataSaveDebug§r] savePlayerAsync() for player ${tryget(()=>player?.name??"undefined")??"ERROR"}<${tryget(()=>player?.id??"undefined")??"ERROR"}>`)) */
-        const origData =
-            tryget(() => this.getSavedPlayer("player:" + player.id)) ??
-            ({} as savedPlayer);
+        const origData = tryget(() => this.getSavedPlayer("player:" + player.id)) ?? ({} as savedPlayer);
         let savedPlayerData: savedPlayerData;
-        if(config.system.playerDataSavePerformanceMode === "full") {
+        if (config.system.playerDataSavePerformanceMode === "full") {
             savedPlayerData = {
                 // ms for 1000 runs: 1
                 name: player.name,
@@ -1359,52 +1173,27 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
                 // ms for 1000 runs: 22
                 inputPermissions: {
                     // ms for 1000 runs: 2
-                    Camera: player.inputPermissions.isPermissionCategoryEnabled(
-                        InputPermissionCategory.Camera
-                    ),
+                    Camera: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.Camera),
                     // ms for 1000 runs: 2
-                    Movement: player.inputPermissions.isPermissionCategoryEnabled(
-                        InputPermissionCategory.Movement
-                    ),
+                    Movement: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.Movement),
                     // ms for 1000 runs: 2
-                    LateralMovement:
-                        player.inputPermissions.isPermissionCategoryEnabled(
-                            InputPermissionCategory.LateralMovement
-                        ),
+                    LateralMovement: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.LateralMovement),
                     // ms for 1000 runs: 2
-                    Sneak: player.inputPermissions.isPermissionCategoryEnabled(
-                        InputPermissionCategory.Sneak
-                    ),
+                    Sneak: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.Sneak),
                     // ms for 1000 runs: 2
-                    Jump: player.inputPermissions.isPermissionCategoryEnabled(
-                        InputPermissionCategory.Jump
-                    ),
+                    Jump: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.Jump),
                     // ms for 1000 runs: 2
-                    Mount: player.inputPermissions.isPermissionCategoryEnabled(
-                        InputPermissionCategory.Mount
-                    ),
+                    Mount: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.Mount),
                     // ms for 1000 runs: 2
-                    Dismount: player.inputPermissions.isPermissionCategoryEnabled(
-                        InputPermissionCategory.Dismount
-                    ),
+                    Dismount: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.Dismount),
                     // ms for 1000 runs: 2
-                    MoveForward:
-                        player.inputPermissions.isPermissionCategoryEnabled(
-                            InputPermissionCategory.MoveForward
-                        ),
+                    MoveForward: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.MoveForward),
                     // ms for 1000 runs: 2
-                    MoveBackward:
-                        player.inputPermissions.isPermissionCategoryEnabled(
-                            InputPermissionCategory.MoveBackward
-                        ),
+                    MoveBackward: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.MoveBackward),
                     // ms for 1000 runs: 2
-                    MoveLeft: player.inputPermissions.isPermissionCategoryEnabled(
-                        InputPermissionCategory.MoveLeft
-                    ),
+                    MoveLeft: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.MoveLeft),
                     // ms for 1000 runs: 2
-                    MoveRight: player.inputPermissions.isPermissionCategoryEnabled(
-                        InputPermissionCategory.MoveRight
-                    ),
+                    MoveRight: player.inputPermissions.isPermissionCategoryEnabled(InputPermissionCategory.MoveRight),
                 },
                 // ms for 1000 runs: 2
                 inputInfo: {
@@ -1420,7 +1209,7 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
                 // ms for 1000 runs: 0
                 saveMode: "full",
             };
-        }else if(config.system.playerDataSavePerformanceMode === "medium") {
+        } else if (config.system.playerDataSavePerformanceMode === "medium") {
             savedPlayerData = {
                 // ms for 1000 runs: 1
                 name: player.name,
@@ -1519,57 +1308,29 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
                 saveMode: "lite",
             };
         }
-        savedPlayerData.saveId =
-            savedPlayerData.saveId ?? "player:" + savedPlayerData.id;
-        savedPlayerData.format_version =
-            savedPlayerData.format_version ?? format_version;
+        savedPlayerData.saveId = savedPlayerData.saveId ?? "player:" + savedPlayerData.id;
+        savedPlayerData.format_version = savedPlayerData.format_version ?? format_version;
         if (config.system.playerInventoryDataSaveSystemEnabled) {
             if (
                 config.system.useLegacyPlayerInventoryDataSaveSystem ||
-                semver.satisfies(
-                    savedPlayerData.player_save_format_version ?? "0.0.0",
-                    "<1.5.0-0",
-                    { includePrerelease: true }
-                )
+                semver.satisfies(savedPlayerData.player_save_format_version ?? "0.0.0", "<1.5.0-0", { includePrerelease: true })
             ) {
                 savedPlayerData.items = {
                     inventory: [],
                     equipment: [],
                     ender_chest: [],
                 };
-                for (
-                    let i = 0;
-                    i < player.getComponent("inventory").inventorySize;
-                    i++
-                ) {
-                    if (
-                        player
-                            .getComponent("inventory")
-                            .container.getItem(Number(i)) !== undefined
-                    ) {
+                for (let i = 0; i < player.getComponent("inventory").inventorySize; i++) {
+                    if (player.getComponent("inventory").container.getItem(Number(i)) !== undefined) {
                         savedPlayerData.items.inventory.push({
-                            id: player
-                                .getComponent("inventory")
-                                .container.getItem(Number(i)).typeId,
+                            id: player.getComponent("inventory").container.getItem(Number(i)).typeId,
                             slot: i,
                             enchants:
-                                player
-                                    .getComponent("inventory")
-                                    .container.getItem(Number(i))
-                                    ?.getComponent("enchantable")
-                                    ?.getEnchantments().length != 0
-                                    ? player
-                                          .getComponent("inventory")
-                                          .container.getItem(Number(i))
-                                          ?.getComponent("enchantable")
-                                          ?.getEnchantments()
+                                player.getComponent("inventory").container.getItem(Number(i))?.getComponent("enchantable")?.getEnchantments().length != 0
+                                    ? player.getComponent("inventory").container.getItem(Number(i))?.getComponent("enchantable")?.getEnchantments()
                                     : undefined,
-                            name: player
-                                .getComponent("inventory")
-                                .container.getItem(Number(i))?.nameTag,
-                            count: player
-                                .getComponent("inventory")
-                                .container.getItem(Number(i)).amount,
+                            name: player.getComponent("inventory").container.getItem(Number(i))?.nameTag,
+                            count: player.getComponent("inventory").container.getItem(Number(i)).amount,
                         });
                     } else {
                         savedPlayerData.items.inventory.push({
@@ -1580,146 +1341,64 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
                     }
                 }
                 savedPlayerData.items.inventory.push({
-                    id:
-                        player
-                            .getComponent("equippable")
-                            .getEquipment(EquipmentSlot.Head)?.typeId ?? "",
+                    id: player.getComponent("equippable").getEquipment(EquipmentSlot.Head)?.typeId ?? "",
                     slot: "Head",
                     enchants:
-                        player
-                            .getComponent("equippable")
-                            .getEquipment(EquipmentSlot.Head)
-                            ?.getComponent("enchantable")
-                            ?.getEnchantments().length != 0
-                            ? player
-                                  .getComponent("equippable")
-                                  .getEquipment(EquipmentSlot.Head)
-                                  ?.getComponent("enchantable")
-                                  ?.getEnchantments()
+                        player.getComponent("equippable").getEquipment(EquipmentSlot.Head)?.getComponent("enchantable")?.getEnchantments().length != 0
+                            ? player.getComponent("equippable").getEquipment(EquipmentSlot.Head)?.getComponent("enchantable")?.getEnchantments()
                             : undefined,
-                    name: player
-                        .getComponent("equippable")
-                        .getEquipment(EquipmentSlot.Head)?.nameTag,
-                    count:
-                        player
-                            .getComponent("equippable")
-                            .getEquipment(EquipmentSlot.Head)?.amount ?? 0,
+                    name: player.getComponent("equippable").getEquipment(EquipmentSlot.Head)?.nameTag,
+                    count: player.getComponent("equippable").getEquipment(EquipmentSlot.Head)?.amount ?? 0,
                 });
                 savedPlayerData.items.inventory.push({
-                    id:
-                        player
-                            .getComponent("equippable")
-                            .getEquipment(EquipmentSlot.Chest)?.typeId ?? "",
+                    id: player.getComponent("equippable").getEquipment(EquipmentSlot.Chest)?.typeId ?? "",
                     slot: "Chest",
                     enchants:
-                        player
-                            .getComponent("equippable")
-                            .getEquipment(EquipmentSlot.Chest)
-                            ?.getComponent("enchantable")
-                            ?.getEnchantments().length != 0
-                            ? player
-                                  .getComponent("equippable")
-                                  .getEquipment(EquipmentSlot.Chest)
-                                  ?.getComponent("enchantable")
-                                  ?.getEnchantments()
+                        player.getComponent("equippable").getEquipment(EquipmentSlot.Chest)?.getComponent("enchantable")?.getEnchantments().length != 0
+                            ? player.getComponent("equippable").getEquipment(EquipmentSlot.Chest)?.getComponent("enchantable")?.getEnchantments()
                             : undefined,
-                    name: player
-                        .getComponent("equippable")
-                        .getEquipment(EquipmentSlot.Chest)?.nameTag,
-                    count:
-                        player
-                            .getComponent("equippable")
-                            .getEquipment(EquipmentSlot.Chest)?.amount ?? 0,
+                    name: player.getComponent("equippable").getEquipment(EquipmentSlot.Chest)?.nameTag,
+                    count: player.getComponent("equippable").getEquipment(EquipmentSlot.Chest)?.amount ?? 0,
                 });
                 savedPlayerData.items.inventory.push({
-                    id:
-                        player
-                            .getComponent("equippable")
-                            .getEquipment(EquipmentSlot.Legs)?.typeId ?? "",
+                    id: player.getComponent("equippable").getEquipment(EquipmentSlot.Legs)?.typeId ?? "",
                     slot: "Legs",
                     enchants:
-                        player
-                            .getComponent("equippable")
-                            .getEquipment(EquipmentSlot.Legs)
-                            ?.getComponent("enchantable")
-                            ?.getEnchantments().length != 0
-                            ? player
-                                  .getComponent("equippable")
-                                  .getEquipment(EquipmentSlot.Legs)
-                                  ?.getComponent("enchantable")
-                                  ?.getEnchantments()
+                        player.getComponent("equippable").getEquipment(EquipmentSlot.Legs)?.getComponent("enchantable")?.getEnchantments().length != 0
+                            ? player.getComponent("equippable").getEquipment(EquipmentSlot.Legs)?.getComponent("enchantable")?.getEnchantments()
                             : undefined,
-                    name: player
-                        .getComponent("equippable")
-                        .getEquipment(EquipmentSlot.Legs)?.nameTag,
-                    count:
-                        player
-                            .getComponent("equippable")
-                            .getEquipment(EquipmentSlot.Legs)?.amount ?? 0,
+                    name: player.getComponent("equippable").getEquipment(EquipmentSlot.Legs)?.nameTag,
+                    count: player.getComponent("equippable").getEquipment(EquipmentSlot.Legs)?.amount ?? 0,
                 });
                 savedPlayerData.items.inventory.push({
-                    id:
-                        player
-                            .getComponent("equippable")
-                            .getEquipment(EquipmentSlot.Feet)?.typeId ?? "",
+                    id: player.getComponent("equippable").getEquipment(EquipmentSlot.Feet)?.typeId ?? "",
                     slot: "Feet",
                     enchants:
-                        player
-                            .getComponent("equippable")
-                            .getEquipment(EquipmentSlot.Feet)
-                            ?.getComponent("enchantable")
-                            ?.getEnchantments().length != 0
-                            ? player
-                                  .getComponent("equippable")
-                                  .getEquipment(EquipmentSlot.Feet)
-                                  ?.getComponent("enchantable")
-                                  ?.getEnchantments()
+                        player.getComponent("equippable").getEquipment(EquipmentSlot.Feet)?.getComponent("enchantable")?.getEnchantments().length != 0
+                            ? player.getComponent("equippable").getEquipment(EquipmentSlot.Feet)?.getComponent("enchantable")?.getEnchantments()
                             : undefined,
-                    name: player
-                        .getComponent("equippable")
-                        .getEquipment(EquipmentSlot.Feet)?.nameTag,
-                    count:
-                        player
-                            .getComponent("equippable")
-                            .getEquipment(EquipmentSlot.Feet)?.amount ?? 0,
+                    name: player.getComponent("equippable").getEquipment(EquipmentSlot.Feet)?.nameTag,
+                    count: player.getComponent("equippable").getEquipment(EquipmentSlot.Feet)?.amount ?? 0,
                 });
                 savedPlayerData.items.inventory.push({
-                    id:
-                        player
-                            .getComponent("equippable")
-                            .getEquipment(EquipmentSlot.Offhand)?.typeId ?? "",
+                    id: player.getComponent("equippable").getEquipment(EquipmentSlot.Offhand)?.typeId ?? "",
                     slot: "Offhand",
                     enchants:
-                        player
-                            .getComponent("equippable")
-                            .getEquipment(EquipmentSlot.Offhand)
-                            ?.getComponent("enchantable")
-                            ?.getEnchantments().length != 0
-                            ? player
-                                  .getComponent("equippable")
-                                  .getEquipment(EquipmentSlot.Offhand)
-                                  ?.getComponent("enchantable")
-                                  ?.getEnchantments()
+                        player.getComponent("equippable").getEquipment(EquipmentSlot.Offhand)?.getComponent("enchantable")?.getEnchantments().length != 0
+                            ? player.getComponent("equippable").getEquipment(EquipmentSlot.Offhand)?.getComponent("enchantable")?.getEnchantments()
                             : undefined,
-                    name: player
-                        .getComponent("equippable")
-                        .getEquipment(EquipmentSlot.Offhand)?.nameTag,
-                    count:
-                        player
-                            .getComponent("equippable")
-                            .getEquipment(EquipmentSlot.Offhand)?.amount ?? 0,
+                    name: player.getComponent("equippable").getEquipment(EquipmentSlot.Offhand)?.nameTag,
+                    count: player.getComponent("equippable").getEquipment(EquipmentSlot.Offhand)?.amount ?? 0,
                 });
             } else if (
                 !config.system.useLegacyPlayerInventoryDataSaveSystem &&
-                semver.satisfies(
-                    savedPlayerData.player_save_format_version ?? "0.0.0",
-                    ">=1.5.0",
-                    { includePrerelease: true }
-                )
+                semver.satisfies(savedPlayerData.player_save_format_version ?? "0.0.0", ">=1.5.0", { includePrerelease: true })
             ) {
                 await waitTick();
-                if(!player.isValid()){
-                    console.warn(`Player data save canceled for ${player.id} because the player is no longer valid, likely because they left during the save process.`);
+                if (!player.isValid()) {
+                    console.warn(
+                        `Player data save canceled for ${player.id} because the player is no longer valid, likely because they left during the save process.`
+                    );
                     return undefined;
                 }
                 await this.saveInventoryAsync(player, {
@@ -1728,14 +1407,11 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
                 });
             }
         }
-        if(!player.isValid()){
+        if (!player.isValid()) {
             console.warn(`Player data save canceled for ${player.id} because the player is no longer valid, likely because they left during the save process.`);
             return undefined;
         }
-        world.setDynamicProperty(
-            savedPlayerData.saveId ?? `player:${savedPlayerData.id}`,
-            JSON.stringify(savedPlayerData)
-        );
+        world.setDynamicProperty(savedPlayerData.saveId ?? `player:${savedPlayerData.id}`, JSON.stringify(savedPlayerData));
         // let t2 = Date.now();
         // console.log(`player_save: Saved player ${player.id} in ${t2 - t1}ms`);
         return savedPlayerData.saveId ?? `player:${savedPlayerData.id}`;
@@ -1763,16 +1439,6 @@ getBan(banId: string){let banString = String(world.getDynamicProperty(banId)).sp
         savedPlayer.getSavedPlayerIds().forEach((b) => {
             players.push(savedPlayer.getSavedPlayer(b));
         });
-        return players.sort(
-            (a, b) =>
-                1 -
-                2 *
-                    Number(
-                        [
-                            String(a.name.toLowerCase()),
-                            String(b.name.toLowerCase()),
-                        ].sort()[0] == String(a.name.toLowerCase())
-                    )
-        );
+        return players.sort((a, b) => 1 - 2 * Number([String(a.name.toLowerCase()), String(b.name.toLowerCase())].sort()[0] == String(a.name.toLowerCase())));
     }
 }

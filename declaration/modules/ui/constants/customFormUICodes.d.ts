@@ -26,7 +26,7 @@ export declare const customFormUICodes: {
                  * -   Allows for buttons in the title bar.
                  * -   Buttons are displayed in a grid with 3 columns.
                  * -   Allows for buttons to the left and right of the form.
-                 * -   The form is 345px*230px instead of 220px*200px.
+                 * -   The form is 345px\*230px instead of 220px\*200px.
                  */
                 gridMenu: string;
                 /**
@@ -35,7 +35,7 @@ export declare const customFormUICodes: {
                  * -   Allows for buttons in the title bar.
                  * -   Buttons are displayed in a grid with 3 columns.
                  * -   Allows for buttons to the left and right of the form.
-                 * -   The form is 345px*230px instead of 220px*200px.
+                 * -   The form is 345px\*230px instead of 220px\*200px.
                  * -   Has a status bar.
                  *
                  * @deprecated This form style is currently disabled for performance reasons.
@@ -68,7 +68,7 @@ export declare const customFormUICodes: {
                  * This is the same as the general form style, but it is the same size as the grid menu form style.
                  *
                  * -   Allows for buttons in the title bar.
-                 * -   The form is 345px*230px instead of 220px*200px.
+                 * -   The form is 345px\*230px instead of 220px\*200px.
                  */
                 medium: string;
                 /**
@@ -77,7 +77,7 @@ export declare const customFormUICodes: {
                  * This is the same as the general (Status Bar) form style, but it is the same size as the grid menu form style.
                  *
                  * -   Allows for buttons in the title bar.
-                 * -   The form is 345px*230px instead of 220px*200px.
+                 * -   The form is 345px\*230px instead of 220px\*200px.
                  * -   Has a status bar.
                  *
                  * @deprecated This form style is currently disabled for performance reasons.
@@ -249,7 +249,7 @@ export declare const customFormUICodes: {
                  *
                  * This is the same as the general modal form style, but it is the same size as the grid menu long form style.
                  *
-                 * -   The form is 345px*230px instead of 225px*200px.
+                 * -   The form is 345px\*230px instead of 225px\*200px.
                  */
                 medium: string;
                 /**

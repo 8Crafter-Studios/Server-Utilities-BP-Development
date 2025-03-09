@@ -1,9 +1,10 @@
-import { Entity, Player } from "@minecraft/server";
-import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
+import type { loosePlayerType } from "modules/utilities/types/loosePlayerType";
 /**
- * @description Opens the player menu.
- * @param {Entity | executeCommandPlayerW | Player} sourceEntitya - The entity which should open the player menu.
- * @returns {Promise<0>} A promise which resolves to 0 once the player menu has been closed.
- * @throws TypeError - If the type of sourceEntitya is not an instance of the Player class, or an instance of the executeCommandPlayerW class with a Player linked to it.
+ * Opens the player menu.
+ *
+ * @async
+ * @param {loosePlayerType} sourceEntity - The player viewing the UI.
+ * @returns {Promise<0>} A promise that resolves to `0` once the player menu has been closed.
+ * @throws {TypeError} If sourceEntity is not an instance of the Player class or an instance of the executeCommandPlayerW class with a Player linked to it.
  */
-export declare function playerMenu(sourceEntitya: Entity | executeCommandPlayerW | Player): Promise<0>;
+export declare function playerMenu(sourceEntity: loosePlayerType): Promise<0>;

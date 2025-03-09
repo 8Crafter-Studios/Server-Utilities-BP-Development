@@ -762,7 +762,7 @@ export class ProtectedAreaTester {
                             break;
                         }
                         case "itemUse": {
-                            const prop = category.playerInteractWithBlock;
+                            const prop = category.itemUse;
                             const data = event;
                             success =
                                 !prop.allowedBypassTags.some((tag) => data.source.hasTag(tag)) &&
@@ -774,7 +774,7 @@ export class ProtectedAreaTester {
                             break;
                         }
                         case "itemUseOn": {
-                            const prop = category.playerInteractWithBlock;
+                            const prop = category.itemUseOn;
                             const data = event;
                             success =
                                 !prop.allowedBypassTags.some((tag) => data.source.hasTag(tag)) &&
@@ -875,6 +875,7 @@ export class ProtectedAreaTester {
                             break;
                         }
                     }
+                    console.log(this.preventableEvent, success);
                     if (!success)
                         return false;
                     return new ProtectedAreaCategory("advancedArea", category.id).testIsInArea(location, dimension);

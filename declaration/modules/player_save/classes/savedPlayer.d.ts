@@ -43,10 +43,7 @@ export interface savedItem {
     name?: string;
     lore?: string[];
     enchants?: Enchantment[];
-    properties?: [
-        id: string,
-        value: string | number | Boolean | Vector3 | undefined
-    ][];
+    properties?: [id: string, value: string | number | Boolean | Vector3 | undefined][];
 }
 export interface savedPlayerData {
     name: string;
@@ -58,10 +55,7 @@ export interface savedPlayerData {
         equipment: savedItem[] | undefined;
         ender_chest: savedItem[] | undefined;
     };
-    properties?: [
-        id: string | undefined,
-        value: string | number | Boolean | Vector3 | undefined
-    ][];
+    properties?: [id: string | undefined, value: string | number | Boolean | Vector3 | undefined][];
     lastOnline: number;
     firstJoined?: number;
     location?: Vector3;
@@ -135,10 +129,7 @@ export declare class savedPlayer {
         equipment: savedItem[] | undefined;
         ender_chest: savedItem[] | undefined;
     };
-    properties?: [
-        id: string | undefined,
-        value: string | number | Boolean | Vector3 | undefined
-    ][];
+    properties?: [id: string | undefined, value: string | number | Boolean | Vector3 | undefined][];
     lastOnline: number;
     firstJoined: number;
     location?: Vector3;
@@ -246,6 +237,11 @@ export declare class savedPlayer {
         valid: ban[];
         expired: ban[];
     };
+    /**
+     * Returns true if the player's saved inventory data is using the legacy pre-1.5.0 format, this would be the case if the player's inventory was saved before the 1.5.0 player save format version, or the {@linkcode config.system.useLegacyPlayerInventoryDataSaveSystem} option was set to true when the player's inventory was saved.
+     */
+    get hasLegacyInventorySave(): boolean;
+    get hasModernInventorySave(): boolean;
     static getSavedPlayerIds(): string[];
     static savePlayerData(savedPlayerData: savedPlayerData): string;
     static saveInventoryAsync(player: Player, options?: {

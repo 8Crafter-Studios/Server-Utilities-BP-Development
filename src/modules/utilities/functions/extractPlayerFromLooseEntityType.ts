@@ -1,6 +1,7 @@
-import { type Entity, Player } from "@minecraft/server";
+import { Player } from "@minecraft/server";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { getDetailedType } from "./getDetailedType";
+import type { loosePlayerType } from "../types/loosePlayerType";
 
 /**
  * Converts a loose entity type into a Player type, ensuring that the loose entity type is an instance of the Player class, or an instance of the executeCommandPlayerW class with a Player linked to it.
@@ -10,13 +11,13 @@ import { getDetailedType } from "./getDetailedType";
  * - index: The index of the function argument in the function's parameter list.
  * - name: The name of the function argument.
  * - customSourceMessage: A custom message to include in the error message.
- * If the functionArgumentDetails parameter is not provided, the function will use default values of `{index: 0, name: "sourceEntitya"}`.
- * @param {executeCommandPlayerW | Entity | Player} looseEntityType The loose entity type to convert to a Player type.
+ * If the functionArgumentDetails parameter is not provided, the function will use default values of `{index: 0, name: "sourceEntity"}`.
+ * @param {loosePlayerType} looseEntityType The loose entity type to convert to a Player type.
  * @param {{index: number, name: string}|{customSourceMessage: string}|"none"} functionArgumentDetails An object containing details about the function argument that the loose entity type is derived from.
  * @returns {Player} A Player instance.
  * @throws {TypeError} If the loose entity type is not an instance of the Player class or an instance of the executeCommandPlayerW class with a Player linked to it.
  */
-export function extractPlayerFromLooseEntityType(looseEntityType: executeCommandPlayerW | Entity | Player, functionArgumentDetails: {index: number, name: string}|{customSourceMessage: string}|"none" = {index: 0, name: "sourceEntitya"}): Player {
+export function extractPlayerFromLooseEntityType(looseEntityType: loosePlayerType, functionArgumentDetails: {index: number, name: string}|{customSourceMessage: string}|"none" = {index: 0, name: "sourceEntity"}): Player {
     const player = looseEntityType instanceof executeCommandPlayerW ? looseEntityType.player : (looseEntityType as Player);
     if (!(player instanceof Player)) {
             throw new TypeError(

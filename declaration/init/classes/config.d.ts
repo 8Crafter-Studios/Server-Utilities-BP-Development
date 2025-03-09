@@ -1,3 +1,4 @@
+import type { Vector3 } from "@minecraft/server";
 import { StructureSaveMode, type DimensionLocation, Dimension } from "@minecraft/server";
 import type { Warp } from "modules/coordinates/interfaces/Warp";
 import type { PlayerDataSaveMode } from "modules/player_save/classes/savedPlayer";
@@ -17,6 +18,22 @@ export declare class config {
     static set invalidChatCommandAction(invalidChatCommandAction: number | undefined);
     static get undoClipboardMode(): StructureSaveMode;
     static set undoClipboardMode(undoClipboardMode: StructureSaveMode | undefined);
+    /**
+     * The default spawn location for the gametest structures, this is used when spawning in no AI entities and simulated players.
+     *
+     * Dynamic Property ID: `andexdbSettings:gametestStructureDefaultSpawnLocation`
+     *
+     * @default { x: 1000000000, y: 100, z: 1000000000 }
+     */
+    static get gametestStructureDefaultSpawnLocation(): Vector3;
+    static set gametestStructureDefaultSpawnLocation(gametestStructureDefaultSpawnLocation: Partial<Vector3> | undefined);
+    /**
+     * The location to teleport players when they use the \\spawn command.
+     *
+     * Dynamic Property ID: `andexdbSettings:spawnCommandLocation`
+     *
+     * @default { x: null, y: null, z: null, dimension: overworld }
+     */
     static get spawnCommandLocation(): DimensionLocation | {
         x: null;
         y: null;
@@ -32,7 +49,7 @@ export declare class config {
     /**
      * Whether or not players can teleport to spawn using the `\spawn` command when they are in a different dimension than the spawn.
      *
-     * Defaults to true.
+     * @default true
      */
     static get spawnCommandAllowCrossDimensionalTeleport(): boolean;
     static set spawnCommandAllowCrossDimensionalTeleport(enabled: boolean | undefined);
@@ -314,17 +331,17 @@ export declare class config {
          *
          * When this option is disabled the limit is 10^32767. So basically infinite.
          *
-         * Default: false.
+         * Dynamic Property ID: `andexdbSettings:moneySystem.useScoreboardBasedMoneySystem`
          *
-         * Dynamic Property ID: andexdbSettings:moneySystem.useScoreboardBasedMoneySystem
+         * @default false
          */
         useScoreboardBasedMoneySystem: boolean;
         /**
          * The name of the scoreboard to use for the money system.
          *
-         * Default: "andexdb:money".
+         * Dynamic Property ID: `andexdbSettings:moneySystem.scoreboardName`
          *
-         * Dynamic Property ID: andexdbSettings:moneySystem.scoreboardName
+         * @default "andexdb:money"
          */
         scoreboardName: string;
     };
@@ -332,9 +349,9 @@ export declare class config {
         /**
          * Whether or not the bounty system is enabled.
          *
-         * Default: true.
+         * Dynamic Property ID: `andexdbSettings:bountySystem.enabled`
          *
-         * Dynamic Property ID: andexdbSettings:bountySystem.enabled
+         * @default true
          */
         enabled: boolean;
         /**
@@ -348,17 +365,17 @@ export declare class config {
         /**
          * Whether or not the warps system is enabled.
          *
-         * Default: true.
+         * Dynamic Property ID: `andexdbSettings:warpsSystem.enabled`
          *
-         * Dynamic Property ID: andexdbSettings:warpsSystem.enabled
+         * @default true
          */
         enabled: boolean;
         /**
          * List of saved warps.
          *
-         * Default: [].
+         * Dynamic Property ID: `andexdbSettings:warpsSystem.warps`
          *
-         * Dynamic Property ID: andexdbSettings:warpsSystem.warps
+         * @default []
          *
          * @throws The setter throws if the input is not an array of warp interface objects or undefined.
          */
@@ -368,9 +385,9 @@ export declare class config {
         /**
          * Whether or not the money transfer system is enabled.
          *
-         * Default: true.
+         * Dynamic Property ID: `andexdbSettings:moneyTransferSystem.enabled`
          *
-         * Dynamic Property ID: andexdbSettings:moneyTransferSystem.enabled
+         * @default true
          */
         enabled: boolean;
     };
@@ -386,9 +403,7 @@ export declare class config {
             readonly mainMenu: {
                 /**
                  *
-                 */
-                buttons: (keyof typeof menuButtonIds.mainMenu.buttons)[];
-                /**
+                 */ /**
                  * Whether to show the buttons marked as deprecated on the main menu.
                  *
                  * Defaults to false.
@@ -555,7 +570,7 @@ export declare class config {
         /**
          * How often to refresh protected areas.
          *
-         * Dynamic Property ID: andexdbSettings:protectedAreasRefreshRate
+         * Dynamic Property ID: `andexdbSettings:protectedAreasRefreshRate`
          *
          * @default 200
          */
@@ -566,7 +581,7 @@ export declare class config {
         /**
          * How often to check for banned players.
          *
-         * Dynamic Property ID: andexdbSettings:bannedPlayersRefreshRate
+         * Dynamic Property ID: `andexdbSettings:bannedPlayersRefreshRate`
          *
          * @default 20
          */
@@ -574,7 +589,7 @@ export declare class config {
         /**
          * How long it has to be since the last ban refresh before the bans list will be automatically refreshed, when getting the bans list or checking if a player is banned.
          *
-         * Dynamic Property ID: andexdbSettings:bansMinimumAutoRefresh
+         * Dynamic Property ID: `andexdbSettings:bansMinimumAutoRefresh`
          *
          * @default 1000
          */
@@ -622,7 +637,7 @@ export declare class config {
     static reset(subsection?: any): void;
     static applySettings(settings: DeepPartial<ReturnType<typeof modules.utils.filterProperties<typeof config, ["prototype", "reset", "applySettings", "toJSON"]>>>): void;
     static toJSON(): {
-        [k: string]: string | number | boolean | DimensionLocation | config | {
+        [k: string]: string | number | boolean | Vector3 | DimensionLocation | config | {
             /**
              * Whether or not to use a scoreboard-based money system instead of a dynamic property-based one.
              *
@@ -630,17 +645,17 @@ export declare class config {
              *
              * When this option is disabled the limit is 10^32767. So basically infinite.
              *
-             * Default: false.
+             * Dynamic Property ID: `andexdbSettings:moneySystem.useScoreboardBasedMoneySystem`
              *
-             * Dynamic Property ID: andexdbSettings:moneySystem.useScoreboardBasedMoneySystem
+             * @default false
              */
             useScoreboardBasedMoneySystem: boolean;
             /**
              * The name of the scoreboard to use for the money system.
              *
-             * Default: "andexdb:money".
+             * Dynamic Property ID: `andexdbSettings:moneySystem.scoreboardName`
              *
-             * Dynamic Property ID: andexdbSettings:moneySystem.scoreboardName
+             * @default "andexdb:money"
              */
             scoreboardName: string;
         } | {
@@ -648,9 +663,7 @@ export declare class config {
                 readonly mainMenu: {
                     /**
                      *
-                     */
-                    buttons: (keyof typeof menuButtonIds.mainMenu.buttons)[];
-                    /**
+                     */ /**
                      * Whether to show the buttons marked as deprecated on the main menu.
                      *
                      * Defaults to false.
@@ -842,17 +855,17 @@ export declare class config {
             /**
              * Whether or not the warps system is enabled.
              *
-             * Default: true.
+             * Dynamic Property ID: `andexdbSettings:warpsSystem.enabled`
              *
-             * Dynamic Property ID: andexdbSettings:warpsSystem.enabled
+             * @default true
              */
             enabled: boolean;
             /**
              * List of saved warps.
              *
-             * Default: [].
+             * Dynamic Property ID: `andexdbSettings:warpsSystem.warps`
              *
-             * Dynamic Property ID: andexdbSettings:warpsSystem.warps
+             * @default []
              *
              * @throws The setter throws if the input is not an array of warp interface objects or undefined.
              */
@@ -861,9 +874,9 @@ export declare class config {
             /**
              * Whether or not the bounty system is enabled.
              *
-             * Default: true.
+             * Dynamic Property ID: `andexdbSettings:bountySystem.enabled`
              *
-             * Dynamic Property ID: andexdbSettings:bountySystem.enabled
+             * @default true
              */
             enabled: boolean;
             /**
@@ -890,9 +903,9 @@ export declare class config {
             /**
              * Whether or not the money transfer system is enabled.
              *
-             * Default: true.
+             * Dynamic Property ID: `andexdbSettings:moneyTransferSystem.enabled`
              *
-             * Dynamic Property ID: andexdbSettings:moneyTransferSystem.enabled
+             * @default true
              */
             enabled: boolean;
         } | {
@@ -1134,7 +1147,7 @@ export declare class config {
             /**
              * How often to refresh protected areas.
              *
-             * Dynamic Property ID: andexdbSettings:protectedAreasRefreshRate
+             * Dynamic Property ID: `andexdbSettings:protectedAreasRefreshRate`
              *
              * @default 200
              */
@@ -1145,7 +1158,7 @@ export declare class config {
             /**
              * How often to check for banned players.
              *
-             * Dynamic Property ID: andexdbSettings:bannedPlayersRefreshRate
+             * Dynamic Property ID: `andexdbSettings:bannedPlayersRefreshRate`
              *
              * @default 20
              */
@@ -1153,7 +1166,7 @@ export declare class config {
             /**
              * How long it has to be since the last ban refresh before the bans list will be automatically refreshed, when getting the bans list or checking if a player is banned.
              *
-             * Dynamic Property ID: andexdbSettings:bansMinimumAutoRefresh
+             * Dynamic Property ID: `andexdbSettings:bansMinimumAutoRefresh`
              *
              * @default 1000
              */

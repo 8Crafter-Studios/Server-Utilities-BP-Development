@@ -12,36 +12,31 @@ import { BlockMask } from "modules/commands/classes/BlockMask";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { customFormUICodes } from "modules/ui/constants/customFormUICodes";
 import { selectTexturePreset } from "modules/ui/functions/selectTexturePreset";
+import { extractPlayerFromLooseEntityType } from "modules/utilities/functions/extractPlayerFromLooseEntityType";
 import type { VerifyConstraint } from "modules/utilities/functions/filterProperties";
 import { getDetailedType } from "modules/utilities/functions/getDetailedType";
 import { showActions } from "modules/utilities/functions/showActions";
 import { showMessage } from "modules/utilities/functions/showMessage";
+import type { loosePlayerType } from "modules/utilities/types/loosePlayerType";
 import { securityVariables } from "security/ultraSecurityModeUtils";
 
 export async function editCustomAreaCategory(
-    sourceEntitya: Entity | executeCommandPlayerW | Player,
+    sourceEntity: Entity | executeCommandPlayerW | Player,
     categoryID: (typeof ProtectedAreas)["areas"]["advancedAreaCategories"][number]["id"]
 ): Promise<0 | 1> {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
     if (arguments.length !== 2) {
         throw new TypeError(`Incorrect number of arguments to function. Expected 2, received ${arguments.length}.`);
     }
-    if (!(sourceEntity instanceof Player)) {
-        throw new TypeError(
-            "Invalid Player. Function argument [0] (sourceEntitya) expected an instance of the Player class, or an instance of the executeCommandPlayerW class with a Player linked to it, but instead got " +
-                getDetailedType(sourceEntity) +
-                "."
-        );
-    }
+    const player = extractPlayerFromLooseEntityType(sourceEntity);
     if (!(typeof categoryID === "string")) {
         throw new TypeError(
             `Native type conversion failed. Function argument [1] (categoryID) expected type string but got type ${getDetailedType(categoryID)} instead`
         );
     }
     if (securityVariables.ultraSecurityModeEnabled) {
-        if (securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.editCustomProtectedAreaCategories") == false) {
+        if (securityVariables.testPlayerForPermission(player as Player, "andexdb.editCustomProtectedAreaCategories") == false) {
             const r = await showMessage(
-                sourceEntity as Player,
+                player as Player,
                 "Access Denied (403)",
                 "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.editCustomProtectedAreaCategories",
                 "Back",
@@ -61,7 +56,7 @@ export async function editCustomAreaCategory(
             return (
                 (
                     await showMessage(
-                        sourceEntity,
+                        player,
                         "Invalid Category ID",
                         `The custom protected area category with ID ${JSON.stringify(categoryID)} does not exist.`,
                         "Back",
@@ -74,7 +69,7 @@ export async function editCustomAreaCategory(
                 .title(customFormUICodes.action.titles.formStyles.medium + "Edit Custom Category")
                 .body(
                     `ID: ${category.id}§r
-    Icon Path: ${category.icon_path ?? "None"}`
+Icon Path: ${category.icon_path ?? "None"}`
                 )
                 .button(
                     customFormUICodes.action.buttons.positions.main_only + `Settings\n${!!category && category.enabled ? "§aEnabled" : "§cDisabled"}`,
@@ -104,6 +99,18 @@ export async function editCustomAreaCategory(
                 .button(
                     `${customFormUICodes.action.buttons.positions.main_only}Entity Interaction Prevention\n${
                         !!category.playerInteractWithEntity && category.playerInteractWithEntity.enabled !== false ? "§aEnabled" : "§cDisabled"
+                    }`,
+                    "textures/ui/pencil_edit_icon"
+                )
+                .button(
+                    `${customFormUICodes.action.buttons.positions.main_only}Item Use Prevention\n${
+                        !!category.itemUse && category.itemUse.enabled !== false ? "§aEnabled" : "§cDisabled"
+                    }`,
+                    "textures/ui/pencil_edit_icon"
+                )
+                .button(
+                    `${customFormUICodes.action.buttons.positions.main_only}Item Use On Prevention\n${
+                        !!category.itemUseOn && category.itemUseOn.enabled !== false ? "§aEnabled" : "§cDisabled"
                     }`,
                     "textures/ui/pencil_edit_icon"
                 )
@@ -155,7 +162,7 @@ export async function editCustomAreaCategory(
             if (debugMode) {
                 form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Raw Data\n§8(Debug Mode Only)", "textures/ui/debug_glyph_color");
             }
-            const rb = await form.forceShow(sourceEntity);
+            const rb = await form.forceShow(player);
             if (rb.canceled) return 1;
             switch (
                 cullUndefined([
@@ -165,6 +172,8 @@ export async function editCustomAreaCategory(
                     "playerBreakBlock",
                     "playerInteractWithBlock",
                     "playerInteractWithEntity",
+                    "itemUse",
+                    "itemUseOn",
                     "explosion",
                     "effectAdd",
                     "chatSend",
@@ -180,81 +189,95 @@ export async function editCustomAreaCategory(
                 ] as const)[rb.selection]
             ) {
                 case "settings":
-                    if ((await editCustomAreaCategorySettings(sourceEntity, categoryID)) === 1) {
+                    if ((await editCustomAreaCategorySettings(player, categoryID)) === 1) {
                         continue;
                     } else {
                         return 0;
                     }
                 case "applyIconTexturePreset": {
-                    const r = await selectTexturePreset(sourceEntity);
+                    const r = await selectTexturePreset(player);
                     if (r === 1) {
                         continue;
                     } else if (r === 0) {
                         return 0;
-                    }else{
+                    } else {
                         category.icon_path = r;
-                        const out: AdvancedProtectedAreaCategory<true> = JSON.parse(world.getDynamicProperty("advancedProtectedAreaCategory:" + categoryID) as string);
+                        const out: AdvancedProtectedAreaCategory<true> = JSON.parse(
+                            world.getDynamicProperty("advancedProtectedAreaCategory:" + categoryID) as string
+                        );
                         out.icon_path = r;
                         world.setDynamicProperty("advancedProtectedAreaCategory:" + categoryID, JSON.stringify(out));
                         continue;
                     }
                 }
                 case "playerPlaceBlock":
-                    if ((await editCustomAreaCategorySetting(sourceEntity, categoryID, "playerPlaceBlock")) === 1) {
+                    if ((await editCustomAreaCategorySetting(player, categoryID, "playerPlaceBlock")) === 1) {
                         continue;
                     } else {
                         return 0;
                     }
                 case "playerBreakBlock":
-                    if ((await editCustomAreaCategorySetting(sourceEntity, categoryID, "playerBreakBlock")) === 1) {
+                    if ((await editCustomAreaCategorySetting(player, categoryID, "playerBreakBlock")) === 1) {
                         continue;
                     } else {
                         return 0;
                     }
                 case "playerInteractWithBlock":
-                    if ((await editCustomAreaCategorySetting(sourceEntity, categoryID, "playerInteractWithBlock")) === 1) {
+                    if ((await editCustomAreaCategorySetting(player, categoryID, "playerInteractWithBlock")) === 1) {
                         continue;
                     } else {
                         return 0;
                     }
                 case "playerInteractWithEntity":
-                    if ((await editCustomAreaCategorySetting(sourceEntity, categoryID, "playerInteractWithEntity")) === 1) {
+                    if ((await editCustomAreaCategorySetting(player, categoryID, "playerInteractWithEntity")) === 1) {
+                        continue;
+                    } else {
+                        return 0;
+                    }
+                case "itemUse":
+                    if ((await editCustomAreaCategorySetting(player, categoryID, "itemUse")) === 1) {
+                        continue;
+                    } else {
+                        return 0;
+                    }
+                case "itemUseOn":
+                    if ((await editCustomAreaCategorySetting(player, categoryID, "itemUseOn")) === 1) {
                         continue;
                     } else {
                         return 0;
                     }
                 case "explosion":
-                    if ((await editCustomAreaCategorySetting(sourceEntity, categoryID, "explosion")) === 1) {
+                    if ((await editCustomAreaCategorySetting(player, categoryID, "explosion")) === 1) {
                         continue;
                     } else {
                         return 0;
                     }
                 case "effectAdd":
-                    if ((await editCustomAreaCategorySetting(sourceEntity, categoryID, "effectAdd")) === 1) {
+                    if ((await editCustomAreaCategorySetting(player, categoryID, "effectAdd")) === 1) {
                         continue;
                     } else {
                         return 0;
                     }
                 case "chatSend":
-                    if ((await editCustomAreaCategorySetting(sourceEntity, categoryID, "chatSend")) === 1) {
+                    if ((await editCustomAreaCategorySetting(player, categoryID, "chatSend")) === 1) {
                         continue;
                     } else {
                         return 0;
                     }
                 case "playerGameModeChange":
-                    if ((await editCustomAreaCategorySetting(sourceEntity, categoryID, "playerGameModeChange")) === 1) {
+                    if ((await editCustomAreaCategorySetting(player, categoryID, "playerGameModeChange")) === 1) {
                         continue;
                     } else {
                         return 0;
                     }
                 case "noPVPZone":
-                    if ((await editCustomAreaCategorySetting(sourceEntity, categoryID, "noPVPZone")) === 1) {
+                    if ((await editCustomAreaCategorySetting(player, categoryID, "noPVPZone")) === 1) {
                         continue;
                     } else {
                         return 0;
                     }
                 case "tagZone":
-                    if ((await editCustomAreaCategorySetting(sourceEntity, categoryID, "tagZone")) === 1) {
+                    if ((await editCustomAreaCategorySetting(player, categoryID, "tagZone")) === 1) {
                         continue;
                     } else {
                         return 0;
@@ -265,9 +288,9 @@ export async function editCustomAreaCategory(
                     return 0;
                 case "delete":
                     if (securityVariables.ultraSecurityModeEnabled) {
-                        if (securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.deleteCustomProtectedAreaCategories") == false) {
+                        if (securityVariables.testPlayerForPermission(player as Player, "andexdb.deleteCustomProtectedAreaCategories") == false) {
                             const r = await showMessage(
-                                sourceEntity as Player,
+                                player as Player,
                                 "Access Denied (403)",
                                 "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.deleteCustomProtectedAreaCategories",
                                 "Back",
@@ -283,7 +306,7 @@ export async function editCustomAreaCategory(
                     if (
                         (
                             await showMessage(
-                                sourceEntity,
+                                player,
                                 "Are you sure?",
                                 "Are you sure you want to delete this category? This will also delete any linked protected areas.",
                                 "Cancel",
@@ -307,7 +330,7 @@ export async function editCustomAreaCategory(
                         if (
                             (
                                 await showMessage(
-                                    sourceEntity,
+                                    player,
                                     "Category Deleted",
                                     "This protected area category has been successfully deleted.",
                                     "Back",
@@ -323,7 +346,7 @@ export async function editCustomAreaCategory(
                         if (
                             (
                                 await showMessage(
-                                    sourceEntity,
+                                    player,
                                     "Deletion Canceled",
                                     "The deletion of this protected area category has been successfully cancelled.",
                                     "Back",
@@ -338,9 +361,9 @@ export async function editCustomAreaCategory(
                     }
                 case "duplicate": {
                     if (securityVariables.ultraSecurityModeEnabled) {
-                        if (securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.createCustomProtectedAreaCategories") == false) {
+                        if (securityVariables.testPlayerForPermission(player as Player, "andexdb.createCustomProtectedAreaCategories") == false) {
                             const r = await showMessage(
-                                sourceEntity as Player,
+                                player as Player,
                                 "Access Denied (403)",
                                 "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.createCustomProtectedAreaCategories",
                                 "Back",
@@ -353,7 +376,7 @@ export async function editCustomAreaCategory(
                             }
                         }
                     }
-                    const r = await duplicateCustomAreaCategory(sourceEntity, categoryID);
+                    const r = await duplicateCustomAreaCategory(player, categoryID);
                     switch (r) {
                         case 0:
                             return 0;
@@ -385,7 +408,7 @@ export async function editCustomAreaCategory(
                     if (
                         (
                             await showActions(
-                                sourceEntity,
+                                player,
                                 customFormUICodes.action.titles.formStyles.medium + "Raw Data",
                                 JSONB.stringify(category, undefined, 4),
                                 [customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left"],
@@ -403,16 +426,19 @@ export async function editCustomAreaCategory(
         } catch (e) {
             console.error(e, e.stack);
             // Present the error to the user, and return 1 if they select "Back", and 0 if they select "Close".
-            return ((await showMessage(sourceEntity, "An Error occurred", `An error occurred: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
+            return ((await showMessage(player, "An Error occurred", `An error occurred: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
         }
     }
 }
 
 /**
  * Duplicates a custom protected area category.
- * @param sourceEntitya The source entity, which can be an instance of `Entity`, `executeCommandPlayerW`, or `Player`.
+ *
+ * @async
+ * @param {loosePlayerType} sourceEntity - The player viewing the UI.
  * @param categoryID The ID of the category to duplicate.
- * @returns A promise that resolves to 0 if the previous menu should be closed, 1 if the prvious menu should be reopened, or 2 if the menu before the previous menu should be reopened.
+ * @returns {Promise<0 | 1 | 2>} A promise that resolves to `0` if the previous menu should be closed, or `1` if the previous menu should be reopened, or `2` if the menu before the previous menu should be reopened.
+ * @throws {TypeError} If sourceEntity is not an instance of the Player class or an instance of the executeCommandPlayerW class with a Player linked to it.
  *
  * The function performs the following steps:
  * 1. Validates the number of arguments and the type of the source entity.
@@ -423,173 +449,164 @@ export async function editCustomAreaCategory(
  * 6. Calls `editCustomAreaCategory` to allow further editing of the newly created category.
  */
 export async function duplicateCustomAreaCategory(
-    sourceEntitya: Entity | executeCommandPlayerW | Player,
+    sourceEntity: loosePlayerType,
     categoryID: (typeof ProtectedAreas)["areas"]["advancedAreaCategories"][number]["id"]
 ): Promise<0 | 1 | 2> {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
     if (arguments.length !== 2) {
         throw new TypeError(`Incorrect number of arguments to function. Expected 2, received ${arguments.length}.`);
     }
-    if (!(sourceEntity instanceof Player)) {
-        throw new TypeError(
-            "Invalid Player. Function argument [0] (sourceEntitya) expected an instance of the Player class, or an instance of the executeCommandPlayerW class with a Player linked to it, but instead got " +
-                getDetailedType(sourceEntity) +
-                "."
-        );
-    }
+    const player = extractPlayerFromLooseEntityType(sourceEntity);
     if (!(typeof categoryID === "string")) {
         throw new TypeError(
             `Native type conversion failed. Function argument [1] (categoryID) expected type string but got type ${getDetailedType(categoryID)} instead`
         );
     }
-    if (securityVariables.ultraSecurityModeEnabled) {
-        if (securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.createCustomProtectedAreaCategories") == false) {
-            const r = await showMessage(
-                sourceEntity as Player,
-                "Access Denied (403)",
-                "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.createCustomProtectedAreaCategories",
-                "Back",
-                "Cancel"
-            );
-            if (r.canceled || r.selection == 0) {
-                return 1;
-            } else {
-                return 0;
-            }
-        }
-    }
-    const category = ProtectedAreas.areas.advancedAreaCategories.find((v) => v.id == categoryID);
-    if (category === undefined)
-        return (
-            (
-                await showMessage(
-                    sourceEntity,
-                    "Invalid Category ID",
-                    `The custom protected area category with ID ${JSON.stringify(categoryID)} does not exist.`,
+    try {
+        if (securityVariables.ultraSecurityModeEnabled) {
+            if (securityVariables.testPlayerForPermission(player as Player, "andexdb.createCustomProtectedAreaCategories") == false) {
+                const r = await showMessage(
+                    player as Player,
+                    "Access Denied (403)",
+                    "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.createCustomProtectedAreaCategories",
                     "Back",
-                    "Close"
-                )
-            ).selection !== 1
-        ).toNumber();
-    while (true) {
-        const form = new ModalFormData();
-        form.title(customFormUICodes.action.titles.formStyles.medium + "Duplicate Custom Area Category");
-        form.textField("Enter the name for the new category:", "");
-        form.submitButton("Duplicate");
-        const r = await form.forceShow(sourceEntity);
-        if (r.canceled) {
-            return 1;
+                    "Cancel"
+                );
+                if (r.canceled || r.selection == 0) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }
         }
-        const newName = r.formValues[0] as string;
-        if (newName === "") {
-            if ((await showMessage(sourceEntity, "Invalid Name", "You must enter a name for the category.", "Back", "Close")).selection !== 1) {
-                continue;
+        const category = ProtectedAreas.areas.advancedAreaCategories.find((v) => v.id == categoryID);
+        if (category === undefined)
+            return (
+                (
+                    await showMessage(
+                        player,
+                        "Invalid Category ID",
+                        `The custom protected area category with ID ${JSON.stringify(categoryID)} does not exist.`,
+                        "Back",
+                        "Close"
+                    )
+                ).selection !== 1
+            ).toNumber();
+        while (true) {
+            const form = new ModalFormData();
+            form.title(customFormUICodes.action.titles.formStyles.medium + "Duplicate Custom Area Category");
+            form.textField("Enter the name for the new category:", "");
+            form.submitButton("Duplicate");
+            const r = await form.forceShow(player);
+            if (r.canceled) {
+                return 1;
+            }
+            const newName = r.formValues[0] as string;
+            if (newName === "") {
+                if ((await showMessage(player, "Invalid Name", "You must enter a name for the category.", "Back", "Close")).selection !== 1) {
+                    continue;
+                } else {
+                    return 0;
+                }
+            }
+            world.setDynamicProperty(
+                "advancedProtectedAreaCategory:" + newName,
+                JSON.stringify({ ...JSON.parse(world.getDynamicProperty("advancedProtectedAreaCategory:" + categoryID) as string), id: newName })
+            );
+            ProtectedAreas.loadAdvancedCategory(newName);
+            if ((await editCustomAreaCategory(player, newName)) === 1) {
+                return 2;
             } else {
                 return 0;
             }
         }
-        world.setDynamicProperty(
-            "advancedProtectedAreaCategory:" + newName,
-            JSON.stringify({ ...JSON.parse(world.getDynamicProperty("advancedProtectedAreaCategory:" + categoryID) as string), id: newName })
-        );
-        ProtectedAreas.loadAdvancedCategory(newName);
-        if ((await editCustomAreaCategory(sourceEntity, newName)) === 1) {
-            return 2;
-        } else {
-            return 0;
-        }
+    } catch (e) {
+        console.error(e, e.stack);
+        // Present the error to the user, and return 1 if they select "Back", and 0 if they select "Close".
+        return ((await showMessage(player, "An Error occurred", `An error occurred: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
     }
 }
 
 export async function editCustomAreaCategorySettings(
-    sourceEntitya: Entity | executeCommandPlayerW | Player,
+    sourceEntity: loosePlayerType,
     categoryID: (typeof ProtectedAreas)["areas"]["advancedAreaCategories"][number]["id"]
 ): Promise<0 | 1> {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
     if (arguments.length !== 2) {
         throw new TypeError(`Incorrect number of arguments to function. Expected 2, received ${arguments.length}.`);
     }
-    if (!(sourceEntity instanceof Player)) {
-        throw new TypeError(
-            "Invalid Player. Function argument [0] (sourceEntitya) expected an instance of the Player class, or an instance of the executeCommandPlayerW class with a Player linked to it, but instead got " +
-                getDetailedType(sourceEntity) +
-                "."
-        );
-    }
+    const player = extractPlayerFromLooseEntityType(sourceEntity);
     if (!(typeof categoryID === "string")) {
         throw new TypeError(
             `Native type conversion failed. Function argument [1] (categoryID) expected type string but got type ${getDetailedType(categoryID)} instead`
         );
     }
-    if (securityVariables.ultraSecurityModeEnabled) {
-        if (securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.editCustomProtectedAreaCategories") == false) {
-            const r = await showMessage(
-                sourceEntity as Player,
-                "Access Denied (403)",
-                "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.editCustomProtectedAreaCategories",
-                "Back",
-                "Cancel"
-            );
-            if (r.canceled || r.selection == 0) {
-                return 1;
-            } else {
-                return 0;
+    try {
+        if (securityVariables.ultraSecurityModeEnabled) {
+            if (securityVariables.testPlayerForPermission(player as Player, "andexdb.editCustomProtectedAreaCategories") == false) {
+                const r = await showMessage(
+                    player as Player,
+                    "Access Denied (403)",
+                    "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.editCustomProtectedAreaCategories",
+                    "Back",
+                    "Cancel"
+                );
+                if (r.canceled || r.selection == 0) {
+                    return 1;
+                } else {
+                    return 0;
+                }
             }
         }
+        const category = ProtectedAreas.areas.advancedAreaCategories.find((v) => v.id == categoryID);
+        if (category === undefined)
+            return (
+                (
+                    await showMessage(
+                        player,
+                        "Invalid Category ID",
+                        `The custom protected area category with ID ${JSON.stringify(categoryID)} does not exist.`,
+                        "Back",
+                        "Close"
+                    )
+                ).selection !== 1
+            ).toNumber();
+        const form = new ModalFormData();
+        form.title(customFormUICodes.modal.titles.formStyles.medium + "Custom Area Category Settings"); /* 
+        form.textField(
+            "Category ID",
+            "string",
+            category.id
+        ) */
+        form.toggle(
+            "Enabled\nWhether or not this protected area category is enabled. If disabled, then any areas in this category will cease to function until this is enabled.",
+            category.enabled ?? true
+        );
+        form.textField("Icon Path (Optional)", "string", category.icon_path ?? "");
+        form.submitButton("Save");
+        const r = await form.forceShow(player);
+        if (r.canceled) return 1;
+        category.enabled = r.formValues[0] as boolean;
+        category.icon_path = r.formValues[1] as string;
+        const out: AdvancedProtectedAreaCategory<true> = JSON.parse(world.getDynamicProperty("advancedProtectedAreaCategory:" + categoryID) as string);
+        out.enabled = r.formValues[0] as boolean;
+        out.icon_path = r.formValues[1] as string;
+        world.setDynamicProperty("advancedProtectedAreaCategory:" + categoryID, JSON.stringify(out));
+        return 1;
+    } catch (e) {
+        console.error(e, e.stack);
+        // Present the error to the user, and return 1 if they select "Back", and 0 if they select "Close".
+        return ((await showMessage(player, "An Error occurred", `An error occurred: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
     }
-    const category = ProtectedAreas.areas.advancedAreaCategories.find((v) => v.id == categoryID);
-    if (category === undefined)
-        return (
-            (
-                await showMessage(
-                    sourceEntity,
-                    "Invalid Category ID",
-                    `The custom protected area category with ID ${JSON.stringify(categoryID)} does not exist.`,
-                    "Back",
-                    "Close"
-                )
-            ).selection !== 1
-        ).toNumber();
-    const form = new ModalFormData();
-    form.title(customFormUICodes.modal.titles.formStyles.medium + "Custom Area Category Settings"); /* 
-    form.textField(
-        "Category ID",
-        "string",
-        category.id
-    ) */
-    form.toggle(
-        "Enabled\nWhether or not this protected area category is enabled. If disabled, then any areas in this category will cease to function until this is enabled.",
-        category.enabled ?? true
-    );
-    form.textField("Icon Path (Optional)", "string", category.icon_path ?? "");
-    form.submitButton("Save");
-    const r = await form.forceShow(sourceEntity);
-    if (r.canceled) return 1;
-    category.enabled = r.formValues[0] as boolean;
-    category.icon_path = r.formValues[1] as string;
-    const out: AdvancedProtectedAreaCategory<true> = JSON.parse(world.getDynamicProperty("advancedProtectedAreaCategory:" + categoryID) as string);
-    out.enabled = r.formValues[0] as boolean;
-    out.icon_path = r.formValues[1] as string;
-    world.setDynamicProperty("advancedProtectedAreaCategory:" + categoryID, JSON.stringify(out));
-    return 1;
 }
 
 export async function editCustomAreaCategorySetting(
-    sourceEntitya: Entity | executeCommandPlayerW | Player,
+    sourceEntity: Entity | executeCommandPlayerW | Player,
     categoryID: (typeof ProtectedAreas)["areas"]["advancedAreaCategories"][number]["id"],
     setting: Exclude<keyof AdvancedProtectedAreaCategory, "icon_path" | "id" | "enabled">
 ): Promise<0 | 1> {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
     if (arguments.length !== 3) {
         throw new TypeError(`Incorrect number of arguments to function. Expected 3, received ${arguments.length}.`);
     }
-    if (!(sourceEntity instanceof Player)) {
-        throw new TypeError(
-            "Invalid Player. Function argument [0] (sourceEntitya) expected an instance of the Player class, or an instance of the executeCommandPlayerW class with a Player linked to it, but instead got " +
-                getDetailedType(sourceEntity) +
-                "."
-        );
-    }
+    const player = extractPlayerFromLooseEntityType(sourceEntity);
     if (!(typeof categoryID === "string")) {
         throw new TypeError(
             `Native type conversion failed. Function argument [1] (categoryID) expected type string but got type ${getDetailedType(categoryID)} instead`
@@ -600,569 +617,566 @@ export async function editCustomAreaCategorySetting(
             `Native type conversion failed. Function argument [2] (setting) expected type string but got type ${getDetailedType(categoryID)} instead`
         );
     }
-    if (securityVariables.ultraSecurityModeEnabled) {
-        if (securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.editCustomProtectedAreaCategories") == false) {
-            const r = await showMessage(
-                sourceEntity as Player,
-                "Access Denied (403)",
-                "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.editCustomProtectedAreaCategories",
-                "Back",
-                "Cancel"
-            );
-            if (r.canceled || r.selection == 0) {
-                return 1;
-            } else {
-                return 0;
-            }
-        }
-    }
-    try {
-        const category = ProtectedAreas.areas.advancedAreaCategories.find((v) => v.id == categoryID);
-        if (category === undefined)
-            return (
-                (
-                    await showMessage(
-                        sourceEntity,
-                        "Invalid Category ID",
-                        `The custom protected area category with ID ${JSON.stringify(categoryID)} does not exist.`,
+    while (true) {
+        try {
+            if (securityVariables.ultraSecurityModeEnabled) {
+                if (securityVariables.testPlayerForPermission(player as Player, "andexdb.editCustomProtectedAreaCategories") == false) {
+                    const r = await showMessage(
+                        player as Player,
+                        "Access Denied (403)",
+                        "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.editCustomProtectedAreaCategories",
                         "Back",
-                        "Close"
-                    )
-                ).selection !== 1
-            ).toNumber();
-        const option = category[setting];
-        const form = new ActionFormData();
-        form.title(customFormUICodes.action.titles.formStyles.medium + advancedCategoryPropertyDisplayNames[setting] + " Settings");
-        form.body(`Edit custom area category settings for ${advancedCategoryPropertyDisplayNames[setting]} in ${categoryID}.`);
-        form.button(
-            `${customFormUICodes.action.buttons.positions.main_only}${!!option && option.enabled !== false ? "§aEnabled" : "§cDisabled"}`,
-            !!option && option.enabled ? "textures/ui/toggle_on" : "textures/ui/toggle_off"
-        );
-        let optionsList: (
-            | Exclude<
-                  KeysOfUnion<Exclude<typeof option, false>>,
-                  "fromGameModes" | "toGameModes" | "fromGameModesToGameModes" | "rawmask" | "mode" | "enabled" | "removeOnExit" | "playersOnly"
-              >
-            | "gameModeFilters"
-            | "ignoredLabelOption"
-        )[] = [];
-        switch (setting) {
-            case "playerPlaceBlock": {
-                // !!category[setting] && category[setting];
-                optionsList = ["allowedBypassTags", "heldItemFilters", "mask"];
-                const option = category[setting];
-                form.button(
-                    `${customFormUICodes.action.buttons.positions.main_only}${
-                        !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
-                    }Allowed Bypass Tags\n${
-                        !!option && !!option.allowedBypassTags
-                            ? option.allowedBypassTags.length === 1
-                                ? "1 tag"
-                                : `${option.allowedBypassTags.length} tags`
-                            : "0 tags"
-                    }`,
-                    "textures/ui/pencil_edit_icon"
-                );
-                form.button(
-                    `${customFormUICodes.action.buttons.positions.main_only}${
-                        !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
-                    }Held Item Filters\n${
-                        !!option && !!option.heldItemFilters
-                            ? option.heldItemFilters.items.length === 1
-                                ? `1 item ${option.heldItemFilters.mode ?? "exclude"}d`
-                                : `${option.heldItemFilters.items.length} items ${option.heldItemFilters.mode ?? "exclude"}d`
-                            : `0 items excluded`
-                    }`,
-                    "textures/ui/pencil_edit_icon"
-                );
-                form.button(
-                    `${customFormUICodes.action.buttons.positions.main_only}${
-                        !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
-                    }Block Mask\n${
-                        !!option && !!option.mask && option.mask.blocks.length !== 0
-                            ? option.mask.blocks.length === 1
-                                ? `1 block permutation ${option.mode ?? "exclude"}d`
-                                : `${option.mask.blocks.length} blocks ${option.mode ?? "exclude"}d`
-                            : `All Blocks`
-                    }`,
-                    "textures/ui/pencil_edit_icon"
-                );
-                break;
-            }
-            case "playerBreakBlock": {
-                optionsList = ["allowedBypassTags", "heldItemFilters", "mask"];
-                const option = category[setting];
-                form.button(
-                    `${customFormUICodes.action.buttons.positions.main_only}${
-                        !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
-                    }Allowed Bypass Tags\n${
-                        !!option && !!option.allowedBypassTags
-                            ? option.allowedBypassTags.length === 1
-                                ? "1 tag"
-                                : `${option.allowedBypassTags.length} tags`
-                            : "0 tags"
-                    }`,
-                    "textures/ui/pencil_edit_icon"
-                );
-                form.button(
-                    `${customFormUICodes.action.buttons.positions.main_only}${
-                        !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
-                    }Held Item Filters\n${
-                        !!option && !!option.heldItemFilters
-                            ? option.heldItemFilters.items.length === 1
-                                ? `1 item ${option.heldItemFilters.mode ?? "exclude"}d`
-                                : `${option.heldItemFilters.items.length} items ${option.heldItemFilters.mode ?? "exclude"}d`
-                            : `0 items excluded`
-                    }`,
-                    "textures/ui/pencil_edit_icon"
-                );
-                form.button(
-                    `${customFormUICodes.action.buttons.positions.main_only}${
-                        !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
-                    }Block Mask\n${
-                        !!option && !!option.mask && option.mask.blocks.length !== 0
-                            ? option.mask.blocks.length === 1
-                                ? `1 block permutation ${option.mode ?? "exclude"}d`
-                                : `${option.mask.blocks.length} blocks ${option.mode ?? "exclude"}d`
-                            : `All Blocks`
-                    }`,
-                    "textures/ui/pencil_edit_icon"
-                );
-                break;
-            }
-            case "playerInteractWithBlock": {
-                optionsList = ["allowedBypassTags", "heldItemFilters", "mask"];
-                const option = category[setting];
-                form.button(
-                    `${customFormUICodes.action.buttons.positions.main_only}${
-                        !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
-                    }Allowed Bypass Tags\n${
-                        !!option && !!option.allowedBypassTags
-                            ? option.allowedBypassTags.length === 1
-                                ? "1 tag"
-                                : `${option.allowedBypassTags.length} tags`
-                            : "0 tags"
-                    }`,
-                    "textures/ui/pencil_edit_icon"
-                );
-                form.button(
-                    `${customFormUICodes.action.buttons.positions.main_only}${
-                        !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
-                    }Held Item Filters\n${
-                        !!option && !!option.heldItemFilters
-                            ? option.heldItemFilters.items.length === 1
-                                ? `1 item ${option.heldItemFilters.mode ?? "exclude"}d`
-                                : `${option.heldItemFilters.items.length} items ${option.heldItemFilters.mode ?? "exclude"}d`
-                            : `0 items excluded`
-                    }`,
-                    "textures/ui/pencil_edit_icon"
-                );
-                form.button(
-                    `${customFormUICodes.action.buttons.positions.main_only}${
-                        !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
-                    }Block Mask\n${
-                        !!option && !!option.mask && option.mask.blocks.length !== 0
-                            ? option.mask.blocks.length === 1
-                                ? `1 block permutation ${option.mode ?? "exclude"}d`
-                                : `${option.mask.blocks.length} blocks ${option.mode ?? "exclude"}d`
-                            : `All Blocks`
-                    }`,
-                    "textures/ui/pencil_edit_icon"
-                );
-                break;
-            }
-            case "itemUse": {
-                optionsList = ["allowedBypassTags", "heldItemFilters"];
-                const option = category[setting];
-                form.button(
-                    `${customFormUICodes.action.buttons.positions.main_only}${
-                        !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
-                    }Allowed Bypass Tags\n${
-                        !!option && !!option.allowedBypassTags
-                            ? option.allowedBypassTags.length === 1
-                                ? "1 tag"
-                                : `${option.allowedBypassTags.length} tags`
-                            : "0 tags"
-                    }`,
-                    "textures/ui/pencil_edit_icon"
-                );
-                form.button(
-                    `${customFormUICodes.action.buttons.positions.main_only}${
-                        !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
-                    }Held Item Filters\n${
-                        !!option && !!option.heldItemFilters
-                            ? option.heldItemFilters.items.length === 1
-                                ? `1 item ${option.heldItemFilters.mode ?? "exclude"}d`
-                                : `${option.heldItemFilters.items.length} items ${option.heldItemFilters.mode ?? "exclude"}d`
-                            : `0 items excluded`
-                    }`,
-                    "textures/ui/pencil_edit_icon"
-                );
-                break;
-            }
-            case "itemUseOn": {
-                optionsList = ["allowedBypassTags", "heldItemFilters", "mask"];
-                const option = category[setting];
-                form.button(
-                    `${customFormUICodes.action.buttons.positions.main_only}${
-                        !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
-                    }Allowed Bypass Tags\n${
-                        !!option && !!option.allowedBypassTags
-                            ? option.allowedBypassTags.length === 1
-                                ? "1 tag"
-                                : `${option.allowedBypassTags.length} tags`
-                            : "0 tags"
-                    }`,
-                    "textures/ui/pencil_edit_icon"
-                );
-                form.button(
-                    `${customFormUICodes.action.buttons.positions.main_only}${
-                        !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
-                    }Held Item Filters\n${
-                        !!option && !!option.heldItemFilters
-                            ? option.heldItemFilters.items.length === 1
-                                ? `1 item ${option.heldItemFilters.mode ?? "exclude"}d`
-                                : `${option.heldItemFilters.items.length} items ${option.heldItemFilters.mode ?? "exclude"}d`
-                            : `0 items excluded`
-                    }`,
-                    "textures/ui/pencil_edit_icon"
-                );
-                form.button(
-                    `${customFormUICodes.action.buttons.positions.main_only}${
-                        !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
-                    }Block Mask\n${
-                        !!option && !!option.mask && option.mask.blocks.length !== 0
-                            ? option.mask.blocks.length === 1
-                                ? `1 block permutation ${option.mode ?? "exclude"}d`
-                                : `${option.mask.blocks.length} blocks ${option.mode ?? "exclude"}d`
-                            : `All Blocks`
-                    }`,
-                    "textures/ui/pencil_edit_icon"
-                );
-                break;
-            }
-            case "explosion": {
-                optionsList = ["allowedBypassTags", "heldItemFilters", "mask", "sourceEntityFilter"];
-                const option = category[setting];
-                form.button(
-                    `${customFormUICodes.action.buttons.positions.main_only}${
-                        !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
-                    }Allowed Bypass Tags\n${
-                        !!option && !!option.allowedBypassTags
-                            ? option.allowedBypassTags.length === 1
-                                ? "1 tag"
-                                : `${option.allowedBypassTags.length} tags`
-                            : "0 tags"
-                    }`,
-                    "textures/ui/pencil_edit_icon"
-                );
-                form.button(
-                    `${customFormUICodes.action.buttons.positions.main_only}${
-                        !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
-                    }Held Item Filters\n${
-                        !!option && !!option.heldItemFilters
-                            ? option.heldItemFilters.items.length === 1
-                                ? `1 item ${option.heldItemFilters.mode ?? "exclude"}d`
-                                : `${option.heldItemFilters.items.length} items ${option.heldItemFilters.mode ?? "exclude"}d`
-                            : `0 items excluded`
-                    }`,
-                    "textures/ui/pencil_edit_icon"
-                );
-                form.button(
-                    `${customFormUICodes.action.buttons.positions.main_only}${
-                        !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
-                    }Block Mask\n${
-                        !!option && !!option.mask && option.mask.blocks.length !== 0
-                            ? option.mask.blocks.length === 1
-                                ? `1 block permutation ${option.mode ?? "exclude"}d`
-                                : `${option.mask.blocks.length} blocks ${option.mode ?? "exclude"}d`
-                            : `All Blocks`
-                    }`,
-                    "textures/ui/pencil_edit_icon"
-                );
-                form.button(
-                    `${customFormUICodes.action.buttons.positions.main_only}${
-                        !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
-                    }Source Entity Filter\n${
-                        !!option &&
-                        !!option.sourceEntityFilter &&
-                        (option.sourceEntityFilter.excludeTags?.length > 0 ||
-                            option.sourceEntityFilter.includeTags?.length > 0 ||
-                            option.sourceEntityFilter.excludeTypes?.length > 0 ||
-                            option.sourceEntityFilter.includeTypes?.length > 0)
-                            ? `${
-                                  option.sourceEntityFilter.excludeTags?.length > 0
-                                      ? option.sourceEntityFilter.excludeTags.length === 1
-                                          ? `1 tag excluded`
-                                          : `${option.sourceEntityFilter.excludeTags.length} tags excluded`
-                                      : option.sourceEntityFilter.includeTags?.length > 0
-                                      ? option.sourceEntityFilter.includeTags?.length === 1
-                                          ? `1 tag included`
-                                          : `${option.sourceEntityFilter.includeTags.length} tags included`
-                                      : ""
-                              }${
-                                  option.sourceEntityFilter.excludeTypes?.length > 0
-                                      ? option.sourceEntityFilter.excludeTypes.length === 1
-                                          ? `1 type excluded`
-                                          : `${option.sourceEntityFilter.excludeTypes.length} types excluded`
-                                      : option.sourceEntityFilter.includeTypes?.length > 0
-                                      ? option.sourceEntityFilter.includeTypes?.length === 1
-                                          ? `1 type included`
-                                          : `${option.sourceEntityFilter.includeTypes.length} types included`
-                                      : ""
-                              }`
-                            : "No Filter"
-                    }`,
-                    "textures/ui/pencil_edit_icon"
-                );
-                break;
-            }
-            case "playerInteractWithEntity": {
-                optionsList = ["targetEntityFilter", "allowedBypassTags", "heldItemFilters", "mask"];
-                const option = category[setting];
-                form.button(
-                    `${customFormUICodes.action.buttons.positions.main_only}${
-                        !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
-                    }Target Entity Filter\n${
-                        !!option &&
-                        !!option.targetEntityFilter &&
-                        (option.targetEntityFilter.excludeTags?.length > 0 ||
-                            option.targetEntityFilter.includeTags?.length > 0 ||
-                            option.targetEntityFilter.excludeTypes?.length > 0 ||
-                            option.targetEntityFilter.includeTypes?.length > 0)
-                            ? `${
-                                  option.targetEntityFilter.excludeTags?.length > 0
-                                      ? option.targetEntityFilter.excludeTags.length === 1
-                                          ? `1 tag excluded`
-                                          : `${option.targetEntityFilter.excludeTags.length} tags excluded`
-                                      : option.targetEntityFilter.includeTags?.length > 0
-                                      ? option.targetEntityFilter.includeTags?.length === 1
-                                          ? `1 tag included`
-                                          : `${option.targetEntityFilter.includeTags.length} tags included`
-                                      : ""
-                              }${
-                                  option.targetEntityFilter.excludeTypes?.length > 0
-                                      ? option.targetEntityFilter.excludeTypes.length === 1
-                                          ? `1 type excluded`
-                                          : `${option.targetEntityFilter.excludeTypes.length} types excluded`
-                                      : option.targetEntityFilter.includeTypes?.length > 0
-                                      ? option.targetEntityFilter.includeTypes?.length === 1
-                                          ? `1 type included`
-                                          : `${option.targetEntityFilter.includeTypes.length} types included`
-                                      : ""
-                              }`
-                            : "No Filter"
-                    }`,
-                    "textures/ui/pencil_edit_icon"
-                );
-                form.button(
-                    `${customFormUICodes.action.buttons.positions.main_only}${
-                        !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
-                    }Allowed Bypass Tags\n${
-                        !!option && !!option.allowedBypassTags
-                            ? option.allowedBypassTags.length === 1
-                                ? "1 tag"
-                                : `${option.allowedBypassTags.length} tags`
-                            : "0 tags"
-                    }`,
-                    "textures/ui/pencil_edit_icon"
-                );
-                form.button(
-                    `${customFormUICodes.action.buttons.positions.main_only}${
-                        !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
-                    }Held Item Filters\n${
-                        !!option && !!option.heldItemFilters
-                            ? option.heldItemFilters.items.length === 1
-                                ? `1 item ${option.heldItemFilters.mode ?? "exclude"}d`
-                                : `${option.heldItemFilters.items.length} items ${option.heldItemFilters.mode ?? "exclude"}d`
-                            : `0 items excluded`
-                    }`,
-                    "textures/ui/pencil_edit_icon"
-                );
-                break;
-            }
-            case "playerGameModeChange": {
-                optionsList = ["allowedBypassTags", "heldItemFilters", "gameModeFilters"];
-                const option = category[setting];
-                form.button(
-                    `${customFormUICodes.action.buttons.positions.main_only}${
-                        !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
-                    }Allowed Bypass Tags\n${
-                        !!option && !!option.allowedBypassTags
-                            ? option.allowedBypassTags.length === 1
-                                ? "1 tag"
-                                : `${option.allowedBypassTags.length} tags`
-                            : "0 tags"
-                    }`,
-                    "textures/ui/pencil_edit_icon"
-                );
-                form.button(
-                    `${customFormUICodes.action.buttons.positions.main_only}${
-                        !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
-                    }Held Item Filters\n${
-                        !!option && !!option.heldItemFilters
-                            ? option.heldItemFilters.items.length === 1
-                                ? `1 item ${option.heldItemFilters.mode ?? "exclude"}d`
-                                : `${option.heldItemFilters.items.length} items ${option.heldItemFilters.mode ?? "exclude"}d`
-                            : `0 items excluded`
-                    }`,
-                    "textures/ui/pencil_edit_icon"
-                );
-                form.button(
-                    `${customFormUICodes.action.buttons.positions.main_only}${
-                        !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
-                    }Game Mode Filters\n${
-                        !!option &&
-                        ((!!option.fromGameModes && option.fromGameModes.length > 0) ||
-                            (!!option.toGameModes && option.toGameModes.length > 0) ||
-                            (!!option.fromGameModesToGameModes && option.fromGameModesToGameModes.length > 0))
-                            ? (() => {
-                                  let filterCount = 0;
-                                  if (!!option.fromGameModes && option.fromGameModes.length > 0) filterCount += option.fromGameModes.length;
-                                  if (!!option.toGameModes && option.toGameModes.length > 0) filterCount += option.toGameModes.length;
-                                  if (!!option.fromGameModesToGameModes && option.fromGameModesToGameModes.length > 0)
-                                      filterCount += option.fromGameModesToGameModes.length;
-                                  return filterCount === 1 ? "1 filter" : `${filterCount} filters`;
-                              })()
-                            : `No Filters`
-                    }`,
-                    "textures/ui/pencil_edit_icon"
-                );
-                break;
-            }
-            case "chatSend": {
-                optionsList = ["allowedBypassTags", "heldItemFilters"];
-                const option = category[setting];
-                form.button(
-                    `${customFormUICodes.action.buttons.positions.main_only}${
-                        !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
-                    }Allowed Bypass Tags\n${
-                        !!option && !!option.allowedBypassTags
-                            ? option.allowedBypassTags.length === 1
-                                ? "1 tag"
-                                : `${option.allowedBypassTags.length} tags`
-                            : "0 tags"
-                    }`,
-                    "textures/ui/pencil_edit_icon"
-                );
-                form.button(
-                    `${customFormUICodes.action.buttons.positions.main_only}${
-                        !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
-                    }Held Item Filters\n${
-                        !!option && !!option.heldItemFilters
-                            ? option.heldItemFilters.items.length === 1
-                                ? `1 item ${option.heldItemFilters.mode ?? "exclude"}d`
-                                : `${option.heldItemFilters.items.length} items ${option.heldItemFilters.mode ?? "exclude"}d`
-                            : `0 items excluded`
-                    }`,
-                    "textures/ui/pencil_edit_icon"
-                );
-                break;
-            }
-            case "effectAdd": {
-                optionsList = ["effectFilter", "sourceEntityFilter"];
-                const option = category[setting];
-                form.button(
-                    `${customFormUICodes.action.buttons.positions.main_only}${
-                        !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
-                    }Effect Filter\n${
-                        !!option && !!option.effectFilter && (option.effectFilter.excludeTypes?.length > 0 || option.effectFilter.includeTypes?.length > 0)
-                            ? option.effectFilter.excludeTypes?.length > 0
-                                ? option.effectFilter.excludeTypes.length === 1
-                                    ? "1 effect excluded"
-                                    : `${option.effectFilter.excludeTypes.length} effects excluded`
-                                : option.effectFilter.includeTypes.length === 1
-                                ? "1 effect included"
-                                : `${option.effectFilter.includeTypes.length} effects included`
-                            : "All Effects"
-                    }${
-                        !!option && !!option.effectFilter && !Number.isNaN(Number(option.effectFilter.minDuration))
-                            ? `, min duration: ${option.effectFilter.minDuration}`
-                            : ""
-                    }${
-                        !!option && !!option.effectFilter && !Number.isNaN(Number(option.effectFilter.maxDuration))
-                            ? `, max duration: ${option.effectFilter.maxDuration}`
-                            : ""
-                    }`,
-                    "textures/ui/pencil_edit_icon"
-                );
-                form.button(
-                    `${customFormUICodes.action.buttons.positions.main_only}${
-                        !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
-                    }Source Entity Filter\n${
-                        !!option &&
-                        !!option.sourceEntityFilter &&
-                        (option.sourceEntityFilter.excludeTags?.length > 0 ||
-                            option.sourceEntityFilter.includeTags?.length > 0 ||
-                            option.sourceEntityFilter.excludeTypes?.length > 0 ||
-                            option.sourceEntityFilter.includeTypes?.length > 0)
-                            ? `${
-                                  option.sourceEntityFilter.excludeTags?.length > 0
-                                      ? option.sourceEntityFilter.excludeTags.length === 1
-                                          ? `1 tag excluded`
-                                          : `${option.sourceEntityFilter.excludeTags.length} tags excluded`
-                                      : option.sourceEntityFilter.includeTags?.length > 0
-                                      ? option.sourceEntityFilter.includeTags?.length === 1
-                                          ? `1 tag included`
-                                          : `${option.sourceEntityFilter.includeTags.length} tags included`
-                                      : ""
-                              }${
-                                  option.sourceEntityFilter.excludeTypes?.length > 0
-                                      ? option.sourceEntityFilter.excludeTypes.length === 1
-                                          ? `1 type excluded`
-                                          : `${option.sourceEntityFilter.excludeTypes.length} types excluded`
-                                      : option.sourceEntityFilter.includeTypes?.length > 0
-                                      ? option.sourceEntityFilter.includeTypes?.length === 1
-                                          ? `1 type included`
-                                          : `${option.sourceEntityFilter.includeTypes.length} types included`
-                                      : ""
-                              }`
-                            : "No Filter"
-                    }`,
-                    "textures/ui/pencil_edit_icon"
-                );
-                break;
-            }
-            case "noPVPZone": {
-                if (entity_scale_format_version === null) {
-                    optionsList = ["ignoredLabelOption"];
-                    form.button(
-                        `${
-                            customFormUICodes.action.buttons.positions.main_only
-                        }${"§e8Crafter's Entity Scale Add-On is required for the no PVP zones to work."}`,
-                        "textures/ui/WarningGlyph"
+                        "Cancel"
                     );
+                    if (r.canceled || r.selection == 0) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
                 }
-                // This one currently has no options.
-                break;
             }
-            case "tagZone": {
-                optionsList = ["tags"];
-                const option = category[setting];
-                form.button(
-                    `${customFormUICodes.action.buttons.positions.main_only}${
-                        !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
-                    }Tags\n${!!option && !!option.tags ? (option.tags.length === 1 ? "1 tag" : `${option.tags.length} tags`) : "0 tags"}`,
-                    "textures/ui/pencil_edit_icon"
-                );
-                break;
-            }
-            default:
-                throw new Error("Invalid option type.");
-        } /* 
-        form.button(
-            `${customFormUICodes.action.buttons.positions.main_only}${!!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled}`,
-            !!option && option.enabled ? "textures/ui/toggle_on" : "textures/ui/toggle_off"
-        ); */
-        form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
-        form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
-        return await form.forceShow(sourceEntity).then(async (rb) => {
-            if (rb.canceled) return 1;
-            switch (
-                (["toggle"] as const)[rb.selection] ??
-                optionsList[rb.selection - 1] ??
-                (["back", "close"] as const)[rb.selection - optionsList.length - 1]
-            ) {
+            const category = ProtectedAreas.areas.advancedAreaCategories.find((v) => v.id == categoryID);
+            if (category === undefined)
+                return (
+                    (
+                        await showMessage(
+                            player,
+                            "Invalid Category ID",
+                            `The custom protected area category with ID ${JSON.stringify(categoryID)} does not exist.`,
+                            "Back",
+                            "Close"
+                        )
+                    ).selection !== 1
+                ).toNumber();
+            const option = category[setting];
+            const form = new ActionFormData();
+            form.title(customFormUICodes.action.titles.formStyles.medium + advancedCategoryPropertyDisplayNames[setting] + " Settings");
+            form.body(`Edit custom area category settings for ${advancedCategoryPropertyDisplayNames[setting]} in ${categoryID}.`);
+            form.button(
+                `${customFormUICodes.action.buttons.positions.main_only}${!!option && option.enabled !== false ? "§aEnabled" : "§cDisabled"}`,
+                !!option && option.enabled ? "textures/ui/toggle_on" : "textures/ui/toggle_off"
+            );
+            let optionsList: (
+                | Exclude<
+                      KeysOfUnion<Exclude<typeof option, false>>,
+                      "fromGameModes" | "toGameModes" | "fromGameModesToGameModes" | "rawmask" | "mode" | "enabled" | "removeOnExit" | "playersOnly"
+                  >
+                | "gameModeFilters"
+                | "ignoredLabelOption"
+            )[] = [];
+            switch (setting) {
+                case "playerPlaceBlock": {
+                    // !!category[setting] && category[setting];
+                    optionsList = ["allowedBypassTags", "heldItemFilters", "mask"];
+                    const option = category[setting];
+                    form.button(
+                        `${customFormUICodes.action.buttons.positions.main_only}${
+                            !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
+                        }Allowed Bypass Tags\n${
+                            !!option && !!option.allowedBypassTags
+                                ? option.allowedBypassTags.length === 1
+                                    ? "1 tag"
+                                    : `${option.allowedBypassTags.length} tags`
+                                : "0 tags"
+                        }`,
+                        "textures/ui/pencil_edit_icon"
+                    );
+                    form.button(
+                        `${customFormUICodes.action.buttons.positions.main_only}${
+                            !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
+                        }Held Item Filters\n${
+                            !!option && !!option.heldItemFilters
+                                ? option.heldItemFilters.items.length === 1
+                                    ? `1 item ${option.heldItemFilters.mode ?? "exclude"}d`
+                                    : `${option.heldItemFilters.items.length} items ${option.heldItemFilters.mode ?? "exclude"}d`
+                                : `0 items excluded`
+                        }`,
+                        "textures/ui/pencil_edit_icon"
+                    );
+                    form.button(
+                        `${customFormUICodes.action.buttons.positions.main_only}${
+                            !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
+                        }Block Mask\n${
+                            !!option && !!option.mask && option.mask.blocks.length !== 0
+                                ? option.mask.blocks.length === 1
+                                    ? `1 block permutation ${option.mode ?? "exclude"}d`
+                                    : `${option.mask.blocks.length} blocks ${option.mode ?? "exclude"}d`
+                                : `All Blocks`
+                        }`,
+                        "textures/ui/pencil_edit_icon"
+                    );
+                    break;
+                }
+                case "playerBreakBlock": {
+                    optionsList = ["allowedBypassTags", "heldItemFilters", "mask"];
+                    const option = category[setting];
+                    form.button(
+                        `${customFormUICodes.action.buttons.positions.main_only}${
+                            !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
+                        }Allowed Bypass Tags\n${
+                            !!option && !!option.allowedBypassTags
+                                ? option.allowedBypassTags.length === 1
+                                    ? "1 tag"
+                                    : `${option.allowedBypassTags.length} tags`
+                                : "0 tags"
+                        }`,
+                        "textures/ui/pencil_edit_icon"
+                    );
+                    form.button(
+                        `${customFormUICodes.action.buttons.positions.main_only}${
+                            !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
+                        }Held Item Filters\n${
+                            !!option && !!option.heldItemFilters
+                                ? option.heldItemFilters.items.length === 1
+                                    ? `1 item ${option.heldItemFilters.mode ?? "exclude"}d`
+                                    : `${option.heldItemFilters.items.length} items ${option.heldItemFilters.mode ?? "exclude"}d`
+                                : `0 items excluded`
+                        }`,
+                        "textures/ui/pencil_edit_icon"
+                    );
+                    form.button(
+                        `${customFormUICodes.action.buttons.positions.main_only}${
+                            !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
+                        }Block Mask\n${
+                            !!option && !!option.mask && option.mask.blocks.length !== 0
+                                ? option.mask.blocks.length === 1
+                                    ? `1 block permutation ${option.mode ?? "exclude"}d`
+                                    : `${option.mask.blocks.length} blocks ${option.mode ?? "exclude"}d`
+                                : `All Blocks`
+                        }`,
+                        "textures/ui/pencil_edit_icon"
+                    );
+                    break;
+                }
+                case "playerInteractWithBlock": {
+                    optionsList = ["allowedBypassTags", "heldItemFilters", "mask"];
+                    const option = category[setting];
+                    form.button(
+                        `${customFormUICodes.action.buttons.positions.main_only}${
+                            !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
+                        }Allowed Bypass Tags\n${
+                            !!option && !!option.allowedBypassTags
+                                ? option.allowedBypassTags.length === 1
+                                    ? "1 tag"
+                                    : `${option.allowedBypassTags.length} tags`
+                                : "0 tags"
+                        }`,
+                        "textures/ui/pencil_edit_icon"
+                    );
+                    form.button(
+                        `${customFormUICodes.action.buttons.positions.main_only}${
+                            !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
+                        }Held Item Filters\n${
+                            !!option && !!option.heldItemFilters
+                                ? option.heldItemFilters.items.length === 1
+                                    ? `1 item ${option.heldItemFilters.mode ?? "exclude"}d`
+                                    : `${option.heldItemFilters.items.length} items ${option.heldItemFilters.mode ?? "exclude"}d`
+                                : `0 items excluded`
+                        }`,
+                        "textures/ui/pencil_edit_icon"
+                    );
+                    form.button(
+                        `${customFormUICodes.action.buttons.positions.main_only}${
+                            !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
+                        }Block Mask\n${
+                            !!option && !!option.mask && option.mask.blocks.length !== 0
+                                ? option.mask.blocks.length === 1
+                                    ? `1 block permutation ${option.mode ?? "exclude"}d`
+                                    : `${option.mask.blocks.length} blocks ${option.mode ?? "exclude"}d`
+                                : `All Blocks`
+                        }`,
+                        "textures/ui/pencil_edit_icon"
+                    );
+                    break;
+                }
+                case "itemUse": {
+                    optionsList = ["allowedBypassTags", "heldItemFilters"];
+                    const option = category[setting];
+                    form.button(
+                        `${customFormUICodes.action.buttons.positions.main_only}${
+                            !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
+                        }Allowed Bypass Tags\n${
+                            !!option && !!option.allowedBypassTags
+                                ? option.allowedBypassTags.length === 1
+                                    ? "1 tag"
+                                    : `${option.allowedBypassTags.length} tags`
+                                : "0 tags"
+                        }`,
+                        "textures/ui/pencil_edit_icon"
+                    );
+                    form.button(
+                        `${customFormUICodes.action.buttons.positions.main_only}${
+                            !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
+                        }Held Item Filters\n${
+                            !!option && !!option.heldItemFilters
+                                ? option.heldItemFilters.items.length === 1
+                                    ? `1 item ${option.heldItemFilters.mode ?? "exclude"}d`
+                                    : `${option.heldItemFilters.items.length} items ${option.heldItemFilters.mode ?? "exclude"}d`
+                                : `0 items excluded`
+                        }`,
+                        "textures/ui/pencil_edit_icon"
+                    );
+                    break;
+                }
+                case "itemUseOn": {
+                    optionsList = ["allowedBypassTags", "heldItemFilters", "mask"];
+                    const option = category[setting];
+                    form.button(
+                        `${customFormUICodes.action.buttons.positions.main_only}${
+                            !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
+                        }Allowed Bypass Tags\n${
+                            !!option && !!option.allowedBypassTags
+                                ? option.allowedBypassTags.length === 1
+                                    ? "1 tag"
+                                    : `${option.allowedBypassTags.length} tags`
+                                : "0 tags"
+                        }`,
+                        "textures/ui/pencil_edit_icon"
+                    );
+                    form.button(
+                        `${customFormUICodes.action.buttons.positions.main_only}${
+                            !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
+                        }Held Item Filters\n${
+                            !!option && !!option.heldItemFilters
+                                ? option.heldItemFilters.items.length === 1
+                                    ? `1 item ${option.heldItemFilters.mode ?? "exclude"}d`
+                                    : `${option.heldItemFilters.items.length} items ${option.heldItemFilters.mode ?? "exclude"}d`
+                                : `0 items excluded`
+                        }`,
+                        "textures/ui/pencil_edit_icon"
+                    );
+                    form.button(
+                        `${customFormUICodes.action.buttons.positions.main_only}${
+                            !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
+                        }Block Mask\n${
+                            !!option && !!option.mask && option.mask.blocks.length !== 0
+                                ? option.mask.blocks.length === 1
+                                    ? `1 block permutation ${option.mode ?? "exclude"}d`
+                                    : `${option.mask.blocks.length} blocks ${option.mode ?? "exclude"}d`
+                                : `All Blocks`
+                        }`,
+                        "textures/ui/pencil_edit_icon"
+                    );
+                    break;
+                }
+                case "explosion": {
+                    optionsList = ["allowedBypassTags", "heldItemFilters", "mask", "sourceEntityFilter"];
+                    const option = category[setting];
+                    form.button(
+                        `${customFormUICodes.action.buttons.positions.main_only}${
+                            !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
+                        }Allowed Bypass Tags\n${
+                            !!option && !!option.allowedBypassTags
+                                ? option.allowedBypassTags.length === 1
+                                    ? "1 tag"
+                                    : `${option.allowedBypassTags.length} tags`
+                                : "0 tags"
+                        }`,
+                        "textures/ui/pencil_edit_icon"
+                    );
+                    form.button(
+                        `${customFormUICodes.action.buttons.positions.main_only}${
+                            !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
+                        }Held Item Filters\n${
+                            !!option && !!option.heldItemFilters
+                                ? option.heldItemFilters.items.length === 1
+                                    ? `1 item ${option.heldItemFilters.mode ?? "exclude"}d`
+                                    : `${option.heldItemFilters.items.length} items ${option.heldItemFilters.mode ?? "exclude"}d`
+                                : `0 items excluded`
+                        }`,
+                        "textures/ui/pencil_edit_icon"
+                    );
+                    form.button(
+                        `${customFormUICodes.action.buttons.positions.main_only}${
+                            !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
+                        }Block Mask\n${
+                            !!option && !!option.mask && option.mask.blocks.length !== 0
+                                ? option.mask.blocks.length === 1
+                                    ? `1 block permutation ${option.mode ?? "exclude"}d`
+                                    : `${option.mask.blocks.length} blocks ${option.mode ?? "exclude"}d`
+                                : `All Blocks`
+                        }`,
+                        "textures/ui/pencil_edit_icon"
+                    );
+                    form.button(
+                        `${customFormUICodes.action.buttons.positions.main_only}${
+                            !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
+                        }Source Entity Filter\n${
+                            !!option &&
+                            !!option.sourceEntityFilter &&
+                            (option.sourceEntityFilter.excludeTags?.length > 0 ||
+                                option.sourceEntityFilter.includeTags?.length > 0 ||
+                                option.sourceEntityFilter.excludeTypes?.length > 0 ||
+                                option.sourceEntityFilter.includeTypes?.length > 0)
+                                ? `${
+                                      option.sourceEntityFilter.excludeTags?.length > 0
+                                          ? option.sourceEntityFilter.excludeTags.length === 1
+                                              ? `1 tag excluded`
+                                              : `${option.sourceEntityFilter.excludeTags.length} tags excluded`
+                                          : option.sourceEntityFilter.includeTags?.length > 0
+                                          ? option.sourceEntityFilter.includeTags?.length === 1
+                                              ? `1 tag included`
+                                              : `${option.sourceEntityFilter.includeTags.length} tags included`
+                                          : ""
+                                  }${
+                                      option.sourceEntityFilter.excludeTypes?.length > 0
+                                          ? option.sourceEntityFilter.excludeTypes.length === 1
+                                              ? `1 type excluded`
+                                              : `${option.sourceEntityFilter.excludeTypes.length} types excluded`
+                                          : option.sourceEntityFilter.includeTypes?.length > 0
+                                          ? option.sourceEntityFilter.includeTypes?.length === 1
+                                              ? `1 type included`
+                                              : `${option.sourceEntityFilter.includeTypes.length} types included`
+                                          : ""
+                                  }`
+                                : "No Filter"
+                        }`,
+                        "textures/ui/pencil_edit_icon"
+                    );
+                    break;
+                }
+                case "playerInteractWithEntity": {
+                    optionsList = ["targetEntityFilter", "allowedBypassTags", "heldItemFilters"];
+                    const option = category[setting];
+                    form.button(
+                        `${customFormUICodes.action.buttons.positions.main_only}${
+                            !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
+                        }Target Entity Filter\n${
+                            !!option &&
+                            !!option.targetEntityFilter &&
+                            (option.targetEntityFilter.excludeTags?.length > 0 ||
+                                option.targetEntityFilter.includeTags?.length > 0 ||
+                                option.targetEntityFilter.excludeTypes?.length > 0 ||
+                                option.targetEntityFilter.includeTypes?.length > 0)
+                                ? `${
+                                      option.targetEntityFilter.excludeTags?.length > 0
+                                          ? option.targetEntityFilter.excludeTags.length === 1
+                                              ? `1 tag excluded`
+                                              : `${option.targetEntityFilter.excludeTags.length} tags excluded`
+                                          : option.targetEntityFilter.includeTags?.length > 0
+                                          ? option.targetEntityFilter.includeTags?.length === 1
+                                              ? `1 tag included`
+                                              : `${option.targetEntityFilter.includeTags.length} tags included`
+                                          : ""
+                                  }${
+                                      option.targetEntityFilter.excludeTypes?.length > 0
+                                          ? option.targetEntityFilter.excludeTypes.length === 1
+                                              ? `1 type excluded`
+                                              : `${option.targetEntityFilter.excludeTypes.length} types excluded`
+                                          : option.targetEntityFilter.includeTypes?.length > 0
+                                          ? option.targetEntityFilter.includeTypes?.length === 1
+                                              ? `1 type included`
+                                              : `${option.targetEntityFilter.includeTypes.length} types included`
+                                          : ""
+                                  }`
+                                : "No Filter"
+                        }`,
+                        "textures/ui/pencil_edit_icon"
+                    );
+                    form.button(
+                        `${customFormUICodes.action.buttons.positions.main_only}${
+                            !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
+                        }Allowed Bypass Tags\n${
+                            !!option && !!option.allowedBypassTags
+                                ? option.allowedBypassTags.length === 1
+                                    ? "1 tag"
+                                    : `${option.allowedBypassTags.length} tags`
+                                : "0 tags"
+                        }`,
+                        "textures/ui/pencil_edit_icon"
+                    );
+                    form.button(
+                        `${customFormUICodes.action.buttons.positions.main_only}${
+                            !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
+                        }Held Item Filters\n${
+                            !!option && !!option.heldItemFilters
+                                ? option.heldItemFilters.items.length === 1
+                                    ? `1 item ${option.heldItemFilters.mode ?? "exclude"}d`
+                                    : `${option.heldItemFilters.items.length} items ${option.heldItemFilters.mode ?? "exclude"}d`
+                                : `0 items excluded`
+                        }`,
+                        "textures/ui/pencil_edit_icon"
+                    );
+                    break;
+                }
+                case "playerGameModeChange": {
+                    optionsList = ["allowedBypassTags", "heldItemFilters", "gameModeFilters"];
+                    const option = category[setting];
+                    form.button(
+                        `${customFormUICodes.action.buttons.positions.main_only}${
+                            !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
+                        }Allowed Bypass Tags\n${
+                            !!option && !!option.allowedBypassTags
+                                ? option.allowedBypassTags.length === 1
+                                    ? "1 tag"
+                                    : `${option.allowedBypassTags.length} tags`
+                                : "0 tags"
+                        }`,
+                        "textures/ui/pencil_edit_icon"
+                    );
+                    form.button(
+                        `${customFormUICodes.action.buttons.positions.main_only}${
+                            !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
+                        }Held Item Filters\n${
+                            !!option && !!option.heldItemFilters
+                                ? option.heldItemFilters.items.length === 1
+                                    ? `1 item ${option.heldItemFilters.mode ?? "exclude"}d`
+                                    : `${option.heldItemFilters.items.length} items ${option.heldItemFilters.mode ?? "exclude"}d`
+                                : `0 items excluded`
+                        }`,
+                        "textures/ui/pencil_edit_icon"
+                    );
+                    form.button(
+                        `${customFormUICodes.action.buttons.positions.main_only}${
+                            !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
+                        }Game Mode Filters\n${
+                            !!option &&
+                            ((!!option.fromGameModes && option.fromGameModes.length > 0) ||
+                                (!!option.toGameModes && option.toGameModes.length > 0) ||
+                                (!!option.fromGameModesToGameModes && option.fromGameModesToGameModes.length > 0))
+                                ? (() => {
+                                      let filterCount = 0;
+                                      if (!!option.fromGameModes && option.fromGameModes.length > 0) filterCount += option.fromGameModes.length;
+                                      if (!!option.toGameModes && option.toGameModes.length > 0) filterCount += option.toGameModes.length;
+                                      if (!!option.fromGameModesToGameModes && option.fromGameModesToGameModes.length > 0)
+                                          filterCount += option.fromGameModesToGameModes.length;
+                                      return filterCount === 1 ? "1 filter" : `${filterCount} filters`;
+                                  })()
+                                : `No Filters`
+                        }`,
+                        "textures/ui/pencil_edit_icon"
+                    );
+                    break;
+                }
+                case "chatSend": {
+                    optionsList = ["allowedBypassTags", "heldItemFilters"];
+                    const option = category[setting];
+                    form.button(
+                        `${customFormUICodes.action.buttons.positions.main_only}${
+                            !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
+                        }Allowed Bypass Tags\n${
+                            !!option && !!option.allowedBypassTags
+                                ? option.allowedBypassTags.length === 1
+                                    ? "1 tag"
+                                    : `${option.allowedBypassTags.length} tags`
+                                : "0 tags"
+                        }`,
+                        "textures/ui/pencil_edit_icon"
+                    );
+                    form.button(
+                        `${customFormUICodes.action.buttons.positions.main_only}${
+                            !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
+                        }Held Item Filters\n${
+                            !!option && !!option.heldItemFilters
+                                ? option.heldItemFilters.items.length === 1
+                                    ? `1 item ${option.heldItemFilters.mode ?? "exclude"}d`
+                                    : `${option.heldItemFilters.items.length} items ${option.heldItemFilters.mode ?? "exclude"}d`
+                                : `0 items excluded`
+                        }`,
+                        "textures/ui/pencil_edit_icon"
+                    );
+                    break;
+                }
+                case "effectAdd": {
+                    optionsList = ["effectFilter", "sourceEntityFilter"];
+                    const option = category[setting];
+                    form.button(
+                        `${customFormUICodes.action.buttons.positions.main_only}${
+                            !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
+                        }Effect Filter\n${
+                            !!option && !!option.effectFilter && (option.effectFilter.excludeTypes?.length > 0 || option.effectFilter.includeTypes?.length > 0)
+                                ? option.effectFilter.excludeTypes?.length > 0
+                                    ? option.effectFilter.excludeTypes.length === 1
+                                        ? "1 effect excluded"
+                                        : `${option.effectFilter.excludeTypes.length} effects excluded`
+                                    : option.effectFilter.includeTypes.length === 1
+                                    ? "1 effect included"
+                                    : `${option.effectFilter.includeTypes.length} effects included`
+                                : "All Effects"
+                        }${
+                            !!option && !!option.effectFilter && !Number.isNaN(Number(option.effectFilter.minDuration))
+                                ? `, min duration: ${option.effectFilter.minDuration}`
+                                : ""
+                        }${
+                            !!option && !!option.effectFilter && !Number.isNaN(Number(option.effectFilter.maxDuration))
+                                ? `, max duration: ${option.effectFilter.maxDuration}`
+                                : ""
+                        }`,
+                        "textures/ui/pencil_edit_icon"
+                    );
+                    form.button(
+                        `${customFormUICodes.action.buttons.positions.main_only}${
+                            !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
+                        }Source Entity Filter\n${
+                            !!option &&
+                            !!option.sourceEntityFilter &&
+                            (option.sourceEntityFilter.excludeTags?.length > 0 ||
+                                option.sourceEntityFilter.includeTags?.length > 0 ||
+                                option.sourceEntityFilter.excludeTypes?.length > 0 ||
+                                option.sourceEntityFilter.includeTypes?.length > 0)
+                                ? `${
+                                      option.sourceEntityFilter.excludeTags?.length > 0
+                                          ? option.sourceEntityFilter.excludeTags.length === 1
+                                              ? `1 tag excluded`
+                                              : `${option.sourceEntityFilter.excludeTags.length} tags excluded`
+                                          : option.sourceEntityFilter.includeTags?.length > 0
+                                          ? option.sourceEntityFilter.includeTags?.length === 1
+                                              ? `1 tag included`
+                                              : `${option.sourceEntityFilter.includeTags.length} tags included`
+                                          : ""
+                                  }${
+                                      option.sourceEntityFilter.excludeTypes?.length > 0
+                                          ? option.sourceEntityFilter.excludeTypes.length === 1
+                                              ? `1 type excluded`
+                                              : `${option.sourceEntityFilter.excludeTypes.length} types excluded`
+                                          : option.sourceEntityFilter.includeTypes?.length > 0
+                                          ? option.sourceEntityFilter.includeTypes?.length === 1
+                                              ? `1 type included`
+                                              : `${option.sourceEntityFilter.includeTypes.length} types included`
+                                          : ""
+                                  }`
+                                : "No Filter"
+                        }`,
+                        "textures/ui/pencil_edit_icon"
+                    );
+                    break;
+                }
+                case "noPVPZone": {
+                    if (entity_scale_format_version === null) {
+                        optionsList = ["ignoredLabelOption"];
+                        form.button(
+                            `${
+                                customFormUICodes.action.buttons.positions.main_only
+                            }${"§e8Crafter's Entity Scale Add-On is required for the no PVP zones to work."}`,
+                            "textures/ui/WarningGlyph"
+                        );
+                    }
+                    // This one currently has no options.
+                    break;
+                }
+                case "tagZone": {
+                    optionsList = ["tags"];
+                    const option = category[setting];
+                    form.button(
+                        `${customFormUICodes.action.buttons.positions.main_only}${
+                            !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
+                        }Tags\n${!!option && !!option.tags ? (option.tags.length === 1 ? "1 tag" : `${option.tags.length} tags`) : "0 tags"}`,
+                        "textures/ui/pencil_edit_icon"
+                    );
+                    break;
+                }
+                default:
+                    throw new Error("Invalid option type.");
+            } /* 
+            form.button(
+                `${customFormUICodes.action.buttons.positions.main_only}${!!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled}`,
+                !!option && option.enabled ? "textures/ui/toggle_on" : "textures/ui/toggle_off"
+            ); */
+            form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
+            form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
+            const r = await form.forceShow(player);
+            if (r.canceled) return 1;
+            switch ((["toggle"] as const)[r.selection] ?? optionsList[r.selection - 1] ?? (["back", "close"] as const)[r.selection - optionsList.length - 1]) {
                 case "toggle": {
                     if (!!category[setting]) {
                         if (category[setting].enabled === false) {
@@ -1186,14 +1200,14 @@ export async function editCustomAreaCategorySetting(
                         out[setting] = AdvancedProtectedAreaCategoryPropertyAllEnabledDefaults_JSON[setting] as any;
                     }
                     world.setDynamicProperty("advancedProtectedAreaCategory:" + categoryID, JSON.stringify(out));
-                    return await editCustomAreaCategorySetting(sourceEntity, categoryID, setting);
+                    continue;
                 }
                 case "allowedBypassTags": {
                     if (!!!category[setting]) {
                         if (
                             (
                                 await showMessage(
-                                    sourceEntity,
+                                    player,
                                     "Event Disabled",
                                     `${advancedCategoryPropertyDisplayNames[setting]} is disabled, so this menu cannot be accessed.`,
                                     "Back",
@@ -1201,7 +1215,7 @@ export async function editCustomAreaCategorySetting(
                                 )
                             ).selection !== 1
                         ) {
-                            return await editCustomAreaCategorySetting(sourceEntity, categoryID, setting);
+                            continue;
                         } else {
                             return 0;
                         }
@@ -1217,8 +1231,8 @@ export async function editCustomAreaCategorySetting(
                         ) ?? ""
                     );
                     form.submitButton("Save");
-                    const r = await form.forceShow(sourceEntity);
-                    if (r.canceled) return await editCustomAreaCategorySetting(sourceEntity, categoryID, setting);
+                    const r = await form.forceShow(player);
+                    if (r.canceled) continue;
                     (category[setting] as VerifyConstraint<(typeof category)[typeof setting], { allowedBypassTags: string[] }>).allowedBypassTags = !!r
                         .formValues?.[0]
                         ? (r.formValues?.[0] as string).split(/,\s?/g)
@@ -1230,14 +1244,14 @@ export async function editCustomAreaCategorySetting(
                         ? (r.formValues?.[0] as string).split(/,\s?/g)
                         : [];
                     world.setDynamicProperty("advancedProtectedAreaCategory:" + categoryID, JSON.stringify(out));
-                    return await editCustomAreaCategorySetting(sourceEntity, categoryID, setting);
+                    continue;
                 }
                 case "effectFilter": {
                     if (!!!category[setting]) {
                         if (
                             (
                                 await showMessage(
-                                    sourceEntity,
+                                    player,
                                     "Event Disabled",
                                     `${advancedCategoryPropertyDisplayNames[setting]} is disabled, so this menu cannot be accessed.`,
                                     "Back",
@@ -1245,7 +1259,7 @@ export async function editCustomAreaCategorySetting(
                                 )
                             ).selection !== 1
                         ) {
-                            return await editCustomAreaCategorySetting(sourceEntity, categoryID, setting);
+                            continue;
                         } else {
                             return 0;
                         }
@@ -1279,8 +1293,8 @@ export async function editCustomAreaCategorySetting(
                         String((category[setting] as Exclude<(typeof category)["effectAdd"], false>)?.effectFilter?.maxDuration ?? "")
                     );
                     form.submitButton("Save");
-                    const r = await form.forceShow(sourceEntity);
-                    if (r.canceled) return await editCustomAreaCategorySetting(sourceEntity, categoryID, setting);
+                    const r = await form.forceShow(player);
+                    if (r.canceled) continue;
                     const [mode, types, minDuration, maxDuration] = r.formValues as [mode: 0 | 1, types: string, minDuration: string, maxDuration: string];
                     catProp.effectFilter.excludeTypes = mode === 0 ? (types === "" ? [] : types.split(/,\s?/g)) : [];
                     catProp.effectFilter.includeTypes = mode === 1 ? (types === "" ? [] : types.split(/,\s?/g)) : [];
@@ -1297,14 +1311,14 @@ export async function editCustomAreaCategorySetting(
                     outProp.effectFilter.minDuration = minDuration === "" ? undefined : minDuration.toNumber();
                     outProp.effectFilter.maxDuration = maxDuration === "" ? undefined : maxDuration.toNumber();
                     world.setDynamicProperty("advancedProtectedAreaCategory:" + categoryID, JSON.stringify(out));
-                    return await editCustomAreaCategorySetting(sourceEntity, categoryID, setting);
+                    continue;
                 }
                 case "gameModeFilters": {
                     if (!!!category[setting]) {
                         if (
                             (
                                 await showMessage(
-                                    sourceEntity,
+                                    player,
                                     "Event Disabled",
                                     `${advancedCategoryPropertyDisplayNames[setting]} is disabled, so this menu cannot be accessed.`,
                                     "Back",
@@ -1312,7 +1326,7 @@ export async function editCustomAreaCategorySetting(
                                 )
                             ).selection !== 1
                         ) {
-                            return await editCustomAreaCategorySetting(sourceEntity, categoryID, setting);
+                            continue;
                         } else {
                             return 0;
                         }
@@ -1350,8 +1364,8 @@ export async function editCustomAreaCategorySetting(
                             : (category[setting] as Exclude<(typeof category)["playerGameModeChange"], false>).fromGameModes?.join(",") ?? ""
                     );
                     form.submitButton("Save");
-                    const r = await form.forceShow(sourceEntity);
-                    if (r.canceled) return await editCustomAreaCategorySetting(sourceEntity, categoryID, setting);
+                    const r = await form.forceShow(player);
+                    if (r.canceled) continue;
                     const [fromGameModes, toGameModes, fromGameModesToGameModes] = r.formValues as [
                         fromGameModes: string,
                         toGameModes: string,
@@ -1371,14 +1385,14 @@ export async function editCustomAreaCategorySetting(
                     outProp.fromGameModesToGameModes =
                         fromGameModesToGameModes === "" ? [] : (JSON.parse(fromGameModesToGameModes) as [from: GameMode, to: GameMode][]);
                     world.setDynamicProperty("advancedProtectedAreaCategory:" + categoryID, JSON.stringify(out));
-                    return await editCustomAreaCategorySetting(sourceEntity, categoryID, setting);
+                    continue;
                 }
                 case "heldItemFilters": {
                     if (!!!category[setting]) {
                         if (
                             (
                                 await showMessage(
-                                    sourceEntity,
+                                    player,
                                     "Event Disabled",
                                     `${advancedCategoryPropertyDisplayNames[setting]} is disabled, so this menu cannot be accessed.`,
                                     "Back",
@@ -1386,7 +1400,7 @@ export async function editCustomAreaCategorySetting(
                                 )
                             ).selection !== 1
                         ) {
-                            return await editCustomAreaCategorySetting(sourceEntity, categoryID, setting);
+                            continue;
                         } else {
                             return 0;
                         }
@@ -1407,8 +1421,8 @@ export async function editCustomAreaCategorySetting(
                         catFilters?.items?.length === 0 ? "" : catFilters?.items?.join(",") ?? ""
                     );
                     form.submitButton("Save");
-                    const r = await form.forceShow(sourceEntity);
-                    if (r.canceled) return await editCustomAreaCategorySetting(sourceEntity, categoryID, setting);
+                    const r = await form.forceShow(player);
+                    if (r.canceled) continue;
                     const [mode, types] = r.formValues as [mode: 0 | 1, types: string];
                     catFilters.mode = mode === 0 ? "exclude" : "include";
                     catFilters.items = types === "" ? [] : types.split(/,\s?/g);
@@ -1420,14 +1434,14 @@ export async function editCustomAreaCategorySetting(
                     outFilters.mode = mode === 0 ? "exclude" : "include";
                     outFilters.items = types === "" ? [] : types.split(/,\s?/g);
                     world.setDynamicProperty("advancedProtectedAreaCategory:" + categoryID, JSON.stringify(out));
-                    return await editCustomAreaCategorySetting(sourceEntity, categoryID, setting);
+                    continue;
                 }
                 case "mask": {
                     if (!!!category[setting]) {
                         if (
                             (
                                 await showMessage(
-                                    sourceEntity,
+                                    player,
                                     "Event Disabled",
                                     `${advancedCategoryPropertyDisplayNames[setting]} is disabled, so this menu cannot be accessed.`,
                                     "Back",
@@ -1435,7 +1449,7 @@ export async function editCustomAreaCategorySetting(
                                 )
                             ).selection !== 1
                         ) {
-                            return await editCustomAreaCategorySetting(sourceEntity, categoryID, setting);
+                            continue;
                         } else {
                             return 0;
                         }
@@ -1455,8 +1469,8 @@ export async function editCustomAreaCategorySetting(
                         (catProp.rawmask ?? "") === "none" ? "" : String(catProp.rawmask ?? "")
                     );
                     form.submitButton("Save");
-                    const r = await form.forceShow(sourceEntity);
-                    if (r.canceled) return await editCustomAreaCategorySetting(sourceEntity, categoryID, setting);
+                    const r = await form.forceShow(player);
+                    if (r.canceled) continue;
                     const [mode, mask] = r.formValues as [mode: 0 | 1, types: string];
                     catProp.mode = mode === 0 ? "exclude" : "include";
                     catProp.mask = BlockMask.extract(mask === "" ? "none" : mask);
@@ -1469,14 +1483,14 @@ export async function editCustomAreaCategorySetting(
                     outProp.mode = mode === 0 ? "exclude" : "include";
                     outProp.mask = mask === "" ? "none" : mask;
                     world.setDynamicProperty("advancedProtectedAreaCategory:" + categoryID, JSON.stringify(out));
-                    return await editCustomAreaCategorySetting(sourceEntity, categoryID, setting);
+                    continue;
                 }
                 case "sourceEntityFilter": {
                     if (!!!category[setting]) {
                         if (
                             (
                                 await showMessage(
-                                    sourceEntity,
+                                    player,
                                     "Event Disabled",
                                     `${advancedCategoryPropertyDisplayNames[setting]} is disabled, so this menu cannot be accessed.`,
                                     "Back",
@@ -1484,7 +1498,7 @@ export async function editCustomAreaCategorySetting(
                                 )
                             ).selection !== 1
                         ) {
-                            return await editCustomAreaCategorySetting(sourceEntity, categoryID, setting);
+                            continue;
                         } else {
                             return 0;
                         }
@@ -1518,8 +1532,8 @@ export async function editCustomAreaCategorySetting(
                             : (category[setting] as Exclude<(typeof category)["effectAdd"], false>).sourceEntityFilter?.excludeTags?.join(",") ?? ""
                     );
                     form.submitButton("Save");
-                    const r = await form.forceShow(sourceEntity);
-                    if (r.canceled) return await editCustomAreaCategorySetting(sourceEntity, categoryID, setting);
+                    const r = await form.forceShow(player);
+                    if (r.canceled) continue;
                     const [mode, types, tagsMode, tags] = r.formValues as [mode: 0 | 1, types: string, tagsMode: 0 | 1, tags: string];
                     catProp.sourceEntityFilter.excludeTypes = mode === 0 ? (types === "" ? [] : types.split(/,\s?/g)) : [];
                     catProp.sourceEntityFilter.includeTypes = mode === 1 ? (types === "" ? [] : types.split(/,\s?/g)) : [];
@@ -1534,14 +1548,14 @@ export async function editCustomAreaCategorySetting(
                     outProp.sourceEntityFilter.excludeTags = tagsMode === 0 ? (tags === "" ? [] : tags.split(/,\s?/g)) : [];
                     outProp.sourceEntityFilter.includeTags = tagsMode === 1 ? (tags === "" ? [] : tags.split(/,\s?/g)) : [];
                     world.setDynamicProperty("advancedProtectedAreaCategory:" + categoryID, JSON.stringify(out));
-                    return await editCustomAreaCategorySetting(sourceEntity, categoryID, setting);
+                    continue;
                 }
                 case "targetEntityFilter": {
                     if (!!!category[setting]) {
                         if (
                             (
                                 await showMessage(
-                                    sourceEntity,
+                                    player,
                                     "Event Disabled",
                                     `${advancedCategoryPropertyDisplayNames[setting]} is disabled, so this menu cannot be accessed.`,
                                     "Back",
@@ -1549,7 +1563,7 @@ export async function editCustomAreaCategorySetting(
                                 )
                             ).selection !== 1
                         ) {
-                            return await editCustomAreaCategorySetting(sourceEntity, categoryID, setting);
+                            continue;
                         } else {
                             return 0;
                         }
@@ -1583,8 +1597,8 @@ export async function editCustomAreaCategorySetting(
                             : catProp.targetEntityFilter?.excludeTags?.join(",") ?? ""
                     );
                     form.submitButton("Save");
-                    const r = await form.forceShow(sourceEntity);
-                    if (r.canceled) return await editCustomAreaCategorySetting(sourceEntity, categoryID, setting);
+                    const r = await form.forceShow(player);
+                    if (r.canceled) continue;
                     const [mode, types, tagsMode, tags] = r.formValues as [mode: 0 | 1, types: string, tagsMode: 0 | 1, tags: string];
                     catProp.targetEntityFilter.excludeTypes = mode === 0 ? (types === "" ? [] : types.split(/,\s?/g)) : [];
                     catProp.targetEntityFilter.includeTypes = mode === 1 ? (types === "" ? [] : types.split(/,\s?/g)) : [];
@@ -1599,14 +1613,14 @@ export async function editCustomAreaCategorySetting(
                     outProp.targetEntityFilter.excludeTags = tagsMode === 0 ? (tags === "" ? [] : tags.split(/,\s?/g)) : [];
                     outProp.targetEntityFilter.includeTags = tagsMode === 1 ? (tags === "" ? [] : tags.split(/,\s?/g)) : [];
                     world.setDynamicProperty("advancedProtectedAreaCategory:" + categoryID, JSON.stringify(out));
-                    return await editCustomAreaCategorySetting(sourceEntity, categoryID, setting);
+                    continue;
                 }
                 case "tags":
                     if (!!!category[setting]) {
                         if (
                             (
                                 await showMessage(
-                                    sourceEntity,
+                                    player,
                                     "Event Disabled",
                                     `${advancedCategoryPropertyDisplayNames[setting]} is disabled, so this menu cannot be accessed.`,
                                     "Back",
@@ -1614,7 +1628,7 @@ export async function editCustomAreaCategorySetting(
                                 )
                             ).selection !== 1
                         ) {
-                            return await editCustomAreaCategorySetting(sourceEntity, categoryID, setting);
+                            continue;
                         } else {
                             return 0;
                         }
@@ -1633,8 +1647,8 @@ export async function editCustomAreaCategorySetting(
                         catProp.removeOnExit ?? false
                     );
                     form.submitButton("Save");
-                    const r = await form.forceShow(sourceEntity);
-                    if (r.canceled) return await editCustomAreaCategorySetting(sourceEntity, categoryID, setting);
+                    const r = await form.forceShow(player);
+                    if (r.canceled) continue;
                     catProp.tags = !!r.formValues?.[0] ? (r.formValues?.[0] as string).split(/,\s?/g) : [];
                     catProp.removeOnExit = r.formValues?.[1] as boolean;
                     const out: AdvancedProtectedAreaCategory<true> = JSON.parse(
@@ -1644,16 +1658,16 @@ export async function editCustomAreaCategorySetting(
                     outProp.tags = !!r.formValues?.[0] ? (r.formValues?.[0] as string).split(/,\s?/g) : [];
                     outProp.removeOnExit = r.formValues?.[1] as boolean;
                     world.setDynamicProperty("advancedProtectedAreaCategory:" + categoryID, JSON.stringify(out));
-                    return await editCustomAreaCategorySetting(sourceEntity, categoryID, setting);
+                    continue;
                 case "back":
                     return 1;
                 case "close":
                     return 0;
             }
-        });
-    } catch (e) {
-        console.error(e, e.stack);
-        // Present the error to the user, and return 1 if they select "Back", and 0 if they select "Close".
-        return ((await showMessage(sourceEntity, "An Error occurred", `An error occurred: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
+        } catch (e) {
+            console.error(e, e.stack);
+            // Present the error to the user, and return 1 if they select "Back", and 0 if they select "Close".
+            return ((await showMessage(player, "An Error occurred", `An error occurred: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
+        }
     }
 }
