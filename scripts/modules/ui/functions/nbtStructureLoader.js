@@ -2,6 +2,7 @@ import { ModalFormData } from "@minecraft/server-ui";
 import { generateNBTFileD } from "modules/commands/functions/generateNBTFileD";
 import { extractPlayerFromLooseEntityType } from "modules/utilities/functions/extractPlayerFromLooseEntityType";
 import { showMessage } from "modules/utilities/functions/showMessage";
+import { customFormUICodes } from "../constants/customFormUICodes";
 //evaluateParameters("{a: \"a\", \"b\": \"b\"}", [{type: "json"}])
 /**
  * Loads a structure from Java SNBT data pasted into a text box.
@@ -17,7 +18,7 @@ export async function nbtStructureLoader(sourceEntity) {
     const player = extractPlayerFromLooseEntityType(sourceEntity);
     try {
         const form = new ModalFormData();
-        form.title("Java NBT Structure Loader [§cExperimental§r]");
+        form.title(customFormUICodes.modal.titles.formStyles.fullscreen + "Java NBT Structure Loader [§cExperimental§r]");
         form.textField("§fFor info on how to use this loader, go to §bhttps://sites.google.com/view/8craftermods/debug-sticks-add-on/andexdbnbtstructureloader§f\nNote: When pasting the nbt data into the text box the game might freeze for anywhere from a few seconds to half a hour depending on how much text is being pasted while it is pasting, and then it will unfreeze. \nNBT Data", "NBT Data");
         form.textField("spawn position x", "integer", String(player.location.x));
         form.textField("spawn position y", "integer", String(player.location.y));

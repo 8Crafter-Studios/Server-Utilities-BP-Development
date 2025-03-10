@@ -875,7 +875,7 @@ export class ProtectedAreaTester {
                             break;
                         }
                     }
-                    console.log(this.preventableEvent, success);
+                    //   console.log(this.preventableEvent, success);
                     if (!success)
                         return false;
                     return new ProtectedAreaCategory("advancedArea", category.id).testIsInArea(location, dimension);

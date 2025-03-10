@@ -6,4 +6,4 @@ export const rankModes = {
     style_3: "Style 3",
     style_4: "Style 4",
     style_5: "Style 5",
-};
+} as const;

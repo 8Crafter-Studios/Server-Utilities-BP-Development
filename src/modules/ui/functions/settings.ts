@@ -2,7 +2,7 @@ import { Entity, Player, world } from "@minecraft/server";
 import { ActionFormData, ActionFormResponse } from "@minecraft/server-ui";
 import { forceShow } from "modules/ui/functions/forceShow";
 import { advancedSettings } from "./advancedSettings";
-import { chatRanksSettings } from "./chatRanksSettings";
+import { chatAndNameTagsSettings } from "./chatAndNameTagsSettings";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { evalAutoScriptSettings } from "./evalAutoScriptSettings";
 import { extraFeaturesSettings } from "./extraFeaturesSettings";
@@ -114,7 +114,7 @@ form.button("Debug Screen", "textures/ui/ui_debug_glyph_color");*/
                     break;
 
                 case "chatRanksSettings":
-                    if ((await chatRanksSettings(sourceEntity)) == 1) {
+                    if ((await chatAndNameTagsSettings(sourceEntity)) == 1) {
                         return await settings(sourceEntity);
                     } else {
                         return 0;

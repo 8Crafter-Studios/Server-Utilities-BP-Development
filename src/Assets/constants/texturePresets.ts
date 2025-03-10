@@ -6042,9 +6042,13 @@ export const texturePresets = {
             "textures/ui/help/installation/select_realm_active_world_edit_world_button_arrow.png",
             "textures/ui/page.png",
             "textures/ui/page_black.png",
+            "textures/ui/reload_black.png",
+            "textures/ui/reload_red.png",
+            "textures/ui/reload_white.png",
             "textures/ui/reset_black.png",
+            "textures/ui/reset_red.png",
             "textures/ui/reset_white.png",
-            "textures/ui/terpyFTP_profile_picture.png",
+            "textures/ui/terpyFTP_profile_picture.png"
         ],
     },
     textures_list_entity_scale: {

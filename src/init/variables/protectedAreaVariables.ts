@@ -1576,8 +1576,10 @@ export class ProtectedAreaTester<
                                       break;
                                   }
                                   case "itemUse": {
-                                      const prop: Exclude<(typeof category)[typeof categories.advancedCategoryProperty], false> =
-                                          category.itemUse as Exclude<(typeof category)[typeof categories.advancedCategoryProperty], false>;
+                                      const prop: Exclude<(typeof category)[typeof categories.advancedCategoryProperty], false> = category.itemUse as Exclude<
+                                          (typeof category)[typeof categories.advancedCategoryProperty],
+                                          false
+                                      >;
                                       const data = event as preventableEventTypeMap[typeof categories.advancedCategoryProperty];
                                       success =
                                           !prop.allowedBypassTags.some((tag) => data.source.hasTag(tag)) &&
@@ -1589,8 +1591,10 @@ export class ProtectedAreaTester<
                                       break;
                                   }
                                   case "itemUseOn": {
-                                      const prop: Exclude<(typeof category)[typeof categories.advancedCategoryProperty], false> =
-                                          category.itemUseOn as Exclude<(typeof category)[typeof categories.advancedCategoryProperty], false>;
+                                      const prop: Exclude<(typeof category)[typeof categories.advancedCategoryProperty], false> = category.itemUseOn as Exclude<
+                                          (typeof category)[typeof categories.advancedCategoryProperty],
+                                          false
+                                      >;
                                       const data = event as preventableEventTypeMap[typeof categories.advancedCategoryProperty];
                                       success =
                                           !prop.allowedBypassTags.some((tag) => data.source.hasTag(tag)) &&
@@ -1723,7 +1727,7 @@ export class ProtectedAreaTester<
                                       break;
                                   }
                               }
-                              console.log(this.preventableEvent, success);
+                              //   console.log(this.preventableEvent, success);
                               if (!success) return false;
                               return new ProtectedAreaCategory("advancedArea", category.id).testIsInArea(location, dimension);
                           })

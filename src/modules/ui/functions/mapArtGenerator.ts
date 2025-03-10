@@ -7,6 +7,7 @@ import { getChunkIndex } from "modules/coordinates/functions/getChunkIndex";
 import type { loosePlayerType } from "modules/utilities/types/loosePlayerType";
 import { extractPlayerFromLooseEntityType } from "modules/utilities/functions/extractPlayerFromLooseEntityType";
 import { showMessage } from "modules/utilities/functions/showMessage";
+import { customFormUICodes } from "../constants/customFormUICodes";
 
 /**
  * Opens a form for generating a map art structure based on the entered snbt data.
@@ -22,7 +23,7 @@ export async function mapArtGenerator(sourceEntity: loosePlayerType): Promise<0 
     const player = extractPlayerFromLooseEntityType(sourceEntity);
     try {
         const form = new ModalFormData();
-        form.title("Map Art Generator [§cExperimental§r]");
+        form.title(customFormUICodes.modal.titles.formStyles.fullscreen + "Map Art Generator [§cExperimental§r]");
         form.textField(
             "§fFor info on how to use this generator, go to §bhttps://sites.google.com/view/8craftermods/debug-sticks-add-on/andexdbnbtstructureloader§f\nNote: When pasting the nbt data into the text box the game might freeze for anywhere from a few seconds to half a hour depending on how much text is being pasted while it is pasting, and then it will unfreeze. \nNBT Data",
             "NBT Data"

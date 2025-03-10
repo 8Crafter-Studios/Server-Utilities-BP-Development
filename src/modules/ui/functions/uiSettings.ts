@@ -28,7 +28,7 @@ export async function uiSettings(sourceEntity: loosePlayerType): Promise<0 | 1> 
                     }
                 }
             }
-            let form = new ActionFormData();
+            const form = new ActionFormData();
             form.title(customFormUICodes.action.titles.formStyles.gridMenu + "UI Settings");
             form.button(customFormUICodes.action.buttons.positions.main_only + "Main", "textures/ui/debug_glyph_color");
             form.button(customFormUICodes.action.buttons.positions.main_only + "Menu Configurations", "textures/ui/automation_glyph_color");
@@ -42,19 +42,27 @@ export async function uiSettings(sourceEntity: loosePlayerType): Promise<0 | 1> 
             let response = r.selection;
             switch ((["main", "menuConfigurations", "advanced", "back", "close"] as const)[response]) {
                 case "main":
-                    if ((await uiSettings_main(player)) == 1) {
+                    if ((await uiSettings_main(player)) === 1) {
                         continue;
                     } else {
                         return 0;
                     }
                 case "menuConfigurations":
-                    if ((await uiSettings_menuConfigurations(player)) == 1) {
+                    if ((await uiSettings_menuConfigurations(player)) === 1) {
+                        continue;
+                    } else {
+                        return 0;
+                    }
+                case "advanced":
+                    /**
+                     * @todo Add the code for the uiSettings_advanced function.
+                     */
+                    if ((await showMessage(player, undefined, "§cSorry, the advanced UI settings menu does not exist yet.", "Back", "Close")).selection !== 1) {
                         continue;
                     } else {
                         return 0;
                     } /* 
-                case "advanced":
-                    if ((await uiSettings_advanced(sourceEntity)) == 1) {
+                    if ((await uiSettings_advanced(sourceEntity)) === 1) {
                         return await uiSettings(sourceEntity);
                     } else {
                         return 0;

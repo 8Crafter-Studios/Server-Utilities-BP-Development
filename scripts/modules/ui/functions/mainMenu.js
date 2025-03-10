@@ -316,11 +316,19 @@ export async function mainMenu(sourceEntity) {
                     catch { }
                     break;
                 case "mapArtGnerator":
-                    mapArtGenerator(player);
-                    return 0;
+                    if ((await mapArtGenerator(player)) == 1) {
+                        continue;
+                    }
+                    else {
+                        return 0;
+                    }
                 case "javaNBTStructureLoader":
-                    nbtStructureLoader(player);
-                    return 0;
+                    if ((await nbtStructureLoader(player)) == 1) {
+                        continue;
+                    }
+                    else {
+                        return 0;
+                    }
                 case "close":
                     return 0;
                 default:

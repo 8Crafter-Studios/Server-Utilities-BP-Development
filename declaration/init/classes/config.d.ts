@@ -3,7 +3,9 @@ import { StructureSaveMode, type DimensionLocation, Dimension } from "@minecraft
 import type { Warp } from "modules/coordinates/interfaces/Warp";
 import type { PlayerDataSaveMode } from "modules/player_save/classes/savedPlayer";
 import { menuButtonIds } from "modules/ui/constants/menuButtonIds";
+import type { rankModes } from "modules/chat/constants/rankModes";
 import type { playerMenuLeaderboardStatistic } from "modules/ui/types/playerMenuLeaderboardStatistic";
+import type { rankEvaluatorModes } from "modules/chat/constants/rankEvaluatorModes";
 /**
  * A class containing the configuration information for the add-on.
  */
@@ -300,7 +302,10 @@ export declare class config {
         chatSudoPrefix: string;
         chatDisplayTimeStamp: boolean;
         showRanksOnPlayerNameTags: boolean;
-        rankMode: string;
+        showHealthOnPlayerNameTags: boolean;
+        rankMode: keyof typeof rankModes;
+        rankEvaluatorMode_chat: (typeof rankEvaluatorModes)[number];
+        rankEvaluatorMode_nameTags: (typeof rankEvaluatorModes)[number];
         rankDisplayPrefix: string;
         rankDisplaySuffix: string;
         nameDisplayPrefix: string;
@@ -308,12 +313,24 @@ export declare class config {
         chatNameAndMessageSeparator: string;
         rankDisplaySeparator: string;
         /**
+         * The template string for displaying a player's dimension in the chat.
+         *
+         * Only applies in Custom(Advanced) mode.
+         *
+         * @todo
+         *
+         * @default "[${dimension}§r] "
+         */
+        chatDimensionTemplateString: string;
+        /**
          * The template string for individual ranks.
+         *
+         * @default "[${rank}§r]"
          */
         rankTemplateString: string;
         messageTemplateString: string;
         nameTagTemplateString: string;
-        defaultRankTemplateString: string;
+        defaultRank: string;
         defaultMessageFormatting: string;
         defaultNameFormatting: string;
         defaultSeparatorFormatting: string;
@@ -1112,7 +1129,10 @@ export declare class config {
             chatSudoPrefix: string;
             chatDisplayTimeStamp: boolean;
             showRanksOnPlayerNameTags: boolean;
-            rankMode: string;
+            showHealthOnPlayerNameTags: boolean;
+            rankMode: keyof typeof rankModes;
+            rankEvaluatorMode_chat: (typeof rankEvaluatorModes)[number];
+            rankEvaluatorMode_nameTags: (typeof rankEvaluatorModes)[number];
             rankDisplayPrefix: string;
             rankDisplaySuffix: string;
             nameDisplayPrefix: string;
@@ -1120,12 +1140,24 @@ export declare class config {
             chatNameAndMessageSeparator: string;
             rankDisplaySeparator: string;
             /**
+             * The template string for displaying a player's dimension in the chat.
+             *
+             * Only applies in Custom(Advanced) mode.
+             *
+             * @todo
+             *
+             * @default "[${dimension}§r] "
+             */
+            chatDimensionTemplateString: string;
+            /**
              * The template string for individual ranks.
+             *
+             * @default "[${rank}§r]"
              */
             rankTemplateString: string;
             messageTemplateString: string;
             nameTagTemplateString: string;
-            defaultRankTemplateString: string;
+            defaultRank: string;
             defaultMessageFormatting: string;
             defaultNameFormatting: string;
             defaultSeparatorFormatting: string;

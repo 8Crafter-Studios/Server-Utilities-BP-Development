@@ -663,11 +663,29 @@ export class config {
             set showRanksOnPlayerNameTags(showRanksOnPlayerNameTags) {
                 world.setDynamicProperty("andexdbSettings:showRanksOnPlayerNameTags", showRanksOnPlayerNameTags ?? false);
             },
+            get showHealthOnPlayerNameTags() {
+                return Boolean(world.getDynamicProperty("andexdbSettings:showHealthOnPlayerNameTags") ?? false);
+            },
+            set showHealthOnPlayerNameTags(showHealthOnPlayerNameTags) {
+                world.setDynamicProperty("andexdbSettings:showHealthOnPlayerNameTags", showHealthOnPlayerNameTags ?? false);
+            },
             get rankMode() {
                 return String(world.getDynamicProperty("andexdbSettings:rankMode") ?? "custom_simple");
             },
             set rankMode(rankMode) {
                 world.setDynamicProperty("andexdbSettings:rankMode", rankMode ?? "custom_simple");
+            },
+            get rankEvaluatorMode_chat() {
+                return String(world.getDynamicProperty("andexdbSettings:rankEvaluatorMode_chat") ?? "default");
+            },
+            set rankEvaluatorMode_chat(rankEvaluatorMode_chat) {
+                world.setDynamicProperty("andexdbSettings:rankEvaluatorMode_chat", rankEvaluatorMode_chat ?? "default");
+            },
+            get rankEvaluatorMode_nameTags() {
+                return String(world.getDynamicProperty("andexdbSettings:rankEvaluatorMode_nameTags") ?? "default");
+            },
+            set rankEvaluatorMode_nameTags(rankEvaluatorMode_nameTags) {
+                world.setDynamicProperty("andexdbSettings:rankEvaluatorMode_nameTags", rankEvaluatorMode_nameTags ?? "default");
             },
             get rankDisplayPrefix() {
                 return String(world.getDynamicProperty("andexdbSettings:rankDisplayPrefix") ?? "[");
@@ -706,7 +724,24 @@ export class config {
                 world.setDynamicProperty("andexdbSettings:rankDisplaySeparator", rankDisplaySeparator ?? " ");
             },
             /**
+             * The template string for displaying a player's dimension in the chat.
+             *
+             * Only applies in Custom(Advanced) mode.
+             *
+             * @todo
+             *
+             * @default "[${dimension}§r] "
+             */
+            get chatDimensionTemplateString() {
+                return String(world.getDynamicProperty("andexdbSettings:chatDimensionTemplateString") ?? "[${dimension}§r] ");
+            },
+            set chatDimensionTemplateString(chatDimensionTemplateString) {
+                world.setDynamicProperty("andexdbSettings:chatDimensionTemplateString", chatDimensionTemplateString ?? "[${dimension}§r] ");
+            },
+            /**
              * The template string for individual ranks.
+             *
+             * @default "[${rank}§r]"
              */
             get rankTemplateString() {
                 return String(world.getDynamicProperty("andexdbSettings:rankTemplateString") ?? "[${rank}§r]");
@@ -716,24 +751,24 @@ export class config {
             },
             get messageTemplateString() {
                 return String(world.getDynamicProperty("andexdbSettings:messageTemplateString") ??
-                    '§r${timestampenabled?`[${timestamp}]`:""}${ranks}§r${(ranks!="")?" ":""}<${name}§r> ${message}');
+                    '${(showDimension ? `[${dimension}§r] ` : "")}${timestampenabled?`[${timestamp}] `:""}${ranks}§r${(ranks!="")?" ":""}<${name}§r> ${message}');
             },
             set messageTemplateString(messageTemplateString) {
-                world.setDynamicProperty("andexdbSettings:messageTemplateString", messageTemplateString ?? '§r${timestampenabled?`[${timestamp}]`:""}${ranks}§r${(ranks!="")?" ":""}<${name}§r> ${message}');
+                world.setDynamicProperty("andexdbSettings:messageTemplateString", messageTemplateString ?? '${(showDimension ? `[${dimension}§r] ` : "")}${timestampenabled?`[${timestamp}] `:""}${ranks}§r${(ranks!="")?" ":""}<${name}§r> ${message}');
             },
             get nameTagTemplateString() {
                 return String(world.getDynamicProperty("andexdbSettings:nameTagTemplateString") ??
-                    '${(showDimension ? `[${dimension}§r§f] ` : "")}${rank} ${nameFormatting}${nameb}${(showHealth ? `§r§f [${currentHealth}/${maxHealth}]` : "")}');
+                    '${rank} ${nameFormatting}${name}${(showHealth ? `§r§f [${currentHealth}/${maxHealth}]` : "")}');
             },
             set nameTagTemplateString(nameTagTemplateString) {
                 world.setDynamicProperty("andexdbSettings:nameTagTemplateString", nameTagTemplateString ??
-                    '${(showDimension ? `[${dimension}§r§f] ` : "")}${rank} ${nameFormatting}${nameb}${(showHealth ? `§r§f [${currentHealth}/${maxHealth}]` : "")}');
+                    '${rank} ${nameFormatting}${name}${(showHealth ? `§r§f [${currentHealth}/${maxHealth}]` : "")}');
             },
-            get defaultRankTemplateString() {
-                return String(world.getDynamicProperty("andexdbSettings:defaultRankTemplateString") ?? "");
+            get defaultRank() {
+                return String(world.getDynamicProperty("andexdbSettings:defaultRank") ?? "§bMember§r");
             },
-            set defaultRankTemplateString(defaultRankTemplateString) {
-                world.setDynamicProperty("andexdbSettings:defaultRankTemplateString", defaultRankTemplateString ?? "");
+            set defaultRank(defaultRank) {
+                world.setDynamicProperty("andexdbSettings:defaultRank", defaultRank ?? "§bMember§r");
             },
             get defaultMessageFormatting() {
                 return String(world.getDynamicProperty("andexdbSettings:defaultMessageFormatting") ?? "");
