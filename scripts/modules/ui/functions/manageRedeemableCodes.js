@@ -7,6 +7,7 @@ import { showMessage } from "modules/utilities/functions/showMessage";
 import { securityVariables } from "security/ultraSecurityModeUtils";
 import { RedeemableCode } from "modules/main/classes/RedeemableCode";
 import { itemSelector } from "./itemSelector";
+import { customFormUICodes } from "../constants/customFormUICodes";
 export async function manageRedeemableCodes(sourceEntitya) {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
     if (!(sourceEntity instanceof Player)) {
@@ -39,12 +40,12 @@ export async function manageRedeemableCodes(sourceEntitya) {
         }
     }
     let form = new ActionFormData();
-    form.title("Manage Redeemable Codes");
+    form.title(customFormUICodes.action.titles.formStyles.medium + "Manage Redeemable Codes");
     const codes = RedeemableCode.getAll();
-    codes.forEach((c) => form.button(c.code));
-    form.button("Add Redeemable Codes", "textures/ui/color_plus");
-    form.button("Back", "textures/ui/arrow_left");
-    form.button("Close", "textures/ui/crossout");
+    codes.forEach((c) => form.button(customFormUICodes.action.buttons.positions.main_only + c.code));
+    form.button(customFormUICodes.action.buttons.positions.main_only + "Add Redeemable Codes", "textures/ui/color_plus");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
     return await forceShow(form, sourceEntity)
         .then(async (ra) => {
         let r = ra;
@@ -56,7 +57,7 @@ export async function manageRedeemableCodes(sourceEntitya) {
                 const code = codes[r.selection];
                 const codesb = codes.filter((c) => c !== code);
                 const item = code.getItem(sourceEntity.dimensionLocation);
-                switch (["loadItem", "delete", "back", "close"][(await showActions(sourceEntity, "Redeemable Code Details", `${code.code}\nItem Type: ${item.typeId}`, ["Load Item", "textures/ui/structure_block_load"], ["Delete", "textures/ui/trash_default"], ["Back", "textures/ui/arrow_left"], ["Close", "textures/ui/crossout"])).selection]) {
+                switch (["loadItem", "delete", "back", "close"][(await showActions(sourceEntity, customFormUICodes.action.titles.formStyles.medium + "Redeemable Code Details", `${code.code}\nItem Type: ${item.typeId}`, [customFormUICodes.action.buttons.positions.main_only + "Load Item", "textures/ui/structure_block_load"], [customFormUICodes.action.buttons.positions.main_only + "Delete", "textures/ui/trash_default"], [customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left"], [customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout"])).selection]) {
                     case "loadItem": {
                         sourceEntity.inventory.container.addItem(item);
                         return await manageRedeemableCodes(sourceEntity);
@@ -87,7 +88,7 @@ export async function manageRedeemableCodes(sourceEntitya) {
                     return await manageRedeemableCodes(sourceEntity);
                 }
                 const r = await new ModalFormData()
-                    .title("New Code")
+                    .title(customFormUICodes.modal.titles.formStyles.medium + "New Code")
                     .textField(`§l§fPlease enter the code below.`, "Code")
                     .submitButton("Create Code")
                     .forceShow(sourceEntity);

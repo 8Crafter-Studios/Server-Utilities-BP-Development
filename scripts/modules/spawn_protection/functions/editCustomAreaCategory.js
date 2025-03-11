@@ -231,7 +231,7 @@ Icon Path: ${category.icon_path ?? "None"}`)
                         }
                     }
                     else {
-                        if ((await showMessage(player, "Deletion Canceled", "The deletion of this protected area category has been successfully cancelled.", "Back", "Close")).selection !== 1) {
+                        if ((await showMessage(player, "Deletion Canceled", "The deletion of this protected area category has been successfully canceled.", "Back", "Close")).selection !== 1) {
                             continue;
                         }
                         else {

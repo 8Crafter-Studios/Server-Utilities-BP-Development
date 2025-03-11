@@ -15,6 +15,7 @@ export class ban {
     format_version = format_version;
     ban_format_version = ban_format_version;
     banId;
+    hasAdvancedReason = false;
     constructor(ban) {
         this.type = ban.type ?? (ban.playerName != undefined ? "name" : "id");
         this.unbanDate = ban.unbanDate;
@@ -35,6 +36,7 @@ export class ban {
                 (ban.type == "name"
                     ? "ban:" + ban.banDate + ":" + ban.playerName
                     : "banId:" + ban.banDate + ":" + ban.playerId);
+        this.hasAdvancedReason = ban.hasAdvancedReason ?? false;
     }
     get isExpired() {
         return this.unbanDate !== Infinity && Number(this.unbanDate) <= Date.now();
@@ -67,11 +69,42 @@ export class ban {
         };
         return timeList;
     }
+    get duration() {
+        if (this.unbanDate === Infinity) {
+            return {
+                days: Infinity,
+                hours: Infinity,
+                minutes: Infinity,
+                seconds: Infinity,
+                milliseconds: Infinity,
+            };
+        }
+        let time = new Date(this.unbanDate - this.banDate +
+            new Date().setUTCFullYear(0));
+        let timeList = {
+            days: Math.floor((time.getTime() - new Date().setUTCFullYear(0)) / 86400000),
+            hours: time.getHours(),
+            minutes: time.getMinutes(),
+            seconds: time.getSeconds(),
+            milliseconds: time.getMilliseconds(),
+        };
+        return timeList;
+    }
     get isTemporary() {
         return this.unbanDate !== Infinity;
     }
     get isPermanent() {
         return this.unbanDate === Infinity;
+    }
+    get kickMessage() {
+        if (this.hasAdvancedReason || semver.lt(this.ban_format_version, "1.3.0")) {
+            return this.reason;
+        }
+        else {
+            const timeZone = config.system.timeZone;
+            return JSON.stringify(this.reason).slice(0, -1) +
+                (this.isPermanent ? `\\n§r§cBanned By: ${this.bannedByName}\\nBan Duration: Permanent\\nBanned On: ${formatDateTime(new Date(this.banDate), timeZone)} UTC${(timeZone > 0 || Object.is(timeZone, 0) ? "+" : "") + timeZone}"` : `\\n§r§cBanned By: ${this.bannedByName}\\nBanned Until: ${formatDateTime(new Date(this.unbanDate), timeZone)} UTC${(timeZone > 0 || Object.is(timeZone, 0) ? "+" : "") + timeZone}\\nBanned On: ${formatDateTime(new Date(this.banDate), timeZone)} UTC${(timeZone > 0 || Object.is(timeZone, 0) ? "+" : "") + timeZone}\\nTime Remaining: {timeRemaining}"`);
+        }
     }
     save() {
         world.setDynamicProperty(this.banId, JSONB.stringify(this));

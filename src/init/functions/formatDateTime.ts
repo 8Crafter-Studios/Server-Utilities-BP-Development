@@ -2,8 +2,12 @@
  * Formats a date object to a date time string formatted as 07/21/2024, 12:37:01 PM.
  * @since 1.18.2-development.10
  * @version 1.1.1
+ * @param {Date} date - The date object to format.
+ * @param {number} [timeZoneOffset=0] - The time zone offset in minutes. Default is 0 (UTC).
+ * @param {boolean} [includeMs=false] - Whether to include milliseconds in the formatted string. Default is false.
+ * @returns {string} The formatted date time string.
  */
-globalThis.formatDateTime = function formatDateTime<includeMs extends boolean>(
+globalThis.formatDateTime = function formatDateTime<includeMs extends boolean = false>(
     date: Date,
     timeZoneOffset: number = 0,
     includeMs: includeMs | boolean = false

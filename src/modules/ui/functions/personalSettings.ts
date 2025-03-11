@@ -4,6 +4,7 @@ import { forceShow } from "modules/ui/functions/forceShow";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { securityVariables } from "security/ultraSecurityModeUtils";
 import { showMessage } from "modules/utilities/functions/showMessage";
+import { customFormUICodes } from "../constants/customFormUICodes";
 
 /**
  * Displays and handles the personal settings form for a player.
@@ -36,13 +37,10 @@ export async function personalSettings(
             }
         }
     }
-    let form2 = new ModalFormData();
-    ("andexdbSettings:autoEscapeChatMessages");
-    ("andexdbSettings:autoURIEscapeChatMessages");
-    ("andexdbSettings:allowChatEscapeCodes");
-    form2.title("Personal Settings");
-    form2.textField(
-        "§l§fTime Zone§r§f\nTime zone as hour for difference from UTC (decimals are allowed), the default is 0. ",
+    let form = new ModalFormData();
+    form.title(customFormUICodes.modal.titles.formStyles.medium + "Personal Settings");
+    form.textField(
+        "§l§fTime Zone§r§f\nTime zone as hour for difference from UTC (decimals are allowed), the default is 0.",
         "number",
         String(
             sourceEntity.getDynamicProperty(
@@ -50,7 +48,7 @@ export async function personalSettings(
             ) ?? 0
         )
     );
-    form2.textField(
+    form.textField(
         "§l§fchatRankPrefix§r§f\nPrefix for your chat ranks, default is undefined",
         "string",
         !!!sourceEntity.getDynamicProperty(
@@ -63,7 +61,7 @@ export async function personalSettings(
                 ) ?? "rank:"
             )
     );
-    form2.textField(
+    form.textField(
         "§l§fchatSudoPrefix§r§f\nPrefix for your custom chat names, default is undefined:",
         "string",
         !!!sourceEntity.getDynamicProperty(
@@ -76,7 +74,7 @@ export async function personalSettings(
                 ) ?? "sudo:"
             )
     );
-    form2.textField(
+    form.textField(
         "§l§frankDisplayPrefix§r§f\nPrefix that appears before your chat ranks in your chat messages, default is undefined",
         "string",
         !!!sourceEntity.getDynamicProperty(
@@ -89,7 +87,7 @@ export async function personalSettings(
                 ) ?? "["
             )
     );
-    form2.textField(
+    form.textField(
         "§l§frankDisplaySuffix§r§f\nSuffix that appears after your chat ranks in your chat messages, default is undefined",
         "string",
         !!!sourceEntity.getDynamicProperty(
@@ -102,7 +100,7 @@ export async function personalSettings(
                 ) ?? "§r§f]"
             )
     );
-    form2.textField(
+    form.textField(
         "§l§frankDisplaySeparator§r§f\nSeparator that appears between your ranks, default is undefined",
         "string",
         !!!sourceEntity.getDynamicProperty(
@@ -115,7 +113,7 @@ export async function personalSettings(
                 ) ?? " "
             )
     );
-    form2.textField(
+    form.textField(
         "§l§fnameDisplayPrefix§r§f\nPrefix that appears before your names in your chat messages, default is undefined",
         "string",
         !!!sourceEntity.getDynamicProperty(
@@ -128,7 +126,7 @@ export async function personalSettings(
                 ) ?? "<"
             )
     );
-    form2.textField(
+    form.textField(
         "§l§fnameDisplaySuffix§r§f\nSuffix that appears after your names in your chat messages, default is undefined",
         "string",
         !!!sourceEntity.getDynamicProperty(
@@ -141,7 +139,7 @@ export async function personalSettings(
                 ) ?? "§r§f>"
             )
     );
-    form2.textField(
+    form.textField(
         '§l§fchatNameAndMessageSeparator§r§f\nSeparator that appears between your name and and your chat message, default is " "',
         "string",
         !!!sourceEntity.getDynamicProperty(
@@ -154,11 +152,11 @@ export async function personalSettings(
                 ) ?? " "
             )
     );
-    form2.toggle(
+    form.toggle(
         "§l§fdoNotSetNameTag§r§f\nStops your name tag from having chat ranks added to it, this is usefull if you want to change your name tag, since otherwise it would keep resetting your name tag, default is false",
         sourceEntity.hasTag("doNotSetNameTag")
     );
-    form2.textField(
+    form.textField(
         "§l§fdebugStickUseCooldown§r§f\nCooldown between changing the block state of a block with a debug stick after you have just changed that state on the same block, default is 4",
         "number; default: 4",
         !!!sourceEntity.getDynamicProperty("debugStickUseCooldown")
@@ -167,7 +165,7 @@ export async function personalSettings(
                 sourceEntity.getDynamicProperty("debugStickUseCooldown") ?? 4
             )
     );
-    form2.textField(
+    form.textField(
         "§l§fdebugStickHoldDuration§r§f\nTime after the actionbar for changing a block state with the debug stick appears before the actionbar can be changed again, default is 10",
         "number; default: 10",
         !!!sourceEntity.getDynamicProperty("debugStickHoldDuration")
@@ -201,8 +199,8 @@ export async function personalSettings(
 
 
 
-    form2.submitButton("Save");
-    return await forceShow(form2, sourceEntity as Player)
+    form.submitButton("Save");
+    return await forceShow(form, sourceEntity as Player)
         .then((to) => {
             let t = to as ModalFormResponse;
             if (t.canceled) {

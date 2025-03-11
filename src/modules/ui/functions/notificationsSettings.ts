@@ -5,6 +5,7 @@ import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPl
 import { PlayerNotifications } from "init/classes/PlayerNotifications";
 import { securityVariables } from "security/ultraSecurityModeUtils";
 import { showMessage } from "modules/utilities/functions/showMessage";
+import { customFormUICodes } from "../constants/customFormUICodes";
 
 /**
  * Displays a notification settings form to the player and updates the player's notification settings based on their input.
@@ -56,7 +57,7 @@ export async function notificationsSettings(
     }
     let form2 = new ModalFormData();
     const noti = new PlayerNotifications(sourceEntity);
-    form2.title("Notifications Settings");
+    form2.title(customFormUICodes.action.titles.formStyles.fullscreen + "Notifications Settings");
     form2.toggle(
         "§l§fGet notified when players run chat commands§r§f",
         noti.getAllChatCommands

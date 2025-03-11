@@ -297,6 +297,9 @@ export declare class config {
          */
         allowCrossDimensionalTeleport: boolean;
     };
+    static get banSystem(): {
+        enabled: boolean;
+    };
     static get chatRanks(): {
         chatRankPrefix: string;
         chatSudoPrefix: string;
@@ -1124,6 +1127,8 @@ export declare class config {
              * @default 15
              */
             pvpCooldownToTeleport: number;
+        } | {
+            enabled: boolean;
         } | {
             chatRankPrefix: string;
             chatSudoPrefix: string;

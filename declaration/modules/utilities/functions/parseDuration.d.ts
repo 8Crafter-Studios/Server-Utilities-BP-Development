@@ -17,3 +17,10 @@
  * @throws {SyntaxError} Throws a syntax error if no valid duration is found inside of the duration string.
  */
 export declare function parseDuration(durationString: string): number;
+export declare function parseDurationRelative(durationString: string, relativeTo?: number): number;
+export declare function formatDuration(startTime: number, endTime: number, options?: {
+    includeMilliseconds?: boolean;
+}): string;
+export declare function formatDuration_compact(startTime: number, endTime: number, options?: {
+    includeMilliseconds?: boolean;
+}): string;

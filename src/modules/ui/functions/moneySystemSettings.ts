@@ -5,6 +5,7 @@ import { forceShow } from "modules/ui/functions/forceShow";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { securityVariables } from "security/ultraSecurityModeUtils";
 import { showMessage } from "modules/utilities/functions/showMessage";
+import { customFormUICodes } from "../constants/customFormUICodes";
 
 /**
  * Displays the Money System Settings UI and handles user interactions.
@@ -31,19 +32,19 @@ export async function moneySystemSettings(
             }
         }
     }
-    let form2 = new ModalFormData();
-    form2.title("Money System Settings");
-    form2.toggle(
+    let form = new ModalFormData();
+    form.title(customFormUICodes.modal.titles.formStyles.medium + "Money System Settings");
+    form.toggle(
         "§l§fUse Scoreboard-Based Money System§r§f\nWhether or not to use a scoreboard-based money system instead of a dynamic property-based one.\nEnabling this option will cause the money system to max out at the 32-bit integer limit (approximately 2.1 billion), but will allow for modifying a player's money with the /scoreboard command instead of having to use the main menu or use script eval.\nWhen this option is disabled the limit is 10^32767. So basically infinite.\nDefaults to false.",
         config.moneySystem.useScoreboardBasedMoneySystem
     );
-    form2.textField(
+    form.textField(
         "§l§fScoreboard Name§r§f\nThe name of the scoreboard to use for the money system.\nDefaults to \"andexdb:money\".",
         "andexdb:money",
         config.moneySystem.scoreboardName
     );
-    form2.submitButton("Save");
-    return await forceShow(form2, sourceEntity as Player)
+    form.submitButton("Save");
+    return await forceShow(form, sourceEntity as Player)
         .then((to) => {
             let t = to as ModalFormResponse;
             if (t.canceled) {

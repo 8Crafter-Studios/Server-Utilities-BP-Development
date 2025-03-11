@@ -996,7 +996,7 @@ export class ServerShopManager {
         form.button(customFormUICodes.action.buttons.positions.main_only + "Main Settings", "textures/ui/icon_setting");
         form.button(
             customFormUICodes.action.buttons.positions.main_only + customFormUICodes.action.buttons.options.disabled + "§cShop Item Settings",
-            "textures/ui/icon_items"
+            "textures/ui/icon_recipe_item"
         );
         form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
         form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");

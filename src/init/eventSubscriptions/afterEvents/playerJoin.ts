@@ -84,7 +84,7 @@ subscribedEvents.afterPlayerJoin = world.afterEvents.playerJoin.subscribe(
                                     String(
                                         new Date(
                                             Number(b?.banDate)
-                                        ).toUTCString() + " GMT"
+                                        ).toUTCString() + " UTC"
                                     )
                                 )
                                 ?.replaceAll(
@@ -92,7 +92,7 @@ subscribedEvents.afterPlayerJoin = world.afterEvents.playerJoin.subscribe(
                                     String(
                                         new Date(
                                             Number(b?.unbanDate)
-                                        ).toUTCString() + " GMT"
+                                        ).toUTCString() + " UTC"
                                     )
                                 )
                                 ?.replaceAll("{type}", String(b?.type))
@@ -135,7 +135,7 @@ subscribedEvents.afterPlayerJoin = world.afterEvents.playerJoin.subscribe(
                                 "{banDate}",
                                 String(
                                     new Date(Number(b?.banDate)).toUTCString() +
-                                    " GMT"
+                                    " UTC"
                                 )
                             )
                             ?.replaceAll(
@@ -143,7 +143,7 @@ subscribedEvents.afterPlayerJoin = world.afterEvents.playerJoin.subscribe(
                                 String(
                                     new Date(
                                         Number(b?.unbanDate)
-                                    ).toUTCString() + " GMT"
+                                    ).toUTCString() + " UTC"
                                 )
                             )
                             ?.replaceAll("{type}", String(b?.type))

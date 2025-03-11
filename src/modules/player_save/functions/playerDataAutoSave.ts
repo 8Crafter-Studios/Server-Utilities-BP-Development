@@ -33,16 +33,12 @@ export async function playerDataAutoSaveAsyncInstance() {
 export async function playerDataAutoSaveAsync() {
     try{
         while(true){
-            if (globalThis.stopPlayerDataAutoSaveAsync === true || (world.getDynamicProperty(
-                "andexdbSettings:autoSavePlayerData"
-                ) ?? true !== true)) {
+            if (globalThis.stopPlayerDataAutoSaveAsync === true || (config.system.autoSavePlayerData !== true)) {
                 globalThis.stopPlayerDataAutoSaveAsync = false;
                 break;
             }
             await playerDataAutoSaveAsyncInstance();
-            if ((globalThis.stopPlayerDataAutoSaveAsync as boolean) === true || (world.getDynamicProperty(
-                "andexdbSettings:autoSavePlayerData"
-                ) ?? true !== true)) {
+            if ((globalThis.stopPlayerDataAutoSaveAsync as boolean) === true || (config.system.autoSavePlayerData !== true)) {
                 globalThis.stopPlayerDataAutoSaveAsync = false;
                 break;
             }
@@ -67,10 +63,7 @@ export async function startPlayerDataAutoSave() {
     } else {
         repeatingIntervals.playerDataAutoSave = system.runInterval(() => {
             lastPlayerDataAutoSaveRun_local = Date.now();
-            if (world.getDynamicProperty(
-                "andexdbSettings:autoSavePlayerData"
-            ) ??
-                true == true) {
+            if (config.system.autoSavePlayerData) {
                 world.getAllPlayers().forEach((p) => {
                     savedPlayer.savePlayer(p);
                 });

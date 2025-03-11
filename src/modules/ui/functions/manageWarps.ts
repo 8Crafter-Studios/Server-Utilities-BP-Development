@@ -7,6 +7,7 @@ import { coordinatesB } from "modules/coordinates/functions/coordinatesB";
 import { securityVariables } from "security/ultraSecurityModeUtils";
 import { extractPlayerFromLooseEntityType } from "modules/utilities/functions/extractPlayerFromLooseEntityType";
 import type { loosePlayerType } from "modules/utilities/types/loosePlayerType";
+import { customFormUICodes } from "../constants/customFormUICodes";
 
 /**
  * Shows the manage warps UI to the player.
@@ -64,12 +65,12 @@ export async function manageWarps(sourceEntity: loosePlayerType): Promise<0 | 1>
                 }
             }
             let form = new ActionFormData();
-            form.title("Manage Warps");
+            form.title(customFormUICodes.action.titles.formStyles.medium + "Manage Warps");
             const warps = config.warpsSystem.warps;
             warps.forEach((w) => form.button(w.displayName, w.icon));
-            form.button("Add Warp", "textures/ui/color_plus");
-            form.button("Back", "textures/ui/arrow_left");
-            form.button("Close", "textures/ui/crossout");
+            form.button(customFormUICodes.action.buttons.positions.main_only + "Add Warp", "textures/ui/color_plus");
+            form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
+            form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
             const r = await form.forceShow(player);
             if (r.canceled) return 1;
 
@@ -82,15 +83,15 @@ export async function manageWarps(sourceEntity: loosePlayerType): Promise<0 | 1>
                             (
                                 await showActions(
                                     player,
-                                    "Warp Details",
+                                    customFormUICodes.action.titles.formStyles.medium + "Warp Details",
                                     `${warp.displayName}\nDimension: ${dimensionTypeDisplayFormattingD[warp.dimension]}\nLocation: ${vTStr(
                                         warp.location
                                     )}\nIcon: ${warp.icon}`,
-                                    ["Move", "textures/ui/move"],
-                                    ["Edit", "textures/ui/pencil_edit_icon"],
-                                    ["Delete", "textures/ui/trash_default"],
-                                    ["Back", "textures/ui/arrow_left"],
-                                    ["Close", "textures/ui/crossout"]
+                                    [customFormUICodes.action.buttons.positions.main_only + "Move", "textures/ui/move"],
+                                    [customFormUICodes.action.buttons.positions.main_only + "Edit", "textures/ui/pencil_edit_icon"],
+                                    [customFormUICodes.action.buttons.positions.main_only + "Delete", "textures/ui/trash_default"],
+                                    [customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left"],
+                                    [customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout"]
                                 )
                             ).selection
                         ]
@@ -98,12 +99,12 @@ export async function manageWarps(sourceEntity: loosePlayerType): Promise<0 | 1>
                         case "move": {
                             const r = await showActions(
                                 player,
-                                "Move Warp",
+                                customFormUICodes.action.titles.formStyles.medium + "Move Warp",
                                 "Would you like to move this warp above or below another warp?",
-                                ["Move Above", "textures/ui/chevron_white_up"],
-                                ["Move Below", "textures/ui/chevron_white_down"],
-                                ["Back", "textures/ui/arrow_left"],
-                                ["Close", "textures/ui/crossout"]
+                                [customFormUICodes.action.buttons.positions.main_only + "Move Above", "textures/ui/chevron_white_up"],
+                                [customFormUICodes.action.buttons.positions.main_only + "Move Below", "textures/ui/chevron_white_down"],
+                                [customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left"],
+                                [customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout"]
                             );
                             if (r.canceled || r.selection === 2) {
                                 continue;
@@ -112,11 +113,11 @@ export async function manageWarps(sourceEntity: loosePlayerType): Promise<0 | 1>
                                 return 0;
                             }
                             let form = new ActionFormData();
-                            form.title("Move Warp");
+                            form.title(customFormUICodes.action.titles.formStyles.medium + "Move Warp");
                             form.body(`Select the warp you would like to move this warp ${r.selection === 0 ? "above" : "below"}.`);
-                            warpsb.forEach((w) => form.button(w.displayName, w.icon));
-                            form.button("Back", "textures/ui/arrow_left");
-                            form.button("Close", "textures/ui/crossout");
+                            warpsb.forEach((w) => form.button(customFormUICodes.action.buttons.positions.main_only + w.displayName, w.icon));
+                            form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
+                            form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
                             const rb = await form.forceShow(player);
                             if (rb.canceled || rb.selection === warpsb.length) {
                                 continue;
@@ -136,7 +137,7 @@ export async function manageWarps(sourceEntity: loosePlayerType): Promise<0 | 1>
                         }
                         case "edit": {
                             const r = await new ModalFormData()
-                                .title("New Warp")
+                                .title(customFormUICodes.modal.titles.formStyles.medium + "New Warp")
                                 .textField(`Warp Display Name`, "Warp Name", warp.displayName)
                                 .textField(`Warp Location. ex. 172.41 76 29.5`, "x y z", vTStr(warp.location))
                                 .dropdown(
@@ -203,7 +204,7 @@ export async function manageWarps(sourceEntity: loosePlayerType): Promise<0 | 1>
                 }
                 case "newWarp": {
                     const r = await new ModalFormData()
-                        .title("New Warp")
+                        .title(customFormUICodes.modal.titles.formStyles.medium + "New Warp")
                         .textField(`Please enter the name for the new warp below.`, "Warp Name")
                         .textField(`Please enter the coordinates for the new warp below. ex. 172.41 76 29.5`, "x y z")
                         .dropdown(

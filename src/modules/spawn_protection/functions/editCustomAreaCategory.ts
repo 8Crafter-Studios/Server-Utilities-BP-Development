@@ -348,7 +348,7 @@ Icon Path: ${category.icon_path ?? "None"}`
                                 await showMessage(
                                     player,
                                     "Deletion Canceled",
-                                    "The deletion of this protected area category has been successfully cancelled.",
+                                    "The deletion of this protected area category has been successfully canceled.",
                                     "Back",
                                     "Close"
                                 )

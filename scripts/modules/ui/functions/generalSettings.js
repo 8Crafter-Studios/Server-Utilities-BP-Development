@@ -86,10 +86,14 @@ export async function generalSettings(sourceEntity) {
         if (r.canceled) {
             return 1;
         }
+        const optionsRequiringRestartToApplyProperly = [];
         const options = Object.fromEntries(includedOptions.map((o, i) => [o, r.formValues[i]]));
         includedOptions.forEach((v) => {
             switch (v) {
                 case "autoSavePlayerData":
+                    if (options[v] !== config.system.autoSavePlayerData) {
+                        optionsRequiringRestartToApplyProperly.push("autoSavePlayerData");
+                    }
                     config.system.autoSavePlayerData = options[v];
                     break;
                 case "chatCommandPrefix":
@@ -131,6 +135,7 @@ export async function generalSettings(sourceEntity) {
                 case "useLegacyPlayerInventoryDataSaveSystem":
                     if (debugModeEnabled) {
                         config.system.useLegacyPlayerInventoryDataSaveSystem = options[v];
+                        optionsRequiringRestartToApplyProperly.push("useLegacyPlayerInventoryDataSaveSystem");
                     }
                     else {
                         throw new Error(`The useLegacyPlayerInventoryDataSaveSystem setting can is only supposed to be changed in debug mode.`);
@@ -143,6 +148,12 @@ export async function generalSettings(sourceEntity) {
                     throw new Error(`Save action for setting ${JSON.stringify(v)} was not defined.`);
             }
         });
+        if (optionsRequiringRestartToApplyProperly.length > 0) {
+            const r = await showMessage(player, "Restart Required", `The following settings require a restart of this world/server/realm to apply properly: ${optionsRequiringRestartToApplyProperly.join(", ")}.\nIf you are on a realm or do not have access to the /reload command, please click the restart button below. Otherwise, run the /reload command.`, "Cancel", "Restart");
+            if (r.selection === 1) {
+                let buffer = new ArrayBuffer(250000000); // Uses all of the currently available scripting memory, forcefully shutting down the world/realm/server.
+            }
+        }
         return 1;
     }
     catch (e) {

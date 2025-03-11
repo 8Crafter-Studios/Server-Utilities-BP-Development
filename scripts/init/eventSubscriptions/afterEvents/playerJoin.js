@@ -41,8 +41,8 @@ subscribedEvents.afterPlayerJoin = world.afterEvents.playerJoin.subscribe((event
                         ?.replaceAll("{bannedBy}", String(b?.bannedByName))
                         ?.replaceAll("{bannedByName}", String(b?.bannedByName))
                         ?.replaceAll("{bannedById}", String(b?.bannedById))
-                        ?.replaceAll("{banDate}", String(new Date(Number(b?.banDate)).toUTCString() + " GMT"))
-                        ?.replaceAll("{unbanDate}", String(new Date(Number(b?.unbanDate)).toUTCString() + " GMT"))
+                        ?.replaceAll("{banDate}", String(new Date(Number(b?.banDate)).toUTCString() + " UTC"))
+                        ?.replaceAll("{unbanDate}", String(new Date(Number(b?.unbanDate)).toUTCString() + " UTC"))
                         ?.replaceAll("{type}", String(b?.type))
                         ?.replaceAll("{timeRemainingRaw}", String(b?.timeRemainingRaw)) ?? b?.reason) ?? b?.reason;
             }
@@ -59,8 +59,8 @@ subscribedEvents.afterPlayerJoin = world.afterEvents.playerJoin.subscribe((event
                         ?.replaceAll("{bannedByName}", String(b?.bannedByName))
                         ?.replaceAll("{bannedById}", String(b?.bannedById))
                         ?.replaceAll("{banDate}", String(new Date(Number(b?.banDate)).toUTCString() +
-                        " GMT"))
-                        ?.replaceAll("{unbanDate}", String(new Date(Number(b?.unbanDate)).toUTCString() + " GMT"))
+                        " UTC"))
+                        ?.replaceAll("{unbanDate}", String(new Date(Number(b?.unbanDate)).toUTCString() + " UTC"))
                         ?.replaceAll("{type}", String(b?.type))
                         ?.replaceAll("{timeRemainingRaw}", String(b?.timeRemainingRaw))
                         ?.escapeCharactersB(true)?.v ?? b?.reason;

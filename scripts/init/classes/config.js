@@ -637,6 +637,16 @@ export class config {
             },
         };
     }
+    static get banSystem() {
+        return {
+            get enabled() {
+                return Boolean(world.getDynamicProperty("andexdbSettings:banEnabled") ?? true);
+            },
+            set enabled(enabled) {
+                world.setDynamicProperty("andexdbSettings:banEnabled", enabled ?? true);
+            },
+        };
+    }
     static get chatRanks() {
         return {
             get chatRankPrefix() {

@@ -3,7 +3,7 @@ import { config } from "init/classes/config";
 import { ban } from "modules/ban/classes/ban";
 import { getSlotFromParsedSlot } from "modules/command_utilities/functions/getSlotFromParsedSlot";
 import { EquipmentSlots } from "modules/command_utilities/constants/EquipmentSlots";
-import { player_save_format_version } from "modules/player_save/functions/player_save_format_version";
+import { player_save_format_version } from "modules/player_save/constants/player_save_format_version";
 import * as semver from "semver";
 export class savedPlayer {
     name;

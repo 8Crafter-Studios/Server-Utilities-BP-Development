@@ -885,7 +885,7 @@ export class ServerShopManager {
         form.body("The server shop system is " + (config.shopSystem.server.enabled ? "§aEnabled" : "§cDisabled"));
         form.button(customFormUICodes.action.buttons.positions.main_only + "Manage Shops", "textures/ui/store_home_icon");
         form.button(customFormUICodes.action.buttons.positions.main_only + "Main Settings", "textures/ui/icon_setting");
-        form.button(customFormUICodes.action.buttons.positions.main_only + customFormUICodes.action.buttons.options.disabled + "§cShop Item Settings", "textures/ui/icon_items");
+        form.button(customFormUICodes.action.buttons.positions.main_only + customFormUICodes.action.buttons.options.disabled + "§cShop Item Settings", "textures/ui/icon_recipe_item");
         form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
         form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
         return await form.forceShow(sourceEntity)

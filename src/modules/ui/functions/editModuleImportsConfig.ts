@@ -3,7 +3,6 @@ import {
     ActionFormData,
     ActionFormResponse,
     MessageFormData,
-    ModalFormData,
 } from "@minecraft/server-ui";
 import { forceShow } from "modules/ui/functions/forceShow";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
@@ -12,6 +11,7 @@ import {
     moduleNamesForModuleImportsConfigListDisplay,
 } from "init/classes/moduleImportsConfig";
 import type { optionalModuleObjectImportFilePaths } from "directoryTree";
+import { customFormUICodes } from "../constants/customFormUICodes";
 
 // ${se}srun(async()=>{try{(await import("modules/ui/functions/editModuleImportsConfig.js")).editModuleImportsConfig(player)}catch(e){console.error(e, e.stack)}})
 
@@ -49,12 +49,12 @@ export async function editModuleImportsConfig(
             switch (r.selection) {
                 case 0:
                     let overrideForm = new ActionFormData();
-                    overrideForm.title("Select Override Option");
+                    overrideForm.title(customFormUICodes.action.titles.formStyles.medium + "Select Override Option");
                     moduleImportsConfig.overrideOptions.forEach((option) => {
                         overrideForm.button(
-                            moduleImportsConfig.override == option
+                            customFormUICodes.action.buttons.positions.main_only + (moduleImportsConfig.override == option
                                 ? option + "\n§aSelected"
-                                : option
+                                : option)
                         );
                     });
                     return await forceShow(
@@ -123,13 +123,13 @@ export async function editModuleImportsConfig_module(
     ][];
     const itemsB = [...new Set(items.map((item) => item[0].split("/")[4]))];
     let form = new ActionFormData();
-    form.title("Edit Module Imports Config: " + module);
+    form.title(customFormUICodes.action.titles.formStyles.medium + "Edit Module Imports Config: " + module);
     form.button(
-        "Change Module Override\n" + moduleImportsConfig.moduleOverrides[module]
+        customFormUICodes.action.buttons.positions.main_only + "Change Module Override\n" + moduleImportsConfig.moduleOverrides[module]
     );
     itemsB.forEach((item) => {
         form.button(
-            item +
+                customFormUICodes.action.buttons.positions.main_only + (item +
                 "\n" +
                 (items
                     .filter((i) => i[0].split("/")[4] == item)
@@ -139,11 +139,11 @@ export async function editModuleImportsConfig_module(
                           .filter((i) => i[0].split("/")[4] == item)
                           .every((i) => i[1] == 0)
                     ? "§cAll Disabled"
-                    : "§eSome Disabled")
+                    : "§eSome Disabled"))
         );
     });
-    form.button("Back");
-    form.button("Close");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
     return await forceShow(form, sourceEntity as Player)
         .then(async (ra) => {
             let r = ra as ActionFormResponse;
@@ -153,13 +153,13 @@ export async function editModuleImportsConfig_module(
             switch (r.selection) {
                 case 0:
                     let overrideForm = new ActionFormData();
-                    overrideForm.title("Select Override Option");
+                    overrideForm.title(customFormUICodes.action.titles.formStyles.medium + "Select Override Option");
                     moduleImportsConfig.overrideOptions.forEach((option) => {
                         overrideForm.button(
-                            moduleImportsConfig.moduleOverrides[module] ==
+                            customFormUICodes.action.buttons.positions.main_only + (moduleImportsConfig.moduleOverrides[module] ==
                                 option
                                 ? option + "\n§aSelected"
-                                : option
+                                : option)
                         );
                     });
                     return await forceShow(
@@ -240,20 +240,20 @@ export async function editModuleImportsConfig_module_folder(
         0 | 1
     ][];
     let form = new ActionFormData();
-    form.title("Edit Module Imports Config: " + module);
+    form.title(customFormUICodes.action.titles.formStyles.medium + "Edit Module Imports Config: " + module);
     form.body(`Path: ${module}/${folder}/`);
     form.button(
-        "Change Module Override\n" + moduleImportsConfig.moduleOverrides[module]
+        customFormUICodes.action.buttons.positions.main_only + "Change Module Override\n" + moduleImportsConfig.moduleOverrides[module]
     );
     items.forEach((item) => {
         form.button(
-            item[0].split("/").slice(5).join("/").slice(-30) +
+            customFormUICodes.action.buttons.positions.main_only + (item[0].split("/").slice(5).join("/").slice(-30) +
                 "\n" +
-                (item[1] == 1 ? "§aEnabled" : "§cDisabled")
+                (item[1] == 1 ? "§aEnabled" : "§cDisabled"))
         );
     });
-    form.button("Back");
-    form.button("Close");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
     return await forceShow(form, sourceEntity as Player)
         .then(async (ra) => {
             let r = ra as ActionFormResponse;
@@ -263,13 +263,13 @@ export async function editModuleImportsConfig_module_folder(
             switch (r.selection) {
                 case 0:
                     let overrideForm = new ActionFormData();
-                    overrideForm.title("Select Override Option");
+                    overrideForm.title(customFormUICodes.action.titles.formStyles.medium + "Select Override Option");
                     moduleImportsConfig.overrideOptions.forEach((option) => {
                         overrideForm.button(
-                            moduleImportsConfig.moduleOverrides[module] ==
+                            customFormUICodes.action.buttons.positions.main_only + (moduleImportsConfig.moduleOverrides[module] ==
                                 option
                                 ? option + "\n§aSelected"
-                                : option
+                                : option)
                         );
                     });
                     return await forceShow(
@@ -346,12 +346,12 @@ export async function editModuleImportsConfig_module_item(
             : sourceEntitya;
     const configJSON = moduleImportsConfig.toJSON();
     let form = new ActionFormData();
-    form.title("Edit Module Imports Config");
+    form.title(customFormUICodes.action.titles.formStyles.medium + "Edit Module Imports Config");
     form.body(`Module: ${module}
 Path: ${item}
 Status: ${configJSON[item] == 1 ? "Enabled" : "Disabled"}
 Deprecated: ${moduleImportsConfig.isFileDeprecated(item as any)}`);
-    form.button(configJSON[item] == 1 ? "Disable" : "Enable");
+    form.button(customFormUICodes.action.buttons.positions.main_only + (configJSON[item] == 1 ? "Disable" : "Enable"));
     form.button("View Data");
     form.button("Back");
     form.button("Close");
@@ -372,7 +372,7 @@ Deprecated: ${moduleImportsConfig.isFileDeprecated(item as any)}`);
                     );
                 case 1:
                     let form = new ActionFormData();
-                    form.title("Data");
+                    form.title(customFormUICodes.action.titles.formStyles.fullscreen + "Data");
                     form.body(
                         JSONB.stringify(
                             await import(item.split("/").slice(2).join("/")),
@@ -390,7 +390,7 @@ Deprecated: ${moduleImportsConfig.isFileDeprecated(item as any)}`);
                             }
                         )
                     );
-                    form.button("Done");
+                    form.button(customFormUICodes.action.buttons.positions.main_only + "Done");
                     return await form
                         .forceShow(sourceEntity as Player)
                         .then(async () => {

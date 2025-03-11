@@ -8144,8 +8144,8 @@ break; */ // COMING SOON!
                         (Number(player.getDynamicProperty("andexdbPersonalSettings:timeZone") ??
                             world.getDynamicProperty("andexdbSettings:timeZone") ??
                             0) < 0
-                            ? " GMT"
-                            : " GMT+") +
+                            ? " UTC"
+                            : " UTC+") +
                         Number(player.getDynamicProperty("andexdbPersonalSettings:timeZone") ??
                             world.getDynamicProperty("andexdbSettings:timeZone") ??
                             0)}, Time Remaining: ${b.timeRemaining.days}d, ${b.timeRemaining.hours}h ${b.timeRemaining.minutes}m ${b.timeRemaining.seconds}s ${b.timeRemaining.milliseconds}ms`)
@@ -8166,8 +8166,8 @@ break; */ // COMING SOON!
                         (Number(player.getDynamicProperty("andexdbPersonalSettings:timeZone") ??
                             world.getDynamicProperty("andexdbSettings:timeZone") ??
                             0) < 0
-                            ? " GMT"
-                            : " GMT+") +
+                            ? " UTC"
+                            : " UTC+") +
                         Number(player.getDynamicProperty("andexdbPersonalSettings:timeZone") ??
                             world.getDynamicProperty("andexdbSettings:timeZone") ??
                             0)}, Time Remaining: ${b.timeRemaining.days}d, ${b.timeRemaining.hours}h ${b.timeRemaining.minutes}m ${b.timeRemaining.seconds}s ${b.timeRemaining.milliseconds}ms`)
@@ -8188,8 +8188,8 @@ break; */ // COMING SOON!
                         (Number(player.getDynamicProperty("andexdbPersonalSettings:timeZone") ??
                             world.getDynamicProperty("andexdbSettings:timeZone") ??
                             0) < 0
-                            ? " GMT"
-                            : " GMT+") +
+                            ? " UTC"
+                            : " UTC+") +
                         Number(player.getDynamicProperty("andexdbPersonalSettings:timeZone") ??
                             world.getDynamicProperty("andexdbSettings:timeZone") ??
                             0)}, Time Remaining: ${b.timeRemaining.days}d, ${b.timeRemaining.hours}h ${b.timeRemaining.minutes}m ${b.timeRemaining.seconds}s ${b.timeRemaining.milliseconds}ms`)
@@ -26703,7 +26703,7 @@ ${command.dp}snapshot list`);
                                                 0) *
                                                 3600000)
                                             .toLocaleString()
-                                            .replace(/^00:/, "12:")} GMT${Number(player.getDynamicProperty("andexdbPersonalSettings:timeZone") ??
+                                            .replace(/^00:/, "12:")} UTC${Number(player.getDynamicProperty("andexdbPersonalSettings:timeZone") ??
                                             world.getDynamicProperty("andexdbSettings:timeZone") ??
                                             0) < 0
                                             ? ""
@@ -26755,7 +26755,7 @@ ${command.dp}snapshot list`);
                                                 0) *
                                                 3600000)
                                             .toLocaleString()
-                                            .replace(/^00:/, "12:")} GMT${Number(player.getDynamicProperty("andexdbPersonalSettings:timeZone") ??
+                                            .replace(/^00:/, "12:")} UTC${Number(player.getDynamicProperty("andexdbPersonalSettings:timeZone") ??
                                             world.getDynamicProperty("andexdbSettings:timeZone") ??
                                             0) < 0
                                             ? ""
@@ -26828,7 +26828,7 @@ ${command.dp}snapshot list`);
                                                     0) *
                                                     3600000)
                                                 .toLocaleString()
-                                                .replace(/^00:/, "12:")} GMT${Number(player.getDynamicProperty("andexdbPersonalSettings:timeZone") ??
+                                                .replace(/^00:/, "12:")} UTC${Number(player.getDynamicProperty("andexdbPersonalSettings:timeZone") ??
                                                 world.getDynamicProperty("andexdbSettings:timeZone") ??
                                                 0) < 0
                                                 ? ""

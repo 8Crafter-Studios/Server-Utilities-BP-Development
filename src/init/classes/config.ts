@@ -723,6 +723,18 @@ export class config {
             },
         };
     }
+    static get banSystem() {
+        return {
+            get enabled(): boolean {
+                return Boolean(
+                    world.getDynamicProperty("andexdbSettings:banEnabled") ?? true
+                );
+            },
+            set enabled(enabled: boolean | undefined) {
+                world.setDynamicProperty("andexdbSettings:banEnabled", enabled ?? true);
+            },
+        };
+    }
     static get chatRanks() {
         return {
             get chatRankPrefix(): string {

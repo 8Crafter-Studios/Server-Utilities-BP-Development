@@ -5,6 +5,7 @@ import { securityVariables } from "security/ultraSecurityModeUtils";
 import { showMessage } from "modules/utilities/functions/showMessage";
 import type { loosePlayerType } from "modules/utilities/types/loosePlayerType";
 import { extractPlayerFromLooseEntityType } from "modules/utilities/functions/extractPlayerFromLooseEntityType";
+import { customFormUICodes } from "../constants/customFormUICodes";
 
 /**
  * Displays and handles the TPA System Settings form for the given entity.
@@ -48,7 +49,7 @@ export async function tpaSettings(sourceEntity: loosePlayerType): Promise<0 | 1>
             }
         }
         let form = new ModalFormData();
-        form.title("TPA System Settings [§cExperimental§r]");
+        form.title(customFormUICodes.modal.titles.formStyles.medium + "TPA System Settings [§cExperimental§r]");
         form.toggle("§l§fEnable TPA System§r§o\ndefault is enabled", config.tpaSystem.tpaSystemEnabled);
         form.textField("§l§fSeconds Until Request Times Out§r§o\ndefault is 60", "int", config.tpaSystem.timeoutDuration.toString());
         form.toggle("§l§fAllow Cross-Dimensional Teleport§r§o\ndefault is enabled", config.tpaSystem.allowCrossDimensionalTeleport);

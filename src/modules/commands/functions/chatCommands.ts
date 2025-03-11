@@ -12036,8 +12036,8 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                                 ) ??
                                                 0
                                         ) < 0
-                                            ? " GMT"
-                                            : " GMT+") +
+                                            ? " UTC"
+                                            : " UTC+") +
                                         Number(
                                             player.getDynamicProperty(
                                                 "andexdbPersonalSettings:timeZone"
@@ -12091,8 +12091,8 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                                 ) ??
                                                 0
                                         ) < 0
-                                            ? " GMT"
-                                            : " GMT+") +
+                                            ? " UTC"
+                                            : " UTC+") +
                                         Number(
                                             player.getDynamicProperty(
                                                 "andexdbPersonalSettings:timeZone"
@@ -12146,8 +12146,8 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                                 ) ??
                                                 0
                                         ) < 0
-                                            ? " GMT"
-                                            : " GMT+") +
+                                            ? " UTC"
+                                            : " UTC+") +
                                         Number(
                                             player.getDynamicProperty(
                                                 "andexdbPersonalSettings:timeZone"
@@ -43358,7 +43358,7 @@ ${command.dp}snapshot list`);
                                                         3600000
                                             )
                                                 .toLocaleString()
-                                                .replace(/^00:/, "12:")} GMT${
+                                                .replace(/^00:/, "12:")} UTC${
                                                 Number(
                                                     player.getDynamicProperty(
                                                         "andexdbPersonalSettings:timeZone"
@@ -43496,7 +43496,7 @@ ${command.dp}snapshot list`);
                                                         3600000
                                             )
                                                 .toLocaleString()
-                                                .replace(/^00:/, "12:")} GMT${
+                                                .replace(/^00:/, "12:")} UTC${
                                                 Number(
                                                     player.getDynamicProperty(
                                                         "andexdbPersonalSettings:timeZone"
@@ -43679,7 +43679,7 @@ ${command.dp}snapshot list`);
                                                                   .replace(
                                                                       /^00:/,
                                                                       "12:"
-                                                                  )} GMT${
+                                                                  )} UTC${
                                                                   Number(
                                                                       player.getDynamicProperty(
                                                                           "andexdbPersonalSettings:timeZone"

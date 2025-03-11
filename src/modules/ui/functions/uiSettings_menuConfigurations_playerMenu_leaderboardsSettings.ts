@@ -131,7 +131,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
     form.button(customFormUICodes.action.buttons.positions.main_only + "Add Leaderboard", "textures/ui/color_plus");
     form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
     form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
-    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Reset To Defaults", "textures/ui/reset_white");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Reset To Defaults", "textures/ui/reset_red");
 
     return await forceShow(form, sourceEntity as Player)
         .then(async (ra) => {
@@ -148,7 +148,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
                     leaderboardID;
                     const leaderboard = statistics.find((s) => s.id === leaderboardID);
                     const rb = await new ActionFormData()
-                        .title("Edit Button")
+                        .title(customFormUICodes.action.titles.formStyles.medium + "Edit Button")
                         .body(
                             `ID: ${leaderboardID}
 Menu Title: ${leaderboard.menuTitle}§r
@@ -157,10 +157,10 @@ Stats List Display Name: ${leaderboard.statsListDisplayName}§r
 Type: ${leaderboard.type}§r
 Default Button Index: ${leaderboard.type === "built-in" ? defaultPlayerMenuLeaderboardStatistics.indexOf(leaderboard) : "None"}`
                         )
-                        .button("Move", "textures/ui/move")
-                        .button("Remove", "textures/ui/trash_default")
-                        .button("Back", "textures/ui/arrow_left")
-                        .button("Close", "textures/ui/crossout")
+                        .button(customFormUICodes.action.buttons.positions.main_only + "Move", "textures/ui/move")
+                        .button(customFormUICodes.action.buttons.positions.main_only + "Remove", "textures/ui/trash_default")
+                        .button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left")
+                        .button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout")
                         .forceShow(sourceEntity);
                     if (rb.canceled || rb.selection === 2)
                         return await uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_displayedLeaderboards(sourceEntity);
@@ -168,12 +168,12 @@ Default Button Index: ${leaderboard.type === "built-in" ? defaultPlayerMenuLeade
                     if (rb.selection === 0) {
                         const r = await showActions(
                             sourceEntity,
-                            "Move Button",
+                            customFormUICodes.action.titles.formStyles.medium + "Move Button",
                             "Would you like to move this button above or below another button?",
-                            ["Move Above", "textures/ui/chevron_white_up"],
-                            ["Move Below", "textures/ui/chevron_white_down"],
-                            ["Back", "textures/ui/arrow_left"],
-                            ["Close", "textures/ui/crossout"]
+                            [customFormUICodes.action.buttons.positions.main_only + "Move Above", "textures/ui/chevron_white_up"],
+                            [customFormUICodes.action.buttons.positions.main_only + "Move Below", "textures/ui/chevron_white_down"],
+                            [customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left"],
+                            [customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout"]
                         );
                         if (r.canceled || r.selection === 2) {
                             return await uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_displayedLeaderboards(sourceEntity);
@@ -183,21 +183,21 @@ Default Button Index: ${leaderboard.type === "built-in" ? defaultPlayerMenuLeade
                         }
                         const leaderboards = menuConfig.leaderboards;
                         let form = new ActionFormData();
-                        form.title("Move Button");
+                        form.title(customFormUICodes.action.titles.formStyles.medium + "Move Button");
                         form.body(`Select the button you would like to move this button ${r.selection === 0 ? "above" : "below"}.`);
                         leaderboards.forEach((l) => {
                             const button = statistics.find((s) => s.id === l);
                             form.button(
-                                button !== undefined
+                                customFormUICodes.action.buttons.positions.main_only + (button !== undefined
                                     ? typeof button?.buttonDisplayName === "string"
                                         ? button?.buttonDisplayName
                                         : "INVALID NAME TYPE: " + typeof (button as any)?.buttonDisplayName
-                                    : "MISSING: " + l,
+                                    : "MISSING: " + l),
                                 button === undefined ? "bug_pack_icon" : undefined
                             );
                         });
-                        form.button("Back", "textures/ui/arrow_left");
-                        form.button("Close", "textures/ui/crossout");
+                        form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
+                        form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
                         const rb = await form.forceShow(sourceEntity);
                         if (rb.canceled || rb.selection === leaderboards.length) {
                             return await uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_displayedLeaderboards(sourceEntity);
@@ -347,7 +347,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
         const buttonID = buttons[r.selection].id;
         const button = buttons[r.selection];
         const rb = await new ActionFormData()
-            .title("Edit Button")
+            .title(customFormUICodes.action.titles.formStyles.medium + "Edit Button")
             .body(
                 `ID: ${buttonID}
 Menu Title: ${button.menuTitle}§r
@@ -356,9 +356,9 @@ Stats List Display Name: ${button.statsListDisplayName}§r
 Type: ${button.type}§r
 Default Button Index: ${button.type === "built-in" ? defaultPlayerMenuLeaderboardStatistics.indexOf(button) : "None"}`
             )
-            .button("Add", "textures/ui/color_plus")
-            .button("Back", "textures/ui/arrow_left")
-            .button("Close", "textures/ui/crossout")
+            .button(customFormUICodes.action.buttons.positions.main_only + "Add", "textures/ui/color_plus")
+            .button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left")
+            .button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout")
             .forceShow(sourceEntity);
         if (rb.canceled || rb.selection === 1)
             return await uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_displayedLeaderboards_addLeaderboard(sourceEntity);
@@ -423,7 +423,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
     form.button(customFormUICodes.action.buttons.positions.main_only + "Add Leaderboard", "textures/ui/color_plus");
     form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
     form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
-    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Reset To Defaults", "textures/ui/reset_white");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Reset To Defaults", "textures/ui/reset_red");
 
     return await forceShow(form, sourceEntity as Player)
         .then(async (ra) => {
@@ -440,7 +440,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
                     leaderboardID;
                     const leaderboard = statistics.find((s) => s.id === leaderboardID);
                     const rb = await new ActionFormData()
-                        .title("Edit Button")
+                        .title(customFormUICodes.action.titles.formStyles.medium + "Edit Button")
                         .body(
                             `ID: ${leaderboardID}
 Menu Title: ${leaderboard.menuTitle}§r
@@ -449,10 +449,10 @@ Stats List Display Name: ${leaderboard.statsListDisplayName}§r
 Type: ${leaderboard.type}§r
 Default Button Index: ${leaderboard.type === "built-in" ? defaultPlayerMenuLeaderboardStatistics.indexOf(leaderboard) : "None"}`
                         )
-                        .button("Move", "textures/ui/move")
-                        .button("Remove", "textures/ui/trash_default")
-                        .button("Back", "textures/ui/arrow_left")
-                        .button("Close", "textures/ui/crossout")
+                        .button(customFormUICodes.action.buttons.positions.main_only + "Move", "textures/ui/move")
+                        .button(customFormUICodes.action.buttons.positions.main_only + "Remove", "textures/ui/trash_default")
+                        .button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left")
+                        .button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout")
                         .forceShow(sourceEntity);
                     if (rb.canceled || rb.selection === 2)
                         return await uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_displayedStatistics(sourceEntity);
@@ -460,12 +460,12 @@ Default Button Index: ${leaderboard.type === "built-in" ? defaultPlayerMenuLeade
                     if (rb.selection === 0) {
                         const r = await showActions(
                             sourceEntity,
-                            "Move Button",
+                            customFormUICodes.action.titles.formStyles.medium + "Move Button",
                             "Would you like to move this button above or below another button?",
-                            ["Move Above", "textures/ui/chevron_white_up"],
-                            ["Move Below", "textures/ui/chevron_white_down"],
-                            ["Back", "textures/ui/arrow_left"],
-                            ["Close", "textures/ui/crossout"]
+                            [customFormUICodes.action.buttons.positions.main_only + "Move Above", "textures/ui/chevron_white_up"],
+                            [customFormUICodes.action.buttons.positions.main_only + "Move Below", "textures/ui/chevron_white_down"],
+                            [customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left"],
+                            [customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout"]
                         );
                         if (r.canceled || r.selection === 2) {
                             return await uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_displayedStatistics(sourceEntity);
@@ -475,21 +475,21 @@ Default Button Index: ${leaderboard.type === "built-in" ? defaultPlayerMenuLeade
                         }
                         const trackedStats = menuConfig.trackedStats;
                         let form = new ActionFormData();
-                        form.title("Move Button");
+                        form.title(customFormUICodes.action.titles.formStyles.medium + "Move Button");
                         form.body(`Select the button you would like to move this button ${r.selection === 0 ? "above" : "below"}.`);
                         trackedStats.forEach((l) => {
                             const button = statistics.find((s) => s.id === l);
                             form.button(
-                                button !== undefined
+                                customFormUICodes.action.buttons.positions.main_only + (button !== undefined
                                     ? typeof button?.buttonDisplayName === "string"
                                         ? button?.buttonDisplayName
                                         : "INVALID NAME TYPE: " + typeof (button as any)?.buttonDisplayName
-                                    : "MISSING: " + l,
+                                    : "MISSING: " + l),
                                 button === undefined ? "bug_pack_icon" : undefined
                             );
                         });
-                        form.button("Back", "textures/ui/arrow_left");
-                        form.button("Close", "textures/ui/crossout");
+                        form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
+                        form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
                         const rb = await form.forceShow(sourceEntity);
                         if (rb.canceled || rb.selection === trackedStats.length) {
                             return await uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_displayedStatistics(sourceEntity);
@@ -636,7 +636,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
         const buttonID = buttons[r.selection].id;
         const button = buttons[r.selection];
         const rb = await new ActionFormData()
-            .title("Edit Button")
+            .title(customFormUICodes.action.titles.formStyles.medium + "Edit Button")
             .body(
                 `ID: ${buttonID}
 Menu Title: ${button.menuTitle}§r
@@ -645,9 +645,9 @@ Stats List Display Name: ${button.statsListDisplayName}§r
 Type: ${button.type}§r
 Default Button Index: ${button.type === "built-in" ? defaultPlayerMenuLeaderboardStatistics.indexOf(button) : "None"}`
             )
-            .button("Add", "textures/ui/color_plus")
-            .button("Back", "textures/ui/arrow_left")
-            .button("Close", "textures/ui/crossout")
+            .button(customFormUICodes.action.buttons.positions.main_only + "Add", "textures/ui/color_plus")
+            .button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left")
+            .button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout")
             .forceShow(sourceEntity);
         if (rb.canceled || rb.selection === 1)
             return await uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_displayedStatistics_addStatistic(sourceEntity);
@@ -687,7 +687,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
     let form = new ActionFormData();
     form.title(customFormUICodes.action.titles.formStyles.gridMenu + "Manage Statistics");
     form.button(customFormUICodes.action.buttons.positions.main_only + "Built-In Statistics", "textures/ui/debug_glyph_color");
-    form.button(customFormUICodes.action.buttons.positions.main_only + "Custom Statistics", "textures/gui/newgui/bundle/PaintBrush");
+    form.button(customFormUICodes.action.buttons.positions.main_only + "Custom Statistics", "textures/gui/newgui/Bundle/PaintBrush");
     form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
     form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
 
@@ -754,7 +754,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
     });
     form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
     form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
-    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Reset To Defaults", "textures/ui/reset_white");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Reset To Defaults", "textures/ui/reset_red");
 
     return await forceShow(form, sourceEntity as Player)
         .then(async (ra) => {
@@ -858,7 +858,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
     }
     try {
         const rb = await new ActionFormData()
-            .title("Edit Built-In Statistic")
+            .title(customFormUICodes.action.titles.formStyles.medium + "Edit Built-In Statistic")
             .body(
                 `ID: ${statistic.id}
 Menu Title: ${statistic.menuTitle}§r
@@ -867,9 +867,9 @@ Stats List Display Name: ${statistic.statsListDisplayName}§r
 Type: ${statistic.type}§r
 Default Button Index: ${statistic.type === "built-in" ? defaultPlayerMenuLeaderboardStatistics.indexOf(statistic) : "None"}`
             )
-            .button("Settings", "textures/ui/icon_setting")
-            .button("Back", "textures/ui/arrow_left")
-            .button("Close", "textures/ui/crossout")
+            .button(customFormUICodes.action.buttons.positions.main_only + "Settings", "textures/ui/icon_setting")
+            .button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left")
+            .button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout")
             .forceShow(sourceEntity);
         if (rb.canceled || rb.selection === 1)
             return await uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics_builtIn(sourceEntity);
@@ -933,7 +933,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
     };
     const includedOptions = ["enabled", "addCommaSeparators", "currencyPrefix"] as (keyof optionsList)[];
     const form = new ModalFormData();
-    form.title("Edit Built-In Statistic");
+    form.title(customFormUICodes.modal.titles.formStyles.medium + "Edit Built-In Statistic");
     const formOptionsMap = {
         enabled: () => form.toggle("§l§fEnabled§r§f\nWhether or not this built-in statistic is enabled. Defaults to true.", menuConfig.enabled),
         addCommaSeparators: () =>
@@ -1024,7 +1024,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
     form.button(customFormUICodes.action.buttons.positions.main_only + "New Statistic", "textures/ui/color_plus");
     form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
     form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
-    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Reset To Defaults", "textures/ui/reset_white");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Reset To Defaults", "textures/ui/reset_red");
 
     return await forceShow(form, sourceEntity as Player)
         .then(async (ra) => {
@@ -1134,7 +1134,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
     try {
         const menuConfig = config.ui.menus.playerMenu_leaderboards;
         const form = new ActionFormData()
-            .title(`${customFormUICodes.action.titles.formStyles.medium}Edit ${statistic.type === "customAdvanced" ? "Advanced" : ""} Custom Statistic`)
+            .title(`${customFormUICodes.action.titles.formStyles.medium}Edit ${statistic.type === "customAdvanced" ? "Advanced " : ""}Custom Statistic`)
             .body(
                 `ID: ${statistic.id}
 Menu Title: ${statistic.menuTitle}§r
@@ -1249,12 +1249,12 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
     };
     const includedOptions = cullUndefined([
         "addCommaSeparators",
-        "prefixWithDollarSign",
+        "currencyPrefix",
         "valueDisplayColor",
         statistic.type === "custom" ? "sorter" : undefined,
     ] as (keyof optionsList)[]);
     const form = new ModalFormData();
-    form.title("Custom Statistic Formatting Options");
+    form.title(customFormUICodes.modal.titles.formStyles.medium + "Custom Statistic Formatting Options");
     const formOptionsMap = {
         addCommaSeparators: () =>
             form.toggle(
@@ -1389,7 +1389,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
         "buttonIcon",
     ] as (keyof optionsList)[]);
     const form = new ModalFormData();
-    form.title("Edit Custom Statistic");
+    form.title(customFormUICodes.modal.titles.formStyles.medium + "Edit Custom Statistic");
     const formOptionsMap = {
         id: () => form.textField("§l§fID§r§f\nThe ID of this leaderboard statistic, this must be unique.", "ID", statistic.id),
         scoreboardObjective: () =>
@@ -1532,7 +1532,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
         "valueDisplayTransformer_statsList",
     ] as (keyof optionsList)[];
     const form = new ModalFormData();
-    form.title("Advanced Statistic Options");
+    form.title(customFormUICodes.modal.titles.formStyles.medium + "Advanced Statistic Options");
     const formOptionsMap = {
         getterFunction: () =>
             form.textField(
@@ -1767,7 +1767,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
         type === "customAdvanced" ? "sorter" : undefined,
     ] as (keyof optionsList)[]);
     const form = new ModalFormData();
-    form.title("New Statistic");
+    form.title(customFormUICodes.modal.titles.formStyles.medium + "New Statistic");
     const formOptionsMap = {
         id: () => form.textField("§l§fID§r§c*§f\nThe ID of this leaderboard statistic, this must be unique.", "ID"),
         scoreboardObjective: () =>
@@ -1795,28 +1795,24 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
         getterFunction: () =>
             form.textField(
                 "§l§fGetter Function§r§c*§f\nA JavaScript function that will get a player's score for this statistic, it should accept one parameter of type savedPlayer, if you don't want a specific player appearing in the leaderboard, then have the function return undefined for them.\nThe type definitions for the savedPlayer class can be found in the declaration folder of the behavior pack, at §bBP/declaration/modules/player_save/classes/savedPlayer.d.ts§r.\nType: §f(§6player§b: §esavedPlayer§f) §d=> §cstring §b| §6undefined§r",
-                "(player: savedPlayer) => string | undefined",
-                statistic.getterFunction.toString()
+                "(player: savedPlayer) => string | undefined"
             ),
         valueType: () =>
             form.dropdown(
                 "§l§fValue Type§r§c*§f\nThe value type for the scores of this leaderboard statistic, choose string if it is not numerical, choose number if it needs to be able to have decimal places, and choose bigint if you want to be able to have infinitely large integers.\nNote: If you choose string, then the preset Ascending and Descending options below for the sort type will not sort based on numerical value, and instead sort it based off of alphabetical order. So if you choose string and do not want it sorting like that then you must choose the Function sort type and put in a custom JavaScript function for it.\nThe default is bigint.",
                 ["string", "number", "bigint"],
-                ["string", "number", "bigint"].indexOf(statistic.valueType.toLowerCase()) !== -1
-                    ? ["string", "number", "bigint"].indexOf(statistic.valueType.toLowerCase())
-                    : 2
+                2
             ),
         sortType: () =>
             form.dropdown(
                 "§l§fSort Type§r§c*§f\nHow to sort the scores, Ascending, Descending, or Function. If you select function then you must put a JavaScript function to sort the scores in the text box below.\nType: §f(§6a§b: §estring§f, §6b§b: §estring§f) §d=> §cnumber§r\nThe default is Descending.",
                 ["Ascending", "Descending", "Function"],
-                typeof statistic.sorter === "function" ? 2 : statistic.sorter
+                1
             ),
         sorter: () =>
             form.textField(
                 "§l§fSorter Function§r§f\n§oOnly applies when the Sort Type is set to Function.§r\nA JavaScript function that is used to sort the scores of the leaderboard, this will be passed directly into an Array.prototype.sort function, so it should return a negative value if the first parameter should be before the second parameter, zero if they are the same, and a positive value if the first parameter should be placed after the second parameter.\nType: §f(§6a§b: §estring§f, §6b§b: §estring§f) §d=> §cnumber§r",
-                "(a: string, b: string) => number",
-                typeof statistic.sorter === "number" ? "" : statistic.sorter.toString()
+                "(a: string, b: string) => number"
             ),
     } as { [key in keyof optionsList]: () => any };
     includedOptions.forEachB((o) => formOptionsMap[o]());

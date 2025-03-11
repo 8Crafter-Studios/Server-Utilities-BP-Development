@@ -46,7 +46,7 @@ export async function uiSettings_menuConfigurations_playerMenu_editButtons(sourc
                 else if ("extraVisibilityConditionsCheck" in button && !button.extraVisibilityConditionsCheck()) {
                     appendedDisplayNameText = "\n§o§6Hidden§r";
                 }
-                form.button(button.displayName + appendedDisplayNameText, button.icon);
+                form.button(customFormUICodes.action.buttons.positions.main_only + button.displayName + appendedDisplayNameText, button.icon);
             });
             form.button(customFormUICodes.action.buttons.positions.main_only + "Add Removed Buttons", "textures/ui/color_plus");
             form.button(customFormUICodes.action.buttons.positions.main_only + "Reset To Defaults", "textures/ui/reset_white");
@@ -89,22 +89,22 @@ export async function uiSettings_menuConfigurations_playerMenu_editButtons(sourc
                                 : "\n§o§cThis button will not be displayed becuase it has not met its defined extra visibility conditions.§r";
                     }
                     const rb = await new ActionFormData()
-                        .title("Edit Button")
+                        .title(customFormUICodes.action.titles.formStyles.medium + "Edit Button")
                         .body(`ID: ${buttonID}
 Display Name: ${button.displayName}§r
 Button Icon: ${button.icon}§r
 Default Button Index: ${button.defaultButtonIndex}${button.deprecated ? "\n§pThis button is deprecated.§r" : ""}${button.experimental ? "\n§eThis button is experimental.§r" : ""}${button.functional ? "" : "\n§4This button is non-functional.§r"}${button.unused ? "\n§pThis button is unused.§r" : ""}${button.upcoming ? "\n§pThis button is a placeholder for an upcoming feature.§r" : ""}${buttonHiddenReasonMessage}`)
-                        .button("Move", "textures/ui/move")
-                        .button("Remove", "textures/ui/trash_default")
-                        .button("Back", "textures/ui/arrow_left")
-                        .button("Close", "textures/ui/crossout")
+                        .button(customFormUICodes.action.buttons.positions.main_only + "Move", "textures/ui/move")
+                        .button(customFormUICodes.action.buttons.positions.main_only + "Remove", "textures/ui/trash_default")
+                        .button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left")
+                        .button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout")
                         .forceShow(player);
                     if (rb.canceled || rb.selection === 2)
                         continue;
                     if (rb.selection === 3)
                         return 0;
                     if (rb.selection === 0) {
-                        const r = await showActions(player, "Move Button", "Would you like to move this button above or below another button?", ["Move Above", "textures/ui/chevron_white_up"], ["Move Below", "textures/ui/chevron_white_down"], ["Back", "textures/ui/arrow_left"], ["Close", "textures/ui/crossout"]);
+                        const r = await showActions(player, customFormUICodes.action.titles.formStyles.medium + "Move Button", "Would you like to move this button above or below another button?", [customFormUICodes.action.buttons.positions.main_only + "Move Above", "textures/ui/chevron_white_up"], [customFormUICodes.action.buttons.positions.main_only + "Move Below", "textures/ui/chevron_white_down"], [customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left"], [customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout"]);
                         if (r.canceled || r.selection === 2) {
                             continue;
                         }
@@ -113,14 +113,14 @@ Default Button Index: ${button.defaultButtonIndex}${button.deprecated ? "\n§pTh
                         }
                         const buttons = menuConfig.buttons;
                         let form = new ActionFormData();
-                        form.title("Move Button");
+                        form.title(customFormUICodes.action.titles.formStyles.medium + "Move Button");
                         form.body(`Select the button you would like to move this button ${r.selection === 0 ? "above" : "below"}.`);
                         menuConfig.buttons.forEach((b) => {
                             const button = menuButtonIds.playerMenu.buttons[b];
-                            form.button(button.displayName, button.icon);
+                            form.button(customFormUICodes.action.buttons.positions.main_only + button.displayName, button.icon);
                         });
-                        form.button("Back", "textures/ui/arrow_left");
-                        form.button("Close", "textures/ui/crossout");
+                        form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
+                        form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
                         const rb = await form.forceShow(player);
                         if (rb.canceled || rb.selection === buttons.length) {
                             continue;

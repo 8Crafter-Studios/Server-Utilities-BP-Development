@@ -5,6 +5,7 @@ import { forceShow } from "modules/ui/functions/forceShow";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { securityVariables } from "security/ultraSecurityModeUtils";
 import { showMessage } from "modules/utilities/functions/showMessage";
+import { customFormUICodes } from "../constants/customFormUICodes";
 
 /**
  * Displays and handles the script settings form for the given entity.
@@ -42,7 +43,7 @@ export async function scriptSettings(
             }
         }
     let form2 = new ModalFormData();
-    form2.title("Script Settings");
+    form2.title(customFormUICodes.modal.titles.formStyles.medium + "Script Settings");
     form2.textField(
         "§l§fplayerDataRefreshRate§r\nThe interval at which to update the saved playerdata of all online players, decreasing this number may increase lag, the default is 20",
         "integer from 1-1000",

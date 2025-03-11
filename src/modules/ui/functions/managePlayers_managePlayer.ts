@@ -211,8 +211,8 @@ export async function managePlayers_managePlayer(sourceEntity: loosePlayerType, 
                             " Items: \n" +
                             slotsArray.join("§r§f\n")
                     );
-                    let form = new ActionFormData();
-                    form.title(`${targetPlayer.name}'s Saved Inventory Data`);
+                    const form = new ActionFormData();
+                    form.title(`${customFormUICodes.action.titles.formStyles.fullscreen}${targetPlayer.name}'s Saved Inventory Data`);
                     form.body(`${text}`);
                     form.button("Done");
                     await form.forceShow(player);
@@ -424,7 +424,7 @@ export async function managePlayers_managePlayer_viewData(sourceEntity: loosePla
                 ) */
             )}`
         );
-        form.button("Done");
+        form.button(customFormUICodes.action.buttons.positions.main_only + "Done");
         await form.forceShow(sourceEntity as Player);
         return 1;
     } catch (e) {

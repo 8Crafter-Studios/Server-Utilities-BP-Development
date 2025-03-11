@@ -1189,37 +1189,36 @@ export class PlayerShopManager {
         form.button(customFormUICodes.action.buttons.positions.main_only + "Manage Your Shops", "textures/ui/store_home_icon");
         form.button(customFormUICodes.action.buttons.positions.main_only + "Manage All Shops", "textures/ui/store_home_icon");
         form.button(customFormUICodes.action.buttons.positions.main_only + "Main Settings", "textures/ui/icon_setting");
-        form.button(customFormUICodes.action.buttons.positions.main_only + "§cShop Item Settings", "textures/ui/icon_items");
+        form.button(customFormUICodes.action.buttons.positions.main_only + customFormUICodes.action.buttons.options.disabled + "§cShop Item Settings", "textures/ui/icon_recipe_item");
         form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
         form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
         return await form.forceShow(sourceEntity)
             .then(async (r) => {
             if (r.canceled)
                 return 1;
-            let response = r.selection;
-            switch (response) {
-                case 0:
+            switch (["manageShops", "manageAllShops", "mainSettings", "shopItemSettings", "back", "close"][r.selection]) {
+                case "manageShops":
                     if ((await PlayerShopManager.managePlayerShops(sourceEntity, false)) !== 0) {
                         return (await PlayerShopManager.playerShopSystemSettings(sourceEntity));
                     }
                     else {
                         return 0;
                     }
-                case 1:
+                case "manageAllShops":
                     if ((await PlayerShopManager.managePlayerShops(sourceEntity, true)) !== 0) {
                         return (await PlayerShopManager.playerShopSystemSettings(sourceEntity));
                     }
                     else {
                         return 0;
                     }
-                case 2:
+                case "mainSettings":
                     if ((await PlayerShopManager.playerShopSystemSettings_main(sourceEntity)) !== 0) {
                         return (await PlayerShopManager.playerShopSystemSettings(sourceEntity));
                     }
                     else {
                         return 0;
                     }
-                case 3:
+                case "shopItemSettings":
                     /**
                      * @todo Add the code for the shop item settings, and add the shop item itself.
                      */
@@ -1229,9 +1228,9 @@ export class PlayerShopManager {
                         }
                         return 0;
                     });
-                case 4:
+                case "back":
                     return 1;
-                case 5:
+                case "close":
                     return 0;
                 default:
                     return 1;

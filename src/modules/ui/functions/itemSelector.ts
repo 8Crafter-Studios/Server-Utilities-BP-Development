@@ -2,6 +2,7 @@ import { Entity, Player, EquipmentSlot, ContainerSlot } from "@minecraft/server"
 import { ActionFormData, MessageFormData } from "@minecraft/server-ui";
 import { forceShow } from "modules/ui/functions/forceShow";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
+import { customFormUICodes } from "../constants/customFormUICodes";
 
 export async function itemSelector<
     FuncType extends (...args: any) => FuncReturnType,
@@ -19,7 +20,7 @@ export async function itemSelector<
         ? sourceEntitya.player
         : sourceEntitya;
     let form = new ActionFormData();
-    form.title("Select Item");
+    form.title(customFormUICodes.action.titles.formStyles.fullscreen + "Select Item");
     let itemsList = [] as {
         slot: number | EquipmentSlot;
         item: ContainerSlot;
@@ -62,13 +63,13 @@ export async function itemSelector<
     slotsList.forEach((p) => {
         if (p.item.hasItem()) {
             form.button(
-                `${p?.slot}: ${p?.item?.typeId}\n${p?.item?.amount}; ${p?.item?.nameTag}` /*, "textures/ui/online"*/
+                `${customFormUICodes.action.buttons.positions.main_only}${p?.slot}: ${p?.item?.typeId}\n${p?.item?.amount}; ${p?.item?.nameTag}` /*, "textures/ui/online"*/
             );
         } else {
-            form.button(`${p?.slot}: empty\n0; ` /*, "textures/ui/online"*/);
+            form.button(`${customFormUICodes.action.buttons.positions.main_only}${p?.slot}: empty\n0; ` /*, "textures/ui/online"*/);
         }
     });
-    form.button("Back");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back");
     let r = await forceShow(form, sourceEntity as Player);
     try {
         if (r.canceled) {
