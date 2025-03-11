@@ -19,6 +19,7 @@ import colorCore from "color-core";
 import Decimal from "decimal.js";
 import * as semver from "semver";
 import * as ipc from "ipc";
+import moment from "moment";
 import "intl";
 import "intl.locales";
 import * as shopmain from "ExtraFeatures/shop_main";
@@ -48,6 +49,7 @@ export declare const modulesMap: {
     Decimal: typeof Decimal;
     semver: typeof semver;
     ipc: typeof ipc;
+    moment: typeof moment;
     "@minecraft/server": typeof mcServer;
     "@minecraft/server-ui": typeof mcServerUi;
     "@minecraft/server-gametest": typeof GameTest;

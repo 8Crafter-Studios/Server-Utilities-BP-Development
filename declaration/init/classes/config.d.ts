@@ -657,7 +657,7 @@ export declare class config {
     static reset(subsection?: any): void;
     static applySettings(settings: DeepPartial<ReturnType<typeof modules.utils.filterProperties<typeof config, ["prototype", "reset", "applySettings", "toJSON"]>>>): void;
     static toJSON(): {
-        [k: string]: string | number | boolean | Vector3 | DimensionLocation | config | {
+        [k: string]: string | number | boolean | Vector3 | config | {
             /**
              * Whether or not to use a scoreboard-based money system instead of a dynamic property-based one.
              *
@@ -928,7 +928,7 @@ export declare class config {
              * @default true
              */
             enabled: boolean;
-        } | {
+        } | DimensionLocation | {
             x: null;
             y: null;
             z: null;

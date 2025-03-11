@@ -627,14 +627,14 @@ export declare class securityVariables {
 }
 export declare function editPermissionForPlayerUI(player: Player, targetPlayerId: LooseAutocomplete<"everyone" | typeof permissionPresetMap[keyof typeof permissionPresetMap]>): Promise<-403 | 1 | 0>;
 export declare function selectSecurityMode(player: Player): Promise<-424 | -403 | 0 | 1>;
-export declare function commandsUltraSecurityModeSecurityLevelOverridesEditor(player: Player): Promise<0 | 1 | -403 | -423>;
-export declare function commandsUltraSecurityModeSecurityLevelOverridesEditor_categories(player: Player): Promise<0 | 1 | -403 | -423>;
+export declare function commandsUltraSecurityModeSecurityLevelOverridesEditor(player: Player): Promise<1 | 0 | -403 | -423>;
+export declare function commandsUltraSecurityModeSecurityLevelOverridesEditor_categories(player: Player): Promise<1 | 0 | -403 | -423>;
 export declare function selectCommandsUltraSecurityModeSecurityLevelOverrides_category(player: Player, category: commandCategory): Promise<1 | -403 | -423>;
-export declare function commandsUltraSecurityModeSecurityLevelOverridesEditor_commands(player: Player): Promise<0 | 1 | -403 | -423>;
-export declare function commandsUltraSecurityModeSecurityLevelOverridesEditor_commands_category(player: Player, category: commandCategory): Promise<0 | 1 | -403 | -423>;
+export declare function commandsUltraSecurityModeSecurityLevelOverridesEditor_commands(player: Player): Promise<1 | 0 | -403 | -423>;
+export declare function commandsUltraSecurityModeSecurityLevelOverridesEditor_commands_category(player: Player, category: commandCategory): Promise<1 | 0 | -403 | -423>;
 export declare function selectCommandsUltraSecurityModeSecurityLevelOverrides_command_builtIn(player: Player, command: command<"built-in">): Promise<1 | -403 | -423>;
 export declare function selectCommandsUltraSecurityModeSecurityLevelOverrides_command_custom(player: Player, command: command<"custom">): Promise<1 | -403 | -423>;
 export declare function ultraSecurityModeDebug(player: Player): Promise<1 | -403 | -423>;
 export declare function resetPlayerPermissionsUI(player: Player): Promise<1 | -403 | -423>;
-export declare function managePermissionsPresets(player: Player): Promise<0 | 1 | -403 | -423>;
+export declare function managePermissionsPresets(player: Player): Promise<1 | 0 | -403 | -423>;
 export {};

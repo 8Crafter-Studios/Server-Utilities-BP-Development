@@ -28,7 +28,8 @@
     "forceConsistentCasingInFileNames": true,
     "generateCpuProfile": "profile.cpuprofile",
     // "traceResolution": true,
-    "extendedDiagnostics": true
+    "extendedDiagnostics": true,
+    "skipLibCheck": true
   },
   "exclude": [ "node_modules" ],
   "include": [ "src" ]

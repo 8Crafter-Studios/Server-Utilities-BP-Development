@@ -72,6 +72,7 @@ import colorCore, { Color } from "color-core";
 import Decimal from "decimal.js";
 import * as semver from "semver";
 import * as ipc from "ipc";
+import moment from "moment";
 import "intl";
 import "intl.locales";
 Object.defineProperties(globalThis, {
@@ -170,6 +171,7 @@ export const modulesMap = {
     Decimal,
     semver,
     ipc,
+    moment,
     ["@minecraft/server"]: mcServer,
     ["@minecraft/server-ui"]: mcServerUi,
     ["@minecraft/server-gametest"]: GameTest /*
