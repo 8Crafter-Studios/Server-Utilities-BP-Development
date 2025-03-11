@@ -111,7 +111,7 @@ declare const permissionTypes: Readonly<{
     readonly "andexdb.useHeadAdminLevelCommands": {
         readonly id: "andexdb.useHeadAdminLevelCommands";
         readonly default: false;
-        readonly includedInPermissions: ["andexdb.useHeadAdminLevelCommands", "andexdb.useOwnerLevelCommands"];
+        readonly includedInPermissions: ["andexdb.useOwnerLevelCommands"];
         readonly description: "Allows the player to use head admin-level custom commands.\n    This permission is included in the 'andexdb.headAdmin' permission.\n    This permission is included in the 'andexdb.useOwnerLevelCommands' permission.\n    §cDANGER!: This permission should only be given to trusted staff members. It is DANGEROUS to give this permission to anyone else.";
         readonly additionalPrompts: [{
             readonly title: "§l§cWARNING!";
@@ -128,8 +128,8 @@ declare const permissionTypes: Readonly<{
     readonly "andexdb.useAdminLevelCommands": {
         readonly id: "andexdb.useAdminLevelCommands";
         readonly default: false;
-        readonly includedInPermissions: ["andexdb.useOwnerLevelCommands"];
-        readonly description: "Allows the player to use admin-level custom commands.\n    This permission is included in the 'andexdb.admin' permission.\n    This permission is included in the 'andexdb.headAdmin' permission.\n    This permission is included in the 'andexdb.useOwnerLevelCommands' permission.\n    §cDANGER!: This permission should only be given to trusted staff members. It is DANGEROUS to give this permission to anyone else.";
+        readonly includedInPermissions: ["andexdb.useHeadAdminLevelCommands", "andexdb.useOwnerLevelCommands"];
+        readonly description: "Allows the player to use admin-level custom commands.\n    This permission is included in the 'andexdb.admin' permission.\n    This permission is included in the 'andexdb.headAdmin' permission.\n    This permission is included in the 'andexdb.useHeadAdminLevelCommands' permission.\n    This permission is included in the 'andexdb.useOwnerLevelCommands' permission.\n    §cDANGER!: This permission should only be given to trusted staff members. It is DANGEROUS to give this permission to anyone else.";
         readonly additionalPrompts: [{
             readonly title: "§l§cWARNING!";
             readonly prompt: "Are you sure you want to give this player the ability to use ALL ADMIN-LEVEL COMMANDS?";
@@ -145,8 +145,8 @@ declare const permissionTypes: Readonly<{
     readonly "andexdb.useModeratorLevelCommands": {
         readonly id: "andexdb.useModeratorLevelCommands";
         readonly default: false;
-        readonly includedInPermissions: ["andexdb.useAdminLevelCommands", "andexdb.useOwnerLevelCommands"];
-        readonly description: "Allows the player to use moderator-level custom commands.\n    This permission is included in the 'andexdb.headAdmin' permission.\n    This permission is included in the 'andexdb.admin' permission.\n    This permission is included in the 'andexdb.moderator' permission.\n    This permission is included in the 'andexdb.useOwnerLevelCommands' permission.\n    This permission is included in the 'andexdb.useAdminLevelCommands' permission.";
+        readonly includedInPermissions: ["andexdb.useAdminLevelCommands", "andexdb.useHeadAdminLevelCommands", "andexdb.useOwnerLevelCommands"];
+        readonly description: "Allows the player to use moderator-level custom commands.\n    This permission is included in the 'andexdb.moderator' permission.\n    This permission is included in the 'andexdb.admin' permission.\n    This permission is included in the 'andexdb.headAdmin' permission.\n    This permission is included in the 'andexdb.useAdminLevelCommands' permission.\n    This permission is included in the 'andexdb.useHeadAdminLevelCommands' permission.\n    This permission is included in the 'andexdb.useOwnerLevelCommands' permission.";
         readonly additionalPrompts: [{
             readonly title: "§l§cWARNING!";
             readonly prompt: "Are you sure you want to give this player the ability to use ALL MODERATOR-LEVEL COMMANDS?";
@@ -626,7 +626,7 @@ export declare class securityVariables {
     static testOfflinePlayerForPermission(playerId: string, permission: permissionType): boolean;
 }
 export declare function editPermissionForPlayerUI(player: Player, targetPlayerId: LooseAutocomplete<"everyone" | typeof permissionPresetMap[keyof typeof permissionPresetMap]>): Promise<-403 | 1 | 0>;
-export declare function selectSecurityMode(player: Player): Promise<1 | -403 | -424>;
+export declare function selectSecurityMode(player: Player): Promise<-424 | -403 | 0 | 1>;
 export declare function commandsUltraSecurityModeSecurityLevelOverridesEditor(player: Player): Promise<0 | 1 | -403 | -423>;
 export declare function commandsUltraSecurityModeSecurityLevelOverridesEditor_categories(player: Player): Promise<0 | 1 | -403 | -423>;
 export declare function selectCommandsUltraSecurityModeSecurityLevelOverrides_category(player: Player, category: commandCategory): Promise<1 | -403 | -423>;

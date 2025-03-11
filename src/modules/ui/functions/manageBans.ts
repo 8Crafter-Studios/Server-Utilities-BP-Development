@@ -35,21 +35,21 @@ export async function manageBans(
             }
         }
     }
-    let form6 = new ActionFormData();
-    form6.title(customFormUICodes.action.titles.formStyles.gridMenu + "Manage Bans");
+    let form = new ActionFormData();
+    form.title(customFormUICodes.action.titles.formStyles.gridMenu + "Manage Bans");
     // Have auto refresh enabled only for the first method call to get the bans.
     ban.getValidBansAutoRefresh().idBans.forEach((p) => {
-        form6.button(`${p.playerId}\nValid`, "textures/ui/online");
+        form.button(`${customFormUICodes.action.buttons.positions.main_only}${p.originalPlayerName ?? p.playerId}\nValid - ID Ban`, "textures/ui/online");
     });
     ban.getExpiredBansNoRefresh().idBans.forEach((p) => {
-        form6.button(`${p.playerId}\nExpired`, "textures/ui/Ping_Offline_Red");
+        form.button(`${customFormUICodes.action.buttons.positions.main_only}${p.originalPlayerName ?? p.playerId}\nExpired - ID Ban`, "textures/ui/Ping_Offline_Red");
     });
     ban.getValidBansNoRefresh().nameBans.forEach((p) => {
-        form6.button(`${p.playerName}\nValid`, "textures/ui/online");
+        form.button(`${customFormUICodes.action.buttons.positions.main_only}${p.playerName}\nValid - Name Ban`, "textures/ui/online");
     });
     ban.getExpiredBansNoRefresh().nameBans.forEach((p) => {
-        form6.button(
-            `${customFormUICodes.action.buttons.positions.main_only}${p.playerName}\nExpired`,
+        form.button(
+            `${customFormUICodes.action.buttons.positions.main_only}${p.playerName}\nExpired - Name Ban`,
             "textures/ui/Ping_Offline_Red"
         );
     });
@@ -58,17 +58,17 @@ export async function manageBans(
         .idBans.concat(ban.getExpiredBansNoRefresh().idBans)
         .concat(ban.getValidBansNoRefresh().nameBans)
         .concat(ban.getExpiredBansNoRefresh().nameBans);
-    form6.button(customFormUICodes.action.buttons.positions.left_side_only + customFormUICodes.action.buttons.styles.display_icon_as_text + "Add ID Ban", "Ban\nID");
-    form6.button(customFormUICodes.action.buttons.positions.left_side_only + customFormUICodes.action.buttons.styles.display_icon_as_text + "Add Name Ban", "Ban\nName");
-    form6.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
-    form6.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
-    return await forceShow(form6, sourceEntity as Player)
-        .then(async (ga) => {
-            let g = ga as ActionFormResponse;
-            if (g.canceled) {
+    if(banList.length === 0) form.body("There are currently no bans.");
+    form.button(customFormUICodes.action.buttons.positions.left_side_only + customFormUICodes.action.buttons.styles.display_icon_as_text + "Add ID Ban", "textures/ui/hammel_l_id_ban");
+    form.button(customFormUICodes.action.buttons.positions.left_side_only + customFormUICodes.action.buttons.styles.display_icon_as_text + "Add Name Ban", "textures/ui/hammer_l_name_ban");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
+    return await forceShow(form, sourceEntity as Player)
+        .then(async (r) => {
+            if (r.canceled) {
                 return 1 as const;
             }
-            switch (g.selection) {
+            switch (r.selection) {
                 case banList.length:
                     if (securityVariables.ultraSecurityModeEnabled) {
                         if(securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.banPlayers") == false){
@@ -81,7 +81,7 @@ export async function manageBans(
                         }
                     }
                     let form5 = new ModalFormData();
-                    form5.title(`Add ID Ban`);
+                    form5.title(`${customFormUICodes.modal.titles.formStyles.medium}Add ID Ban`);
                     form5.textField(
                         "Player UUID\nThis is the uuid of the player. ",
                         "Integer"
@@ -144,7 +144,7 @@ export async function manageBans(
                         }
                     }
                     let form6 = new ModalFormData();
-                    form6.title(`Add Name Ban`);
+                    form6.title(`${customFormUICodes.modal.titles.formStyles.medium}Add Name Ban`);
                     form6.textField(
                         "Player Name\nThis is the name of the player. ",
                         "String"
@@ -216,8 +216,8 @@ export async function manageBans(
                     break;
                 default:
                     let form4 = new ActionFormData();
-                    form4.title(customFormUICodes.action.titles.formStyles.general + `Manage Ban`);
-                    let ba = banList[g.selection];
+                    form4.title(customFormUICodes.action.titles.formStyles.medium + `Manage Ban`);
+                    let ba = banList[r.selection];
                     let timeRemaining = ba.timeRemaining;
                     form4.body(
                         `§bformat_version: §e${ba.format_version}\n§r§bban_format_version: §e${ba.ban_format_version}\n§r§bbanId: §6${ba.banId}\n§r§btype: §a${ba.type}\ntimeRemaining: ${timeRemaining.days}d, ${timeRemaining.hours}h ${timeRemaining.minutes}m ${timeRemaining.seconds}s ${timeRemaining.milliseconds}ms\n§r§bbanDate: §q${new Date(
@@ -311,11 +311,11 @@ export async function manageBans(
                                         }
                                     }
                                 }
-                                const r = await showMessage(sourceEntity as Player, "Are you sure?", `Are you sure you want to unban ${banList[g.selection].playerName ?? banList[g.selection].originalPlayerName}<${banList[g.selection].playerId ?? banList[g.selection].originalPlayerId}>?`, "Unban", "Cancel");
+                                const r = await showMessage(sourceEntity as Player, "Are you sure?", `Are you sure you want to unban ${ba.playerName ?? ba.originalPlayerName}<${ba.playerId ?? ba.originalPlayerId}>?`, "Unban", "Cancel");
                                 if(r.canceled || r.selection === 1){
                                     return 0;
                                 }else{
-                                    banList[g.selection].remove();
+                                    banList[r.selection].remove();
                                     return 1;
                                 }
                             }

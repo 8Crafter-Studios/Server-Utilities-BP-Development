@@ -57,10 +57,10 @@ export async function managePlayers_managePlayer(sourceEntity, targetPlayer) {
             form.button(customFormUICodes.action.buttons.positions.main_only + "Manage Permissions", "textures/ui/permissions_op_crown");
             form.button(customFormUICodes.action.buttons.positions.main_only +
                 customFormUICodes.action.buttons.options.disabled +
-                "§4Manage Hotbar Presets§f(§cCOMING SOON!§f)", "textures/ui/creative_icon");
+                "§4Manage Hotbar Presets §f(§cCOMING SOON!§f)", "textures/ui/creative_icon");
             form.button(customFormUICodes.action.buttons.positions.main_only +
                 customFormUICodes.action.buttons.options.disabled +
-                "§4Manage Private Warps§f(§cCOMING SOON!§f)", "textures/items/ender_pearl");
+                "§4Manage Private Warps §f(§cCOMING SOON!§f)", "textures/items/ender_pearl");
             form.button(customFormUICodes.action.buttons.positions.main_only + "Manage Homes", "textures/ui/store_home_icon");
             form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
             form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
@@ -329,13 +329,14 @@ export async function managePlayers_managePlayer_viewData(sourceEntity, targetPl
     const player = extractPlayerFromLooseEntityType(sourceEntity);
     try {
         let form = new ActionFormData();
-        form.title(`${targetPlayer.name}'s Saved Player Data`);
+        form.title(`${customFormUICodes.action.titles.formStyles.fullscreen}${targetPlayer.name}'s Saved Player Data`);
         form.body(`${colorizeJSONString(JSON.stringify(targetPlayer, undefined, 2).replaceAll("§", "\uF019") /* .replaceAll(
             /(?<!\\)(?![},:](\"|{\"))\"/g,
             '§r§f"'
         ) */)}`);
         form.button("Done");
         await form.forceShow(sourceEntity);
+        return 1;
     }
     catch (e) {
         console.error(e, e.stack);

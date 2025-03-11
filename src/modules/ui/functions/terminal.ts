@@ -3,6 +3,7 @@ import { ModalFormData, ModalFormResponse } from "@minecraft/server-ui";
 import { forceShow } from "modules/ui/functions/forceShow";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { showMessage } from "modules/utilities/functions/showMessage";
+import { customFormUICodes } from "../constants/customFormUICodes";
 
 /**
  * Displays a modal form to the player for running a command with an optional delay.
@@ -21,7 +22,7 @@ export async function terminal(
         throw new TypeError("Invalid Player. Expected an instance of the Player class, or an instance of the executeCommandPlayerW class with a Player linked to it, but instead got " + (typeof sourceEntity == "object" ? sourceEntity === null ? "object[null]" : "object[" + ((sourceEntity as object).constructor.name ?? "unknown") + "]" : typeof sourceEntity) + ".")
     }
     let form = new ModalFormData();
-    form.title("Command Runner / Terminal");
+    form.title(customFormUICodes.modal.titles.formStyles.fullscreen + "Command Runner / Terminal");
     form.textField("Run Command", "Run Command");
     form.textField("Run Delay", "Run Delay");
     // form.toggle("Debug", false);

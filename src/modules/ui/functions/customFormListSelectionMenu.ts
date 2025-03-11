@@ -6,6 +6,7 @@ import { showCustomFormUI } from "./showCustomFormUI";
 import { customFormUIEditor } from "./customFormUIEditor";
 import { customFormUIEditorCode } from "./customFormUIEditorCode";
 import { addNewCustomFormUI } from "./addNewCustomFormUI";
+import { customFormUICodes } from "../constants/customFormUICodes";
 
 //salo
 export function customFormListSelectionMenu(player: Player) {
@@ -18,86 +19,83 @@ export function customFormListSelectionMenu(player: Player) {
     a.forEach((aelement, i) => {
         b[i] = String(world.getDynamicProperty(aelement));
         form1234.button(
-            aelement.slice(9),
+            customFormUICodes.action.buttons.positions.main_only + aelement.slice(9),
             String(
                 world.getDynamicProperty(`customUIIcon:${aelement.slice(9)}`) ??
                 "textures/ui/book_edit_default"
             )
         );
     });
-    form1234.title("Custom Form UI Editor");
-    form1234.button("Add New", "textures/ui/color_plus");
-    form1234.button("Back", "textures/ui/arrow_left");
+    form1234.title(customFormUICodes.action.titles.formStyles.medium + "Custom Form UI Editor");
+    form1234.button(customFormUICodes.action.buttons.positions.main_only + "Add New", "textures/ui/color_plus");
+    form1234.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
     let form123456 = new ActionFormData();
-    form123456.title("Edit Custom Form UI");
-    form123456.button("Edit Elements", "textures/ui/color_plus");
-    form123456.button("Edit Code", "textures/ui/color_plus");
-    form123456.button("View", "textures/ui/color_plus");
-    form123456.button("Delete", "textures/ui/color_plus");
-    form123456.button("Back", "textures/ui/arrow_left");
+    form123456.title(customFormUICodes.action.titles.formStyles.gridMenu + "Edit Custom Form UI");
+    form123456.button(customFormUICodes.action.buttons.positions.main_only + "Edit Elements", "textures/ui/color_plus");
+    form123456.button(customFormUICodes.action.buttons.positions.main_only + "Edit Code", "textures/ui/color_plus");
+    form123456.button(customFormUICodes.action.buttons.positions.main_only + "View", "textures/ui/color_plus");
+    form123456.button(customFormUICodes.action.buttons.positions.main_only + "Delete", "textures/ui/icon_trash");
+    form123456.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
     forceShow(form1234, player).then((t) => {
-        let ta = t as ActionFormResponse;
-        if (ta.canceled &&
-            ta.cancelationReason == FormCancelationReason.UserClosed) {
+        if (t.canceled &&
+            t.cancelationReason == FormCancelationReason.UserClosed) {
             return;
         }
         switch (true) {
-            case ta.selection == a.length:
+            case t.selection == a.length:
                 addNewCustomFormUI(player, true);
-                showCustomFormUI(a[ta.selection].slice(9), player);
+                showCustomFormUI(a[t.selection].slice(9), player);
                 break;
-            case ta.selection == a.length + 1:
+            case t.selection == a.length + 1:
                 mainMenu(player);
                 break;
             default:
                 forceShow(form123456, player).then((v) => {
-                    let va = v as ActionFormResponse;
-                    if (va.canceled &&
-                        va.cancelationReason == FormCancelationReason.UserClosed) {
+                    if (v.canceled &&
+                        v.cancelationReason == FormCancelationReason.UserClosed) {
                         return;
                     }
-                    switch (va.selection) {
+                    switch (v.selection) {
                         case 0:
-                            customFormUIEditor(a[ta.selection], player, true);
+                            customFormUIEditor(a[t.selection], player, true);
                             break;
                         case 1:
                             customFormUIEditorCode(
-                                a[ta.selection],
+                                a[t.selection],
                                 player,
                                 true
                             );
                             break;
                         case 2:
-                            showCustomFormUI(a[ta.selection].slice(9), player);
+                            showCustomFormUI(a[t.selection].slice(9), player);
                             break;
                         case 3:
                             let form12345678 = new MessageFormData();
                             form12345678.title("Confirm Custom UI Deletion");
                             form12345678.body(
-                                `Are you sure you want to delete the custom UI ${a[ta.selection]}`
+                                `Are you sure you want to delete the custom UI ${a[t.selection]}`
                             );
                             form12345678.button1("Cancel");
                             form12345678.button2("Confirm");
                             forceShow(form12345678, player).then((u) => {
-                                let ua = u as MessageFormResponse;
-                                if (ua.canceled &&
-                                    ua.cancelationReason ==
+                                if (u.canceled &&
+                                    u.cancelationReason ==
                                     FormCancelationReason.UserClosed) {
                                     return;
                                 }
-                                switch (ua.selection) {
+                                switch (u.selection) {
                                     case 0:
                                         customFormListSelectionMenu(player);
                                         break;
                                     case 1:
                                         world.setDynamicProperty(
-                                            a[ta.selection]
+                                            a[t.selection]
                                         );
                                         world
                                             .getDynamicPropertyIds()
                                             .filter((dpi) => dpi.startsWith(
                                                 "customUIElement:" +
-                                                a[ta.selection].slice(
+                                                a[t.selection].slice(
                                                     9
                                                 ) +
                                                 "|"
@@ -110,7 +108,7 @@ export function customFormListSelectionMenu(player: Player) {
                                             .getDynamicPropertyIds()
                                             .filter((dpi) => dpi.startsWith(
                                                 "customUICode:" +
-                                                a[ta.selection].slice(
+                                                a[t.selection].slice(
                                                     9
                                                 ) +
                                                 "|"

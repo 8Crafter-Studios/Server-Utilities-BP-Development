@@ -307,11 +307,12 @@ export async function mainMenu(sourceEntity) {
                     }
                 case "itemEditor":
                     try {
-                        itemSelector(player, player).then((a) => {
+                        itemSelector(player, player).then(async (a) => {
                             if (!!a) {
                                 itemEditorTypeSelection(player, player, a);
                             }
                         });
+                        return 0;
                     }
                     catch { }
                     break;

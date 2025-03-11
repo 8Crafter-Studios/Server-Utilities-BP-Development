@@ -217,7 +217,7 @@ export async function chatRanksSettings_generalChatSettings(sourceEntity: looseP
                 ),
             autoURIEscapeChatMessages: () =>
                 form.toggle(
-                    "§l§fAuto URI Escape Chat Messages§r§f\n§r§o§5Applies to all rank modes/styles.\n§r§fSets whether or not to automatically escape URI % escape codes, for example if they put \"a%bba\" it would turn into \"a»a\", or if they put \"a%20a\" it would turn into \"a a\", default is false",
+                    "§l§fAuto URI Escape Chat Messages§r§f\n§r§o§5Applies to all rank modes/styles.\n§r§fSets whether or not to automatically escape URI %% escape codes, for example if they put \"a%%bba\" it would turn into \"a»a\", or if they put \"a%%20a\" it would turn into \"a a\", default is false",
                     config.chatRanks.autoURIEscapeChatMessages
                 ),
             allowChatEscapeCodes: () =>

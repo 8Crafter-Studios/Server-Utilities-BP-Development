@@ -24,7 +24,7 @@ export async function nbtStructureLoader(sourceEntity: loosePlayerType): Promise
         const form = new ModalFormData();
         form.title(customFormUICodes.modal.titles.formStyles.fullscreen + "Java NBT Structure Loader [§cExperimental§r]");
         form.textField(
-            "§fFor info on how to use this loader, go to §bhttps://sites.google.com/view/8craftermods/debug-sticks-add-on/andexdbnbtstructureloader§f\nNote: When pasting the nbt data into the text box the game might freeze for anywhere from a few seconds to half a hour depending on how much text is being pasted while it is pasting, and then it will unfreeze. \nNBT Data",
+            "§fFor info on how to use this loader, go to §bhttps://www.8crafter.com/debug-sticks-add-on/andexdbnbtstructureloader§f\nNote: When pasting the nbt data into the text box the game might freeze for anywhere from a few seconds to half a hour depending on how much text is being pasted while it is pasting, and then it will unfreeze. \nNBT Data",
             "NBT Data"
         );
         form.textField("spawn position x", "integer", String(player.location.x));

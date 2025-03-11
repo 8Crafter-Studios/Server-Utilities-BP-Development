@@ -11,6 +11,7 @@ import type { commandCategory } from "modules/commands/types/commandCategory";
 import { commandCategoriesDisplay } from "modules/ui/functions/commandCategoriesDisplay";
 // import { commandCategories } from "modules/ui/functions/commandCategories";
 import type { command } from "modules/commands/classes/command";
+import { customFormUICodes } from "modules/ui/constants/customFormUICodes";
 
 let ownerUsingDiablePermissionsDebug = false;
 
@@ -155,7 +156,7 @@ const permissionTypes = Object.freeze(
         "andexdb.useHeadAdminLevelCommands": {
             id: "andexdb.useHeadAdminLevelCommands",
             default: false,
-            includedInPermissions: ["andexdb.useHeadAdminLevelCommands", "andexdb.useOwnerLevelCommands"],
+            includedInPermissions: ["andexdb.useOwnerLevelCommands"],
             description: `Allows the player to use head admin-level custom commands.
     This permission is included in the 'andexdb.headAdmin' permission.
     This permission is included in the 'andexdb.useOwnerLevelCommands' permission.
@@ -177,10 +178,11 @@ const permissionTypes = Object.freeze(
         "andexdb.useAdminLevelCommands": {
             id: "andexdb.useAdminLevelCommands",
             default: false,
-            includedInPermissions: ["andexdb.useOwnerLevelCommands"],
+            includedInPermissions: ["andexdb.useHeadAdminLevelCommands", "andexdb.useOwnerLevelCommands"],
             description: `Allows the player to use admin-level custom commands.
     This permission is included in the 'andexdb.admin' permission.
     This permission is included in the 'andexdb.headAdmin' permission.
+    This permission is included in the 'andexdb.useHeadAdminLevelCommands' permission.
     This permission is included in the 'andexdb.useOwnerLevelCommands' permission.
     §cDANGER!: This permission should only be given to trusted staff members. It is DANGEROUS to give this permission to anyone else.`,
             additionalPrompts: [
@@ -200,13 +202,14 @@ const permissionTypes = Object.freeze(
         "andexdb.useModeratorLevelCommands": {
             id: "andexdb.useModeratorLevelCommands",
             default: false,
-            includedInPermissions: ["andexdb.useAdminLevelCommands", "andexdb.useOwnerLevelCommands"],
+            includedInPermissions: ["andexdb.useAdminLevelCommands", "andexdb.useHeadAdminLevelCommands", "andexdb.useOwnerLevelCommands"],
             description: `Allows the player to use moderator-level custom commands.
-    This permission is included in the 'andexdb.headAdmin' permission.
-    This permission is included in the 'andexdb.admin' permission.
     This permission is included in the 'andexdb.moderator' permission.
-    This permission is included in the 'andexdb.useOwnerLevelCommands' permission.
-    This permission is included in the 'andexdb.useAdminLevelCommands' permission.`,
+    This permission is included in the 'andexdb.admin' permission.
+    This permission is included in the 'andexdb.headAdmin' permission.
+    This permission is included in the 'andexdb.useAdminLevelCommands' permission.
+    This permission is included in the 'andexdb.useHeadAdminLevelCommands' permission.
+    This permission is included in the 'andexdb.useOwnerLevelCommands' permission.`,
             additionalPrompts: [
                 {
                     title: "§l§cWARNING!",
@@ -1398,21 +1401,21 @@ async function editPermissionForPlayerUI_permission(
     }
 }
 
-export async function selectSecurityMode(player: Player) {
+export async function selectSecurityMode(player: Player): Promise<-424 | -403 | 0 | 1> {
     let form = new ActionFormData();
     let players = world.getPlayers();
-    form.title("Security Mode");
-    form.body("");
-    form.button(`Standard Security Mode${ultraSecurityModeEnabled ? "" : "\n§aSelected"}`);
-    form.button(`Ultra Security Mode${ultraSecurityModeEnabled ? "\n§aSelected" : ""}`);
-    form.button("Back", "textures/ui/arrow_left"); /*
-form.button("Debug Screen", "textures/ui/ui_debug_glyph_color");*/
+    form.title(customFormUICodes.action.titles.formStyles.medium + "Security Mode");
+    // form.body("");
+    form.button(`${customFormUICodes.action.buttons.positions.main_only}Standard Security Mode${ultraSecurityModeEnabled ? "" : "\n§aSelected"}`);
+    form.button(`${customFormUICodes.action.buttons.positions.main_only}Ultra Security Mode${ultraSecurityModeEnabled ? "\n§aSelected" : ""}`);
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
 
     const r = await form.forceShow(player);
     if (r.canceled) {
         return 1;
     }
-    if (r.selection == 1 && !securityConfiguratorPackIsActive) {
+    if (r.selection === 1 && !securityConfiguratorPackIsActive) {
         const rb = await showMessage(
             player,
             "Missing Required Behavior Pack (424)",
@@ -1420,7 +1423,7 @@ form.button("Debug Screen", "textures/ui/ui_debug_glyph_color");*/
         );
         return -424;
     }
-    if (ultraSecurityModeEnabled || r.selection == 1) {
+    if (ultraSecurityModeEnabled || r.selection === 1) {
         if (!(world.getPlayers({ name: "Andexter8" })[0] == player && player.hasTag("ultraSecurityModeDebugOverride"))) {
             if (!(playerPermissions[player.id]?.includes("andexdb.fullControl") ?? false)) {
                 if (player.name !== owner) {
@@ -1447,7 +1450,7 @@ form.button("Debug Screen", "textures/ui/ui_debug_glyph_color");*/
         case 0:
             ultraSecurityModeEnabled = false;
             world.setDynamicProperty("ultraSecurityModeEnabled", false);
-            return;
+            return 1;
         case 1:
             if (!ultraSecurityModeEnabled) {
                 ultraSecurityModeEnabled = true;
@@ -1463,9 +1466,11 @@ form.button("Debug Screen", "textures/ui/ui_debug_glyph_color");*/
                     let buffer = new ArrayBuffer(250000000); // Uses all of the currently available scripting memory, forcefully shutting down the world/realm/server.
                 }
             }
-            return;
+            return 1;
         case 2:
-            return;
+            return 1;
+        case 3:
+            return 0;
     }
 }
 

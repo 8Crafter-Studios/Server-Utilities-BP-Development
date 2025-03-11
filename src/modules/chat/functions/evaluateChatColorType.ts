@@ -5,5 +5,5 @@ export function evaluateChatColorType(text: string, type: string) {
     let ib = -1n;
     //    let value = "hi§r§btest s§# a zs§# x vc §r§ksazx"; 
     let stop = false;
-    return text.split("").map((v, i, a) => { if (a[i - 1] == "§" && v == "!") { stop = true; return v; } else if (a[i - 1] == "§" && v == "?") { stop = !stop; return v; } else if (a[i - 1] == "§" && v == "#") { stop = false; return v; } else if (a[i - 1] == "§" || v == "§" || v == " " || stop) { return v; } else { ib++; return patternFunctionList[type as keyof typeof patternFunctionList](Number(ib), Math.floor(Math.random() * patternList.rainbow.length)) + v; } }).join("");
+    return text.split("").map((v, i, a) => { if (a[i - 1] == "§" && (v == "!" || "0123456789abcdefghijmnpqstuv".includes(v))) { stop = true; return v; } else if (a[i - 1] == "§" && v == "?") { stop = !stop; return v; } else if (a[i - 1] == "§" && "#r".includes(v)) { stop = false; return v; } else if (a[i - 1] == "§" || v == "§" || v == " " || stop) { return v; } else { ib++; return patternFunctionList[type as keyof typeof patternFunctionList](Number(ib), Math.floor(Math.random() * patternList.rainbow.length)) + v; } }).join("");
 }

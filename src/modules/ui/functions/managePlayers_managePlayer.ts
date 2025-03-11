@@ -78,13 +78,13 @@ export async function managePlayers_managePlayer(sourceEntity: loosePlayerType, 
             form.button(
                 customFormUICodes.action.buttons.positions.main_only +
                     customFormUICodes.action.buttons.options.disabled +
-                    "§4Manage Hotbar Presets§f(§cCOMING SOON!§f)",
+                    "§4Manage Hotbar Presets §f(§cCOMING SOON!§f)",
                 "textures/ui/creative_icon"
             );
             form.button(
                 customFormUICodes.action.buttons.positions.main_only +
                     customFormUICodes.action.buttons.options.disabled +
-                    "§4Manage Private Warps§f(§cCOMING SOON!§f)",
+                    "§4Manage Private Warps §f(§cCOMING SOON!§f)",
                 "textures/items/ender_pearl"
             );
             form.button(customFormUICodes.action.buttons.positions.main_only + "Manage Homes", "textures/ui/store_home_icon");
@@ -415,7 +415,7 @@ export async function managePlayers_managePlayer_viewData(sourceEntity: loosePla
     const player = extractPlayerFromLooseEntityType(sourceEntity);
     try {
         let form = new ActionFormData();
-        form.title(`${targetPlayer.name}'s Saved Player Data`);
+        form.title(`${customFormUICodes.action.titles.formStyles.fullscreen}${targetPlayer.name}'s Saved Player Data`);
         form.body(
             `${colorizeJSONString(
                 JSON.stringify(targetPlayer, undefined, 2).replaceAll("§", "\uF019") /* .replaceAll(
@@ -426,6 +426,7 @@ export async function managePlayers_managePlayer_viewData(sourceEntity: loosePla
         );
         form.button("Done");
         await form.forceShow(sourceEntity as Player);
+        return 1;
     } catch (e) {
         console.error(e, e.stack);
         // Present the error to the user, and return 1 if they select "Back", and 0 if they select "Close".

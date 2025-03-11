@@ -3,6 +3,7 @@ import { ModalFormData, ModalFormResponse } from "@minecraft/server-ui";
 import { forceShow } from "modules/ui/functions/forceShow";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { showMessage } from "modules/utilities/functions/showMessage";
+import { customFormUICodes } from "../constants/customFormUICodes";
 /**
  * Displays a modal form to the player for evaluating and running a script.
  *
@@ -18,7 +19,7 @@ export async function scriptEvalRunWindow(sourceEntitya) {
         throw new TypeError("Invalid Player. Expected an instance of the Player class, or an instance of the executeCommandPlayerW class with a Player linked to it, but instead got " + (typeof sourceEntity == "object" ? sourceEntity === null ? "object[null]" : "object[" + (sourceEntity.constructor.name ?? "unknown") + "]" : typeof sourceEntity) + ".");
     }
     let form = new ModalFormData();
-    form.title("Script Evaluate Run Window");
+    form.title(customFormUICodes.modal.titles.formStyles.fullscreen + "Script Evaluate Run Window");
     form.textField("Script", "JavaScript");
     form.textField("Script", "JavaScript");
     form.textField("Script", "JavaScript");

@@ -44,7 +44,7 @@ export async function settings(
     form.title(customFormUICodes.action.titles.formStyles.gridMenu + "Settings");
     form.body("Choose menu to open. ");
     form.button(customFormUICodes.action.buttons.positions.main_only + "General Settings", "textures/ui/worldsIcon");
-    form.button(customFormUICodes.action.buttons.positions.main_only + "Chat Ranks Settings", "textures/ui/message");
+    form.button(customFormUICodes.action.buttons.positions.main_only + "Chat & Name Tags Settings", "textures/ui/message");
     form.button(customFormUICodes.action.buttons.positions.main_only + "Script Settings", "textures/ui/debug_glyph_color");
     form.button(customFormUICodes.action.buttons.positions.main_only + "UI Settings", "textures/ui/feedIcon");
     form.button(

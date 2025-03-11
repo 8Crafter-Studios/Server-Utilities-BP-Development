@@ -1,5 +1,4 @@
 import { Vector3Utils } from "@minecraft/math.js";
-import type { Player } from "@minecraft/server";
 import { ModalFormData } from "@minecraft/server-ui";
 import { generateNBTFileD } from "modules/commands/functions/generateNBTFileD";
 import { chunkIndexToBoundingBox } from "modules/coordinates/functions/chunkIndexToBoundingBox";
@@ -25,7 +24,7 @@ export async function mapArtGenerator(sourceEntity: loosePlayerType): Promise<0 
         const form = new ModalFormData();
         form.title(customFormUICodes.modal.titles.formStyles.fullscreen + "Map Art Generator [§cExperimental§r]");
         form.textField(
-            "§fFor info on how to use this generator, go to §bhttps://sites.google.com/view/8craftermods/debug-sticks-add-on/andexdbnbtstructureloader§f\nNote: When pasting the nbt data into the text box the game might freeze for anywhere from a few seconds to half a hour depending on how much text is being pasted while it is pasting, and then it will unfreeze. \nNBT Data",
+            "§fFor info on how to use this generator, go to §bhttps://www.8crafter.com/debug-sticks-add-on/andexdbnbtstructureloader§f\nNote: When pasting the nbt data into the text box the game might freeze for anywhere from a few seconds to half a hour depending on how much text is being pasted while it is pasting, and then it will unfreeze. \nNBT Data",
             "NBT Data"
         );
         form.textField("Chunk Index x", "integer", String(getChunkIndex(player.location).x));

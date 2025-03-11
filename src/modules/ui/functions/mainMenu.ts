@@ -300,11 +300,12 @@ export async function mainMenu(sourceEntity: loosePlayerType): Promise<0 | 1> {
                     }
                 case "itemEditor":
                     try {
-                        itemSelector(player as Player, player as Player).then((a) => {
+                        itemSelector(player as Player, player as Player).then(async (a) => {
                             if (!!a) {
                                 itemEditorTypeSelection(player as Player, player as Player, a);
                             }
                         });
+                        return 0;
                     } catch {}
                     break;
                 case "mapArtGnerator":
