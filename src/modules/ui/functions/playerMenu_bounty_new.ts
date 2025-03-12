@@ -115,7 +115,7 @@ export async function playerMenu_bounty_new(
             switch (
                 (["search", "previous", "go", "next", "", ""] as const)[r.selection] ??
                 (!!displayPlayersB[r.selection - 6] ? "player" : undefined) ??
-                (["back", "close", "refresh"] as const)[r.selection - displayPlayersB.length + 6]
+                (["back", "close", "refresh"] as const)[r.selection - displayPlayersB.length - 6]
             ) {
                 case "search":
                     {
@@ -176,7 +176,7 @@ export async function playerMenu_bounty_new(
                 case "player": {
                     const player = displayPlayersB[r.selection - 6];
                     const ra = await new ModalFormData()
-                        .title("Place Bounty")
+                        .title(customFormUICodes.modal.titles.formStyles.medium + "Place Bounty")
                         .textField(
                             `§6--------------------------------
 §aMoney: ${numberFormatter(

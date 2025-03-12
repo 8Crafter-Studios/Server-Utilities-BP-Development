@@ -6,6 +6,7 @@ import { showMessage } from "modules/utilities/functions/showMessage";
 import { savedPlayer } from "modules/player_save/classes/savedPlayer";
 import { numberFormatter } from "modules/utilities/functions/numberFormatter";
 import { Bounty } from "modules/main/classes/Bounty";
+import { customFormUICodes } from "../constants/customFormUICodes";
 export async function playerMenu_bounty_from_individual(sourceEntitya, bounty, targetPlayer) {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
     if (!(sourceEntity instanceof Player)) {
@@ -28,7 +29,7 @@ export async function playerMenu_bounty_from_individual(sourceEntitya, bounty, t
     }
     const target = targetPlayer ?? bounty.getLinkedTargetSavedPlayer();
     let form = new ActionFormData();
-    form.title(sourceEntity.name);
+    form.title(customFormUICodes.action.titles.formStyles.medium + sourceEntity.name);
     form.body(`Target: ${target.name}\n${target.isOnline
         ? "Online"
         : target.isBanned
@@ -36,13 +37,12 @@ export async function playerMenu_bounty_from_individual(sourceEntitya, bounty, t
             : config.bountySystem.showLastOnlineTimeInBountyDetailsList
                 ? "Last Online: " + new Date(target.lastOnline).formatDateTime(sourceEntity.timeZone, false, true)
                 : "Offline"}\nPlaced By: ${sourceEntity.name}\nPlaced On: ${new Date(bounty.creationTime).formatDateTime(sourceEntity.timeZone, false, true)}\nReward: ${numberFormatter(bounty.value, { currencyPrefix: config.ui.menus.playerMenu_leaderboards.builtInStats.money.displayOptions.currencyPrefix, addCommaSeparators: true }, 0)}`);
-    form.button("Cancel Bounty", "textures/ui/arrow_left");
-    form.button("Back", "textures/ui/arrow_left");
-    form.button("Close", "textures/ui/crossout");
+    form.button(customFormUICodes.action.buttons.positions.main_only + "Cancel Bounty", "textures/ui/arrow_left");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
     return await forceShow(form, sourceEntity)
         .then(async (ra) => {
         let r = ra;
-        // This will stop the code when the player closes the form
         if (r.canceled)
             return 1;
         switch (["cancel", "back", "close"][r.selection]) {

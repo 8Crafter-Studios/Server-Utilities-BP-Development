@@ -75,7 +75,7 @@ export async function playerMenu_bounty_new(sourceEntitya, pagen = 0, maxplayers
             return 1;
         switch (["search", "previous", "go", "next", "", ""][r.selection] ??
             (!!displayPlayersB[r.selection - 6] ? "player" : undefined) ??
-            ["back", "close", "refresh"][r.selection - displayPlayersB.length + 6]) {
+            ["back", "close", "refresh"][r.selection - displayPlayersB.length - 6]) {
             case "search":
                 {
                     const rb = await tryget(async () => await new ModalFormData()
@@ -117,7 +117,7 @@ export async function playerMenu_bounty_new(sourceEntitya, pagen = 0, maxplayers
             case "player": {
                 const player = displayPlayersB[r.selection - 6];
                 const ra = await new ModalFormData()
-                    .title("Place Bounty")
+                    .title(customFormUICodes.modal.titles.formStyles.medium + "Place Bounty")
                     .textField(`§6--------------------------------
 §aMoney: ${numberFormatter(sourceEntity.moneySystem.money, {
                     addCommaSeparators: true,

@@ -6,6 +6,7 @@ import { showMessage } from "modules/utilities/functions/showMessage";
 import { savedPlayer } from "modules/player_save/classes/savedPlayer";
 import { numberFormatter } from "modules/utilities/functions/numberFormatter";
 import { Bounty } from "modules/main/classes/Bounty";
+import { customFormUICodes } from "../constants/customFormUICodes";
 
 export async function playerMenu_bounty_from_individual(
     sourceEntitya: Entity | executeCommandPlayerW | Player,
@@ -40,7 +41,7 @@ export async function playerMenu_bounty_from_individual(
     }
     const target = targetPlayer ?? bounty.getLinkedTargetSavedPlayer();
     let form = new ActionFormData();
-    form.title(sourceEntity.name);
+    form.title(customFormUICodes.action.titles.formStyles.medium + sourceEntity.name);
     form.body(
         `Target: ${target.name}\n${
             target.isOnline
@@ -56,13 +57,12 @@ export async function playerMenu_bounty_from_individual(
             true
         )}\nReward: ${numberFormatter(bounty.value, { currencyPrefix: config.ui.menus.playerMenu_leaderboards.builtInStats.money.displayOptions.currencyPrefix, addCommaSeparators: true }, 0)}`
     );
-    form.button("Cancel Bounty", "textures/ui/arrow_left");
-    form.button("Back", "textures/ui/arrow_left");
-    form.button("Close", "textures/ui/crossout");
+    form.button(customFormUICodes.action.buttons.positions.main_only + "Cancel Bounty", "textures/ui/arrow_left");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
     return await forceShow(form, sourceEntity)
         .then(async (ra) => {
             let r = ra as ActionFormResponse;
-            // This will stop the code when the player closes the form
             if (r.canceled) return 1;
 
             switch ((["cancel", "back", "close"] as const)[r.selection]) {

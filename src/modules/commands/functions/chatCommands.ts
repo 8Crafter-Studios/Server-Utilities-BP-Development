@@ -27455,13 +27455,13 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                             }
                         }
                         let target = targetSelectorAllListC(
-                            args[1],
+                            args[3],
                             "",
                             vTStr(player.location),
                             player
                         ).find((v) => v.typeId == "minecraft:player") as Player;
                         let targetb = targetSelectorAllListC(
-                            args[1],
+                            args[4],
                             "",
                             vTStr(player.location),
                             player
@@ -27706,36 +27706,36 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                     if (!!!args[4]) {
                         args[4] = JSON.stringify(player.name);
                     }
-                    let target = targetSelectorAllListC(
-                        args[3],
-                        "",
-                        vTStr(player.location),
-                        player
-                    ).find(
-                        (v) => v.typeId == "minecraft:player"
-                    ) as Player;
-                    let targetb = targetSelectorAllListC(
-                        args[4],
-                        "",
-                        vTStr(player.location),
-                        player
-                    ).find(
-                        (v) => v.typeId == "minecraft:player"
-                    ) as Player;
-                    if (target == undefined) {
-                        player.sendError(
-                            `§cError: No players matching the specified target selector for player1 were found. `,
-                            true
-                        );
-                    } else if (target == undefined) {
-                        player.sendError(
-                            `§cError: No players matching the specified target selector for player1 were found. `,
-                            true
-                        );
-                    } else {
-                        args[1] ??= "0";
-                        args[2] ??= "0";
-                        system.run(() => {
+                    system.run(() => {
+                        let target = targetSelectorAllListC(
+                            args[3],
+                            "",
+                            vTStr(player.location),
+                            player
+                        ).find(
+                            (v) => v.typeId == "minecraft:player"
+                        ) as Player;
+                        let targetb = targetSelectorAllListC(
+                            args[4],
+                            "",
+                            vTStr(player.location),
+                            player
+                        ).find(
+                            (v) => v.typeId == "minecraft:player"
+                        ) as Player;
+                        if (target == undefined) {
+                            player.sendError(
+                                `§cError: No players matching the specified target selector for player1 were found. `,
+                                true
+                            );
+                        } else if (targetb == undefined) {
+                            player.sendError(
+                                `§cError: No players matching the specified target selector for player2 were found. `,
+                                true
+                            );
+                        } else {
+                            args[1] ??= "0";
+                            args[2] ??= "0";
                             const targetInventory = target.inventory;
                             const targetInventoryB = targetb.inventory;
                             if (
@@ -27745,62 +27745,62 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 const items =
                                     args[1].toLowerCase() == "equipment"
                                         ? equippableToItemStackArray(
-                                              target.equippable,
-                                              true
-                                          )
+                                            target.equippable,
+                                            true
+                                        )
                                         : containerToItemStackArray(
-                                              target.inventory.container
-                                          ).slice(
-                                              Math.round(
-                                                  args[1].toNumber() * 9
-                                              ),
-                                              Math.round(
-                                                  args[1].toNumber() * 9
-                                              ) + 6
-                                          );
+                                            target.inventory.container
+                                        ).slice(
+                                            Math.round(
+                                                args[1].toNumber() * 9
+                                            ),
+                                            Math.round(
+                                                args[1].toNumber() * 9
+                                            ) + 6
+                                        );
                                 const itemsb =
                                     args[2].toLowerCase() == "equipment"
                                         ? equippableToItemStackArray(
-                                              targetb.equippable,
-                                              true
-                                          )
+                                            targetb.equippable,
+                                            true
+                                        )
                                         : containerToItemStackArray(
-                                              targetb.inventory.container
-                                          ).slice(
-                                              Math.round(
-                                                  args[1].toNumber() * 9
-                                              ),
-                                              Math.round(
-                                                  args[1].toNumber() * 9
-                                              ) + 6
-                                          );
+                                            targetb.inventory.container
+                                        ).slice(
+                                            Math.round(
+                                                args[1].toNumber() * 9
+                                            ),
+                                            Math.round(
+                                                args[1].toNumber() * 9
+                                            ) + 6
+                                        );
                                 const slotsb =
                                     args[2].toLowerCase() == "equipment"
                                         ? equippableToContainerSlotArray(
-                                              targetb.equippable,
-                                              true
-                                          )
+                                            targetb.equippable,
+                                            true
+                                        )
                                         : containerToContainerSlotArray(
-                                              targetb.inventory.container
-                                          ).slice(
-                                              Math.round(
-                                                  args[2].toNumber() * 9
-                                              ),
-                                              Math.round(
-                                                  args[2].toNumber() * 9
-                                              ) + 6
-                                          );
+                                            targetb.inventory.container
+                                        ).slice(
+                                            Math.round(
+                                                args[2].toNumber() * 9
+                                            ),
+                                            Math.round(
+                                                args[2].toNumber() * 9
+                                            ) + 6
+                                        );
                                 (args[1].toLowerCase() == "equipment"
                                     ? equippableToContainerSlotArray(
-                                          target.equippable,
-                                          true
-                                      )
+                                        target.equippable,
+                                        true
+                                    )
                                     : containerToContainerSlotArray(
-                                          target.inventory.container
-                                      ).slice(
-                                          Math.round(args[1].toNumber() * 9),
-                                          Math.round(args[1].toNumber() * 9) + 6
-                                      )
+                                        target.inventory.container
+                                    ).slice(
+                                        Math.round(args[1].toNumber() * 9),
+                                        Math.round(args[1].toNumber() * 9) + 6
+                                    )
                                 ).forEach((s, i) => {
                                     slotsb[i].setItem(items[i]);
                                     s.setItem(itemsb[i]);
@@ -27823,8 +27823,8 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                             player.sendMessageB(
                                 `Successfully swapped row ${args[1]} of ${args[3]}'s inventory with row ${args[2]} of ${args[4]}'s inventory.`
                             );
-                        });
-                    }
+                        }
+                    });
                 }
                 break;
             case !!switchTest.match(/^compressitems$/):

@@ -37,7 +37,7 @@ export async function playerMenu_bounties(sourceEntitya: Entity | executeCommand
         }
     }
     let form = new ActionFormData();
-    form.title(customFormUICodes.action.titles.formStyles.general + "Bounties");
+    form.title(customFormUICodes.action.titles.formStyles.medium + "Bounties");
     form.button(customFormUICodes.action.buttons.positions.main_only + "Place a Bounty", "textures/ui/pointer");
     form.button(customFormUICodes.action.buttons.positions.main_only + "View All Active Bounties", "textures/gui/newgui/Friends");
     form.button(customFormUICodes.action.buttons.positions.main_only + "View Bounties You Placed", "textures/gui/newgui/mob_effects/strength_effect");

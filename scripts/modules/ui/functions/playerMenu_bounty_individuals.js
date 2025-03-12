@@ -1,14 +1,15 @@
-import { Entity, ObjectiveSortOrder, Player, world } from "@minecraft/server";
+import { Entity, Player } from "@minecraft/server";
 import { ActionFormData, ActionFormResponse, ModalFormData } from "@minecraft/server-ui";
 import { forceShow } from "modules/ui/functions/forceShow";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { showMessage } from "modules/utilities/functions/showMessage";
 import { savedPlayer } from "modules/player_save/classes/savedPlayer";
-import { playerMenu_leaderboard_player } from "./playerMenu_leaderboard_player";
 import { numberFormatter_compact } from "modules/utilities/functions/numberFormatter";
 import { Bounty, TotalBounty } from "modules/main/classes/Bounty";
-import { playerMenu_bounty } from "./playerMenu_bounty";
 import { playerMenu_bounty_individual } from "./playerMenu_bounty_individual";
+/**
+ * @todo Make this function use the better style from {@link modules.uis.playerMenu_bounties_list}.
+ */
 export async function playerMenu_bounty_individuals(sourceEntitya, totalBounty, targetPlayer, pagen = 0, maxplayersperpage = config.ui.pages
     .maxPlayersPerManagePlayersPage ?? 9, search) {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW

@@ -17372,8 +17372,8 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                 args[3] = player.name;
                             }
                         }
-                        let target = targetSelectorAllListC(args[1], "", vTStr(player.location), player).find((v) => v.typeId == "minecraft:player");
-                        let targetb = targetSelectorAllListC(args[1], "", vTStr(player.location), player).find((v) => v.typeId == "minecraft:player");
+                        let target = targetSelectorAllListC(args[3], "", vTStr(player.location), player).find((v) => v.typeId == "minecraft:player");
+                        let targetb = targetSelectorAllListC(args[4], "", vTStr(player.location), player).find((v) => v.typeId == "minecraft:player");
                         if ((args[2] ?? "").trim() == "") {
                             args[2] = String(targetb?.selectedSlotIndex);
                         }
@@ -17553,18 +17553,18 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                     if (!!!args[4]) {
                         args[4] = JSON.stringify(player.name);
                     }
-                    let target = targetSelectorAllListC(args[3], "", vTStr(player.location), player).find((v) => v.typeId == "minecraft:player");
-                    let targetb = targetSelectorAllListC(args[4], "", vTStr(player.location), player).find((v) => v.typeId == "minecraft:player");
-                    if (target == undefined) {
-                        player.sendError(`§cError: No players matching the specified target selector for player1 were found. `, true);
-                    }
-                    else if (target == undefined) {
-                        player.sendError(`§cError: No players matching the specified target selector for player1 were found. `, true);
-                    }
-                    else {
-                        args[1] ??= "0";
-                        args[2] ??= "0";
-                        system.run(() => {
+                    system.run(() => {
+                        let target = targetSelectorAllListC(args[3], "", vTStr(player.location), player).find((v) => v.typeId == "minecraft:player");
+                        let targetb = targetSelectorAllListC(args[4], "", vTStr(player.location), player).find((v) => v.typeId == "minecraft:player");
+                        if (target == undefined) {
+                            player.sendError(`§cError: No players matching the specified target selector for player1 were found. `, true);
+                        }
+                        else if (targetb == undefined) {
+                            player.sendError(`§cError: No players matching the specified target selector for player2 were found. `, true);
+                        }
+                        else {
+                            args[1] ??= "0";
+                            args[2] ??= "0";
                             const targetInventory = target.inventory;
                             const targetInventoryB = targetb.inventory;
                             if (args[1].toLowerCase() == "equipment" ||
@@ -17593,8 +17593,8 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                 }
                             }
                             player.sendMessageB(`Successfully swapped row ${args[1]} of ${args[3]}'s inventory with row ${args[2]} of ${args[4]}'s inventory.`);
-                        });
-                    }
+                        }
+                    });
                 }
                 break;
             case !!switchTest.match(/^compressitems$/):

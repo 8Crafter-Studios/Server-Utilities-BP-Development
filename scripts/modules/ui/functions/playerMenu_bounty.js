@@ -1,12 +1,12 @@
-import { Entity, ObjectiveSortOrder, Player, world } from "@minecraft/server";
-import { ActionFormData, ActionFormResponse, ModalFormData } from "@minecraft/server-ui";
+import { Entity, Player } from "@minecraft/server";
+import { ActionFormData, ActionFormResponse } from "@minecraft/server-ui";
 import { forceShow } from "modules/ui/functions/forceShow";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { showMessage } from "modules/utilities/functions/showMessage";
 import { savedPlayer } from "modules/player_save/classes/savedPlayer";
-import { defaultPlayerMenuLeaderboardStatistics } from "../constants/defaultPlayerMenuLeaderboardStatistics";
 import { numberFormatter } from "modules/utilities/functions/numberFormatter";
 import { playerMenu_bounty_individuals } from "./playerMenu_bounty_individuals";
+import { customFormUICodes } from "../constants/customFormUICodes";
 export async function playerMenu_bounty(sourceEntitya, totalBounty, targetPlayer) {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
     if (!(sourceEntity instanceof Player)) {
@@ -31,7 +31,7 @@ export async function playerMenu_bounty(sourceEntitya, totalBounty, targetPlayer
     const menuConfig = config.ui.menus.playerMenu_leaderboards;
     // menuConfig.buttons.map(k=>[k, menuButtonIds.mainMenu.buttons[k]])
     let form = new ActionFormData();
-    form.title(target.name);
+    form.title(customFormUICodes.action.titles.formStyles.medium + target.name);
     form.body(`Target: ${target.name}\n${target.isOnline
         ? "Online"
         : target.isBanned
@@ -39,9 +39,9 @@ export async function playerMenu_bounty(sourceEntitya, totalBounty, targetPlayer
             : menuConfig.showLastOnlineTimeInPlayerStatsList
                 ? "Last Online: " + new Date(target.lastOnline).formatDateTime(sourceEntity.timeZone, false, true)
                 : "Offline"}\nTotal Reward: ${numberFormatter(totalBounty.totalValue, { currencyPrefix: config.ui.menus.playerMenu_leaderboards.builtInStats.money.displayOptions.currencyPrefix, addCommaSeparators: true }, 0)}`);
-    form.button(`View Individual Bounties\n${totalBounty.getBounties().length}`, "textures/ui/arrow_left");
-    form.button("Back", "textures/ui/arrow_left");
-    form.button("Close", "textures/ui/crossout");
+    form.button(`${customFormUICodes.action.buttons.positions.main_only}View Individual Bounties\n${totalBounty.getBounties().length}`, "textures/ui/arrow_left");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
     return await forceShow(form, sourceEntity)
         .then(async (ra) => {
         let r = ra;
