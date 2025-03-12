@@ -302,7 +302,7 @@ Icon Path: ${category.icon_path ?? "None"}`)
  * @async
  * @param {loosePlayerType} sourceEntity - The player viewing the UI.
  * @param categoryID The ID of the category to duplicate.
- * @returns {Promise<0 | 1 | 2>} A promise that resolves to `0` if the previous menu should be closed, or `1` if the previous menu should be reopened, or `2` if the menu before the previous menu should be reopened.
+ * @returns {Promise<0 | 1 | 2>} A promise that resolves to `0` if the previous menu should be closed, `1` if the previous menu should be reopened, or `2` if the menu before the previous menu should be reopened.
  * @throws {TypeError} If sourceEntity is not an instance of the Player class or an instance of the executeCommandPlayerW class with a Player linked to it.
  *
  * The function performs the following steps:

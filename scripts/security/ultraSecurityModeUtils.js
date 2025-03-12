@@ -1190,13 +1190,13 @@ export async function editPermissionForPlayerUI(player, targetPlayerId) {
         }
     }
     let form = new ActionFormData();
-    form.title("Edit Permissions For Player");
+    form.title(customFormUICodes.action.titles.formStyles.medium + "Edit Permissions for Player");
     const perms = Object.entries(permissionType);
     perms.forEach((permissionType) => {
-        form.button((playerPermissions[targetPlayerId]?.includes(permissionType[0]) ? "§a" : securityVariables.testOfflinePlayerForPermission(targetPlayerId, permissionType[1]) ? "§e" : "§c") + permissionType[0]);
+        form.button(customFormUICodes.action.buttons.positions.main_only + (playerPermissions[targetPlayerId]?.includes(permissionType[0]) ? "§a" : securityVariables.testOfflinePlayerForPermission(targetPlayerId, permissionType[1]) ? "§e" : "§c") + permissionType[0]);
     });
-    form.button("Back");
-    form.button("Close");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
     const r = await form.forceShow(player);
     if (r.canceled) {
         return 1;
@@ -1232,15 +1232,15 @@ async function editPermissionForPlayerUI_permission(player, targetPlayerId, perm
         }
     }
     let form = new ActionFormData();
-    form.title("Edit Permissions For Player");
+    form.title(customFormUICodes.action.titles.formStyles.medium + "Edit Permission for Player");
     form.body(`Permission: ${perm.id}\nCurrent Status: ${playerPermissions[targetPlayerId]?.includes(perm.id)}\nDefault: ${perm.default}${perm.includedInPermissions.find((p) => playerPermissions[targetPlayerId]?.includes(p))
         ? `\n§eThis player already has this permission because of the following permissions ${JSON.stringify(perm.includedInPermissions.filter((p) => playerPermissions[targetPlayerId]?.includes(p)))}. If you want to remove this permission from this player, you must remove the permissions listed above.`
         : ""}${playerPermissions.everyone.includes(perm.id)
         ? "\n§eThis player already has this permission because this permission has been enabled for everyone. To make it not enabled for everyone, go to Main Menu > Security > Default Permissions."
         : ""}§r\n` + perm.description);
-    form.button(`${playerPermissions[targetPlayerId]?.includes(perm.id) ? "Remove" : "Add"} Permission${!!perm.includedInPermissions.find((p) => playerPermissions[targetPlayerId]?.includes(p)) ? "\n§cNo Effect" : ""}`);
-    form.button("Back");
-    form.button("Close");
+    form.button(`${customFormUICodes.action.buttons.positions.main_only}${playerPermissions[targetPlayerId]?.includes(perm.id) ? "Remove" : "Add"} Permission${!!perm.includedInPermissions.find((p) => playerPermissions[targetPlayerId]?.includes(p)) ? "\n§cNo Effect" : ""}`);
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
     const r = await form.forceShow(player);
     if (r.canceled) {
         return 1;

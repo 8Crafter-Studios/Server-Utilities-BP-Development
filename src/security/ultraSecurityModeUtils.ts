@@ -1276,13 +1276,13 @@ export async function editPermissionForPlayerUI(player: Player, targetPlayerId: 
         }
     }
     let form = new ActionFormData();
-    form.title("Edit Permissions For Player");
+    form.title(customFormUICodes.action.titles.formStyles.medium + "Edit Permissions for Player");
     const perms = Object.entries(permissionType);
     perms.forEach((permissionType) => {
-        form.button((playerPermissions[targetPlayerId]?.includes(permissionType[0] as any)?"§a":securityVariables.testOfflinePlayerForPermission(targetPlayerId, permissionType[1])?"§e":"§c")+permissionType[0]);
+        form.button(customFormUICodes.action.buttons.positions.main_only + (playerPermissions[targetPlayerId]?.includes(permissionType[0] as any)?"§a":securityVariables.testOfflinePlayerForPermission(targetPlayerId, permissionType[1])?"§e":"§c")+permissionType[0]);
     });
-    form.button("Back");
-    form.button("Close");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
     const r = await form.forceShow(player);
     if (r.canceled) {
         return 1;
@@ -1331,7 +1331,7 @@ async function editPermissionForPlayerUI_permission(
         }
     }
     let form = new ActionFormData();
-    form.title("Edit Permissions For Player");
+    form.title(customFormUICodes.action.titles.formStyles.medium + "Edit Permission for Player");
     form.body(
         `Permission: ${perm.id}\nCurrent Status: ${playerPermissions[targetPlayerId]?.includes(perm.id)}\nDefault: ${perm.default}${
             perm.includedInPermissions.find((p) => playerPermissions[targetPlayerId]?.includes(p))
@@ -1346,12 +1346,12 @@ async function editPermissionForPlayerUI_permission(
         }§r\n` + perm.description
     );
     form.button(
-        `${playerPermissions[targetPlayerId]?.includes(perm.id) ? "Remove" : "Add"} Permission${
+        `${customFormUICodes.action.buttons.positions.main_only}${playerPermissions[targetPlayerId]?.includes(perm.id) ? "Remove" : "Add"} Permission${
             !!perm.includedInPermissions.find((p) => playerPermissions[targetPlayerId]?.includes(p)) ? "\n§cNo Effect" : ""
         }`
     );
-    form.button("Back");
-    form.button("Close");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
     const r = await form.forceShow(player);
     if (r.canceled) {
         return 1;

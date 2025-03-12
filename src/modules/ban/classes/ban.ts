@@ -20,24 +20,25 @@ export class ban {
     banId: string;
     hasAdvancedReason: boolean = false;
     constructor(
-        ban: {
-            type: "name" | "id";
-            banId?: string;
-            unbanDate: number;
-            banDate: number;
-            bannedById: string;
-            bannedByName: string;
-            reason?: string;
-            removeAfterBanExpires?: boolean;
-            playerName?: string;
-            originalPlayerId?: string;
-            playerId?: string;
-            originalPlayerName?: string;
-            format_version?: string;
-            ban_format_version?: string;
-            hasAdvancedReason?: boolean;
-        } |
-            ban
+        ban:
+            | {
+                  type: "name" | "id";
+                  banId?: string;
+                  unbanDate: number;
+                  banDate: number;
+                  bannedById: string;
+                  bannedByName: string;
+                  reason?: string;
+                  removeAfterBanExpires?: boolean;
+                  playerName?: string;
+                  originalPlayerId?: string;
+                  playerId?: string;
+                  originalPlayerName?: string;
+                  format_version?: string;
+                  ban_format_version?: string;
+                  hasAdvancedReason?: boolean;
+              }
+            | ban
     ) {
         this.type = ban.type ?? (ban.playerName != undefined ? "name" : "id");
         this.unbanDate = ban.unbanDate;
@@ -54,11 +55,7 @@ export class ban {
         this.originalPlayerName = ban.originalPlayerName;
         this.format_version = ban.format_version ?? format_version;
         this.ban_format_version = ban.ban_format_version ?? ban_format_version;
-        this.banId =
-            ban.banId ??
-            (ban.type == "name"
-                ? "ban:" + ban.banDate + ":" + ban.playerName
-                : "banId:" + ban.banDate + ":" + ban.playerId);
+        this.banId = ban.banId ?? (ban.type == "name" ? "ban:" + ban.banDate + ":" + ban.playerName : "banId:" + ban.banDate + ":" + ban.playerId);
         this.hasAdvancedReason = ban.hasAdvancedReason ?? false;
     }
     get isExpired() {
@@ -78,23 +75,24 @@ export class ban {
                 minutes: Infinity,
                 seconds: Infinity,
                 milliseconds: Infinity,
-            }
+            };
         }
-        let time = new Date(
-            Math.abs(Number(this.unbanDate) - Date.now()) +
-            new Date().setUTCFullYear(0)
-        );
+        let time = new Date(Math.abs(Number(this.unbanDate) - Date.now()) + new Date().setUTCFullYear(0));
         let timeList = {
-            days: (-1 * Number(this.isExpired) + 1) *
-                Math.floor(
-                    (time.getTime() - new Date().setUTCFullYear(0)) / 86400000
-                ),
+            days: (-1 * Number(this.isExpired) + 1) * Math.floor((time.getTime() - new Date().setUTCFullYear(0)) / 86400000),
             hours: (-1 * Number(this.isExpired) + 1) * time.getHours(),
             minutes: (-1 * Number(this.isExpired) + 1) * time.getMinutes(),
             seconds: (-1 * Number(this.isExpired) + 1) * time.getSeconds(),
             milliseconds: (-1 * Number(this.isExpired) + 1) * time.getMilliseconds(),
         };
         return timeList;
+    }
+    get timeRemainingString() {
+        return this.isPermanent
+            ? "Forever"
+            : Date.now() > this.unbanDate
+            ? "-" + moment().preciseDiff(moment(this.unbanDate))
+            : moment().preciseDiff(moment(this.unbanDate));
     }
     get duration() {
         if (this.unbanDate === Infinity) {
@@ -104,22 +102,24 @@ export class ban {
                 minutes: Infinity,
                 seconds: Infinity,
                 milliseconds: Infinity,
-            }
+            };
         }
-        let time = new Date(
-            this.unbanDate - this.banDate +
-            new Date().setUTCFullYear(0)
-        );
+        let time = new Date(this.unbanDate - this.banDate + new Date().setUTCFullYear(0));
         let timeList = {
-            days: Math.floor(
-                    (time.getTime() - new Date().setUTCFullYear(0)) / 86400000
-                ),
+            days: Math.floor((time.getTime() - new Date().setUTCFullYear(0)) / 86400000),
             hours: time.getHours(),
             minutes: time.getMinutes(),
             seconds: time.getSeconds(),
             milliseconds: time.getMilliseconds(),
         };
         return timeList;
+    }
+    get durationString() {
+        return this.isPermanent
+            ? "Permanent"
+            : this.banDate > this.unbanDate
+            ? "-" + moment().preciseDiff(moment(this.unbanDate))
+            : moment().preciseDiff(moment(this.unbanDate));
     }
     get isTemporary() {
         return this.unbanDate !== Infinity;
@@ -132,8 +132,24 @@ export class ban {
             return this.reason;
         } else {
             const timeZone = config.system.timeZone;
-            return JSON.stringify(this.reason).slice(0, -1) +
-            (this.isPermanent ? `\\n§r§cBanned By: ${this.bannedByName}\\nBan Duration: Permanent\\nBanned On: ${formatDateTime(new Date(this.banDate), timeZone)} UTC${(timeZone > 0 || Object.is(timeZone, 0) ? "+" : "") + timeZone}"` : `\\n§r§cBanned By: ${this.bannedByName}\\nBanned Until: ${formatDateTime(new Date(this.unbanDate), timeZone)} UTC${(timeZone > 0 || Object.is(timeZone, 0) ? "+" : "") + timeZone}\\nBanned On: ${formatDateTime(new Date(this.banDate), timeZone)} UTC${(timeZone > 0 || Object.is(timeZone, 0) ? "+" : "") + timeZone}\\nTime Remaining: {timeRemaining}"`);
+            return (
+                JSON.stringify(this.reason).slice(0, -1) +
+                (this.isPermanent
+                    ? `\\n§r§cBanned By: ${this.bannedByName}\\nBan Duration: Permanent\\nBanned On: ${formatDateTime(new Date(this.banDate), timeZone)} UTC${
+                          (timeZone > 0 || Object.is(timeZone, 0) ? "+" : "") + timeZone
+                      }"`
+                    : `\\n§r§cBanned By: ${this.bannedByName}\\nBanned Until: ${formatDateTime(new Date(this.unbanDate), timeZone)} UTC${
+                          (timeZone > 0 || Object.is(timeZone, 0) ? "+" : "") + timeZone
+                      }\\nBanned On: ${formatDateTime(new Date(this.banDate), timeZone)} UTC${
+                          (timeZone > 0 || Object.is(timeZone, 0) ? "+" : "") + timeZone
+                      }\\nBan Duration: ${
+                          this.banDate > this.unbanDate
+                              ? "-" + moment(this.banDate).preciseDiff(moment(this.unbanDate))
+                              : moment(this.banDate).preciseDiff(moment(this.unbanDate))
+                      }\\nTime Remaining: ${
+                          Date.now() > this.unbanDate ? "-" + moment().preciseDiff(moment(this.unbanDate)) : moment().preciseDiff(moment(this.unbanDate))
+                      }"`)
+            );
         }
     }
     save() {
@@ -145,86 +161,80 @@ export class ban {
     static getBanIds(banType: string = "both") {
         return world
             .getDynamicPropertyIds()
-            .filter((s) => banType == "both"
-                ? s.startsWith("ban:") || s.startsWith("banId:")
-                : banType == "name"
+            .filter((s) =>
+                banType == "both"
+                    ? s.startsWith("ban:") || s.startsWith("banId:")
+                    : banType == "name"
                     ? s.startsWith("ban:")
                     : banType == "id"
-                        ? s.startsWith("banId:")
-                        : undefined
+                    ? s.startsWith("banId:")
+                    : undefined
             );
     }
     static getValidBanIds(banType: string = "both") {
         return world
             .getDynamicPropertyIds()
-            .filter((s) => banType == "both"
-                ? (s.startsWith("ban:") ? ban.getBan(s).isValid : false) ||
-                (s.startsWith("banId:") ? ban.getBan(s).isValid : false)
-                : banType == "name"
+            .filter((s) =>
+                banType == "both"
+                    ? (s.startsWith("ban:") ? ban.getBan(s).isValid : false) || (s.startsWith("banId:") ? ban.getBan(s).isValid : false)
+                    : banType == "name"
                     ? s.startsWith("ban:")
                         ? ban.getBan(s).isValid
                         : false
                     : banType == "id"
-                        ? s.startsWith("banId:")
-                            ? ban.getBan(s).isValid
-                            : false
-                        : undefined
+                    ? s.startsWith("banId:")
+                        ? ban.getBan(s).isValid
+                        : false
+                    : undefined
             );
     }
     static getExpiredBanIds(banType: string = "both") {
         return world
             .getDynamicPropertyIds()
-            .filter((s) => banType == "both"
-                ? (s.startsWith("ban:")
-                    ? ban.getBan(s).isExpired
-                    : false) ||
-                (s.startsWith("banId:") ? ban.getBan(s).isExpired : false)
-                : banType == "name"
+            .filter((s) =>
+                banType == "both"
+                    ? (s.startsWith("ban:") ? ban.getBan(s).isExpired : false) || (s.startsWith("banId:") ? ban.getBan(s).isExpired : false)
+                    : banType == "name"
                     ? s.startsWith("ban:")
                         ? ban.getBan(s).isExpired
                         : false
                     : banType == "id"
-                        ? s.startsWith("banId:")
-                            ? ban.getBan(s).isExpired
-                            : false
-                        : undefined
+                    ? s.startsWith("banId:")
+                        ? ban.getBan(s).isExpired
+                        : false
+                    : undefined
             );
     } /*
 saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playerName}`, `${Number(ban.removeAfterBanExpires)}||${ban.unbanDate.valueOf()}||${ban.banDate.valueOf()}||${ban.originalPlayerId}||${ban.bannedById}||${ban.bannedByName.replaceAll("|", "\\|")}||${ban.reason}`)}else{if(ban.type=="id"){world.setDynamicProperty(`idBan:${ban.playerId}`, `${Number(ban.removeAfterBanExpires)}||${ban.unbanDate.valueOf()}||${ban.banDate.valueOf()}||${ban.originalPlayerName.replaceAll("|", "\\|")}||${ban.bannedById}||${ban.bannedByName.replaceAll("|", "\\|")}||${ban.reason}`)}else{}}}*/
 
     static saveBan(
-        ban: {
-            type: "name" | "id";
-            unbanDate: Date | number;
-            banDate: Date | number;
-            bannedById: string | number;
-            bannedByName: string;
-            reason: string;
-            removeAfterBanExpires?: boolean;
-            playerName?: string;
-            originalPlayerId?: string | number;
-            playerId?: string | number;
-            originalPlayerName?: string;
-            format_version?: string | number;
-            ban_format_version?: string | number;
-            banId?: string;
-        } |
-            ban
+        ban:
+            | {
+                  type: "name" | "id";
+                  unbanDate: Date | number;
+                  banDate: Date | number;
+                  bannedById: string | number;
+                  bannedByName: string;
+                  reason: string;
+                  removeAfterBanExpires?: boolean;
+                  playerName?: string;
+                  originalPlayerId?: string | number;
+                  playerId?: string | number;
+                  originalPlayerName?: string;
+                  format_version?: string | number;
+                  ban_format_version?: string | number;
+                  banId?: string;
+              }
+            | ban
     ) {
         ban.removeAfterBanExpires = ban.removeAfterBanExpires ?? true;
         ban.format_version = ban.format_version ?? format_version;
         ban.ban_format_version = ban.ban_format_version ?? ban_format_version;
         if (ban.type == "name") {
-            world.setDynamicProperty(
-                ban.banId ?? `ban:${ban.banDate}:${ban.playerName}`,
-                JSONB.stringify(ban)
-            );
+            world.setDynamicProperty(ban.banId ?? `ban:${ban.banDate}:${ban.playerName}`, JSONB.stringify(ban));
         } else {
             if (ban.type == "id") {
-                world.setDynamicProperty(
-                    ban.banId ?? `idBan:${ban.banDate}:${ban.playerId}`,
-                    JSONB.stringify(ban)
-                );
+                world.setDynamicProperty(ban.banId ?? `idBan:${ban.banDate}:${ban.playerId}`, JSONB.stringify(ban));
             } else {
             }
         }
@@ -288,13 +298,13 @@ getBan(banId: string){let banString = String(world.getDynamicProperty(banId)).sp
         };
     }
     static getBansAutoRefresh() {
-        if(lastBanRefresh < Date.now() - config.system.bansMinimumAutoRefresh){
+        if (lastBanRefresh < Date.now() - config.system.bansMinimumAutoRefresh) {
             ban.refreshBans();
         }
-        return {...bans};
+        return { ...bans };
     }
     static getValidBansAutoRefresh() {
-        if(lastBanRefresh < Date.now() - config.system.bansMinimumAutoRefresh){
+        if (lastBanRefresh < Date.now() - config.system.bansMinimumAutoRefresh) {
             ban.refreshBans();
         }
         return {
@@ -304,7 +314,7 @@ getBan(banId: string){let banString = String(world.getDynamicProperty(banId)).sp
         };
     }
     static getExpiredBansAutoRefresh() {
-        if(lastBanRefresh < Date.now() - config.system.bansMinimumAutoRefresh) {
+        if (lastBanRefresh < Date.now() - config.system.bansMinimumAutoRefresh) {
             ban.refreshBans();
         }
         return {
@@ -314,7 +324,7 @@ getBan(banId: string){let banString = String(world.getDynamicProperty(banId)).sp
         };
     }
     static getBansNoRefresh() {
-        return {...bans};
+        return { ...bans };
     }
     static getValidBansNoRefresh() {
         return {
@@ -331,41 +341,28 @@ getBan(banId: string){let banString = String(world.getDynamicProperty(banId)).sp
         };
     }
     static testForBannedPlayer(player: Player | savedPlayer | savedPlayerData) {
-        if(lastBanRefresh < Date.now() - config.system.bansMinimumAutoRefresh){
+        if (lastBanRefresh < Date.now() - config.system.bansMinimumAutoRefresh) {
             ban.refreshBans();
         }
-        return bans.idBans.find((b) => b.isValid && b.playerId == player.id) !==
-            undefined
+        return bans.idBans.find((b) => b.isValid && b.playerId == player.id) !== undefined
             ? true
-            : bans
-                .nameBans.find(
-                    (b) => b.isValid && b.playerName == player.name
-                ) != undefined
-                ? true
-                : false;
-    }
-    static testForNameBannedPlayer(
-        player: Player | savedPlayer | savedPlayerData
-    ) {
-        if(lastBanRefresh < Date.now() - config.system.bansMinimumAutoRefresh){
-            ban.refreshBans();
-        }
-        return bans.nameBans.find((b) => b.isValid && b.playerName == player.name) !==
-            undefined
+            : bans.nameBans.find((b) => b.isValid && b.playerName == player.name) != undefined
             ? true
             : false;
     }
-    static testForIdBannedPlayer(
-        player: Player | savedPlayer | savedPlayerData
-    ) {
-        if(lastBanRefresh < Date.now() - config.system.bansMinimumAutoRefresh){
+    static testForNameBannedPlayer(player: Player | savedPlayer | savedPlayerData) {
+        if (lastBanRefresh < Date.now() - config.system.bansMinimumAutoRefresh) {
+            ban.refreshBans();
+        }
+        return bans.nameBans.find((b) => b.isValid && b.playerName == player.name) !== undefined ? true : false;
+    }
+    static testForIdBannedPlayer(player: Player | savedPlayer | savedPlayerData) {
+        if (lastBanRefresh < Date.now() - config.system.bansMinimumAutoRefresh) {
             ban.refreshBans();
         }
         return bans.idBans.find((b) => b.isValid && b.playerId == player.id) !== undefined;
     }
-    static executeOnBannedPlayers(
-        callbackfn: (player: Player, index: number, array: any[]) => unknown
-    ) {
+    static executeOnBannedPlayers(callbackfn: (player: Player, index: number, array: any[]) => unknown) {
         let feedback: any[];
         feedback = [];
         world

@@ -92,6 +92,12 @@ Object.defineProperties(globalThis, {
         enumerable: true,
         writable: false,
     },
+    moment: {
+        value: moment,
+        configurable: false,
+        enumerable: true,
+        writable: false,
+    }
 });
 // semver
 // import * as main from "legacyModuleAliases/Main";

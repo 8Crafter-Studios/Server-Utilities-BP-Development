@@ -12,6 +12,7 @@ import * as semver from "semver";
 import type { loosePlayerType } from "modules/utilities/types/loosePlayerType";
 import { extractPlayerFromLooseEntityType } from "modules/utilities/functions/extractPlayerFromLooseEntityType";
 import { customFormUICodes } from "../constants/customFormUICodes";
+import { manageBansOnPlayer } from "./manageBans";
 
 /**
  *
@@ -214,7 +215,7 @@ export async function managePlayers_managePlayer(sourceEntity: loosePlayerType, 
                     const form = new ActionFormData();
                     form.title(`${customFormUICodes.action.titles.formStyles.fullscreen}${targetPlayer.name}'s Saved Inventory Data`);
                     form.body(`${text}`);
-                    form.button("Done");
+                    form.button(customFormUICodes.action.buttons.positions.main_only + "Done");
                     await form.forceShow(player);
                     continue;
                 }
@@ -310,14 +311,14 @@ export async function managePlayers_managePlayer(sourceEntity: loosePlayerType, 
                     continue;
                 }
                 case "manageBans":
-                    if ((await managePlayers_managePlayer_manageBans(player, targetPlayer)) == 1) {
+                    if ((await manageBansOnPlayer(player, targetPlayer)) == 1) {
                         continue;
                     } else {
                         return 0;
                     }
                 case "editMoney": {
                     try {
-                        const r = await new ModalFormData().textField("Money", "int", MoneySystem.get(targetPlayer.id).money.toString()).forceShow(player);
+                        const r = await new ModalFormData().title(`${customFormUICodes.modal.titles.formStyles.medium}Edit Money for ${targetPlayer.name}`).textField("Money", "int", MoneySystem.get(targetPlayer.id).money.toString()).forceShow(player);
 
                         if (r.canceled) continue;
                         if (!!r.formValues[0].toBigInt()) {

@@ -43,6 +43,7 @@ export declare class ban {
         seconds: number;
         milliseconds: number;
     };
+    get timeRemainingString(): string;
     get duration(): {
         days: number;
         hours: number;
@@ -50,6 +51,7 @@ export declare class ban {
         seconds: number;
         milliseconds: number;
     };
+    get durationString(): string;
     get isTemporary(): boolean;
     get isPermanent(): boolean;
     get kickMessage(): string;

@@ -10,6 +10,7 @@ import { editPermissionForPlayerUI, securityVariables } from "security/ultraSecu
 import * as semver from "semver";
 import { extractPlayerFromLooseEntityType } from "modules/utilities/functions/extractPlayerFromLooseEntityType";
 import { customFormUICodes } from "../constants/customFormUICodes";
+import { manageBansOnPlayer } from "./manageBans";
 /**
  *
  * @todo Split each of the cases in the switch function into separate functions.
@@ -175,7 +176,7 @@ export async function managePlayers_managePlayer(sourceEntity, targetPlayer) {
                     const form = new ActionFormData();
                     form.title(`${customFormUICodes.action.titles.formStyles.fullscreen}${targetPlayer.name}'s Saved Inventory Data`);
                     form.body(`${text}`);
-                    form.button("Done");
+                    form.button(customFormUICodes.action.buttons.positions.main_only + "Done");
                     await form.forceShow(player);
                     continue;
                 }
@@ -238,7 +239,7 @@ export async function managePlayers_managePlayer(sourceEntity, targetPlayer) {
                     continue;
                 }
                 case "manageBans":
-                    if ((await managePlayers_managePlayer_manageBans(player, targetPlayer)) == 1) {
+                    if ((await manageBansOnPlayer(player, targetPlayer)) == 1) {
                         continue;
                     }
                     else {
@@ -246,7 +247,7 @@ export async function managePlayers_managePlayer(sourceEntity, targetPlayer) {
                     }
                 case "editMoney": {
                     try {
-                        const r = await new ModalFormData().textField("Money", "int", MoneySystem.get(targetPlayer.id).money.toString()).forceShow(player);
+                        const r = await new ModalFormData().title(`${customFormUICodes.modal.titles.formStyles.medium}Edit Money for ${targetPlayer.name}`).textField("Money", "int", MoneySystem.get(targetPlayer.id).money.toString()).forceShow(player);
                         if (r.canceled)
                             continue;
                         if (!!r.formValues[0].toBigInt()) {

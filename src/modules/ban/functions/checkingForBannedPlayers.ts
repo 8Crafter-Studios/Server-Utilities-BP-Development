@@ -1,7 +1,8 @@
-import { system, world } from "@minecraft/server";
+import { system } from "@minecraft/server";
 import { config } from "init/classes/config";
 import { savedPlayer } from "modules/player_save/classes/savedPlayer";
 import { ban } from "../classes/ban";
+import moment from "moment";
 
 /**
  * This is only editable by functions in this file.
@@ -17,7 +18,8 @@ export function startCheckingForBannedPlayers(): void {
         if (
             config.banSystem.enabled
         ) {
-            ban.executeOnBannedPlayers((p) => {
+            ban.executeOnBannedPlayers(async (p) => {
+                await waitTicks(20); // So the reason message will actually appear.
                 let success = false;
                 let b =
                     savedPlayer
@@ -44,6 +46,7 @@ export function startCheckingForBannedPlayers(): void {
                             (a: ban, b: ban) =>
                                 1 - 2 * Number(a?.banDate > b?.banDate)
                         )[0];
+                const timeZone = config.system.timeZone;
                 let reason = b?.kickMessage;
                 try {
                     reason = String(
@@ -51,7 +54,7 @@ export function startCheckingForBannedPlayers(): void {
                             b?.kickMessage
                                 ?.replaceAll(
                                     "{timeRemaining}",
-                                    b.unbanDate === Infinity ? "Infinity" : `${b?.timeRemaining.days}d, ${b?.timeRemaining.hours}h ${b?.timeRemaining.minutes}m ${b?.timeRemaining.seconds}s ${b?.timeRemaining.milliseconds}ms`
+                                    b.unbanDate === Infinity ? "Forever" : Date.now() > b.unbanDate ? "-" + moment().preciseDiff(moment(b.unbanDate)) : moment().preciseDiff(moment(b.unbanDate))/* `${b?.timeRemaining.days}d, ${b?.timeRemaining.hours}h ${b?.timeRemaining.minutes}m ${b?.timeRemaining.seconds}s ${b?.timeRemaining.milliseconds}ms` */
                                 )
                                 .replaceAll(
                                     "{timeRemainingDays}",
@@ -87,19 +90,11 @@ export function startCheckingForBannedPlayers(): void {
                                 )
                                 .replaceAll(
                                     "{banDate}",
-                                    String(
-                                        new Date(
-                                            Number(b?.banDate)
-                                        ).toLocaleString() + " UTC"
-                                    )
+                                    `${formatDateTime(new Date(b.banDate), timeZone)} UTC${(timeZone > 0 || Object.is(timeZone, 0) ? "+" : "") + timeZone}`
                                 )
                                 .replaceAll(
                                     "{unbanDate}",
-                                    b.unbanDate === Infinity ? "Never" : String(
-                                        new Date(
-                                            Number(b?.unbanDate)
-                                        ).toLocaleString() + " UTC"
-                                    )
+                                    b.isPermanent ? "Never" : `${formatDateTime(new Date(b.unbanDate), timeZone)} UTC${(timeZone > 0 || Object.is(timeZone, 0) ? "+" : "") + timeZone}`
                                 )
                                 .replaceAll("{type}", String(b?.type))
                                 .replaceAll(
@@ -112,7 +107,7 @@ export function startCheckingForBannedPlayers(): void {
                     reason = b?.kickMessage
                         ?.replaceAll(
                             "{timeRemaining}",
-                            b.unbanDate === Infinity ? "Infinity" : `${b?.timeRemaining.days}d, ${b?.timeRemaining.hours}h ${b?.timeRemaining.minutes}m ${b?.timeRemaining.seconds}s ${b?.timeRemaining.milliseconds}ms`
+                            b.unbanDate === Infinity ? "Forever" : Date.now() > b.unbanDate ? "-" + moment().preciseDiff(moment(b.unbanDate)) : moment().preciseDiff(moment(b.unbanDate))
                         )
                         .replaceAll(
                             "{timeRemainingDays}",
@@ -139,18 +134,11 @@ export function startCheckingForBannedPlayers(): void {
                         .replaceAll("{bannedById}", String(b?.bannedById))
                         .replaceAll(
                             "{banDate}",
-                            String(
-                                new Date(Number(b?.banDate)).toLocaleString() +
-                                    " UTC"
-                            )
+                            `${formatDateTime(new Date(b.banDate), timeZone)} UTC${(timeZone > 0 || Object.is(timeZone, 0) ? "+" : "") + timeZone}`
                         )
                         .replaceAll(
                             "{unbanDate}",
-                            b.unbanDate === Infinity ? "Never" : String(
-                                new Date(
-                                    Number(b?.unbanDate)
-                                ).toLocaleString() + " UTC"
-                            )
+                            b.unbanDate === Infinity ? "Never" : `${formatDateTime(new Date(b.unbanDate), timeZone)} UTC${(timeZone > 0 || Object.is(timeZone, 0) ? "+" : "") + timeZone}`
                         )
                         .replaceAll("{type}", String(b?.type))
                         .replaceAll(
