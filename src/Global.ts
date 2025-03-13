@@ -706,6 +706,7 @@ declare global {
         /**
          * A class containing the configuration information for the add-on.
          * @see {@link modules.main.config}
+         * @notExported
          */
         static get config(): typeof import("./init/classes/config").config;
         /**

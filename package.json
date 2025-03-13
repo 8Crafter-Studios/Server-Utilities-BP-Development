@@ -1,6 +1,6 @@
 {
   "name": "debug-sticks",
-  "version": "1.31.0-preview.20+BUILD.1",
+  "version": "1.33.1-preview.20+BUILD.1",
   "description": "",
   "main": "scripts/Main.js",
   "scripts": {
@@ -16,9 +16,6 @@
   "author": "8Crafter",
   "license": "ISC",
   "dependencies": {
-    "@formatjs/intl": "^3.1.4",
-    "@formatjs/intl-locale": "^4.2.10",
-    "@formatjs/intl-numberformat": "^8.15.3",
     "@minecraft/common": "^1.1.0",
     "@minecraft/math": "^1.3.5",
     "@minecraft/server": "^1.18.0-beta.1.21.60-preview.28",
@@ -33,8 +30,6 @@
     "intl": "^1.2.5",
     "mcbe-ipc": "^3.0.1",
     "moment": "^2.30.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
     "semver": "^7.6.3",
     "simplex-noise": "^4.0.3"
   },
