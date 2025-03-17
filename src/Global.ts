@@ -1,9 +1,9 @@
 import {
     type RawMessage,
-    Player,
-    Dimension,
+    type Player,
+    type Dimension,
 } from "@minecraft/server";
-import Decimal from "decimal.js";
+import type Decimal from "decimal.js";
 import type { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 declare global {
     interface Object {
@@ -86,6 +86,13 @@ declare global {
     class ParseError extends Error {}
     namespace globalThis {
         class InternalError extends Error {}
+        /**
+         * Internal only.
+         * @private
+         * @protected
+         * @ignore
+         * @param sdsa284f83kd_38pqnv_38_f_0_vmewd_19mvndifekod_f8ufv4m3ddm1c0nvh289cmfue8hd9mjf3 INTERNAL
+         */
         function tfsa(
             sdsa284f83kd_38pqnv_38_f_0_vmewd_19mvndifekod_f8ufv4m3ddm1c0nvh289cmfue8hd9mjf3: unknown
         ): unknown;
@@ -456,6 +463,10 @@ declare global {
             }
         ): string;
     }
+    /**
+     * @namespace
+     * @ignore
+     */
     class globalThis {
         /**
          * @remarks Maps the dimension IDs to lowercase names of the dimensions types that all include "The" before the dimension name.
@@ -466,7 +477,7 @@ declare global {
          * @property the_end: the end
          * @property minecraft:the_end: the end
          */
-        static get dimensionTypeDisplayFormatting(): {
+        static readonly dimensionTypeDisplayFormatting: {
             "minecraft:overworld": "the overworld";
             overworld: "the overworld";
             "minecraft:nether": "the nether";
@@ -483,7 +494,7 @@ declare global {
          * @property the_end: the end
          * @property minecraft:the_end: the end
          */
-        static get dimensionTypeDisplayFormattingB(): {
+        static readonly dimensionTypeDisplayFormattingB: {
             "minecraft:overworld": "overworld";
             overworld: "overworld";
             "minecraft:nether": "nether";
@@ -500,7 +511,7 @@ declare global {
          * @property the_end: The End
          * @property minecraft:the_end: The End
          */
-        static get dimensionTypeDisplayFormattingC(): {
+        static readonly dimensionTypeDisplayFormattingC: {
             "minecraft:overworld": "The Overworld";
             overworld: "The Overworld";
             "minecraft:nether": "The Nether";
@@ -517,7 +528,7 @@ declare global {
          * @property the_end: The End
          * @property minecraft:the_end: The End
          */
-        static get dimensionTypeDisplayFormattingD(): {
+        static readonly dimensionTypeDisplayFormattingD: {
             "minecraft:overworld": "Overworld";
             overworld: "Overworld";
             "minecraft:nether": "Nether";
@@ -534,7 +545,7 @@ declare global {
          * @property the_end: §dThe End
          * @property minecraft:the_end: §dThe End
          */
-        static get dimensionTypeDisplayFormattingE(): {
+        static readonly dimensionTypeDisplayFormattingE: {
             "minecraft:overworld": "§aOverworld";
             overworld: "§aOverworld";
             "minecraft:nether": "§cNether";
@@ -551,7 +562,7 @@ declare global {
          * @property the_end: the_end
          * @property minecraft:the_end: the_end
          */
-        static get dimensionTypeDisplayFormattingF(): {
+        static readonly dimensionTypeDisplayFormattingF: {
             "minecraft:overworld": "overworld";
             overworld: "overworld";
             "minecraft:nether": "nether";
@@ -565,14 +576,14 @@ declare global {
          * @property 1: Nether
          * @property 2: The End
          */
-        static get dimensions(): [Dimension, Dimension, Dimension];
+        static readonly dimensions: [Dimension, Dimension, Dimension];
         /**
          * @remarks Maps the namespaced dimension IDs to the dimensions objects with the same IDs.
          * @property minecraft:overworld: Overworld
          * @property minecraft:nether: Nether
          * @property minecraft:the_end: The End
          */
-        static get dimensionsb(): {
+        static readonly dimensionsb: {
             "minecraft:overworld": Dimension;
             "minecraft:nether": Dimension;
             "minecraft:the_end": Dimension;
@@ -583,7 +594,7 @@ declare global {
          * @property nether: Nether
          * @property the_end: The End
          */
-        static get dimensionsc(): {
+        static readonly dimensionsc: {
             overworld: Dimension;
             nether: Dimension;
             the_end: Dimension;
@@ -596,7 +607,7 @@ declare global {
          * 2: "minecraft:the_end"
          * ```
          */
-        static get dimensionsd(): [
+        static readonly dimensionsd: [
             "minecraft:overworld",
             "minecraft:nether",
             "minecraft:the_end"
@@ -609,7 +620,7 @@ declare global {
          * 2: "the_end"
          * ```
          */
-        static get dimensionse(): ["overworld", "nether", "the_end"];
+        static readonly dimensionse: ["overworld", "nether", "the_end"];
         /**
          * @remarks Maps the dimension IDs to the dimensions objects with the same IDs.
          * @property minecraft:overworld: Overworld
@@ -619,7 +630,7 @@ declare global {
          * @property nether: Nether
          * @property the_end: The End
          */
-        static get dimensionsf(): {
+        static readonly dimensionsf: {
             "minecraft:overworld": Dimension;
             "minecraft:nether": Dimension;
             "minecraft:the_end": Dimension;
@@ -630,41 +641,61 @@ declare global {
         /**
          * @remarks The overworld dimension object.
          */
-        static get overworld(): Dimension & { typeId: "minecraft:overworld" };
+        static readonly overworld: Dimension & { typeId: "minecraft:overworld" };
         /**
          * @remarks The nether dimension object.
          */
-        static get nether(): Dimension & { typeId: "minecraft:nether" };
+        static readonly nether: Dimension & { typeId: "minecraft:nether" };
         /**
          * @remarks The end dimension object.
          */
-        static get the_end(): Dimension & { typeId: "minecraft:the_end" };
+        static readonly the_end: Dimension & { typeId: "minecraft:the_end" };
+        /**
+         * A global getter that returns object containing all of the online players.
+         * 
+         * @example
+         * ```typescript
+         * const Andexter8 = players.Andexter8;
+         * ```
+         * 
+         * @kindOverride Variable
+         * @group Getters
+         */
         static get players(): { [name: string]: Player };
+        /**
+         * A global getter that returns the current stack.
+         * 
+         * It is the equivalent of doing `new Error().stack`.
+         * 
+         * @kindOverride Variable
+         * @group Getters
+         */
         static get stack(): Error["stack"];
         /**
+         * {@inheritDoc Globals!modules.Decimal}
          * @see {@link modules.Decimal}
          */
-        static get Decimal(): typeof Decimal;
+        static readonly Decimal: typeof Decimal;
         /**
+         * {@inheritDoc Globals!modules.colorCore.Color}
          * @see {@link modules.colorCore.Color}
          */
-        static get Color(): typeof globalThis.modules.colorCore.Color;
+        static readonly Color: typeof globalThis.modules.colorCore.Color;
         /**
+         * {@inheritDoc Globals!modules.colorCore}
          * @see {@link modules.colorCore}
          */
-        static get colorCore(): typeof globalThis.modules.colorCore;
+        static readonly colorCore: typeof globalThis.modules.colorCore;
         /**
+         * {@inheritDoc Globals!modules.semver.SemVer}
          * @see {@link modules.semver.SemVer}
          */
-        static get SemVer(): typeof globalThis.modules.semver.SemVer;
+        static readonly SemVer: typeof globalThis.modules.semver.SemVer;
         /**
+         * {@inheritDoc Globals!modules.semver}
          * @see {@link modules.semver}
          */
-        static get semver(): typeof globalThis.modules.semver;
-        /**
-         * @see {@link globalThis}
-         */
-        static get gt(): typeof globalThis;
+        static readonly semver: typeof globalThis.modules.semver;
         /**
          * This is an alias of {@link system.run}.
          * @remarks
@@ -701,23 +732,20 @@ declare global {
          *
          * printEveryMinute();
          * ```
+         * @kindOverride Function
          */
-        static get srun(): typeof import("./init/functions/srun").srun;
-        /**
-         * A class containing the configuration information for the add-on.
-         * @see {@link modules.main.config}
-         * @notExported
-         */
-        static get config(): typeof import("./init/classes/config").config;
+        static readonly srun: typeof import("./init/functions/srun").srun;
         /**
          * A class containing configuration detailing which functions, classes, and constants from the modules to import into their respective properties on the global modules object.
          * @see {@link modules.main.moduleImportsConfig}
+         * 
+         * @useDeclaredType
          */
-        static get moduleImportsConfig(): typeof import("./init/classes/moduleImportsConfig").moduleImportsConfig;
+        static readonly moduleImportsConfig: typeof import("./init/classes/moduleImportsConfig").moduleImportsConfig;
         /**
          * If this is set to true it will stop all instances of {@link modules.playersave.playerDataAutoSaveAsync}.
          */
-        static get lastPlayerDataAutoSaveRun(): number;
+        static readonly lastPlayerDataAutoSaveRun: number;
     }
     interface Function {
         readonly lineNumber: number;

@@ -1,5 +1,10 @@
+/**
+ * @file shop_main.ts
+ * @description This file contains functions and types related to the shop system..
+ */
 import { Player, Entity, ItemLockMode, ItemStack, ItemEnchantableComponent, ItemDurabilityComponent } from "@minecraft/server";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
+import "init/classes/config";
 /**
  * Main function to handle the shop system settings interface.
  *

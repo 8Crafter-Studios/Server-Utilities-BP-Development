@@ -1,4 +1,5 @@
 import type { Entity, Player } from "@minecraft/server";
+import "init/classes/config";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 /**
  * Displays and handles the script settings form for the given entity.

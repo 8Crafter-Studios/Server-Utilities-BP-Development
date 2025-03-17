@@ -1,4 +1,5 @@
 import { Player, Entity } from "@minecraft/server";
+import "init/classes/config";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { type PlayerShopPage, type PlayerSavedShopItem, type PlayerSellableShopElement, type PlayerBuyableShopElement, type PlayerSellableShopItem, type PlayerSellableAdvancedShopItem } from "./shop_main";
 import type { loosePlayerType } from "modules/utilities/types/loosePlayerType";

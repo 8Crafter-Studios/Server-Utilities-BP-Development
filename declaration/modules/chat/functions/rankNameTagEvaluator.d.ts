@@ -1,4 +1,5 @@
 import { Player } from "@minecraft/server";
+import "init/classes/config";
 export declare function rankNameTagEvaluator(displayName: ReturnType<typeof rankNameTagEvaluator_getDisplayNameFromPlayer>, options?: {
     isPlaceholderPlayer?: boolean;
     player?: Player;

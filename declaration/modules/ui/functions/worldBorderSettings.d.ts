@@ -1,4 +1,5 @@
 import type { Entity, Player } from "@minecraft/server";
+import "init/classes/config";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 /**
  * Displays and handles the world border settings form for a specified dimension.

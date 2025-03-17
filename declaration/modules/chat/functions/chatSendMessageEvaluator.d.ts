@@ -1,4 +1,5 @@
 import { Player } from "@minecraft/server";
+import "init/classes/config";
 export declare function chatSendMessageEvaluator(message: string, displayName: ReturnType<typeof chatSend_getDisplayNameFromPlayer>, options?: {
     isPlaceholderPlayer?: boolean;
     player?: Player;

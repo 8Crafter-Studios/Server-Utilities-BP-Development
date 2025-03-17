@@ -1,3 +1,4 @@
+import "init/classes/config";
 import type { loosePlayerType } from "modules/utilities/types/loosePlayerType";
 /**
  * Displays and handles the preview name tag form for a given player or entity.

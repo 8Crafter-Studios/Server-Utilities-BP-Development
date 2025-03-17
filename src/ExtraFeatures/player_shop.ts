@@ -1,7 +1,7 @@
 import { ItemStack, Player, world, Entity, StructureSaveMode, InvalidStructureError, EntityInventoryComponent, Container } from "@minecraft/server";
 import { ActionFormData, ActionFormResponse, MessageFormData, ModalFormData } from "@minecraft/server-ui";
 import { getPathInObject } from "modules/main/functions/getPathInObject";
-import { config } from "init/classes/config";
+import "init/classes/config";
 import { containerToContainerSlotArray } from "modules/command_utilities/functions/containerToContainerSlotArray";
 import { containerToItemStackArray } from "modules/command_utilities/functions/containerToItemStackArray";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";

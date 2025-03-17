@@ -1,3 +1,4 @@
+import "init/classes/config";
 /**
  * This is only editable by functions in this file.
  * @type {number|null}

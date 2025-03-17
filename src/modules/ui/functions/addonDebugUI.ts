@@ -1,6 +1,6 @@
 import { Entity, Player, world, system } from "@minecraft/server";
 import { ActionFormData, ActionFormResponse } from "@minecraft/server-ui";
-import { config } from "init/classes/config";
+import "init/classes/config";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { forceShow } from "./forceShow";
 import { showActions } from "modules/utilities/functions/showActions";

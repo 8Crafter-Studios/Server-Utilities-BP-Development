@@ -1,4 +1,5 @@
 import { EquipmentSlot, type Enchantment, type Vector3, Dimension, type Vector2, type DimensionLocation, GameMode, MemoryTier, PlatformType, Player, ItemStack } from "@minecraft/server";
+import "init/classes/config";
 import type { PlayerPermissions } from "init/classes/PlayerPermissions";
 import { ban } from "modules/ban/classes/ban";
 export type PlayerDataSaveMode = "full" | "medium" | "lite";

@@ -1,6 +1,6 @@
 import type { Player } from "@minecraft/server";
 import { ModalFormData } from "@minecraft/server-ui";
-import { config } from "init/classes/config";
+import "init/classes/config";
 import { securityVariables } from "security/ultraSecurityModeUtils";
 import { showMessage } from "modules/utilities/functions/showMessage";
 import { customFormUICodes } from "../constants/customFormUICodes";

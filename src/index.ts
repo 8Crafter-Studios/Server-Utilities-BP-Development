@@ -1,3 +1,9 @@
+/**
+ * @file index.ts
+ * @module index
+ * @description This file is the main file of the project.
+ * @mergeModuleWith <project>
+ */
 import { system, world } from "@minecraft/server";
 
 import * as GameTest from "@minecraft/server-gametest";
@@ -52,7 +58,7 @@ import "GameTestScripts/ItemEnchantmentsTests.js"; /*
 import "GameTestScripts/SculkTests.js";
 import "GameTestScripts/VibrationTests.js";
 import "GameTestScripts/EnchantmentTests.js";*/ /*
-import "Eval.js";*//* 
+import "Eval.js";*/ /* 
 import "legacyModuleAliases/commands_documentation.js";
 import "legacyModuleAliases/commands.js";
 import "legacyModuleAliases/coordinates.js";
@@ -99,7 +105,7 @@ Object.defineProperties(globalThis, {
         configurable: false,
         enumerable: true,
         writable: false,
-    }
+    },
 });
 // semver
 // import * as main from "legacyModuleAliases/Main";
@@ -160,36 +166,49 @@ const modulesMap = {
     /**
      * The `@minecraft/server` module.
      * @see {@link https://www.npmjs.com/package/@minecraft/server}
+     * @namespace
      */
     mcServer: mcServer,
     /**
      * The `@minecraft/server-ui` module.
      * @see {@link https://www.npmjs.com/package/@minecraft/server-ui}
+     * @namespace
      */
     mcServerUi,
     /**
      * The `@minecraft/server-gametest` module.
      * @see {@link https://www.npmjs.com/package/@minecraft/server-gametest}
+     * @namespace
      */
     GameTest,
     /**
      * The `@minecraft/server-admin` module.
      * @see {@link https://www.npmjs.com/package/@minecraft/server-admin}
+     * @namespace
      */
     // mcServerAdmin,
     /**
+     * The `@minecraft/server-net` module.
+     * @see {@link https://www.npmjs.com/package/@minecraft/server-net}
+     * @namespace
+     */
+    // mcServerNet,
+    /**
      * The `@minecraft/server-debug` module.
      * @see {@link https://www.npmjs.com/package/@minecraft/debug-utilities}
+     * @namespace
      */
     // mcDebugUtilities,
     /**
      * The `@minecraft/common` module.
      * @see {@link https://www.npmjs.com/package/@minecraft/common}
+     * @namespace
      */
     // mcCommon,
     /**
      * The `@minecraft/vanilla-data` module.
      * @see {@link https://www.npmjs.com/package/@minecraft/vanilla-data}
+     * @namespace
      */
     // mcVanillaData,
     /**
@@ -254,6 +273,7 @@ const modulesMap = {
     /**
      * The Color class of the `color-core` module.
      * @see {@link modules.colorCore.Color}
+     * @kindOverride Namespace
      */
     Color,
     /**
@@ -284,41 +304,49 @@ const modulesMap = {
     /**
      * The `@minecraft/server` module.
      * @see {@link https://www.npmjs.com/package/@minecraft/server}
+     * @namespace
      */
     ["@minecraft/server"]: mcServer,
     /**
      * The `@minecraft/server-ui` module.
      * @see {@link https://www.npmjs.com/package/@minecraft/server-ui}
+     * @namespace
      */
     ["@minecraft/server-ui"]: mcServerUi,
     /**
      * The `@minecraft/server-gametest` module.
      * @see {@link https://www.npmjs.com/package/@minecraft/server-gametest}
+     * @namespace
      */
     ["@minecraft/server-gametest"]: GameTest,
     /**
      * The `@minecraft/common` module.
      * @see {@link https://www.npmjs.com/package/@minecraft/common}
+     * @namespace
      */
     // ["@minecraft/common"]: mcCommon,
     /**
      * The `@minecraft/server-admin` module.
      * @see {@link https://www.npmjs.com/package/@minecraft/server-admin}
+     * @namespace
      */
     // ["@minecraft/server-admin"]: mcServerAdmin,
     /**
      * The `@minecraft/server-net` module.
      * @see {@link https://www.npmjs.com/package/@minecraft/server-net}
+     * @namespace
      */
-    // ["@minecraft/server-net"]: mcServerNet 
+    // ["@minecraft/server-net"]: mcServerNet
     /**
      * The `@minecraft/debug-utilities` module.
      * @see {@link https://www.npmjs.com/package/@minecraft/debug-utilities}
+     * @namespace
      */
-    // ["@minecraft/debug-utilities"]: mcDebugUtilities 
+    // ["@minecraft/debug-utilities"]: mcDebugUtilities
     /**
      * The `@minecraft/vanilla-data` module.
      * @see {@link https://www.npmjs.com/package/@minecraft/vanilla-data}
+     * @namespace
      */
     // ["@minecraft/vanilla-data"]: mcVanillaData,
     /**
@@ -443,19 +471,28 @@ globalThis.modules = modulesMap;
 declare global {
     namespace globalThis {
         /**
+         * This namespace contains all the modules.
          * @namespace
          * @global
          */
-        var modules: typeof modulesMap;/* 
+        var modules: typeof modulesMap; /* 
         var IPC: typeof ipc.IPC;
         var IPC_NET: typeof ipc.NET;
         var IPC_PROTO: typeof ipc.PROTO; */
     }
 }
 
+/**
+ * This is an alias of {@link globalThis}.
+ * @namespace
+ * @see {@link Globals}
+ * @hideconstructor
+ * @readonly
+ */
+// export const gt = globalThis;
+
 // import "Main";
 import { undoClipboard } from "modules/coordinates/classes/undoClipboard";
-import type { StrippedJungleLogStates } from "@minecraft/vanilla-data";
 globalThis.scriptStartTick = system.currentTick;
 world.setDynamicProperty("format_version", format_version);
 system.runTimeout(() => undoClipboard.cullItemsMissingStructure(), 50);
@@ -478,3 +515,17 @@ ${se}srun(async()=>{console.log(JSON.stringify(Object.fromEntries(await [
     "utilities",
 ].mapAsync(async v=>[v, (await import("directoryTree")).optionalModuleObjectImportFilePaths.filter(f=>f.startsWith(`BP/scripts/modules/${v}/`))])), undefined, 4))})
 */
+
+export type * as "@minecraft/server" from "@minecraft/server";
+export type * as "@minecraft/server-ui" from "@minecraft/server-ui";
+/**
+ * @kindOverride Module
+ */
+export type * as "@minecraft/server-gametest" from "@minecraft/server-gametest";
+/**
+ * The `@minecraft/math` module.
+ * @see {@link https://www.npmjs.com/package/@minecraft/math}
+ * @kindOverride Module
+ * @external
+ */
+export type * as "@minecraft/math" from "@minecraft/math";

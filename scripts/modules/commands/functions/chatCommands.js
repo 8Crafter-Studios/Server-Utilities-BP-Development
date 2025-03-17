@@ -34,7 +34,7 @@ import { fillBlocksH } from "modules/main/functions/fillBlocksH";
 import { fillBlocksB } from "modules/main/functions/fillBlocksB";
 import { clearAllContainerBlocks } from "modules/main/functions/clearAllContainerBlocks";
 import { scanForContainerBlocks } from "modules/main/functions/scanForContainerBlocks";
-import { config } from "init/classes/config";
+import "init/classes/config";
 import { srun } from "init/functions/srun";
 import { getTopSolidBlock } from "modules/main/functions/getTopSolidBlock";
 import { command } from "modules/commands/classes/command";

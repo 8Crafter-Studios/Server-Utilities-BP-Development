@@ -1,3 +1,4 @@
+import "init/classes/config";
 import type { loosePlayerType } from "modules/utilities/types/loosePlayerType";
 /**
  * Displays and handles the main settings form for the main menu for a given entity.

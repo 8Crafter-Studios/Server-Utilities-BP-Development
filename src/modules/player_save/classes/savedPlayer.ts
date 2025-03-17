@@ -17,7 +17,7 @@ import {
     PlayerCursorInventoryComponent,
     ContainerSlot,
 } from "@minecraft/server";
-import { config } from "init/classes/config";
+import "init/classes/config";
 import type { PlayerPermissions } from "init/classes/PlayerPermissions";
 import { ban } from "modules/ban/classes/ban";
 import { getSlotFromParsedSlot } from "modules/command_utilities/functions/getSlotFromParsedSlot";

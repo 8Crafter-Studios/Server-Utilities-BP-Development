@@ -1,5 +1,5 @@
 import { ActionFormData, ActionFormResponse, ModalFormData } from "@minecraft/server-ui";
-import { config } from "init/classes/config";
+import "init/classes/config";
 import { managePlayers_managePlayer } from "./managePlayers_managePlayer";
 import { savedPlayer } from "modules/player_save/classes/savedPlayer";
 import { securityVariables } from "security/ultraSecurityModeUtils";

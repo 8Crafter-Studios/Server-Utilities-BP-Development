@@ -1,4 +1,5 @@
 import type { Entity, Player } from "@minecraft/server";
+import "init/classes/config";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 /**
  * Displays the Money System Settings UI and handles user interactions.

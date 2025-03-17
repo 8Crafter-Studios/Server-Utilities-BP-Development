@@ -1,3 +1,4 @@
+import "init/classes/config";
 import type { loosePlayerType } from "modules/utilities/types/loosePlayerType";
 /**
  * Displays and handles the UI settings form for a given entity.

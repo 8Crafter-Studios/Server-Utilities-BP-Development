@@ -1,4 +1,5 @@
 import { type Vector3, Dimension, type StructureCreateOptions, type StructurePlaceOptions } from "@minecraft/server";
+import "init/classes/config";
 export declare class undoClipboard {
     static get ids(): string[];
     static saveIds(timestamp: number | string): string[];

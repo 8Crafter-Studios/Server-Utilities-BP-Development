@@ -3,6 +3,7 @@ import { MoneySystem } from "ExtraFeatures/money";
 import { PlayerNotifications } from "init/classes/PlayerNotifications";
 import { PlayerPermissions } from "init/classes/PlayerPermissions";
 import { WorldEditSelection } from "init/classes/WorldEditSelection";
+import "init/classes/config";
 import { WorldPosition } from "modules/coordinates/classes/WorldPosition";
 import type { RotationLocation } from "modules/coordinates/interfaces/RotationLocation";
 export declare class executeCommandPlayerW {

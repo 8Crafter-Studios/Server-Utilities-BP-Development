@@ -1,4 +1,5 @@
 import { Player, ChatSendBeforeEvent } from "@minecraft/server";
+import "init/classes/config";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 export declare function chatCommands(params: {
     returnBeforeChatSend: boolean | undefined;

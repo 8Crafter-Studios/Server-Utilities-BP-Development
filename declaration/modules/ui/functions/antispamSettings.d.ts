@@ -1,3 +1,4 @@
+import "init/classes/config";
 import type { loosePlayerType } from "modules/utilities/types/loosePlayerType";
 /**
  * Configures and displays the anti-spam settings form to the specified player.

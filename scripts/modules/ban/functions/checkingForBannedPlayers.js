@@ -1,5 +1,5 @@
 import { system } from "@minecraft/server";
-import { config } from "init/classes/config";
+import "init/classes/config";
 import { savedPlayer } from "modules/player_save/classes/savedPlayer";
 import { ban } from "../classes/ban";
 import moment from "moment";

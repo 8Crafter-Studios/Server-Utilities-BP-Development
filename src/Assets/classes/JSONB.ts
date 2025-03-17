@@ -1,5 +1,8 @@
 export const JSONB: globalThis.JSONB = {} as any
 declare global {
+    /**
+     * An intrinsic object that provides functions to convert JavaScript values to and from the JavaScript Object Notation (JSON) format.
+     */
     interface JSONB {
         /**
          * Converts a JavaScript Object Notation (JSON) string into an object.
@@ -25,6 +28,7 @@ declare global {
     }
     /**
      * An intrinsic object that provides functions to convert JavaScript values to and from the JavaScript Object Notation (JSON) format.
+     * @namespace
      */
     var JSONB: JSONB;
 }
