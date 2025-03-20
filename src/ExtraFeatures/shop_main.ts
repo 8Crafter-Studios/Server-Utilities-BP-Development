@@ -1,5 +1,6 @@
 /**
- * @file shop_main.ts
+ * ExtraFeatures/shop_main.ts
+ * @module
  * @description This file contains functions and types related to the shop system..
  */
 import { Player, Entity, ItemLockMode, ItemStack, ItemEnchantableComponent, ItemDurabilityComponent } from "@minecraft/server";

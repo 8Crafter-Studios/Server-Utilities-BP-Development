@@ -1,3 +1,16 @@
+/**
+ * Assets/constants/charMaps.ts
+ * @module
+ * @description This file contains character maps.
+ */
+
+/**
+ * A character map for the characters in the `default8.png` file.
+ * 
+ * These characters can all be used in minecraft without switching it to the unicode font.
+ * 
+ * This contains an array with 16 arrays that each have 16 of the characters from the `default8.png` file, each sub-array is another row of the `default8.png` file.
+ */
 export const default8 = Object.freeze(
     Object.defineProperty(([
         [
@@ -589,6 +602,13 @@ export const default8 = Object.freeze(
     readonly toString: (space?: string|number)=>string
 };
 
+/**
+ * A character map for the characters in the `default8.png` file.
+ * 
+ * These characters can all be used in minecraft without switching it to the unicode font.
+ * 
+ * This has the characters as the keys and the unicode hex codes as the values.
+ */
 export const default8Codes = Object.freeze({
     "À": "00c0",
     "Á": "00c1",

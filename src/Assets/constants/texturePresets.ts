@@ -1,3 +1,12 @@
+/**
+ * Assets/constants/texturePresets.ts
+ * @module
+ * @description This file contains texture presets.
+ */
+
+/**
+ * Mappings for texture presets.
+ */
 export const texturePresets = {
     item_texture_vanilla: {
         displayName: "Vanilla Item Textures",
@@ -6276,6 +6285,10 @@ export const texturePresets = {
               visibilityConditions(): boolean;
           };
       };
+
+/**
+ * Represents the data for the `texture_data` property of a texture preset that is not a textures_list_* preset.
+ */
 export type TextureData = {
     [key: string]: {
         quad?: number;

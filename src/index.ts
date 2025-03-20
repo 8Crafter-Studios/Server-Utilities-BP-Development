@@ -1,5 +1,5 @@
 /**
- * @file index.ts
+ * index.ts
  * @module index
  * @description This file is the main file of the project.
  * @mergeModuleWith <project>

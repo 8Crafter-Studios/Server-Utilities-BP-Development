@@ -1,3 +1,8 @@
+/**
+ * Global.ts
+ * @module
+ * @description This file declares global properties and methods, and declares additional symbols on many classes and modules.
+ */
 import {
     type RawMessage,
     type Player,
