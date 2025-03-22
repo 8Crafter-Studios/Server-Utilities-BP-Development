@@ -27,7 +27,7 @@ export async function playerMenu_leaderboards(
     }
     const menuConfig = config.ui.menus.playerMenu_leaderboards;
     // menuConfig.buttons.map(k=>[k, menuButtonIds.mainMenu.buttons[k]])
-    const buttons = (menuConfig.leaderboards.map(k=>[k, defaultPlayerMenuLeaderboardStatistics.find(s=>s.id === k && menuConfig.builtInStats[k as keyof typeof menuConfig.builtInStats].enabled) ?? menuConfig.customStats.find(s=>s.id === k)]) as [string, playerMenuLeaderboardStatistic<"built-in"|"custom"|"customAdvanced">][]);
+    const buttons = (menuConfig.leaderboards.map(k=>[k, defaultPlayerMenuLeaderboardStatistics.find(s=>s.id === k && menuConfig.builtInStats[k as Exclude<keyof typeof menuConfig.builtInStats, "prototype">].enabled) ?? menuConfig.customStats.find(s=>s.id === k)]) as [string, playerMenuLeaderboardStatistic<"built-in"|"custom"|"customAdvanced">][]);
     let form = new ActionFormData();
     form.title(customFormUICodes.action.titles.formStyles.general + "Leaderboards");
     form.body("Select a leaderboard.");

@@ -45,7 +45,7 @@ export async function playerMenu_leaderboard_player(
     form.title(player.name);
     const stats = menuConfig.trackedStats.map((k) => [
         k,
-        defaultPlayerMenuLeaderboardStatistics.find((s) => s.id === k && menuConfig.builtInStats[k as keyof typeof menuConfig.builtInStats].enabled) ??
+        defaultPlayerMenuLeaderboardStatistics.find((s) => s.id === k && menuConfig.builtInStats[k as Exclude<keyof typeof menuConfig.builtInStats, "prototype">].enabled) ??
             menuConfig.customStats.find((s) => s.id === k),
     ]) as [string, playerMenuLeaderboardStatistic<"built-in"|"custom"|"customAdvanced">][];
     const statsDisplay = stats.map(([k, s]) => {
