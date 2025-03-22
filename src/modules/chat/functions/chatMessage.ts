@@ -106,17 +106,11 @@ export function chatMessage(
     let newMessage = eventData.message;
     let switchTest = newMessage
         .slice(
-            String(
-                world.getDynamicProperty("andexdbSettings:chatCommandPrefix") ??
-                    "\\"
-            ).length
+            config.chatCommandPrefix.length
         )
         .split(" ")[0];
     let switchTestB = newMessage.slice(
-        String(
-            world.getDynamicProperty("andexdbSettings:chatCommandPrefix") ??
-                "\\"
-        ).length
+        config.chatCommandPrefix.length
     );
     let commanda = undefined;
     if (newMessage.startsWith(config.chatCommandPrefix)) {
@@ -240,21 +234,18 @@ export function chatMessage(
             });
     } catch {}
     if (
-        world.getDynamicProperty("andexdbSettings:autoEscapeChatMessages") ==
-        true
+        config.chatRanks.autoEscapeChatMessages
     ) {
         newMessage = newMessage.escapeCharacters(true);
     }
     if (
-        world.getDynamicProperty("andexdbSettings:autoURIEscapeChatMessages") ==
-        true
+        config.chatRanks.autoURIEscapeChatMessages
     ) {
         newMessage = newMessage.escapeCharacters(false, false, 0, true);
     }
     if (
         player.hasTag("canUseChatEscapeCodes") ||
-        world.getDynamicProperty("andexdbSettings:allowChatEscapeCodes") !=
-            false
+        config.chatRanks.allowChatEscapeCodes
     ) {
         if (newMessage.includes("${ea}")) {
             newMessage = newMessage.replace("${ea}", "");

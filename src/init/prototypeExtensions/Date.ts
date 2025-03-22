@@ -13,15 +13,7 @@ await (async()=>{if(!("toNumber" in Number.prototype)){
 Object.defineProperties(Date.prototype, {
     timezone: {
         value:
-            typeof world.getDynamicProperty("andexdbSettings:timeZone") ==
-            "object"
-                ? 0
-                : (
-                      (world.getDynamicProperty("andexdbSettings:timeZone") as
-                          | string
-                          | number
-                          | boolean) ?? 0
-                  ).toNumber() ?? 0,
+            config.system.timeZone,
         configurable: true,
         enumerable: true,
         writable: true,

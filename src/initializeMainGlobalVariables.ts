@@ -6,6 +6,9 @@
 import { system } from "@minecraft/server";
 import "init/functions/breakpoint";
 
+/**
+ * The main global variables.
+ */
 export namespace mainGlobalVariables {
     /**
      * The version of the add-on.

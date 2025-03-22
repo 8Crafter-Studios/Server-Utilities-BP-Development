@@ -298,13 +298,13 @@ getBan(banId: string){let banString = String(world.getDynamicProperty(banId)).sp
         };
     }
     static getBansAutoRefresh() {
-        if (lastBanRefresh < Date.now() - config.system.bansMinimumAutoRefresh) {
+        if (lastBanRefresh < Date.now() - config.moderation.bans.minimumAutoRefresh) {
             ban.refreshBans();
         }
         return { ...bans };
     }
     static getValidBansAutoRefresh() {
-        if (lastBanRefresh < Date.now() - config.system.bansMinimumAutoRefresh) {
+        if (lastBanRefresh < Date.now() - config.moderation.bans.minimumAutoRefresh) {
             ban.refreshBans();
         }
         return {
@@ -314,7 +314,7 @@ getBan(banId: string){let banString = String(world.getDynamicProperty(banId)).sp
         };
     }
     static getExpiredBansAutoRefresh() {
-        if (lastBanRefresh < Date.now() - config.system.bansMinimumAutoRefresh) {
+        if (lastBanRefresh < Date.now() - config.moderation.bans.minimumAutoRefresh) {
             ban.refreshBans();
         }
         return {
@@ -341,7 +341,7 @@ getBan(banId: string){let banString = String(world.getDynamicProperty(banId)).sp
         };
     }
     static testForBannedPlayer(player: Player | savedPlayer | savedPlayerData) {
-        if (lastBanRefresh < Date.now() - config.system.bansMinimumAutoRefresh) {
+        if (lastBanRefresh < Date.now() - config.moderation.bans.minimumAutoRefresh) {
             ban.refreshBans();
         }
         return bans.idBans.find((b) => b.isValid && b.playerId == player.id) !== undefined
@@ -351,13 +351,13 @@ getBan(banId: string){let banString = String(world.getDynamicProperty(banId)).sp
             : false;
     }
     static testForNameBannedPlayer(player: Player | savedPlayer | savedPlayerData) {
-        if (lastBanRefresh < Date.now() - config.system.bansMinimumAutoRefresh) {
+        if (lastBanRefresh < Date.now() - config.moderation.bans.minimumAutoRefresh) {
             ban.refreshBans();
         }
         return bans.nameBans.find((b) => b.isValid && b.playerName == player.name) !== undefined ? true : false;
     }
     static testForIdBannedPlayer(player: Player | savedPlayer | savedPlayerData) {
-        if (lastBanRefresh < Date.now() - config.system.bansMinimumAutoRefresh) {
+        if (lastBanRefresh < Date.now() - config.moderation.bans.minimumAutoRefresh) {
             ban.refreshBans();
         }
         return bans.idBans.find((b) => b.isValid && b.playerId == player.id) !== undefined;

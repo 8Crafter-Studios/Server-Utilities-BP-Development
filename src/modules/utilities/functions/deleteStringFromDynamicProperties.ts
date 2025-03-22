@@ -11,7 +11,7 @@ export function deleteStringFromDynamicProperties(
     propertyName: string
 ): void {
     if (typeof propertyName != "string") {
-        throw new TypeError(`args[1]: Expected type of string but got type of ${typeof propertyName} instead.`);
+        throw new TypeError(`args[0]: Expected type of string but got type of ${typeof propertyName} instead.`);
     }
     const length = Number(world.getDynamicProperty(`${propertyName}.length`) ?? 0);
     for (let i = 0n; i < length; i++) {

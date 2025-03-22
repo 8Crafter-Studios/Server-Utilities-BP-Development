@@ -20,7 +20,7 @@ declare global {
      * ```
      * 
      * @namespace
-     * @showGroups
+     * @hideGroups References
      */
     // @ts-expect-error
     export import Globals = globalThis;

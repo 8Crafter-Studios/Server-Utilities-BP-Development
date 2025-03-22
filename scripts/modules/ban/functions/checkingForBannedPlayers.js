@@ -13,7 +13,7 @@ export function startCheckingForBannedPlayers() {
         stopCheckingForBannedPlayers();
     } // this prevents multiple instances of the banned players checker running simultaneously.
     bannedPlayersCheckerIntervalID = system.runInterval(() => {
-        if (config.banSystem.enabled) {
+        if (config.moderation.bans.enabled) {
             ban.executeOnBannedPlayers(async (p) => {
                 await waitTicks(20); // So the reason message will actually appear.
                 let success = false;

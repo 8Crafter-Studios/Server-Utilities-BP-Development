@@ -119,7 +119,7 @@ declare global {
         -readonly [P in keyof T]: MutableDeep<T[P]>;
     };
 
-    type DeepPartial<T> = T extends object
+    export type DeepPartial<T> = T extends object
         ? {
               [P in keyof T]?: DeepPartial<T[P]>;
           }
