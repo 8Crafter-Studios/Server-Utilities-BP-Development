@@ -1873,9 +1873,11 @@ namespace exports {
                                              */
                                             class config_ui_menus_playerMenu_leaderboards_builtInStats_money {
                                                 /**
-                                                 * Whether or not this built-in statictic is enabled.
+                                                 * Whether or not the built-in `money` leaderboard statictic is enabled.
                                                  *
-                                                 * Defaults to true.
+                                                 * Dynamic Property ID: `andexdbSettings:ui.menus.playerMenu_leaderboards.builtInStats.money.enabled`
+                                                 * 
+                                                 * @default true
                                                  */
                                                 static get enabled(): boolean {
                                                     return Boolean(
@@ -1899,14 +1901,18 @@ namespace exports {
                                                      * The display options for the built-in `money` leaderboard statistic.
                                                      * @hideconstructor
                                                      * @nameOverride displayOptions
-                                                     * @parentOverride Globals.config
+                                                     * @parentOverride Globals.config.ui:class.menus:class.playerMenu_leaderboards:class.builtInStats:class.money:class
                                                      * @group Subclasses
                                                      */
                                                     class config_ui_menus_playerMenu_leaderboards_builtInStats_money_displayOptions {
                                                         /**
                                                          * A currency symbol to prefix the displayed value with.
+                                                         * 
+                                                         * For example, if this is set to "$", then 1327401 would become $1327401 and -1234781 would become -$1234781. (Can be combined with "Add Comma Separators" to make it display like -$1,234,781.).
+                                                         * 
+                                                         * Dynamic Property ID: `andexdbSettings:ui.menus.playerMenu_leaderboards.builtInStats.money.displayOptions.currencyPrefix`
                                                          *
-                                                         * Defaults to "$".
+                                                         * @default "$"
                                                          */
                                                         static get currencyPrefix(): string {
                                                             return String(
@@ -1915,16 +1921,20 @@ namespace exports {
                                                                 ) ?? "$"
                                                             );
                                                         }
-                                                        static set currencyPrefix(prefixWithDollarSign: string | undefined) {
+                                                        static set currencyPrefix(currencyPrefix: string | undefined) {
                                                             world.setDynamicProperty(
                                                                 "andexdbSettings:ui.menus.playerMenu_leaderboards.builtInStats.money.displayOptions.currencyPrefix",
-                                                                prefixWithDollarSign ?? "$"
+                                                                currencyPrefix ?? "$"
                                                             );
                                                         }
                                                         /**
                                                          * Whether or not to add comma separators to the displayed value for this statistic.
                                                          *
-                                                         * Defaults to true.
+                                                         * For example, if this is set to true, then 1327401 would become 1,327,401 and -1234781 would become -1,234,781.
+                                                         *
+                                                         * Dynamic Property ID: `andexdbSettings:ui.menus.playerMenu_leaderboards.builtInStats.money.displayOptions.addCommaSeparators`
+                                                         * 
+                                                         * @default true
                                                          */
                                                         static get addCommaSeparators(): boolean {
                                                             return Boolean(
