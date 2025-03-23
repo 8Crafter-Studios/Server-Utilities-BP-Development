@@ -15,24 +15,59 @@ var exports;
     greet() {
         console.log(`Hello, my name is 1.`);
     }*/
+        /**
+         * Whether or not chat commands are enabled.
+         *
+         * Dynamic Property ID: `andexdbSettings:chatCommandsEnabled`
+         *
+         * @default true
+         *
+         * @danger Disabling this setting is highly discouraged.
+         */
         static get chatCommandsEnabled() {
             return Boolean(world.getDynamicProperty("andexdbSettings:chatCommandsEnabled") ?? true);
         }
         static set chatCommandsEnabled(enabled) {
             world.setDynamicProperty("andexdbSettings:chatCommandsEnabled", enabled ?? true);
         }
+        /**
+         * The prefix for all built-in chat commands.
+         *
+         * Dynamic Property ID: `andexdbSettings:chatCommandPrefix`
+         *
+         * @default "\\"
+         */
         static get chatCommandPrefix() {
             return String(world.getDynamicProperty("andexdbSettings:chatCommandPrefix") ?? "\\");
         }
         static set chatCommandPrefix(prefix) {
             world.setDynamicProperty("andexdbSettings:chatCommandPrefix", prefix ?? "\\");
         }
+        /**
+         * The list of command prefixes that the add-on will recognize and leave chat messages starting with those alone to allow other chat command add-ons to use them.
+         *
+         * Dynamic Property ID: `andexdbSettings:validChatCommandPrefixes`
+         *
+         * @default ""
+         */
         static get validChatCommandPrefixes() {
             return String(world.getDynamicProperty("andexdbSettings:validChatCommandPrefixes") ?? "");
         }
         static set validChatCommandPrefixes(prefixes) {
             world.setDynamicProperty("andexdbSettings:validChatCommandPrefixes", prefixes ?? "");
         }
+        /**
+         * The action to take when an invalid chat command is entered.
+         *
+         * 0 = Do Nothing\
+         * 1 = Send Message\
+         * 2 = Cancel Message\
+         * 3 = Warn Player
+         *
+         * Dynamic Property ID: `andexdbSettings:invalidChatCommandAction`
+         *
+         * @default 3
+         */
         static get invalidChatCommandAction() {
             return isNaN(Number(world.getDynamicProperty("andexdbSettings:invalidChatCommandAction")))
                 ? 3
@@ -41,6 +76,13 @@ var exports;
         static set invalidChatCommandAction(invalidChatCommandAction) {
             world.setDynamicProperty("andexdbSettings:invalidChatCommandAction", invalidChatCommandAction ?? 3);
         }
+        /**
+         * The save mode for the undo clipboard.
+         *
+         * Dynamic Property ID: `andexdbSettings:undoClipboardMode`
+         *
+         * @default "Memory"
+         */
         static get undoClipboardMode() {
             return String(world.getDynamicProperty("andexdbSettings:undoClipboardMode") ?? StructureSaveMode.Memory);
         }
@@ -100,6 +142,8 @@ var exports;
         /**
          * Whether or not players can teleport to spawn using the `\spawn` command when they are in a different dimension than the spawn.
          *
+         * Dynamic Property ID: `andexdbSettings:spawnCommandAllowCrossDimensionalTeleport`
+         *
          * @default true
          */
         static get spawnCommandAllowCrossDimensionalTeleport() {
@@ -108,410 +152,573 @@ var exports;
         static set spawnCommandAllowCrossDimensionalTeleport(enabled) {
             world.setDynamicProperty("andexdbSettings:spawnCommandAllowCrossDimensionalTeleport", enabled ?? true);
         }
+        /**
+         * The world border settings.
+         * @group Subclasses
+         */
         static get worldBorder() {
-            return {
-                get overworld() {
-                    return {
-                        get enabled() {
+            /**
+             * The world border settings.
+             * @hideconstructor
+             * @nameOverride worldBorder
+             * @parentOverride Globals.config
+             * @group Subclasses
+             */
+            class config_worldBorder {
+                /**
+                 * The world border settings for the overworld.
+                 * @group Subclasses
+                 */
+                static get overworld() {
+                    /**
+                     * The world border settings for the overworld.
+                     * @hideconstructor
+                     * @nameOverride overworld
+                     * @parentOverride Globals.config.worldBorder:class
+                     * @group Subclasses
+                     */
+                    class config_worldBorder_overworld {
+                        static get enabled() {
                             return Boolean(world.getDynamicProperty("andexdbWorldBorderSettings:overworld.enabled") ?? false);
-                        },
-                        set enabled(enabled) {
+                        }
+                        static set enabled(enabled) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:overworld.enabled", enabled ?? false);
-                        },
-                        get from() {
+                        }
+                        static get from() {
                             return (tryget(() => JSON.parse(String(world.getDynamicProperty("andexdbWorldBorderSettings:overworld.from") ?? "{x: -29999984, z: -29999984}"))) ?? { x: -29999984, z: -29999984 });
-                        },
-                        set from(from) {
+                        }
+                        static set from(from) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:overworld.from", JSON.stringify(from ?? { x: -29999984, z: -29999984 }));
-                        },
-                        get to() {
+                        }
+                        static get to() {
                             return (tryget(() => JSON.parse(String(world.getDynamicProperty("andexdbWorldBorderSettings:overworld.to") ?? "{x: 29999984, z: 29999984}"))) ?? { x: 29999984, z: 29999984 });
-                        },
-                        set to(to) {
+                        }
+                        static set to(to) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:overworld.to", JSON.stringify(to ?? { x: 29999984, z: 29999984 }));
-                        },
-                        get mode() {
+                        }
+                        static get mode() {
                             return Number(world.getDynamicProperty("andexdbWorldBorderSettings:overworld.mode") ?? 1);
-                        },
-                        set mode(mode) {
+                        }
+                        static set mode(mode) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:overworld.mode", mode ?? 1);
-                        },
-                        get damage() {
+                        }
+                        static get damage() {
                             return Number(world.getDynamicProperty("andexdbWorldBorderSettings:overworld.damageMode.damage") ?? 1);
-                        },
-                        set damage(damage) {
+                        }
+                        static set damage(damage) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:overworld.damageMode.damage", damage ?? 1);
-                        },
-                        get knockbackH() {
+                        }
+                        static get knockbackH() {
                             return Number(world.getDynamicProperty("andexdbWorldBorderSettings:overworld.knockbackMode.knockbackH") ?? 2.5);
-                        },
-                        set knockbackH(horizontalKnockback) {
+                        }
+                        static set knockbackH(horizontalKnockback) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:overworld.knockbackMode.knockbackH", horizontalKnockback ?? 2.5);
-                        },
-                        get knockbackV() {
+                        }
+                        static get knockbackV() {
                             return Number(world.getDynamicProperty("andexdbWorldBorderSettings:overworld.knockbackMode.knockbackV") ?? 1.25);
-                        },
-                        set knockbackV(verticalKnockback) {
+                        }
+                        static set knockbackV(verticalKnockback) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:overworld.knockbackMode.knockbackV", verticalKnockback ?? 1.25);
-                        },
-                        get preventWorldInteractionOutsideBorder() {
+                        }
+                        static get preventWorldInteractionOutsideBorder() {
                             return Boolean(world.getDynamicProperty("andexdbWorldBorderSettings:overworld.preventWorldInteractionOutsideBorder") ?? false);
-                        },
-                        set preventWorldInteractionOutsideBorder(preventWorldInteractionOutsideBorder) {
+                        }
+                        static set preventWorldInteractionOutsideBorder(preventWorldInteractionOutsideBorder) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:overworld.preventWorldInteractionOutsideBorder", preventWorldInteractionOutsideBorder ?? false);
-                        },
-                        get tintIntensity() {
+                        }
+                        static get tintIntensity() {
                             return Number(world.getDynamicProperty("andexdbWorldBorderSettings:overworld.tintIntensity") ?? 1);
-                        },
-                        set tintIntensity(tintIntensity) {
+                        }
+                        static set tintIntensity(tintIntensity) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:overworld.tintIntensity", tintIntensity ?? 1);
-                        },
+                        }
                         /**
                          * d
                          * @todo
                          */
-                        get warnPlayersInChat() {
+                        static get warnPlayersInChat() {
                             return Boolean(world.getDynamicProperty("andexdbWorldBorderSettings:overworld.warnPlayersInChat") ?? false);
-                        },
+                        }
                         /**
                          * c
                          * @todo
                          */
-                        set warnPlayersInChat(warnPlayersInChat) {
+                        static set warnPlayersInChat(warnPlayersInChat) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:overworld.warnPlayersInChat", warnPlayersInChat ?? false);
-                        },
+                        }
                         /**
                          * b
                          * @todo
                          */
-                        get showActionbarWarningWhenOutsideBorder() {
+                        static get showActionbarWarningWhenOutsideBorder() {
                             return Boolean(world.getDynamicProperty("andexdbWorldBorderSettings:overworld.showActionbarWarningWhenOutsideBorder") ?? false);
-                        },
+                        }
                         /**
                          * a
                          * @todo
                          */
-                        set showActionbarWarningWhenOutsideBorder(showActionbarWarningWhenOutsideBorder) {
+                        static set showActionbarWarningWhenOutsideBorder(showActionbarWarningWhenOutsideBorder) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:overworld.showActionbarWarningWhenOutsideBorder", showActionbarWarningWhenOutsideBorder ?? false);
-                        },
-                        get showRedScreenOutlineWhenOutsideBorder() {
+                        }
+                        static get showRedScreenOutlineWhenOutsideBorder() {
                             return Boolean(world.getDynamicProperty("andexdbWorldBorderSettings:overworld.showRedScreenOutlineWhenOutsideBorder") ?? true);
-                        },
-                        set showRedScreenOutlineWhenOutsideBorder(showRedScreenOutlineWhenOutsideBorder) {
+                        }
+                        static set showRedScreenOutlineWhenOutsideBorder(showRedScreenOutlineWhenOutsideBorder) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:overworld.showRedScreenOutlineWhenOutsideBorder", showRedScreenOutlineWhenOutsideBorder ?? true);
-                        },
-                        get showBorderParticles() {
+                        }
+                        static get showBorderParticles() {
                             return Boolean(world.getDynamicProperty("andexdbWorldBorderSettings:overworld.showBorderParticles") ?? true);
-                        },
-                        set showBorderParticles(showBorderParticles) {
+                        }
+                        static set showBorderParticles(showBorderParticles) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:overworld.showBorderParticles", showBorderParticles ?? true);
-                        },
+                        }
                         /**
                          * @deprecated
                          */
-                        get useShadersCompatibleBorderParticles() {
+                        static get useShadersCompatibleBorderParticles() {
                             return Boolean(world.getDynamicProperty("andexdbWorldBorderSettings:overworld.useShadersCompatibleBorderParticles") ?? false);
-                        },
+                        }
                         /**
                          * @deprecated
                          */
-                        set useShadersCompatibleBorderParticles(useShadersCompatibleBorderParticles) {
+                        static set useShadersCompatibleBorderParticles(useShadersCompatibleBorderParticles) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:overworld.useShadersCompatibleBorderParticles", useShadersCompatibleBorderParticles ?? false);
-                        },
-                        get buffer() {
+                        }
+                        static get buffer() {
                             return Number(world.getDynamicProperty("andexdbWorldBorderSettings:overworld.buffer") ?? 5);
-                        },
-                        set buffer(buffer) {
+                        }
+                        static set buffer(buffer) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:overworld.buffer", buffer ?? 5);
-                        },
-                    };
-                },
-                get nether() {
-                    return {
-                        get enabled() {
+                        }
+                    }
+                    return config_worldBorder_overworld;
+                }
+                /**
+                 * The world border settings for the nether.
+                 * @group Subclasses
+                 */
+                static get nether() {
+                    /**
+                     * The world border settings for the nether.
+                     * @hideconstructor
+                     * @nameOverride nether
+                     * @parentOverride Globals.config.worldBorder:class
+                     * @group Subclasses
+                     */
+                    class config_worldBorder_nether {
+                        static get enabled() {
                             return Boolean(world.getDynamicProperty("andexdbWorldBorderSettings:nether.enabled") ?? false);
-                        },
-                        set enabled(enabled) {
+                        }
+                        static set enabled(enabled) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:nether.enabled", enabled ?? false);
-                        },
-                        get from() {
+                        }
+                        static get from() {
                             return (tryget(() => JSON.parse(String(world.getDynamicProperty("andexdbWorldBorderSettings:nether.from") ?? "{x: -29999984, z: -29999984}"))) ?? { x: -29999984, z: -29999984 });
-                        },
-                        set from(from) {
+                        }
+                        static set from(from) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:nether.from", JSON.stringify(from ?? { x: -29999984, z: -29999984 }));
-                        },
-                        get to() {
+                        }
+                        static get to() {
                             return (tryget(() => JSON.parse(String(world.getDynamicProperty("andexdbWorldBorderSettings:nether.to") ?? "{x: 29999984, z: 29999984}"))) ?? { x: 29999984, z: 29999984 });
-                        },
-                        set to(to) {
+                        }
+                        static set to(to) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:nether.to", JSON.stringify(to ?? { x: 29999984, z: 29999984 }));
-                        },
-                        get mode() {
+                        }
+                        static get mode() {
                             return Number(world.getDynamicProperty("andexdbWorldBorderSettings:nether.mode") ?? 1);
-                        },
-                        set mode(mode) {
+                        }
+                        static set mode(mode) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:nether.mode", mode ?? 1);
-                        },
-                        get damage() {
+                        }
+                        static get damage() {
                             return Number(world.getDynamicProperty("andexdbWorldBorderSettings:nether.damageMode.damage") ?? 1);
-                        },
-                        set damage(damage) {
+                        }
+                        static set damage(damage) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:nether.damageMode.damage", damage ?? 1);
-                        },
-                        get knockbackH() {
+                        }
+                        static get knockbackH() {
                             return Number(world.getDynamicProperty("andexdbWorldBorderSettings:nether.knockbackMode.knockbackH") ?? 2.5);
-                        },
-                        set knockbackH(horizontalKnockback) {
+                        }
+                        static set knockbackH(horizontalKnockback) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:nether.knockbackMode.knockbackH", horizontalKnockback ?? 2.5);
-                        },
-                        get knockbackV() {
+                        }
+                        static get knockbackV() {
                             return Number(world.getDynamicProperty("andexdbWorldBorderSettings:nether.knockbackMode.knockbackV") ?? 1.25);
-                        },
-                        set knockbackV(verticalKnockback) {
+                        }
+                        static set knockbackV(verticalKnockback) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:nether.knockbackMode.knockbackV", verticalKnockback ?? 1.25);
-                        },
-                        get preventWorldInteractionOutsideBorder() {
+                        }
+                        static get preventWorldInteractionOutsideBorder() {
                             return Boolean(world.getDynamicProperty("andexdbWorldBorderSettings:nether.preventWorldInteractionOutsideBorder") ?? false);
-                        },
-                        set preventWorldInteractionOutsideBorder(preventWorldInteractionOutsideBorder) {
+                        }
+                        static set preventWorldInteractionOutsideBorder(preventWorldInteractionOutsideBorder) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:nether.preventWorldInteractionOutsideBorder", preventWorldInteractionOutsideBorder ?? false);
-                        },
-                        get tintIntensity() {
+                        }
+                        static get tintIntensity() {
                             return Number(world.getDynamicProperty("andexdbWorldBorderSettings:nether.tintIntensity") ?? 1);
-                        },
-                        set tintIntensity(tintIntensity) {
+                        }
+                        static set tintIntensity(tintIntensity) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:nether.tintIntensity", tintIntensity ?? 1);
-                        },
+                        }
                         /**
                          * @todo
                          */
-                        get warnPlayersInChat() {
+                        static get warnPlayersInChat() {
                             return Boolean(world.getDynamicProperty("andexdbWorldBorderSettings:nether.warnPlayersInChat") ?? false);
-                        },
+                        }
                         /**
                          * @todo
                          */
-                        set warnPlayersInChat(warnPlayersInChat) {
+                        static set warnPlayersInChat(warnPlayersInChat) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:nether.warnPlayersInChat", warnPlayersInChat ?? false);
-                        },
+                        }
                         /**
                          * @todo
                          */
-                        get showActionbarWarningWhenOutsideBorder() {
+                        static get showActionbarWarningWhenOutsideBorder() {
                             return Boolean(world.getDynamicProperty("andexdbWorldBorderSettings:nether.showActionbarWarningWhenOutsideBorder") ?? false);
-                        },
+                        }
                         /**
                          * @todo
                          */
-                        set showActionbarWarningWhenOutsideBorder(showActionbarWarningWhenOutsideBorder) {
+                        static set showActionbarWarningWhenOutsideBorder(showActionbarWarningWhenOutsideBorder) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:nether.showActionbarWarningWhenOutsideBorder", showActionbarWarningWhenOutsideBorder ?? false);
-                        },
-                        get showRedScreenOutlineWhenOutsideBorder() {
+                        }
+                        static get showRedScreenOutlineWhenOutsideBorder() {
                             return Boolean(world.getDynamicProperty("andexdbWorldBorderSettings:nether.showRedScreenOutlineWhenOutsideBorder") ?? true);
-                        },
-                        set showRedScreenOutlineWhenOutsideBorder(showRedScreenOutlineWhenOutsideBorder) {
+                        }
+                        static set showRedScreenOutlineWhenOutsideBorder(showRedScreenOutlineWhenOutsideBorder) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:nether.showRedScreenOutlineWhenOutsideBorder", showRedScreenOutlineWhenOutsideBorder ?? true);
-                        },
-                        get showBorderParticles() {
+                        }
+                        static get showBorderParticles() {
                             return Boolean(world.getDynamicProperty("andexdbWorldBorderSettings:nether.showBorderParticles") ?? true);
-                        },
-                        set showBorderParticles(showBorderParticles) {
+                        }
+                        static set showBorderParticles(showBorderParticles) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:nether.showBorderParticles", showBorderParticles ?? true);
-                        },
+                        }
                         /**
                          * @deprecated
                          */
-                        get useShadersCompatibleBorderParticles() {
+                        static get useShadersCompatibleBorderParticles() {
                             return Boolean(world.getDynamicProperty("andexdbWorldBorderSettings:nether.useShadersCompatibleBorderParticles") ?? false);
-                        },
+                        }
                         /**
                          * @deprecated
                          */
-                        set useShadersCompatibleBorderParticles(useShadersCompatibleBorderParticles) {
+                        static set useShadersCompatibleBorderParticles(useShadersCompatibleBorderParticles) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:nether.useShadersCompatibleBorderParticles", useShadersCompatibleBorderParticles ?? false);
-                        },
-                        get buffer() {
+                        }
+                        static get buffer() {
                             return Number(world.getDynamicProperty("andexdbWorldBorderSettings:nether.buffer") ?? 5);
-                        },
-                        set buffer(buffer) {
+                        }
+                        static set buffer(buffer) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:nether.buffer", buffer ?? 5);
-                        },
-                    };
-                },
-                get the_end() {
-                    return {
-                        get enabled() {
+                        }
+                    }
+                    return config_worldBorder_nether;
+                }
+                /**
+                 * The world border settings for the end.
+                 * @group Subclasses
+                 */
+                static get the_end() {
+                    /**
+                     * The world border settings for the end.
+                     * @hideconstructor
+                     * @nameOverride the_end
+                     * @parentOverride Globals.config.worldBorder:class
+                     * @group Subclasses
+                     */
+                    class config_worldBorder_the_end {
+                        static get enabled() {
                             return Boolean(world.getDynamicProperty("andexdbWorldBorderSettings:the_end.enabled") ?? false);
-                        },
-                        set enabled(enabled) {
+                        }
+                        static set enabled(enabled) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:the_end.enabled", enabled ?? false);
-                        },
-                        get from() {
+                        }
+                        static get from() {
                             return (tryget(() => JSON.parse(String(world.getDynamicProperty("andexdbWorldBorderSettings:the_end.from") ?? "{x: -29999984, z: -29999984}"))) ?? { x: -29999984, z: -29999984 });
-                        },
-                        set from(from) {
+                        }
+                        static set from(from) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:the_end.from", JSON.stringify(from ?? { x: -29999984, z: -29999984 }));
-                        },
-                        get to() {
+                        }
+                        static get to() {
                             return (tryget(() => JSON.parse(String(world.getDynamicProperty("andexdbWorldBorderSettings:the_end.to") ?? "{x: 29999984, z: 29999984}"))) ?? { x: 29999984, z: 29999984 });
-                        },
-                        set to(to) {
+                        }
+                        static set to(to) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:the_end.to", JSON.stringify(to ?? { x: 29999984, z: 29999984 }));
-                        },
-                        get mode() {
+                        }
+                        static get mode() {
                             return Number(world.getDynamicProperty("andexdbWorldBorderSettings:the_end.mode") ?? 1);
-                        },
-                        set mode(mode) {
+                        }
+                        static set mode(mode) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:the_end.mode", mode ?? 1);
-                        },
-                        get damage() {
+                        }
+                        static get damage() {
                             return Number(world.getDynamicProperty("andexdbWorldBorderSettings:the_end.damageMode.damage") ?? 1);
-                        },
-                        set damage(damage) {
+                        }
+                        static set damage(damage) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:the_end.damageMode.damage", damage ?? 1);
-                        },
-                        get knockbackH() {
+                        }
+                        static get knockbackH() {
                             return Number(world.getDynamicProperty("andexdbWorldBorderSettings:the_end.knockbackMode.knockbackH") ?? 2.5);
-                        },
-                        set knockbackH(horizontalKnockback) {
+                        }
+                        static set knockbackH(horizontalKnockback) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:the_end.knockbackMode.knockbackH", horizontalKnockback ?? 2.5);
-                        },
-                        get knockbackV() {
+                        }
+                        static get knockbackV() {
                             return Number(world.getDynamicProperty("andexdbWorldBorderSettings:the_end.knockbackMode.knockbackV") ?? 1.25);
-                        },
-                        set knockbackV(verticalKnockback) {
+                        }
+                        static set knockbackV(verticalKnockback) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:the_end.knockbackMode.knockbackV", verticalKnockback ?? 1.25);
-                        },
-                        get preventWorldInteractionOutsideBorder() {
+                        }
+                        static get preventWorldInteractionOutsideBorder() {
                             return Boolean(world.getDynamicProperty("andexdbWorldBorderSettings:the_end.preventWorldInteractionOutsideBorder") ?? false);
-                        },
-                        set preventWorldInteractionOutsideBorder(preventWorldInteractionOutsideBorder) {
+                        }
+                        static set preventWorldInteractionOutsideBorder(preventWorldInteractionOutsideBorder) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:the_end.preventWorldInteractionOutsideBorder", preventWorldInteractionOutsideBorder ?? false);
-                        },
-                        get tintIntensity() {
+                        }
+                        static get tintIntensity() {
                             return Number(world.getDynamicProperty("andexdbWorldBorderSettings:the_end.tintIntensity") ?? 1);
-                        },
-                        set tintIntensity(tintIntensity) {
+                        }
+                        static set tintIntensity(tintIntensity) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:the_end.tintIntensity", tintIntensity ?? 1);
-                        },
+                        }
                         /**
                          * @todo
                          */
-                        get warnPlayersInChat() {
+                        static get warnPlayersInChat() {
                             return Boolean(world.getDynamicProperty("andexdbWorldBorderSettings:the_end.warnPlayersInChat") ?? false);
-                        },
+                        }
                         /**
                          * @todo
                          */
-                        set warnPlayersInChat(warnPlayersInChat) {
+                        static set warnPlayersInChat(warnPlayersInChat) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:the_end.warnPlayersInChat", warnPlayersInChat ?? false);
-                        },
+                        }
                         /**
                          * @todo
                          */
-                        get showActionbarWarningWhenOutsideBorder() {
+                        static get showActionbarWarningWhenOutsideBorder() {
                             return Boolean(world.getDynamicProperty("andexdbWorldBorderSettings:the_end.showActionbarWarningWhenOutsideBorder") ?? false);
-                        },
+                        }
                         /**
                          * @todo
                          */
-                        set showActionbarWarningWhenOutsideBorder(showActionbarWarningWhenOutsideBorder) {
+                        static set showActionbarWarningWhenOutsideBorder(showActionbarWarningWhenOutsideBorder) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:the_end.showActionbarWarningWhenOutsideBorder", showActionbarWarningWhenOutsideBorder ?? false);
-                        },
-                        get showRedScreenOutlineWhenOutsideBorder() {
+                        }
+                        static get showRedScreenOutlineWhenOutsideBorder() {
                             return Boolean(world.getDynamicProperty("andexdbWorldBorderSettings:the_end.showRedScreenOutlineWhenOutsideBorder") ?? true);
-                        },
-                        set showRedScreenOutlineWhenOutsideBorder(showRedScreenOutlineWhenOutsideBorder) {
+                        }
+                        static set showRedScreenOutlineWhenOutsideBorder(showRedScreenOutlineWhenOutsideBorder) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:the_end.showRedScreenOutlineWhenOutsideBorder", showRedScreenOutlineWhenOutsideBorder ?? true);
-                        },
-                        get showBorderParticles() {
+                        }
+                        static get showBorderParticles() {
                             return Boolean(world.getDynamicProperty("andexdbWorldBorderSettings:the_end.showBorderParticles") ?? true);
-                        },
-                        set showBorderParticles(showBorderParticles) {
+                        }
+                        static set showBorderParticles(showBorderParticles) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:the_end.showBorderParticles", showBorderParticles ?? true);
-                        },
+                        }
                         /**
                          * @deprecated
                          */
-                        get useShadersCompatibleBorderParticles() {
+                        static get useShadersCompatibleBorderParticles() {
                             return Boolean(world.getDynamicProperty("andexdbWorldBorderSettings:the_end.useShadersCompatibleBorderParticles") ?? false);
-                        },
+                        }
                         /**
                          * @deprecated
                          */
-                        set useShadersCompatibleBorderParticles(useShadersCompatibleBorderParticles) {
+                        static set useShadersCompatibleBorderParticles(useShadersCompatibleBorderParticles) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:the_end.useShadersCompatibleBorderParticles", useShadersCompatibleBorderParticles ?? false);
-                        },
-                        get buffer() {
+                        }
+                        static get buffer() {
                             return Number(world.getDynamicProperty("andexdbWorldBorderSettings:the_end.buffer") ?? 5);
-                        },
-                        set buffer(buffer) {
+                        }
+                        static set buffer(buffer) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:the_end.buffer", buffer ?? 5);
-                        },
-                    };
-                },
-            };
+                        }
+                    }
+                    return config_worldBorder_the_end;
+                }
+            }
+            return config_worldBorder;
         }
+        /**
+         * The shop system settings.
+         * @group Subclasses
+         */
         static get shopSystem() {
-            return {
-                get server() {
-                    return {
-                        get enabled() {
+            /**
+             * The shop system settings.
+             * @hideconstructor
+             * @nameOverride shopSystem
+             * @parentOverride Globals.config
+             * @group Subclasses
+             */
+            class config_shopSystem {
+                /**
+                 * The server shop system settings.
+                 * @group Subclasses
+                 */
+                static get server() {
+                    /**
+                     * The server shop system settings.
+                     * @hideconstructor
+                     * @nameOverride server
+                     * @parentOverride Globals.config.shopSystem:class
+                     * @group Subclasses
+                     */
+                    class config_shopSystem_server {
+                        /**
+                         * Whether or not the server shop system is enabled.
+                         *
+                         * Dynamic Property ID: `andexdbShopSystemSettings:server.enabled`
+                         *
+                         * @default false
+                         */
+                        static get enabled() {
                             return Boolean(world.getDynamicProperty("andexdbShopSystemSettings:server.enabled") ?? false);
-                        },
-                        set enabled(enabled) {
+                        }
+                        static set enabled(enabled) {
                             world.setDynamicProperty("andexdbShopSystemSettings:server.enabled", enabled ?? false);
-                        },
-                    };
-                },
-                get player() {
-                    return {
-                        get enabled() {
+                        }
+                    }
+                    return config_shopSystem_server;
+                }
+                /**
+                 * The player shop system settings.
+                 * @group Subclasses
+                 */
+                static get player() {
+                    /**
+                     * The player shop system settings.
+                     * @hideconstructor
+                     * @nameOverride player
+                     * @parentOverride Globals.config.shopSystem:class
+                     * @group Subclasses
+                     */
+                    class config_shopSystem_player {
+                        /**
+                         * Whether or not the player shop system is enabled.
+                         *
+                         * Dynamic Property ID: `andexdbShopSystemSettings:player.enabled`
+                         *
+                         * @default false
+                         */
+                        static get enabled() {
                             return Boolean(world.getDynamicProperty("andexdbShopSystemSettings:player.enabled") ?? false);
-                        },
-                        set enabled(enabled) {
+                        }
+                        static set enabled(enabled) {
                             world.setDynamicProperty("andexdbShopSystemSettings:player.enabled", enabled ?? false);
-                        },
-                        get maxShopsPerPlayer() {
+                        }
+                        /**
+                         * The maximum amount of shops a player can have.
+                         *
+                         * Dynamic Property ID: `andexdbShopSystemSettings:player.maxShopsPerPlayer`
+                         *
+                         * @default 5
+                         */
+                        static get maxShopsPerPlayer() {
                             return (world.getDynamicProperty("andexdbShopSystemSettings:player.maxShopsPerPlayer") ?? 5).toString().toNumber() ?? 5;
-                        },
-                        set maxShopsPerPlayer(maxShopsPerPlayer) {
+                        }
+                        static set maxShopsPerPlayer(maxShopsPerPlayer) {
                             world.setDynamicProperty("andexdbShopSystemSettings:player.maxShopsPerPlayer", maxShopsPerPlayer ?? 5);
-                        },
-                        get allowSellingLockInSlotItems() {
+                        }
+                        /**
+                         * Whether or not players can sell items that are locked to a specific slot in their inventory.
+                         *
+                         * Dynamic Property ID: `andexdbShopSystemSettings:player.allowSellingLockInSlotItems`
+                         *
+                         * @default false
+                         */
+                        static get allowSellingLockInSlotItems() {
                             return Boolean(world.getDynamicProperty("andexdbShopSystemSettings:player.allowSellingLockInSlotItems") ?? false);
-                        },
-                        set allowSellingLockInSlotItems(allowSellingLockInSlotItems) {
+                        }
+                        static set allowSellingLockInSlotItems(allowSellingLockInSlotItems) {
                             world.setDynamicProperty("andexdbShopSystemSettings:player.allowSellingLockInSlotItems", allowSellingLockInSlotItems ?? false);
-                        },
-                        get allowSellingLockInInventoryItems() {
+                        }
+                        /**
+                         * Whether or not players can sell items that are locked to inventory.
+                         *
+                         * Dynamic Property ID: `andexdbShopSystemSettings:player.allowSellingLockInInventoryItems`
+                         *
+                         * @default false
+                         */
+                        static get allowSellingLockInInventoryItems() {
                             return Boolean(world.getDynamicProperty("andexdbShopSystemSettings:player.allowSellingLockInInventoryItems") ?? false);
-                        },
-                        set allowSellingLockInInventoryItems(allowSellingLockInInventoryItems) {
+                        }
+                        static set allowSellingLockInInventoryItems(allowSellingLockInInventoryItems) {
                             world.setDynamicProperty("andexdbShopSystemSettings:player.allowSellingLockInInventoryItems", allowSellingLockInInventoryItems ?? false);
-                        },
-                        get allowSellingKeepOnDeathItems() {
+                        }
+                        /**
+                         * Whether or not players can sell items that have the keepOnDeath component set to true.
+                         *
+                         * Dynamic Property ID: `andexdbShopSystemSettings:player.allowSellingKeepOnDeathItems`
+                         *
+                         * @default true
+                         */
+                        static get allowSellingKeepOnDeathItems() {
                             return Boolean(world.getDynamicProperty("andexdbShopSystemSettings:player.allowSellingKeepOnDeathItems") ?? true);
-                        },
-                        set allowSellingKeepOnDeathItems(allowSellingKeepOnDeathItems) {
+                        }
+                        static set allowSellingKeepOnDeathItems(allowSellingKeepOnDeathItems) {
                             world.setDynamicProperty("andexdbShopSystemSettings:player.allowSellingKeepOnDeathItems", allowSellingKeepOnDeathItems ?? true);
-                        },
-                    };
-                },
-                get sign() {
-                    return {
-                        get enabled() {
+                        }
+                    }
+                    return config_shopSystem_player;
+                }
+                /**
+                 * The sign shop system settings.
+                 * @alpha
+                 * @unused The sign shop system has not been implemented yet.
+                 * @group Subclasses
+                 */
+                static get sign() {
+                    /**
+                     * The sign shop system settings.
+                     * @hideconstructor
+                     * @nameOverride sign
+                     * @parentOverride Globals.config.shopSystem:class
+                     * @alpha
+                     * @unused
+                     * @group Subclasses
+                     */
+                    class config_shopSystem_sign {
+                        /**
+                         * Whether or not the sign shop system is enabled.
+                         *
+                         * Dynamic Property ID: `andexdbShopSystemSettings:sign.enabled`
+                         *
+                         * @alpha
+                         * @unused
+                         *
+                         * @default false
+                         */
+                        static get enabled() {
                             return Boolean(world.getDynamicProperty("andexdbShopSystemSettings:sign.enabled") ?? false);
-                        },
-                        set enabled(enabled) {
+                        }
+                        static set enabled(enabled) {
                             world.setDynamicProperty("andexdbShopSystemSettings:sign.enabled", enabled ?? false);
-                        },
-                    };
-                },
-            };
+                        }
+                    }
+                    return config_shopSystem_sign;
+                }
+            }
+            return config_shopSystem;
         }
+        /**
+         * The settings for all teleportation related systems, features, and commands of that add-on that are available to regular players.
+         * @group Subclasses
+         */
         static get teleportSystems() {
-            return {
+            /**
+             * The settings for all teleportation related systems, features, and commands of that add-on that are available to regular players.
+             * @hideconstructor
+             * @nameOverride teleportSystems
+             * @parentOverride Globals.config
+             * @group Subclasses
+             */
+            class config_teleportSystems {
                 /**
                  * Whether or not cross-dimensional teleports are allowed.
                  *
@@ -519,227 +726,290 @@ var exports;
                  *
                  * Overrides the `allowCrossDimensionalTeleport` options for the home system, TPA system, and `\spawn` command.
                  *
+                 * Dynamic Property ID: `teleportSystemsSettings:allowCrossDimensionalTeleport`
+                 *
                  * @default true
                  */
-                get allowCrossDimensionalTeleport() {
+                static get allowCrossDimensionalTeleport() {
                     return Boolean(world.getDynamicProperty("teleportSystemsSettings:allowCrossDimensionalTeleport") ?? true);
-                },
-                set allowCrossDimensionalTeleport(enabled) {
+                }
+                static set allowCrossDimensionalTeleport(enabled) {
                     world.setDynamicProperty("teleportSystemsSettings:allowCrossDimensionalTeleport", enabled ?? true);
-                },
+                }
                 /**
                  * How long in seconds after teleporting that the player has to wait before they can teleport again.
                  *
                  * Set it to 0 to have no teleport cooldown.
                  *
+                 * Dynamic Property ID: `homeSystemSettings:teleportCooldown`
+                 *
                  * @default 30
                  */
-                get teleportCooldown() {
+                static get teleportCooldown() {
                     return Number(world.getDynamicProperty("homeSystemSettings:teleportCooldown") ?? 30);
-                },
-                set teleportCooldown(maxHomes) {
+                }
+                static set teleportCooldown(maxHomes) {
                     world.setDynamicProperty("homeSystemSettings:teleportCooldown", maxHomes ?? 30);
-                },
+                }
                 /**
                  * How long in seconds that the player has to stand still before they can teleport, if they move during this time period, the teleportation is canceled.
                  *
                  * Set it to 0 to have players teleport instantly.
                  *
+                 * Dynamic Property ID: `homeSystemSettings:standStillTimeToTeleport`
+                 *
                  * @default 5
                  */
-                get standStillTimeToTeleport() {
+                static get standStillTimeToTeleport() {
                     return Number(world.getDynamicProperty("homeSystemSettings:standStillTimeToTeleport") ?? 5);
-                },
-                set standStillTimeToTeleport(maxHomes) {
+                }
+                static set standStillTimeToTeleport(maxHomes) {
                     world.setDynamicProperty("homeSystemSettings:standStillTimeToTeleport", maxHomes ?? 5);
-                },
+                }
                 /**
                  * How long in seconds after getting damaged by another player that the player has to wait before they can teleport with the player menu or commands such as `\spawn`, `\home`, `\gohome`, `\tpa`, and `\rtp`.
                  *
                  * Set it to 0 to have no PVP cooldown.
                  *
+                 * Dynamic Property ID: `andexdbSettings:pvpCooldownToTeleport`
+                 *
                  * @default 15
                  */
-                get pvpCooldownToTeleport() {
+                static get pvpCooldownToTeleport() {
                     return isNaN(Number(world.getDynamicProperty("andexdbSettings:pvpCooldownToTeleport")))
                         ? 15
                         : Number(world.getDynamicProperty("andexdbSettings:pvpCooldownToTeleport") ?? 15);
-                },
-                set pvpCooldownToTeleport(invalidChatCommandAction) {
+                }
+                static set pvpCooldownToTeleport(invalidChatCommandAction) {
                     world.setDynamicProperty("andexdbSettings:pvpCooldownToTeleport", invalidChatCommandAction ?? 15);
-                },
-            };
+                }
+            }
+            return config_teleportSystems;
         }
+        /**
+         * The home system settings.
+         * @group Subclasses
+         */
         static get homeSystem() {
-            return {
-                get homeSystemEnabled() {
+            /**
+             * The home system settings.
+             * @hideconstructor
+             * @nameOverride homeSystem
+             * @parentOverride Globals.config
+             * @group Subclasses
+             */
+            class config_homeSystem {
+                /**
+                 * Whether or not the home system is enabled.
+                 *
+                 * Dynamic Property ID: `homeSystemSettings:homeSystemEnabled`
+                 *
+                 * @default true
+                 */
+                static get homeSystemEnabled() {
                     return Boolean(world.getDynamicProperty("homeSystemSettings:homeSystemEnabled") ?? true);
-                },
-                set homeSystemEnabled(enabled) {
+                }
+                static set homeSystemEnabled(enabled) {
                     world.setDynamicProperty("homeSystemSettings:homeSystemEnabled", enabled ?? true);
-                },
-                get maxHomesPerPlayer() {
+                }
+                /**
+                 * The maximum number of homes a player can have.
+                 *
+                 * Dynamic Property ID: `homeSystemSettings:maxHomesPerPlayer`
+                 *
+                 * @default Infinity
+                 */
+                static get maxHomesPerPlayer() {
                     return world.getDynamicProperty("homeSystemSettings:maxHomesPerPlayer") == -1
                         ? Infinity
                         : Number(world.getDynamicProperty("homeSystemSettings:maxHomesPerPlayer") ?? Infinity);
-                },
-                set maxHomesPerPlayer(maxHomes) {
+                }
+                static set maxHomesPerPlayer(maxHomes) {
                     world.setDynamicProperty("homeSystemSettings:maxHomesPerPlayer", (maxHomes ?? Infinity) == Infinity ? -1 : maxHomes);
-                },
+                }
                 /**
                  * Whether or not you can teleport to a home that is in a different dimension than you.
                  *
-                 * Defaults to true.
+                 * Dynamic Property ID: `homeSystemSettings:allowCrossDimensionalTeleport`
+                 *
+                 * @default true
                  */
-                get allowCrossDimensionalTeleport() {
+                static get allowCrossDimensionalTeleport() {
                     return Boolean(world.getDynamicProperty("homeSystemSettings:allowCrossDimensionalTeleport") ?? true);
-                },
-                set allowCrossDimensionalTeleport(enabled) {
+                }
+                static set allowCrossDimensionalTeleport(enabled) {
                     world.setDynamicProperty("homeSystemSettings:allowCrossDimensionalTeleport", enabled ?? true);
-                },
+                }
                 /**
                  * Whether or not homes are allowed in dimensions other than the overworld.
                  *
-                 * Defaults to true.
+                 * Dynamic Property ID: `homeSystemSettings:allowHomesInOtherDimensions`
+                 *
+                 * @default true
                  */
-                get allowHomesInOtherDimensions() {
+                static get allowHomesInOtherDimensions() {
                     return Boolean(world.getDynamicProperty("homeSystemSettings:allowHomesInOtherDimensions") ?? true);
-                },
-                set allowHomesInOtherDimensions(enabled) {
+                }
+                static set allowHomesInOtherDimensions(enabled) {
                     world.setDynamicProperty("homeSystemSettings:allowHomesInOtherDimensions", enabled ?? true);
-                },
-            };
+                }
+            }
+            return config_homeSystem;
         }
+        /**
+         * The teleport request system settings.
+         * @group Subclasses
+         */
         static get tpaSystem() {
-            return {
-                get tpaSystemEnabled() {
+            /**
+             * The teleport request system settings.
+             * @hideconstructor
+             * @nameOverride tpaSystem
+             * @parentOverride Globals.config
+             * @group Subclasses
+             */
+            class config_tpaSystem {
+                /**
+                 * Whether or not the teleport request system is enabled.
+                 *
+                 * Dynamic Property ID: `tpaSystemSettings:tpaSystemEnabled`
+                 *
+                 * @default true
+                 */
+                static get tpaSystemEnabled() {
                     return Boolean(world.getDynamicProperty("tpaSystemSettings:tpaSystemEnabled") ?? world.getDynamicProperty("rtpSystemSettings:rtpSystemEnabled") ?? true);
-                },
-                set tpaSystemEnabled(enabled) {
+                }
+                static set tpaSystemEnabled(enabled) {
                     world.setDynamicProperty("tpaSystemSettings:tpaSystemEnabled", enabled ?? true);
-                },
+                }
                 /**
                  * The number of seconds after a teleport request is sent before it will time out.
                  *
-                 * Defaults to 60.
+                 * Dynamic Property ID: `tpaSystemSettings:timeoutDuration`
+                 *
+                 * @default 60
                  */
-                get timeoutDuration() {
+                static get timeoutDuration() {
                     return isNaN(Number(world.getDynamicProperty("tpaSystemSettings:timeoutDuration")))
                         ? 60
                         : Number(world.getDynamicProperty("tpaSystemSettings:timeoutDuration") ?? 60);
-                },
-                set timeoutDuration(timeoutDuration) {
+                }
+                static set timeoutDuration(timeoutDuration) {
                     world.setDynamicProperty("tpaSystemSettings:timeoutDuration", timeoutDuration ?? 60);
-                },
+                }
                 /**
                  * Whether or not you can teleport to a player who is in a different dimension than you.
                  *
-                 * Defaults to true.
+                 * Dynamic Property ID: `tpaSystemSettings:allowCrossDimensionalTeleport`
+                 *
+                 * @default true
                  */
-                get allowCrossDimensionalTeleport() {
+                static get allowCrossDimensionalTeleport() {
                     return Boolean(world.getDynamicProperty("tpaSystemSettings:allowCrossDimensionalTeleport") ?? true);
-                },
-                set allowCrossDimensionalTeleport(enabled) {
+                }
+                static set allowCrossDimensionalTeleport(enabled) {
                     world.setDynamicProperty("tpaSystemSettings:allowCrossDimensionalTeleport", enabled ?? true);
-                },
-            };
+                }
+            }
+            return config_tpaSystem;
         }
-        static get banSystem() {
-            return {
-                get enabled() {
-                    return Boolean(world.getDynamicProperty("andexdbSettings:banEnabled") ?? true);
-                },
-                set enabled(enabled) {
-                    world.setDynamicProperty("andexdbSettings:banEnabled", enabled ?? true);
-                },
-            };
-        }
+        /**
+         * The chat and name tags settings.
+         * @group Subclasses
+         */
         static get chatRanks() {
-            return {
-                get chatRankPrefix() {
+            /**
+             * The chat and name tags settings.
+             * @hideconstructor
+             * @nameOverride chatRanks
+             * @parentOverride Globals.config
+             * @group Subclasses
+             */
+            class config_chatRanks {
+                static get chatRankPrefix() {
                     return String(world.getDynamicProperty("andexdbSettings:chatRankPrefix") ?? "rank:");
-                },
-                set chatRankPrefix(chatRankPrefix) {
+                }
+                static set chatRankPrefix(chatRankPrefix) {
                     world.setDynamicProperty("andexdbSettings:chatRankPrefix", chatRankPrefix ?? "rank:");
-                },
-                get chatSudoPrefix() {
+                }
+                static get chatSudoPrefix() {
                     return String(world.getDynamicProperty("andexdbSettings:chatSudoPrefix") ?? "sudo:");
-                },
-                set chatSudoPrefix(chatSudoPrefix) {
+                }
+                static set chatSudoPrefix(chatSudoPrefix) {
                     world.setDynamicProperty("andexdbSettings:chatSudoPrefix", chatSudoPrefix ?? "sudo:");
-                },
-                get chatDisplayTimeStamp() {
+                }
+                static get chatDisplayTimeStamp() {
                     return Boolean(world.getDynamicProperty("andexdbSettings:chatDisplayTimeStamp") ?? false);
-                },
-                set chatDisplayTimeStamp(chatDisplayTimeStampEnabled) {
+                }
+                static set chatDisplayTimeStamp(chatDisplayTimeStampEnabled) {
                     world.setDynamicProperty("andexdbSettings:chatDisplayTimeStamp", chatDisplayTimeStampEnabled ?? false);
-                },
-                get showRanksOnPlayerNameTags() {
+                }
+                static get showRanksOnPlayerNameTags() {
                     return Boolean(world.getDynamicProperty("andexdbSettings:showRanksOnPlayerNameTags") ?? false);
-                },
-                set showRanksOnPlayerNameTags(showRanksOnPlayerNameTags) {
+                }
+                static set showRanksOnPlayerNameTags(showRanksOnPlayerNameTags) {
                     world.setDynamicProperty("andexdbSettings:showRanksOnPlayerNameTags", showRanksOnPlayerNameTags ?? false);
-                },
-                get showHealthOnPlayerNameTags() {
+                }
+                static get showHealthOnPlayerNameTags() {
                     return Boolean(world.getDynamicProperty("andexdbSettings:showHealthOnPlayerNameTags") ?? false);
-                },
-                set showHealthOnPlayerNameTags(showHealthOnPlayerNameTags) {
+                }
+                static set showHealthOnPlayerNameTags(showHealthOnPlayerNameTags) {
                     world.setDynamicProperty("andexdbSettings:showHealthOnPlayerNameTags", showHealthOnPlayerNameTags ?? false);
-                },
-                get rankMode() {
+                }
+                static get rankMode() {
                     return String(world.getDynamicProperty("andexdbSettings:rankMode") ?? "custom_simple");
-                },
-                set rankMode(rankMode) {
+                }
+                static set rankMode(rankMode) {
                     world.setDynamicProperty("andexdbSettings:rankMode", rankMode ?? "custom_simple");
-                },
-                get rankEvaluatorMode_chat() {
+                }
+                static get rankEvaluatorMode_chat() {
                     return String(world.getDynamicProperty("andexdbSettings:rankEvaluatorMode_chat") ?? "default");
-                },
-                set rankEvaluatorMode_chat(rankEvaluatorMode_chat) {
+                }
+                static set rankEvaluatorMode_chat(rankEvaluatorMode_chat) {
                     world.setDynamicProperty("andexdbSettings:rankEvaluatorMode_chat", rankEvaluatorMode_chat ?? "default");
-                },
-                get rankEvaluatorMode_nameTags() {
+                }
+                static get rankEvaluatorMode_nameTags() {
                     return String(world.getDynamicProperty("andexdbSettings:rankEvaluatorMode_nameTags") ?? "default");
-                },
-                set rankEvaluatorMode_nameTags(rankEvaluatorMode_nameTags) {
+                }
+                static set rankEvaluatorMode_nameTags(rankEvaluatorMode_nameTags) {
                     world.setDynamicProperty("andexdbSettings:rankEvaluatorMode_nameTags", rankEvaluatorMode_nameTags ?? "default");
-                },
-                get rankDisplayPrefix() {
+                }
+                static get rankDisplayPrefix() {
                     return String(world.getDynamicProperty("andexdbSettings:rankDisplayPrefix") ?? "[");
-                },
-                set rankDisplayPrefix(rankDisplayPrefix) {
+                }
+                static set rankDisplayPrefix(rankDisplayPrefix) {
                     world.setDynamicProperty("andexdbSettings:rankDisplayPrefix", rankDisplayPrefix ?? "[");
-                },
-                get rankDisplaySuffix() {
+                }
+                static get rankDisplaySuffix() {
                     return String(world.getDynamicProperty("andexdbSettings:rankDisplaySuffix") ?? "§r]");
-                },
-                set rankDisplaySuffix(rankDisplaySuffix) {
+                }
+                static set rankDisplaySuffix(rankDisplaySuffix) {
                     world.setDynamicProperty("andexdbSettings:rankDisplaySuffix", rankDisplaySuffix ?? "§r]");
-                },
-                get nameDisplayPrefix() {
+                }
+                static get nameDisplayPrefix() {
                     return String(world.getDynamicProperty("andexdbSettings:nameDisplayPrefix") ?? "[");
-                },
-                set nameDisplayPrefix(nameDisplayPrefix) {
+                }
+                static set nameDisplayPrefix(nameDisplayPrefix) {
                     world.setDynamicProperty("andexdbSettings:nameDisplayPrefix", nameDisplayPrefix ?? "<");
-                },
-                get nameDisplaySuffix() {
+                }
+                static get nameDisplaySuffix() {
                     return String(world.getDynamicProperty("andexdbSettings:nameDisplaySuffix") ?? "§r]");
-                },
-                set nameDisplaySuffix(nameDisplaySuffix) {
+                }
+                static set nameDisplaySuffix(nameDisplaySuffix) {
                     world.setDynamicProperty("andexdbSettings:nameDisplaySuffix", nameDisplaySuffix ?? "§r>");
-                },
-                get chatNameAndMessageSeparator() {
+                }
+                static get chatNameAndMessageSeparator() {
                     return String(world.getDynamicProperty("andexdbSettings:chatNameAndMessageSeparator") ?? " ");
-                },
-                set chatNameAndMessageSeparator(chatNameAndMessageSeparator) {
+                }
+                static set chatNameAndMessageSeparator(chatNameAndMessageSeparator) {
                     world.setDynamicProperty("andexdbSettings:chatNameAndMessageSeparator", chatNameAndMessageSeparator ?? " ");
-                },
-                get rankDisplaySeparator() {
+                }
+                static get rankDisplaySeparator() {
                     return String(world.getDynamicProperty("andexdbSettings:rankDisplaySeparator") ?? " ");
-                },
-                set rankDisplaySeparator(rankDisplaySeparator) {
+                }
+                static set rankDisplaySeparator(rankDisplaySeparator) {
                     world.setDynamicProperty("andexdbSettings:rankDisplaySeparator", rankDisplaySeparator ?? " ");
-                },
+                }
                 /**
                  * The template string for displaying a player's dimension in the chat.
                  *
@@ -749,113 +1019,125 @@ var exports;
                  *
                  * @default "[${dimension}§r] "
                  */
-                get chatDimensionTemplateString() {
+                static get chatDimensionTemplateString() {
                     return String(world.getDynamicProperty("andexdbSettings:chatDimensionTemplateString") ?? "[${dimension}§r] ");
-                },
-                set chatDimensionTemplateString(chatDimensionTemplateString) {
+                }
+                static set chatDimensionTemplateString(chatDimensionTemplateString) {
                     world.setDynamicProperty("andexdbSettings:chatDimensionTemplateString", chatDimensionTemplateString ?? "[${dimension}§r] ");
-                },
+                }
                 /**
                  * The template string for individual ranks.
                  *
                  * @default "[${rank}§r]"
                  */
-                get rankTemplateString() {
+                static get rankTemplateString() {
                     return String(world.getDynamicProperty("andexdbSettings:rankTemplateString") ?? "[${rank}§r]");
-                },
-                set rankTemplateString(rankTemplateString) {
+                }
+                static set rankTemplateString(rankTemplateString) {
                     world.setDynamicProperty("andexdbSettings:rankTemplateString", rankTemplateString ?? "[${rank}§r]");
-                },
-                get messageTemplateString() {
+                }
+                static get messageTemplateString() {
                     return String(world.getDynamicProperty("andexdbSettings:messageTemplateString") ??
                         '${(showDimension ? `[${dimension}§r] ` : "")}${timestampenabled?`[${timestamp}] `:""}${ranks}§r${(ranks!="")?" ":""}<${name}§r> ${message}');
-                },
-                set messageTemplateString(messageTemplateString) {
+                }
+                static set messageTemplateString(messageTemplateString) {
                     world.setDynamicProperty("andexdbSettings:messageTemplateString", messageTemplateString ??
                         '${(showDimension ? `[${dimension}§r] ` : "")}${timestampenabled?`[${timestamp}] `:""}${ranks}§r${(ranks!="")?" ":""}<${name}§r> ${message}');
-                },
-                get nameTagTemplateString() {
+                }
+                static get nameTagTemplateString() {
                     return String(world.getDynamicProperty("andexdbSettings:nameTagTemplateString") ??
                         '${rank} ${nameFormatting}${name}${(showHealth ? `§r§f [${currentHealth}/${maxHealth}]` : "")}');
-                },
-                set nameTagTemplateString(nameTagTemplateString) {
+                }
+                static set nameTagTemplateString(nameTagTemplateString) {
                     world.setDynamicProperty("andexdbSettings:nameTagTemplateString", nameTagTemplateString ?? '${rank} ${nameFormatting}${name}${(showHealth ? `§r§f [${currentHealth}/${maxHealth}]` : "")}');
-                },
-                get defaultRank() {
+                }
+                static get defaultRank() {
                     return String(world.getDynamicProperty("andexdbSettings:defaultRank") ?? "§bMember§r");
-                },
-                set defaultRank(defaultRank) {
+                }
+                static set defaultRank(defaultRank) {
                     world.setDynamicProperty("andexdbSettings:defaultRank", defaultRank ?? "§bMember§r");
-                },
-                get defaultMessageFormatting() {
+                }
+                static get defaultMessageFormatting() {
                     return String(world.getDynamicProperty("andexdbSettings:defaultMessageFormatting") ?? "");
-                },
-                set defaultMessageFormatting(defaultMessageFormatting) {
+                }
+                static set defaultMessageFormatting(defaultMessageFormatting) {
                     world.setDynamicProperty("andexdbSettings:defaultMessageFormatting", defaultMessageFormatting ?? "");
-                },
-                get defaultNameFormatting() {
+                }
+                static get defaultNameFormatting() {
                     return String(world.getDynamicProperty("andexdbSettings:defaultNameFormatting") ?? "");
-                },
-                set defaultNameFormatting(defaultNameFormatting) {
+                }
+                static set defaultNameFormatting(defaultNameFormatting) {
                     world.setDynamicProperty("andexdbSettings:defaultNameFormatting", defaultNameFormatting ?? "");
-                },
-                get defaultSeparatorFormatting() {
+                }
+                static get defaultSeparatorFormatting() {
                     return String(world.getDynamicProperty("andexdbSettings:defaultSeparatorFormatting") ?? "");
-                },
-                set defaultSeparatorFormatting(defaultSeparatorFormatting) {
+                }
+                static set defaultSeparatorFormatting(defaultSeparatorFormatting) {
                     world.setDynamicProperty("andexdbSettings:defaultSeparatorFormatting", defaultSeparatorFormatting ?? "");
-                },
-                get disableCustomChatMessages() {
+                }
+                static get disableCustomChatMessages() {
                     return Boolean(world.getDynamicProperty("andexdbSettings:disableCustomChatMessages") ?? false);
-                },
-                set disableCustomChatMessages(disableCustomChatMessages) {
+                }
+                static set disableCustomChatMessages(disableCustomChatMessages) {
                     world.setDynamicProperty("andexdbSettings:disableCustomChatMessages", disableCustomChatMessages ?? false);
-                },
-                get allowCustomChatMessagesMuting() {
+                }
+                static get allowCustomChatMessagesMuting() {
                     return Boolean(world.getDynamicProperty("andexdbSettings:allowCustomChatMessagesMuting") ?? false);
-                },
-                set allowCustomChatMessagesMuting(allowCustomChatMessagesMuting) {
+                }
+                static set allowCustomChatMessagesMuting(allowCustomChatMessagesMuting) {
                     world.setDynamicProperty("andexdbSettings:showRanksOnPlayerNameTags", allowCustomChatMessagesMuting ?? false);
-                },
-                get autoEscapeChatMessages() {
+                }
+                static get autoEscapeChatMessages() {
                     return Boolean(world.getDynamicProperty("andexdbSettings:autoEscapeChatMessages") ?? false);
-                },
-                set autoEscapeChatMessages(autoEscapeChatMessages) {
+                }
+                static set autoEscapeChatMessages(autoEscapeChatMessages) {
                     world.setDynamicProperty("andexdbSettings:autoEscapeChatMessages", autoEscapeChatMessages ?? false);
-                },
-                get autoURIEscapeChatMessages() {
+                }
+                static get autoURIEscapeChatMessages() {
                     return Boolean(world.getDynamicProperty("andexdbSettings:autoURIEscapeChatMessages") ?? false);
-                },
-                set autoURIEscapeChatMessages(autoURIEscapeChatMessages) {
+                }
+                static set autoURIEscapeChatMessages(autoURIEscapeChatMessages) {
                     world.setDynamicProperty("andexdbSettings:autoURIEscapeChatMessages", autoURIEscapeChatMessages ?? false);
-                },
-                get allowChatEscapeCodes() {
+                }
+                static get allowChatEscapeCodes() {
                     return Boolean(world.getDynamicProperty("andexdbSettings:allowChatEscapeCodes") ?? false);
-                },
-                set allowChatEscapeCodes(allowChatEscapeCodes) {
+                }
+                static set allowChatEscapeCodes(allowChatEscapeCodes) {
                     world.setDynamicProperty("andexdbSettings:allowChatEscapeCodes", allowChatEscapeCodes ?? false);
-                },
-            };
+                }
+            }
+            return config_chatRanks;
         }
+        /**
+         * The money system settings.
+         * @group Subclasses
+         */
         static get moneySystem() {
-            return {
+            /**
+             * The money system settings.
+             * @hideconstructor
+             * @nameOverride moneySystem
+             * @parentOverride Globals.config
+             * @group Subclasses
+             */
+            class config_moneySystem {
                 /**
                  * Whether or not to use a scoreboard-based money system instead of a dynamic property-based one.
                  *
                  * Enabling this option will cause the money system to max out at the 32-bit integer limit (approximately 2.1 billion), but will allow for modifying a player's money with the /scoreboard command instead of having to use the main menu or use script eval.
                  *
-                 * When this option is disabled the limit is 10^32767. So basically infinite.
+                 * When this option is disabled the limit is `10^32767`. So basically infinite.
                  *
                  * Dynamic Property ID: `andexdbSettings:moneySystem.useScoreboardBasedMoneySystem`
                  *
                  * @default false
                  */
-                get useScoreboardBasedMoneySystem() {
+                static get useScoreboardBasedMoneySystem() {
                     return Boolean(world.getDynamicProperty("andexdbSettings:moneySystem.useScoreboardBasedMoneySystem") ?? false);
-                },
-                set useScoreboardBasedMoneySystem(enabled) {
+                }
+                static set useScoreboardBasedMoneySystem(enabled) {
                     world.setDynamicProperty("andexdbSettings:moneySystem.useScoreboardBasedMoneySystem", enabled ?? false);
-                },
+                }
                 /**
                  * The name of the scoreboard to use for the money system.
                  *
@@ -863,16 +1145,28 @@ var exports;
                  *
                  * @default "andexdb:money"
                  */
-                get scoreboardName() {
+                static get scoreboardName() {
                     return String(world.getDynamicProperty("andexdbSettings:moneySystem.scoreboardName") ?? "andexdb:money");
-                },
-                set scoreboardName(enabled) {
+                }
+                static set scoreboardName(enabled) {
                     world.setDynamicProperty("andexdbSettings:moneySystem.scoreboardName", enabled ?? "andexdb:money");
-                },
-            };
+                }
+            }
+            return config_moneySystem;
         }
+        /**
+         * The bounty system settings.
+         * @group Subclasses
+         */
         static get bountySystem() {
-            return {
+            /**
+             * The bounty system settings.
+             * @hideconstructor
+             * @nameOverride bountySystem
+             * @parentOverride Globals.config
+             * @group Subclasses
+             */
+            class config_bountySystem {
                 /**
                  * Whether or not the bounty system is enabled.
                  *
@@ -880,27 +1174,41 @@ var exports;
                  *
                  * @default true
                  */
-                get enabled() {
+                static get enabled() {
                     return Boolean(world.getDynamicProperty("andexdbSettings:bountySystem.enabled") ?? true);
-                },
-                set enabled(enabled) {
+                }
+                static set enabled(enabled) {
                     world.setDynamicProperty("andexdbSettings:bountySystem.enabled", enabled ?? true);
-                },
+                }
                 /**
                  * Whether to show the time that a player was last online in the stats list that is shown when a player clicks on the bounty for another player in the bounty list.
                  *
-                 * Defaults to false.
+                 * Dynamic Property ID: `andexdbSettings:bountySystem.showLastOnlineTimeInPlayerStatsList`
+                 *
+                 * @default false
                  */
-                get showLastOnlineTimeInBountyDetailsList() {
+                static get showLastOnlineTimeInBountyDetailsList() {
                     return Boolean(world.getDynamicProperty("andexdbSettings:bountySystem.showLastOnlineTimeInPlayerStatsList") ?? false);
-                },
-                set showLastOnlineTimeInBountyDetailsList(show) {
+                }
+                static set showLastOnlineTimeInBountyDetailsList(show) {
                     world.setDynamicProperty("andexdbSettings:bountySystem.showLastOnlineTimeInPlayerStatsList", show ?? false);
-                },
-            };
+                }
+            }
+            return config_bountySystem;
         }
+        /**
+         * The warps system settings.
+         * @group Subclasses
+         */
         static get warpsSystem() {
-            return {
+            /**
+             * The warps system settings.
+             * @hideconstructor
+             * @nameOverride warpsSystem
+             * @parentOverride Globals.config
+             * @group Subclasses
+             */
+            class config_warpsSystem {
                 /**
                  * Whether or not the warps system is enabled.
                  *
@@ -908,12 +1216,12 @@ var exports;
                  *
                  * @default true
                  */
-                get enabled() {
+                static get enabled() {
                     return Boolean(world.getDynamicProperty("warpsSystem:bountySystem.enabled") ?? true);
-                },
-                set enabled(enabled) {
+                }
+                static set enabled(enabled) {
                     world.setDynamicProperty("andexdbSettings:warpsSystem.enabled", enabled ?? true);
-                },
+                }
                 /**
                  * List of saved warps.
                  *
@@ -921,12 +1229,12 @@ var exports;
                  *
                  * @default []
                  *
-                 * @throws The setter throws if the input is not an array of warp interface objects or undefined.
+                 * @throws {TypeError} The setter throws if the input is not an array of warp interface objects or undefined.
                  */
-                get warps() {
+                static get warps() {
                     return JSONB.parse(world.getStringFromDynamicProperties("warpsSystem:warpsSystem.warps", "[]"));
-                },
-                set warps(warps) {
+                }
+                static set warps(warps) {
                     if (warps === undefined) {
                         world.saveStringToDynamicProperties("[]", "warpsSystem:warpsSystem.warps");
                     }
@@ -942,11 +1250,23 @@ var exports;
                                 : typeof warps) +
                             ".");
                     }
-                },
-            };
+                }
+            }
+            return config_warpsSystem;
         }
+        /**
+         * The money transfer system settings.
+         * @group Subclasses
+         */
         static get moneyTransferSystem() {
-            return {
+            /**
+             * The money transfer system settings.
+             * @hideconstructor
+             * @nameOverride moneyTransferSystem
+             * @parentOverride Globals.config
+             * @group Subclasses
+             */
+            class config_moneyTransferSystem {
                 /**
                  * Whether or not the money transfer system is enabled.
                  *
@@ -954,60 +1274,202 @@ var exports;
                  *
                  * @default true
                  */
-                get enabled() {
+                static get enabled() {
                     return Boolean(world.getDynamicProperty("andexdbSettings:moneyTransferSystem.enabled") ?? true);
-                },
-                set enabled(enabled) {
+                }
+                static set enabled(enabled) {
                     world.setDynamicProperty("andexdbSettings:moneyTransferSystem.enabled", enabled ?? true);
-                },
-            };
+                }
+            }
+            return config_moneyTransferSystem;
         }
+        /**
+         * The anti-spam system settings.
+         * @group Subclasses
+         */
         static get antiSpamSystem() {
-            return {
-                get antispamEnabled() {
+            /**
+             * The anti-spam system settings.
+             * @hideconstructor
+             * @nameOverride antiSpamSystem
+             * @parentOverride Globals.config
+             * @group Subclasses
+             */
+            class config_antiSpamSystem {
+                /**
+                 * Whether or not the anti-spam system is enabled.
+                 *
+                 * Dynamic Property ID: `antispamSettings:antispamEnabled`
+                 *
+                 * @default false
+                 */
+                static get antispamEnabled() {
                     return Boolean(world.getDynamicProperty("antispamSettings:antispamEnabled") ?? false);
-                },
-                set antispamEnabled(enabled) {
+                }
+                static set antispamEnabled(enabled) {
                     world.setDynamicProperty("antispamSettings:antispamEnabled", enabled ?? false);
-                },
-                get restartAntiSpamMuteTimerUponAttemptedMessageSendDuringMute() {
+                }
+                /**
+                 * Whether or not to restart the anti-spam mute timer when a message is sent during a mute.
+                 *
+                 * Dynamic Property ID: `antispamSettings:restartAntiSpamMuteTimerUponAttemptedMessageSendDuringMute`
+                 *
+                 * @default false
+                 */
+                static get restartAntiSpamMuteTimerUponAttemptedMessageSendDuringMute() {
                     return Boolean(world.getDynamicProperty("antispamSettings:restartAntiSpamMuteTimerUponAttemptedMessageSendDuringMute") ?? false);
-                },
-                set restartAntiSpamMuteTimerUponAttemptedMessageSendDuringMute(restartAntiSpamMuteTimerUponAttemptedMessageSendDuringMute) {
+                }
+                static set restartAntiSpamMuteTimerUponAttemptedMessageSendDuringMute(restartAntiSpamMuteTimerUponAttemptedMessageSendDuringMute) {
                     world.setDynamicProperty("antispamSettings:restartAntiSpamMuteTimerUponAttemptedMessageSendDuringMute", restartAntiSpamMuteTimerUponAttemptedMessageSendDuringMute ?? false);
-                },
-                get waitTimeAfterAntispamActivation() {
+                }
+                /**
+                 * The wait time in seconds before a player can send another chat message.
+                 *
+                 * Dynamic Property ID: `antispamSettings:waitTimeAfterAntispamActivation`
+                 *
+                 * @default 60
+                 */
+                static get waitTimeAfterAntispamActivation() {
                     return isNaN(Number(world.getDynamicProperty("antispamSettings:waitTimeAfterAntispamActivation")))
                         ? 60
                         : Number(world.getDynamicProperty("antispamSettings:waitTimeAfterAntispamActivation") ?? 60);
-                },
-                set waitTimeAfterAntispamActivation(waitTimeInSeconds) {
+                }
+                static set waitTimeAfterAntispamActivation(waitTimeInSeconds) {
                     world.setDynamicProperty("antispamSettings:waitTimeAfterAntispamActivation", waitTimeInSeconds ?? 60);
-                },
-                get maxTimeBewteenMessagesToTriggerAntiSpam() {
+                }
+                /**
+                 * The maximum time in seconds between individual messages to trigger anti-spam.
+                 *
+                 * Dynamic Property ID: `antispamSettings:maxTimeBewteenMessagesToTriggerAntiSpam`
+                 *
+                 * @default 5
+                 */
+                static get maxTimeBewteenMessagesToTriggerAntiSpam() {
                     return isNaN(Number(world.getDynamicProperty("antispamSettings:maxTimeBewteenMessagesToTriggerAntiSpam")))
                         ? 5
                         : Number(world.getDynamicProperty("antispamSettings:maxTimeBewteenMessagesToTriggerAntiSpam") ?? 5);
-                },
-                set maxTimeBewteenMessagesToTriggerAntiSpam(maxTimeInSeconds) {
+                }
+                static set maxTimeBewteenMessagesToTriggerAntiSpam(maxTimeInSeconds) {
                     world.setDynamicProperty("antispamSettings:maxTimeBewteenMessagesToTriggerAntiSpam", maxTimeInSeconds ?? 5);
-                },
-                get antispamTriggerMessageCount() {
+                }
+                /**
+                 * The message count to trigger anti-spam.
+                 *
+                 * Dynamic Property ID: `antispamSettings:antispamTriggerMessageCount`
+                 *
+                 * @default 4
+                 */
+                static get antispamTriggerMessageCount() {
                     return isNaN(Number(world.getDynamicProperty("antispamSettings:antispamTriggerMessageCount")))
                         ? 4
                         : Number(gwdp("antispamSettings:antispamTriggerMessageCount") ?? 4);
-                },
-                set antispamTriggerMessageCount(messageCount) {
+                }
+                static set antispamTriggerMessageCount(messageCount) {
                     world.setDynamicProperty("antispamSettings:antispamTriggerMessageCount", messageCount ?? 4);
-                },
-            };
+                }
+            }
+            return config_antiSpamSystem;
         }
+        /**
+         * The moderation settings.
+         * @group Subclasses
+         */
+        static get moderation() {
+            /**
+             * The moderation settings.
+             * @hideconstructor
+             * @nameOverride moderation
+             * @parentOverride Globals.config
+             * @group Subclasses
+             */
+            class config_moderation {
+                /**
+                 * The ban settings.
+                 * @group Subclasses
+                 */
+                static get bans() {
+                    /**
+                     * The ban settings.
+                     * @hideconstructor
+                     * @nameOverride bans
+                     * @parentOverride Globals.config.moderation:class
+                     * @group Subclasses
+                     */
+                    class config_moderation_bans {
+                        /**
+                         * Whether or not the ban system is enabled.
+                         *
+                         * Dynamic Property ID: `andexdbSettings:banEnabled`
+                         *
+                         * @default true
+                         */
+                        static get enabled() {
+                            return Boolean(world.getDynamicProperty("andexdbSettings:banEnabled") ?? true);
+                        }
+                        static set enabled(enabled) {
+                            world.setDynamicProperty("andexdbSettings:banEnabled", enabled ?? true);
+                        }
+                        /**
+                         * How long it has to be since the last ban refresh before the bans list will be automatically refreshed, when getting the bans list or checking if a player is banned.
+                         *
+                         * Dynamic Property ID: `andexdbSettings:moderation.bans.minimumAutoRefresh`
+                         *
+                         * @default 1000
+                         */
+                        static get minimumAutoRefresh() {
+                            return Number(world.getDynamicProperty("andexdbSettings:moderation.bans.minimumAutoRefresh") ??
+                                // Also check old ID for backwards compatibility.
+                                world.getDynamicProperty("andexdbSettings:bansMinimumAutoRefresh") ??
+                                1000);
+                        }
+                        static set minimumAutoRefresh(minimumAutoRefresh) {
+                            world.setDynamicProperty("andexdbSettings:moderation.bans.minimumAutoRefresh", minimumAutoRefresh ?? 1000);
+                        }
+                    }
+                    return config_moderation_bans;
+                }
+            }
+            return config_moderation;
+        }
+        /**
+         * The UI settings.
+         * @group Subclasses
+         */
         static get ui() {
-            return {
-                get menus() {
-                    return {
-                        get mainMenu() {
-                            return {
+            /**
+             * The UI settings.
+             * @hideconstructor
+             * @nameOverride ui
+             * @parentOverride Globals.config
+             * @group Subclasses
+             */
+            class config_ui {
+                /**
+                 * The menu configurations.
+                 * @group Subclasses
+                 */
+                static get menus() {
+                    /**
+                     * The menu configurations.
+                     * @hideconstructor
+                     * @nameOverride menus
+                     * @parentOverride Globals.config.ui:class
+                     * @group Subclasses
+                     */
+                    class config_ui_menus {
+                        /**
+                         * The main menu settings.
+                         * @group Subclasses
+                         */
+                        static get mainMenu() {
+                            /**
+                             * The main menu settings.
+                             * @hideconstructor
+                             * @nameOverride mainMenu
+                             * @parentOverride Globals.config.ui:class.menus:class
+                             * @group Subclasses
+                             */
+                            class config_ui_menus_mainMenu {
                                 /**
                                  *
                                  */ /*
@@ -1047,77 +1509,116 @@ var exports;
                                 /**
                                  * Whether to show the buttons marked as deprecated on the main menu.
                                  *
-                                 * Defaults to false.
+                                 * Dynamic Property ID: `andexdbSettings:ui.menus.mainMenu.showDeprecatedButtons`
+                                 *
+                                 * @default false
                                  */
-                                get showDeprecatedButtons() {
+                                static get showDeprecatedButtons() {
                                     return Boolean(world.getDynamicProperty("andexdbSettings:ui.menus.mainMenu.showDeprecatedButtons") ?? false);
-                                },
-                                set showDeprecatedButtons(show) {
+                                }
+                                static set showDeprecatedButtons(show) {
                                     world.setDynamicProperty("andexdbSettings:ui.menus.mainMenu.showDeprecatedButtons", show ?? false);
-                                },
+                                }
                                 /**
                                  * Whether to show the buttons marked as deprecated on the main menu.
                                  *
-                                 * Defaults to true.
+                                 * Dynamic Property ID: `andexdbSettings:ui.menus.mainMenu.showExperimentalButtons`
+                                 *
+                                 * @default true
                                  */
-                                get showExperimentalButtons() {
+                                static get showExperimentalButtons() {
                                     return Boolean(world.getDynamicProperty("andexdbSettings:ui.menus.mainMenu.showExperimentalButtons") ?? true);
-                                },
-                                set showExperimentalButtons(show) {
+                                }
+                                static set showExperimentalButtons(show) {
                                     world.setDynamicProperty("andexdbSettings:ui.menus.mainMenu.showExperimentalButtons", show ?? true);
-                                },
+                                }
                                 /**
                                  * Whether to show the buttons marked as deprecated on the main menu.
                                  *
-                                 * Defaults to false.
+                                 * Dynamic Property ID: `andexdbSettings:ui.menus.mainMenu.showUnusedButtons`
+                                 *
+                                 * @default false
                                  */
-                                get showUnusedButtons() {
+                                static get showUnusedButtons() {
                                     return Boolean(world.getDynamicProperty("andexdbSettings:ui.menus.mainMenu.showUnusedButtons") ?? false);
-                                },
-                                set showUnusedButtons(show) {
+                                }
+                                static set showUnusedButtons(show) {
                                     world.setDynamicProperty("andexdbSettings:ui.menus.mainMenu.showUnusedButtons", show ?? false);
-                                },
+                                }
                                 /**
                                  * Whether to show the buttons for features that are planned to be added in a future update on the main menu.
                                  *
-                                 * Defaults to false.
+                                 * Dynamic Property ID: `andexdbSettings:ui.menus.mainMenu.showUpcomingButtons`
+                                 *
+                                 * @default false
                                  */
-                                get showUpcomingButtons() {
+                                static get showUpcomingButtons() {
                                     return Boolean(world.getDynamicProperty("andexdbSettings:ui.menus.mainMenu.showUpcomingButtons") ?? false);
-                                },
-                                set showUpcomingButtons(show) {
+                                }
+                                static set showUpcomingButtons(show) {
                                     world.setDynamicProperty("andexdbSettings:ui.menus.mainMenu.showUpcomingButtons", show ?? false);
-                                },
+                                }
                                 /**
                                  * Whether to show the buttons for features that are non-functional on the main menu.
                                  *
-                                 * Defaults to false.
+                                 * Dynamic Property ID: `andexdbSettings:ui.menus.mainMenu.showNonFunctionalButtons`
+                                 *
+                                 * @default false
                                  */
-                                get showNonFunctionalButtons() {
+                                static get showNonFunctionalButtons() {
                                     return Boolean(world.getDynamicProperty("andexdbSettings:ui.menus.mainMenu.showNonFunctionalButtons") ?? false);
-                                },
-                                set showNonFunctionalButtons(show) {
+                                }
+                                static set showNonFunctionalButtons(show) {
                                     world.setDynamicProperty("andexdbSettings:ui.menus.mainMenu.showNonFunctionalButtons", show ?? false);
-                                },
-                            };
-                        },
-                        get playerMenu() {
-                            return {
+                                }
+                            }
+                            return config_ui_menus_mainMenu;
+                        }
+                        /**
+                         * The player menu settings.
+                         * @group Subclasses
+                         */
+                        static get playerMenu() {
+                            /**
+                             * The player menu settings.
+                             * @hideconstructor
+                             * @nameOverride playerMenu
+                             * @parentOverride Globals.config.ui:class.menus:class
+                             * @group Subclasses
+                             */
+                            class config_ui_menus_playerMenu {
                                 /**
                                  * Whether or not the player menu is enabled.
                                  *
-                                 * Defaults to true.
-                                 */
-                                get enabled() {
-                                    return Boolean(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu.enabled") ?? true);
-                                },
-                                set enabled(enabled) {
-                                    world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu.enabled", enabled ?? true);
-                                },
-                                /**
+                                 * Dynamic Property ID: `andexdbSettings:ui.menus.playerMenu.enabled`
                                  *
+                                 * @default true
                                  */
-                                get buttons() {
+                                static get enabled() {
+                                    return Boolean(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu.enabled") ?? true);
+                                }
+                                static set enabled(enabled) {
+                                    world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu.enabled", enabled ?? true);
+                                }
+                                /**
+                                 * The buttons to show on the player menu. They will appear in the order that they are specified in this option.
+                                 *
+                                 * Dynamic Property ID: `andexdbSettings:ui.menus.playerMenu.buttons`
+                                 *
+                                 * @default JSON.stringify(
+                                 *    (Object.keys(menuButtonIds.playerMenu.buttons) as (keyof typeof menuButtonIds.playerMenu.buttons)[]).sort(
+                                 *        (a, b) =>
+                                 *            menuButtonIds.playerMenu.buttons[a].defaultButtonIndex >
+                                 *            menuButtonIds.playerMenu.buttons[b].defaultButtonIndex
+                                 *                ? 1
+                                 *                : menuButtonIds.playerMenu.buttons[a].defaultButtonIndex <
+                                 *                  menuButtonIds.playerMenu.buttons[b].defaultButtonIndex
+                                 *                ? -1
+                                 *                : 0
+                                 *    )
+                                 *)
+                                 */
+                                static get buttons() {
                                     return JSON.parse(String(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu.buttons") ??
                                         JSON.stringify(Object.keys(menuButtonIds.playerMenu.buttons).sort((a, b) => menuButtonIds.playerMenu.buttons[a].defaultButtonIndex >
                                             menuButtonIds.playerMenu.buttons[b].defaultButtonIndex
@@ -1126,8 +1627,8 @@ var exports;
                                                 menuButtonIds.playerMenu.buttons[b].defaultButtonIndex
                                                 ? -1
                                                 : 0))));
-                                },
-                                set buttons(buttonList) {
+                                }
+                                static set buttons(buttonList) {
                                     world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu.buttons", JSON.stringify(buttonList ??
                                         Object.keys(menuButtonIds.playerMenu.buttons).sort((a, b) => menuButtonIds.playerMenu.buttons[a].defaultButtonIndex >
                                             menuButtonIds.playerMenu.buttons[b].defaultButtonIndex
@@ -1136,129 +1637,200 @@ var exports;
                                                 menuButtonIds.playerMenu.buttons[b].defaultButtonIndex
                                                 ? -1
                                                 : 0)));
-                                },
+                                }
                                 /**
                                  * The item name for the item that opens the player menu.
                                  *
-                                 * Defaults to "Menu".
+                                 * Dynamic Property ID: `andexdbSettings:ui.menus.playerMenu.itemName`
+                                 *
+                                 * @default "Menu"
                                  */
-                                get itemName() {
+                                static get itemName() {
                                     return String(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu.itemName") ?? "§r§fMenu");
-                                },
-                                set itemName(itemName) {
+                                }
+                                static set itemName(itemName) {
                                     world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu.itemName", itemName ?? "§r§fMenu");
-                                },
+                                }
                                 /**
                                  * Whether to show the buttons marked as deprecated on the player menu.
                                  *
-                                 * Defaults to false.
+                                 * Dynamic Property ID: `andexdbSettings:ui.menus.playerMenu.showDeprecatedButtons`
+                                 *
+                                 * @default false
                                  */
-                                get showDeprecatedButtons() {
+                                static get showDeprecatedButtons() {
                                     return Boolean(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu.showDeprecatedButtons") ?? false);
-                                },
-                                set showDeprecatedButtons(show) {
+                                }
+                                static set showDeprecatedButtons(show) {
                                     world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu.showDeprecatedButtons", show ?? false);
-                                },
+                                }
                                 /**
                                  * Whether to show the buttons marked as deprecated on the player menu.
                                  *
-                                 * Defaults to true.
+                                 * Dynamic Property ID: `andexdbSettings:ui.menus.playerMenu.showExperimentalButtons`
+                                 *
+                                 * @default true
                                  */
-                                get showExperimentalButtons() {
+                                static get showExperimentalButtons() {
                                     return Boolean(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu.showExperimentalButtons") ?? true);
-                                },
-                                set showExperimentalButtons(show) {
+                                }
+                                static set showExperimentalButtons(show) {
                                     world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu.showExperimentalButtons", show ?? true);
-                                },
+                                }
                                 /**
                                  * Whether to show the buttons marked as deprecated on the player menu.
                                  *
-                                 * Defaults to false.
+                                 * Dynamic Property ID: `andexdbSettings:ui.menus.playerMenu.showUnusedButtons`
+                                 *
+                                 * @default false
                                  */
-                                get showUnusedButtons() {
+                                static get showUnusedButtons() {
                                     return Boolean(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu.showUnusedButtons") ?? false);
-                                },
-                                set showUnusedButtons(show) {
+                                }
+                                static set showUnusedButtons(show) {
                                     world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu.showUnusedButtons", show ?? false);
-                                },
+                                }
                                 /**
                                  * Whether to show the buttons for features that are planned to be added in a future update on the player menu.
                                  *
-                                 * Defaults to false.
+                                 * Dynamic Property ID: `andexdbSettings:ui.menus.playerMenu.showUpcomingButtons`
+                                 *
+                                 * @default false
                                  */
-                                get showUpcomingButtons() {
+                                static get showUpcomingButtons() {
                                     return Boolean(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu.showUpcomingButtons") ?? false);
-                                },
-                                set showUpcomingButtons(show) {
+                                }
+                                static set showUpcomingButtons(show) {
                                     world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu.showUpcomingButtons", show ?? false);
-                                },
+                                }
                                 /**
                                  * Whether to show the buttons for features that are non-functional on the player menu.
                                  *
-                                 * Defaults to false.
+                                 * Dynamic Property ID: `andexdbSettings:ui.menus.playerMenu.showNonFunctionalButtons`
+                                 *
+                                 * @default false
                                  */
-                                get showNonFunctionalButtons() {
+                                static get showNonFunctionalButtons() {
                                     return Boolean(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu.showNonFunctionalButtons") ?? false);
-                                },
-                                set showNonFunctionalButtons(show) {
+                                }
+                                static set showNonFunctionalButtons(show) {
                                     world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu.showNonFunctionalButtons", show ?? false);
-                                },
-                            };
-                        },
-                        get playerMenu_leaderboards() {
-                            return {
+                                }
+                            }
+                            return config_ui_menus_playerMenu;
+                        }
+                        /**
+                         * The settings for the player menu leaderboards.
+                         * @group Subclasses
+                         */
+                        static get playerMenu_leaderboards() {
+                            /**
+                             * The settings for the player menu leaderboards.
+                             * @hideconstructor
+                             * @nameOverride playerMenu_leaderboards
+                             * @parentOverride Globals.config.ui:class.menus:class
+                             * @group Subclasses
+                             */
+                            class config_ui_menus_playerMenu_leaderboards {
                                 /**
                                  * The settings for the built-in leaderboard statistics.
+                                 * @group Subclasses
                                  */
-                                get builtInStats() {
-                                    return {
-                                        get money() {
-                                            return {
+                                static get builtInStats() {
+                                    /**
+                                     * The settings for the built-in leaderboard statistics.
+                                     * @hideconstructor
+                                     * @nameOverride builtInStats
+                                     * @parentOverride Globals.config.ui:class.menus:class.playerMenu_leaderboards:class
+                                     * @group Subclasses
+                                     */
+                                    class config_ui_menus_playerMenu_leaderboards_builtInStats {
+                                        /**
+                                         * The settings for the built-in `money` leaderboard statistic.
+                                         * @group Subclasses
+                                         */
+                                        static get money() {
+                                            /**
+                                             * The settings for the built-in `money` leaderboard statistic.
+                                             * @hideconstructor
+                                             * @nameOverride money
+                                             * @parentOverride Globals.config.ui:class.menus:class.playerMenu_leaderboards:class.builtInStats:class
+                                             * @group Subclasses
+                                             */
+                                            class config_ui_menus_playerMenu_leaderboards_builtInStats_money {
                                                 /**
-                                                 * Whether or not this built-in statictic is enabled.
+                                                 * Whether or not the built-in `money` leaderboard statictic is enabled.
                                                  *
-                                                 * Defaults to true.
+                                                 * Dynamic Property ID: `andexdbSettings:ui.menus.playerMenu_leaderboards.builtInStats.money.enabled`
+                                                 *
+                                                 * @default true
                                                  */
-                                                get enabled() {
+                                                static get enabled() {
                                                     return Boolean(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.builtInStats.money.enabled") ?? true);
-                                                },
-                                                set enabled(enabled) {
+                                                }
+                                                static set enabled(enabled) {
                                                     world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.builtInStats.money.enabled", enabled ?? true);
-                                                },
-                                                get displayOptions() {
-                                                    return {
+                                                }
+                                                /**
+                                                 * The display options for the built-in `money` leaderboard statistic.
+                                                 * @group Subclasses
+                                                 */
+                                                static get displayOptions() {
+                                                    /**
+                                                     * The display options for the built-in `money` leaderboard statistic.
+                                                     * @hideconstructor
+                                                     * @nameOverride displayOptions
+                                                     * @parentOverride Globals.config.ui:class.menus:class.playerMenu_leaderboards:class.builtInStats:class.money:class
+                                                     * @group Subclasses
+                                                     */
+                                                    class config_ui_menus_playerMenu_leaderboards_builtInStats_money_displayOptions {
                                                         /**
                                                          * A currency symbol to prefix the displayed value with.
                                                          *
-                                                         * Defaults to "$".
+                                                         * For example, if this is set to "$", then 1327401 would become $1327401 and -1234781 would become -$1234781. (Can be combined with "Add Comma Separators" to make it display like -$1,234,781.).
+                                                         *
+                                                         * Dynamic Property ID: `andexdbSettings:ui.menus.playerMenu_leaderboards.builtInStats.money.displayOptions.currencyPrefix`
+                                                         *
+                                                         * @default "$"
                                                          */
-                                                        get currencyPrefix() {
+                                                        static get currencyPrefix() {
                                                             return String(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.builtInStats.money.displayOptions.currencyPrefix") ?? "$");
-                                                        },
-                                                        set currencyPrefix(prefixWithDollarSign) {
-                                                            world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.builtInStats.money.displayOptions.currencyPrefix", prefixWithDollarSign ?? "$");
-                                                        },
+                                                        }
+                                                        static set currencyPrefix(currencyPrefix) {
+                                                            world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.builtInStats.money.displayOptions.currencyPrefix", currencyPrefix ?? "$");
+                                                        }
                                                         /**
                                                          * Whether or not to add comma separators to the displayed value for this statistic.
                                                          *
-                                                         * Defaults to true.
+                                                         * For example, if this is set to true, then 1327401 would become 1,327,401 and -1234781 would become -1,234,781.
+                                                         *
+                                                         * Dynamic Property ID: `andexdbSettings:ui.menus.playerMenu_leaderboards.builtInStats.money.displayOptions.addCommaSeparators`
+                                                         *
+                                                         * @default true
                                                          */
-                                                        get addCommaSeparators() {
+                                                        static get addCommaSeparators() {
                                                             return Boolean(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.builtInStats.money.displayOptions.addCommaSeparators") ?? true);
-                                                        },
-                                                        set addCommaSeparators(addCommaSeparators) {
+                                                        }
+                                                        static set addCommaSeparators(addCommaSeparators) {
                                                             world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.builtInStats.money.displayOptions.addCommaSeparators", addCommaSeparators ?? true);
-                                                        },
-                                                    };
-                                                },
-                                            };
-                                        },
-                                    };
-                                },
+                                                        }
+                                                    }
+                                                    return config_ui_menus_playerMenu_leaderboards_builtInStats_money_displayOptions;
+                                                }
+                                            }
+                                            return config_ui_menus_playerMenu_leaderboards_builtInStats_money;
+                                        }
+                                    }
+                                    return config_ui_menus_playerMenu_leaderboards_builtInStats;
+                                }
                                 /**
+                                 * The custom leaderboard statistics.
                                  *
+                                 * Dynamic Property ID: `andexdbSettings:ui.menus.playerMenu_leaderboards.customStats`
+                                 *
+                                 * @default []
                                  */
-                                get customStats() {
+                                static get customStats() {
                                     return JSONB.parse(String(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.customStats") ?? "[]")).map((s) => {
                                         if (s.type === "custom") {
                                             return {
@@ -1340,8 +1912,8 @@ var exports;
                                             }
                                         }
                                     });
-                                },
-                                set customStats(buttonList) {
+                                }
+                                static set customStats(buttonList) {
                                     world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.customStats", JSONB.stringify((buttonList ?? []).map((s) => {
                                         if (s.type === "custom") {
                                             return {
@@ -1423,130 +1995,193 @@ var exports;
                                             }
                                         }
                                     })));
-                                },
+                                }
                                 /**
                                  * The statistics that are displayed when a player clicks on another player inside of the player menu leaderboard, they will be displayed in the order they are in this array.
                                  *
                                  * It should be an array of ids of leaderboard statistics, including both custom and built-in ones.
                                  *
                                  * Defaults to the list of the built-in leaderboard statistics from the `defaultPlayerMenuLeaderboardStatistics` array, in the same order that they appear in the array.
+                                 *
+                                 * Dynamic Property ID: `andexdbSettings:ui.menus.playerMenu_leaderboards.trackedStats`
+                                 *
+                                 * @default defaultPlayerMenuLeaderboardStatistics.map((s) => s.id)
                                  */
-                                get trackedStats() {
+                                static get trackedStats() {
                                     return JSON.parse(String(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.trackedStats") ??
                                         JSON.stringify(defaultPlayerMenuLeaderboardStatistics.map((s) => s.id))));
-                                },
-                                set trackedStats(buttonList) {
+                                }
+                                static set trackedStats(buttonList) {
                                     world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.trackedStats", JSON.stringify(buttonList ?? defaultPlayerMenuLeaderboardStatistics.map((s) => s.id)));
-                                },
+                                }
                                 /**
                                  * The list of statistics that have their own leaderboards, they will be displayed in the order they are in this array.
                                  *
                                  * It should be an array of ids of leaderboard statistics, including both custom and built-in ones.
                                  *
                                  * Defaults to the list of the built-in leaderboard statistics from the `defaultPlayerMenuLeaderboardStatistics` array, in the same order that they appear in the array.
+                                 *
+                                 * Dynamic Property ID: `andexdbSettings:ui.menus.playerMenu_leaderboards.leaderboards`
+                                 *
+                                 * @default defaultPlayerMenuLeaderboardStatistics.map((s) => s.id)
                                  */
-                                get leaderboards() {
+                                static get leaderboards() {
                                     return JSON.parse(String(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.leaderboards") ??
                                         JSON.stringify(defaultPlayerMenuLeaderboardStatistics.map((s) => s.id))));
-                                },
-                                set leaderboards(buttonList) {
+                                }
+                                static set leaderboards(buttonList) {
                                     world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.leaderboards", JSON.stringify(buttonList ?? defaultPlayerMenuLeaderboardStatistics.map((s) => s.id)));
-                                },
+                                }
                                 /**
                                  * Whether to show the time that a player was last online in the stats list that is shown when a player click on another player in a leaderboard.
                                  *
-                                 * Defaults to false.
+                                 * Dynamic Property ID: `andexdbSettings:ui.menus.playerMenu_leaderboards.showLastOnlineTimeInPlayerStatsList`
+                                 *
+                                 * @default false
                                  */
-                                get showLastOnlineTimeInPlayerStatsList() {
+                                static get showLastOnlineTimeInPlayerStatsList() {
                                     return Boolean(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.showLastOnlineTimeInPlayerStatsList") ??
                                         false);
-                                },
-                                set showLastOnlineTimeInPlayerStatsList(show) {
+                                }
+                                static set showLastOnlineTimeInPlayerStatsList(show) {
                                     world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.showLastOnlineTimeInPlayerStatsList", show ?? false);
-                                },
+                                }
                                 /**
                                  * Whether to show banned players inside of the leaderboards.
                                  *
-                                 * Defaults to false.
+                                 * Dynamic Property ID: `andexdbSettings:ui.menus.playerMenu_leaderboards.showBannedPlayersInLeaderboards`
+                                 *
+                                 * @default false
                                  */
-                                get showBannedPlayersInLeaderboards() {
+                                static get showBannedPlayersInLeaderboards() {
                                     return Boolean(world.getDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.showBannedPlayersInLeaderboards") ?? false);
-                                },
-                                set showBannedPlayersInLeaderboards(show) {
+                                }
+                                static set showBannedPlayersInLeaderboards(show) {
                                     world.setDynamicProperty("andexdbSettings:ui.menus.playerMenu_leaderboards.showBannedPlayersInLeaderboards", show ?? false);
-                                },
-                            };
-                        },
-                    };
-                },
-                get main() {
-                    return {};
-                },
-                get pages() {
-                    return {
+                                }
+                            }
+                            return config_ui_menus_playerMenu_leaderboards;
+                        }
+                    }
+                    return config_ui_menus;
+                }
+                /**
+                 * The main UI settings.
+                 * @group Subclasses
+                 */
+                static get main() {
+                    /**
+                     * The main UI settings.
+                     * @hideconstructor
+                     * @nameOverride main
+                     * @parentOverride Globals.config.ui:class
+                     * @group Subclasses
+                     */
+                    class config_ui_main {
+                    }
+                    return config_ui_main;
+                }
+                /**
+                 * The settings for paged UI menus.
+                 * @group Subclasses
+                 */
+                static get pages() {
+                    /**
+                     * The settings for paged UI menus.
+                     * @hideconstructor
+                     * @nameOverride pages
+                     * @parentOverride Globals.config.ui:class
+                     * @group Subclasses
+                     */
+                    class config_ui_pages {
                         /**
                          * Moved from {@link config} to {@link config.ui.pages} in version 1.23.0-preview.20+BUILD.1 on 10/04/2024 at 3:10:37 PM PDT.
                          */
-                        get maxPlayersPerManagePlayersPage() {
+                        static get maxPlayersPerManagePlayersPage() {
                             return Number(world.getDynamicProperty("andexdbSettings:maxPlayersPerManagePlayersPage") ?? 9);
-                        },
-                        set maxPlayersPerManagePlayersPage(maxPlayersPerManagePlayersPage) {
+                        }
+                        static set maxPlayersPerManagePlayersPage(maxPlayersPerManagePlayersPage) {
                             world.setDynamicProperty("andexdbSettings:maxPlayersPerManagePlayersPage", Math.min(1000, Math.max(1, maxPlayersPerManagePlayersPage ?? 9)));
-                        },
+                        }
                         /**
                          * Moved from {@link config} to {@link config.ui.pages} in version 1.23.0-preview.20+BUILD.1 on 10/04/2024 at 3:10:37 PM PDT.
                          */
-                        get maxBansPerManageBansPage() {
+                        static get maxBansPerManageBansPage() {
                             return Number(world.getDynamicProperty("andexdbSettings:maxBansPerManageBansPage") ?? 10);
-                        },
-                        set maxBansPerManageBansPage(maxBansPerManageBansPage) {
+                        }
+                        static set maxBansPerManageBansPage(maxBansPerManageBansPage) {
                             world.setDynamicProperty("andexdbSettings:maxBansPerManageBansPage", maxBansPerManageBansPage ?? 10);
-                        },
+                        }
                         /**
                          * Moved from {@link config} to {@link config.ui.pages} in version 1.23.0-preview.20+BUILD.1 on 10/04/2024 at 3:10:37 PM PDT.
                          */
-                        get maxHomesPerManageHomesPage() {
+                        static get maxHomesPerManageHomesPage() {
                             return Number(world.getDynamicProperty("andexdbSettings:maxHomesPerManageHomesPage") ?? 10);
-                        },
-                        set maxHomesPerManageHomesPage(maxHomesPerManageHomesPage) {
+                        }
+                        static set maxHomesPerManageHomesPage(maxHomesPerManageHomesPage) {
                             world.setDynamicProperty("andexdbSettings:maxHomesPerManageHomesPage", maxHomesPerManageHomesPage ?? 10);
-                        },
-                    };
-                },
-                get other() {
-                    return {
-                        get useStarWarsReference404Page() {
+                        }
+                    }
+                    return config_ui_pages;
+                }
+                /**
+                 * Other UI settings.
+                 * @group Subclasses
+                 */
+                static get other() {
+                    /**
+                     * Other UI settings.
+                     * @hideconstructor
+                     * @nameOverride other
+                     * @parentOverride Globals.config.ui:class
+                     * @group Subclasses
+                     */
+                    class config_ui_other {
+                        static get useStarWarsReference404Page() {
                             return Boolean(world.getDynamicProperty("andexdbUISettings:other.useStarWarsReference404Page") ?? false);
-                        },
-                        set useStarWarsReference404Page(useStarWarsReference404Page) {
+                        }
+                        static set useStarWarsReference404Page(useStarWarsReference404Page) {
                             world.setDynamicProperty("andexdbUISettings:other.useStarWarsReference404Page", useStarWarsReference404Page ?? false);
-                        },
-                    };
-                },
-            };
+                        }
+                    }
+                    return config_ui_other;
+                }
+            }
+            return config_ui;
         }
+        /**
+         * System settings.
+         * @group Subclasses
+         */
         static get system() {
-            return {
-                get artificialLagMS() {
+            /**
+             * System settings.
+             * @hideconstructor
+             * @nameOverride system
+             * @parentOverride Globals.config
+             * @group Subclasses
+             */
+            class config_system {
+                static get artificialLagMS() {
                     return Number(world.getDynamicProperty("andexdbSettings:artificialLagMS") ?? 0);
-                },
-                set artificialLagMS(artificialLagMS) {
+                }
+                static set artificialLagMS(artificialLagMS) {
                     world.setDynamicProperty("andexdbSettings:artificialLagMS", artificialLagMS ?? 0);
-                },
-                get timeZone() {
+                }
+                static get timeZone() {
                     return isNaN(Number(world.getDynamicProperty("andexdbSettings:timeZone")))
                         ? 0
                         : Number(world.getDynamicProperty("andexdbSettings:timeZone") ?? 0);
-                },
-                set timeZone(timeZone) {
+                }
+                static set timeZone(timeZone) {
                     world.setDynamicProperty("andexdbSettings:timeZone", timeZone ?? 0);
-                },
-                get playerDataRefreshRate() {
+                }
+                static get playerDataRefreshRate() {
                     return Number(world.getDynamicProperty("andexdbSettings:playerDataRefreshRate") ?? 20);
-                },
-                set playerDataRefreshRate(playerDataRefreshRate) {
+                }
+                static set playerDataRefreshRate(playerDataRefreshRate) {
                     world.setDynamicProperty("andexdbSettings:playerDataRefreshRate", Number.isNaN(Number(playerDataRefreshRate)) ? 5 : Math.min(1000, Math.max(1, Number(playerDataRefreshRate ?? 20))));
-                },
+                }
                 /**
                  * How often to refresh protected areas.
                  *
@@ -1554,34 +2189,34 @@ var exports;
                  *
                  * @default 200
                  */
-                get protectedAreasRefreshRate() {
+                static get protectedAreasRefreshRate() {
                     return Number(world.getDynamicProperty("andexdbSettings:protectedAreasRefreshRate") ?? 200);
-                },
-                set protectedAreasRefreshRate(protectedAreasRefreshRate) {
+                }
+                static set protectedAreasRefreshRate(protectedAreasRefreshRate) {
                     world.setDynamicProperty("andexdbSettings:protectedAreasRefreshRate", Number.isNaN(Number(protectedAreasRefreshRate)) ? 200 : Math.min(1000000, Math.max(1, Number(protectedAreasRefreshRate ?? 200))));
-                },
-                get protectedAreasZoneActionsEnabled() {
+                }
+                static get protectedAreasZoneActionsEnabled() {
                     return Boolean(world.getDynamicProperty("andexdbSettings:protectedAreasZoneActionsEnabled") ?? true);
-                },
-                set protectedAreasZoneActionsEnabled(protectedAreasZoneActionsEnabled) {
+                }
+                static set protectedAreasZoneActionsEnabled(protectedAreasZoneActionsEnabled) {
                     world.setDynamicProperty("andexdbSettings:protectedAreasZoneActionsEnabled", protectedAreasZoneActionsEnabled ?? true);
-                },
-                get protectedAreasZoneActionsInterval() {
+                }
+                static get protectedAreasZoneActionsInterval() {
                     return Number(world.getDynamicProperty("andexdbSettings:protectedAreasZoneActionsInterval") ?? 5);
-                },
-                set protectedAreasZoneActionsInterval(protectedAreasZoneActionsInterval) {
+                }
+                static set protectedAreasZoneActionsInterval(protectedAreasZoneActionsInterval) {
                     world.setDynamicProperty("andexdbSettings:protectedAreasZoneActionsInterval", Number.isNaN(Number(protectedAreasZoneActionsInterval))
                         ? 5
                         : Math.min(1000000, Math.max(1, Number(protectedAreasZoneActionsInterval ?? 5))));
-                },
-                get protectedAreasZoneRefreshInterval() {
+                }
+                static get protectedAreasZoneRefreshInterval() {
                     return Number(world.getDynamicProperty("andexdbSettings:protectedAreasZoneRefreshInterval") ?? 200);
-                },
-                set protectedAreasZoneRefreshInterval(protectedAreasZoneRefreshInterval) {
+                }
+                static set protectedAreasZoneRefreshInterval(protectedAreasZoneRefreshInterval) {
                     world.setDynamicProperty("andexdbSettings:protectedAreasZoneRefreshInterval", Number.isNaN(Number(protectedAreasZoneRefreshInterval))
                         ? 200
                         : Math.min(1000000, Math.max(1, Number(protectedAreasZoneRefreshInterval ?? 200))));
-                },
+                }
                 /**
                  * How often to check for banned players.
                  *
@@ -1589,156 +2224,166 @@ var exports;
                  *
                  * @default 20
                  */
-                get bannedPlayersRefreshRate() {
+                static get bannedPlayersRefreshRate() {
                     return Number(world.getDynamicProperty("andexdbSettings:bannedPlayersRefreshRate") ?? 20);
-                },
-                set bannedPlayersRefreshRate(bannedPlayersRefreshRate) {
+                }
+                static set bannedPlayersRefreshRate(bannedPlayersRefreshRate) {
                     world.setDynamicProperty("andexdbSettings:bannedPlayersRefreshRate", Number.isNaN(Number(bannedPlayersRefreshRate)) ? 20 : Math.min(1000, Math.max(1, Number(bannedPlayersRefreshRate ?? 20))));
-                },
-                /**
-                 * How long it has to be since the last ban refresh before the bans list will be automatically refreshed, when getting the bans list or checking if a player is banned.
-                 *
-                 * Dynamic Property ID: `andexdbSettings:bansMinimumAutoRefresh`
-                 *
-                 * @default 1000
-                 */
-                get bansMinimumAutoRefresh() {
-                    return Number(world.getDynamicProperty("andexdbSettings:bansMinimumAutoRefresh") ?? 1000);
-                },
-                set bansMinimumAutoRefresh(bansMinimumAutoRefresh) {
-                    world.setDynamicProperty("andexdbSettings:bansMinimumAutoRefresh", Number.isNaN(Number(bansMinimumAutoRefresh)) ? 1000 : Number(bansMinimumAutoRefresh ?? 1000));
-                },
-                get debugMode() {
+                }
+                static get debugMode() {
                     return Boolean(world.getDynamicProperty("andexdbSettings:debugMode") ?? false);
-                },
-                set debugMode(debugMode) {
+                }
+                static set debugMode(debugMode) {
                     world.setDynamicProperty("andexdbSettings:debugMode", debugMode ?? false);
-                },
+                }
                 /**
                  * It is recommended to leave this set to false.
-                 */
-                get allowWatchdogTerminationCrash() {
-                    return Boolean(world.getDynamicProperty("andexdbSettings:allowWatchdogTerminationCrash") ?? false);
-                },
-                set allowWatchdogTerminationCrash(allowWatchdogTerminationCrash) {
-                    world.setDynamicProperty("andexdbSettings:allowWatchdogTerminationCrash", allowWatchdogTerminationCrash ?? false);
-                },
-                /**
-                 * It is recommended to leave this set to false.
-                 */
-                get hideWatchdogTerminationCrashEnabledWarningsOnStartup() {
-                    return Boolean(world.getDynamicProperty("andexdbSettings:hideWatchdogTerminationCrashEnabledWarningsOnStartup") ?? false);
-                },
-                set hideWatchdogTerminationCrashEnabledWarningsOnStartup(hideWatchdogTerminationCrashEnabledWarningsOnStartup) {
-                    world.setDynamicProperty("andexdbSettings:hideWatchdogTerminationCrashEnabledWarningsOnStartup", hideWatchdogTerminationCrashEnabledWarningsOnStartup ?? false);
-                },
-                get autoSavePlayerData() {
-                    return Boolean(world.getDynamicProperty("andexdbSettings:autoSavePlayerData") ?? true);
-                },
-                set autoSavePlayerData(autoSavePlayerData) {
-                    world.setDynamicProperty("andexdbSettings:autoSavePlayerData", autoSavePlayerData ?? true);
-                },
-                /**
-                 * It is recommended to leave this set to false.
+                 *
+                 * Dynamic Property ID: `andexdbSettings:allowWatchdogTerminationCrash`
+                 *
                  * @default false
-                 * @decorator
-                 * also
-                 * false
                  */
-                get useLegacyPlayerInventoryDataSaveSystem() {
+                static get allowWatchdogTerminationCrash() {
+                    return Boolean(world.getDynamicProperty("andexdbSettings:allowWatchdogTerminationCrash") ?? false);
+                }
+                static set allowWatchdogTerminationCrash(allowWatchdogTerminationCrash) {
+                    world.setDynamicProperty("andexdbSettings:allowWatchdogTerminationCrash", allowWatchdogTerminationCrash ?? false);
+                }
+                /**
+                 * It is recommended to leave this set to false.
+                 *
+                 * Dynamic Property ID: `andexdbSettings:hideWatchdogTerminationCrashEnabledWarningsOnStartup`
+                 *
+                 * @default false
+                 */
+                static get hideWatchdogTerminationCrashEnabledWarningsOnStartup() {
+                    return Boolean(world.getDynamicProperty("andexdbSettings:hideWatchdogTerminationCrashEnabledWarningsOnStartup") ?? false);
+                }
+                static set hideWatchdogTerminationCrashEnabledWarningsOnStartup(hideWatchdogTerminationCrashEnabledWarningsOnStartup) {
+                    world.setDynamicProperty("andexdbSettings:hideWatchdogTerminationCrashEnabledWarningsOnStartup", hideWatchdogTerminationCrashEnabledWarningsOnStartup ?? false);
+                }
+                static get autoSavePlayerData() {
+                    return Boolean(world.getDynamicProperty("andexdbSettings:autoSavePlayerData") ?? true);
+                }
+                static set autoSavePlayerData(autoSavePlayerData) {
+                    world.setDynamicProperty("andexdbSettings:autoSavePlayerData", autoSavePlayerData ?? true);
+                }
+                /**
+                 * It is recommended to leave this set to false.
+                 *
+                 * Dynamic Property ID: `andexdbSettings:useLegacyPlayerInventoryDataSaveSystem`
+                 *
+                 * @default false
+                 */
+                static get useLegacyPlayerInventoryDataSaveSystem() {
                     return Boolean(world.getDynamicProperty("andexdbSettings:useLegacyPlayerInventoryDataSaveSystem") ?? false);
-                },
-                set useLegacyPlayerInventoryDataSaveSystem(useLegacyPlayerInventoryDataSaveSystem) {
+                }
+                static set useLegacyPlayerInventoryDataSaveSystem(useLegacyPlayerInventoryDataSaveSystem) {
                     world.setDynamicProperty("andexdbSettings:useLegacyPlayerInventoryDataSaveSystem", useLegacyPlayerInventoryDataSaveSystem ?? false);
-                },
-                get playerInventoryDataSaveSystemEnabled() {
+                }
+                static get playerInventoryDataSaveSystemEnabled() {
                     return Boolean(world.getDynamicProperty("andexdbSettings:playerInventoryDataSaveSystemEnabled") ?? true);
-                },
-                set playerInventoryDataSaveSystemEnabled(playerInventoryDataSaveSystemEnabled) {
+                }
+                static set playerInventoryDataSaveSystemEnabled(playerInventoryDataSaveSystemEnabled) {
                     world.setDynamicProperty("andexdbSettings:playerInventoryDataSaveSystemEnabled", playerInventoryDataSaveSystemEnabled ?? true);
-                },
-                get spreadPlayerInventoryDataSavesOverMultipleTicks() {
+                }
+                static get spreadPlayerInventoryDataSavesOverMultipleTicks() {
                     return Boolean(world.getDynamicProperty("andexdbSettings:spreadPlayerInventoryDataSavesOverMultipleTicks") ?? true);
-                },
-                set spreadPlayerInventoryDataSavesOverMultipleTicks(spreadPlayerInventoryDataSavesOverMultipleTicks) {
+                }
+                static set spreadPlayerInventoryDataSavesOverMultipleTicks(spreadPlayerInventoryDataSavesOverMultipleTicks) {
                     world.setDynamicProperty("andexdbSettings:spreadPlayerInventoryDataSavesOverMultipleTicks", spreadPlayerInventoryDataSavesOverMultipleTicks ?? true);
-                },
-                get playerDataSavePerformanceMode() {
+                }
+                static get playerDataSavePerformanceMode() {
                     return String(world.getDynamicProperty("andexdbSettings:playerDataSavePerformanceMode") ?? "full");
-                },
-                set playerDataSavePerformanceMode(playerDataSavePerformanceMode) {
+                }
+                static set playerDataSavePerformanceMode(playerDataSavePerformanceMode) {
                     world.setDynamicProperty("andexdbSettings:playerDataSavePerformanceMode", playerDataSavePerformanceMode ?? "full");
-                },
-                get showEntityScaleNotFoundConsoleLog() {
+                }
+                static get showEntityScaleNotFoundConsoleLog() {
                     return Boolean(world.getDynamicProperty("andexdbSettings:showEntityScaleNotFoundConsoleLog") ?? true);
-                },
-                set showEntityScaleNotFoundConsoleLog(showEntityScaleNotFoundConsoleLog) {
+                }
+                static set showEntityScaleNotFoundConsoleLog(showEntityScaleNotFoundConsoleLog) {
                     world.setDynamicProperty("andexdbSettings:showEntityScaleNotFoundConsoleLog", showEntityScaleNotFoundConsoleLog ?? true);
-                },
-                get showEntityScaleFoundConsoleLog() {
+                }
+                static get showEntityScaleFoundConsoleLog() {
                     return Boolean(world.getDynamicProperty("andexdbSettings:showEntityScaleFoundConsoleLog") ?? true);
-                },
-                set showEntityScaleFoundConsoleLog(showEntityScaleFoundConsoleLog) {
+                }
+                static set showEntityScaleFoundConsoleLog(showEntityScaleFoundConsoleLog) {
                     world.setDynamicProperty("andexdbSettings:showEntityScaleFoundConsoleLog", showEntityScaleFoundConsoleLog ?? true);
-                },
-                get showEntityScaleNotFoundChatLog() {
+                }
+                static get showEntityScaleNotFoundChatLog() {
                     return Boolean(world.getDynamicProperty("andexdbSettings:showEntityScaleNotFoundChatLog") ?? false);
-                },
-                set showEntityScaleNotFoundChatLog(showEntityScaleNotFoundChatLog) {
+                }
+                static set showEntityScaleNotFoundChatLog(showEntityScaleNotFoundChatLog) {
                     world.setDynamicProperty("andexdbSettings:showEntityScaleNotFoundChatLog", showEntityScaleNotFoundChatLog ?? false);
-                },
-                get showEntityScaleFoundChatLog() {
+                }
+                static get showEntityScaleFoundChatLog() {
                     return Boolean(world.getDynamicProperty("andexdbSettings:showEntityScaleFoundChatLog") ?? false);
-                },
-                set showEntityScaleFoundChatLog(showEntityScaleFoundChatLog) {
+                }
+                static set showEntityScaleFoundChatLog(showEntityScaleFoundChatLog) {
                     world.setDynamicProperty("andexdbSettings:showEntityScaleFoundChatLog", showEntityScaleFoundChatLog ?? false);
-                },
-                get showBlueModsAnticheatNotFoundConsoleLog() {
+                }
+                static get showBlueModsAnticheatNotFoundConsoleLog() {
                     return Boolean(world.getDynamicProperty("andexdbSettings:showBlueModsAnticheatNotFoundConsoleLog") ?? true);
-                },
-                set showBlueModsAnticheatNotFoundConsoleLog(showBlueModsAnticheatNotFoundConsoleLog) {
+                }
+                static set showBlueModsAnticheatNotFoundConsoleLog(showBlueModsAnticheatNotFoundConsoleLog) {
                     world.setDynamicProperty("andexdbSettings:showBlueModsAnticheatNotFoundConsoleLog", showBlueModsAnticheatNotFoundConsoleLog ?? true);
-                },
-                get showBlueModsAnticheatFoundConsoleLog() {
+                }
+                static get showBlueModsAnticheatFoundConsoleLog() {
                     return Boolean(world.getDynamicProperty("andexdbSettings:showBlueModsAnticheatFoundConsoleLog") ?? true);
-                },
-                set showBlueModsAnticheatFoundConsoleLog(showBlueModsAnticheatFoundConsoleLog) {
+                }
+                static set showBlueModsAnticheatFoundConsoleLog(showBlueModsAnticheatFoundConsoleLog) {
                     world.setDynamicProperty("andexdbSettings:showBlueModsAnticheatFoundConsoleLog", showBlueModsAnticheatFoundConsoleLog ?? true);
-                },
-                get showBlueModsAnticheatNotFoundChatLog() {
+                }
+                static get showBlueModsAnticheatNotFoundChatLog() {
                     return Boolean(world.getDynamicProperty("andexdbSettings:showBlueModsAnticheatNotFoundChatLog") ?? false);
-                },
-                set showBlueModsAnticheatNotFoundChatLog(showBlueModsAnticheatNotFoundChatLog) {
+                }
+                static set showBlueModsAnticheatNotFoundChatLog(showBlueModsAnticheatNotFoundChatLog) {
                     world.setDynamicProperty("andexdbSettings:showBlueModsAnticheatNotFoundChatLog", showBlueModsAnticheatNotFoundChatLog ?? false);
-                },
-                get showBlueModsAnticheatFoundChatLog() {
+                }
+                static get showBlueModsAnticheatFoundChatLog() {
                     return Boolean(world.getDynamicProperty("andexdbSettings:showBlueModsAnticheatFoundChatLog") ?? false);
-                },
-                set showBlueModsAnticheatFoundChatLog(showBlueModsAnticheatFoundChatLog) {
+                }
+                static set showBlueModsAnticheatFoundChatLog(showBlueModsAnticheatFoundChatLog) {
                     world.setDynamicProperty("andexdbSettings:showBlueModsAnticheatFoundChatLog", showBlueModsAnticheatFoundChatLog ?? false);
-                },
+                }
                 /**
                  * Sets whether or not the add-on is allowed to connect to and communicate with the entity scale add-on.
                  * @warning It is HIGHLY DISCOURAGED to disable this option.
                  */
-                get allowConnectingToEntityScale() {
+                static get allowConnectingToEntityScale() {
                     return Boolean(world.getDynamicProperty("andexdbSettings:allowConnectingToEntityScale") ?? true);
-                },
-                set allowConnectingToEntityScale(allowConnectingToEntityScale) {
+                }
+                static set allowConnectingToEntityScale(allowConnectingToEntityScale) {
                     world.setDynamicProperty("andexdbSettings:allowConnectingToEntityScale", allowConnectingToEntityScale ?? true);
-                },
+                }
                 /**
                  * Sets whether or not the add-on is allowed to connect to and communicate with the BlueMods Anticheat add-on.
                  * @warning It is HIGHLY DISCOURAGED to disable this option.
                  */
-                get allowConnectingToBlueModsAnticheat() {
+                static get allowConnectingToBlueModsAnticheat() {
                     return Boolean(world.getDynamicProperty("andexdbSettings:allowConnectingToBlueModsAnticheat") ?? true);
-                },
-                set allowConnectingToBlueModsAnticheat(allowConnectingToBlueModsAnticheat) {
+                }
+                static set allowConnectingToBlueModsAnticheat(allowConnectingToBlueModsAnticheat) {
                     world.setDynamicProperty("andexdbSettings:allowConnectingToBlueModsAnticheat", allowConnectingToBlueModsAnticheat ?? true);
-                },
-            };
+                }
+            }
+            return config_system;
         }
+        /**
+         * Resets the specified subsection of the config, or the entire config if no subsection is specified.
+         * @param subsection The subsection of the config to reset. If not specified, the entire config will be reset.
+         *
+         * @example Reset the `config.worldBorder.overworld` section of the config:
+         * ```ts
+         * config.reset(config.worldBorder.overworld);
+         * ```
+         *
+         * @example Reset the entire config:
+         * ```ts
+         * config.reset();
+         * ```
+         */
         static reset(subsection) {
             function resetProperties(obj) {
                 const descriptors = Object.getOwnPropertyDescriptors(obj);
@@ -1746,13 +2391,29 @@ var exports;
                     if (descriptor?.get && descriptor.set) {
                         obj[key] = undefined;
                     }
-                    else if (descriptor?.get && typeof descriptor.get() === "object" && descriptor.get() !== null) {
+                    else if (descriptor?.get && typeof descriptor.get() === "function") {
                         resetProperties(descriptor.get());
                     }
                 }
             }
             resetProperties(subsection ?? config);
         }
+        /**
+         * Applies the specified settings to the config.
+         * @param {FilterKey<DeepPartial<typeof config>, ["prototype", "reset", "applySettings", "toJSON"]>} settings The settings to apply to the config, as a partial of the JSONified version of the config.
+         *
+         * @example Apply settings to the config:
+         * ```ts
+         * config.applySettings({
+         *     worldBorder: {
+         *         overworld: {
+         *             enabled: true
+         *         },
+         *     },
+         *     chatCommandPrefix: "!",
+         * });
+         * ```
+         */
         static applySettings(settings) {
             function applySettingsRecursive(settings, target) {
                 for (const key in settings) {
@@ -1771,28 +2432,50 @@ var exports;
             }
             applySettingsRecursive(settings, config);
         }
+        /**
+         * Converts the config object to a JSON-serializable object.
+         * @returns {FilterKey<typeof config, ["prototype", "reset", "applySettings", "toJSON"]>} An object that can be serialized to JSON, containing all the properties of the config object except for the ones with the names "prototype", "reset", "applySettings", and "toJSON", and the ones that are not enumerable.
+         */
         static toJSON() {
             // modules.utils.filterProperties(modules.utils.filterProperties(config, ["addCommaSeparators", "spawnCommandAllowCrossDimensionalTeleport", "allowWatchdogTerminationCrash", "spawnCommandLocation", "allowChatEscapeCodes"], {}), ["toJSON"], {}).antiSpamSystem.antispamEnabled;
-            return Object.fromEntries(Object.getOwnPropertyNames(config)
-                .filter((n) => ![
-                "constructor",
-                "toString",
-                "toLocaleString",
-                "valueOf",
-                "hasOwnProperty",
-                "name",
-                "prototype",
-                "reset",
-                "applySettings",
-                "length",
-                "toJSON",
-            ].includes(n))
-                .map((n) => [n, config[n]]));
+            return Object.fromEntries(Object.getOwnPropertyNames(this).map((key) => {
+                const descriptor = Object.getOwnPropertyDescriptor(this, key);
+                if (descriptor?.get && descriptor.set) {
+                    return [key, descriptor.get()];
+                }
+                else if (descriptor?.get) {
+                    return [key, config.toJSON.call(descriptor.get())];
+                }
+                return [key, this[key]];
+            })); /*
+                Object.getOwnPropertyNames(config)
+                    .filter(
+                        (n) =>
+                            ![
+                                "constructor",
+                                "toString",
+                                "toLocaleString",
+                                "valueOf",
+                                "hasOwnProperty",
+                                "name",
+                                "prototype",
+                                "reset",
+                                "applySettings",
+                                "length",
+                                "toJSON",
+                            ].includes(n)
+                    )
+                    .map((n) => [n, config[n as keyof typeof config]])
+            ); */
         }
     }
     exports.config = config;
 })(exports || (exports = {}));
 export var config = exports.config;
+/**
+ * {@inheritDoc exports.config.system}
+ */
+export const system = exports.config.system;
 Object.defineProperties(globalThis, {
     config: {
         value: exports.config,

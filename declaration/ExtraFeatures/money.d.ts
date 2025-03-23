@@ -1,3 +1,8 @@
+/**
+ * ExtraFeatures/money.ts
+ * @module
+ * @description This file contains classes related to the money system.
+ */
 import { Entity, ScoreboardObjective } from "@minecraft/server";
 export declare class MoneySystem {
     playerID: `${number}`;

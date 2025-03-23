@@ -20,7 +20,7 @@ declare global {
      * ```
      *
      * @namespace
-     * @showGroups
+     * @hideGroups References
      */
     export import Globals = globalThis;
 }

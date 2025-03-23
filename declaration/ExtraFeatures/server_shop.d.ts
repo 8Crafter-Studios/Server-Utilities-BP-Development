@@ -1,3 +1,8 @@
+/**
+ * ExtraFeatures/server_shop.ts
+ * @module
+ * @description This file contains functions and types related to the server shop system.
+ */
 import { Player, Entity } from "@minecraft/server";
 import "init/classes/config";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";

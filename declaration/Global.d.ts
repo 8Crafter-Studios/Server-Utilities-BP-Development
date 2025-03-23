@@ -1,3 +1,8 @@
+/**
+ * Global.ts
+ * @module
+ * @description This file declares global properties and methods, and declares additional symbols on many classes and modules.
+ */
 import { type RawMessage, type Player, type Dimension } from "@minecraft/server";
 import type Decimal from "decimal.js";
 import type { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
@@ -538,7 +543,7 @@ declare global {
          */
         static get stack(): Error["stack"];
         /**
-         * @namespace
+         * {@inheritDoc Globals!modules.Decimal}
          * @see {@link modules.Decimal}
          */
         static readonly Decimal: typeof Decimal;

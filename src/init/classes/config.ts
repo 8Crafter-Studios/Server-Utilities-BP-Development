@@ -759,7 +759,7 @@ namespace exports {
                      * @nameOverride sign
                      * @parentOverride Globals.config.shopSystem:class
                      * @alpha
-                     * @unused The sign shop system has not been implemented yet.
+                     * @unused
                      * @group Subclasses
                      */
                     class config_shopSystem_sign {
@@ -767,10 +767,11 @@ namespace exports {
                          * Whether or not the sign shop system is enabled.
                          *
                          * Dynamic Property ID: `andexdbShopSystemSettings:sign.enabled`
+                         * 
+                         * @alpha
+                         * @unused
                          *
                          * @default false
-                         * @alpha
-                         * @unused The sign shop system has not been implemented yet.
                          */
                         static get enabled(): boolean {
                             return Boolean(world.getDynamicProperty("andexdbShopSystemSettings:sign.enabled") ?? false);
@@ -2586,7 +2587,7 @@ namespace exports {
                 for (const [key, descriptor] of Object.entries(descriptors)) {
                     if (descriptor?.get && descriptor.set) {
                         obj[key] = undefined;
-                    } else if (descriptor?.get && typeof descriptor.get() === "object" && descriptor.get() !== null) {
+                    } else if (descriptor?.get && typeof descriptor.get() === "function") {
                         resetProperties(descriptor.get());
                     }
                 }
@@ -2633,6 +2634,16 @@ namespace exports {
         static toJSON(): FilterKey<typeof config, ["prototype", "reset", "applySettings", "toJSON"]> {
             // modules.utils.filterProperties(modules.utils.filterProperties(config, ["addCommaSeparators", "spawnCommandAllowCrossDimensionalTeleport", "allowWatchdogTerminationCrash", "spawnCommandLocation", "allowChatEscapeCodes"], {}), ["toJSON"], {}).antiSpamSystem.antispamEnabled;
             return Object.fromEntries(
+                Object.getOwnPropertyNames(this).map((key) => {
+                    const descriptor = Object.getOwnPropertyDescriptor(this, key);
+                    if (descriptor?.get && descriptor.set) {
+                        return [key, descriptor.get()];
+                    } else if (descriptor?.get) {
+                        return [key, config.toJSON.call(descriptor.get())];
+                    }
+                    return [key, this[key as keyof typeof config]];
+                }),
+            ) as ReturnType<typeof modules.utils.filterProperties<typeof config, ["prototype", "reset", "applySettings", "toJSON"]>>;/* 
                 Object.getOwnPropertyNames(config)
                     .filter(
                         (n) =>
@@ -2651,7 +2662,7 @@ namespace exports {
                             ].includes(n)
                     )
                     .map((n) => [n, config[n as keyof typeof config]])
-            ) as ReturnType<typeof modules.utils.filterProperties<typeof config, ["prototype", "reset", "applySettings", "toJSON"]>>;
+            ); */
         }
     }
 }

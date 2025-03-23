@@ -18,8 +18,8 @@ declare const VectorClass: {
         z: number;
         assign(vec: import("@minecraft/server").Vector3): /*elided*/ any;
         equals(v: import("@minecraft/server").Vector3): boolean;
-        add(v: import("@minecraft/server").Vector3): /*elided*/ any;
-        subtract(v: import("@minecraft/server").Vector3): /*elided*/ any;
+        add(v: Partial<import("@minecraft/server").Vector3>): /*elided*/ any;
+        subtract(v: Partial<import("@minecraft/server").Vector3>): /*elided*/ any;
         scale(val: number): /*elided*/ any;
         dot(vec: import("@minecraft/server").Vector3): number;
         cross(vec: import("@minecraft/server").Vector3): /*elided*/ any;
@@ -37,6 +37,10 @@ declare const VectorClass: {
         }): /*elided*/ any;
         lerp(vec: import("@minecraft/server").Vector3, t: number): /*elided*/ any;
         slerp(vec: import("@minecraft/server").Vector3, t: number): /*elided*/ any;
+        multiply(vec: import("@minecraft/server").Vector3): /*elided*/ any;
+        rotateX(a: number): /*elided*/ any;
+        rotateY(a: number): /*elided*/ any;
+        rotateZ(a: number): /*elided*/ any;
     };
     new (x: number, y: number, z: number): {
         zero: import("@minecraft/server").Vector3;
@@ -56,8 +60,8 @@ declare const VectorClass: {
         z: number;
         assign(vec: import("@minecraft/server").Vector3): /*elided*/ any;
         equals(v: import("@minecraft/server").Vector3): boolean;
-        add(v: import("@minecraft/server").Vector3): /*elided*/ any;
-        subtract(v: import("@minecraft/server").Vector3): /*elided*/ any;
+        add(v: Partial<import("@minecraft/server").Vector3>): /*elided*/ any;
+        subtract(v: Partial<import("@minecraft/server").Vector3>): /*elided*/ any;
         scale(val: number): /*elided*/ any;
         dot(vec: import("@minecraft/server").Vector3): number;
         cross(vec: import("@minecraft/server").Vector3): /*elided*/ any;
@@ -75,6 +79,10 @@ declare const VectorClass: {
         }): /*elided*/ any;
         lerp(vec: import("@minecraft/server").Vector3, t: number): /*elided*/ any;
         slerp(vec: import("@minecraft/server").Vector3, t: number): /*elided*/ any;
+        multiply(vec: import("@minecraft/server").Vector3): /*elided*/ any;
+        rotateX(a: number): /*elided*/ any;
+        rotateY(a: number): /*elided*/ any;
+        rotateZ(a: number): /*elided*/ any;
     };
     zero: import("@minecraft/server").Vector3;
     one: import("@minecraft/server").Vector3;

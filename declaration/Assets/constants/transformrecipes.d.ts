@@ -1,3 +1,13 @@
+/**
+ * Assets/constants/transformrecipes.ts
+ * @module
+ * @description This file contains mappings for recipes for the `\gettransformsmithingtemplate` command. These recipes are used to convert smithing table enchanted book items into any vanilla item.
+ */
+/**
+ * Mappings for recipes for the `\gettransformsmithingtemplate` command.
+ *
+ * These recipes are used to convert smithing table enchanted book items into any vanilla item.
+ */
 export declare const listoftransformrecipes: readonly [{
     readonly id: "minecraft:enchanted_book";
 }, {

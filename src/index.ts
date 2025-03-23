@@ -8,12 +8,12 @@ import { system, world } from "@minecraft/server";
 
 import * as GameTest from "@minecraft/server-gametest";
 import * as mcServer from "@minecraft/server";
-import * as mcServerUi from "@minecraft/server-ui"; /*
-import * as mcServerAdmin from "@minecraft/server-admin";*/ /*
-import * as mcServerNet from "@minecraft/server-net";*/ /*
-import * as mcDebugUtilities from "@minecraft/debug-utilities";*/ /*
-import * as mcCommon from "@minecraft/common";*/ /*
-import * as mcVanillaData from "@minecraft/vanilla-data";*/
+import * as mcServerUi from "@minecraft/server-ui";
+import * as mcServerAdmin from "@minecraft/server-admin";/*
+import * as mcServerNet from "@minecraft/server-net";*//*
+import * as mcDebugUtilities from "@minecraft/debug-utilities";*/
+import * as mcCommon from "@minecraft/common";
+import * as mcVanillaData from "@minecraft/vanilla-data.js";
 import "initializeMainGlobalVariables";
 import "Assets/classes/JSONB";
 import "Global";
@@ -73,7 +73,7 @@ import "legacyModuleAliases/errors.js";
 import "legacyModuleAliases/utilities.js"; */
 import "@minecraft/math.js";
 import "GlobalDecorators";
-import mcMath from "@minecraft/math.js";
+import * as mcMath from "@minecraft/math.js";
 import colorCore, { Color } from "color-core";
 import Decimal from "decimal.js";
 import * as semver from "semver";
@@ -165,57 +165,72 @@ const errors = await moduleImportsConfig.import("errors");
 const modulesMap = {
     /**
      * The `@minecraft/server` module.
+     *
      * @see {@link https://www.npmjs.com/package/@minecraft/server}
      * @namespace
      */
     mcServer: mcServer,
     /**
      * The `@minecraft/server-ui` module.
+     *
      * @see {@link https://www.npmjs.com/package/@minecraft/server-ui}
      * @namespace
      */
     mcServerUi,
     /**
      * The `@minecraft/server-gametest` module.
+     *
      * @see {@link https://www.npmjs.com/package/@minecraft/server-gametest}
      * @namespace
      */
     GameTest,
     /**
      * The `@minecraft/server-admin` module.
+     *
      * @see {@link https://www.npmjs.com/package/@minecraft/server-admin}
      * @namespace
      */
-    // mcServerAdmin,
+    mcServerAdmin,
     /**
      * The `@minecraft/server-net` module.
+     *
      * @see {@link https://www.npmjs.com/package/@minecraft/server-net}
      * @namespace
      */
     // mcServerNet,
     /**
-     * The `@minecraft/server-debug` module.
+     * The `@minecraft/debug-utilities` module.
+     *
      * @see {@link https://www.npmjs.com/package/@minecraft/debug-utilities}
      * @namespace
      */
     // mcDebugUtilities,
     /**
+     * The `@minecraft/diagnostics` module.
+     *
+     * @see {@link https://www.npmjs.com/package/@minecraft/diagnostics}
+     * @namespace
+     */
+    // mcDiagnostics,
+    /**
      * The `@minecraft/common` module.
+     *
      * @see {@link https://www.npmjs.com/package/@minecraft/common}
      * @namespace
      */
-    // mcCommon,
+    mcCommon,
     /**
      * The `@minecraft/vanilla-data` module.
+     *
      * @see {@link https://www.npmjs.com/package/@minecraft/vanilla-data}
      * @namespace
      */
-    // mcVanillaData,
+    mcVanillaData,
     /**
      * This module contains the main classes, constants, and functions of the add-one, as well as other miscellaneous classes, constants, and functions.
      * @namespace
      */
-    main,
+    main: main as UnionToIntersection<optionalModuleObjectImportFilePathsImportMap[(typeof moduleOptionalImportPathMap)["main"][number]]>,
     /**
      * This is an alias of {@link modules.assets.constants.transformrecipes}.
      * @see {@link modules.assets.constants.transformrecipes}
@@ -227,37 +242,38 @@ const modulesMap = {
      * @namespace
      * @path `modules/coordinates/`
      */
-    coords,
+    coords: coords as UnionToIntersection<optionalModuleObjectImportFilePathsImportMap[(typeof moduleOptionalImportPathMap)["coordinates"][number]]>,
     /**
      * This module contains classes, constants, functions, and types for working with commands.
      * @namespace
      * @path `modules/commands/`
      */
-    cmds,
+    cmds: cmds as UnionToIntersection<optionalModuleObjectImportFilePathsImportMap[(typeof moduleOptionalImportPathMap)["commands"][number]]>,
     /**
      * This module contains classes, constants, functions, and types for working with the ban system.
      * @namespace
      * @path `modules/ban/`
      */
-    bans,
+    bans: bans as UnionToIntersection<optionalModuleObjectImportFilePathsImportMap[(typeof moduleOptionalImportPathMap)["ban"][number]]>,
     /**
      * This module contains constants, functions, and types for working with the UI system.
      * @namespace
      * @path `modules/ui/`
+     * @primaryExport
      */
-    uis,
+    uis: uis as UnionToIntersection<optionalModuleObjectImportFilePathsImportMap[(typeof moduleOptionalImportPathMap)["ui"][number]]>,
     /**
      * This module contains classes, constants, and functions for working with the player data save system.
      * @namespace
      * @path `modules/player_save/`
      */
-    playersave,
+    playersave: playersave as UnionToIntersection<optionalModuleObjectImportFilePathsImportMap[(typeof moduleOptionalImportPathMap)["player_save"][number]]>,
     /**
      * This module contains constants and functions for working with the spawn protection system.
      * @namespace
      * @path `modules/spawn_protection/`
      */
-    spawnprot,
+    spawnprot: spawnprot as UnionToIntersection<optionalModuleObjectImportFilePathsImportMap[(typeof moduleOptionalImportPathMap)["spawn_protection"][number]]>,
     /**
      * The `@minecraft/math` module.
      * @see {@link https://www.npmjs.com/package/@minecraft/math}
@@ -303,54 +319,69 @@ const modulesMap = {
     moment,
     /**
      * The `@minecraft/server` module.
+     *
      * @see {@link https://www.npmjs.com/package/@minecraft/server}
      * @namespace
      */
     ["@minecraft/server"]: mcServer,
     /**
      * The `@minecraft/server-ui` module.
+     *
      * @see {@link https://www.npmjs.com/package/@minecraft/server-ui}
      * @namespace
      */
     ["@minecraft/server-ui"]: mcServerUi,
     /**
      * The `@minecraft/server-gametest` module.
+     *
      * @see {@link https://www.npmjs.com/package/@minecraft/server-gametest}
      * @namespace
      */
     ["@minecraft/server-gametest"]: GameTest,
     /**
      * The `@minecraft/common` module.
+     *
      * @see {@link https://www.npmjs.com/package/@minecraft/common}
      * @namespace
      */
-    // ["@minecraft/common"]: mcCommon,
+    ["@minecraft/common"]: mcCommon,
     /**
      * The `@minecraft/server-admin` module.
+     *
      * @see {@link https://www.npmjs.com/package/@minecraft/server-admin}
      * @namespace
      */
-    // ["@minecraft/server-admin"]: mcServerAdmin,
+    ["@minecraft/server-admin"]: mcServerAdmin,
     /**
      * The `@minecraft/server-net` module.
+     *
      * @see {@link https://www.npmjs.com/package/@minecraft/server-net}
      * @namespace
      */
     // ["@minecraft/server-net"]: mcServerNet
     /**
      * The `@minecraft/debug-utilities` module.
+     *
      * @see {@link https://www.npmjs.com/package/@minecraft/debug-utilities}
      * @namespace
      */
     // ["@minecraft/debug-utilities"]: mcDebugUtilities
     /**
+     * The `@minecraft/diagnostics` module.
+     *
+     * @see {@link https://www.npmjs.com/package/@minecraft/diagnostics}
+     * @namespace
+     */
+    // ["@minecraft/diagnostics"]: mcDiagnostics
+    /**
      * The `@minecraft/vanilla-data` module.
      * @see {@link https://www.npmjs.com/package/@minecraft/vanilla-data}
      * @namespace
      */
-    // ["@minecraft/vanilla-data"]: mcVanillaData,
+    ["@minecraft/vanilla-data"]: mcVanillaData,
     /**
      * The `@minecraft/math` module.
+     *
      * @see {@link https://www.npmjs.com/package/@minecraft/math}
      * @namespace
      */
@@ -360,37 +391,37 @@ const modulesMap = {
      * @namespace
      * @path `modules/chat/`
      */
-    chat,
+    chat: chat as UnionToIntersection<optionalModuleObjectImportFilePathsImportMap[(typeof moduleOptionalImportPathMap)["chat"][number]]>,
     /**
      * This module contains utility constants, enums, and functions for working with commands.
      * @namespace
      * @path `modules/command_utilities/`
      */
-    cmdutils,
+    cmdutils: cmdutils as UnionToIntersection<optionalModuleObjectImportFilePathsImportMap[(typeof moduleOptionalImportPathMap)["command_utilities"][number]]>,
     /**
      * This module contains the list of commands.
      * @namespace
      * @path `modules/commands_list/`
      */
-    cmdslist,
+    cmdslist: cmdslist as UnionToIntersection<optionalModuleObjectImportFilePathsImportMap[(typeof moduleOptionalImportPathMap)["commands_list"][number]]>,
     /**
      * This module contains documentation for commands.
      * @namespace
      * @path `modules/commands_documentation/`
      */
-    cmdsdocs,
+    cmdsdocs: cmdsdocs as UnionToIntersection<optionalModuleObjectImportFilePathsImportMap[(typeof moduleOptionalImportPathMap)["commands_documentation"][number]]>,
     /**
      * This module contains utility classes, functions, and types.
      * @namespace
      * @path `modules/utilities/`
      */
-    utils,
+    utils: utils as UnionToIntersection<optionalModuleObjectImportFilePathsImportMap[(typeof moduleOptionalImportPathMap)["utilities"][number]]>,
     /**
      * This module contains error classes.
      * @namespace
      * @path `modules/errors/`
      */
-    errors,
+    errors: errors as UnionToIntersection<optionalModuleObjectImportFilePathsImportMap[(typeof moduleOptionalImportPathMap)["errors"][number]]>,
     /**
      * This module contains functions and types for working with the shop system.
      * @namespace
@@ -493,6 +524,7 @@ declare global {
 
 // import "Main";
 import { undoClipboard } from "modules/coordinates/classes/undoClipboard";
+import type { moduleOptionalImportPathMap, optionalModuleObjectImportFilePathsImportMap } from "directoryTree";
 globalThis.scriptStartTick = system.currentTick;
 world.setDynamicProperty("format_version", format_version);
 system.runTimeout(() => undoClipboard.cullItemsMissingStructure(), 50);
@@ -516,15 +548,184 @@ ${se}srun(async()=>{console.log(JSON.stringify(Object.fromEntries(await [
 ].mapAsync(async v=>[v, (await import("directoryTree")).optionalModuleObjectImportFilePaths.filter(f=>f.startsWith(`BP/scripts/modules/${v}/`))])), undefined, 4))})
 */
 
+/**
+ * The `@minecraft/server` module.
+ *
+ * @beta
+ * Contains many types related to manipulating a Minecraft
+ * world, including entities, blocks, dimensions, and more.
+ *
+ * Manifest Details
+ * ```json
+ * {
+ *   "module_name": "@minecraft/server",
+ *   "version": "1.18.0-beta"
+ * }
+ * ```
+ *
+ * @see {@link https://www.npmjs.com/package/@minecraft/server}
+ */
 export type * as "@minecraft/server" from "@minecraft/server";
+/**
+ * The `@minecraft/server-ui` module.
+ *
+ * @beta
+ * The `@minecraft/server-ui` module contains types for
+ * expressing simple dialog-based user experiences.
+ *
+ *   * {@link ActionFormData} contain a list of buttons with
+ * captions and images that can be used for presenting a set of
+ * options to a player.
+ *   * {@link MessageFormData} are simple two-button message
+ * experiences that are functional for Yes/No or OK/Cancel
+ * questions.
+ *   * {@link ModalFormData} allow for a more flexible
+ * "questionnaire-style" list of controls that can be used to
+ * take input.
+ *
+ * Manifest Details
+ * ```json
+ * {
+ *   "module_name": "@minecraft/server-ui",
+ *   "version": "1.4.0-beta"
+ * }
+ * ```
+ *
+ * @see {@link https://www.npmjs.com/package/@minecraft/server-ui}
+ */
 export type * as "@minecraft/server-ui" from "@minecraft/server-ui";
 /**
+ * The `@minecraft/server-gametest` module.
+ *
+ * @beta
+ * The @minecraft/server-gametest module provides scriptable
+ * APIs for scaffolding and testing content experiences in
+ * Minecraft.
+ *
+ * Manifest Details
+ * ```json
+ * {
+ *   "module_name": "@minecraft/server-gametest",
+ *   "version": "1.0.0-internal.1.20.80-stable"
+ * }
+ * ```
+ *
+ * @see {@link https://www.npmjs.com/package/@minecraft/server-gametest}
  * @kindOverride Module
  */
 export type * as "@minecraft/server-gametest" from "@minecraft/server-gametest";
 /**
+ * The `@minecraft/server-admin` module.
+ *
+ * @beta
+ * Contains types related to administering a Bedrock Dedicated
+ * Server. These types allow for the configuration of variables
+ * and secrets in JSON files in the Bedrock Dedicated Server
+ * folder. These types cannot be used on Minecraft clients or
+ * within Minecraft Realms.
+ *
+ * Manifest Details
+ * ```json
+ * {
+ *   "module_name": "@minecraft/server-admin",
+ *   "version": "1.0.0-beta"
+ * }
+ * ```
+ *
+ * @see {@link https://www.npmjs.com/package/@minecraft/server-admin}
+ * @kindOverride Module
+ */
+export type * as "@minecraft/server-admin" from "@minecraft/server-admin";
+/**
+ * The `@minecraft/server-net` module.
+ *
+ * Note: This module is not in the manifest.json so it cannot be accessed in-game.
+ *
+ * It is only in the api docs for references for vanilla types.
+ *
+ * @beta
+ * The `@minecraft/server-net` module contains types for
+ * executing HTTP-based requests. This module can only be used
+ * on Bedrock Dedicated Server. These APIs do not function
+ * within the Minecraft game client or within Minecraft Realms.
+ *
+ * Manifest Details
+ * ```json
+ * {
+ *   "module_name": "@minecraft/server-net",
+ *   "version": "1.0.0-beta"
+ * }
+ * ```
+ *
+ * @see {@link https://www.npmjs.com/package/@minecraft/server-net}
+ * @kindOverride Module
+ */
+// export type * as "@minecraft/server-net" from "@minecraft/server-net"; // Must be import type because it is not in the manifest.json so it cannot be imported or exported in-game.
+/**
+ * The `@minecraft/debug-utilities` module.
+ *
+ * Note: This module is not in the manifest.json so it cannot be accessed in-game.
+ *
+ * It is only in the api docs for references for vanilla types.
+ *
+ * @beta
+ * Contains debug utility functions.
+ *
+ * Manifest Details
+ * ```json
+ * {
+ *   "module_name": "@minecraft/debug-utilities",
+ *   "version": "1.0.0-beta"
+ * }
+ * ```
+ *
+ * @see {@link https://www.npmjs.com/package/@minecraft/debug-utilities}
+ * @kindOverride Module
+ */
+// export type * as "@minecraft/debug-utilities" from "@minecraft/debug-utilities"; // Must be import type because it is not in the manifest.json so it cannot be imported or exported in-game.
+/**
+ * The `@minecraft/diagnostics` module.
+ *
+ * Note: This module is not in the manifest.json so it cannot be accessed in-game.
+ *
+ * It is only in the api docs for references for vanilla types
+ *
+ * @see {@link https://www.npmjs.com/package/@minecraft/diagnostics}
+ * @kindOverride Module
+ */
+// export type * as "@minecraft/diagnostics" from "@minecraft/diagnostics"; // Must be import type because it is not in the manifest.json so it cannot be imported or exported in-game.
+/**
+ * The `@minecraft/common` module.
+ *
+ * Manifest Details
+ * ```json
+ * {
+ *   "module_name": "@minecraft/common",
+ *   "version": "1.1.0"
+ * }
+ * ```
+ * 
+ * @see {@link https://www.npmjs.com/package/@minecraft/common}
+ * @kindOverride Module
+ */
+export type * as "@minecraft/common" from "@minecraft/common";
+/**
+ * The `@minecraft/vanilla-data` module.
+ *
+ * This module contains type definitions and enumarations for vanilla content
+ * within the game, such as Blocks, Items, Entities, and more. This module is
+ * versioned accordingly with Minecraft release and preview versions, and
+ * contain the up to date types available in the game.
+ *
+ * @see {@link https://www.npmjs.com/package/@minecraft/vanilla-data}
+ * @kindOverride Module
+ */
+export type * as "@minecraft/vanilla-data" from "@minecraft/vanilla-data";
+/**
  * The `@minecraft/math` module.
+ *
  * @see {@link https://www.npmjs.com/package/@minecraft/math}
+ * @version v2.2.1
  * @kindOverride Module
  * @external
  */

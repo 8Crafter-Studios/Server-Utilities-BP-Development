@@ -77,7 +77,7 @@
  * }
  * ```
  */
-export declare function swdp(propertyId: string, newValue?: string | number | boolean | undefined): void;
+export declare function swdp(identifier: string, value?: string | number | boolean | undefined): void;
 declare global {
     /**
      * @see {@link world.setDynamicProperty}

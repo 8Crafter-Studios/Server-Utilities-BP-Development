@@ -24,7 +24,7 @@ import {
   type ExplosionOptions,
   type Vector3,
 } from "@minecraft/server";
-import mcMath from "@minecraft/math.js";
+import * as mcMath from "@minecraft/math.js";
 
 GameTest.register("APITests", "on_entity_created", (test) => {
   const entitySpawnCallback = world.afterEvents.entitySpawn.subscribe((entity) => {

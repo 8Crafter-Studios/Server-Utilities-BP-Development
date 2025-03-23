@@ -10,3 +10,4 @@ declare function readonlify<T extends {
     new (...args: any[]): {};
 } & T;
 declare function readonly(target: any, key: string, propertyDescriptor?: PropertyDescriptor): void;
+declare function propToGetter(target: any, key: string, propertyDescriptor?: PropertyDescriptor): void;
