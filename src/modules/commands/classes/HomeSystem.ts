@@ -4,27 +4,48 @@ import { gwdp } from "init/functions/gwdp";
 import type { extendedExecuteCommandPlayerW } from "modules/commands/types/extendedExecuteCommandPlayerW";
 import { Home } from "./Home";
 
+/**
+ * This class is used for managing homes for the home system.
+ */
 export class HomeSystem {
     constructor() { }
+    /**
+     * The format version of the home system.
+     */
     static home_format_version = "0.7.0-beta.72";
-    static getHomes(homeIds: string[]) {
-        let homes = [] as Home[];
-        homeIds.forEach((c) => homes.push(Home.get(c)));
-        return homes;
+    /**
+     * Gets the homes for the given home IDs.
+     *
+     * @param {string[]} homeIds The list of home IDs to get the homes for.
+     * @returns {Home[]} The homes for the given home IDs.
+     */
+    static getHomes(homeIds: string[]): Home[] {
+        return homeIds.map((c) => Home.get(c));
     }
-    static getAllHomes() {
-        let homes = [] as Home[];
-        this.getHomeIds().forEach((c) => homes.push(Home.get(c)));
-        return homes;
+    /**
+     * Gets all homes.
+     * @returns {Home[]} A list of all homes.
+     */
+    static getAllHomes(): Home[] {
+        return this.getHomeIds().map((c) => Home.get(c));
     }
-    static getHomeIds() {
+    /**
+     * Gets all home IDs.
+     * @returns {string[]} A list of all home IDs.
+     */
+    static getHomeIds(): string[] {
         return world
             .getDynamicPropertyIds()
             .filter((v) => v.startsWith("home:"));
     }
+    /**
+     * Gets the home IDs for the given player.
+     * @param {Player | extendedExecuteCommandPlayerW | string} player The player to get the home IDs for. Can be a player object, or a player ID.
+     * @returns {string[]} A list of home IDs for the given player.
+     */
     static getHomeIdsForPlayer(
         player: Player | extendedExecuteCommandPlayerW | string
-    ) {
+    ): string[] {
         return world
             .getDynamicPropertyIds()
             .filter((v) => v.startsWith("home:"))
@@ -35,19 +56,36 @@ export class HomeSystem {
                 ) == (typeof player == "string" ? player : player.id)
             );
     }
+    /**
+     * Gets the homes for the given player.
+     * @param {Player | extendedExecuteCommandPlayerW | string} player The player to get the homes for. Can be a player object, or a player ID.
+     * @returns {Home[]} A list of homes for the given player.
+     */
     static getHomesForPlayer(
         player: Player | extendedExecuteCommandPlayerW | string
-    ) {
+    ): Home[] {
         return this.getHomes(this.getHomeIdsForPlayer(player));
     }
+    /**
+     * Checks if the given player has reached the maximum number of homes.
+     * @param {Player | extendedExecuteCommandPlayerW | string} player The player to check.
+     * @returns {boolean} True if the player has reached the maximum number of homes, false otherwise.
+     */
     static testIfPlayerAtMaxHomes(
         player: Player | extendedExecuteCommandPlayerW | string
-    ) {
+    ): boolean {
         return (
             this.getHomeIdsForPlayer(player).length >= this.maxHomesPerPlayer
         );
     }
-    static get maxHomesPerPlayer() {
+    /**
+     * The maximum number of homes per player.
+     * 
+     * Dynamic Property ID: `homeSystemSettings:maxHomesPerPlayer`
+     * 
+     * @default Infinity
+     */
+    static get maxHomesPerPlayer(): number {
         return gwdp("homeSystemSettings:maxHomesPerPlayer") == -1
             ? Infinity
             : Number(gwdp("homeSystemSettings:maxHomesPerPlayer") ?? Infinity);

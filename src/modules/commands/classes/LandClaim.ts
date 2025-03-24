@@ -2,6 +2,11 @@ import { type Vector3, Dimension, world, Player } from "@minecraft/server";
 import { getPlayerById } from "init/functions/getPlayerById";
 import { LandClaimSystem } from "./LandClaimSystem";
 
+/**
+ * A land claim for the land claim system.
+ * @alpha
+ * @deprecated This class is not functional yet.
+ */
 export class LandClaim {
     area: { min: Vector3; max: Vector3; };
     dimension: Dimension;

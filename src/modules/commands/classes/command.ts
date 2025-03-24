@@ -1,4 +1,4 @@
-import { world, Player, Entity, Dimension } from "@minecraft/server";
+import { world, Player, Entity, Dimension, CommandError } from "@minecraft/server";
 import { tfsb } from "init/functions/tfsb";
 import { SemVerString } from "modules/main/classes/SemVerString";
 import { commands_format_version } from "modules/commands/constants/commands_format_version";
@@ -11,14 +11,48 @@ import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPl
 import { sOSATSA } from "modules/commands/functions/sOSATSA";
 import { commands } from "modules/commands_list/constants/commands";
 import { securityVariables } from "security/ultraSecurityModeUtils";
+import type { loosePlayerType } from "modules/utilities/types/loosePlayerType";
+import { extractPlayerFromLooseEntityType } from "modules/utilities/functions/extractPlayerFromLooseEntityType";
 
+/**
+ * Represents a command.
+ * 
+ * @typeParam {T} The type of the command.
+ */
 export class command<T extends "built-in" | "custom" | "unknown" = "unknown"> {
+    /**
+     * The type of the command.
+     * 
+     * - `"built-in"`: Built-in command.
+     * - `"custom"`: Custom command.
+     * - `"unknown"`: Unknown command type.
+     */
     type: T;
+    /**
+     * The name of the command.
+     */
     commandName: string;
+    /**
+     * The currently entered command name, either the command name or an alias.
+     */
     currentCommandName: string;
+    /**
+     * The parameters of the command.
+     * 
+     * Only applies to custom commands.
+     */
     parameters?: {
+        /**
+         * The name of the parameter.
+         */
         name: string;
+        /**
+         * The internal type of the parameter.
+         */
         internalType?: evaluateParametersArgumentTypes;
+        /**
+         * The type of the parameter.
+         */
         type?:
             | "string"
             | "integer"
@@ -46,6 +80,9 @@ export class command<T extends "built-in" | "custom" | "unknown" = "unknown"> {
             | "targetselector"
             | "none"
             | string;
+        /**
+         * The display type of the parameter.
+         */
         displayType?:
             | "string"
             | "str"
@@ -105,34 +142,121 @@ export class command<T extends "built-in" | "custom" | "unknown" = "unknown"> {
             | ""
             | "none"
             | string;
+        /**
+         * The evaluation type of the parameter.
+         */
         evaluationType?: string;
     }[];
+    /**
+     * The escaped regular expression to determine if a string is this command.
+     */
     escregexp?: { v: string; f?: string };
+    /**
+     * The current escaped regular expression to determine if a string is this command, either the regular expression or the regular expression of an alias.
+     */
     currentescregexp?: { v: string; f?: string };
+    /**
+     * The currently selected alias of the command, if the user is using an alias.
+     */
     selectedalias?: {
+        /**
+         * The index of the alias.
+         */
         index: number;
+        /**
+         * The details of the alias.
+         */
         alias: {
+            /**
+             * The name of the alias.
+             */
             commandName: string;
+            /**
+             * The escaped regular expression of the alias.
+             */
             escregexp?: { v: string; f?: string };
+            /**
+             * The regular expression of the alias.
+             */
             regexp: RegExp;
+            /**
+             * The name of the command the alias is an alias of.
+             */
             aliasTo?: string;
         };
     };
+    /**
+     * The version of the command.
+     */
     command_version?: string | number;
+    /**
+     * The syntaxes of the command.
+     */
     formats: command_formats_type_list;
+    /**
+     * The description of the command.
+     */
     description?: string;
+    /**
+     * The version of the add-on that custom command was created in.
+     */
     format_version: string | number = format_version;
+    /**
+     * The commands format version that the command was created in.
+     */
     commands_format_version: string | number = commands_format_version;
+    /**
+     * The ID of the custom command.
+     */
     customCommandId?: string;
+    /**
+     * The ID of the command settings.
+     */
     commandSettingsId: string;
+    /**
+     * The formatting code of the command.
+     */
     formatting_code: string = "§r§f";
+    /**
+     * The type of the custom command.
+     * 
+     * - "commands": The custom command uses vanilla Minecraft commands.
+     * - "javascript": The custom command uses javascript.
+     */
     customCommandType?: "commands" | "javascript";
+    /**
+     * The prefix of the custom command.
+     */
     customCommandPrefix?: string;
+    /**
+     * Whether parameters should be automatcially evaluated for the command.
+     */
     customCommandParametersEnabled?: boolean;
+    /**
+     * The number of lines of code in the custom command.
+     */
     customCommandCodeLines?: number;
+    /**
+     * The list of parameters of the custom command.
+     */
     customCommandParametersList?: evaluateParametersArgumentTypes[];
+    /**
+     * The category(ies) of the command.
+     *
+     * This is used in the manage commands menu to determine where it should appear.
+     */
     category?: string | string[];
+    /**
+     * The categories of the command.
+     *
+     * This is used in the manage commands menu to determine where it should appear.
+     */
     categories?: string[];
+    /**
+     * Creates an instance of the `command` class.
+     * @param command The command to create.
+     * @returns An instance of the `command` class.
+     */
     constructor(
         command:
             | {
@@ -228,24 +352,47 @@ export class command<T extends "built-in" | "custom" | "unknown" = "unknown"> {
         this.category = command.category ?? commandtest?.category;
         this.categories = sOSATSA(command.category ?? commandtest?.category ?? []);
     }
-    get isHidden() {
+    /**
+     * If the command is hidden.
+     */
+    get isHidden(): boolean {
         return this?.settings?.defaultSettings?.hidden ?? false;
     }
-    get isDeprecated() {
+    /**
+     * If the command is deprecated.
+     */
+    get isDeprecated(): boolean {
         return this?.settings?.defaultSettings?.deprecated ?? false;
     }
-    get isFunctional() {
+    /**
+     * If the command is functional.
+     */
+    get isFunctional(): boolean {
         return this.type == "custom" ? true : this?.settings?.defaultSettings?.functional ?? false;
     }
-    get releaseStage() {
+    /**
+     * The release stage of the command.
+     */
+    get releaseStage(): string {
         return tryget(() => SemVerString.fromString(String(this.command_version)).pre_release_stage);
     }
-    get regexp() {
+    /**
+     * The regular expression to determine if a string is this command.
+     */
+    get regexp(): RegExp {
         return new RegExp(this?.escregexp?.v ?? "", this?.escregexp?.f);
     }
+    /**
+     * The current regular expression to determine if a string is this command, will be either the parsed regexp of the command or on of its aliases.
+     */
     get currentregexp() {
         return new RegExp(this?.currentescregexp?.v ?? "", this?.currentescregexp?.f);
     }
+    /**
+     * The aliases of the command.
+     * 
+     * Only available if the command is a built-in command.
+     */
     get aliases(): T extends "built-in" ? {
         commandName: string;
         escregexp?: {
@@ -278,14 +425,39 @@ export class command<T extends "built-in" | "custom" | "unknown" = "unknown"> {
               }[]) as any
             : undefined;
     }
-    get settings() {
+    /**
+     * The settings of the command, will be an instance of the {@link commandSettings} class.
+     */
+    get settings(): commandSettings<T> {
         return new commandSettings(this.commandSettingsId, this);
     }
+    /**
+     * The ultra security mode security level of the command.
+     * 
+     * Only applies when {@link https://wiki.8crafter.com/andexdb/usm/usm ultra security mode} is enabled.
+     *
+     * - `owner`: Only the owner or people with the `andexdb.fullControl` or `andexdb.useOwnerLevelCommands` permissions can execute the command.
+     * - `headAdmin`: Only players with the `andexdb.headAdmin` or `andexdb.useHeadAdminLevelCommands` permissions can execute the command.
+     * - `admin`: Only players with the `andexdb.admin` or `andexdb.useAdminLevelCommands` permissions can execute the command.
+     * - `moderator`: Only players with the `andexdb.moderator` or `andexdb.useModeratorLevelCommands` permissions can execute the command.
+     * - `WorldEdit`: Only players with the `andexdb.WorldEdit` permission can execute the command.
+     * - `everyone`: Everyone can execute the command.
+     */
     get ultraSecurityModeSecurityLevel(): "owner" | "headAdmin" | "admin" | "moderator" | "WorldEdit" | "everyone" {
         return (securityVariables.commandsUltraSecurityModeSecurityLevelOverrides[this.type=="custom"?"customCommandOverrides":"commandOverrides"][this.commandName] ?? securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][this.categories?.find(c=>!!securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][c as keyof typeof securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"]]) as keyof typeof securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"]] ?? (this.type=="built-in"?commands.find(c=>c.commandName==this.commandName)?.ultraSecurityModeSecurityLevel:undefined))
             // (securityVariables.commandsUltraSecurityModeSecurityLevelOverrides[modules.cmds.command.get("mainmenu", "built-in").type=="custom"?"customCommandOverrides":"commandOverrides"][modules.cmds.command.get("mainmenu", "built-in").commandName] ?? securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][modules.cmds.command.get("mainmenu", "built-in").categories?.find(c=>!!securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][c])] ?? (modules.cmds.command.get("mainmenu", "built-in").type=="built-in"?modules.cmdslist.commands.find(c=>c.commandName==modules.cmds.command.get("mainmenu", "built-in").commandName)?.ultraSecurityModeSecurityLevel:undefined))
     };
-    get code() {
+    /**
+     * The code of the custom command.
+     *
+     * If {@link customCommandType} is `commands`, the code will be a list of strings with vanilla Minecraft commands.
+     * 
+     * If {@link customCommandType} is `javascript`, the code will be a list of strings that represent lines of JavaScript code, this should be merged together with newline characters.
+     *
+     * @throws {TypeError} If the command is not a custom command (Tests if the {@link type} property is `custom`).
+     * @throws {TypeError} If the {@link customCommandId} property is undefined.
+     */
+    get code(): string[] {
         if (this.type == "custom") {
             if (this?.customCommandId != undefined) {
                 return world
@@ -303,7 +475,14 @@ export class command<T extends "built-in" | "custom" | "unknown" = "unknown"> {
     get testPlayerCanUse(){return Number(this.unbanDate)-Date.now()}
     get timeRemaining(){let time = new Date(Math.abs((Number(this.unbanDate)-Date.now()))+(new Date().setUTCFullYear(0))); let timeList = {days: (-1*Number(this.isExpired)+1)*Math.floor((time.getTime()-(new Date().setUTCFullYear(0)))/86400000), hours: (-1*Number(this.isExpired)+1)*time.getHours(), minutes: (-1*Number(this.isExpired)+1)*time.getMinutes(), seconds: (-1*Number(this.isExpired)+1)*time.getSeconds(), milliseconds: (-1*Number(this.isExpired)+1)*time.getMilliseconds()}; return timeList}*/
 
-    save() {
+    /**
+     * Saves the custom command.
+     *
+     * @returns {string} The ID of the custom command.
+     * @throws {TypeError} If the command is not a custom command (Tests if the {@link type} property is `custom`).
+     * @throws {TypeError} If the {@link customCommandId} property is undefined.
+     */
+    save(): string {
         if (this.type == "custom") {
             if (this?.customCommandId != undefined) {
                 world.setDynamicProperty(this?.customCommandId, JSON.stringify(this));
@@ -315,7 +494,13 @@ export class command<T extends "built-in" | "custom" | "unknown" = "unknown"> {
             throw new TypeError("Cannot save command because it is not a custom command or the type of the command is unknown. ");
         }
     }
-    remove() {
+    /**
+     * Removes the current command if it is a custom command.
+     *
+     * @throws {TypeError} If the command is not a custom command (Tests if the {@link type} property is `custom`).
+     * @throws {TypeError} If the {@link customCommandId} property is undefined.
+     */
+    remove(): void {
         if (this.type == "custom") {
             if (this?.customCommandId != undefined) {
                 world.setDynamicProperty(this?.customCommandId);
@@ -326,12 +511,15 @@ export class command<T extends "built-in" | "custom" | "unknown" = "unknown"> {
             throw new TypeError("Cannot remove command because it is not a custom command or the type of the command is unknown. ");
         }
     }
-    testCanPlayerUseCommand(player: Player | executeCommandPlayerW | Entity) {
-        if (!(player instanceof Player || (player instanceof executeCommandPlayerW && !!world.getAllPlayers().find((v) => v.id == player.player?.id)))) {
-            return false;
-        }
-        const playerE = player instanceof executeCommandPlayerW ? player.player : player;
-        assertIsDefined(playerE);
+    /**
+     * Tests if the given player can use this command.
+     *
+     * @param {loosePlayerType} player The player to test.
+     * @returns {boolean} True if the player can use this command, false otherwise. If the player is an instance of the {@link executeCommandPlayerW} class, and there is no linked player, or the linked player is not online, the function will return false.
+     * @throws {TypeError} If player is not an instance of the Player class or an instance of the executeCommandPlayerW class with a Player linked to it.
+     */
+    testCanPlayerUseCommand(player: loosePlayerType): boolean {
+        const playerE = extractPlayerFromLooseEntityType(player);
 
         if (
             tfsb(!!(player as Player)?.name ? (player as Player) : ({ name: "" } as any)) &&
@@ -386,7 +574,20 @@ export class command<T extends "built-in" | "custom" | "unknown" = "unknown"> {
 
         return true;
     }
-    run(commandstring: string, executor: Player | executeCommandPlayerW | Entity | Dimension, player?: Player | executeCommandPlayerW, event?: Object) {
+    /**
+     * Runs the custom command.
+     *
+     * @param {string} commandstring The command string.
+     * @param {loosePlayerType | Dimension} executor The executor of the command.
+     * @param {Player | executeCommandPlayerW} [player] The player object that can be accessed by the code of the command.
+     * @param {Object} [event] The event object that can be accessed by the code of the command.
+     * @throws {TypeError} If the command is not a custom command (Tests if the {@link type} property is `custom`).
+     * @throws {TypeError} If the {@link customCommandId} property is undefined.
+     * @throws {CommandError} If the vanilla minecraft command throws an error.
+     * @throws {Error} If the custom command throws an error.
+     * @throws {any} If the custom JavaScript code throws an error.
+     */
+    run(commandstring: string, executor: loosePlayerType | Dimension, player?: Player | executeCommandPlayerW, event?: Object): void {
         if (this.type == "custom") {
             if (this?.code != undefined) {
                 let eventData = event;
@@ -422,9 +623,17 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
     static saveBan(ban: {type: "name"|"id", unbanDate: Date|number, banDate: Date|number, bannedById: string|number, bannedByName: string, reason: string, removeAfterBanExpires?: boolean, playerName?: string, originalPlayerId?: string|number, playerId?: string|number, originalPlayerName?: string, format_version?: string|number, ban_format_version?: string|number, banId?: string}|ban){ban.removeAfterBanExpires = ban.removeAfterBanExpires ?? true; ban.format_version = ban.format_version ?? format_version; ban.ban_format_version = ban.ban_format_version ?? ban_format_version; if(ban.type=="name"){world.setDynamicProperty(ban.banId??`ban:${ban.banDate}:${ban.playerName}`, JSON.stringify(ban))}else{if(ban.type=="id"){world.setDynamicProperty(ban.banId??`idBan:${ban.banDate}:${ban.playerId}`, JSON.stringify(ban))}else{}}}*/ /*
     getBan(banId: string){let banString = String(world.getDynamicProperty(banId)).split("||"); this.removeAfterBanExpires=Boolean(Number(banString[0])); this.unbanDate=new Date(Number(banString[1])); this.banDate=new Date(Number(banString[2])); if(banId.startsWith("ban")){this.originalPlayerId=Number(banString[3]); this.playerName=banId.split(":").slice(1).join(":"); }else{if(banId.startsWith("idBan")){this.originalPlayerName=Number(banString[3]); this.playerName=Number(playerId.split(":")[1]); }else{}}; this.bannedById=Number(banString[4]); this.bannedByName=banString[5].replaceAll("\\|", "|"); this.playerName=banString.slice(6).join("||"); return this as ban}*/
 
-    static get(commandName: string, type: "built-in" | "custom" | "unknown" = "built-in") {
+    /**
+     * Gets a command.
+     *
+     * @template T The type of the command.
+     * @param {string} commandName The name of the command.
+     * @param {T} [type="built-in"] The type of the command.
+     * @returns {command<T>} The command.
+     */
+    static get<T extends "built-in" | "custom" | "unknown" = "built-in">(commandName: string, type?: T): command<T> {
         if (type == "built-in") {
-            return new command({ type: type, commandName: commandName });
+            return new command({ type: type, commandName: commandName ?? "built-in" });
         } else {
             if (type == "custom") {
                 return new command({

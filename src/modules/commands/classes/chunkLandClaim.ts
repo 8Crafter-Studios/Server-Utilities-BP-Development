@@ -4,6 +4,11 @@ import { chunkIndexToBoundingBox } from "modules/coordinates/functions/chunkInde
 import { LandClaimSystem } from "./LandClaimSystem";
 import { LandClaim } from "./LandClaim";
 
+/**
+ * A chunk land claim for the land claim system.
+ * @alpha
+ * @deprecated This class is not functional yet.
+ */
 export class chunkLandClaim {
     chunks: Vector2[];
     dimension: Dimension;

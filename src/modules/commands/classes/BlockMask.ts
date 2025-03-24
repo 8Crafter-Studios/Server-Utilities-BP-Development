@@ -36,10 +36,49 @@ export const knownContainerTypes = [
     "minecraft:lit_smoker",
 ] as const;
 
+/**
+ * The custom block mask filter presets.
+ *
+ * These contain a set of block mask filters that can be used in a block mask.
+ *
+ * They are used by putting the key for the preset in this object as the block ID for a block mask filter.
+ *
+ * @beta
+ */
 export const customMaskGroupPresets = {
+    /**
+     * All types of leaves.
+     *
+     * It gets all block types that include `leaves` anywhere in their ID.
+     */
     "preset:leaves": BlockTypes.getAll()
         .map((v) => v.id)
         .filter((v) => v.includes("leaves")),
+    /**
+     * Plant blocks.
+     *
+     * It gets all block types that include `leaves` or `sapling` anywhere in their ID.
+     * 
+     * It also includes the following preset values:
+     * 
+     * - `tag:log`
+     * - `tag:plant`
+     * - `short_grass`
+     * - `short_grass`
+     * - `tall_grass`
+     * - `vine`
+     * - `dandelion`
+     * - `allium`
+     * - `brown_mushroom_block`
+     * - `red_mushroom_block`
+     * - `mushroom_stem`
+     * - `crimson_roots`
+     * - `warped_roots`
+     * - `bee_nest`
+     *
+     * @beta This preset is still a work in progress.
+     * @todo Finish this preset.
+     */
     "preset:deforest": [
         ...new Set([
             ...BlockTypes.getAll()
@@ -63,6 +102,13 @@ export const customMaskGroupPresets = {
             "bee_nest", // TO-DO
         ]),
     ],
+    /**
+     * All types of ores.
+     * 
+     * It gets all block types that include `ore` anywhere in their ID.
+     * 
+     * It also includes `ancient_debris`.
+     */
     "preset:ores": [
         ...new Set([
             ...BlockTypes.getAll()
@@ -71,6 +117,30 @@ export const customMaskGroupPresets = {
             "ancient_debris",
         ]),
     ],
+    /**
+     * All types of ore blocks.
+     * 
+     * It includes the following preset values:
+     * - `coal_block`
+     * - `copper_block`
+     * - `exposed_copper`
+     * - `weathered_copper`
+     * - `oxidized_copper`
+     * - `waxed_copper`
+     * - `waxed_exposed_copper`
+     * - `waxed_weathered_copper`
+     * - `waxed_oxidized_copper`
+     * - `iron_block`
+     * - `gold_block`
+     * - `emerald_block`
+     * - `diamond_block`
+     * - `netherite_block`
+     * - `redstone_block`
+     * - `lapis_block`
+     * - `raw_copper_block`
+     * - `raw_iron_block`
+     * - `raw_gold_block`
+     */
     "preset:ore_blocks": [
         ...new Set([
             "coal_block",
@@ -94,6 +164,15 @@ export const customMaskGroupPresets = {
             "raw_gold_block",
         ]),
     ],
+    /**
+     * All types of liquids.
+     *
+     * It includes the following preset values:
+     * - `water`
+     * - `flowing_water`
+     * - `lava`
+     * - `flowing_lava`
+     */
     "preset:liquid": [...new Set(["water", "flowing_water", "lava", "flowing_lava"])],
 };
 
@@ -114,35 +193,101 @@ export const customMaskGroupPresets = {
     ] as const)
 } */
 
+/**
+ * A block mask filter.
+ */
+export interface BlockMaskFilter {
+    /**
+     * The {@link Block.prototype.typeId block ID} or filter type.
+     * 
+     * Filter type examples:
+     * - `minecraft:example_block` - A block ID ({@link Block.prototype.typeId}).
+     * - `isAir` - Air ({@link Block.prototype.isAir}).
+     * - `isLiquid` - Liquid ({@link Block.prototype.isLiquid}).
+     * - `isSolid` - Solid ({@link Block.prototype.isSolid}).
+     * - `isValid` - If the block is valid ({@link Block.prototype.isValid}).
+     * - `isWaterlogged` - If the block is waterlogged ({@link Block.prototype.isWaterlogged}).
+     * - `canBeWaterlogged`/`isWaterloggable`/`waterloggable` - If the block can be waterlogged ({@link Block.prototype.canContainLiquid}({@link modules.mcServer.LiquidType.Water})).
+     * - `keep` - ({@link Block.prototype.typeId} === `minecraft:air`).
+     * - `tag:minecraft:example_tag` - A block tag ({@link Block.prototype.hasTag}).
+     * - `preset:example_preset` - A filter preset ({@link customMaskGroupPresets}).
+     */
+    type: string;
+    /**
+     * The {@link BlockPermutation.getAllStates block states}.
+     */
+    states?: { [id: string]: string | number | boolean };
+    /**
+     * The raw string representation of the block mask filter, with the block states formatted as JSON.
+     * 
+     * @example
+     * ```mccmd
+     * minecraft:example_block{"facing":"west","fill_level":5,"top_slot_bit":true}
+     * ```
+     */
+    get raw(): string;
+    /**
+     * The raw string representation of the block mask filter, with the blocks states formatted like vanilla block states.
+     * 
+     * @example
+     * ```mccmd
+     * minecraft:example_block["facing"="west","fill_level"=5,"top_slot_bit"=true]
+     * ```
+     */
+    get rawsb(): string;
+    /**
+     * The raw string representation of the block mask filter, without the block states.
+     * 
+     * It basically just returns the block ID or filter type.
+     * 
+     * @example
+     * ```mccmd
+     * minecraft:example_block
+     * ```
+     */
+    get rawns(): string;
+}
+
+/**
+ * A class that represents a block mask.
+ * 
+ * Block masks are used to filter blocks in a world.
+ * 
+ * Many things use them, such as the spawn protection system, and many WorldEdit commands.
+ */
 export class BlockMask {
-    #blocksList: {
-        type: string;
-        states?: { [id: string]: string | number | boolean };
-        get raw(): string;
-        get rawsb(): string;
-        get rawns(): string;
-    }[] = [];
+    /**
+     * The filters in the block mask.
+     *
+     * @default []
+     */
+    #blocksList: BlockMaskFilter[] = [];
+    /**
+     * Whether the block mask has any filters with block states.
+     */
     #hasStates: boolean;
+    /**
+     * The block IDs and filters types in the block mask.
+     */
     #blockTypeIds: string[];
     /**
+     * The type of the block mask.
+     *
      * "include" will make it only select blocks included in the block mask
+     *
      * "exclude" will make it only select blocks that are not included in the block mask
+     *
+     * @default "include"
      */
     type: "include" | "exclude" = "include";
-    get blocks(): {
-        type: string;
-        states?: { [id: string]: string | number | boolean };
-        get raw(): string;
-        get rawsb(): string;
-        get rawns(): string;
-    }[] {
+    /**
+     * The filters in the block mask.
+     */
+    get blocks(): BlockMaskFilter[] {
         return this.#blocksList;
     }
     set blocks(
-        blocks: {
-            type: string;
-            states?: { [id: string]: string | number | boolean };
-        }[]
+        blocks: Omit<BlockMaskFilter, "raw" | "rawsb" | "rawns">[]
     ) {
         this.#blocksList = blocks.map((v) => ({
             type: v.type,
@@ -168,19 +313,48 @@ export class BlockMask {
         this.#hasStates = !!blocks.find((v) => !!v.states);
         [...new Set((this.#blockTypeIds = blocks.map((v) => v.type)))];
     }
-    get includesStates() {
+    /**
+     * Whether the block mask has any filters with block states.
+     */
+    get includesStates(): boolean {
         return this.#hasStates;
     }
-    get blockTypes() {
+    /**
+     * The block IDs and filters types in the block mask.
+     */
+    get blockTypes(): string[] {
         return this.#blockTypeIds;
     }
+    /**
+     * The raw string representation of the block mask. 
+     * 
+     * @example
+     * ```mccmd
+     * e:preset:liquid,minecraft:example_block["facing"="west","fill_level"=5,"top_slot_bit"=true],tag:minecraft:example_tag
+     * ```
+     */
     get raw(): string {
         return (this.type === "exclude" ? "e:" : "i:") + (this.#blocksList.length === 0 ? "none" : this.#blocksList.map((v) => v.rawsb).join(","));
     }
-    toString() {
+    /**
+     * Converts the block mask to a string.
+     * 
+     * It returns the same value as {@link BlockMask.prototype.raw}.
+     * 
+     * @returns {string} The raw string representation of the block mask.
+     */
+    toString(): string {
         return this.raw;
     }
-    evaluateIds() {
+    /**
+     * Evaluates the block IDs and filters types in the block mask.
+     * 
+     * This method does the following things:
+     * 
+     * - Removes any filters that have a block ID of "none" or "any".
+     * - Converts any filter that is missing its `raw`, `rawsb`, or `rawns` getter to a {@link BlockMaskFilter} that does have the getters.
+     */
+    evaluateIds(): void {
         this.#blocksList = cullEmpty(
             this.#blocksList.map((v) =>
                 v.type == "none"
@@ -211,13 +385,16 @@ export class BlockMask {
             )
         );
     }
+    /**
+     * Creates a new block mask.
+     *
+     * @param {Omit<BlockMaskFilter, "raw" | "rawsb" | "rawns">[]} blocks The filters for the block mask.
+     * @param {"include" | "exclude"} [type = "include"] The type of the block mask.
+     * @returns A new block mask.
+     */
     constructor(
-        blocks: {
-            type: string;
-            states?: { [id: string]: string | number | boolean };
-        }[] = [],
+        blocks: Omit<BlockMaskFilter, "raw" | "rawsb" | "rawns">[] = [],
         type: "include" | "exclude" = "include",
-        rawMatch?: string
     ) {
         this.#blocksList = blocks.map((v) => ({
             type: v.type,
@@ -244,12 +421,14 @@ export class BlockMask {
         this.#hasStates = !!blocks.find((v) => !!v.states);
         this.#blockTypeIds = [...new Set(blocks.map((v) => v.type))];
     }
+    /**
+     * Pushes new filters to the block mask.
+     * @param {...Omit<BlockMaskFilter, "raw" | "rawsb" | "rawns">[]} blocks The filters to push to the block mask.
+     * @returns {number} The new amount of filters in the block mask.
+     */
     push(
-        ...blocks: {
-            type: string;
-            states?: { [id: string]: string | number | boolean };
-        }[]
-    ) {
+        ...blocks: Omit<BlockMaskFilter, "raw" | "rawsb" | "rawns">[]
+    ): number {
         this.#hasStates = this.#hasStates || !!blocks.find((v) => !!v.states);
         [...new Set((this.#blockTypeIds = [...this.#blocksList, ...blocks].map((v) => v.type)))];
         return this.#blocksList.push(
@@ -276,10 +455,17 @@ export class BlockMask {
             }))
         );
     }
+    /**
+     * Tests if a block matches the block mask.
+     *
+     * @param {Block | BlockPermutation | BlockType | { type: BlockType | string; states?: Record<string, boolean | number | string> } | string} block The block to test.
+     * @param {typeof this.type} [mode = this.type] The mode to test in. If specified, this paramter will override the block mask's type property.
+     * @returns {boolean} Whether the block matches the block mask.
+     */
     testIfMatches(
         block: Block | BlockPermutation | BlockType | { type: BlockType | string; states?: Record<string, boolean | number | string> } | string,
         mode: typeof this.type = this.type
-    ) {
+    ): boolean {
         if (this.#blocksList.length == 0) {
             return true;
         }
@@ -759,15 +945,89 @@ export class BlockMask {
             return mode == "exclude" ? !resultFound : resultFound;
         }
     }
-    static testForStatesMatch(states: Record<string, boolean | number | string>, statesMask: Record<string, boolean | number | string>) {
+    /**
+     * Tests if the states in the first parameter extend the states in the second parameter.
+     *
+     * @param {Record<string, boolean | number | string>} states The states to test.
+     * @param {Record<string, boolean | number | string>} statesMask The states to test against.
+     * @returns {boolean} True if the states in the first parameter extend the states in the second parameter, false otherwise.
+     * 
+     * @example
+     * ```typescript
+     * const BlockMask = modules.cmds.BlockMask;
+     * 
+     * const states = {
+     *   "foo": true,
+     *   "bar": false,
+     * };
+     * const statesMask = {
+     *   "foo": true,
+     *   "bar": true,
+     * };
+     * const result = BlockMask.testForStatesMatch(states, statesMask);
+     * console.log(result); // false
+     * ```
+     * 
+     * @example 
+     * ```typescript
+     * const BlockMask = modules.cmds.BlockMask;
+     * 
+     * const states = {
+     *   "foo": true,
+     *   "bar": false,
+     * };
+     * const statesMask = {
+     *   "foo": true,
+     * };
+     * const result = BlockMask.testForStatesMatch(states, statesMask);
+     * console.log(result); // true
+     * ```
+     * 
+     * @example
+     * ```typescript
+     * const BlockMask = modules.cmds.BlockMask;
+     * 
+     * const states = {
+     *   "foo": true,
+     *   "bar": false,
+     * };
+     * const statesMask = {
+     *   "foo": true,
+     *   "bar": false,
+     *   "baz": false,
+     * };
+     * const result = BlockMask.testForStatesMatch(states, statesMask);
+     * console.log(result); // false
+     * ```
+     */
+    static testForStatesMatch(states: Record<string, boolean | number | string>, statesMask: Record<string, boolean | number | string>): boolean {
         return testForObjectExtension(states, statesMask);
     }
+    /**
+     * Parses a string into a BlockMask object.
+     *
+     * @deprecated This function is non-functional, and does absolutely nothing.
+     */
     static parse() {}
+    /**
+     * Extracts a raw block mask from a string.
+     *
+     * @param {string} str The string to extract the raw block mask from.
+     * @returns {string | null} The raw block mask, or null if no raw block mask was found.
+     */
     static extractRaw(str: string): string | null {
         return str.match(
             /(?<=\s|^)([ie]:)?((?:[\"\'])?(?:[a-zA-Z0-9_\-\.]+:(?:[a-zA-Z0-9_\-\.]+:)?)?[a-zA-Z0-9_\-\.]+(?:[\"\'])?(?:[\[\{](?:[^\]\}]*)[\]\}])?(?=[,\s]|$))(,(?:[\"\'])?(?:[a-zA-Z0-9_\-\.]+:(?:[a-zA-Z0-9_\-\.]+:)?)?[a-zA-Z0-9_\-\.]+(?:[\"\'])?(?:[\[\{](?:[^\]\}]*)[\]\}])?)*/
         )?.[0];
     }
+    /**
+     * Extracts a block mask from a string.
+     *
+     * @param {string} str The string to extract the block mask from.
+     * @param {boolean} [extraIdParsingEnabled = true] Whether to enable extra ID parsing. If emabled, filters with block IDs of "none" or "any" will be removed.
+     * @param {"include" | "exclude"} [modeOverride] Override the mode of the block mask. If not provided, the mode will be determined based on the string.
+     * @returns {BlockMask} The block mask extracted from the string.
+     */
     static extract(str: string, extraIdParsingEnabled: boolean = true, modeOverride?: "include" | "exclude"): BlockMask {
         if (extraIdParsingEnabled) {
             const result = extractCustomMaskType(str);
@@ -789,13 +1049,20 @@ export class BlockMask {
             return new BlockMask(result, modeOverride ?? result.mode);
         }
     }
+    /**
+     * Extracts a block mask and its raw string from a string.
+     *
+     * @param {string} str The string to extract the block mask from.
+     * @param {boolean} [extraIdParsingEnabled = true] Whether to enable extra ID parsing. If emabled, filters with block IDs of "none" or "any" will be removed. Only applies to the block mask, the raw string is not affected.
+     * @param {"include" | "exclude"} [modeOverride] Override the mode of the block mask. If not provided, the mode will be determined based on the string. Only applies to the block mask, the raw string is not affected.
+     * @returns {{ raw: string; parsed: BlockMask }} The raw string and the block mask extracted from the string.
+     */
     static extractWRaw(str: string, extraIdParsingEnabled: boolean = true, modeOverride?: "include" | "exclude"): { raw: string; parsed: BlockMask } {
         let result: {
             type: string;
             states?: Record<string, string | number | boolean>;
         }[];
         let mode: "include" | "exclude" = "include";
-        let rawMatch: string;
         if (extraIdParsingEnabled) {
             const r = extractCustomMaskType(str);
             result = cullEmpty(
@@ -823,11 +1090,25 @@ export class BlockMask {
             parsed: extraIdParsingEnabled ? new BlockMask(result, modeOverride ?? mode) : new BlockMask(result, modeOverride ?? mode),
         };
     }
+    /**
+     * Extracts the raw strings of all block masks from a string.
+     *
+     * @param {string} str The string to extract the block masks from.
+     * @returns {string[] | null} The raw strings of the block masks extracted from the string, or null if no block masks were found.
+     */
     static extractAllRaw(str: string): string[] | null {
         return str.match(
             /(?<=\s|^)([ie]:)?((?:[\"\'])?(?:[a-zA-Z0-9_\-\.]+:(?:[a-zA-Z0-9_\-\.]+:)?)?[a-zA-Z0-9_\-\.]+(?:[\"\'])?(?:[\[\{](?:[^\]\}]*)[\]\}])?(?=[,\s]|$))(,(?:[\"\'])?(?:[a-zA-Z0-9_\-\.]+:(?:[a-zA-Z0-9_\-\.]+:)?)?[a-zA-Z0-9_\-\.]+(?:[\"\'])?(?:[\[\{](?:[^\]\}]*)[\]\}])?)*/g
         );
     }
+    /**
+     * Extracts all block masks from a string.
+     *
+     * @param {string} str The string to extract the block masks from.
+     * @param {boolean} [extraIdParsingEnabled = true] Whether to enable extra ID parsing. If emabled, filters with block IDs of "none" or "any" will be removed.
+     * @param {"include" | "exclude"} [modeOverride] Override the mode of the block mask. If not provided, the mode will be determined based on the string.
+     * @returns {BlockMask[]} The block masks extracted from the string.
+     */
     static extractAll(str: string, extraIdParsingEnabled: boolean = true, modeOverride?: "include" | "exclude"): BlockMask[] {
         return extractCustomMaskTypes(str).map(
             (v) =>
@@ -850,7 +1131,15 @@ export class BlockMask {
                 )
         );
     }
-    static extractAllWRaw(str: string, extraIdParsingEnabled: boolean = true, modeOverride?: "include" | "exclude"): { raw: string[]; parsed: BlockMask[] } {
+    /**
+     * Extracts all block masks from a string and their raw strings.
+     *
+     * @param {string} str The string to extract the block masks from.
+     * @param {boolean} [extraIdParsingEnabled = true] Whether to enable extra ID parsing. If emabled, filters with block IDs of "none" or "any" will be removed. Only applies to the block masks, the raw strings are not affected.
+     * @param {"include" | "exclude"} [modeOverride] Override the mode of the block mask. If not provided, the mode will be determined based on the string. Only applies to the block masks, the raw strings are not affected.
+     * @returns {{ raw: string[] | null; parsed: BlockMask[] }} An object containing the raw strings and the block masks extracted from the string.
+     */
+    static extractAllWRaw(str: string, extraIdParsingEnabled: boolean = true, modeOverride?: "include" | "exclude"): { raw: string[] | null; parsed: BlockMask[] } {
         return {
             raw: str.match(
                 /(?<=\s|^)([ie]:)?((?:[\"\'])?(?:[a-zA-Z0-9_\-\.]+:(?:[a-zA-Z0-9_\-\.]+:)?)?[a-zA-Z0-9_\-\.]+(?:[\"\'])?(?:[\[\{](?:[^\]\}]*)[\]\}])?(?=[,\s]|$))(,(?:[\"\'])?(?:[a-zA-Z0-9_\-\.]+:(?:[a-zA-Z0-9_\-\.]+:)?)?[a-zA-Z0-9_\-\.]+(?:[\"\'])?(?:[\[\{](?:[^\]\}]*)[\]\}])?)*/g
@@ -878,7 +1167,8 @@ export class BlockMask {
         };
     }
 }
-function extractCustomMaskType(str: string) {
+
+function extractCustomMaskType(str: string): Omit<BlockMaskFilter, "raw" | "rawsb" | "rawns">[] & { mode: "include" | "exclude"; rawMatch: string; } {
     const maskTypes = [] as {
         type: string;
         states?: Record<string, string | number | boolean>;
@@ -946,7 +1236,8 @@ function extractCustomMaskType(str: string) {
         states?: Record<string, string | number | boolean>;
     }[] & { mode: "include" | "exclude"; rawMatch: string };
 }
-function extractCustomMaskTypes(str: string) {
+
+function extractCustomMaskTypes(str: string): (Omit<BlockMaskFilter, "raw" | "rawsb" | "rawns">[] & { mode: "include" | "exclude"; rawMatch: string; })[] {
     const masks = [] as ({
         type: string;
         states?: Record<string, string | number | boolean>;

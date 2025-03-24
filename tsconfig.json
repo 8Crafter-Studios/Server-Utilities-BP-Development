@@ -15,7 +15,7 @@
     "allowJs": true,
     "declaration": true,/*
     "declarationMap": true,*/
-    "declarationDir": "./declaration",
+    "declarationDir": "./scripts",
     "verbatimModuleSyntax": true/*, 
     "resolveJsonModule": true*/,
     "sourceMap": true,
