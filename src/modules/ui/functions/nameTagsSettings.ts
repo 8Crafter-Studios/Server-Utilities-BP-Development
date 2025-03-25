@@ -5,10 +5,6 @@ import { showMessage } from "modules/utilities/functions/showMessage";
 import { customFormUICodes } from "../constants/customFormUICodes";
 import type { loosePlayerType } from "modules/utilities/types/loosePlayerType";
 import { extractPlayerFromLooseEntityType } from "modules/utilities/functions/extractPlayerFromLooseEntityType";
-import { chatRanksSettings_chatStyle } from "./chatRanksSettings_chatStyle";
-import { chatRanksSettings_chatStyleSettings } from "./chatRanksSettings_chatStyleSettings";
-import { chatRanksSettings_generalChatSettings } from "./chatRanksSettings_generalChatSettings";
-import { chatRanksSettings_previewChatMessage } from "./chatRanksSettings_previewChatMessage";
 import { nameTagsSettings_generalNameTagsSettings } from "./nameTagsSettings_generalNameTagsSettings";
 import { nameTagsSettings_previewNameTag } from "./nameTagsSettings_previewNameTag";
 

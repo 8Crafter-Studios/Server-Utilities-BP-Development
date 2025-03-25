@@ -956,6 +956,21 @@ var exports;
                 static set showHealthOnPlayerNameTags(showHealthOnPlayerNameTags) {
                     world.setDynamicProperty("andexdbSettings:showHealthOnPlayerNameTags", showHealthOnPlayerNameTags ?? false);
                 }
+                /**
+                 * The maximum number of decimal places to display on the health display on player name tags.
+                 *
+                 * Must be between 0 and 20 (inclusive).
+                 *
+                 * Dynamic Property ID: `andexdbSettings:playerNameTagHealthPrecision`
+                 *
+                 * @default 1
+                 */
+                static get playerNameTagHealthPrecision() {
+                    return Math.min(Math.max(0, String(world.getDynamicProperty("andexdbSettings:playerNameTagHealthPrecision") ?? 1).toNumber()), 20);
+                }
+                static set playerNameTagHealthPrecision(playerNameTagHealthPrecision) {
+                    world.setDynamicProperty("andexdbSettings:playerNameTagHealthPrecision", Math.min(Math.max(0, typeof playerNameTagHealthPrecision === "number" ? playerNameTagHealthPrecision.isFinite() ? playerNameTagHealthPrecision : 1 : 1), 20));
+                }
                 static get rankMode() {
                     return String(world.getDynamicProperty("andexdbSettings:rankMode") ?? "custom_simple");
                 }
@@ -2446,7 +2461,8 @@ var exports;
                 else if (descriptor?.get) {
                     return [key, config.toJSON.call(descriptor.get())];
                 }
-                return [key, this[key]];
+                // return [key, this[key as keyof typeof config]];
+                return undefined;
             })); /*
                 Object.getOwnPropertyNames(config)
                     .filter(

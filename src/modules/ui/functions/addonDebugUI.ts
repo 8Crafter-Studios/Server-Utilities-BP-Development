@@ -9,6 +9,7 @@ import { startCheckingForBannedPlayers, stopCheckingForBannedPlayers } from "mod
 import { startProtectedAreasRefresher, stopProtectedAreasRefresher } from "modules/spawn_protection/functions/protectedAreasRefresher";
 import { startPlayerDataAutoSave, stopPlayerDataAutoSave } from "modules/player_save/functions/playerDataAutoSave";
 import { customFormUICodes } from "../constants/customFormUICodes";
+import { startZoneActionsInterval, stopZoneActionsInterval } from "modules/spawn_protection/functions/protectedAreaIntervals";
 
 export async function addonDebugUI(sourceEntitya: Entity | executeCommandPlayerW | Player): Promise<0 | 1> {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
@@ -20,8 +21,8 @@ export async function addonDebugUI(sourceEntitya: Entity | executeCommandPlayerW
     form.button(customFormUICodes.action.buttons.positions.main_only + "Stop Player Data Auto Save", "textures/ui/close_button_default_light");
     form.button(customFormUICodes.action.buttons.positions.main_only + "Start Checking For Banned Players", "textures/ui/recap_glyph_color_2x");
     form.button(customFormUICodes.action.buttons.positions.main_only + "Stop Checking For Banned Players", "textures/ui/close_button_default_light");
-    form.button(customFormUICodes.action.buttons.positions.main_only + "Start Protected Areas Refresher", "textures/ui/recap_glyph_color_2x");
-    form.button(customFormUICodes.action.buttons.positions.main_only + "Stop Protected Areas Refresher", "textures/ui/close_button_default_light");
+    form.button(customFormUICodes.action.buttons.positions.main_only + "Start Zone Actions Interval", "textures/ui/recap_glyph_color_2x");
+    form.button(customFormUICodes.action.buttons.positions.main_only + "Stop Zone Actions Interval", "textures/ui/close_button_default_light");
     form.button(customFormUICodes.action.buttons.positions.main_only + "Stop All Built-In Intervals", "textures/ui/close_button_default_light");
     form.button(
         customFormUICodes.action.buttons.positions.main_only +
@@ -53,7 +54,7 @@ form.button(entity_scale_format_version!=null?"Stop All Entity Scale Built-In In
                     const DPTBC = new (Decimal.clone({ precision: 50 }))(world.getDynamicPropertyTotalByteCount());
                     await showActions(
                         sourceEntity as Player,
-                        "Debug Info",
+                        customFormUICodes.action.titles.formStyles.medium + "Debug Info",
                         `Dynamic Property Total Byte Count: ${DPTBC} Bytes/${DPTBC.div(1000).toDecimalPlaces(2)} KB/${DPTBC.div(1024).toDecimalPlaces(
                             2
                         )} KiB/${DPTBC.div(1000000).toDecimalPlaces(2)} MB/${DPTBC.div(1048576).toDecimalPlaces(2)} MiB
@@ -66,16 +67,18 @@ Time Of Day: ${world.getTimeOfDay()}
 Day: ${world.getDay()}
 Moon Phase: ${world.getMoonPhase()}
 Default Spawn Location: ${JSONB.stringify(world.getDefaultSpawnLocation())}`,
-                        ["Done"]
+                        [customFormUICodes.action.buttons.positions.main_only + "Done"],
+                        [customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left"]
                     );
                     return await addonDebugUI(sourceEntity);
                 case 1:
                     await showActions(
                         sourceEntity as Player,
-                        "Raw Config",
+                        customFormUICodes.action.titles.formStyles.medium + "Raw Config",
                         colorizeJSONString(
                             JSONB.stringify(
-                                Object.fromEntries(
+                                config.toJSON()
+                                /* Object.fromEntries(
                                     Object.getOwnPropertyNames(config)
                                         .filter(
                                             (n) =>
@@ -111,7 +114,7 @@ Default Spawn Location: ${JSONB.stringify(world.getDefaultSpawnLocation())}`,
                                                     ],
                                                 ] as any
                                         )
-                                ) /*{
+                                ) */ /*{
                 antiSpamSystem: config.antiSpamSystem,
                 chatCommandPrefix: config.chatCommandPrefix,
                 chatCommandsEnabled: config.chatCommandsEnabled,
@@ -132,7 +135,8 @@ Default Spawn Location: ${JSONB.stringify(world.getDefaultSpawnLocation())}`,
                                 2
                             ).replaceAll("§", "\uF019")
                         ),
-                        ["Done"]
+                        [customFormUICodes.action.buttons.positions.main_only + "Done"],
+                        [customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left"]
                     );
                     return await addonDebugUI(sourceEntity);
                 case 2:
@@ -148,10 +152,10 @@ Default Spawn Location: ${JSONB.stringify(world.getDefaultSpawnLocation())}`,
                     stopCheckingForBannedPlayers();
                     return await addonDebugUI(sourceEntity);
                 case 6:
-                    startProtectedAreasRefresher();
+                    startZoneActionsInterval();
                     return await addonDebugUI(sourceEntity);
                 case 7:
-                    stopProtectedAreasRefresher();
+                    stopZoneActionsInterval();
                     return await addonDebugUI(sourceEntity);
                 case 8:
                     Object.values(repeatingIntervals).forEach((v) => tryrun(() => system.clearRun(v)));
@@ -169,7 +173,7 @@ Default Spawn Location: ${JSONB.stringify(world.getDefaultSpawnLocation())}`,
                                     "Proceed",
                                     "Back"
                                 )
-                            ).selection == 0
+                            ).selection === 0
                         ) {
                             overworld.runCommand("/scriptevent andexsa:clearRepeatingIntervals");
                         }

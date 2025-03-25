@@ -62,6 +62,7 @@ export async function nameTagsSettings_generalNameTagsSettings(sourceEntity: loo
             nameTagTemplateString: string;
             showHealthOnPlayerNameTags: boolean;
             showRanksOnPlayerNameTags: boolean;
+            playerNameTagHealthPrecision: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20;
         };
         const includedOptions = cullUndefined([
             // "rankMode",
@@ -228,6 +229,14 @@ export async function nameTagsSettings_generalNameTagsSettings(sourceEntity: loo
                     "§l§fShow Ranks On Player Name Tags§r§f\nSets whether or not to show players ranks on their name tags, default is false",
                     config.chatRanks.showRanksOnPlayerNameTags
                 ),
+            playerNameTagHealthPrecision: () =>
+                form.slider(
+                    "§l§fPlayer Name Tag Health Precision§r§f\nThe maximum number of decimal places to display on the health display on player name tags. Must be between 0 and 20 (inclusive), default is 1",
+                    0,
+                    20,
+                    1,
+                    config.chatRanks.playerNameTagHealthPrecision
+                ),
         } as { [key in keyof optionsList]: () => any };
         includedOptions.forEach((o) => formOptionsMap[o]());
         //⌠⌡÷≈≡±≥≤»
@@ -312,6 +321,9 @@ export async function nameTagsSettings_generalNameTagsSettings(sourceEntity: loo
                     break;
                 case "showRanksOnPlayerNameTags":
                     config.chatRanks.showRanksOnPlayerNameTags = options[v];
+                    break;
+                case "playerNameTagHealthPrecision":
+                    config.chatRanks.playerNameTagHealthPrecision = options[v];
                     break;
                 default:
                     throw new Error(`Save action for setting ${JSON.stringify(v)} was not defined.`);

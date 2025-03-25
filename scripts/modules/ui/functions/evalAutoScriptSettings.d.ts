@@ -3,6 +3,8 @@ import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPl
 /**
  * Evaluates and displays the auto script settings form to the specified entity.
  *
+ * @todo Replace this menu with an action form with buttons for each of the script dynamic properties, allowing the player to edit them directly.
+ *
  * @param sourceEntitya - The entity that will receive the form. It can be an instance of `Entity`, `executeCommandPlayerW`, or `Player`.
  * @returns A promise that resolves to:
  * - `1` if the form was successfully shown and processed.

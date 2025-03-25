@@ -1037,6 +1037,21 @@ namespace exports {
                 static set showHealthOnPlayerNameTags(showHealthOnPlayerNameTags: boolean | undefined) {
                     world.setDynamicProperty("andexdbSettings:showHealthOnPlayerNameTags", showHealthOnPlayerNameTags ?? false);
                 }
+                /**
+                 * The maximum number of decimal places to display on the health display on player name tags.
+                 * 
+                 * Must be between 0 and 20 (inclusive).
+                 * 
+                 * Dynamic Property ID: `andexdbSettings:playerNameTagHealthPrecision`
+                 * 
+                 * @default 1
+                 */
+                static get playerNameTagHealthPrecision(): 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 {
+                    return Math.min(Math.max(0, String(world.getDynamicProperty("andexdbSettings:playerNameTagHealthPrecision") ?? 1).toNumber()), 20) as 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20;
+                }
+                static set playerNameTagHealthPrecision(playerNameTagHealthPrecision: number | undefined) {
+                    world.setDynamicProperty("andexdbSettings:playerNameTagHealthPrecision", Math.min(Math.max(0, typeof playerNameTagHealthPrecision === "number" ? playerNameTagHealthPrecision.isFinite() ? playerNameTagHealthPrecision : 1 : 1), 20));
+                }
                 static get rankMode(): keyof typeof rankModes {
                     return String(world.getDynamicProperty("andexdbSettings:rankMode") ?? "custom_simple") as keyof typeof rankModes;
                 }
@@ -2641,7 +2656,8 @@ namespace exports {
                     } else if (descriptor?.get) {
                         return [key, config.toJSON.call(descriptor.get())];
                     }
-                    return [key, this[key as keyof typeof config]];
+                    // return [key, this[key as keyof typeof config]];
+                    return undefined;
                 }),
             ) as ReturnType<typeof modules.utils.filterProperties<typeof config, ["prototype", "reset", "applySettings", "toJSON"]>>;/* 
                 Object.getOwnPropertyNames(config)
