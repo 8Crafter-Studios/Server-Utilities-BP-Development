@@ -1,5 +1,10 @@
 import { type Vector2, Dimension, Player } from "@minecraft/server";
 import { LandClaim } from "./LandClaim";
+/**
+ * A chunk land claim for the land claim system.
+ * @alpha
+ * @deprecated This class is not functional yet.
+ */
 export declare class chunkLandClaim {
     chunks: Vector2[];
     dimension: Dimension;

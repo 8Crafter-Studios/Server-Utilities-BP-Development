@@ -1,38 +1,36 @@
-import { Player, world } from "@minecraft/server";
-import { getPlayerById } from "init/functions/getPlayerById";
-import { HomeSystem } from "./HomeSystem";
+import { type DimensionLocation, Player, type Vector3 } from "@minecraft/server";
 /**
  * Represents a home for the home system.
  */
-export class Home {
+export declare class Home {
     /**
      * The location and dimension of the home.
      */
-    location;
+    location: DimensionLocation;
     /**
      * The name of the home.
      */
-    name;
+    name: string;
     /**
      * The ID of the owner of the home.
      */
-    ownerId;
+    ownerId: string;
     /**
      * The name of the owner of the home.
      */
-    ownerName;
+    ownerName?: string;
     /**
      * The save ID of the home.
      */
-    saveId;
+    saveId: string;
     /**
      * The version of the add-on that this home was saved with.
      */
-    format_version;
+    format_version?: string;
     /**
      * The format version the home system was on when this home was saved.
      */
-    home_format_version;
+    home_format_version?: string;
     /**
      * Creates an instance of the `Home` class.
      * @param {object} home The home to create.
@@ -46,88 +44,61 @@ export class Home {
      * @param {string} [home.home_format_version] The format version the home system was on when this home was saved.
      * @returns The created home.
      */
-    constructor(home) {
-        this.location = home.location;
-        this.name = home.name;
-        this.ownerId = home.ownerId ?? home.owner?.id;
-        this.ownerName = home.ownerName ?? home.owner?.name;
-        this.saveId = home.saveId;
-        this.format_version = home.format_version ?? format_version;
-        this.home_format_version =
-            home.home_format_version ?? HomeSystem.home_format_version;
-    }
+    constructor(home: {
+        location: DimensionLocation;
+        name: string;
+        owner?: Player;
+        ownerId?: string;
+        ownerName?: string;
+        saveId: string;
+        format_version?: string;
+        home_format_version?: string;
+    });
     /**
      * Returns the owner of the home if they are online, otherwise returns undefined.
      * @returns {Player | undefined} The owner of the home if they are online, otherwise returns undefined.
      */
-    get owner() {
-        return getPlayerById(this.ownerId);
-    }
+    get owner(): Player | undefined;
     /**
      * Checks if the owner of the home is online.
      * @returns {boolean} True if the owner of the home is online, false otherwise.
      */
-    get isOwnerOnline() {
-        return !!world.getAllPlayers().find((p) => p.id == this.ownerId);
-    }
+    get isOwnerOnline(): boolean;
     /**
      * Checks if the home is saved.
      * @returns {boolean} True if the home is saved, false otherwise.
      */
-    get isSaved() {
-        return !!world.getDynamicProperty(this.saveId);
-    }
+    get isSaved(): boolean;
     /**
      * Converts the home to a JSON object.
      * @returns {{ location: Vector3 & { dimension: string; }; name: string; ownerId: string; ownerName: string; format_version: string; home_format_version: string; }} The JSON object representing this home.
      */
-    toJSON() {
-        return {
-            location: Object.assign(this.location, {
-                dimension: this.location.dimension.id,
-            }),
-            name: this.name,
-            ownerId: this.ownerId,
-            ownerName: this.ownerName,
-            format_version: this.format_version ?? format_version,
-            home_format_version: this.home_format_version ?? HomeSystem.home_format_version,
+    toJSON(): {
+        location: Vector3 & {
+            dimension: string;
         };
-    }
+        name: string;
+        ownerId: string;
+        ownerName: string;
+        format_version: string;
+        home_format_version: string;
+    };
     /**
      * Saves the home.
      * @param {Partial<ReturnType<Home["toJSON"]>>} [otherDataToChange = {}] Additional data to add to the home.
      * @param {boolean} [keepOldFormatVersion = false] If set to true, the format version won't be set to the current version.
      */
-    save(otherDataToChange = {}, keepOldFormatVersion = false) {
-        world.setDynamicProperty(this.saveId, JSONStringify(Object.assign(Object.assign(Object.assign(JSONParse(String(world.getDynamicProperty(this.saveId) ??
-            "{}")) ?? {}, this.toJSON()), otherDataToChange), keepOldFormatVersion
-            ? {}
-            : {
-                format_version,
-                home_format_version: HomeSystem.home_format_version,
-            })));
-    }
+    save(otherDataToChange?: Partial<ReturnType<Home["toJSON"]>>, keepOldFormatVersion?: boolean): void;
     /**
      * Removes the home.
      */
-    remove() {
-        world.setDynamicProperty(this.saveId);
-    }
+    remove(): void;
     /**
      * Gets the home with the given save ID.
      * @param {string} homeId The save ID of the home.
      * @returns {Home} The home with the given save ID.
      */
-    static get(homeId) {
-        return !!world.getDynamicProperty(homeId)
-            ? new Home(Object.assign(JSONParse(String(world.getDynamicProperty(homeId))), {
-                saveId: homeId,
-                location: Object.assign(JSONParse(String(world.getDynamicProperty(homeId))).location, {
-                    dimension: world.getDimension(JSONParse(String(world.getDynamicProperty(homeId))).location.dimension),
-                }),
-            }))
-            : undefined;
-    }
+    static get(homeId: string): Home;
     /**
      * Deletes the home with the given save ID.
      *
@@ -135,8 +106,5 @@ export class Home {
      *
      * @param {string} homeId The save ID of the home to delete.
      */
-    static delete(homeId) {
-        world.setDynamicProperty(homeId);
-    }
+    static delete(homeId: string): void;
 }
-//# sourceMappingURL=Home.js.map

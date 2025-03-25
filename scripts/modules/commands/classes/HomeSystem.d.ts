@@ -1,69 +1,50 @@
-import { world, Player } from "@minecraft/server";
-import { swdp } from "init/functions/swdp";
-import { gwdp } from "init/functions/gwdp";
+import { Player } from "@minecraft/server";
+import type { extendedExecuteCommandPlayerW } from "modules/commands/types/extendedExecuteCommandPlayerW";
 import { Home } from "./Home";
 /**
  * This class is used for managing homes for the home system.
  */
-export class HomeSystem {
-    constructor() { }
+export declare class HomeSystem {
+    constructor();
     /**
      * The format version of the home system.
      */
-    static home_format_version = "0.7.0-beta.72";
+    static home_format_version: string;
     /**
      * Gets the homes for the given home IDs.
      *
      * @param {string[]} homeIds The list of home IDs to get the homes for.
      * @returns {Home[]} The homes for the given home IDs.
      */
-    static getHomes(homeIds) {
-        return homeIds.map((c) => Home.get(c));
-    }
+    static getHomes(homeIds: string[]): Home[];
     /**
      * Gets all homes.
      * @returns {Home[]} A list of all homes.
      */
-    static getAllHomes() {
-        return this.getHomeIds().map((c) => Home.get(c));
-    }
+    static getAllHomes(): Home[];
     /**
      * Gets all home IDs.
      * @returns {string[]} A list of all home IDs.
      */
-    static getHomeIds() {
-        return world
-            .getDynamicPropertyIds()
-            .filter((v) => v.startsWith("home:"));
-    }
+    static getHomeIds(): string[];
     /**
      * Gets the home IDs for the given player.
      * @param {Player | extendedExecuteCommandPlayerW | string} player The player to get the home IDs for. Can be a player object, or a player ID.
      * @returns {string[]} A list of home IDs for the given player.
      */
-    static getHomeIdsForPlayer(player) {
-        return world
-            .getDynamicPropertyIds()
-            .filter((v) => v.startsWith("home:"))
-            .filter((v) => tryget(() => JSONParse(String(world.getDynamicProperty(v)))
-            ?.ownerId) == (typeof player == "string" ? player : player.id));
-    }
+    static getHomeIdsForPlayer(player: Player | extendedExecuteCommandPlayerW | string): string[];
     /**
      * Gets the homes for the given player.
      * @param {Player | extendedExecuteCommandPlayerW | string} player The player to get the homes for. Can be a player object, or a player ID.
      * @returns {Home[]} A list of homes for the given player.
      */
-    static getHomesForPlayer(player) {
-        return this.getHomes(this.getHomeIdsForPlayer(player));
-    }
+    static getHomesForPlayer(player: Player | extendedExecuteCommandPlayerW | string): Home[];
     /**
      * Checks if the given player has reached the maximum number of homes.
      * @param {Player | extendedExecuteCommandPlayerW | string} player The player to check.
      * @returns {boolean} True if the player has reached the maximum number of homes, false otherwise.
      */
-    static testIfPlayerAtMaxHomes(player) {
-        return (this.getHomeIdsForPlayer(player).length >= this.maxHomesPerPlayer);
-    }
+    static testIfPlayerAtMaxHomes(player: Player | extendedExecuteCommandPlayerW | string): boolean;
     /**
      * The maximum number of homes per player.
      *
@@ -71,13 +52,6 @@ export class HomeSystem {
      *
      * @default Infinity
      */
-    static get maxHomesPerPlayer() {
-        return gwdp("homeSystemSettings:maxHomesPerPlayer") == -1
-            ? Infinity
-            : Number(gwdp("homeSystemSettings:maxHomesPerPlayer") ?? Infinity);
-    }
-    static set maxHomesPerPlayer(maxHomes) {
-        swdp("homeSystemSettings:maxHomesPerPlayer", maxHomes == Infinity ? -1 : maxHomes);
-    }
+    static get maxHomesPerPlayer(): number;
+    static set maxHomesPerPlayer(maxHomes: number);
 }
-//# sourceMappingURL=HomeSystem.js.map

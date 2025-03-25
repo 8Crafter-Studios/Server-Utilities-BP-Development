@@ -1,5 +1,10 @@
 import { Player, type Vector3, type DimensionLocation } from "@minecraft/server";
 import { LandClaim } from "./LandClaim";
+/**
+ * This class is used for managing land claims.
+ * @alpha
+ * @deprecated This class is not functional yet.
+ */
 export declare class LandClaimSystem {
     constructor();
     get warnAboutDeniedPermissions(): boolean | undefined;
