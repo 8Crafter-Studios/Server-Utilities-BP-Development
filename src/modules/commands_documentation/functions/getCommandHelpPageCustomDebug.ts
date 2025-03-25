@@ -9,7 +9,7 @@ export function getCommandHelpPageCustomDebug(commandName: string, player?: Play
     let cmd = command.get(((commandName.slice(0, command.dp.length) == command.dp) && (commandName.slice(command.dp.length, command.dp.length + 1) != "\\")) ? commandName.slice(1) : commandName, "custom");
     return !cmd.settings.isSaved
         ? `§cError: Unknown custom command "${cmd.commandName}§r§c", check that the command exists, if it does then there is just no help info for it.`
-        : `§e${cmd.commandName}${(cmd.aliases?.length ?? 0) != 0 ? ` (also ${cmd.aliases.map((v) => v.commandName).join(", ")})` : ""}:\n${commanddescriptions[cmd.commandName as keyof typeof commanddescriptions]}§r\nUsage:\n- ${(
+        : `§e${cmd.commandName}:\n${commanddescriptions[cmd.commandName as keyof typeof commanddescriptions]}§r\nUsage:\n- ${(
             commandsyntaxes[cmd.currentCommandName as keyof typeof commandsyntaxes] ?? "missing"
         )
             .split("\n")

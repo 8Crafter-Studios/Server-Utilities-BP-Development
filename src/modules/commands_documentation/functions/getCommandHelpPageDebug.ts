@@ -21,7 +21,7 @@ export function getCommandHelpPageDebug(commandName: string, player?: Player | e
             ? ""
             : "§r\nCategories: " + JSON.stringify(cmd.categories)}${!!!cmd.settings?.defaultSettings
             ? ""
-            : "§r\nBuilt-In Raw Command Data: " + JSON.stringify(Object.fromEntries(Object.entries(cmd.settings.defaultSettings).map(v => v[0] == "formatting_code" ? [v[0], v[1]["replaceAll"]("§", "\uF019")] : v)), (k, v) => { if (typeof v == "string") { return "§r" + v + "§r"; } else { return v; } }, spacing)}${!!!cmd.settings
+            : "§r\nBuilt-In Raw Command Data: " + JSON.stringify(Object.fromEntries(Object.entries(cmd.settings.defaultSettings).map(v => v[0] == "formatting_code" ? [v[0], (v[1] as typeof cmd.settings.defaultSettings["formatting_code"])["replaceAll"]("§", "\uF019")] : v)), (k, v) => { if (typeof v == "string") { return "§r" + v + "§r"; } else { return v; } }, spacing)}${!!!cmd.settings
             ? ""
             : "§r\nRaw Settings: " + JSON.stringify(Object.fromEntries(Object.entries(cmd.settings).map(v => v[0] == "formatting_code" ? [v[0], v[1]["replaceAll"]("§", "\uF019")] : v)), (k, v) => { if (typeof v == "string") { return "§r" + v + "§r"; } else { return v; } }, spacing)}§r\nType: ${cmd.type}§r\n${!cmd.settings.enabled
             ? "§cDISABLED"
