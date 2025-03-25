@@ -75,7 +75,7 @@ export async function chatRanksSettings_chatStyleSettings(sourceEntity: loosePla
                   ]
                 : []),
             rankMode === "custom_simple" || rankMode === "custom_advanced" ? "rankDisplaySeparator" : undefined,
-            ...(rankMode === "custom_simple" ? ["rankTemplateString", "messageTemplateString"] : []),
+            ...(rankMode === "custom_advanced" ? ["rankTemplateString", "messageTemplateString"] : []),
             // "defaultRank",
             "defaultMessageFormatting",
             "defaultNameFormatting",

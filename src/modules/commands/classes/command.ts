@@ -1,4 +1,4 @@
-import { world, Player, Entity, Dimension, CommandError } from "@minecraft/server";
+import { world, Player, Dimension, type CommandError } from "@minecraft/server";
 import { tfsb } from "init/functions/tfsb";
 import { SemVerString } from "modules/main/classes/SemVerString";
 import { commands_format_version } from "modules/commands/constants/commands_format_version";
@@ -648,7 +648,13 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
             }
         }
     }
-    static findBuiltIn(commandString: string, returnCommandInsteadOfAlias: boolean = false) {
+    /**
+     * Gets a built-in command.
+     * @param {string} commandString The command string to detect the command from.
+     * @param {boolean} [returnCommandInsteadOfAlias = true] Whether or not to always return the main command, even if the detected command is an alias.
+     * @returns {typeof commands[number] | { index: number; alias: typeof commands[number]["aliases"][number]; aliasTo: typeof commands[number] }} The built-in command.
+     */
+    static findBuiltIn(commandString: string, returnCommandInsteadOfAlias: boolean = false): typeof commands[number] | { index: number; alias: typeof commands[number]["aliases"][number]; aliasTo: typeof commands[number] } {
         let b =
             commands.find((v) => !!commandString.match(new command(v).regexp)) ??
             (() => {
@@ -673,7 +679,12 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
             })();
         return b;
     }
-    static getDefaultCommands(noSort: boolean = false) {
+    /**
+     * Gets the built-in commands.
+     * @param {boolean} [noSort = false] If set to true, it will not sort the commands.
+     * @returns {command<"built-in">[]} The array of built-in commands.
+     */
+    static getDefaultCommands(noSort: boolean = false): command<"built-in">[] {
         try {
             if (noSort) {
                 return commands.map(
@@ -707,7 +718,13 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
         category: string,
         noSort?: boolean
     ): command<"built-in">[]; */
-    static getDefaultCommandsOfCategory(category: commandCategory, noSort: boolean = false) {
+    /**
+     * Gets the built-in commands of a category.
+     * @param {commandCategory} category The category of the commands.
+     * @param {boolean} [noSort = false] If set to true, it will not sort the commands.
+     * @returns {command<"built-in">[]} The array of built-in commands.
+     */
+    static getDefaultCommandsOfCategory(category: commandCategory, noSort: boolean = false): command<"built-in">[] {
         try {
             if (noSort) {
                 return commands
@@ -735,7 +752,13 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
             console.error(e, e.stack);
         }
     }
-    static getCommandAliases() {
+    /**
+     * Gets all of the aliases of the built-in commands.
+     * @returns {{ [k: string]: { commandName: string; escregexp?: { v: string; f?: string }; regexp: RegExp; aliasTo?: string }[] }} The aliases of the built-in commands.
+     */
+    static getCommandAliases(): {
+        [k in typeof commands[number]["commandName"]]: typeof commands[number]["aliases"];
+    } {
         try {
             return Object.fromEntries(
                 commands
@@ -755,7 +778,12 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
             console.error(e, e.stack);
         }
     }
-    static getCustomCommands(noSort: boolean = false) {
+    /**
+     * Gets all of the custom commands.
+     * @param {boolean} [noSort = false] If set to true, it will not sort the commands.
+     * @returns {command<"custom">[]} The array of custom commands.
+     */
+    static getCustomCommands(noSort: boolean = false): command<"custom">[] {
         try {
             if (noSort) {
                 return world
@@ -794,9 +822,21 @@ static testForNameBannedPlayer(player: Player|savedPlayer|savedPlayerData){retur
 static testForIdBannedPlayer(player: Player|savedPlayer|savedPlayerData){return ban.getBans().idBans.find(b=>b.isValid&&b.playerId==player.id)!=undefined?true:false}
 static executeOnBannedPlayers(callbackfn: (player: Player, index: Number, array: any[])=>unknown){let feedback: any[]; feedback = []; world.getAllPlayers().filter((p)=>ban.testForBannedPlayer(p)).forEach((p, i, a)=>{try{feedback.push(callbackfn(p, i, a))}catch(e){feedback.push(e)}}); return feedback}*/
 
-    static get defaultPrefix() {
+    /**
+     * The current prefix set for the chat commands.
+     *
+     * @default "\\"
+     */
+    static get defaultPrefix(): string {
         return String(world.getDynamicProperty("andexdbSettings:chatCommandPrefix") ?? "\\");
     }
+    /**
+     * The current prefix set for the chat commands.
+     * 
+     * This is an alias of {@link defaultPrefix}.
+     * 
+     * @default "\\"
+     */
     static get dp() {
         return String(world.getDynamicProperty("andexdbSettings:chatCommandPrefix") ?? "\\");
     }
