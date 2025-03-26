@@ -49,7 +49,7 @@ subscribedEvents.afterPlayerDimensionChange =
                         p,
                         `§r§f[§l§dServer§r§f]${world.getDynamicProperty(
                             "serverNotificationSpacer"
-                        ) ?? ""}[§eplayerDimensionChange§r][${event.player.name}] Entered ${dimensionTypeDisplayFormatting[event.fromDimension.id as keyof typeof dimensionTypeDisplayFormatting]} at ${vTStr(event.fromLocation)} from ${dimensionTypeDisplayFormatting[event.toDimension.id as keyof typeof dimensionTypeDisplayFormatting]} at ${vTStr(event.toLocation)}. `
+                        ) ?? ""}[§eplayerDimensionChange§r][${event.player.name}] Entered ${dimensionTypeDisplayFormatting[event.toDimension.id as keyof typeof dimensionTypeDisplayFormatting]} at ${vTStr(event.toLocation)} from ${dimensionTypeDisplayFormatting[event.fromDimension.id as keyof typeof dimensionTypeDisplayFormatting]} at ${vTStr(event.fromLocation)}. `
                     );
                     let pn = new PlayerNotifications(p);
                     srun(() => p.playSound(

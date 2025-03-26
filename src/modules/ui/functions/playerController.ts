@@ -297,9 +297,10 @@ export function playerController(
                 if (Boolean(applyKnockback) == true) {
                     try {
                         playerList[playerTargetB].applyKnockback(
-                            Number(kockbackDirectionX),
-                            Number(knockbackDirectionZ),
-                            Number(knockbackHorizontalStrength),
+                            {
+                                x: Number(kockbackDirectionX) * Number(knockbackHorizontalStrength),
+                                z: Number(knockbackDirectionZ) * Number(knockbackHorizontalStrength),
+                            },
                             Number(knockbackVerticalStrength)
                         );
                     } catch (e) {

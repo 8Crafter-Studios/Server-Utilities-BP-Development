@@ -159,9 +159,10 @@ repeatingIntervals.worldBorderSystem = system.runInterval(() => {
                         let difference = values.difference;
                         let dv = anglesToDirectionVectorDeg(rot.x, rot.y);
                         p.applyKnockback(
-                            dv.x,
-                            dv.z,
-                            borderSettings.knockbackH ?? 2.5,
+                            {
+                                x: dv.x * (borderSettings.knockbackH ?? 2.5),
+                                z: dv.z * (borderSettings.knockbackH ?? 2.5),
+                            },
                             borderSettings.knockbackV ?? 1.25
                         );
                     } else if (borderSettings.mode == 2) {
@@ -993,9 +994,10 @@ repeatingIntervals.worldBorderSystem = system.runInterval(() => {
                         let difference = values.difference;
                         let dv = anglesToDirectionVectorDeg(rot.x, rot.y);
                         p.applyKnockback(
-                            dv.x,
-                            dv.z,
-                            borderSettings.knockbackH ?? 2.5,
+                            {
+                                x: dv.x * (borderSettings.knockbackH ?? 2.5),
+                                z: dv.z * (borderSettings.knockbackH ?? 2.5),
+                            },
                             borderSettings.knockbackV ?? 1.25
                         );
                     } else if (borderSettings.mode == 2) {
@@ -1824,12 +1826,13 @@ repeatingIntervals.worldBorderSystem = system.runInterval(() => {
                             ),
                         });
                         let rot = values.rot;
-                        let difference = values.difference;
+                        // let difference = values.difference;
                         let dv = anglesToDirectionVectorDeg(rot.x, rot.y);
                         p.applyKnockback(
-                            dv.x,
-                            dv.z,
-                            borderSettings.knockbackH ?? 2.5,
+                            {
+                                x: dv.x * (borderSettings.knockbackH ?? 2.5),
+                                z: dv.z * (borderSettings.knockbackH ?? 2.5),
+                            },
                             borderSettings.knockbackV ?? 1.25
                         );
                     } else if (borderSettings.mode == 2) {

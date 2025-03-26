@@ -13,11 +13,11 @@ export namespace mainGlobalVariables {
     /**
      * The version of the add-on.
      */
-    export const current_format_version = "1.33.1-preview.20+BUILD.1";
+    export const current_format_version = "1.34.0-preview.20+BUILD.1";
     /**
      * The version of Minecraft Bedrock Edition supported by the add-on.
      */
-    export const current_supported_minecraft_version = "1.21.6x";
+    export const current_supported_minecraft_version = "1.21.7x";
     /**
      * The tick that the `initializeMainGlobalVariables` script was run.
      */
@@ -178,15 +178,15 @@ declare global {
             [id: string]: number;
         };
         /**
-         * The tick that the {@link world.beforeEvents.worldInitialize} event was triggered.
+         * The tick that the {@link system.beforeEvents.startup} event was triggered.
          * 
-         * It will be set to `-1` until the {@link world.beforeEvents.worldInitialize} event is triggered.
+         * It will be set to `-1` until the {@link system.beforeEvents.startup} event is triggered.
          */
         var beforeInitializeTick: number;
         /**
-         * The tick that the {@link world.afterEvents.worldInitialize} event was triggered.
+         * The tick that the {@link world.afterEvents.worldLoad} event was triggered.
          * 
-         * It will be set to `-1` until the {@link world.afterEvents.worldInitialize} event is triggered.
+         * It will be set to `-1` until the {@link world.afterEvents.worldLoad} event is triggered.
          */
         var initializeTick: number;
         export import beforeScriptStartTick = mainGlobalVariables.beforeScriptStartTick;

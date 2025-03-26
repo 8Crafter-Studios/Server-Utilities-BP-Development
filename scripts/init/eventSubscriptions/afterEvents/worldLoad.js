@@ -1,8 +1,19 @@
 import { world, system } from "@minecraft/server";
 import { checkIfCompatibleBlueModsAnticheatIsActive } from "modules/main/functions/checkIfCompatibleBlueModsAnticheatIsActive";
 import { checkIfCompatibleEntityScaleIsActive } from "modules/main/functions/checkIfCompatibleEntityScaleIsActive";
-subscribedEvents.afterWorldInitialize =
-    world.afterEvents.worldInitialize.subscribe(async (event) => {
+subscribedEvents.afterWorldLoad =
+    world.afterEvents.worldLoad.subscribe(async (event) => {
+        try {
+            eval(String(world.getDynamicProperty("evalAfterEvents:worldLoad")));
+        }
+        catch (e) {
+            console.error(e, e.stack);
+            world.getAllPlayers().forEach((currentplayer) => {
+                if (currentplayer.hasTag("worldLoadAfterEventDebugErrors")) {
+                    currentplayer.sendMessage(e + e.stack);
+                }
+            });
+        }
         try {
             eval(String(world.getDynamicProperty("evalAfterEvents:worldInitialize")));
         }
@@ -139,4 +150,4 @@ subscribedEvents.afterWorldInitialize =
             propertiesDefinitionWarpListGlobalValues.defineString('globalWarpListValues', 10000);
             event.propertyRegistry.registerWorldDynamicProperties(propertiesDefinitionWarpListGlobalValues);*/
     });
-//# sourceMappingURL=worldInitialize.js.map
+//# sourceMappingURL=worldLoad.js.map

@@ -5,6 +5,7 @@ import { securityVariables } from "security/ultraSecurityModeUtils";
 import { showMessage } from "modules/utilities/functions/showMessage";
 import { extractPlayerFromLooseEntityType } from "modules/utilities/functions/extractPlayerFromLooseEntityType";
 import type { loosePlayerType } from "modules/utilities/types/loosePlayerType";
+import { customFormUICodes } from "../constants/customFormUICodes";
 
 /**
  * Configures and displays the anti-spam settings form to the specified player.
@@ -49,7 +50,7 @@ export async function antispamSettings(sourceEntity: loosePlayerType): Promise<0
             }
         }
         let form = new ModalFormData();
-        form.title("Anti-Spam Settings [§cExperimental§r]");
+        form.title(customFormUICodes.modal.titles.formStyles.medium + "Anti-Spam Settings [§cExperimental§r]");
         form.toggle("§l§fAnti-Spam Enabled§r§f", config.antiSpamSystem.antispamEnabled);
         form.toggle(
             "§l§fReset Anti-Spam Mute Timer Upon Attempted Message Send While Muted§r§f",

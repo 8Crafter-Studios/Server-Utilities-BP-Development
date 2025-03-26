@@ -45,7 +45,7 @@ subscribedEvents.beforeExplosion = world.beforeEvents.explosion.subscribe(
                                       event.source?.typeId
                               )
                             : true) &&
-                        (!!event.source && (event.source?.isValid() ?? true)
+                        (!!event.source && (event.source?.isValid ?? true)
                             ? !p.hasTag(
                                   "excludeBeforeExplosionNotificationsBy:" +
                                       ((event.source as Player)?.name ??

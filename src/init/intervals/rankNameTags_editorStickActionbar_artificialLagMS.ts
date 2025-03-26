@@ -78,11 +78,11 @@ try {
                                       )}§9}`
                                     : ""
                             }${
-                                !!block.getComponent("fluidContainer")
+                                !!block.getComponent("fluid_container")
                                     ? `
-§l§eminecraft:fluidContainer: §r§9{§eFill Level: §r§c${block.getComponent("fluidContainer")?.fillLevel}§a, §eFluid Type: §r§c§a${block
-                                          .getComponent("fluidContainer")
-                                          ?.getFluidType()}, §eCustom Color: §r§c${JSON.stringify(block.getComponent("fluidContainer")?.fluidColor)}§9}`
+§l§eminecraft:fluid_container: §r§9{§eFill Level: §r§c${block.getComponent("fluid_container")?.fillLevel}§a, §eFluid Type: §r§c§a${block
+                                          .getComponent("fluid_container")
+                                          ?.getFluidType()}, §eCustom Color: §r§c${JSON.stringify(block.getComponent("fluid_container")?.fluidColor)}§9}`
                                     : ""
                             }`;
                             playerList2[index].onScreenDisplay.setActionBar(

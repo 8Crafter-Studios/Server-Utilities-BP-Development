@@ -5,7 +5,6 @@ import {
     ExplosionBeforeEvent,
     ItemTypes,
     ItemUseBeforeEvent,
-    ItemUseOnBeforeEvent,
     PlayerBreakBlockBeforeEvent,
     PlayerGameModeChangeBeforeEvent,
     PlayerInteractWithBlockBeforeEvent,
@@ -366,51 +365,6 @@ export interface AdvancedProtectedAreaCategory<JSONMode extends boolean = false>
                * @default true
                */
               enabled?: boolean;
-              /**
-               * A list of tags that allow players to bypass this area type.
-               */
-              allowedBypassTags: string[];
-              /**
-               * Filters for held items that determine whether or not this area type will affect that player.
-               */
-              heldItemFilters:
-                  | false
-                  | {
-                        /**
-                         * If the mode is set to `include`, then only players holding one of the specified items will be affected by this area type.
-                         *
-                         * If the mode is set to `exclude`, then players holding one of the specified items will not be affected by this area type.
-                         */
-                        mode: "exclude" | "include";
-                        /**
-                         * The item types to allow or block.
-                         */
-                        items: string[];
-                    };
-          };
-    itemUseOn?:
-        | false
-        | {
-              /**
-               * Whether or not this area effect is enabled.
-               *
-               * @default true
-               */
-              enabled?: boolean;
-              /**
-               * If the mode is set to `include`, then only blocks matching the specified block mask will be allowed to be broken by players.
-               *
-               * If the mode is set to `exclude`, then blocks matching the specified block mask will be blocked from being broken by players.
-               */
-              mode: "exclude" | "include";
-              /**
-               * The block types to allow or block.
-               */
-              mask: JSONMode extends true ? string : BlockMask;
-              /**
-               * The raw string for the block mask. When saved as JSON, this is the value stored in the mask property.
-               */
-              rawmask?: JSONMode extends true ? undefined : string;
               /**
                * A list of tags that allow players to bypass this area type.
                */
@@ -803,17 +757,6 @@ export const AdvancedProtectedAreaCategoryPropertyAllEnabledDefaults = makeMutab
             items: [],
         },
     },
-    itemUseOn: {
-        enabled: true,
-        allowedBypassTags: [],
-        heldItemFilters: {
-            mode: "exclude",
-            items: [],
-        },
-        mask: new BlockMask([], "exclude"),
-        rawmask: "none",
-        mode: "exclude",
-    },
     noPVPZone: {
         enabled: true,
     },
@@ -934,16 +877,6 @@ export const AdvancedProtectedAreaCategoryPropertyAllEnabledDefaults_JSON = make
             mode: "exclude",
             items: [],
         },
-    },
-    itemUseOn: {
-        enabled: true,
-        allowedBypassTags: [],
-        heldItemFilters: {
-            mode: "exclude",
-            items: [],
-        },
-        mask: "none",
-        mode: "exclude",
     },
     noPVPZone: {
         enabled: true,
@@ -1328,7 +1261,6 @@ export class ProtectedAreas {
  * @property {ExplosionBeforeEvent} explosion - Event triggered before an explosion occurs.
  * @property {PlayerInteractWithEntityBeforeEvent} playerInteractWithEntity - Event triggered before a player interacts with an entity.
  * @property {ItemUseBeforeEvent} itemUse - Event triggered before an item is used.
- * @property {ItemUseOnBeforeEvent} itemUseOn - Event triggered before an item is used on a block.
  * @property {PlayerGameModeChangeBeforeEvent} playerGameModeChange - Event triggered before a player's game mode is changed.
  * @property {ChatSendBeforeEvent} chatSend - Event triggered before a chat message is sent.
  * @property {EffectAddBeforeEvent} effectAdd - Event triggered before an effect is added to an entity.
@@ -1340,7 +1272,6 @@ interface preventableEventTypeMap {
     explosion: ExplosionBeforeEvent;
     playerInteractWithEntity: PlayerInteractWithEntityBeforeEvent;
     itemUse: ItemUseBeforeEvent;
-    itemUseOn: ItemUseOnBeforeEvent;
     playerGameModeChange: PlayerGameModeChangeBeforeEvent;
     chatSend: ChatSendBeforeEvent;
     effectAdd: EffectAddBeforeEvent;
@@ -1391,13 +1322,6 @@ const preventableEventMap: {
         builtInCategories: [],
         advancedCategoryProperty: "itemUse",
     },
-    itemUseOn: {
-        builtInCategories: [
-            "noBlockInteractArea" /* ,
-            "noInteractArea" */,
-        ],
-        advancedCategoryProperty: "itemUseOn",
-    },
     playerGameModeChange: {
         builtInCategories: [],
         advancedCategoryProperty: "playerGameModeChange",
@@ -1431,7 +1355,6 @@ export const advancedCategoryPropertyDisplayNames = {
     explosion: "Explosion Prevention",
     playerInteractWithEntity: "Entity Interaction Prevention",
     itemUse: "Item Use Prevention",
-    itemUseOn: "Item Use On Prevention",
     playerGameModeChange: "Game Mode Change Prevention",
     chatSend: "Player Chat Message Send Prevention",
     effectAdd: "Entity Effect Add Prevention",
@@ -1442,7 +1365,7 @@ export const advancedCategoryPropertyDisplayNames = {
 /**
  * The `ProtectedAreaTester` class is used to test if certain events occur within a protected area.
  *
- * @template {T extends "playerPlaceBlock" | "playerBreakBlock" | "playerInteractWithBlock" | "explosion" | "playerInteractWithEntity" | "itemUse" | "itemUseOn" | "playerGameModeChange" | "chatSend" | "effectAdd"} T
+ * @template {T extends "playerPlaceBlock" | "playerBreakBlock" | "playerInteractWithBlock" | "explosion" | "playerInteractWithEntity" | "itemUse" | "playerGameModeChange" | "chatSend" | "effectAdd"} T
  * The type of event that can be prevented. It can be one of the following:
  * - "playerPlaceBlock"
  * - "playerBreakBlock"
@@ -1450,7 +1373,6 @@ export const advancedCategoryPropertyDisplayNames = {
  * - "explosion"
  * - "playerInteractWithEntity"
  * - "itemUse"
- * - "itemUseOn"
  * - "playerGameModeChange"
  * - "chatSend"
  * - "effectAdd"
@@ -1463,7 +1385,6 @@ export class ProtectedAreaTester<
         | "explosion"
         | "playerInteractWithEntity"
         | "itemUse"
-        | "itemUseOn"
         | "playerGameModeChange"
         | "chatSend"
         | "effectAdd"
@@ -1588,22 +1509,6 @@ export class ProtectedAreaTester<
                                                   ? prop.heldItemFilters.items.some((item) => data.itemStack?.typeId === (ItemTypes.get(item)?.id ?? item))
                                                   : !prop.heldItemFilters.items.some((item) => data.itemStack?.typeId === (ItemTypes.get(item)?.id ?? item))
                                               : true);
-                                      break;
-                                  }
-                                  case "itemUseOn": {
-                                      const prop: Exclude<(typeof category)[typeof categories.advancedCategoryProperty], false> = category.itemUseOn as Exclude<
-                                          (typeof category)[typeof categories.advancedCategoryProperty],
-                                          false
-                                      >;
-                                      const data = event as preventableEventTypeMap[typeof categories.advancedCategoryProperty];
-                                      success =
-                                          !prop.allowedBypassTags.some((tag) => data.source.hasTag(tag)) &&
-                                          (prop.heldItemFilters !== false
-                                              ? prop.heldItemFilters.mode === "include"
-                                                  ? prop.heldItemFilters.items.some((item) => data.itemStack?.typeId === (ItemTypes.get(item)?.id ?? item))
-                                                  : !prop.heldItemFilters.items.some((item) => data.itemStack?.typeId === (ItemTypes.get(item)?.id ?? item))
-                                              : true) &&
-                                          prop.mask.testIfMatches(data.block, prop.mode);
                                       break;
                                   }
                                   case "explosion": {

@@ -1,4 +1,4 @@
-import { world, system } from "@minecraft/server";
+import { system } from "@minecraft/server";
 
 /*
 let a = world.getDimension("the_end").getBlock({x: 0, y: 0, z: 0}).permutation
@@ -10,8 +10,8 @@ let b = a[Number(world.getAllPlayers()[0].getDynamicProperty("debugStickProperty
 world.getAllPlayers().forEach((pi, ia)=>{console.warn(pi.getComponent("inventory").inventorySize); for(let i = 0; i<pi.getComponent("inventory").inventorySize; i++){let item = pi.getComponent("inventory").container.getSlot(i); console.warn(i); if(item.typeId == "minecraft:skull"){world.getAllPlayers().forEach((pn)=>{if(item.nameTag == `§r§f${pn.name}'s Head§§`){item.setLore([`§r§aLocation: ${JSON.stringify(pn.location)}`, `Velocity: ${JSON.stringify(pn.getVelocity())}`, `Rotation: ${JSON.stringify(pn.getRotation())}`, `View Direction: ${JSON.stringify(pn.getViewDirection())}`, `Sleeping: ${pn.isSleeping}`, `Sneaking: ${pn.isSneaking}`, `Sprinting: ${pn.isSprinting}`, `Swimming: ${pn.isSwimming}`])}})}}})
 world.getAllPlayers().forEach((pi, ia)=>{console.warn(pi.getComponent("inventory").inventorySize); for(let i = 0; i<pi.getComponent("inventory").inventorySize; i++){let item = pi.getComponent("inventory").container.getSlot(i); console.warn(i); }})
  */
-subscribedEvents.beforeWorldInitialize =
-    world.beforeEvents.worldInitialize.subscribe((event) => {
+const eventUnsubscribeCallback =
+    system.beforeEvents.startup.subscribe((event) => {/* 
         try {
             eval(
                 String(
@@ -21,11 +21,25 @@ subscribedEvents.beforeWorldInitialize =
         } catch (e) {
             console.error(e, e.stack);
             world.getAllPlayers().forEach((currentplayer) => {
-                if (currentplayer.hasTag("worldInitializeAfterEventDebugErrors")) {
+                if (currentplayer.hasTag("worldInitializeBeforeEventDebugErrors")) {
                     currentplayer.sendMessage(e + e.stack);
                 }
             });
         }
+        try {
+            eval(
+                String(
+                    world.getDynamicProperty("evalBeforeEvents:startup")
+                )
+            );
+        } catch (e) {
+            console.error(e, e.stack);
+            world.getAllPlayers().forEach((currentplayer) => {
+                if (currentplayer.hasTag("startupBeforeEventDebugErrors")) {
+                    currentplayer.sendMessage(e + e.stack);
+                }
+            });
+        } */
         globalThis.beforeInitializeTick = system.currentTick;
         event.itemComponentRegistry.registerCustomComponent(
             "andexdbcomponents:animate_use_on",
@@ -51,3 +65,7 @@ subscribedEvents.beforeWorldInitialize =
             }
         );
     });
+
+system.runTimeout(() => {
+    subscribedEvents.beforeStartup = eventUnsubscribeCallback;
+}, 1);

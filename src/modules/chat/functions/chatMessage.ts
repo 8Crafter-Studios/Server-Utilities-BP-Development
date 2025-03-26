@@ -414,7 +414,7 @@ export function chatMessage(
     ) {
         newMessage = newMessage.replace("${r}", "");
         eventData.cancel = true;
-        player.runCommandAsync(newMessage);
+        srun(()=>player.runCommand(newMessage));
         return;
     }
     if (
@@ -463,7 +463,7 @@ export function chatMessage(
     ) {
         newMessage = newMessage.replace("${run}", "");
         eventData.cancel = true;
-        player.runCommandAsync(newMessage);
+        srun(()=>player.runCommand(newMessage));
         return;
     }
     /*${scripteval}world.getAllPlayers().forEach((t)=>{t.setDynamicProperty("canUseScriptEval", true)}); */

@@ -2649,16 +2649,16 @@ namespace exports {
         static toJSON(): FilterKey<typeof config, ["prototype", "reset", "applySettings", "toJSON"]> {
             // modules.utils.filterProperties(modules.utils.filterProperties(config, ["addCommaSeparators", "spawnCommandAllowCrossDimensionalTeleport", "allowWatchdogTerminationCrash", "spawnCommandLocation", "allowChatEscapeCodes"], {}), ["toJSON"], {}).antiSpamSystem.antispamEnabled;
             return Object.fromEntries(
-                Object.getOwnPropertyNames(this).map((key) => {
+                cullUndefined(Object.getOwnPropertyNames(this).map((key) => {
                     const descriptor = Object.getOwnPropertyDescriptor(this, key);
                     if (descriptor?.get && descriptor.set) {
                         return [key, descriptor.get()];
-                    } else if (descriptor?.get) {
+                    } else if (descriptor?.get && typeof descriptor.get() === "function" && descriptor.get()?.name?.startsWith("config")) {
                         return [key, config.toJSON.call(descriptor.get())];
                     }
                     // return [key, this[key as keyof typeof config]];
                     return undefined;
-                }),
+                })),
             ) as ReturnType<typeof modules.utils.filterProperties<typeof config, ["prototype", "reset", "applySettings", "toJSON"]>>;/* 
                 Object.getOwnPropertyNames(config)
                     .filter(

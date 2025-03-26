@@ -412,7 +412,7 @@ export function chatSend(params: { returnBeforeChatSend: boolean | undefined; pl
             if (world.getDynamicProperty("allowCustomChatMessagesMuting") != true) {
                 p.sendMessage(messageOutput);
             } else {
-                p.runCommandAsync(`/tellraw @s ${JSON.stringify({ "rawtext": [{ "text": messageOutput }] })}`);
+                srun(() => p.runCommand(`/tellraw @s ${JSON.stringify({ "rawtext": [{ "text": messageOutput }] })}`));
             }
         });
     } /*

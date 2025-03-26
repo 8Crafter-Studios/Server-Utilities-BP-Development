@@ -512,7 +512,7 @@ export class BlockMask {
                                     return false;
                                 }
                             case "isValid":
-                                if (block.isValid()) {
+                                if (block.isValid) {
                                     if (b.states != undefined) {
                                         return BlockMask.testForStatesMatch(block.permutation.getAllStates(), b.states);
                                     } else {

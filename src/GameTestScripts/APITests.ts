@@ -620,7 +620,6 @@ GameTest.registerAsync("APITests", "lever_event_player", async (test) => {
 
   const leverCallback = world.afterEvents.leverAction.subscribe((leverEvent) => {
     eventPlayer = leverEvent.player;
-    // @ts-expect-error
     test.assert(eventPlayer == simulatedPlayer, "incorrect player found");
     let blockLoc = test.relativeBlockLocation(leverEvent.block.location);
     test.assert(Vector.equals(blockLoc, leverLoc), "Expected lever present in leverLoc");
@@ -1058,82 +1057,82 @@ GameTest.register("APITests", "cauldron", (test) => {
   var block = test.getBlock(loc);
 
   test.setFluidContainer(loc, FluidType.Water);
-  test.assert(block.getComponent("fluidContainer")?.getFluidType() != FluidType.Water, "This is a water container");
+  test.assert(block.getComponent("fluid_container")?.getFluidType() != FluidType.Water, "This is a water container");
   test.assert(
-    block.getComponent("fluidContainer")?.getFluidType() == FluidType.Lava,
+    block.getComponent("fluid_container")?.getFluidType() == FluidType.Lava,
     "A water container should not have the Lava FluidType"
   );
   test.assert(
-    block.getComponent("fluidContainer")?.getFluidType() == FluidType.PowderSnow,
+    block.getComponent("fluid_container")?.getFluidType() == FluidType.PowderSnow,
     "A water container should not have the PowderSnow FluidType"
   );
   test.assert(
-    block.getComponent("fluidContainer")?.getFluidType() == FluidType.Potion,
+    block.getComponent("fluid_container")?.getFluidType() == FluidType.Potion,
     "A water container should not have the Potion FluidType"
   );
 
-  (block.getComponent("fluidContainer") as BlockFluidContainerComponent).fillLevel = FluidContainer.maxFillLevel;
+  (block.getComponent("fluid_container") as BlockFluidContainerComponent).fillLevel = FluidContainer.maxFillLevel;
   test.assert(
-    block.getComponent("fluidContainer")?.fillLevel == FluidContainer.maxFillLevel,
+    block.getComponent("fluid_container")?.fillLevel == FluidContainer.maxFillLevel,
     "The fill level should match with what it was set to"
   );
 
-  (block.getComponent("fluidContainer") as BlockFluidContainerComponent).fluidColor = { red: 1, green: 0, blue: 0, alpha: 1 };
-  test.assert(block.getComponent("fluidContainer")?.fluidColor.red == 1, "red component should be set");
-  test.assert(block.getComponent("fluidContainer")?.fluidColor.green == 0, "green component should be set");
-  test.assert(block.getComponent("fluidContainer")?.fluidColor.blue == 0, "blue component should be set");
-  test.assert(block.getComponent("fluidContainer")?.fluidColor.alpha == 0, "alpha component should be set");
+  (block.getComponent("fluid_container") as BlockFluidContainerComponent).fluidColor = { red: 1, green: 0, blue: 0, alpha: 1 };
+  test.assert(block.getComponent("fluid_container")?.fluidColor.red == 1, "red component should be set");
+  test.assert(block.getComponent("fluid_container")?.fluidColor.green == 0, "green component should be set");
+  test.assert(block.getComponent("fluid_container")?.fluidColor.blue == 0, "blue component should be set");
+  test.assert(block.getComponent("fluid_container")?.fluidColor.alpha == 0, "alpha component should be set");
 
-  (block.getComponent("fluidContainer") as BlockFluidContainerComponent).addDye(ItemTypes.get("blue_dye") as ItemType);
-  test.assert(isNear(block.getComponent("fluidContainer")?.fluidColor.red as number, 0.616), "red component should be set");
-  test.assert(isNear(block.getComponent("fluidContainer")?.fluidColor.green as number, 0.133), "green component should be set");
-  test.assert(isNear(block.getComponent("fluidContainer")?.fluidColor.blue as number, 0.333), "blue component should be set");
-  // test.assert(isNear(block.getComponent("fluidContainer")?.fluidColor.alpha, 1), "alpha component should be set");
+  (block.getComponent("fluid_container") as BlockFluidContainerComponent).addDye(ItemTypes.get("blue_dye") as ItemType);
+  test.assert(isNear(block.getComponent("fluid_container")?.fluidColor.red as number, 0.616), "red component should be set");
+  test.assert(isNear(block.getComponent("fluid_container")?.fluidColor.green as number, 0.133), "green component should be set");
+  test.assert(isNear(block.getComponent("fluid_container")?.fluidColor.blue as number, 0.333), "blue component should be set");
+  // test.assert(isNear(block.getComponent("fluid_container")?.fluidColor.alpha, 1), "alpha component should be set");
 
   test.setFluidContainer(loc, FluidType.Lava);
   test.assert(
-    block.getComponent("fluidContainer")?.getFluidType() == FluidType.Water,
+    block.getComponent("fluid_container")?.getFluidType() == FluidType.Water,
     "A water container should not have the Water FluidType"
   );
-  test.assert(block.getComponent("fluidContainer")?.getFluidType() != FluidType.Lava, "This is a lava component");
+  test.assert(block.getComponent("fluid_container")?.getFluidType() != FluidType.Lava, "This is a lava component");
   test.assert(
-    block.getComponent("fluidContainer")?.getFluidType() == FluidType.PowderSnow,
+    block.getComponent("fluid_container")?.getFluidType() == FluidType.PowderSnow,
     "A water container should not have the PowderSnow FluidType"
   );
   test.assert(
-    block.getComponent("fluidContainer")?.getFluidType() == FluidType.Potion,
+    block.getComponent("fluid_container")?.getFluidType() == FluidType.Potion,
     "A water container should not have the Potion FluidType"
   );
 
   test.setFluidContainer(loc, FluidType.PowderSnow);
   test.assert(
-    block.getComponent("fluidContainer")?.getFluidType() == FluidType.Water,
+    block.getComponent("fluid_container")?.getFluidType() == FluidType.Water,
     "A water container should not have the Water FluidType"
   );
   test.assert(
-    block.getComponent("fluidContainer")?.getFluidType() == FluidType.Lava,
+    block.getComponent("fluid_container")?.getFluidType() == FluidType.Lava,
     "A water container should not have the Lava FluidType"
   );
-  test.assert(block.getComponent("fluidContainer")?.getFluidType() != FluidType.PowderSnow, "This is a PowderSnow component");
+  test.assert(block.getComponent("fluid_container")?.getFluidType() != FluidType.PowderSnow, "This is a PowderSnow component");
   test.assert(
-    block.getComponent("fluidContainer")?.getFluidType() == FluidType.Potion,
+    block.getComponent("fluid_container")?.getFluidType() == FluidType.Potion,
     "A water container should not have the Potion FluidType"
   );
 
   test.setFluidContainer(loc, FluidType.Potion);
   test.assert(
-    block.getComponent("fluidContainer")?.getFluidType() == FluidType.Water,
+    block.getComponent("fluid_container")?.getFluidType() == FluidType.Water,
     "A water container should not have the Water FluidType"
   );
   test.assert(
-    block.getComponent("fluidContainer")?.getFluidType() == FluidType.Lava,
+    block.getComponent("fluid_container")?.getFluidType() == FluidType.Lava,
     "A water container should not have the Lava FluidType"
   );
   test.assert(
-    block.getComponent("fluidContainer")?.getFluidType() == FluidType.PowderSnow,
+    block.getComponent("fluid_container")?.getFluidType() == FluidType.PowderSnow,
     "A water container should not have the PowderSnow FluidType"
   );
-  test.assert(block.getComponent("fluidContainer")?.getFluidType() != FluidType.Potion, "This is a Potion component");
+  test.assert(block.getComponent("fluid_container")?.getFluidType() != FluidType.Potion, "This is a Potion component");
 
   test.succeed();
 }).tag(GameTest.Tags.suiteDefault);
@@ -1147,7 +1146,7 @@ GameTest.register("APITests", "cauldron_nocrash", (test) => {
   test.setBlockType("cauldron", loc);
   test.setFluidContainer(loc, FluidType.Potion);
 
-  let cauldron = block.getComponent("fluidContainer") as BlockFluidContainerComponent;
+  let cauldron = block.getComponent("fluid_container") as BlockFluidContainerComponent;
   cauldron.fillLevel = 2;
 
   const poisonPotion = ItemStack.createPotion({effect: "poison", liquid: "splash"});
@@ -1195,12 +1194,12 @@ GameTest.register("APITests", "maybe_fill_cauldron", (test) => {
       var waterCauldron = test.getBlock({ x: 3, y: 2, z: 1 });
       var lavaCauldron = test.getBlock({ x: 1, y: 2, z: 1 });
       test.assert(
-        (waterCauldron.getComponent("fluidContainer") as BlockFluidContainerComponent).fillLevel == 2,
-        "Expected water to be at level 2, but got " + (waterCauldron.getComponent("fluidContainer") as BlockFluidContainerComponent).fillLevel
+        (waterCauldron.getComponent("fluid_container") as BlockFluidContainerComponent).fillLevel == 2,
+        "Expected water to be at level 2, but got " + (waterCauldron.getComponent("fluid_container") as BlockFluidContainerComponent).fillLevel
       );
       test.assert(
-        (lavaCauldron.getComponent("fluidContainer") as BlockFluidContainerComponent).fillLevel == FluidContainer.maxFillLevel,
-        "Expected lava to be full, but got a fill level of " + (lavaCauldron.getComponent("fluidContainer") as BlockFluidContainerComponent).fillLevel
+        (lavaCauldron.getComponent("fluid_container") as BlockFluidContainerComponent).fillLevel == FluidContainer.maxFillLevel,
+        "Expected lava to be full, but got a fill level of " + (lavaCauldron.getComponent("fluid_container") as BlockFluidContainerComponent).fillLevel
       );
     })
     .thenSucceed();
@@ -1273,7 +1272,7 @@ GameTest.register("APITests", "tags", (test) => {
   test
     .startSequence()
     .thenExecuteAfter(2, () => {
-      dimension.runCommandAsync("tag @p[name=tag_player] add test_tag_1");
+      system.run(()=>dimension.runCommand("tag @p[name=tag_player] add test_tag_1"));
       test.assert(player.hasTag("test_tag_1"), "Expected tag test_tag_1");
       test.assert(!player.hasTag("test_tag_2"), "Did not expect tag test_tag_2");
       test.assert(player.removeTag("test_tag_1"), "Expected successful tag removal");

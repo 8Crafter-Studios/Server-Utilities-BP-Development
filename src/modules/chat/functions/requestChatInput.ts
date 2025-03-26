@@ -8,7 +8,7 @@ export async function requestChatInput(player: Player, requestMessage?: string |
     !!!currentlyRequestedChatInput[player.id] ? currentlyRequestedChatInput[player.id] = { anyInput: { [id]: { time: Date.now(), id: id, request: requestMessage } }, conditionalInput: {} } : currentlyRequestedChatInput[player.id].anyInput[id] = { time: Date.now(), id: id, request: requestMessage };
     return new Promise((resolve: (value: string) => void, reject: (error: Error) => void) => {
         function a() {
-            if (!player.isValid()) { delete currentlyRequestedChatInput[player.id]; reject(new ReferenceError("The player that the input was requested from is no longer valid, most likely the have left the game.")); return; }; if (!!!currentlyRequestedChatInput[player.id].anyInput[id].input) {
+            if (!player.isValid) { delete currentlyRequestedChatInput[player.id]; reject(new ReferenceError("The player that the input was requested from is no longer valid, most likely the have left the game.")); return; }; if (!!!currentlyRequestedChatInput[player.id].anyInput[id].input) {
                 system.run(() => {
                     a();
                 });

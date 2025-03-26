@@ -89,6 +89,7 @@ export async function nameTagsSettings_generalNameTagsSettings(sourceEntity: loo
             "nameTagTemplateString",
             "showHealthOnPlayerNameTags",
             // "showRanksOnPlayerNameTags",
+            "playerNameTagHealthPrecision",
         ] as (keyof optionsList)[]);
         const form = new ModalFormData();
         form.title(customFormUICodes.modal.titles.formStyles.medium + "Chat Ranks Settings");
@@ -109,7 +110,7 @@ export async function nameTagsSettings_generalNameTagsSettings(sourceEntity: loo
                 form.dropdown(
                     '§l§fName Tags Rank Evaluator Mode§r§f\nThe way that the chat ranks are evaluated in the chat.\nDefaults: The default mode for rank evaluation.\nSuffix and Prefix Only Once: A mode where the suffix and prefix are added to the begginning and end of the joined ranks, instead of being added to each rank. So, instead of [rank1] [rank2] [rank3], it will be [rank1 rank2 rank3], or instead of [rank1],[rank2],[rank3], it will be [rank1,rank2,rank3].',
                     rankEvaluatorModes.map(m=>rankEvaluatorModesDisplayMap[m]),
-                    rankEvaluatorModes.indexOf(config.chatRanks.rankEvaluatorMode_chat)
+                    rankEvaluatorModes.indexOf(config.chatRanks.rankEvaluatorMode_nameTags)
                 ),
             rankDisplayPrefix: () =>
                 form.textField(

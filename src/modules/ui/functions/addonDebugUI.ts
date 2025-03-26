@@ -10,6 +10,7 @@ import { startProtectedAreasRefresher, stopProtectedAreasRefresher } from "modul
 import { startPlayerDataAutoSave, stopPlayerDataAutoSave } from "modules/player_save/functions/playerDataAutoSave";
 import { customFormUICodes } from "../constants/customFormUICodes";
 import { startZoneActionsInterval, stopZoneActionsInterval } from "modules/spawn_protection/functions/protectedAreaIntervals";
+import { getAllEntities } from "modules/commands/functions/getAllEntities";
 
 export async function addonDebugUI(sourceEntitya: Entity | executeCommandPlayerW | Player): Promise<0 | 1> {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
@@ -54,19 +55,29 @@ form.button(entity_scale_format_version!=null?"Stop All Entity Scale Built-In In
                     const DPTBC = new (Decimal.clone({ precision: 50 }))(world.getDynamicPropertyTotalByteCount());
                     await showActions(
                         sourceEntity as Player,
-                        customFormUICodes.action.titles.formStyles.medium + "Debug Info",
+                        customFormUICodes.action.titles.formStyles.fullscreen + "Debug Info",
                         `Dynamic Property Total Byte Count: ${DPTBC} Bytes/${DPTBC.div(1000).toDecimalPlaces(2)} KB/${DPTBC.div(1024).toDecimalPlaces(
                             2
                         )} KiB/${DPTBC.div(1000000).toDecimalPlaces(2)} MB/${DPTBC.div(1048576).toDecimalPlaces(2)} MiB
 Dynamic Property ID Count: ${world.getDynamicPropertyIds().length}
 Structure ID Count: ${world.structureManager.getWorldStructureIds().length}
+Entity Count: ${getAllEntities().length}
+Player Count: ${world.getAllPlayers().length}
 Server Memory Tier: ${system.serverSystemInfo.memoryTier}
 Current Tick: ${system.currentTick}
 Absolute Time: ${world.getAbsoluteTime()}
 Time Of Day: ${world.getTimeOfDay()}
 Day: ${world.getDay()}
 Moon Phase: ${world.getMoonPhase()}
-Default Spawn Location: ${JSONB.stringify(world.getDefaultSpawnLocation())}`,
+Weather: ${overworld.getWeather()}
+Default Spawn Location: ${JSONB.stringify(world.getDefaultSpawnLocation())}
+Difficulty: ${world.getDifficulty()}
+Is Hardcore: ${world.isHardcore}
+Is Editor World: ${system.isEditorWorld}
+Add-On Version: ${format_version}
+Entity Scale Version: ${entity_scale_format_version}
+BlueMods Anticheat Version: ${bluemods_anticheat_format_version}
+Server Timezone: ${config.system.timeZone}`,
                         [customFormUICodes.action.buttons.positions.main_only + "Done"],
                         [customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left"]
                     );
@@ -74,7 +85,7 @@ Default Spawn Location: ${JSONB.stringify(world.getDefaultSpawnLocation())}`,
                 case 1:
                     await showActions(
                         sourceEntity as Player,
-                        customFormUICodes.action.titles.formStyles.medium + "Raw Config",
+                        customFormUICodes.action.titles.formStyles.fullscreen + "Raw Config",
                         colorizeJSONString(
                             JSONB.stringify(
                                 config.toJSON()

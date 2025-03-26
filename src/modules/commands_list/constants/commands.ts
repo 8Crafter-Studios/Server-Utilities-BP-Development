@@ -4844,7 +4844,7 @@ export const commands = [
                 format: "",
             },
         ],
-        command_version: "1.0.1",
+        command_version: "2.0.0",
         description: "",
         category: ["Entity Scale Add-On"],
         commandSettingsId: "built-inCommandSettings:scale",

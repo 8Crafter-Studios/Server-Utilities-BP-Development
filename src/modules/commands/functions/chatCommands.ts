@@ -5617,7 +5617,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                 {
                                                     if (
                                                         !!!block.block.getComponent(
-                                                            "fluidContainer"
+                                                            "fluid_container"
                                                         )
                                                     ) {
                                                         throw new Error(
@@ -5646,7 +5646,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                                         {
                                                                             const currentColor =
                                                                                 block?.block.getComponent(
-                                                                                    "fluidContainer"
+                                                                                    "fluid_container"
                                                                                 ).fluidColor;
                                                                             player.sendMessageB(
                                                                                 `#${
@@ -5705,7 +5705,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                                         {
                                                                             const currentColor =
                                                                                 block?.block.getComponent(
-                                                                                    "fluidContainer"
+                                                                                    "fluid_container"
                                                                                 ).fluidColor;
                                                                             player.sendMessageB(
                                                                                 `Red: ${currentColor.red}, Green: ${currentColor.green}, Blue: ${currentColor.blue}, Alpha: ${currentColor.alpha}`
@@ -5721,7 +5721,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                                         {
                                                                             const currentColor =
                                                                                 block?.block.getComponent(
-                                                                                    "fluidContainer"
+                                                                                    "fluid_container"
                                                                                 ).fluidColor;
                                                                             player.sendMessageB(
                                                                                 `Red: ${(
@@ -5749,7 +5749,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                                         {
                                                                             const currentColor =
                                                                                 block?.block.getComponent(
-                                                                                    "fluidContainer"
+                                                                                    "fluid_container"
                                                                                 ).fluidColor;
                                                                             player.sendMessageB(
                                                                                 `Red: ${
@@ -5835,7 +5835,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                                         {
                                                                             const currentColor =
                                                                                 block?.block.getComponent(
-                                                                                    "fluidContainer"
+                                                                                    "fluid_container"
                                                                                 ).fluidColor;
                                                                             player.sendMessageB(
                                                                                 `#${
@@ -5883,7 +5883,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                                         {
                                                                             const currentColor =
                                                                                 block?.block.getComponent(
-                                                                                    "fluidContainer"
+                                                                                    "fluid_container"
                                                                                 ).fluidColor;
                                                                             player.sendMessageB(
                                                                                 `Red: ${currentColor.red}, Green: ${currentColor.green}, Blue: ${currentColor.blue}`
@@ -5899,7 +5899,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                                         {
                                                                             const currentColor =
                                                                                 block?.block.getComponent(
-                                                                                    "fluidContainer"
+                                                                                    "fluid_container"
                                                                                 ).fluidColor;
                                                                             player.sendMessageB(
                                                                                 `Red: ${(
@@ -5924,7 +5924,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                                         {
                                                                             const currentColor =
                                                                                 block?.block.getComponent(
-                                                                                    "fluidContainer"
+                                                                                    "fluid_container"
                                                                                 ).fluidColor;
                                                                             player.sendMessageB(
                                                                                 `Red: ${
@@ -6002,7 +6002,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                                     rgbToHsl(
                                                                         mcRGBAToColorCoreRGB(
                                                                             block?.block.getComponent(
-                                                                                "fluidContainer"
+                                                                                "fluid_container"
                                                                             )
                                                                                 .fluidColor
                                                                         )
@@ -6032,7 +6032,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                                     rgbToHSLuv(
                                                                         mcRGBAToColorCoreRGB(
                                                                             block?.block.getComponent(
-                                                                                "fluidContainer"
+                                                                                "fluid_container"
                                                                             )
                                                                                 .fluidColor
                                                                         )
@@ -6060,7 +6060,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                                     rgbToHsv(
                                                                         mcRGBAToColorCoreRGB(
                                                                             block?.block.getComponent(
-                                                                                "fluidContainer"
+                                                                                "fluid_container"
                                                                             )
                                                                                 .fluidColor
                                                                         )
@@ -6090,7 +6090,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                                     rgbToHsv(
                                                                         mcRGBAToColorCoreRGB(
                                                                             block?.block.getComponent(
-                                                                                "fluidContainer"
+                                                                                "fluid_container"
                                                                             )
                                                                                 .fluidColor
                                                                         )
@@ -6120,7 +6120,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                                     rgbToHsi(
                                                                         mcRGBAToColorCoreRGB(
                                                                             block?.block.getComponent(
-                                                                                "fluidContainer"
+                                                                                "fluid_container"
                                                                             )
                                                                                 .fluidColor
                                                                         )
@@ -6148,7 +6148,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                                     rgbToHPLuv(
                                                                         mcRGBAToColorCoreRGB(
                                                                             block?.block.getComponent(
-                                                                                "fluidContainer"
+                                                                                "fluid_container"
                                                                             )
                                                                                 .fluidColor
                                                                         )
@@ -6176,7 +6176,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                                     new Color(
                                                                         mcRGBAToColorCoreRGB(
                                                                             block?.block.getComponent(
-                                                                                "fluidContainer"
+                                                                                "fluid_container"
                                                                             )
                                                                                 .fluidColor
                                                                         )
@@ -6192,7 +6192,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                                     new Color(
                                                                         mcRGBAToColorCoreRGB(
                                                                             block?.block.getComponent(
-                                                                                "fluidContainer"
+                                                                                "fluid_container"
                                                                             )
                                                                                 .fluidColor
                                                                         )
@@ -6208,7 +6208,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                                     new Color(
                                                                         mcRGBAToColorCoreRGB(
                                                                             block?.block.getComponent(
-                                                                                "fluidContainer"
+                                                                                "fluid_container"
                                                                             )
                                                                                 .fluidColor
                                                                         )
@@ -6223,7 +6223,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                                 const currentColor =
                                                                     mcRGBAToColorCoreRGB(
                                                                         block?.block.getComponent(
-                                                                            "fluidContainer"
+                                                                            "fluid_container"
                                                                         )
                                                                             .fluidColor
                                                                     );
@@ -6292,7 +6292,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                 player.sendMessageB(
                                                     `Fill Level: ${
                                                         block?.block.getComponent(
-                                                            "fluidContainer"
+                                                            "fluid_container"
                                                         ).fillLevel
                                                     }`
                                                 );
@@ -6354,7 +6354,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                 {
                                                     if (
                                                         !!!block.block.getComponent(
-                                                            "fluidContainer"
+                                                            "fluid_container"
                                                         )
                                                     ) {
                                                         throw new Error(
@@ -6482,7 +6482,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                                                     : 2;
                                                                             const currentColor =
                                                                                 block?.block.getComponent(
-                                                                                    "fluidContainer"
+                                                                                    "fluid_container"
                                                                                 ).fluidColor;
                                                                             const red =
                                                                                 rgba
@@ -6573,7 +6573,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                                                       ) /
                                                                                       denominator;
                                                                             block.block.getComponent(
-                                                                                "fluidContainer"
+                                                                                "fluid_container"
                                                                             ).fluidColor =
                                                                                 {
                                                                                     red,
@@ -6640,7 +6640,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
 
                                                                             const currentColor =
                                                                                 block?.block.getComponent(
-                                                                                    "fluidContainer"
+                                                                                    "fluid_container"
                                                                                 ).fluidColor;
                                                                             const red =
                                                                                 (
@@ -6671,7 +6671,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                                                         : rgba[3]
                                                                                 ).toNumber();
                                                                             block.block.getComponent(
-                                                                                "fluidContainer"
+                                                                                "fluid_container"
                                                                             ).fluidColor =
                                                                                 {
                                                                                     red,
@@ -6739,7 +6739,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
 
                                                                             const currentColor =
                                                                                 block?.block.getComponent(
-                                                                                    "fluidContainer"
+                                                                                    "fluid_container"
                                                                                 ).fluidColor;
                                                                             const red =
                                                                                 rgba[0].trim() ==
@@ -6774,7 +6774,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                                                           .round() /
                                                                                       255;
                                                                             block.block.getComponent(
-                                                                                "fluidContainer"
+                                                                                "fluid_container"
                                                                             ).fluidColor =
                                                                                 {
                                                                                     red,
@@ -6842,7 +6842,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
 
                                                                             const currentColor =
                                                                                 block?.block.getComponent(
-                                                                                    "fluidContainer"
+                                                                                    "fluid_container"
                                                                                 ).fluidColor;
                                                                             const red =
                                                                                 rgba[0].trim() ==
@@ -6869,7 +6869,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                                                     : rgba[3].toNumber() /
                                                                                       255;
                                                                             block.block.getComponent(
-                                                                                "fluidContainer"
+                                                                                "fluid_container"
                                                                             ).fluidColor =
                                                                                 {
                                                                                     red,
@@ -6991,7 +6991,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                                                     : 2;
                                                                             const currentColor =
                                                                                 block?.block.getComponent(
-                                                                                    "fluidContainer"
+                                                                                    "fluid_container"
                                                                                 ).fluidColor;
                                                                             const red =
                                                                                 rgb
@@ -7060,7 +7060,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                                                       ) /
                                                                                       denominator;
                                                                             block.block.getComponent(
-                                                                                "fluidContainer"
+                                                                                "fluid_container"
                                                                             ).fluidColor =
                                                                                 {
                                                                                     red,
@@ -7125,7 +7125,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
 
                                                                             const currentColor =
                                                                                 block?.block.getComponent(
-                                                                                    "fluidContainer"
+                                                                                    "fluid_container"
                                                                                 ).fluidColor;
                                                                             const red =
                                                                                 (
@@ -7149,7 +7149,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                                                         : rgba[2]
                                                                                 ).toNumber();
                                                                             block.block.getComponent(
-                                                                                "fluidContainer"
+                                                                                "fluid_container"
                                                                             ).fluidColor =
                                                                                 {
                                                                                     red,
@@ -7215,7 +7215,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
 
                                                                             const currentColor =
                                                                                 block?.block.getComponent(
-                                                                                    "fluidContainer"
+                                                                                    "fluid_container"
                                                                                 ).fluidColor;
                                                                             const red =
                                                                                 rgba[0].trim() ==
@@ -7242,7 +7242,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                                                           .round() /
                                                                                       255;
                                                                             block.block.getComponent(
-                                                                                "fluidContainer"
+                                                                                "fluid_container"
                                                                             ).fluidColor =
                                                                                 {
                                                                                     red,
@@ -7333,7 +7333,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                                 }
                                                                 const currentColor =
                                                                     block?.block.getComponent(
-                                                                        "fluidContainer"
+                                                                        "fluid_container"
                                                                     ).fluidColor;
                                                                 const hslB =
                                                                     HSLToRGB(
@@ -7345,7 +7345,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                                     blue,
                                                                 ] = hslB;
                                                                 block.block.getComponent(
-                                                                    "fluidContainer"
+                                                                    "fluid_container"
                                                                 ).fluidColor = {
                                                                     red:
                                                                         red /
@@ -7424,7 +7424,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                 {
                                                     if (
                                                         !!!block.block.getComponent(
-                                                            "fluidContainer"
+                                                            "fluid_container"
                                                         )
                                                     ) {
                                                         throw new Error(
@@ -7437,7 +7437,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                             ["presetText"]
                                                         );
                                                     block.block.getComponent(
-                                                        "fluidContainer"
+                                                        "fluid_container"
                                                     ).fillLevel =
                                                         argsc.args[0].toNumber();
                                                 }
@@ -7564,12 +7564,12 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                 break;
             case !!switchTest.match(/^gmc$/):
                 eventData.cancel = true;
-                try {
-                    player.runCommandAsync("/gamemode c");
-                } catch (e) {
-                    player.sendError("§c" + e + e.stack, true);
-                }
                 system.run(() => {
+                    try {
+                        player.runCommand("/gamemode c");
+                    } catch (e) {
+                        player.sendError("§c" + e + e.stack, true);
+                    }
                     targetSelectorAllListE(
                         "@a [tag=canSeeCustomChatCommandFeedbackFromMods]",
                         player.location.x +
@@ -7590,12 +7590,12 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                 break;
             case !!switchTest.match(/^gms$/):
                 eventData.cancel = true;
-                try {
-                    player.runCommandAsync("/gamemode s");
-                } catch (e) {
-                    player.sendError("§c" + e + e.stack, true);
-                }
                 system.run(() => {
+                    try {
+                        player.runCommand("/gamemode s");
+                    } catch (e) {
+                        player.sendError("§c" + e + e.stack, true);
+                    }
                     targetSelectorAllListE(
                         "@a [tag=canSeeCustomChatCommandFeedbackFromMods]",
                         player.location.x +
@@ -7616,12 +7616,12 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                 break;
             case !!switchTest.match(/^gma$/):
                 eventData.cancel = true;
-                try {
-                    player.runCommandAsync("/gamemode a");
-                } catch (e) {
-                    player.sendError("§c" + e + e.stack, true);
-                }
                 system.run(() => {
+                    try {
+                        player.runCommand("/gamemode a");
+                    } catch (e) {
+                        player.sendError("§c" + e + e.stack, true);
+                    }
                     targetSelectorAllListE(
                         "@a [tag=canSeeCustomChatCommandFeedbackFromMods]",
                         player.location.x +
@@ -7642,12 +7642,12 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                 break;
             case !!switchTest.match(/^gmd$/):
                 eventData.cancel = true;
-                try {
-                    player.runCommandAsync("/gamemode d");
-                } catch (e) {
-                    player.sendError("§c" + e + e.stack, true);
-                }
                 system.run(() => {
+                    try {
+                        player.runCommand("/gamemode d");
+                    } catch (e) {
+                        player.sendError("§c" + e + e.stack, true);
+                    }
                     targetSelectorAllListE(
                         "@a [tag=canSeeCustomChatCommandFeedbackFromMods]",
                         player.location.x +
@@ -7668,12 +7668,12 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                 break;
             case !!switchTest.match(/^gmp$/):
                 eventData.cancel = true;
-                try {
-                    player.runCommandAsync("/gamemode spectator");
-                } catch (e) {
-                    player.sendError("§c" + e + e.stack, true);
-                }
                 system.run(() => {
+                    try {
+                        player.runCommand("/gamemode spectator");
+                    } catch (e) {
+                        player.sendError("§c" + e + e.stack, true);
+                    }
                     targetSelectorAllListE(
                         "@a [tag=canSeeCustomChatCommandFeedbackFromMods]",
                         player.location.x +
@@ -7694,46 +7694,46 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                 break;
             case !!switchTest.match(/^gmr$/):
                 eventData.cancel = true;
-                switch (Math.round(Math.random() * 4)) {
-                    case 0:
-                        try {
-                            player.runCommandAsync("/gamemode c");
-                        } catch (e) {
-                            player.sendError("§c" + e + e.stack, true);
-                        }
-                        break;
-                    case 1:
-                        try {
-                            player.runCommandAsync("/gamemode s");
-                        } catch (e) {
-                            player.sendError("§c" + e + e.stack, true);
-                        }
-                        break;
-                    case 2:
-                        try {
-                            player.runCommandAsync("/gamemode a");
-                        } catch (e) {
-                            player.sendError("§c" + e + e.stack, true);
-                        }
-                        break;
-                    case 3:
-                        try {
-                            player.runCommandAsync("/gamemode d");
-                        } catch (e) {
-                            player.sendError("§c" + e + e.stack, true);
-                        }
-                        break;
-                    case 4:
-                        try {
-                            player.runCommandAsync("/gamemode spectator");
-                        } catch (e) {
-                            player.sendError("§c" + e + e.stack, true);
-                        }
-                        break;
-                } /*
-            try{player.runCommandAsync("/gamemode random")}catch(e){player.sendError("§c" + e + e.stack, true)}*/
 
                 system.run(() => {
+                    switch (Math.round(Math.random() * 4)) {
+                        case 0:
+                            try {
+                                player.runCommand("/gamemode c");
+                            } catch (e) {
+                                player.sendError("§c" + e + e.stack, true);
+                            }
+                            break;
+                        case 1:
+                            try {
+                                player.runCommand("/gamemode s");
+                            } catch (e) {
+                                player.sendError("§c" + e + e.stack, true);
+                            }
+                            break;
+                        case 2:
+                            try {
+                                player.runCommand("/gamemode a");
+                            } catch (e) {
+                                player.sendError("§c" + e + e.stack, true);
+                            }
+                            break;
+                        case 3:
+                            try {
+                                player.runCommand("/gamemode d");
+                            } catch (e) {
+                                player.sendError("§c" + e + e.stack, true);
+                            }
+                            break;
+                        case 4:
+                            try {
+                                player.runCommand("/gamemode spectator");
+                            } catch (e) {
+                                player.sendError("§c" + e + e.stack, true);
+                            }
+                            break;
+                    } /*
+                try{player.runCommand("/gamemode random")}catch(e){player.sendError("§c" + e + e.stack, true)}*/
                     targetSelectorAllListE(
                         "@a [tag=canSeeCustomChatCommandFeedbackFromMods]",
                         player.location.x +
@@ -7754,25 +7754,27 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                 break; /*
     case !!switchTest.match(/^settings$/):
         eventData.cancel = true;
-        switch (Math.min(newMessage.split(" ").length, 3)){
-            case 3:
-                try{player.runCommandAsync("/scriptevent andexdb:setWorldDynamicPropertyB " + newMessage.slice(10).split(" ")[0] + "|" + newMessage.slice(newMessage.split(" ")[1].length+10))}catch(e){player.sendError("§c" + e + e.stack, true)}
-                try{eventData.sender.sendMessage("Set " + newMessage.split(" ")[1] + " to " + newMessage.slice(newMessage.split(" ")[1].length+10)); }catch(e){player.sendError("§c" + e + e.stack, true)}
-            break;
-            case 2:
-                try{eventData.sender.sendMessage("Setting " + newMessage.split(" ")[1] + ": " + world.getDynamicProperty(newMessage.split(" ")[1])); }catch(e){player.sendError("§c" + e + e.stack, true)}
-            break;
-        }
+        srun(()=>{
+            switch (Math.min(newMessage.split(" ").length, 3)){
+                case 3:
+                    try{player.runCommand("/scriptevent andexdb:setWorldDynamicPropertyB " + newMessage.slice(10).split(" ")[0] + "|" + newMessage.slice(newMessage.split(" ")[1].length+10))}catch(e){player.sendError("§c" + e + e.stack, true)}
+                    try{eventData.sender.sendMessage("Set " + newMessage.split(" ")[1] + " to " + newMessage.slice(newMessage.split(" ")[1].length+10)); }catch(e){player.sendError("§c" + e + e.stack, true)}
+                break;
+                case 2:
+                    try{eventData.sender.sendMessage("Setting " + newMessage.split(" ")[1] + ": " + world.getDynamicProperty(newMessage.split(" ")[1])); }catch(e){player.sendError("§c" + e + e.stack, true)}
+                break;
+            }
+        });
     break; */
 
             case !!switchTest.match(/^enderchest$/) || !!switchTest.match(/^ec$/):
                 eventData.cancel = true;
-                try {
-                    player.runCommandAsync("/setblock ~~~ ender_chest");
-                } catch (e) {
-                    player.sendError("§c" + e + e.stack, true);
-                }
                 system.run(() => {
+                    try {
+                        player.runCommand("/setblock ~~~ ender_chest");
+                    } catch (e) {
+                        player.sendError("§c" + e + e.stack, true);
+                    }
                     targetSelectorAllListE(
                         "@a [tag=canSeeCustomChatCommandFeedbackFromMods]",
                         player.location.x +
@@ -10833,7 +10835,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                                 player,
                                                 `§aID: ${
                                                     structure.id
-                                                }\nisValid: ${structure.isValid()}\nSize: ${JSON.stringify(
+                                                }\nisValid: ${structure.isValid}\nSize: ${JSON.stringify(
                                                     structure.size
                                                 )}.`
                                             );
@@ -12613,9 +12615,13 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                 try {
                     system.run(() => {
                         try {
+                            if(entity_scale_format_version === null){
+                                throw new Error(`8Crafter's Entity Scale Add-On v1.18.0 or newer is required to use the ${command.dp}scale command as of Minecraft v1.21.70, this is because in v1.21.70 microsoft made the value property of EntityScaleComponent readonly, so entity scale is required because it uses an older, stable version of the @minecraft/server modules that does not have this change.`)
+                            }
                             if (newMessage.split(" ")[2] == undefined) {
-                                player.getComponent("scale").value = Number(
-                                    newMessage.split(" ")[1]
+                                player.runCommand(
+                                    "/scriptevent andexsa:setScale " +
+                                        Number(newMessage.split(" ")[1])
                                 );
                             } else {
                                 targetSelectorAllListE(
@@ -12703,13 +12709,15 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                 break;
             case !!switchTest.match(/^tps$/):
                 eventData.cancel = true;
-                try {
-                    player.runCommandAsync(
-                        "/scriptevent andexsa:getTPSExtraDetails"
-                    );
-                } catch (e) {
-                    player.sendError("§c" + e + e.stack, true);
-                }
+                srun(()=>{
+                    try {
+                        player.runCommand(
+                            "/scriptevent andexsa:getTPSExtraDetails"
+                        );
+                    } catch (e) {
+                        player.sendError("§c" + e + e.stack, true);
+                    }
+                });
                 break;
             case !!switchTest.match(/^managescriptautoeval$/):
                 eventData.cancel = true;
@@ -12995,13 +13003,15 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                 break;
             case !!switchTest.match(/^stopallsaintervals$/):
                 eventData.cancel = true;
-                try {
-                    player.runCommandAsync(
-                        "/scriptevent andexsa:clearRepeatingIntervals"
-                    );
-                } catch (e) {
-                    player.sendError("§c" + e + e.stack, true);
-                }
+                srun(()=>{
+                    try {
+                        player.runCommand(
+                            "/scriptevent andexsa:clearRepeatingIntervals"
+                        );
+                    } catch (e) {
+                        player.sendError("§c" + e + e.stack, true);
+                    }
+                });
                 break;
             case !!switchTest.match(/^datapickblock$/) ||
                 !!switchTest.match(/^dpb$/):
@@ -44529,14 +44539,14 @@ ${command.dp}snapshot list`);
                     !args[1].includes(":")
                         ? (args[1] = "minecraft:" + args[1])
                         : undefined;
-                    player.runCommandAsync(
+                    srun(()=>player.runCommand(
                         `/give @s andexdb:enchantment_transfer_smithing_template 1 ${listoftransformrecipes.findIndex(
                             (v) =>
                                 v.id == args[1] &&
                                 ((!!!(v as any)["data"] && !!!args[2]) ||
                                     (v as any)["data"] == args[2])
                         )}`
-                    );
+                    ));
                     player.sendMessageB(
                         listoftransformrecipes.findIndex(
                             (v) =>
@@ -45399,9 +45409,10 @@ ${command.dp}snapshot list`);
                                                 set ["minecraft:generic.scale"](
                                                     value: number
                                                 ) {
-                                                    target.getComponent(
-                                                        "scale"
-                                                    ).value = value;
+                                                    if(entity_scale_format_version === null){
+                                                        throw new Error("8Crafter's Entity Scale Add-On v1.18.0 or newer is required to set the minecraft:generic.scale\" attribute.")
+                                                    }
+                                                    target.runCommand("/scriptevent andexsa:setScale " + value);
                                                 },
                                             };
                                             pbsend(

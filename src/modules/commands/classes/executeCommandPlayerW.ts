@@ -31,6 +31,7 @@ import {
     type PlayAnimationOptions,
     type TeleportOptions,
     InputInfo,
+    type EntityComponentReturnType,
 } from "@minecraft/server";
 import { MoneySystem } from "ExtraFeatures/money";
 import { PlayerNotifications } from "init/classes/PlayerNotifications";
@@ -406,6 +407,12 @@ export class executeCommandPlayerW {
     get inputInfo() {
         return this.player?.inputInfo;
     }
+    get graphicsMode() {
+        return this.player?.graphicsMode;
+    }
+    get isValid() {
+        return this.player?.isValid;
+    }
     addEffect(effectType: string | EffectType, duration: number, options?: EntityEffectOptions) {
         return this.player?.addEffect(effectType, duration, options);
     }
@@ -487,8 +494,8 @@ export class executeCommandPlayerW {
     applyImpulse(vector: Vector3) {
         return this.player?.applyImpulse(vector);
     }
-    applyKnockback(directionX: number, directionZ: number, horizontalStrength: number, verticalStrength: number) {
-        return this.player?.applyKnockback(directionX, directionZ, horizontalStrength, verticalStrength);
+    applyKnockback(horizontalForce: VectorXZ, verticalStrength: number) {
+        return this.player?.applyKnockback(horizontalForce, verticalStrength);
     }
     clearDynamicProperties() {
         return this.player?.clearDynamicProperties();
@@ -507,6 +514,7 @@ export class executeCommandPlayerW {
     }
     getComponent<T extends keyof EntityComponentTypeMap>(componentId: T): EntityComponentTypeMap[T] | undefined;
     getComponent<T extends keyof BlockComponentTypeMap>(componentId: T): BlockComponentTypeMap[T] | undefined;
+    getComponent<T extends string>(componentId: T): EntityComponentReturnType<T> | undefined;
     getComponent<T extends keyof EntityComponentTypeMap | keyof BlockComponentTypeMap>(
         componentId: T
     ): T extends keyof EntityComponentTypeMap
@@ -560,9 +568,6 @@ export class executeCommandPlayerW {
     hasTag(tag: string) {
         return this.player?.hasTag(tag);
     }
-    isValid() {
-        return this.player?.isValid();
-    }
     kill() {
         return this.player?.kill();
     }
@@ -587,9 +592,6 @@ export class executeCommandPlayerW {
     runCommand(commandString: string) {
         return this.player?.runCommand(commandString);
     }
-    runCommandAsync(commandString: string) {
-        return this.player?.runCommandAsync(commandString);
-    }
     setDynamicProperty(identifier: string, value?: string | number | boolean | Vector3) {
         return this.player?.setDynamicProperty(identifier, value);
     }
@@ -613,6 +615,15 @@ export class executeCommandPlayerW {
     }
     tryTeleport(location: Vector3, teleportOptions?: TeleportOptions) {
         return this.player?.tryTeleport(location, teleportOptions);
+    }
+    setPropertyOverrideForEntity(targetEntity: Entity, identifier: string, value: boolean | number | string){
+        return this.player?.setPropertyOverrideForEntity(targetEntity, identifier, value);
+    }
+    removePropertyOverrideForEntity(targetEntity: Entity, identifier: string){
+        return this.player?.removePropertyOverrideForEntity(targetEntity, identifier);
+    }
+    clearPropertyOverridesForEntity(targetEntity: Entity){
+        return this.player?.clearPropertyOverridesForEntity(targetEntity);
     }
     saveStringToDynamicProperties(string: string, propertyName: string, clearOldProperties: boolean = true, chunkSize: number | bigint = 32760): void {
         saveStringToEntityDynamicProperties(this.player as Entity, string, propertyName, clearOldProperties, chunkSize);

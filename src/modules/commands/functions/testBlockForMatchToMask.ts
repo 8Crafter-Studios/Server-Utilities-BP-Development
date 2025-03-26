@@ -22,7 +22,7 @@ export function testBlockForMatchToMask(
             return block.isSolid;
         }
         if (!!matches.find((v) => v.type == "isValid")) {
-            return block.isValid();
+            return block.isValid;
         }
         if (!!matches.find((v) => v.type == "true")) {
             return true;
@@ -60,7 +60,7 @@ export function testBlockForMatchToMask(
             return block.isSolid;
         }
         if (matches.type == "isValid") {
-            return block.isValid();
+            return block.isValid;
         }
         if (matches.type == "true") {
             return true;
