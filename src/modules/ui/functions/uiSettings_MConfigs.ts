@@ -1,9 +1,9 @@
 import { ActionFormData } from "@minecraft/server-ui";
 import { securityVariables } from "security/ultraSecurityModeUtils";
 import { showMessage } from "modules/utilities/functions/showMessage";
-import { uiSettings_menuConfigurations_playerMenu } from "./uiSettings_menuConfigurations_playerMenu";
+import { uiSettings_menuConfigurations_playerMenu } from "./uiSettings_MConfigs_PM";
 import { customFormUICodes } from "../constants/customFormUICodes";
-import { uiSettings_menuConfigurations_mainMenu } from "./uiSettings_menuConfigurations_mainMenu";
+import { uiSettings_menuConfigurations_mainMenu } from "./uiSettings_MConfigs_MM";
 import { extractPlayerFromLooseEntityType } from "modules/utilities/functions/extractPlayerFromLooseEntityType";
 import type { loosePlayerType } from "modules/utilities/types/loosePlayerType";
 

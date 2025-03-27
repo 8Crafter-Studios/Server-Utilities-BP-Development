@@ -88,8 +88,8 @@ export async function playerMenu_leaderboard(
                 : (p: savedPlayer) =>
                       tryget(() =>
                           leaderboardObjective?.getScore(
-                              participants?.find((v) => tryget(() => v.getEntity()?.id) == p.id) ??
-                                  (participants?.find((v) => v.id == p.scoreboardIdentity) as any)
+                            (participants?.find((v) => v.id == p.scoreboardIdentity) as any)
+                                ?? participants?.find((v) => tryget(() => v.getEntity()?.id) == p.id)
                           )
                       )?.toString();
         displayPlayers = savedPlayers

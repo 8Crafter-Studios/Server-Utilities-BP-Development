@@ -1,5 +1,5 @@
-import { Entity, ObjectiveSortOrder, Player, world } from "@minecraft/server";
-import { ActionFormData, ActionFormResponse, ModalFormData } from "@minecraft/server-ui";
+import { Entity, Player, world } from "@minecraft/server";
+import { ActionFormData, ActionFormResponse } from "@minecraft/server-ui";
 import { forceShow } from "modules/ui/functions/forceShow";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { showMessage } from "modules/utilities/functions/showMessage";
@@ -7,6 +7,7 @@ import type { playerMenuLeaderboardStatistic } from "../types/playerMenuLeaderbo
 import { savedPlayer } from "modules/player_save/classes/savedPlayer";
 import { defaultPlayerMenuLeaderboardStatistics } from "../constants/defaultPlayerMenuLeaderboardStatistics";
 import { numberFormatter } from "modules/utilities/functions/numberFormatter";
+import { customFormUICodes } from "../constants/customFormUICodes";
 
 export async function playerMenu_leaderboard_player(
     sourceEntitya: Entity | executeCommandPlayerW | Player,
@@ -42,7 +43,7 @@ export async function playerMenu_leaderboard_player(
     const menuConfig = config.ui.menus.playerMenu_leaderboards;
     // menuConfig.buttons.map(k=>[k, menuButtonIds.mainMenu.buttons[k]])
     let form = new ActionFormData();
-    form.title(player.name);
+    form.title(customFormUICodes.action.titles.formStyles.medium + player.name);
     const stats = menuConfig.trackedStats.map((k) => [
         k,
         defaultPlayerMenuLeaderboardStatistics.find((s) => s.id === k && menuConfig.builtInStats[k as Exclude<keyof typeof menuConfig.builtInStats, "prototype">].enabled) ??
@@ -88,15 +89,16 @@ export async function playerMenu_leaderboard_player(
                 : "Offline"
         }\n${statsDisplay.join("§r\n")}`
     );
-    form.button("Back", "textures/ui/arrow_left");
-    form.button("Close", "textures/ui/crossout");
+    form.button(customFormUICodes.action.buttons.positions.main_only + "Done");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
     return await forceShow(form, sourceEntity)
         .then(async (ra) => {
             let r = ra as ActionFormResponse;
-            // This will stop the code when the player closes the form
             if (r.canceled) return 1;
 
-            switch ((["back", "close"] as const)[r.selection]) {
+            switch ((["done", "back", "close"] as const)[r.selection]) {
+                case "done":
                 case "back":
                     return 1;
                 case "close":

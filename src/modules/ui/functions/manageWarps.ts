@@ -67,7 +67,7 @@ export async function manageWarps(sourceEntity: loosePlayerType): Promise<0 | 1>
             let form = new ActionFormData();
             form.title(customFormUICodes.action.titles.formStyles.medium + "Manage Warps");
             const warps = config.warpsSystem.warps;
-            warps.forEach((w) => form.button(w.displayName, w.icon));
+            warps.forEach((w) => form.button(customFormUICodes.action.buttons.positions.main_only + w.displayName, w.icon));
             form.button(customFormUICodes.action.buttons.positions.main_only + "Add Warp", "textures/ui/color_plus");
             form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
             form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");

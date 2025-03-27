@@ -1,15 +1,18 @@
-import { Player } from "@minecraft/server";
+import { Entity, Player } from "@minecraft/server";
 import { ActionFormData } from "@minecraft/server-ui";
-import { forceShow } from "modules/ui/functions/forceShow";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { securityVariables } from "security/ultraSecurityModeUtils";
 import { showMessage } from "modules/utilities/functions/showMessage";
+import { uiSettings_menuConfigurations_playerMenu_mainSettings } from "./uiSettings_MConfigs_PM_MSttgs";
+import { uiSettings_menuConfigurations_playerMenu_editButtons } from "./uiSettings_MConfigs_PM_EBttn";
+import { manageWarps } from "./manageWarps";
+import { manageRedeemableCodes } from "./manageRedeemableCodes";
+import { uiSettings_menuConfigurations_playerMenu_leaderboardsSettings } from "./uiSettings_MConfigs_PM_lbrdSttgs";
 import { customFormUICodes } from "../constants/customFormUICodes";
-import type { loosePlayerType } from "modules/utilities/types/loosePlayerType";
-import { uiSettings_menuConfigurations_mainMenu_mainSettings } from "./uiSettings_menuConfigurations_mainMenu_mainSettings";
+import { extractPlayerFromLooseEntityType } from "modules/utilities/functions/extractPlayerFromLooseEntityType";
 
 /**
- * Displays and handles the main menu settings form for a given entity.
+ * Displays and handles the player menu settings form for a given entity.
  *
  * @async
  * @param {loosePlayerType} sourceEntity - The player viewing the UI.
@@ -25,14 +28,14 @@ import { uiSettings_menuConfigurations_mainMenu_mainSettings } from "./uiSetting
  * 5. Updates the configuration based on the form input.
  * 6. Returns the appropriate status code based on the outcome.
  */
-export async function uiSettings_menuConfigurations_mainMenu(sourceEntity: loosePlayerType): Promise<0 | 1> {
-    const player = sourceEntity instanceof executeCommandPlayerW ? sourceEntity.player : (sourceEntity as Player);
+export async function uiSettings_menuConfigurations_playerMenu(sourceEntity: Entity | executeCommandPlayerW | Player): Promise<0 | 1> {
+    const player = extractPlayerFromLooseEntityType(sourceEntity);
     while (true) {
         try {
             if (securityVariables.ultraSecurityModeEnabled) {
-                if (securityVariables.testPlayerForPermission(player as Player, "andexdb.accessSettings") == false) {
+                if (securityVariables.testPlayerForPermission(player, "andexdb.accessSettings") == false) {
                     const r = await showMessage(
-                        player as Player,
+                        player,
                         "Access Denied (403)",
                         "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.accessSettings",
                         "Back",
@@ -46,18 +49,46 @@ export async function uiSettings_menuConfigurations_mainMenu(sourceEntity: loose
                 }
             }
             let form = new ActionFormData();
-            form.title(customFormUICodes.action.titles.formStyles.gridMenu + "Main Menu Settings");
+            form.title(customFormUICodes.action.titles.formStyles.gridMenu + "Player Menu Settings");
             form.button(customFormUICodes.action.buttons.positions.main_only + "Main Settings", "textures/ui/settings_glyph_color_2x");
-            // form.button(customFormUICodes.action.buttons.positions.main_only + "Edit Buttons", "textures/ui/pencil_edit_icon");
+            form.button(customFormUICodes.action.buttons.positions.main_only + "Edit Buttons", "textures/ui/pencil_edit_icon");
+            form.button(customFormUICodes.action.buttons.positions.main_only + "Leaderboards Settings", "textures/ui/icon_best3");
+            form.button(customFormUICodes.action.buttons.positions.main_only + "Edit Warps", "textures/items/ender_pearl");
+            form.button(customFormUICodes.action.buttons.positions.main_only + "Edit Redeemable Codes", "textures/ui/icon_blackfriday");
             form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
             form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
-            const r = await forceShow(form, player as Player);
+
+            const r = await form.forceShow(player);
             if (r.canceled) return 1;
 
             let response = r.selection;
-            switch ((["mainSettings" /* , "editButtons" */, "back", "close"] as const)[response]) {
+            switch ((["mainSettings", "editButtons", "leaderboardsSettings", "editWarps", "editRedeemableCodes", "back", "close"] as const)[response]) {
                 case "mainSettings":
-                    if ((await uiSettings_menuConfigurations_mainMenu_mainSettings(player)) == 1) {
+                    if ((await uiSettings_menuConfigurations_playerMenu_mainSettings(player)) == 1) {
+                        continue;
+                    } else {
+                        return 0;
+                    }
+                case "editButtons":
+                    if ((await uiSettings_menuConfigurations_playerMenu_editButtons(player)) == 1) {
+                        continue;
+                    } else {
+                        return 0;
+                    }
+                case "leaderboardsSettings":
+                    if ((await uiSettings_menuConfigurations_playerMenu_leaderboardsSettings(player)) == 1) {
+                        continue;
+                    } else {
+                        return 0;
+                    }
+                case "editWarps":
+                    if ((await manageWarps(player)) == 1) {
+                        continue;
+                    } else {
+                        return 0;
+                    }
+                case "editRedeemableCodes":
+                    if ((await manageRedeemableCodes(player)) == 1) {
                         continue;
                     } else {
                         return 0;

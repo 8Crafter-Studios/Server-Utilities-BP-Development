@@ -36,7 +36,7 @@ export async function playerMenu_homes(sourceEntitya: Entity | executeCommandPla
         }
     }
     let form = new ActionFormData();
-    form.title(customFormUICodes.action.titles.formStyles.general + "Homes");
+    form.title(customFormUICodes.action.titles.formStyles.medium + "Homes");
     const homes = HomeSystem.getHomesForPlayer(sourceEntity.id);
     homes.forEach((h) =>
         form.button(`${customFormUICodes.action.buttons.positions.main_only}${h.name}\n${dimensionTypeDisplayFormatting[dimensionse[dimensions.indexOf(h.location.dimension)]]}§r ${vTStr(Vector.floor(h.location))}`)

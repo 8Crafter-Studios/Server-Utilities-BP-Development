@@ -4,7 +4,7 @@ import { securityVariables } from "security/ultraSecurityModeUtils";
 import { showMessage } from "modules/utilities/functions/showMessage";
 import { menuButtonIds } from "../constants/menuButtonIds";
 import { showActions } from "modules/utilities/functions/showActions";
-import { uiSettings_menuConfigurations_playerMenu_editButtons_addRemovedButtons } from "./uiSettings_menuConfigurations_playerMenu_editButtons_addRemovedButtons";
+import { uiSettings_menuConfigurations_playerMenu_editButtons_addRemovedButtons } from "./uiSettings_MConfigs_PM_EBttn_aRB";
 import { customFormUICodes } from "../constants/customFormUICodes";
 import { extractPlayerFromLooseEntityType } from "modules/utilities/functions/extractPlayerFromLooseEntityType";
 import type { loosePlayerType } from "modules/utilities/types/loosePlayerType";

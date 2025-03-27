@@ -102,11 +102,11 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
     form.body("This menu allows you to customize what leaderboards are displayed in the leaderboards section of the player menu.");
     leaderboards.forEach((l) => {
         const button = statistics.find((s) => s.id === l);
-        form.button(customFormUICodes.action.buttons.positions.main_only + button !== undefined
+        form.button(customFormUICodes.action.buttons.positions.main_only + (button !== undefined
             ? typeof button?.buttonDisplayName === "string"
                 ? button?.buttonDisplayName
                 : "INVALID NAME TYPE: " + typeof button?.buttonDisplayName
-            : "MISSING: " + l, button === undefined ? "bug_pack_icon" : undefined);
+            : "MISSING: " + l), button === undefined ? "bug_pack_icon" : undefined);
     });
     form.button(customFormUICodes.action.buttons.positions.main_only + "Add Leaderboard", "textures/ui/color_plus");
     form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
@@ -659,12 +659,12 @@ Default Button Index: ${statistic.type === "built-in" ? defaultPlayerMenuLeaderb
             .button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout")
             .forceShow(sourceEntity);
         if (rb.canceled || rb.selection === 1)
-            return await uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics_builtIn(sourceEntity);
+            return 1;
         if (rb.selection === 2)
             return 0;
         if (rb.selection === 0) {
             if ((await uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics_builtIn_editStatistic(sourceEntity, statistic)) == 1) {
-                return await uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics_builtIn(sourceEntity);
+                return await uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics_builtIn_statistic(sourceEntity, statistic);
             }
             else {
                 return 0;
