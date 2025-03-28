@@ -118,3 +118,5 @@ export class ModerationActions {
         }
     }
 }
+
+ModerationActions.refreshMutes();

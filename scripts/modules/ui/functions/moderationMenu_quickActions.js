@@ -5,6 +5,8 @@ import { customFormUICodes } from "../constants/customFormUICodes";
 import { moderationMenu_quickBan } from "./moderationMenu_quickBan";
 import { moderationMenu_quickKick } from "./moderationMenu_quickKick";
 import { moderationMenu_quickMute } from "./moderationMenu_quickMute";
+import { securityVariables } from "security/ultraSecurityModeUtils";
+import { moderationMenu_quickTransfer } from "./moderationMenu_quickTransfer";
 /**
  * Displays the moderation quick actions menu.
  *
@@ -19,14 +21,25 @@ export async function moderationMenu_quickActions(sourceEntity) {
             const form = new ActionFormData();
             form.title(customFormUICodes.action.titles.formStyles.gridMenu + "Quick Actions");
             form.button(customFormUICodes.action.buttons.positions.main_only + "Ban Player", "textures/ui/hammer_l");
-            form.button(customFormUICodes.action.buttons.positions.main_only + customFormUICodes.action.buttons.options.disabled + "Mute Player", "textures/ui/mute_on");
-            form.button(customFormUICodes.action.buttons.positions.main_only + customFormUICodes.action.buttons.options.disabled + "Kick Player", "textures/ui/friend_glyph_desaturated");
+            form.button(customFormUICodes.action.buttons.positions.main_only + "Mute Player", "textures/ui/mute_on");
+            form.button(customFormUICodes.action.buttons.positions.main_only + "Kick Player", "textures/ui/friend_glyph_desaturated");
+            let transferPlayerButtonVisible = false;
+            if (securityVariables.ultraSecurityModeEnabled) {
+                if (securityVariables.testPlayerForPermission(player, "andexdb.transferPlayers") === true) {
+                    transferPlayerButtonVisible = true;
+                    form.button(customFormUICodes.action.buttons.positions.main_only + "Transfer Player", "textures/ui/servers");
+                }
+            }
+            else {
+                transferPlayerButtonVisible = true;
+                form.button(customFormUICodes.action.buttons.positions.main_only + "Transfer Player", "textures/ui/servers");
+            }
             form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
             form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
             const r = await form.forceShow(player);
             if (r.canceled)
                 return 1;
-            switch (["ban", "mute", "kick", "back", "close"][r.selection]) {
+            switch (cullUndefined(["ban", "mute", "kick", transferPlayerButtonVisible ? "transfer" : undefined, "back", "close"])[r.selection]) {
                 case "ban":
                     if ((await moderationMenu_quickBan(player)) == 1) {
                         continue;
@@ -43,6 +56,13 @@ export async function moderationMenu_quickActions(sourceEntity) {
                     }
                 case "kick":
                     if ((await moderationMenu_quickKick(player)) == 1) {
+                        continue;
+                    }
+                    else {
+                        return 0;
+                    }
+                case "transfer":
+                    if ((await moderationMenu_quickTransfer(player)) == 1) {
                         continue;
                     }
                     else {

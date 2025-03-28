@@ -112,4 +112,5 @@ export class ModerationActions {
         }
     }
 }
+ModerationActions.refreshMutes();
 //# sourceMappingURL=ModerationActions.js.map

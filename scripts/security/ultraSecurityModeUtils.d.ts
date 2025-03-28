@@ -186,6 +186,16 @@ declare const permissionTypes: Readonly<{
         }];
     };
     /**
+     * Allows the player to have the ability to transfer players to other servers through the moderation quick actions UI.
+     */
+    readonly "andexdb.transferPlayers": {
+        readonly id: "andexdb.transferPlayers";
+        readonly default: false;
+        readonly includedInPermissions: [];
+        readonly description: "Allows the player to have the ability to transfer players to other servers through the moderation quick actions UI.";
+        readonly additionalPrompts: [];
+    };
+    /**
      * Allows the player to have the ability to ban players through the manage bans UI.
      * This permission is included in the `andexdb.headAdmin` permission.
      * This permission is included in the `andexdb.admin` permission.
@@ -223,6 +233,46 @@ declare const permissionTypes: Readonly<{
         readonly default: false;
         readonly includedInPermissions: [];
         readonly description: "Allows the player to access the manage bans UI.\n    Note: The player will not be able to ban or unban anyone through the UI unless you give them the 'andexdb.banPlayers' or 'andexdb.unbanPlayers' permissions respectively.\n    This permission is included in the 'andexdb.headAdmin' permission.\n    This permission is included in the 'andexdb.admin' permission.\n    This permission is included in the 'andexdb.moderator' permission.";
+        readonly additionalPrompts: [];
+    };
+    /**
+     * Allows the player to have the ability to mute players through the manage mutes UI.
+     * This permission is included in the `andexdb.headAdmin` permission.
+     * This permission is included in the `andexdb.admin` permission.
+     * This permission is included in the `andexdb.moderator` permission.
+     */
+    readonly "andexdb.mutePlayers": {
+        readonly id: "andexdb.mutePlayers";
+        readonly default: false;
+        readonly includedInPermissions: [];
+        readonly description: "Allows the player to have the ability to mute players through the manage mutes UI.\n    This permission is included in the 'andexdb.headAdmin' permission.\n    This permission is included in the 'andexdb.admin' permission.\n    This permission is included in the 'andexdb.moderator' permission.";
+        readonly additionalPrompts: [];
+    };
+    /**
+     * Allows the player to have the ability to unmute players through the manage mutes UI.
+     * This permission is included in the `andexdb.headAdmin` permission.
+     * This permission is included in the `andexdb.admin` permission.
+     * This permission is included in the `andexdb.moderator` permission.
+     */
+    readonly "andexdb.unmutePlayers": {
+        readonly id: "andexdb.unmutePlayers";
+        readonly default: false;
+        readonly includedInPermissions: [];
+        readonly description: "Allows the player to have the ability to unmute players through the manage mutes UI.\n    This permission is included in the 'andexdb.headAdmin' permission.\n    This permission is included in the 'andexdb.admin' permission.\n    This permission is included in the 'andexdb.moderator' permission.";
+        readonly additionalPrompts: [];
+    };
+    /**
+     * Allows the player to access the manage mutes UI.
+     * Note: The player will not be able to mute or unmute anyone through the UI unless you give them the `andexdb.mutePlayers` or `andexdb.unmutePlayers` permissions respectively.
+     * This permission is included in the `andexdb.headAdmin` permission.
+     * This permission is included in the `andexdb.admin` permission.
+     * This permission is included in the `andexdb.moderator` permission.
+     */
+    readonly "andexdb.accessManageMutesUI": {
+        readonly id: "andexdb.accessManageMutesUI";
+        readonly default: false;
+        readonly includedInPermissions: [];
+        readonly description: "Allows the player to access the manage mutes UI.\n    Note: The player will not be able to mute or unmute anyone through the UI unless you give them the 'andexdb.mutePlayers' or 'andexdb.unmutePlayers' permissions respectively.\n    This permission is included in the 'andexdb.headAdmin' permission.\n    This permission is included in the 'andexdb.admin' permission.\n    This permission is included in the 'andexdb.moderator' permission.";
         readonly additionalPrompts: [];
     };
     /**

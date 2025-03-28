@@ -5,6 +5,7 @@ import { patternColorsMap } from "modules/chat/constants/patternColorsMap";
 import { patternFunctionList } from "modules/chat/constants/patternFunctionList";
 import { evaluateChatColorType } from "./evaluateChatColorType";
 import { chatSend_getChatMessageFormatFromPlayerTags, chatSend_getDisplayNameFromPlayer, chatSend_getPlayerPersonalSettings, chatSend_getRanksFromPlayerTags, chatSend_getTargetPlayerSettings, chatSendMessageEvaluator, chatSendMessageEvaluator_players, chatSendMessageEvaluator_prePlayers } from "./chatSendMessageEvaluator";
+import { ModerationActions } from "modules/moderation/classes/ModerationActions";
 export function chatSend(params) {
     let returnBeforeChatSend = params.returnBeforeChatSend;
     let player = params.player;
@@ -32,6 +33,24 @@ export function chatSend(params) {
             }
             globalThis["lastChatMessage" + player.id] = event.message;
             globalThis["lastChatTime" + player.id] = Date.now();
+        }
+    }
+    if (ModerationActions.testForMutedPlayer(player.name)) {
+        const mute = ModerationActions.getMuteData(player.name);
+        returnBeforeChatSend = true;
+        event.cancel = true;
+        if (newMessage.toLowerCase().includes("mute details")) {
+            const timeZone = player.timeZone;
+            player.sendMessage(`§cMute Details:
+Muted by: ${mute.mutedByName}<${mute.mutedById}>
+Muted on: ${formatDateTime(new Date(mute.muteDate), timeZone)} UTC${timeZone > 0 || Object.is(timeZone, 0) ? "+" : ""}${timeZone}
+Unmute date: ${mute.unmuteDate === null ? "Never" : formatDateTime(new Date(mute.unmuteDate), timeZone)} UTC${timeZone > 0 || Object.is(timeZone, 0) ? "+" : ""}${timeZone}
+Mute duration: ${mute.unmuteDate === null ? "Permanent" : ModerationActions.playerMuteDurationFormatted(player.name)}
+Time until unmute: ${mute.unmuteDate === null ? "Infinite" : ModerationActions.playerTimeUntilUnmuteFormatted(player.name)}
+Mute reason: ${mute.reason}`);
+        }
+        else {
+            player.sendMessage(`§cYou are ${mute.unmuteDate === null ? "§lpermanently§r§c" : "temporarily"} muted${mute.unmuteDate === null ? "" : " for another " + ModerationActions.playerTimeUntilUnmuteFormatted(player.name)}! Type "mute details" for more details.`);
         }
     }
     try {

@@ -3,6 +3,8 @@ import { extractPlayerFromLooseEntityType } from "modules/utilities/functions/ex
 import { showMessage } from "modules/utilities/functions/showMessage";
 import type { loosePlayerType } from "modules/utilities/types/loosePlayerType";
 import { customFormUICodes } from "../constants/customFormUICodes";
+import { transferPlayer } from "@minecraft/server-admin";
+import { securityVariables } from "security/ultraSecurityModeUtils";
 
 /**
  * Shows the quick kick menu of the moderation menu.
@@ -11,19 +13,32 @@ import { customFormUICodes } from "../constants/customFormUICodes";
  * @returns {Promise<0 | 1>} A promise that resolves to `0` if the previous menu should be closed, or `1` if the previous menu should be reopened.
  * @throws {TypeError} If sourceEntity is not an instance of the Player class or an instance of the executeCommandPlayerW class with a Player linked to it.
  */
-export async function moderationMenu_quickKick(sourceEntity: loosePlayerType): Promise<0 | 1> {
+export async function moderationMenu_quickTransfer(sourceEntity: loosePlayerType): Promise<0 | 1> {
     const player = extractPlayerFromLooseEntityType(sourceEntity);
     while (true) {
         try{
+            if (securityVariables.ultraSecurityModeEnabled) {
+                if (securityVariables.testPlayerForPermission(player, "andexdb.transferPlayers") == false) {
+                    const r = await showMessage(
+                        player,
+                        "Access Denied (403)",
+                        "You do not have permission to players to other servers. You need the following permission to transfer players to other servers: andexdb.transferPlayers.",
+                        "Back",
+                        "Cancel"
+                    );
+                    if (r.canceled || r.selection == 0) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                }
+            }
             const form = new ActionFormData();
-            form.title(customFormUICodes.action.titles.formStyles.medium + "Kick Online Player");
-            let playerslist = world.getAllPlayers().filter((p) => p !== player);
+            form.title(customFormUICodes.action.titles.formStyles.medium + "Transfer Online Player");
+            let playerslist = world.getAllPlayers();
             playerslist.forEach((p) => {
                 form.button(customFormUICodes.action.buttons.positions.main_only + p.name /*, "textures/ui/online"*/);
             });
-            if (playerslist.length === 0) {
-                form.body("No players available to kick.");
-            }
             form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
             form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
             form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Refresh", "textures/ui/refresh");
@@ -34,10 +49,23 @@ export async function moderationMenu_quickKick(sourceEntity: loosePlayerType): P
                     const target = playerslist[r.selection];
                     const form = new ModalFormData();
                     form.title(customFormUICodes.action.titles.formStyles.medium + "Kick " + target.name);
-                    form.textField("Reason", "Reason");
+                    form.textField("IP Address", "play.cubecraft.net");
+                    form.textField("Port", "19132");
                     const rb = await form.forceShow(player);
                     if (rb.canceled) continue;
-                    player.runCommand(`kick ${JSON.stringify(target.name)} §cYou have been kicked by ${player.name} for: ${!!rb.formValues?.[0] ? rb.formValues?.[0] : "No reason provided."}`);
+                    if (rb.formValues[0] === "") {
+                        throw new TypeError("IP Address cannot be empty.");
+                    }
+                    if (rb.formValues[1] === "") {
+                        throw new TypeError("Port cannot be empty.");
+                    }
+                    if (!/^[0-9]+$/.test(rb.formValues[1] as string)) {
+                        throw new TypeError("Port must be an integer.");
+                    }
+                    if (rb.formValues[1].toNumber() < 0 || rb.formValues[1].toNumber() > 65535) {
+                        throw new TypeError("Port must be between 0 and 65535 (inclusive).");
+                    }
+                    transferPlayer(target, rb.formValues[0] as string, rb.formValues[1].toNumber());
                     return 1;
                 }
                 case "back":

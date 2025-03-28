@@ -259,6 +259,16 @@ const permissionTypes = Object.freeze(
             ],
         },
         /**
+         * Allows the player to have the ability to transfer players to other servers through the moderation quick actions UI.
+         */
+        "andexdb.transferPlayers": {
+            id: "andexdb.transferPlayers",
+            default: false,
+            includedInPermissions: [],
+            description: `Allows the player to have the ability to transfer players to other servers through the moderation quick actions UI.`,
+            additionalPrompts: [],
+        },
+        /**
          * Allows the player to have the ability to ban players through the manage bans UI.
          * This permission is included in the `andexdb.headAdmin` permission.
          * This permission is included in the `andexdb.admin` permission.
@@ -303,6 +313,56 @@ const permissionTypes = Object.freeze(
             includedInPermissions: [],
             description: `Allows the player to access the manage bans UI.
     Note: The player will not be able to ban or unban anyone through the UI unless you give them the 'andexdb.banPlayers' or 'andexdb.unbanPlayers' permissions respectively.
+    This permission is included in the 'andexdb.headAdmin' permission.
+    This permission is included in the 'andexdb.admin' permission.
+    This permission is included in the 'andexdb.moderator' permission.`,
+            additionalPrompts: [],
+        },
+        /**
+         * Allows the player to have the ability to mute players through the manage mutes UI.
+         * This permission is included in the `andexdb.headAdmin` permission.
+         * This permission is included in the `andexdb.admin` permission.
+         * This permission is included in the `andexdb.moderator` permission.
+         */
+        "andexdb.mutePlayers": {
+            id: "andexdb.mutePlayers",
+            default: false,
+            includedInPermissions: [],
+            description: `Allows the player to have the ability to mute players through the manage mutes UI.
+    This permission is included in the 'andexdb.headAdmin' permission.
+    This permission is included in the 'andexdb.admin' permission.
+    This permission is included in the 'andexdb.moderator' permission.`,
+            additionalPrompts: [],
+        },
+        /**
+         * Allows the player to have the ability to unmute players through the manage mutes UI.
+         * This permission is included in the `andexdb.headAdmin` permission.
+         * This permission is included in the `andexdb.admin` permission.
+         * This permission is included in the `andexdb.moderator` permission.
+         */
+        "andexdb.unmutePlayers": {
+            id: "andexdb.unmutePlayers",
+            default: false,
+            includedInPermissions: [],
+            description: `Allows the player to have the ability to unmute players through the manage mutes UI.
+    This permission is included in the 'andexdb.headAdmin' permission.
+    This permission is included in the 'andexdb.admin' permission.
+    This permission is included in the 'andexdb.moderator' permission.`,
+            additionalPrompts: [],
+        },
+        /**
+         * Allows the player to access the manage mutes UI.
+         * Note: The player will not be able to mute or unmute anyone through the UI unless you give them the `andexdb.mutePlayers` or `andexdb.unmutePlayers` permissions respectively.
+         * This permission is included in the `andexdb.headAdmin` permission.
+         * This permission is included in the `andexdb.admin` permission.
+         * This permission is included in the `andexdb.moderator` permission.
+         */
+        "andexdb.accessManageMutesUI": {
+            id: "andexdb.accessManageMutesUI",
+            default: false,
+            includedInPermissions: [],
+            description: `Allows the player to access the manage mutes UI.
+    Note: The player will not be able to mute or unmute anyone through the UI unless you give them the 'andexdb.mutePlayers' or 'andexdb.unmutePlayers' permissions respectively.
     This permission is included in the 'andexdb.headAdmin' permission.
     This permission is included in the 'andexdb.admin' permission.
     This permission is included in the 'andexdb.moderator' permission.`,
@@ -819,6 +879,9 @@ const playerPermissionsDefault = Object.freeze({
         "andexdb.banPlayers",
         "andexdb.unbanPlayers",
         "andexdb.accessManageBansUI",
+        "andexdb.mutePlayers",
+        "andexdb.unmutePlayers",
+        "andexdb.accessManageMutesUI",
         "andexdb.accessMainMenu",
         "andexdb.accessPersonalSettings",
         "andexdb.accessNotificationsSettings",
@@ -840,6 +903,9 @@ const playerPermissionsDefault = Object.freeze({
         "andexdb.banPlayers",
         "andexdb.unbanPlayers",
         "andexdb.accessManageBansUI",
+        "andexdb.mutePlayers",
+        "andexdb.unmutePlayers",
+        "andexdb.accessManageMutesUI",
         "andexdb.accessManageCommandsUI",
         "andexdb.accessMainMenu",
         "andexdb.accessPersonalSettings",
@@ -874,6 +940,9 @@ const playerPermissionsDefault = Object.freeze({
         "andexdb.banPlayers",
         "andexdb.unbanPlayers",
         "andexdb.accessManageBansUI",
+        "andexdb.mutePlayers",
+        "andexdb.unmutePlayers",
+        "andexdb.accessManageMutesUI",
         "andexdb.accessManageCommandsUI",
         "andexdb.accessMainMenu",
         "andexdb.accessSecuritySettings",

@@ -30,6 +30,6 @@ export declare function manageMute(sourceEntity: loosePlayerType, mute: [playerN
  * @returns {Promise<0 | 1 | 2>} A promise that resolves to `0` if the previous menu should be closed, `1` if the previous menu should be reopened, or `2` if the menu before the previous menu should be reopened.
  * @throws {TypeError} If sourceEntity is not an instance of the Player class or an instance of the executeCommandPlayerW class with a Player linked to it.
  */
-export declare function unmutePlayer(sourceEntity: loosePlayerType, mute: [playerName: string, mute: muteData]): Promise<0 | 1 | 2>;
+export declare function unmutePlayer(sourceEntity: loosePlayerType, playerName: string): Promise<0 | 1 | 2>;
 export declare function addMute(sourceEntity: loosePlayerType): Promise<0 | 1>;
 export declare function addMuteOnPlayer(sourceEntity: loosePlayerType, targetName: string): Promise<0 | 1>;

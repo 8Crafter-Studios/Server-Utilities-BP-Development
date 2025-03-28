@@ -28,7 +28,7 @@ export async function moderationMenu(sourceEntity) {
         try {
             const form = new ActionFormData();
             form.title(customFormUICodes.action.titles.formStyles.gridMenu + "Moderation");
-            form.button(customFormUICodes.action.buttons.positions.main_only + customFormUICodes.action.buttons.options.disabled + "§4Quick Actions\n§f(§cComing Soon!§f)", "textures/ui/hammer_l");
+            form.button(customFormUICodes.action.buttons.positions.main_only + "Quick Actions", "textures/ui/hammer_l");
             form.button(customFormUICodes.action.buttons.positions.main_only + "Manage Bans", "textures/ui/friend_glyph_desaturated");
             form.button(customFormUICodes.action.buttons.positions.main_only + "Anti-Spam", "textures/ui/mute_on");
             form.button(customFormUICodes.action.buttons.positions.main_only + customFormUICodes.action.buttons.options.disabled + "§4Anti-Cheat\n§f(§cComing Soon!§f)", "textures/ui/friend_glyph_desaturated");

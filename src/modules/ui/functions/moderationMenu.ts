@@ -31,7 +31,7 @@ export async function moderationMenu(sourceEntity: loosePlayerType): Promise<-2 
             const form = new ActionFormData();
             form.title(customFormUICodes.action.titles.formStyles.gridMenu + "Moderation");
             form.button(
-                customFormUICodes.action.buttons.positions.main_only + customFormUICodes.action.buttons.options.disabled + "§4Quick Actions\n§f(§cComing Soon!§f)",
+                customFormUICodes.action.buttons.positions.main_only + "Quick Actions",
                 "textures/ui/hammer_l"
             );
             form.button(customFormUICodes.action.buttons.positions.main_only + "Manage Bans", "textures/ui/friend_glyph_desaturated");

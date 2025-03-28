@@ -1,9 +1,7 @@
-import { Entity, Player, world } from "@minecraft/server";
-import { ActionFormData, ActionFormResponse, ModalFormData, ModalFormResponse, MessageFormData } from "@minecraft/server-ui";
+import { world } from "@minecraft/server";
+import { ActionFormData, ModalFormData } from "@minecraft/server-ui";
 import { forceShow } from "modules/ui/functions/forceShow";
-import { ban_format_version } from "modules/ban/constants/ban_format_version";
 import { ModerationActions, type muteData } from "modules/moderation/classes/ModerationActions";
-import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { showMessage } from "modules/utilities/functions/showMessage";
 import { securityVariables } from "security/ultraSecurityModeUtils";
 import { customFormUICodes } from "../constants/customFormUICodes";
@@ -11,7 +9,6 @@ import { extractPlayerFromLooseEntityType } from "modules/utilities/functions/ex
 import type { loosePlayerType } from "modules/utilities/types/loosePlayerType";
 import { parseDurationRelative } from "modules/utilities/functions/parseDuration";
 import moment from "moment";
-import type { savedPlayer } from "modules/player_save/classes/savedPlayer";
 
 /**
  * Displays a UI for managing mutes on players.
@@ -44,11 +41,11 @@ export async function manageMutes(
     while (true) {
         const { player, pagen, maxentriesperpage, search, cachedEntries } = currentParameters;
         if (securityVariables.ultraSecurityModeEnabled) {
-            if (securityVariables.testPlayerForPermission(player, "andexdb.accessManageBansUI") == false) {
+            if (securityVariables.testPlayerForPermission(player, "andexdb.accessManageMutesUI") == false) {
                 const r = await showMessage(
                     player,
                     "Access Denied (403)",
-                    "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.accessManageBansUI",
+                    "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.accessManageMutesUI",
                     "Okay",
                     "Cancel"
                 );
@@ -268,7 +265,7 @@ export async function manageMute(sourceEntity: loosePlayerType, mute: [playerNam
             if (r.canceled) return 1 as const;
             switch ((["unmute", "back", "close"] as const)[r.selection]) {
                 case "unmute":
-                    switch (await unmutePlayer(player, mute)) {
+                    switch (await unmutePlayer(player, mute[0])) {
                         case 0:
                             return 0;
                         case 1:
@@ -298,15 +295,15 @@ export async function manageMute(sourceEntity: loosePlayerType, mute: [playerNam
  * @returns {Promise<0 | 1 | 2>} A promise that resolves to `0` if the previous menu should be closed, `1` if the previous menu should be reopened, or `2` if the menu before the previous menu should be reopened.
  * @throws {TypeError} If sourceEntity is not an instance of the Player class or an instance of the executeCommandPlayerW class with a Player linked to it.
  */
-export async function unmutePlayer(sourceEntity: loosePlayerType, mute: [playerName: string, mute: muteData]): Promise<0 | 1 | 2> {
+export async function unmutePlayer(sourceEntity: loosePlayerType, playerName: string): Promise<0 | 1 | 2> {
     const player = extractPlayerFromLooseEntityType(sourceEntity);
     try {
         if (securityVariables.ultraSecurityModeEnabled) {
-            if (securityVariables.testPlayerForPermission(player, "andexdb.unbanPlayers") == false) {
+            if (securityVariables.testPlayerForPermission(player, "andexdb.unmutePlayers") == false) {
                 const r = await showMessage(
                     player,
                     "Access Denied (403)",
-                    "You do not have permission to unban players. You need the following permission to unban players: andexdb.unbanPlayers",
+                    "You do not have permission to unmute players. You need the following permission to unmute players: andexdb.unmutePlayers",
                     "Okay",
                     "Cancel"
                 );
@@ -317,18 +314,18 @@ export async function unmutePlayer(sourceEntity: loosePlayerType, mute: [playerN
                 }
             }
         }
-        const r = await showMessage(player, "Are you sure?", `Are you sure you want to unmute ${mute[0]}?`, "Cancel", "Unmute");
+        const r = await showMessage(player, "Are you sure?", `Are you sure you want to unmute ${playerName}?`, "Cancel", "Unmute");
         if (r.canceled) return 1 as const;
-        switch ((["cancel", "unban"] as const)[r.selection]) {
+        switch ((["cancel", "unmute"] as const)[r.selection]) {
             case "cancel": {
                 return (
-                    (await showMessage(player, "Unmute Canceled", `The unmute of ${mute[0]} has been sucessfully canceled.`, "Back", "Close")).selection !== 1
+                    (await showMessage(player, "Unmute Canceled", `The unmute of ${playerName} has been sucessfully canceled.`, "Back", "Close")).selection !== 1
                 ).toNumber();
             }
-            case "unban": {
-                ModerationActions.unmutePlayer(mute[0]);
+            case "unmute": {
+                ModerationActions.unmutePlayer(playerName);
                 return ((
-                    (await showMessage(player, "Player Unmuted", `${mute[0]} has been sucessfully unmuted.`, "Back", "Close")).selection !== 1
+                    (await showMessage(player, "Player Unmuted", `${playerName} has been sucessfully unmuted.`, "Back", "Close")).selection !== 1
                 ).toNumber() * 2) as 0 | 2;
             }
         }
@@ -347,11 +344,11 @@ export async function addMute(sourceEntity: loosePlayerType): Promise<0 | 1> {
     while (true) {
         try {
             if (securityVariables.ultraSecurityModeEnabled) {
-                if (securityVariables.testPlayerForPermission(player, "andexdb.banPlayers") == false) {
+                if (securityVariables.testPlayerForPermission(player, "andexdb.mutePlayers") == false) {
                     const r = await showMessage(
                         player,
                         "Access Denied (403)",
-                        "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.banPlayers",
+                        "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.mutePlayers",
                         "Okay",
                         "Cancel"
                     );
@@ -380,7 +377,7 @@ export async function addMute(sourceEntity: loosePlayerType): Promise<0 | 1> {
             defaultMuteDuration = r.formValues[1] as string;
             defaultReason = r.formValues[2] as string;
             const muteDate = Date.now();
-            const unmuteDate = (r.formValues[1] as string).trim() === "" ? Infinity : parseDurationRelative(r.formValues[1] as string, muteDate) + Date.now();
+            const unmuteDate = (r.formValues[1] as string).trim() === "" ? null : parseDurationRelative(r.formValues[1] as string, muteDate) + Date.now();
             if (Number.isNaN(unmuteDate)) {
                 if (
                     (
@@ -428,11 +425,11 @@ export async function addMuteOnPlayer(sourceEntity: loosePlayerType, targetName:
     while (true) {
         try {
             if (securityVariables.ultraSecurityModeEnabled) {
-                if (securityVariables.testPlayerForPermission(player, "andexdb.banPlayers") == false) {
+                if (securityVariables.testPlayerForPermission(player, "andexdb.mutePlayers") == false) {
                     const r = await showMessage(
                         player,
                         "Access Denied (403)",
-                        "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.banPlayers",
+                        "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.mutePlayers",
                         "Okay",
                         "Cancel"
                     );

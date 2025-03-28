@@ -30,13 +30,14 @@ export async function moderationMenu_quickKick(sourceEntity) {
                 return 1;
             switch ((!!playerslist[r.selection] ? "player" : undefined) ?? ["back", "close", "refresh"][r.selection]) {
                 case "player": {
+                    const target = playerslist[r.selection];
                     const form = new ModalFormData();
-                    form.title(customFormUICodes.action.titles.formStyles.medium + "Kick " + playerslist[r.selection].name);
+                    form.title(customFormUICodes.action.titles.formStyles.medium + "Kick " + target.name);
                     form.textField("Reason", "Reason");
                     const rb = await form.forceShow(player);
                     if (rb.canceled)
                         continue;
-                    player.runCommand(`kick ${JSON.stringify(playerslist[r.selection].name)} §cYou have been kicked by ${player.name} for: ${!!rb.formValues?.[0] ? rb.formValues?.[0] : "No reason provided."}`);
+                    player.runCommand(`kick ${JSON.stringify(target.name)} §cYou have been kicked by ${player.name} for: ${!!rb.formValues?.[0] ? rb.formValues?.[0] : "No reason provided."}`);
                     return 1;
                 }
                 case "back":
