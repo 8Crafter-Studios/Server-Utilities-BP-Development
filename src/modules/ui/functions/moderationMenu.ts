@@ -6,6 +6,7 @@ import { customFormUICodes } from "../constants/customFormUICodes";
 import { showMessage } from "modules/utilities/functions/showMessage";
 import { extractPlayerFromLooseEntityType } from "modules/utilities/functions/extractPlayerFromLooseEntityType";
 import type { loosePlayerType } from "modules/utilities/types/loosePlayerType";
+import { moderationMenu_quickActions } from "./moderationMenu_quickActions";
 
 /**
  * Displays and handles the moderation menu for a given entity.
@@ -27,7 +28,7 @@ export async function moderationMenu(sourceEntity: loosePlayerType): Promise<-2 
     const player = extractPlayerFromLooseEntityType(sourceEntity);
     while (true) {
         try {
-            let form = new ActionFormData();
+            const form = new ActionFormData();
             form.title(customFormUICodes.action.titles.formStyles.gridMenu + "Moderation");
             form.button(
                 customFormUICodes.action.buttons.positions.main_only + customFormUICodes.action.buttons.options.disabled + "§4Quick Actions\n§f(§cComing Soon!§f)",

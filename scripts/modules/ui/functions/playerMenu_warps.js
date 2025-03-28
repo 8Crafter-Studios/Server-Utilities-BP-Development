@@ -24,7 +24,7 @@ export async function playerMenu_warps(sourceEntity) {
                 }
             }
             let form = new ActionFormData();
-            form.title(customFormUICodes.action.titles.formStyles.general + "Warps");
+            form.title(customFormUICodes.action.titles.formStyles.medium + "Warps");
             const warps = config.warpsSystem.warps;
             warps.forEach((w) => form.button(customFormUICodes.action.buttons.positions.main_only + w.displayName, w.icon));
             if (player.hasTag("admin")) {

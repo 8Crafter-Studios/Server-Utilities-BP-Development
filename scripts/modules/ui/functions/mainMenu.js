@@ -8,7 +8,7 @@ import { itemSelector } from "./itemSelector";
 import { manageCommands } from "./manageCommands";
 import { managePlayers } from "./managePlayers";
 import { mapArtGenerator } from "./mapArtGenerator";
-import { moderationSettings } from "./moderationSettings";
+import { moderationMenu } from "./moderationMenu";
 import { nbtStructureLoader } from "./nbtStructureLoader";
 import { scriptEvalRunWindow } from "./scriptEvalRunWindow";
 import { settings } from "./settings";
@@ -271,7 +271,7 @@ export async function mainMenu(sourceEntity) {
                     customFormListSelectionMenu(player);
                     return 0;
                 case "moderation":
-                    if ((await moderationSettings(player)) == 1) {
+                    if ((await moderationMenu(player)) == 1) {
                         continue;
                     }
                     else {

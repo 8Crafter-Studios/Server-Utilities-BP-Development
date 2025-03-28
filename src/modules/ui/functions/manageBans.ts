@@ -146,14 +146,8 @@ export async function manageBans(
             }
             // form.button(customFormUICodes.action.buttons.positions.main_only + v[0].originalPlayerId, "loading_spinner");
         });
-        form.button(
-            customFormUICodes.action.buttons.positions.right_side_only + customFormUICodes.action.buttons.styles.display_icon_as_text + "Add ID Ban",
-            "textures/ui/hammer_l_id_ban"
-        );
-        form.button(
-            customFormUICodes.action.buttons.positions.right_side_only + customFormUICodes.action.buttons.styles.display_icon_as_text + "Add Name Ban",
-            "textures/ui/hammer_l_name_ban"
-        );
+        form.button(customFormUICodes.action.buttons.positions.right_side_only + "Add ID Ban", "textures/ui/hammer_l_id_ban");
+        form.button(customFormUICodes.action.buttons.positions.right_side_only + "Add Name Ban", "textures/ui/hammer_l_name_ban");
         form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
         form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
         form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Refresh", "textures/ui/refresh");
