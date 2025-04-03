@@ -70,6 +70,7 @@ import "./functions/dsend";
 import "./functions/ecsend";
 import "./functions/esend";
 import "./functions/fcsend";
+import "./functions/gcsend";
 import "./functions/formatDate";
 import "./functions/formatDateTime";
 import "./functions/formatTime";

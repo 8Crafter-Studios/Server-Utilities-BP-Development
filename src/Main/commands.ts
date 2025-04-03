@@ -21,6 +21,23 @@ export function cmdsEval(
 ) {
     return eval(x);
 }
+export async function cmdsEvalAsync(
+    x: string,
+    eventData?: ChatSendBeforeEvent,
+    bypassChatInputRequests?: boolean,
+    runreturn?: boolean,
+    returnBeforeChatSend?: boolean,
+    returnBeforeChatCommandsOrChatSend?: boolean,
+    event?: ChatSendBeforeEvent,
+    player?: Player,
+    sendToPlayers?: Player[],
+    newMessage?: string,
+    switchTest?: string,
+    switchTestB?: string,
+    commanda?: command<"built-in"|"custom"|"unknown">|typeof commands[number]|{ type: string; }
+) {
+    return await eval(`(async()=>{${x}})()`);
+}
 export function indirectCmdsEval(x: string) {
     return eval?.(x);
 }

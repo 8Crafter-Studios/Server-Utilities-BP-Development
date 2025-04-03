@@ -23,7 +23,7 @@ import { customFormUICodes } from "../constants/customFormUICodes";
  * 5. Updates the configuration based on the form input.
  * 6. Returns the appropriate status code based on the outcome.
  */
-export async function generalSettings(sourceEntity: loosePlayerType) {
+export async function generalSettings(sourceEntity: loosePlayerType): Promise<0 | 1> {
     const player = extractPlayerFromLooseEntityType(sourceEntity);
     try {
         if (securityVariables.ultraSecurityModeEnabled) {

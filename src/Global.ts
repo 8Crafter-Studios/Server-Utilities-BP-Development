@@ -145,6 +145,11 @@ declare global {
             space?: string | number,
             options?: Parameters<typeof colorizeJSONString>[1]
         ): void;
+        function gcsend(
+            value: any,
+            space?: string | number,
+            options?: Parameters<typeof colorizeJSONString>[1]
+        ): void;
         function psend(
             player: Player | executeCommandPlayerW,
             value: string
