@@ -1,4 +1,3 @@
-import "init/meta/importToMakeValidModule";
 globalThis.catchtry = function catchtry<
     TT extends unknown,
     CT extends unknown,
@@ -22,3 +21,5 @@ globalThis.catchtry = function catchtry<
         return finallycallbackfn(v) ?? v;
     }
 };
+
+export {};

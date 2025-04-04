@@ -98,121 +98,120 @@ declare global {
          * @ignore
          * @param sdsa284f83kd_38pqnv_38_f_0_vmewd_19mvndifekod_f8ufv4m3ddm1c0nvh289cmfue8hd9mjf3 INTERNAL
          */
-        function tfsa(
-            sdsa284f83kd_38pqnv_38_f_0_vmewd_19mvndifekod_f8ufv4m3ddm1c0nvh289cmfue8hd9mjf3: unknown
-        ): unknown;
+        function tfsa(sdsa284f83kd_38pqnv_38_f_0_vmewd_19mvndifekod_f8ufv4m3ddm1c0nvh289cmfue8hd9mjf3: unknown): unknown;
+        /**
+         * Removes all values from an array that are `null`.
+         *
+         * @param {T} array The array to remove null values from.
+         * @template {any[]} T The type of the array to remove null values from.
+         * @returns {T[number][]} The array without null values.
+         */
         function cullNull<T extends any[]>(array: T): T[number][];
+        /**
+         * Removes all values from an array that are `undefined`.
+         *
+         * @param {T} array The array to remove undefined values from.
+         * @template {any[]} T The type of the array to remove undefined values from.
+         * @returns {T[number][]} The array without undefined values.
+         */
         function cullUndefined<T extends any[]>(array: T): T[number][];
+        /**
+         * Removes all values from an array that are `null` or `undefined`.
+         *
+         * @param {T} array The array to remove empty values from.
+         * @template {any[]} T The type of the array to remove empty values from.
+         * @returns {T[number][]} The array without empty values.
+         */
         function cullEmpty<T extends any[]>(array: T): T[number][];
+        /**
+         * Tries to get the value of a callback function.
+         *
+         * If the callback function throws an error, it will return `undefined`.
+         *
+         * The is intended to be used with callbacks that might throw errors, and you don't want to handle the error.
+         *
+         * @param {() => T} callbackfn The callback function to try to get the value of.
+         * @template {any} T The type of the value returned by the callback function.
+         * @returns {T} The value of the callback function, or `undefined` if the callback function threw an error.
+         */
         function tryget<T>(callbackfn: () => T): T;
+        /**
+         * Runs a callback function and catches any errors that occur.
+         *
+         * It is the same as {@link tryget}, except it does not return anything.
+         *
+         * @param {() => any} callbackfn The callback function to run.
+         */
         function tryrun(callbackfn: () => any): void;
-        function catchtry(
-            trycallbackfn: () => any,
-            catchcallbackfn?: (e: Error) => any,
-            finallycallbackfn?: (v: any) => any
-        ): any;
-        function send(
-            message: (RawMessage | string)[] | RawMessage | string
-        ): void;
+        /**
+         * Runs a callback function and catches any errors that occur.
+         *
+         * If an error occurs, it will run the `catchcallbackfn` function, and return the result of that function, unless the `finallycallbackfn` function returns a value.
+         *
+         * It will then run the `finallycallbackfn` function, whether an error occurred or not, and return the result of that function or if it does not return anything, the result of the `catchcallbackfn` function, or if there was no error, the result of the `trycallbackfn` function.
+         *
+         * @param {() => TT} trycallbackfn The callback function to run.
+         * @param {((e: Error) => CT)} [catchcallbackfn] The callback function to run if an error occurs.
+         * @param {((v: TT | ReturnType<typeof catchcallbackfn> | undefined) => FT)} [finallycallbackfn] The callback function to run whether an error occurred or not.
+         * @template {unknown} TT The type of the value returned by the `trycallbackfn` function.
+         * @template {unknown} CT The type of the value returned by the `catchcallbackfn` function.
+         * @template {unknown} FT The type of the value returned by the `finallycallbackfn` function.
+         * @returns {TT | CT | FT | undefined} The result of the `finallycallbackfn` function, unless it does not return a value, in which case it will return the result of the `catchcallbackfn` function, or if there was no error, the result of the `trycallbackfn` function.
+         */
+        function catchtry<TT extends unknown, CT extends unknown, FT extends unknown>(
+            trycallbackfn: () => TT,
+            catchcallbackfn?: (e: Error) => CT,
+            finallycallbackfn?: (v: TT | ReturnType<typeof catchcallbackfn> | undefined) => FT
+        ): TT | CT | FT | undefined;
+        function send(message: (RawMessage | string)[] | RawMessage | string): void;
         function asend(value: any): void;
         function bsend(value: any, space?: string | number): void;
         function csend(value: any, space?: string | number): void;
         function dsend(value: any, space?: string | number): void;
         function esend(value: any, space?: string | number): void;
         function fsend(value: any, space?: string | number): void;
-        function bcsend(
-            value: any,
-            space?: string | number,
-            options?: Parameters<typeof colorizeJSONString>[1]
-        ): void;
-        function ccsend(
-            value: any,
-            space?: string | number,
-            options?: Parameters<typeof colorizeJSONString>[1]
-        ): void;
-        function dcsend(
-            value: any,
-            space?: string | number,
-            options?: Parameters<typeof colorizeJSONString>[1]
-        ): void;
-        function ecsend(
-            value: any,
-            space?: string | number,
-            options?: Parameters<typeof colorizeJSONString>[1]
-        ): void;
-        function fcsend(
-            value: any,
-            space?: string | number,
-            options?: Parameters<typeof colorizeJSONString>[1]
-        ): void;
-        function gcsend(
-            value: any,
-            space?: string | number,
-            options?: Parameters<typeof colorizeJSONString>[1]
-        ): void;
-        function psend(
-            player: Player | executeCommandPlayerW,
-            value: string
-        ): void;
-        function pasend(
-            player: Player | executeCommandPlayerW,
-            value: any
-        ): void;
+        function bcsend(value: any, space?: string | number, options?: Parameters<typeof colorizeJSONString>[1]): void;
+        function ccsend(value: any, space?: string | number, options?: Parameters<typeof colorizeJSONString>[1]): void;
+        function dcsend(value: any, space?: string | number, options?: Parameters<typeof colorizeJSONString>[1]): void;
+        function ecsend(value: any, space?: string | number, options?: Parameters<typeof colorizeJSONString>[1]): void;
+        function fcsend(value: any, space?: string | number, options?: Parameters<typeof colorizeJSONString>[1]): void;
+        function psend(player: Player | executeCommandPlayerW, value: string): void;
+        function pasend(player: Player | executeCommandPlayerW, value: any): void;
         /**
          * @remarks This function sends a player a message containing a stringified version of the JSON value passed in. It uses {@link JSONStringify}.
          * @param player The player to send the message to.
          * @param value The JSON to stringify.
          * @param space The spacing for the stringified JSON.
          */
-        function pbsend(
-            player: Player | executeCommandPlayerW,
-            value: any,
-            space?: string | number
-        ): void;
+        function pbsend(player: Player | executeCommandPlayerW, value: any, space?: string | number): void;
         /**
          * @remarks This function sends a player a message containing a stringified version of the JSON value passed in. It uses {@link JSON.stringify}.
          * @param player The player to send the message to.
          * @param value The JSON to stringify.
          * @param space The spacing for the stringified JSON.
          */
-        function pcsend(
-            player: Player | executeCommandPlayerW,
-            value: any,
-            space?: string | number
-        ): void;
+        function pcsend(player: Player | executeCommandPlayerW, value: any, space?: string | number): void;
         /**
          * @remarks This function sends a player a message containing a stringified version of the JSON value passed in. It uses {@link JSONB.stringify} with the following options: `{bigint: true, class: false, function: true, Infinity: true, get: true, NaN: true, NegativeInfinity: true, set: true, undefined: true}`.
          * @param player The player to send the message to.
          * @param value The JSON to stringify.
          * @param space The spacing for the stringified JSON.
          */
-        function pdsend(
-            player: Player | executeCommandPlayerW,
-            value: any,
-            space?: string | number
-        ): void;
+        function pdsend(player: Player | executeCommandPlayerW, value: any, space?: string | number): void;
         /**
          * @remarks This function sends a player a message containing a stringified version of the JSON value passed in. It uses {@link JSONB.stringify} with the following options: `{bigint: true, class: false, function: false, Infinity: true, get: false, NaN: true, NegativeInfinity: true, set: false, undefined: true}`.
          * @param player The player to send the message to.
          * @param value The JSON to stringify.
          * @param space The spacing for the stringified JSON.
          */
-        function pesend(
-            player: Player | executeCommandPlayerW,
-            value: any,
-            space?: string | number
-        ): void;
+        function pesend(player: Player | executeCommandPlayerW, value: any, space?: string | number): void;
         /**
          * @remarks This function sends a player a message containing a stringified version of the JSON value passed in. It uses {@link JSONB.stringify} with the following options: `{bigint: true, class: false, function: false, Infinity: true, get: false, NaN: true, NegativeInfinity: true, set: false, undefined: false}`.
          * @param player The player to send the message to.
          * @param value The JSON to stringify.
          * @param space The spacing for the stringified JSON.
          */
-        function pfsend(
-            player: Player | executeCommandPlayerW,
-            value: any,
-            space?: string | number
-        ): void;
+        function pfsend(player: Player | executeCommandPlayerW, value: any, space?: string | number): void;
         /**
          * @remarks The same as {@link pbsend} except that it colorizes the outputted JSON string.
          * @param player The player to send the message to.
@@ -220,12 +219,7 @@ declare global {
          * @param space The spacing for the stringified JSON.
          * @param options The options for colorizing the JSON string.
          */
-        function pbcsend(
-            player: Player | executeCommandPlayerW,
-            value: any,
-            space?: string | number,
-            options?: Parameters<typeof colorizeJSONString>[1]
-        ): void;
+        function pbcsend(player: Player | executeCommandPlayerW, value: any, space?: string | number, options?: Parameters<typeof colorizeJSONString>[1]): void;
         /**
          * @remarks The same as {@link pcsend} except that it colorizes the outputted JSON string.
          * @param player The player to send the message to.
@@ -233,12 +227,7 @@ declare global {
          * @param space The spacing for the stringified JSON.
          * @param options The options for colorizing the JSON string.
          */
-        function pccsend(
-            player: Player | executeCommandPlayerW,
-            value: any,
-            space?: string | number,
-            options?: Parameters<typeof colorizeJSONString>[1]
-        ): void;
+        function pccsend(player: Player | executeCommandPlayerW, value: any, space?: string | number, options?: Parameters<typeof colorizeJSONString>[1]): void;
         /**
          * @remarks The same as {@link pdsend} except that it colorizes the outputted JSON string.
          * @param player The player to send the message to.
@@ -246,12 +235,7 @@ declare global {
          * @param space The spacing for the stringified JSON.
          * @param options The options for colorizing the JSON string.
          */
-        function pdcsend(
-            player: Player | executeCommandPlayerW,
-            value: any,
-            space?: string | number,
-            options?: Parameters<typeof colorizeJSONString>[1]
-        ): void;
+        function pdcsend(player: Player | executeCommandPlayerW, value: any, space?: string | number, options?: Parameters<typeof colorizeJSONString>[1]): void;
         /**
          * @remarks The same as {@link pesend} except that it colorizes the outputted JSON string.
          * @param player The player to send the message to.
@@ -259,12 +243,7 @@ declare global {
          * @param space The spacing for the stringified JSON.
          * @param options The options for colorizing the JSON string.
          */
-        function pecsend(
-            player: Player | executeCommandPlayerW,
-            value: any,
-            space?: string | number,
-            options?: Parameters<typeof colorizeJSONString>[1]
-        ): void;
+        function pecsend(player: Player | executeCommandPlayerW, value: any, space?: string | number, options?: Parameters<typeof colorizeJSONString>[1]): void;
         /**
          * @remarks The same as {@link pfsend} except that it colorizes the outputted JSON string.
          * @param player The player to send the message to.
@@ -272,41 +251,32 @@ declare global {
          * @param space The spacing for the stringified JSON.
          * @param options The options for colorizing the JSON string.
          */
-        function pfcsend(
-            player: Player | executeCommandPlayerW,
-            value: any,
-            space?: string | number,
-            options?: Parameters<typeof colorizeJSONString>[1]
-        ): void;
-        function perror(
-            player: Player | executeCommandPlayerW,
-            error: Error,
-            prefix?: string
-        ): void;
+        function pfcsend(player: Player | executeCommandPlayerW, value: any, space?: string | number, options?: Parameters<typeof colorizeJSONString>[1]): void;
+        function perror(player: Player | executeCommandPlayerW, error: Error, prefix?: string): void;
         /**
          * An alias of {@link console.info}.
-         * 
+         *
          * [MDN Reference](https://developer.mozilla.org/docs/Web/API/console/error_static)
          */
-        function cinfo(...data: any[]): void
+        function cinfo(...data: any[]): void;
         /**
          * An alias of {@link console.log}.
-         * 
+         *
          * [MDN Reference](https://developer.mozilla.org/docs/Web/API/console/error_static)
          */
-        function clog(...data: any[]): void
+        function clog(...data: any[]): void;
         /**
          * An alias of {@link console.warn}.
-         * 
+         *
          * [MDN Reference](https://developer.mozilla.org/docs/Web/API/console/error_static)
          */
-        function cwarn(...data: any[]): void
+        function cwarn(...data: any[]): void;
         /**
          * An alias of {@link console.error}.
-         * 
+         *
          * [MDN Reference](https://developer.mozilla.org/docs/Web/API/console/error_static)
          */
-        function cerror(...data: any[]): void
+        function cerror(...data: any[]): void;
         /**
          * @remarks Triggers a breakpoint when run while the {@link https://marketplace.visualstudio.com/items?itemName=mojang-studios.minecraft-debugger Visual Studio Code Minecraft Debugger Extension} is connected via the /script command.
          * @since 1.26.0-rc.2+BUILD.1
@@ -328,17 +298,9 @@ declare global {
          * @param {string|number} space Adds indentation, white space, and line break characters to the return-value JSON text to make it easier to read.
          * @returns {any} The JSON string.
          */
-        function JSONStringifyOld(
-            value: any,
-            keepUndefined?: boolean,
-            space?: string | number
-        ): string;
+        function JSONStringifyOld(value: any, keepUndefined?: boolean, space?: string | number): string;
         function JSONParse(JSONString: string, keepUndefined?: boolean): any;
-        function JSONStringify(
-            JSONObject: any,
-            keepUndefined?: boolean,
-            space?: string | number
-        ): string;
+        function JSONStringify(JSONObject: any, keepUndefined?: boolean, space?: string | number): string;
         function iterateGenerator<TY, TR, TN>(
             extractorGenerator: Generator<TY, TR, TN>,
             maxTimePerTick?: number,
@@ -370,11 +332,11 @@ declare global {
          * @template T - The type of values yielded by the generator.
          * @template TReturn - The type of the return value of the generator.
          * @template TNext - The type of the value that can be passed to the generator's `next` method.
-         * 
+         *
          * @param {Generator<T, TReturn, TNext>} g - The generator function to complete.
          * @param {number} [maxTimePerTick=1500] - The maximum time (in milliseconds) to spend on each tick before yielding control back to the system.
          * @param {boolean} [whileConditions=true] - A condition to keep the generator running.
-         * 
+         *
          * @returns {Promise<{ yield: T[]; return: TReturn }>} A promise that resolves with an object containing the yielded values and the return value of the generator.
          */
         function completeGeneratorB<T, TReturn, TNext>(
@@ -417,61 +379,16 @@ declare global {
             timeZoneOffset?: number,
             includeMs?: includeMs
         ): includeMs extends unknown
-            ? `${bigint}/${bigint}/${bigint}, ${bigint}:${bigint}:${bigint} ${
-                  | "A"
-                  | "P"}M`
+            ? `${bigint}/${bigint}/${bigint}, ${bigint}:${bigint}:${bigint} ${"A" | "P"}M`
             : includeMs extends false
-            ? `${bigint}/${bigint}/${bigint}, ${bigint}:${bigint}:${bigint} ${
-                  | "A"
-                  | "P"}M`
-            : `${bigint}/${bigint}/${bigint}, ${bigint}:${bigint}:${bigint}.${bigint} ${
-                  | "A"
-                  | "P"}M`;
+            ? `${bigint}/${bigint}/${bigint}, ${bigint}:${bigint}:${bigint} ${"A" | "P"}M`
+            : `${bigint}/${bigint}/${bigint}, ${bigint}:${bigint}:${bigint}.${bigint} ${"A" | "P"}M`;
         /**
          * Formats a date object to a date string formatted as 07/21/2024.
          * @since 1.26.0-preview.20+BUILD.2
          * @version 1.0.0
          */
         function formatDate(date: Date, timeZoneOffset?: number): string;
-        /**
-         *
-         * @param json
-         * @param options
-         * @default
-         * enum options = {
-         *     number = "§6",
-         *     key = "§e",
-         *     string = "§q",
-         *     true = "§a",
-         *     false = "§c",
-         *     null = "§d",
-         *     undefined = "§d"
-         *     bigint = "§g",
-         *     leftCurlyBracket = "§9",
-         *     rightCurlyBracket = "§9",
-         *     leftSquareBracket = "§5",
-         *     rightSquareBracket = "§5",
-         *     comma = "§f",
-         * }
-         */
-        function colorizeJSONString(
-            json: string | object,
-            options?: {
-                number?: string;
-                key?: string;
-                string?: string;
-                true?: string;
-                false?: string;
-                null?: string;
-                bigint?: string;
-                leftCurlyBracket?: string;
-                rightCurlyBracket?: string;
-                leftSquareBracket?: string;
-                rightSquareBracket?: string;
-                comma?: string;
-                undefined?: string;
-            }
-        ): string;
     }
     /**
      * @namespace
@@ -758,11 +675,47 @@ declare global {
         static readonly lastPlayerDataAutoSaveRun: number;
     }
     interface Function {
+        /**
+         * The line number where the function was defined.
+         *
+         * Native JavaScript property in Minecraft Bedrock Edition.
+         * 
+         * Note: This property is only available in Minecraft Bedrock Edition, it is not documented anywhere and was discovered by reverse engineering.
+         *
+         * This property was discovered by 8Crafter.
+         */
         readonly lineNumber: number;
+        /**
+         * The file name where the function was defined.
+         *
+         * Native JavaScript property in Minecraft Bedrock Edition.
+         * 
+         * Note: This property is only available in Minecraft Bedrock Edition, it is not documented anywhere and was discovered by reverse engineering.
+         *
+         * This property was discovered by 8Crafter.
+         */
         readonly fileName: string;
     }
     interface Class {
+        /**
+         * The line number where the class was defined.
+         *
+         * Native JavaScript property in Minecraft Bedrock Edition.
+         * 
+         * Note: This property is only available in Minecraft Bedrock Edition, it is not documented anywhere and was discovered by reverse engineering.
+         *
+         * This property was discovered by 8Crafter.
+         */
         readonly lineNumber: number;
+        /**
+         * The file name where the class was defined.
+         *
+         * Native JavaScript property in Minecraft Bedrock Edition.
+         * 
+         * Note: This property is only available in Minecraft Bedrock Edition, it is not documented anywhere and was discovered by reverse engineering.
+         *
+         * This property was discovered by 8Crafter.
+         */
         readonly fileName: string;
     }
 }

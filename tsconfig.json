@@ -9,7 +9,8 @@
     "outDir": "./scripts",
     "paths": {
       "@minecraft/math.js": ["../node_modules/@minecraft/math"],
-      "@minecraft/vanilla-data.js": ["../node_modules/@minecraft/vanilla-data"]/*,
+      "@minecraft/vanilla-data.js": ["../node_modules/@minecraft/vanilla-data"]/* ,
+      "@shiki/core.js": ["../node_modules/@shikijs/core"] *//*,
       "semver": ["C:/Users/ander/github/Debug Sticks/BP/node_modules/semver/index.d.ts"]*/
     },
     "allowJs": true,

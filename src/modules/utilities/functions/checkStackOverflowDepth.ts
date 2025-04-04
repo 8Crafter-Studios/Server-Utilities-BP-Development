@@ -1,4 +1,4 @@
-export default function checkStackOverflowDepth(i?: number): { depth: number; error: InternalError } {
+export function checkStackOverflowDepth(i?: number): { depth: number; error: InternalError } {
     var i = i || 1;
     try {
         checkStackOverflowDepth(i + 1);

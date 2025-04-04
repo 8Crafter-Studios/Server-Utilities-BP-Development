@@ -14,10 +14,11 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONStringer;
 
-public class generateDirectoryTreeFile {
+public class generateDirectoryTreeFile_BP {
     public static String optionalModuleObjectImportFilePathsImportMapOut = "export type optionalModuleObjectImportFilePathsImportMap = {";
 
     public static void main(String[] args) throws FileNotFoundException {
+        System.out.println("[Debug Sticks BP] Generating directory tree file...");
         File file = new File("BP/src/directoryTree.ts");
         PrintWriter outFile = new PrintWriter(file);
         ArrayList<String> src = new ArrayList<>();
@@ -41,15 +42,6 @@ public class generateDirectoryTreeFile {
                 if(v.toString().endsWith(".js")){
                     scripts.add(v.toString().replaceAll("\\\\", "/"));
                 }
-            });
-        }catch(Exception e){
-            outFile.close();
-            System.err.println(e);
-            System.exit(1);
-        }
-
-        try (Stream<Path> paths = Files.walk(Paths.get("BP/declaration"))) {
-            paths.filter(Files::isRegularFile).forEach(v -> {
                 if(v.toString().endsWith(".d.ts")){
                     declaration.add(v.toString().replaceAll("\\\\", "/"));
                 }
@@ -59,6 +51,7 @@ public class generateDirectoryTreeFile {
             System.err.println(e);
             System.exit(1);
         }
+
         src.sort((e1, e2)->e1.compareTo(e2));
         scripts.sort((e1, e2)->e1.compareTo(e2));
         declaration.sort((e1, e2)->e1.compareTo(e2));

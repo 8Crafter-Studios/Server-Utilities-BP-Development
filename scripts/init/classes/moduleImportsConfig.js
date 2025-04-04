@@ -325,6 +325,31 @@ export class moduleImportsConfig {
                     ? option ?? undefined
                     : "none");
             },
+            get moderation() {
+                const option = gwdp("moduleImportsConfig:moduleOverride.moderation");
+                if (option == "disableAll") {
+                    return "disableAll";
+                }
+                else if (option == "enableAll") {
+                    return "enableAll";
+                }
+                else if (option == "enableAllNonDeprecated") {
+                    return "enableAllNonDeprecated";
+                }
+                else {
+                    return "none";
+                }
+            },
+            set moderation(option) {
+                swdp("moduleImportsConfig:moduleOverride.moderation", [
+                    "none",
+                    "disableAll",
+                    "enableAll",
+                    "enableAllNonDeprecated",
+                ].includes(option)
+                    ? option ?? undefined
+                    : "none");
+            },
             get player_save() {
                 const option = gwdp("moduleImportsConfig:moduleOverride.player_save");
                 if (option == "disableAll") {

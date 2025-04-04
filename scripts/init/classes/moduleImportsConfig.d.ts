@@ -73,6 +73,7 @@ export declare class moduleImportsConfig {
         coordinates: "none" | "disableAll" | "enableAll" | "enableAllNonDeprecated" | undefined | null;
         errors: "none" | "disableAll" | "enableAll" | "enableAllNonDeprecated" | undefined | null;
         main: "none" | "disableAll" | "enableAll" | "enableAllNonDeprecated" | undefined | null;
+        moderation: "none" | "disableAll" | "enableAll" | "enableAllNonDeprecated" | undefined | null;
         player_save: "none" | "disableAll" | "enableAll" | "enableAllNonDeprecated" | undefined | null;
         spawn_protection: "none" | "disableAll" | "enableAll" | "enableAllNonDeprecated" | undefined | null;
         ui: "none" | "disableAll" | "enableAll" | "enableAllNonDeprecated" | undefined | null;
