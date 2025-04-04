@@ -17,6 +17,6 @@ try {
 export const endTime = Date.now();
 export const starupTime = endTime - startTime;
 
-console.log(`§r[§b8Crafter's Debug Sticks§r] §aStartup time: ${starupTime}ms`);
+console.log(`§r<§b8Crafter's Server Utilities§r[§gv${format_version}§r]> §aStartup time: ${starupTime}ms`);
 
 //# sourceMappingURL=init.js.map
