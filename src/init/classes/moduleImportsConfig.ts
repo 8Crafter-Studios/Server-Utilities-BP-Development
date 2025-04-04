@@ -79,11 +79,11 @@ export class moduleImportsConfig {
      */
     static get override(): (typeof this.overrideOptions)[number] {
         const option = gwdp("moduleImportsConfig:override") as any;
-        if (option == "disableAll") {
+        if (option === "disableAll") {
             return "disableAll";
-        } else if (option == "enableAll") {
+        } else if (option === "enableAll") {
             return "enableAll";
-        } else if (option == "enableAllNonDeprecated") {
+        } else if (option === "enableAllNonDeprecated") {
             return "enableAllNonDeprecated";
         } else {
             return "none";
@@ -633,10 +633,10 @@ export class moduleImportsConfig {
             },
         };
     }
-    static get default(): moduleImportNamesToModuleImportsConfigObjectMapper<0> {
+    static get default(): moduleImportNamesToModuleImportsConfigObjectMapper<1> {
         return Object.fromEntries(
-            optionalModuleObjectImportFilePaths.map((s) => [s, 0 as 0])
-        ) as moduleImportNamesToModuleImportsConfigObjectMapper<0>;
+            optionalModuleObjectImportFilePaths.map((s) => [s, 1 as 1])
+        ) as moduleImportNamesToModuleImportsConfigObjectMapper<1>;
     }
     /**
      *
@@ -671,7 +671,7 @@ export class moduleImportsConfig {
         module: moduleNameForModuleImportsConfig
     ): Partial<moduleImportNamesToModuleImportsConfigObjectMapper<0 | 1>> {
         let string = getStringFromDynamicProperties("moduleImportsConfigData");
-        return Object.assign(Object.fromEntries(moduleOptionalImportPathMap[module].map(v=>[v, 0])), Object.fromEntries(
+        return Object.assign(Object.fromEntries(moduleOptionalImportPathMap[module].map(v=>[v, 1])), Object.fromEntries(
             (
                 Object.entries(
                     JSON.parse(
