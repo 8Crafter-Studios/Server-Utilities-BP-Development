@@ -641,6 +641,38 @@ export const commands = [
         type: "built-in",
         requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
+        commandName: "\\\\loadchunks",
+        escregexp: {
+            v: "^\\\\loadchunks$",
+        },
+        aliases: [
+            {
+                commandName: "\\\\lc",
+                escregexp: {
+                    v: "^\\\\lc$",
+                },
+            },
+        ],
+        formats: [
+            {
+                format: "\\loadchunks",
+            },
+        ],
+        command_version: "1.0.0",
+        description: "",
+        category: ["system", "world", "server", "worldedit"],
+        commandSettingsId: "built-inCommandSettings:\\loadchunks",
+        deprecated: false,
+        functional: true,
+        hidden: false,
+        enabled: true,
+        undoSupported: 1,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
+    },
+    {
+        type: "built-in",
+        requiredTags: ["canUseChatCommands"],
+        formatting_code: "§r§f",
         commandName: "\\\\loadpos",
         escregexp: {
             v: "^\\\\loadpos$",
@@ -1908,7 +1940,7 @@ export const commands = [
         formatting_code: "§r§f",
         commandName: "copyitemfrom",
         escregexp: {
-            v: "^copyitem$from",
+            v: "^copyitemfrom$",
         },
         formats: [
             {
@@ -5452,7 +5484,7 @@ export const commands = [
     {
         type: "built-in",
         requiredTags: ["canUseChatCommands"],
-        formatting_code: "§r§e",
+        formatting_code: "§r§f",
         commandName: "swapitems",
         escregexp: {
             v: "^swapitems$",
@@ -5462,7 +5494,7 @@ export const commands = [
                 format: "swapitems <slot: number|~> <otherSlot: number|~> <otherPlayer: playerName>",
             },
         ],
-        command_version: "0.1.1-beta.1",
+        command_version: "1.0.0",
         description: "",
         category: ["items", "containers/inventories"],
         commandSettingsId: "built-inCommandSettings:swapitems",
@@ -5512,7 +5544,7 @@ export const commands = [
     {
         type: "built-in",
         requiredTags: ["canUseChatCommands"],
-        formatting_code: "§r§e",
+        formatting_code: "§r§f",
         commandName: "takeitem",
         escregexp: {
             v: "^takeitem$",
@@ -5522,7 +5554,7 @@ export const commands = [
                 format: "takeitem <fromSlot: number|~> <fromPlayer: playerName>",
             },
         ],
-        command_version: "0.1.1-beta.1",
+        command_version: "1.0.0",
         description: "",
         category: ["items"],
         commandSettingsId: "built-inCommandSettings:takeitem",

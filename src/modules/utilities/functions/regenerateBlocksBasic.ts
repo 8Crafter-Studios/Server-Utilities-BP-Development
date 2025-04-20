@@ -209,7 +209,7 @@ export async function regenerateBlocksBasic(
     var unloadedSurroundingBlockCount = 0n;
     type a = Omit<{a: 1, b: 2}, 'b'>
     const opts = {
-        minMSBetweenTickWaits: options?.minMSBetweenTickWaits ?? 2000,
+        minMSBetweenTickWaits: options?.minMSBetweenTickWaits ?? config.system.defaultMinMSBetweenTickWaits,
         ignoreAir: options?.ignoreAir ?? true,
         onlyReplaceAir: options?.onlyReplaceAir ?? true,
         airPriority: options?.airPriority ?? 0.5,

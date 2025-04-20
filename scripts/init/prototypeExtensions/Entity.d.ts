@@ -246,5 +246,23 @@ declare module "@minecraft/server" {
          * @author 8Crafter
          */
         deleteStringFromDynamicProperties(propertyName: string): void;
+        /**
+         * @remarks
+         * Gets a component (that represents additional capabilities)
+         * for an entity.
+         *
+         * @param componentId
+         * The identifier of the component (e.g., 'minecraft:health').
+         * If no namespace prefix is specified, 'minecraft:' is
+         * assumed. Available component IDs can be found as part of the
+         * {@link EntityComponentTypes} enum.
+         * @returns
+         * Returns the component if it exists on the entity, otherwise
+         * undefined.
+         * @throws This function can throw errors.
+         *
+         * {@link InvalidEntityError}
+         */
+        getComponent<T extends LooseAutocomplete<keyof EntityComponentTypeMap>>(componentId: T): EntityComponentReturnType<T> | undefined;
     }
 }

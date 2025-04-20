@@ -642,7 +642,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe((event) =>
                                             },
                                             {
                                                 blockMask: mask,
-                                                minMSBetweenTickWaits: 2500,
+                                                minMSBetweenTickWaits: config.system.defaultMinMSBetweenTickWaits,
                                                 replacemode: true,
                                                 integrity: 100,
                                                 liteMode: true,
@@ -703,7 +703,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe((event) =>
                                             },
                                             {
                                                 blockMask: mask,
-                                                minMSBetweenTickWaits: 2500,
+                                                minMSBetweenTickWaits: config.system.defaultMinMSBetweenTickWaits,
                                                 replacemode: true,
                                                 integrity: 100,
                                                 liteMode: true,
@@ -767,7 +767,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe((event) =>
                                             },
                                             {
                                                 blockMask: mask,
-                                                minMSBetweenTickWaits: 2500,
+                                                minMSBetweenTickWaits: config.system.defaultMinMSBetweenTickWaits,
                                                 replacemode: true,
                                                 integrity: 100,
                                                 liteMode: true,
@@ -838,7 +838,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe((event) =>
                                             },
                                             {
                                                 blockMask: mask,
-                                                minMSBetweenTickWaits: 2500,
+                                                minMSBetweenTickWaits: config.system.defaultMinMSBetweenTickWaits,
                                                 replacemode: true,
                                                 integrity: 100,
                                                 liteMode: true,
@@ -917,7 +917,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe((event) =>
                                             },
                                             {
                                                 blockMask: mask,
-                                                minMSBetweenTickWaits: 2500,
+                                                minMSBetweenTickWaits: config.system.defaultMinMSBetweenTickWaits,
                                                 replacemode: true,
                                                 integrity: 100,
                                                 liteMode: true,
@@ -990,7 +990,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe((event) =>
                                             },
                                             {
                                                 blockMask: mask,
-                                                minMSBetweenTickWaits: 2500,
+                                                minMSBetweenTickWaits: config.system.defaultMinMSBetweenTickWaits,
                                                 replacemode: true,
                                                 integrity: 100,
                                                 liteMode: true,
@@ -1064,7 +1064,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe((event) =>
                                             },
                                             {
                                                 blockMask: mask,
-                                                minMSBetweenTickWaits: 2500,
+                                                minMSBetweenTickWaits: config.system.defaultMinMSBetweenTickWaits,
                                                 replacemode: true,
                                                 integrity: 100,
                                                 liteMode: true,
@@ -1147,7 +1147,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe((event) =>
                                             },
                                             {
                                                 blockMask: mask,
-                                                minMSBetweenTickWaits: 2500,
+                                                minMSBetweenTickWaits: config.system.defaultMinMSBetweenTickWaits,
                                                 replacemode: true,
                                                 integrity: 100,
                                                 liteMode: true,
@@ -1224,7 +1224,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe((event) =>
                                             },
                                             {
                                                 blockMask: mask,
-                                                minMSBetweenTickWaits: 2500,
+                                                minMSBetweenTickWaits: config.system.defaultMinMSBetweenTickWaits,
                                                 replacemode: true,
                                                 integrity: 100,
                                                 liteMode: true,

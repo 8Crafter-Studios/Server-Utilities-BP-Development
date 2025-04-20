@@ -9675,7 +9675,7 @@ ${command.dp}ifill <center: x y z> <radius: x y z> <offset: x y z> <length: floa
                                         fillBlocksHSGG(coordinatesa, coordinatesb, sgskygridsize, player.dimension, sgfirstblockname, sgfirstblockstates, {
                                             matchingBlock: sgmatchingblock[0],
                                             matchingBlockStates: sgmatchingblock[1],
-                                            minMSBetweenYields: 5000,
+                                            minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                         }, undefined, sgreplacemode, 100).then((a) => {
                                             player.sendMessageB(`${a.counter == 0
                                                 ? "§c"
@@ -9710,7 +9710,7 @@ ${command.dp}ifill <center: x y z> <radius: x y z> <offset: x y z> <length: floa
                                         fillBlocksHISGG(coordinatesa, coordinatesb, sgskygridsize, player.dimension, sgfirstblockname, sgfirstblockstates, {
                                             matchingBlock: sgmatchingblock[0],
                                             matchingBlockStates: sgmatchingblock[1],
-                                            minMSBetweenYields: 5000,
+                                            minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                         }, undefined, sgreplacemode, 100).then((a) => {
                                             player.sendMessageB(`${a.counter == 0
                                                 ? "§c"
@@ -9761,7 +9761,7 @@ ${command.dp}ifill <center: x y z> <radius: x y z> <offset: x y z> <length: floa
                                         })), hooffset, hothickness, player.dimension, hofirstblockname, hofirstblockstates, {
                                             matchingBlock: homatchingblock[0],
                                             matchingBlockStates: homatchingblock[1],
-                                            minMSBetweenYields: 5000,
+                                            minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                         }, undefined, horeplacemode, 100).then((a) => {
                                             player.sendMessageB(`${a.counter == 0
                                                 ? "§c"
@@ -9800,7 +9800,7 @@ ${command.dp}ifill <center: x y z> <radius: x y z> <offset: x y z> <length: floa
                                         })), ooffset, player.dimension, ofirstblockname, ofirstblockstates, {
                                             matchingBlock: omatchingblock[0],
                                             matchingBlockStates: omatchingblock[1],
-                                            minMSBetweenYields: 5000,
+                                            minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                         }, undefined, oreplacemode, 100).then((a) => {
                                             player.sendMessageB(`${a.counter == 0
                                                 ? "§c"
@@ -9835,7 +9835,7 @@ ${command.dp}ifill <center: x y z> <radius: x y z> <offset: x y z> <length: floa
                                         fillBlocksHHSG(center, radius - 0.5, thickness, player.dimension, hsfirstblockname, hsfirstblockstates, {
                                             matchingBlock: hsmatchingblock[0],
                                             matchingBlockStates: hsmatchingblock[1],
-                                            minMSBetweenYields: 5000,
+                                            minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                         }, undefined, hsreplacemode, 100).then((a) => {
                                             player.sendMessageB(`${a.counter == 0
                                                 ? "§c"
@@ -9870,7 +9870,7 @@ ${command.dp}ifill <center: x y z> <radius: x y z> <offset: x y z> <length: floa
                                         fillBlocksHDG(center, radius - 0.5, thickness, player.dimension, hsfirstblockname, hsfirstblockstates, {
                                             matchingBlock: hsmatchingblock[0],
                                             matchingBlockStates: hsmatchingblock[1],
-                                            minMSBetweenYields: 5000,
+                                            minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                         }, undefined, hsreplacemode, 100).then((a) => {
                                             player.sendMessageB(`${a.counter == 0
                                                 ? "§c"
@@ -9905,7 +9905,7 @@ ${command.dp}ifill <center: x y z> <radius: x y z> <offset: x y z> <length: floa
                                         fillBlocksHSG(center, radius - 0.5, player.dimension, ccfirstblockname, ccfirstblockstates, {
                                             matchingBlock: ccmatchingblock[0],
                                             matchingBlockStates: ccmatchingblock[1],
-                                            minMSBetweenYields: 5000,
+                                            minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                         }, undefined, ccreplacemode, 100).then((a) => {
                                             player.sendMessageB(`${a.counter == 0
                                                 ? "§c"
@@ -9937,7 +9937,7 @@ ${command.dp}ifill <center: x y z> <radius: x y z> <offset: x y z> <length: floa
                                         fillBlocksHSSG(center, radius - 0.5, player.dimension, ccfirstblockname, ccfirstblockstates, {
                                             matchingBlock: ccmatchingblock[0],
                                             matchingBlockStates: ccmatchingblock[1],
-                                            minMSBetweenYields: 5000,
+                                            minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                         }, undefined, ccreplacemode, 100).then((a) => {
                                             player.sendMessageB(`${a.counter == 0
                                                 ? "§c"
@@ -11027,7 +11027,7 @@ ${command.dp}itfill <center: x y z> <radius: x y z> <offset: x y z> <length: flo
                                                 fillBlocksHSGG(coordinatesa, coordinatesb, sgskygridsize, player.dimension, sgfirstblockname, sgfirstblockstates, {
                                                     matchingBlock: sgmatchingblock[0],
                                                     matchingBlockStates: sgmatchingblock[1],
-                                                    minMSBetweenYields: 5000,
+                                                    minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                 }, undefined, sgreplacemode, 100).then((a) => {
                                                     player.sendMessageB(`${a.counter == 0
                                                         ? "§c"
@@ -11081,7 +11081,7 @@ ${command.dp}itfill <center: x y z> <radius: x y z> <offset: x y z> <length: flo
                                                 fillBlocksHISGG(coordinatesa, coordinatesb, sgskygridsize, player.dimension, sgfirstblockname, sgfirstblockstates, {
                                                     matchingBlock: sgmatchingblock[0],
                                                     matchingBlockStates: sgmatchingblock[1],
-                                                    minMSBetweenYields: 5000,
+                                                    minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                 }, undefined, sgreplacemode, 100).then((a) => {
                                                     player.sendMessageB(`${a.counter == 0
                                                         ? "§c"
@@ -11151,7 +11151,7 @@ ${command.dp}itfill <center: x y z> <radius: x y z> <offset: x y z> <length: flo
                                                 })), hooffset, hothickness, player.dimension, hofirstblockname, hofirstblockstates, {
                                                     matchingBlock: homatchingblock[0],
                                                     matchingBlockStates: homatchingblock[1],
-                                                    minMSBetweenYields: 5000,
+                                                    minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                 }, undefined, horeplacemode, 100).then((a) => {
                                                     player.sendMessageB(`${a.counter == 0
                                                         ? "§c"
@@ -11209,7 +11209,7 @@ ${command.dp}itfill <center: x y z> <radius: x y z> <offset: x y z> <length: flo
                                                 })), ooffset, player.dimension, ofirstblockname, ofirstblockstates, {
                                                     matchingBlock: omatchingblock[0],
                                                     matchingBlockStates: omatchingblock[1],
-                                                    minMSBetweenYields: 5000,
+                                                    minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                 }, undefined, oreplacemode, 100).then((a) => {
                                                     player.sendMessageB(`${a.counter == 0
                                                         ? "§c"
@@ -11263,7 +11263,7 @@ ${command.dp}itfill <center: x y z> <radius: x y z> <offset: x y z> <length: flo
                                                 fillBlocksHHSG(center, radius - 0.5, thickness, player.dimension, hsfirstblockname, hsfirstblockstates, {
                                                     matchingBlock: hsmatchingblock[0],
                                                     matchingBlockStates: hsmatchingblock[1],
-                                                    minMSBetweenYields: 5000,
+                                                    minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                 }, undefined, hsreplacemode, 100).then((a) => {
                                                     player.sendMessageB(`${a.counter == 0
                                                         ? "§c"
@@ -11317,7 +11317,7 @@ ${command.dp}itfill <center: x y z> <radius: x y z> <offset: x y z> <length: flo
                                                 fillBlocksHDG(center, radius - 0.5, thickness, player.dimension, hsfirstblockname, hsfirstblockstates, {
                                                     matchingBlock: hsmatchingblock[0],
                                                     matchingBlockStates: hsmatchingblock[1],
-                                                    minMSBetweenYields: 5000,
+                                                    minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                 }, undefined, hsreplacemode, 100).then((a) => {
                                                     player.sendMessageB(`${a.counter == 0
                                                         ? "§c"
@@ -11371,7 +11371,7 @@ ${command.dp}itfill <center: x y z> <radius: x y z> <offset: x y z> <length: flo
                                                 fillBlocksHSG(center, radius - 0.5, player.dimension, ccfirstblockname, ccfirstblockstates, {
                                                     matchingBlock: ccmatchingblock[0],
                                                     matchingBlockStates: ccmatchingblock[1],
-                                                    minMSBetweenYields: 5000,
+                                                    minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                 }, undefined, ccreplacemode, 100).then((a) => {
                                                     player.sendMessageB(`${a.counter == 0
                                                         ? "§c"
@@ -11422,7 +11422,7 @@ ${command.dp}itfill <center: x y z> <radius: x y z> <offset: x y z> <length: flo
                                                 fillBlocksHSSG(center, radius - 0.5, player.dimension, ccfirstblockname, ccfirstblockstates, {
                                                     matchingBlock: ccmatchingblock[0],
                                                     matchingBlockStates: ccmatchingblock[1],
-                                                    minMSBetweenYields: 5000,
+                                                    minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                 }, undefined, ccreplacemode, 100).then((a) => {
                                                     player.sendMessageB(`${a.counter == 0
                                                         ? "§c"
@@ -12481,7 +12481,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                     : firstblockname, firstblockstates, {
                                                     matchingBlock: matchingblock[0],
                                                     matchingBlockStates: matchingblock[1],
-                                                    minMSBetweenYields: 5000,
+                                                    minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                 }, undefined, replacemode, integrity).then((a) => {
                                                     player.sendMessageB(`${a.counter == 0
                                                         ? "§c"
@@ -12538,7 +12538,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                     : firstblockname, firstblockstates, {
                                                     matchingBlock: matchingblock[0],
                                                     matchingBlockStates: matchingblock[1],
-                                                    minMSBetweenYields: 5000,
+                                                    minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                 }, undefined, args[13] ?? true, integrity).then((a) => {
                                                     player.sendMessageB(`${a.counter == 0
                                                         ? "§c"
@@ -12660,7 +12660,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                     : firstblockname, firstblockstates, {
                                                     matchingBlock: matchingblock[0],
                                                     matchingBlockStates: matchingblock[1],
-                                                    minMSBetweenYields: 5000,
+                                                    minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                 }, undefined, replacemode, integrity).then((a) => {
                                                     player.sendMessageB(`${a.counter == 0
                                                         ? "§c"
@@ -12716,7 +12716,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                         Math.random())]
                                                     : firstblockname, firstblockstates, {
                                                     matchingBlock: "air",
-                                                    minMSBetweenYields: 5000,
+                                                    minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                 }, undefined, replacemode, integrity).then((a) => {
                                                     player.sendMessageB(`${a.counter == 0
                                                         ? "§c"
@@ -12773,7 +12773,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                     : firstblockname, firstblockstates, {
                                                     matchingBlock: matchingblock[0],
                                                     matchingBlockStates: matchingblock[1],
-                                                    minMSBetweenYields: 5000,
+                                                    minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                 }, undefined, replacemode, integrity).then((a) => {
                                                     player.sendMessageB(`${a.counter == 0
                                                         ? "§c"
@@ -12830,7 +12830,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                     : firstblockname, firstblockstates, {
                                                     matchingBlock: matchingblock[0],
                                                     matchingBlockStates: matchingblock[1],
-                                                    minMSBetweenYields: 5000,
+                                                    minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                 }, undefined, replacemode, integrity).then((a) => {
                                                     player.sendMessageB(`${a.counter == 0
                                                         ? "§c"
@@ -12887,7 +12887,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                     : firstblockname, firstblockstates, {
                                                     matchingBlock: matchingblock[0],
                                                     matchingBlockStates: matchingblock[1],
-                                                    minMSBetweenYields: 5000,
+                                                    minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                 }, undefined, replacemode, integrity).then((a) => {
                                                     player.sendMessageB(`${a.counter == 0
                                                         ? "§c"
@@ -12975,7 +12975,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                 fillBlocksHSGG(coordinatesa, coordinatesb, sgskygridsize, player.dimension, sgfirstblockname, sgfirstblockstates, {
                                                     matchingBlock: sgmatchingblock[0],
                                                     matchingBlockStates: sgmatchingblock[1],
-                                                    minMSBetweenYields: 5000,
+                                                    minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                 }, undefined, sgreplacemode, integrity).then((a) => {
                                                     player.sendMessageB(`${a.counter == 0
                                                         ? "§c"
@@ -13029,7 +13029,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                 fillBlocksHISGG(coordinatesa, coordinatesb, sgskygridsize, player.dimension, sgfirstblockname, sgfirstblockstates, {
                                                     matchingBlock: sgmatchingblock[0],
                                                     matchingBlockStates: sgmatchingblock[1],
-                                                    minMSBetweenYields: 5000,
+                                                    minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                 }, undefined, sgreplacemode, integrity).then((a) => {
                                                     player.sendMessageB(`${a.counter == 0
                                                         ? "§c"
@@ -13098,7 +13098,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                 })), hooffset, hothickness, player.dimension, hofirstblockname, hofirstblockstates, {
                                                     matchingBlock: homatchingblock[0],
                                                     matchingBlockStates: homatchingblock[1],
-                                                    minMSBetweenYields: 5000,
+                                                    minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                 }, undefined, horeplacemode, hointegrity).then((a) => {
                                                     player.sendMessageB(`${a.counter ==
                                                         0
@@ -13164,7 +13164,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                 })), ooffset, player.dimension, ofirstblockname, ofirstblockstates, {
                                                     matchingBlock: omatchingblock[0],
                                                     matchingBlockStates: omatchingblock[1],
-                                                    minMSBetweenYields: 5000,
+                                                    minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                 }, undefined, oreplacemode, ointegrity).then((a) => {
                                                     player.sendMessageB(`${a.counter ==
                                                         0
@@ -13226,7 +13226,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                 fillBlocksHHSG(center, radius - 0.5, thickness, player.dimension, hsfirstblockname, hsfirstblockstates, {
                                                     matchingBlock: hsmatchingblock[0],
                                                     matchingBlockStates: hsmatchingblock[1],
-                                                    minMSBetweenYields: 5000,
+                                                    minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                 }, undefined, hsreplacemode, cintegrity).then((a) => {
                                                     player.sendMessageB(`${a.counter ==
                                                         0
@@ -13288,7 +13288,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                 fillBlocksHDG(center, radius - 0.5, thickness, player.dimension, hsfirstblockname, hsfirstblockstates, {
                                                     matchingBlock: hsmatchingblock[0],
                                                     matchingBlockStates: hsmatchingblock[1],
-                                                    minMSBetweenYields: 5000,
+                                                    minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                 }, undefined, hsreplacemode, cintegrity).then((a) => {
                                                     player.sendMessageB(`${a.counter ==
                                                         0
@@ -13350,7 +13350,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                 fillBlocksHSG(center, radius - 0.5, player.dimension, ccfirstblockname, ccfirstblockstates, {
                                                     matchingBlock: ccmatchingblock[0],
                                                     matchingBlockStates: ccmatchingblock[1],
-                                                    minMSBetweenYields: 5000,
+                                                    minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                 }, undefined, ccreplacemode, cintegrity).then((a) => {
                                                     player.sendMessageB(`${a.counter ==
                                                         0
@@ -13408,7 +13408,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                 fillBlocksHSSG(center, radius - 0.5, player.dimension, ccfirstblockname, ccfirstblockstates, {
                                                     matchingBlock: ccmatchingblock[0],
                                                     matchingBlockStates: ccmatchingblock[1],
-                                                    minMSBetweenYields: 5000,
+                                                    minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                 }, undefined, ccreplacemode, cintegrity).then((a) => {
                                                     player.sendMessageB(`${a.counter ==
                                                         0
@@ -17203,49 +17203,42 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                     //if((world.scoreboard.getObjective("balance").getScore(player)??0)>JSON.parse(world.getDynamicProperty("shop:costs"))[r.selection]){world.scoreboard.getObjective("balance").addScore(player, -(JSON.parse(world.getDynamicProperty("shop:costs"))[r.selection])); player.getComponent("inventory").container.addItem(cmds.overworld.getBlock({x: 823, y: 84, z: 1037}).getComponent("inventory").container.getItem(r.selection))}
                     //${se}swdp("shop:costs", "[20, 50, 70, 80]")
                     eventData.cancel = true;
-                    let args = evaluateParametersOld(["presetText", "presetText", "string"], switchTestB).args;
-                    if (switchTestB.split(/\s+/g)[2].trim() == "~") {
-                        args[2] = player.name;
-                    }
-                    if ((switchTestB.split(/\s+/g)[2].trim() ?? "") == "") {
-                        args[2] = player.name;
-                    }
-                    let target = world
-                        .getAllPlayers()
-                        .find((_) => _.name == args[2]);
-                    if (!!!target) {
-                        player.sendError(`§cError: Unable to find player with the name ${args[2]}. `, true);
-                    }
-                    else {
-                        if (switchTestB.split(/\s+/g)[1].trim() == "~") {
-                            args[1] = target.selectedSlotIndex;
+                    system.run(() => {
+                        let args = evaluateParameters(switchTestB, ["presetText", "presetText", "targetSelector"]).args;
+                        if (!args[2]?.trim() || args[2].trim() === "~") {
+                            args[2] = player.name;
                         }
-                        let slot = getSlotFromParsedSlot(parseSlot(String(args[1])), {
-                            container: target?.getComponent("inventory")
-                                ?.container,
-                            equipment: target?.getComponent("equippable"),
-                            selectedSlotIndex: target?.selectedSlotIndex,
-                        });
-                        system.run(() => {
-                            if (slot instanceof PlayerCursorInventoryComponent) {
-                                player.sendError("§cYou cannot modify the item inside of a player's cursor inventory slot.", true);
-                                return;
+                        let targets = targetSelectorAllListC(args[2], "", vTStr(player.location), player).filter((v) => v.typeId == "minecraft:player");
+                        if (targets.length === 0) {
+                            player.sendError(`§cError: No players matching the specified target selector were found.`, true);
+                        }
+                        else {
+                            const item = player.getComponent("inventory").container.getItem(player.selectedSlotIndex);
+                            targets.forEach((target) => {
+                                const slot = getSlotFromParsedSlot(parseSlot(args[2] ?? "~"), {
+                                    container: target.getComponent("inventory").container,
+                                    equipment: target.getComponent("equippable"),
+                                    selectedSlotIndex: target.selectedSlotIndex,
+                                    cursor: target.getComponent("cursor_inventory"),
+                                });
+                                if (slot instanceof PlayerCursorInventoryComponent) {
+                                    player.sendError("§cYou cannot modify the item inside of a player's cursor inventory slot.", true);
+                                    return;
+                                }
+                                slot.setItem(item);
+                            });
+                            switch (true) {
+                                case args[2] === player.name:
+                                    player.sendMessageB(`Successfully copied item to slot ${args[1]} of your own inventory.`);
+                                    break;
+                                case targets.length === 1:
+                                    player.sendMessageB(`Successfully copied item to slot ${args[1]} of ${targets[0].name}'s inventory.`);
+                                    break;
+                                default:
+                                    player.sendMessageB(`Successfully copied item to slot ${args[1]} of ${targets.length} players' inventories.`);
                             }
-                            if (String(args[1]).match(/^\d+$/)) {
-                                target
-                                    .getComponent("inventory")
-                                    .container.setItem(Number(args[1]), player
-                                    .getComponent("inventory")
-                                    .container.getItem(player.selectedSlotIndex));
-                            }
-                            else {
-                                slot.setItem(player
-                                    .getComponent("inventory")
-                                    .container.getItem(player.selectedSlotIndex));
-                            }
-                            player.sendMessageB(`Successfully copied item to slot ${args[1]} of ${target.name}'s inventory. `);
-                        });
-                    }
+                        }
+                    });
                 }
                 break;
             case !!switchTest.match(/^dupeitem$/):
@@ -17366,44 +17359,50 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                             "targetSelector",
                             "targetSelector",
                         ]).args;
-                        if ((args[4] ?? "").trim() == "") {
+                        if (!args[4]?.trim() || args[3].trim() === "~") {
                             args[4] = player.name;
                         }
-                        else {
-                            if ((args[4] ?? "").trim() == "~") {
-                                args[4] = player.name;
-                            }
-                        }
-                        if ((args[3] ?? "").trim() == "") {
+                        if (!args[3]?.trim() || args[3].trim() === "~") {
                             args[3] = player.name;
-                        }
-                        else {
-                            if ((args[3] ?? "").trim() == "~") {
-                                args[3] = player.name;
-                            }
                         }
                         let target = targetSelectorAllListC(args[3], "", vTStr(player.location), player).find((v) => v.typeId == "minecraft:player");
                         let targetb = targetSelectorAllListC(args[4], "", vTStr(player.location), player).find((v) => v.typeId == "minecraft:player");
-                        if ((args[2] ?? "").trim() == "") {
+                        if (!args[2]?.trim()) {
                             args[2] = String(targetb?.selectedSlotIndex);
                         }
-                        if ((args[1] ?? "").trim() == "") {
+                        if (!args[1]?.trim()) {
                             args[1] = String(target?.selectedSlotIndex);
                         }
                         if (!!!target) {
-                            player.sendError(`§cError: No player matching the first specified target selector was found. `, true);
+                            player.sendError(`§cError: No player matching the first specified target selector was found.`, true);
                         }
                         else if (!!!targetb) {
-                            player.sendError(`§cError: No player matching the second specified target selector was found. `, true);
+                            player.sendError(`§cError: No player matching the second specified target selector was found.`, true);
+                        }
+                        else if (args[1]?.trim().toLowerCase() === "cursor") {
+                            player.sendError(`§cError: You cannot swap an item with the cursor inventory slot.`, true);
+                        }
+                        else if (args[2]?.trim().toLowerCase() === "cursor") {
+                            player.sendError(`§cError: You cannot swap an item with the cursor inventory slot.`, true);
                         }
                         else {
-                            system.run(() => {
-                                target
-                                    .getComponent("inventory")
-                                    .container.swapItems(Number(args[1].replace(/^~$/, String(target.selectedSlotIndex))), Number(args[2].replace(/^~$/, String(targetb.selectedSlotIndex))), targetb.getComponent("inventory")
-                                    .container);
+                            const targetSlot = getSlotFromParsedSlot(parseSlot(args[1]), {
+                                container: target.getComponent("inventory")
+                                    .container,
+                                equipment: target.getComponent("equippable"),
+                                selectedSlotIndex: target.selectedSlotIndex,
                             });
-                            player.sendMessageB(`Successfully swapped slot ${args[1]} of ${target.name}'s inventory with slot ${args[2]} of ${targetb.name}'s inventory. `);
+                            const targetbSlot = getSlotFromParsedSlot(parseSlot(args[2]), {
+                                container: targetb.getComponent("inventory")
+                                    .container,
+                                equipment: targetb.getComponent("equippable"),
+                                selectedSlotIndex: targetb.selectedSlotIndex,
+                            });
+                            const targetItem = targetSlot?.getItem();
+                            const targetbItem = targetbSlot?.getItem();
+                            targetSlot.setItem(targetbItem);
+                            targetbSlot.setItem(targetItem);
+                            player.sendMessageB(`Successfully swapped slot ${args[1]} of ${target.name}'s inventory with slot ${args[2]} of ${targetb.name}'s inventory.`);
                         }
                     });
                 }
@@ -17444,35 +17443,34 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
             case !!switchTest.match(/^takeitem$/):
                 {
                     eventData.cancel = true;
-                    let args = evaluateParametersOld(["presetText", "presetText", "string"], switchTestB).args;
-                    if (switchTestB.split(/\s+/g)[2].trim() == "~") {
-                        args[2] = player.name;
-                    }
-                    let target = world
-                        .getAllPlayers()
-                        .find((_) => _.name == args[2]);
-                    if (!!!target) {
-                        player.sendError(`§cError: Unable to find player with the name ${args[2]}. `, true);
-                    }
-                    else {
-                        if (switchTestB.split(/\s+/g)[1].trim() == "~") {
-                            args[1] = target.selectedSlotIndex;
+                    system.run(() => {
+                        let args = evaluateParameters(switchTestB, ["presetText", "f-t", "presetText", "targetSelector"]).args;
+                        if (!args[3]?.trim() || args[3].trim() === "~") {
+                            args[3] = player.name;
                         }
-                        let slot = getSlotFromParsedSlot(parseSlot(String(args[1])), {
-                            container: target?.getComponent("inventory")
-                                ?.container,
-                            equipment: target?.getComponent("equippable"),
-                            selectedSlotIndex: target?.selectedSlotIndex,
-                        });
-                        system.run(() => {
-                            if (String(args[1]).match(/^\d+$/)) {
+                        let target = targetSelectorAllListC(args[3], "", vTStr(player.location), player).find((v) => v.typeId == "minecraft:player");
+                        if (!args[2]?.trim()) {
+                            args[2] = String(target?.selectedSlotIndex);
+                        }
+                        if (!target) {
+                            player.sendError(`§cError: No player matching the specified target selector was found.`, true);
+                        }
+                        else {
+                            const slot = getSlotFromParsedSlot(parseSlot(args[2]), {
+                                container: target.getComponent("inventory")
+                                    .container,
+                                equipment: target.getComponent("equippable"),
+                                selectedSlotIndex: target.selectedSlotIndex,
+                                cursor: target.getComponent("cursor_inventory"),
+                            });
+                            if (args[1]?.t && /^\d+$/.test(String(args[2].trim() === "~" || !args[2] ? target.selectedSlotIndex : args[2]))) {
                                 target
                                     .getComponent("inventory")
-                                    .container.transferItem(Number(args[1]), player.getComponent("inventory")
+                                    .container.transferItem(Number(args[2].trim() === "~" || !args[2] ? target.selectedSlotIndex : args[2]), player.getComponent("inventory")
                                     .container);
                             }
                             else {
-                                player
+                                const remainingStack = player
                                     .getComponent("inventory")
                                     .container.addItem(slot instanceof
                                     PlayerCursorInventoryComponent
@@ -17481,10 +17479,13 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                 (slot instanceof PlayerCursorInventoryComponent
                                     ? slot.clear
                                     : slot.setItem)();
+                                if (remainingStack) {
+                                    player.dimension.spawnItem(remainingStack, player.location);
+                                }
                             }
-                            player.sendMessageB(`Successfully took item from ${args[2]}'s inventory. `);
-                        });
-                    }
+                            player.sendMessageB(`Successfully took item from slot ${args[2]} of ${args[3]}'s inventory.`);
+                        }
+                    });
                 }
                 break;
             case !!switchTest.match(/^swapinventories$/) ||
@@ -19357,7 +19358,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                                     : BlockPermutation.resolve(b.type, b.states);
                                             }, {
                                                 blockMask: mask,
-                                                minMSBetweenTickWaits: 2500,
+                                                minMSBetweenTickWaits: config.system.defaultMinMSBetweenTickWaits,
                                                 replacemode: args[1].c,
                                                 integrity: 100,
                                                 liteMode: false,
@@ -19457,7 +19458,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                                     : BlockPermutation.resolve(b.type, b.states);
                                             }, {
                                                 blockMask: mask,
-                                                minMSBetweenTickWaits: 2500,
+                                                minMSBetweenTickWaits: config.system.defaultMinMSBetweenTickWaits,
                                                 replacemode: args[1].c,
                                                 integrity: 100,
                                                 liteMode: false,
@@ -19557,7 +19558,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                                     : BlockPermutation.resolve(b.type, b.states);
                                             }, {
                                                 blockMask: mask,
-                                                minMSBetweenTickWaits: 2500,
+                                                minMSBetweenTickWaits: config.system.defaultMinMSBetweenTickWaits,
                                                 replacemode: args[1].c,
                                                 integrity: 100,
                                                 liteMode: false,
@@ -19657,7 +19658,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                                     : BlockPermutation.resolve(b.type, b.states);
                                             }, {
                                                 blockMask: mask,
-                                                minMSBetweenTickWaits: 2500,
+                                                minMSBetweenTickWaits: config.system.defaultMinMSBetweenTickWaits,
                                                 replacemode: args[1].c,
                                                 integrity: 100,
                                                 liteMode: false,
@@ -19757,7 +19758,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                                     : BlockPermutation.resolve(b.type, b.states);
                                             }, {
                                                 blockMask: mask,
-                                                minMSBetweenTickWaits: 2500,
+                                                minMSBetweenTickWaits: config.system.defaultMinMSBetweenTickWaits,
                                                 replacemode: args[1].c,
                                                 integrity: 100,
                                                 liteMode: false,
@@ -19863,7 +19864,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                                     : BlockPermutation.resolve(b.type, b.states);
                                             }, {
                                                 blockMask: mask,
-                                                minMSBetweenTickWaits: 2500,
+                                                minMSBetweenTickWaits: config.system.defaultMinMSBetweenTickWaits,
                                                 replacemode: args[1].c,
                                                 integrity: 100,
                                                 liteMode: false,
@@ -19989,7 +19990,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                                     : BlockPermutation.resolve(b.type, b.states);
                                             }, {
                                                 blockMask: mask,
-                                                minMSBetweenTickWaits: 2500,
+                                                minMSBetweenTickWaits: config.system.defaultMinMSBetweenTickWaits,
                                                 replacemode: args[1].c,
                                                 integrity: 100,
                                                 liteMode: false,
@@ -20115,7 +20116,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                                     : BlockPermutation.resolve(b.type, b.states);
                                             }, {
                                                 blockMask: mask,
-                                                minMSBetweenTickWaits: 2500,
+                                                minMSBetweenTickWaits: config.system.defaultMinMSBetweenTickWaits,
                                                 replacemode: args[1].c,
                                                 integrity: 100,
                                                 liteMode: false,
@@ -20141,6 +20142,68 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                         finally {
                                             tac.forEach((tab) => tab?.remove());
                                         }
+                                    });
+                                }
+                                catch (e) {
+                                    player.sendError("§c" + e + e.stack, true);
+                                }
+                            });
+                        }
+                    }
+                }
+                break;
+            case !!switchTest.match(/^\\loadchunks$/) || !!switchTest.match(/^\\lc$/):
+                {
+                    eventData.cancel = true;
+                    const args = evaluateParameters(switchTestB, [
+                        "presetText",
+                        "f-v"
+                    ]).args;
+                    const coordinatesa = player.getDynamicProperty("pos1");
+                    const coordinatesb = player.getDynamicProperty("pos2");
+                    const ca = {
+                        x: Math.min(coordinatesa.x, coordinatesb.x),
+                        y: Math.min(coordinatesa.y, coordinatesb.y),
+                        z: Math.min(coordinatesa.z, coordinatesb.z),
+                    };
+                    const cb = {
+                        x: Math.max(coordinatesa.x, coordinatesb.x),
+                        y: Math.max(coordinatesa.y, coordinatesb.y),
+                        z: Math.max(coordinatesa.z, coordinatesb.z),
+                    };
+                    const dimensiona = world.getDimension((player.getDynamicProperty("posD") ??
+                        player.dimension.id));
+                    if (!!!coordinatesa) {
+                        player.sendMessageB("§cError: pos1 is not set.");
+                    }
+                    else {
+                        if (!!!coordinatesb) {
+                            player.sendMessageB("§cError: pos2 is not set.");
+                        }
+                        else {
+                            system.run(() => {
+                                let ta;
+                                try {
+                                    generateTickingAreaFillCoordinatesC(player.location, (() => {
+                                        let a = new CompoundBlockVolume();
+                                        a.pushVolume({
+                                            volume: new BlockVolume(ca, cb),
+                                        });
+                                        return a;
+                                    })(), dimensiona).then((tac) => {
+                                        if (args[1].v) {
+                                            tac.forEach((tab) => {
+                                                try {
+                                                    tab.triggerEvent("andexdb:make_tickingarea_visible");
+                                                }
+                                                catch (e) {
+                                                    console.error(e, e.stack);
+                                                }
+                                            });
+                                        }
+                                        player.sendMessageB(`Spawned ${tac.length} ticking area(s).`);
+                                    }).catch((e) => {
+                                        player.sendError("§cError while loading chunks: " + e + e.stack, true);
                                     });
                                 }
                                 catch (e) {
@@ -20211,7 +20274,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                                     ? BlockPermutation.resolve(blocktypes[Math.floor(blocktypes.length *
                                                         Math.random())].id)
                                                     : BlockPermutation.resolve(b.type, b.states);
-                                            }, { minMSBetweenYields: 2500 }, args[1].c, 100).then((a) => {
+                                            }, { minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits }, args[1].c, 100).then((a) => {
                                                 player.sendMessageB(`${a.counter == 0
                                                     ? "§c"
                                                     : ""}${a.counter} blocks replaced in ${a.completionData
@@ -20312,7 +20375,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                                     ? BlockPermutation.resolve(blocktypes[Math.floor(blocktypes.length *
                                                         Math.random())].id)
                                                     : BlockPermutation.resolve(b.type, b.states);
-                                            }, { minMSBetweenYields: 2500 }, args[1].c, integrity).then((a) => {
+                                            }, { minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits }, args[1].c, integrity).then((a) => {
                                                 player.sendMessageB(`${a.counter == 0
                                                     ? "§c"
                                                     : ""}${a.counter} blocks replaced in ${a.completionData
@@ -20406,7 +20469,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                         try {
                                             fillFlood(ca, cb, dimensiona, {
                                                 blockMask: mask,
-                                                minMSBetweenTickWaits: 2500,
+                                                minMSBetweenTickWaits: config.system.defaultMinMSBetweenTickWaits,
                                                 integrity: 100,
                                                 liteMode: false,
                                             }).then((a) => {
@@ -20496,7 +20559,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                         try {
                                             fillDrain(ca, cb, dimensiona, {
                                                 blockMask: mask,
-                                                minMSBetweenTickWaits: 2500,
+                                                minMSBetweenTickWaits: config.system.defaultMinMSBetweenTickWaits,
                                                 integrity: 100,
                                                 liteMode: false,
                                             }).then((a) => {
@@ -20598,7 +20661,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                             fillBlocksHFGB(ca, cb, dimensiona, () => airpermutation, {
                                                 matchingBlock: matchingblock[0],
                                                 matchingBlockStates: matchingblock[1],
-                                                minMSBetweenYields: 2500,
+                                                minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                             }, args[1].c, 100).then((a) => {
                                                 player.sendMessageB(`${a.counter == 0
                                                     ? "§c"
@@ -20702,7 +20765,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                                     : BlockPermutation.resolve(b.type, b.states);
                                             }, {
                                                 blockMask: mask,
-                                                minMSBetweenTickWaits: 2500,
+                                                minMSBetweenTickWaits: config.system.defaultMinMSBetweenTickWaits,
                                                 replacemode: args[1].c,
                                                 integrity: 100,
                                                 liteMode: false,
@@ -20798,7 +20861,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                                     : BlockPermutation.resolve(b.type, b.states);
                                             }, {
                                                 blockMask: mask,
-                                                minMSBetweenTickWaits: 2500,
+                                                minMSBetweenTickWaits: config.system.defaultMinMSBetweenTickWaits,
                                                 replacemode: args[1].c,
                                                 integrity: 100,
                                                 liteMode: false,
@@ -20895,7 +20958,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                                     : BlockPermutation.resolve(b.type, b.states);
                                             }, {
                                                 blockMask: mask,
-                                                minMSBetweenTickWaits: 2500,
+                                                minMSBetweenTickWaits: config.system.defaultMinMSBetweenTickWaits,
                                                 replacemode: args[1].c,
                                                 integrity: 100,
                                                 liteMode: false,
@@ -20994,7 +21057,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                                     : BlockPermutation.resolve(b.type, b.states);
                                             }, {
                                                 blockMask: mask,
-                                                minMSBetweenTickWaits: 2500,
+                                                minMSBetweenTickWaits: config.system.defaultMinMSBetweenTickWaits,
                                                 replacemode: args[1].c,
                                                 integrity: 100,
                                                 liteMode: false,
@@ -21107,7 +21170,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                                     : BlockPermutation.resolve(b.type, b.states);
                                             }, {
                                                 blockMask: mask,
-                                                minMSBetweenTickWaits: 2500,
+                                                minMSBetweenTickWaits: config.system.defaultMinMSBetweenTickWaits,
                                                 replacemode: args[1].c,
                                                 integrity: 100,
                                                 liteMode: false,
@@ -21519,7 +21582,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                                 ta = tac;
                                                 try {
                                                     fillBlocksHFG(coordinatesa, coordinatesb, player.dimension, "air", undefined, {
-                                                        minMSBetweenYields: 5000,
+                                                        minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                     }, undefined, true, 100).then(() => undefined, (e) => {
                                                         player.sendMessageB("§c" +
                                                             e +
@@ -22668,7 +22731,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                                 fillBlocksHSGG(coordinatesa, coordinatesb, sgskygridsize, player.dimension, sgfirstblockname, sgfirstblockstates, {
                                                     matchingBlock: sgmatchingblock[0],
                                                     matchingBlockStates: sgmatchingblock[1],
-                                                    minMSBetweenYields: 5000,
+                                                    minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                 }, undefined, sgreplacemode, 100).then((a) => {
                                                     player.sendMessageB(`${a.counter == 0
                                                         ? "§c"
@@ -22722,7 +22785,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                                 fillBlocksHISGG(coordinatesa, coordinatesb, sgskygridsize, player.dimension, sgfirstblockname, sgfirstblockstates, {
                                                     matchingBlock: sgmatchingblock[0],
                                                     matchingBlockStates: sgmatchingblock[1],
-                                                    minMSBetweenYields: 5000,
+                                                    minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                 }, undefined, sgreplacemode, 100).then((a) => {
                                                     player.sendMessageB(`${a.counter == 0
                                                         ? "§c"
@@ -22792,7 +22855,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                                 })), hooffset, hothickness, player.dimension, hofirstblockname, hofirstblockstates, {
                                                     matchingBlock: homatchingblock[0],
                                                     matchingBlockStates: homatchingblock[1],
-                                                    minMSBetweenYields: 5000,
+                                                    minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                 }, undefined, horeplacemode, 100).then((a) => {
                                                     player.sendMessageB(`${a.counter == 0
                                                         ? "§c"
@@ -22850,7 +22913,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                                 })), ooffset, player.dimension, ofirstblockname, ofirstblockstates, {
                                                     matchingBlock: omatchingblock[0],
                                                     matchingBlockStates: omatchingblock[1],
-                                                    minMSBetweenYields: 5000,
+                                                    minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                 }, undefined, oreplacemode, 100).then((a) => {
                                                     player.sendMessageB(`${a.counter == 0
                                                         ? "§c"
@@ -22904,7 +22967,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                                 fillBlocksHHSG(center, radius - 0.5, thickness, player.dimension, hsfirstblockname, hsfirstblockstates, {
                                                     matchingBlock: hsmatchingblock[0],
                                                     matchingBlockStates: hsmatchingblock[1],
-                                                    minMSBetweenYields: 5000,
+                                                    minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                 }, undefined, hsreplacemode, 100).then((a) => {
                                                     player.sendMessageB(`${a.counter == 0
                                                         ? "§c"
@@ -22958,7 +23021,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                                 fillBlocksHDG(center, radius - 0.5, thickness, player.dimension, hsfirstblockname, hsfirstblockstates, {
                                                     matchingBlock: hsmatchingblock[0],
                                                     matchingBlockStates: hsmatchingblock[1],
-                                                    minMSBetweenYields: 5000,
+                                                    minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                 }, undefined, hsreplacemode, 100).then((a) => {
                                                     player.sendMessageB(`${a.counter == 0
                                                         ? "§c"
@@ -23012,7 +23075,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                                 fillBlocksHSG(center, radius - 0.5, player.dimension, ccfirstblockname, ccfirstblockstates, {
                                                     matchingBlock: ccmatchingblock[0],
                                                     matchingBlockStates: ccmatchingblock[1],
-                                                    minMSBetweenYields: 5000,
+                                                    minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                 }, undefined, ccreplacemode, 100).then((a) => {
                                                     player.sendMessageB(`${a.counter == 0
                                                         ? "§c"
@@ -23063,7 +23126,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                                 fillBlocksHSSG(center, radius - 0.5, player.dimension, ccfirstblockname, ccfirstblockstates, {
                                                     matchingBlock: ccmatchingblock[0],
                                                     matchingBlockStates: ccmatchingblock[1],
-                                                    minMSBetweenYields: 5000,
+                                                    minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                 }, undefined, ccreplacemode, 100).then((a) => {
                                                     player.sendMessageB(`${a.counter == 0
                                                         ? "§c"
@@ -24091,7 +24154,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                     : firstblockname, firstblockstates, {
                                                     matchingBlock: matchingblock[0],
                                                     matchingBlockStates: matchingblock[1],
-                                                    minMSBetweenYields: 5000,
+                                                    minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                 }, undefined, replacemode, integrity).then((a) => {
                                                     player.sendMessageB(`${a.counter == 0
                                                         ? "§c"
@@ -24148,7 +24211,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                     : firstblockname, firstblockstates, {
                                                     matchingBlock: matchingblock[0],
                                                     matchingBlockStates: matchingblock[1],
-                                                    minMSBetweenYields: 5000,
+                                                    minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                 }, undefined, args[7] ?? true, integrity).then((a) => {
                                                     player.sendMessageB(`${a.counter == 0
                                                         ? "§c"
@@ -24270,7 +24333,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                     : firstblockname, firstblockstates, {
                                                     matchingBlock: matchingblock[0],
                                                     matchingBlockStates: matchingblock[1],
-                                                    minMSBetweenYields: 5000,
+                                                    minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                 }, undefined, replacemode, integrity).then((a) => {
                                                     player.sendMessageB(`${a.counter == 0
                                                         ? "§c"
@@ -24326,7 +24389,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                         Math.random())]
                                                     : firstblockname, firstblockstates, {
                                                     matchingBlock: "air",
-                                                    minMSBetweenYields: 5000,
+                                                    minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                 }, undefined, replacemode, integrity).then((a) => {
                                                     player.sendMessageB(`${a.counter == 0
                                                         ? "§c"
@@ -24383,7 +24446,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                     : firstblockname, firstblockstates, {
                                                     matchingBlock: matchingblock[0],
                                                     matchingBlockStates: matchingblock[1],
-                                                    minMSBetweenYields: 5000,
+                                                    minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                 }, undefined, replacemode, integrity).then((a) => {
                                                     player.sendMessageB(`${a.counter == 0
                                                         ? "§c"
@@ -24440,7 +24503,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                     : firstblockname, firstblockstates, {
                                                     matchingBlock: matchingblock[0],
                                                     matchingBlockStates: matchingblock[1],
-                                                    minMSBetweenYields: 5000,
+                                                    minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                 }, undefined, replacemode, integrity).then((a) => {
                                                     player.sendMessageB(`${a.counter == 0
                                                         ? "§c"
@@ -24497,7 +24560,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                     : firstblockname, firstblockstates, {
                                                     matchingBlock: matchingblock[0],
                                                     matchingBlockStates: matchingblock[1],
-                                                    minMSBetweenYields: 5000,
+                                                    minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                 }, undefined, replacemode, integrity).then((a) => {
                                                     player.sendMessageB(`${a.counter == 0
                                                         ? "§c"
@@ -24585,7 +24648,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                 fillBlocksHSGG(coordinatesa, coordinatesb, sgskygridsize, player.dimension, sgfirstblockname, sgfirstblockstates, {
                                                     matchingBlock: sgmatchingblock[0],
                                                     matchingBlockStates: sgmatchingblock[1],
-                                                    minMSBetweenYields: 5000,
+                                                    minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                 }, undefined, sgreplacemode, integrity).then((a) => {
                                                     player.sendMessageB(`${a.counter == 0
                                                         ? "§c"
@@ -24639,7 +24702,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                 fillBlocksHISGG(coordinatesa, coordinatesb, sgskygridsize, player.dimension, sgfirstblockname, sgfirstblockstates, {
                                                     matchingBlock: sgmatchingblock[0],
                                                     matchingBlockStates: sgmatchingblock[1],
-                                                    minMSBetweenYields: 5000,
+                                                    minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                 }, undefined, sgreplacemode, integrity).then((a) => {
                                                     player.sendMessageB(`${a.counter == 0
                                                         ? "§c"
@@ -24708,7 +24771,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                 })), hooffset, hothickness, player.dimension, hofirstblockname, hofirstblockstates, {
                                                     matchingBlock: homatchingblock[0],
                                                     matchingBlockStates: homatchingblock[1],
-                                                    minMSBetweenYields: 5000,
+                                                    minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                 }, undefined, horeplacemode, hointegrity).then((a) => {
                                                     player.sendMessageB(`${a.counter ==
                                                         0
@@ -24774,7 +24837,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                 })), ooffset, player.dimension, ofirstblockname, ofirstblockstates, {
                                                     matchingBlock: omatchingblock[0],
                                                     matchingBlockStates: omatchingblock[1],
-                                                    minMSBetweenYields: 5000,
+                                                    minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                 }, undefined, oreplacemode, ointegrity).then((a) => {
                                                     player.sendMessageB(`${a.counter ==
                                                         0
@@ -24836,7 +24899,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                 fillBlocksHHSG(center, radius - 0.5, thickness, player.dimension, hsfirstblockname, hsfirstblockstates, {
                                                     matchingBlock: hsmatchingblock[0],
                                                     matchingBlockStates: hsmatchingblock[1],
-                                                    minMSBetweenYields: 5000,
+                                                    minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                 }, undefined, hsreplacemode, cintegrity).then((a) => {
                                                     player.sendMessageB(`${a.counter ==
                                                         0
@@ -24898,7 +24961,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                 fillBlocksHDG(center, radius - 0.5, thickness, player.dimension, hsfirstblockname, hsfirstblockstates, {
                                                     matchingBlock: hsmatchingblock[0],
                                                     matchingBlockStates: hsmatchingblock[1],
-                                                    minMSBetweenYields: 5000,
+                                                    minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                 }, undefined, hsreplacemode, cintegrity).then((a) => {
                                                     player.sendMessageB(`${a.counter ==
                                                         0
@@ -24960,7 +25023,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                 fillBlocksHSG(center, radius - 0.5, player.dimension, ccfirstblockname, ccfirstblockstates, {
                                                     matchingBlock: ccmatchingblock[0],
                                                     matchingBlockStates: ccmatchingblock[1],
-                                                    minMSBetweenYields: 5000,
+                                                    minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                 }, undefined, ccreplacemode, cintegrity).then((a) => {
                                                     player.sendMessageB(`${a.counter ==
                                                         0
@@ -25018,7 +25081,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                 fillBlocksHSSG(center, radius - 0.5, player.dimension, ccfirstblockname, ccfirstblockstates, {
                                                     matchingBlock: ccmatchingblock[0],
                                                     matchingBlockStates: ccmatchingblock[1],
-                                                    minMSBetweenYields: 5000,
+                                                    minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                 }, undefined, ccreplacemode, cintegrity).then((a) => {
                                                     player.sendMessageB(`${a.counter ==
                                                         0
@@ -26887,6 +26950,10 @@ ${command.dp}snapshot list`);
                 !!switchTest.match(/^selr$/):
                 {
                     eventData.cancel = true;
+                    const args = evaluateParameters(switchTestB, [
+                        "presetText",
+                        "number"
+                    ]).args;
                     srun(async () => {
                         var msSinceLastTickWait = Date.now();
                         const begin = {
@@ -26900,7 +26967,7 @@ ${command.dp}snapshot list`);
                             z: Math.max(player.worldEditSelection.pos1.z, player.worldEditSelection.pos2.z),
                         };
                         const molangVariables = new MolangVariableMap();
-                        molangVariables.setFloat("variable.max_lifetime", 10);
+                        molangVariables.setFloat("variable.max_lifetime", args[1] ?? 10);
                         const dimension = player.worldEditSelection.dimension;
                         const ta = await generateTickingAreaFillCoordinatesC(player.location, (() => {
                             let a = new CompoundBlockVolume();
@@ -27194,7 +27261,7 @@ ${command.dp}snapshot list`);
                                         : matchingblock[0], matchingblock[1], {
                                         matchingBlock: firstblockname,
                                         matchingBlockStates: firstblockstates,
-                                        minMSBetweenYields: 2500,
+                                        minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                     }, undefined, args[1].c, 100).then((a) => {
                                         player.sendMessageB(`${a.counter == 0 ? "§c" : ""}${a.counter} blocks replaced in ${a.completionData.endTime -
                                             a.completionData.startTime} ms over ${a.completionData.endTick -
@@ -27721,7 +27788,7 @@ ${command.dp}snapshot list`);
                                     perror(player, e);
                                 }
                                 try {
-                                    fillBlocksHDFGB(from, to, player.dimension, { minMSBetweenYields: 2500 }, 100).then((a) => {
+                                    fillBlocksHDFGB(from, to, player.dimension, { minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits }, 100).then((a) => {
                                         player.sendMessageB(`${a.counter == 0 ? "§c" : ""}${a.counter} blocks replaced in ${a.completionData.endTime -
                                             a.completionData.startTime} ms over ${a.completionData.endTick -
                                             a.completionData.startTick} tick${a.completionData.endTick -

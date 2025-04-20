@@ -14393,7 +14393,7 @@ ${command.dp}ifill <center: x y z> <radius: x y z> <offset: x y z> <length: floa
                                                     sgmatchingblock[0],
                                                 matchingBlockStates:
                                                     sgmatchingblock[1],
-                                                minMSBetweenYields: 5000,
+                                                minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                             },
                                             undefined,
                                             sgreplacemode,
@@ -14463,7 +14463,7 @@ ${command.dp}ifill <center: x y z> <radius: x y z> <offset: x y z> <length: floa
                                                     sgmatchingblock[0],
                                                 matchingBlockStates:
                                                     sgmatchingblock[1],
-                                                minMSBetweenYields: 5000,
+                                                minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                             },
                                             undefined,
                                             sgreplacemode,
@@ -14552,7 +14552,7 @@ ${command.dp}ifill <center: x y z> <radius: x y z> <offset: x y z> <length: floa
                                                     homatchingblock[0],
                                                 matchingBlockStates:
                                                     homatchingblock[1],
-                                                minMSBetweenYields: 5000,
+                                                minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                             },
                                             undefined,
                                             horeplacemode,
@@ -14628,7 +14628,7 @@ ${command.dp}ifill <center: x y z> <radius: x y z> <offset: x y z> <length: floa
                                                     omatchingblock[0],
                                                 matchingBlockStates:
                                                     omatchingblock[1],
-                                                minMSBetweenYields: 5000,
+                                                minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                             },
                                             undefined,
                                             oreplacemode,
@@ -14698,7 +14698,7 @@ ${command.dp}ifill <center: x y z> <radius: x y z> <offset: x y z> <length: floa
                                                     hsmatchingblock[0],
                                                 matchingBlockStates:
                                                     hsmatchingblock[1],
-                                                minMSBetweenYields: 5000,
+                                                minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                             },
                                             undefined,
                                             hsreplacemode,
@@ -14768,7 +14768,7 @@ ${command.dp}ifill <center: x y z> <radius: x y z> <offset: x y z> <length: floa
                                                     hsmatchingblock[0],
                                                 matchingBlockStates:
                                                     hsmatchingblock[1],
-                                                minMSBetweenYields: 5000,
+                                                minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                             },
                                             undefined,
                                             hsreplacemode,
@@ -14837,7 +14837,7 @@ ${command.dp}ifill <center: x y z> <radius: x y z> <offset: x y z> <length: floa
                                                     ccmatchingblock[0],
                                                 matchingBlockStates:
                                                     ccmatchingblock[1],
-                                                minMSBetweenYields: 5000,
+                                                minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                             },
                                             undefined,
                                             ccreplacemode,
@@ -14901,7 +14901,7 @@ ${command.dp}ifill <center: x y z> <radius: x y z> <offset: x y z> <length: floa
                                                     ccmatchingblock[0],
                                                 matchingBlockStates:
                                                     ccmatchingblock[1],
-                                                minMSBetweenYields: 5000,
+                                                minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                             },
                                             undefined,
                                             ccreplacemode,
@@ -16824,7 +16824,7 @@ ${command.dp}itfill <center: x y z> <radius: x y z> <offset: x y z> <length: flo
                                                             sgmatchingblock[0],
                                                         matchingBlockStates:
                                                             sgmatchingblock[1],
-                                                        minMSBetweenYields: 5000,
+                                                        minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                     },
                                                     undefined,
                                                     sgreplacemode,
@@ -16924,7 +16924,7 @@ ${command.dp}itfill <center: x y z> <radius: x y z> <offset: x y z> <length: flo
                                                             sgmatchingblock[0],
                                                         matchingBlockStates:
                                                             sgmatchingblock[1],
-                                                        minMSBetweenYields: 5000,
+                                                        minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                     },
                                                     undefined,
                                                     sgreplacemode,
@@ -17064,7 +17064,7 @@ ${command.dp}itfill <center: x y z> <radius: x y z> <offset: x y z> <length: flo
                                                             homatchingblock[0],
                                                         matchingBlockStates:
                                                             homatchingblock[1],
-                                                        minMSBetweenYields: 5000,
+                                                        minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                     },
                                                     undefined,
                                                     horeplacemode,
@@ -17191,7 +17191,7 @@ ${command.dp}itfill <center: x y z> <radius: x y z> <offset: x y z> <length: flo
                                                             omatchingblock[0],
                                                         matchingBlockStates:
                                                             omatchingblock[1],
-                                                        minMSBetweenYields: 5000,
+                                                        minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                     },
                                                     undefined,
                                                     oreplacemode,
@@ -17309,7 +17309,7 @@ ${command.dp}itfill <center: x y z> <radius: x y z> <offset: x y z> <length: flo
                                                             hsmatchingblock[0],
                                                         matchingBlockStates:
                                                             hsmatchingblock[1],
-                                                        minMSBetweenYields: 5000,
+                                                        minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                     },
                                                     undefined,
                                                     hsreplacemode,
@@ -17427,7 +17427,7 @@ ${command.dp}itfill <center: x y z> <radius: x y z> <offset: x y z> <length: flo
                                                             hsmatchingblock[0],
                                                         matchingBlockStates:
                                                             hsmatchingblock[1],
-                                                        minMSBetweenYields: 5000,
+                                                        minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                     },
                                                     undefined,
                                                     hsreplacemode,
@@ -17544,7 +17544,7 @@ ${command.dp}itfill <center: x y z> <radius: x y z> <offset: x y z> <length: flo
                                                             ccmatchingblock[0],
                                                         matchingBlockStates:
                                                             ccmatchingblock[1],
-                                                        minMSBetweenYields: 5000,
+                                                        minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                     },
                                                     undefined,
                                                     ccreplacemode,
@@ -17656,7 +17656,7 @@ ${command.dp}itfill <center: x y z> <radius: x y z> <offset: x y z> <length: flo
                                                             ccmatchingblock[0],
                                                         matchingBlockStates:
                                                             ccmatchingblock[1],
-                                                        minMSBetweenYields: 5000,
+                                                        minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                     },
                                                     undefined,
                                                     ccreplacemode,
@@ -19723,7 +19723,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                             matchingblock[0],
                                                         matchingBlockStates:
                                                             matchingblock[1],
-                                                        minMSBetweenYields: 5000,
+                                                        minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                     },
                                                     undefined,
                                                     replacemode,
@@ -19830,7 +19830,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                             matchingblock[0],
                                                         matchingBlockStates:
                                                             matchingblock[1],
-                                                        minMSBetweenYields: 5000,
+                                                        minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                     },
                                                     undefined,
                                                     args[13] ?? true,
@@ -20059,7 +20059,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                             matchingblock[0],
                                                         matchingBlockStates:
                                                             matchingblock[1],
-                                                        minMSBetweenYields: 5000,
+                                                        minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                     },
                                                     undefined,
                                                     replacemode,
@@ -20163,7 +20163,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                     firstblockstates,
                                                     {
                                                         matchingBlock: "air",
-                                                        minMSBetweenYields: 5000,
+                                                        minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                     },
                                                     undefined,
                                                     replacemode,
@@ -20270,7 +20270,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                             matchingblock[0],
                                                         matchingBlockStates:
                                                             matchingblock[1],
-                                                        minMSBetweenYields: 5000,
+                                                        minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                     },
                                                     undefined,
                                                     replacemode,
@@ -20377,7 +20377,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                             matchingblock[0],
                                                         matchingBlockStates:
                                                             matchingblock[1],
-                                                        minMSBetweenYields: 5000,
+                                                        minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                     },
                                                     undefined,
                                                     replacemode,
@@ -20484,7 +20484,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                             matchingblock[0],
                                                         matchingBlockStates:
                                                             matchingblock[1],
-                                                        minMSBetweenYields: 5000,
+                                                        minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                     },
                                                     undefined,
                                                     replacemode,
@@ -20648,7 +20648,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                             sgmatchingblock[0],
                                                         matchingBlockStates:
                                                             sgmatchingblock[1],
-                                                        minMSBetweenYields: 5000,
+                                                        minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                     },
                                                     undefined,
                                                     sgreplacemode,
@@ -20748,7 +20748,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                             sgmatchingblock[0],
                                                         matchingBlockStates:
                                                             sgmatchingblock[1],
-                                                        minMSBetweenYields: 5000,
+                                                        minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                     },
                                                     undefined,
                                                     sgreplacemode,
@@ -20867,7 +20867,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                                 homatchingblock[0],
                                                             matchingBlockStates:
                                                                 homatchingblock[1],
-                                                            minMSBetweenYields: 5000,
+                                                            minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                         },
                                                         undefined,
                                                         horeplacemode,
@@ -20982,7 +20982,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                                 omatchingblock[0],
                                                             matchingBlockStates:
                                                                 omatchingblock[1],
-                                                            minMSBetweenYields: 5000,
+                                                            minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                         },
                                                         undefined,
                                                         oreplacemode,
@@ -21088,7 +21088,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                                 hsmatchingblock[0],
                                                             matchingBlockStates:
                                                                 hsmatchingblock[1],
-                                                            minMSBetweenYields: 5000,
+                                                            minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                         },
                                                         undefined,
                                                         hsreplacemode,
@@ -21194,7 +21194,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                                 hsmatchingblock[0],
                                                             matchingBlockStates:
                                                                 hsmatchingblock[1],
-                                                            minMSBetweenYields: 5000,
+                                                            minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                         },
                                                         undefined,
                                                         hsreplacemode,
@@ -21299,7 +21299,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                                 ccmatchingblock[0],
                                                             matchingBlockStates:
                                                                 ccmatchingblock[1],
-                                                            minMSBetweenYields: 5000,
+                                                            minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                         },
                                                         undefined,
                                                         ccreplacemode,
@@ -21398,7 +21398,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                                 ccmatchingblock[0],
                                                             matchingBlockStates:
                                                                 ccmatchingblock[1],
-                                                            minMSBetweenYields: 5000,
+                                                            minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                         },
                                                         undefined,
                                                         ccreplacemode,
@@ -27217,73 +27217,43 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                     //if((world.scoreboard.getObjective("balance").getScore(player)??0)>JSON.parse(world.getDynamicProperty("shop:costs"))[r.selection]){world.scoreboard.getObjective("balance").addScore(player, -(JSON.parse(world.getDynamicProperty("shop:costs"))[r.selection])); player.getComponent("inventory").container.addItem(cmds.overworld.getBlock({x: 823, y: 84, z: 1037}).getComponent("inventory").container.getItem(r.selection))}
                     //${se}swdp("shop:costs", "[20, 50, 70, 80]")
                     eventData.cancel = true;
-                    let args = evaluateParametersOld(
-                        ["presetText", "presetText", "string"],
-                        switchTestB
-                    ).args;
-                    if (switchTestB.split(/\s+/g)[2].trim() == "~") {
-                        args[2] = player.name;
-                    }
-                    if ((switchTestB.split(/\s+/g)[2].trim() ?? "") == "") {
-                        args[2] = player.name;
-                    }
-                    let target = world
-                        .getAllPlayers()
-                        .find((_) => _.name == args[2]);
-                    if (!!!target) {
-                        player.sendError(
-                            `§cError: Unable to find player with the name ${args[2]}. `,
-                            true
-                        );
-                    } else {
-                        if (switchTestB.split(/\s+/g)[1].trim() == "~") {
-                            args[1] = target.selectedSlotIndex;
+                    system.run(() => {
+                        let args = evaluateParameters(switchTestB, ["presetText", "presetText", "targetSelector"]).args;
+                        if (!args[2]?.trim() || args[2].trim() === "~") {
+                            args[2] = player.name;
                         }
-                        let slot = getSlotFromParsedSlot(
-                            parseSlot(String(args[1])),
-                            {
-                                container:
-                                    target?.getComponent("inventory")
-                                        ?.container,
-                                equipment: target?.getComponent("equippable"),
-                                selectedSlotIndex: target?.selectedSlotIndex,
+                        let targets = targetSelectorAllListC(args[2], "", vTStr(player.location), player).filter(
+                            (v) => v.typeId == "minecraft:player"
+                        ) as Player[];
+                        if (targets.length === 0) {
+                            player.sendError(`§cError: No players matching the specified target selector were found.`, true);
+                        } else {
+                            const item: ItemStack | undefined = player.getComponent("inventory").container.getItem(player.selectedSlotIndex);
+                            targets.forEach((target) => {
+                                const slot = getSlotFromParsedSlot(parseSlot(args[2] ?? "~"), {
+                                    container: target.getComponent("inventory").container,
+                                    equipment: target.getComponent("equippable"),
+                                    selectedSlotIndex: target.selectedSlotIndex,
+                                    cursor: target.getComponent("cursor_inventory"),
+                                });
+                                if (slot instanceof PlayerCursorInventoryComponent) {
+                                    player.sendError("§cYou cannot modify the item inside of a player's cursor inventory slot.", true);
+                                    return;
+                                }
+                                slot.setItem(item);
+                            });
+                            switch (true) {
+                                case args[2] === player.name:
+                                    player.sendMessageB(`Successfully copied item to slot ${args[1]} of your own inventory.`);
+                                    break;
+                                case targets.length === 1:
+                                    player.sendMessageB(`Successfully copied item to slot ${args[1]} of ${targets[0].name}'s inventory.`);
+                                    break;
+                                default:
+                                    player.sendMessageB(`Successfully copied item to slot ${args[1]} of ${targets.length} players' inventories.`);
                             }
-                        );
-                        system.run(() => {
-                            if (
-                                slot instanceof PlayerCursorInventoryComponent
-                            ) {
-                                player.sendError(
-                                    "§cYou cannot modify the item inside of a player's cursor inventory slot.",
-                                    true
-                                );
-                                return;
-                            }
-                            if (String(args[1]).match(/^\d+$/)) {
-                                target
-                                    .getComponent("inventory")
-                                    .container.setItem(
-                                        Number(args[1]),
-                                        player
-                                            .getComponent("inventory")
-                                            .container.getItem(
-                                                player.selectedSlotIndex
-                                            )
-                                    );
-                            } else {
-                                slot.setItem(
-                                    player
-                                        .getComponent("inventory")
-                                        .container.getItem(
-                                            player.selectedSlotIndex
-                                        )
-                                );
-                            }
-                            player.sendMessageB(
-                                `Successfully copied item to slot ${args[1]} of ${target.name}'s inventory. `
-                            );
-                        });
-                    }
+                        }
+                    });
                 }
                 break;
             case !!switchTest.match(/^dupeitem$/):
@@ -27450,19 +27420,11 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                             "targetSelector",
                             "targetSelector",
                         ]).args;
-                        if ((args[4] ?? "").trim() == "") {
+                        if (!args[4]?.trim() || args[3].trim() === "~") {
                             args[4] = player.name;
-                        } else {
-                            if ((args[4] ?? "").trim() == "~") {
-                                args[4] = player.name;
-                            }
                         }
-                        if ((args[3] ?? "").trim() == "") {
+                        if (!args[3]?.trim() || args[3].trim() === "~") {
                             args[3] = player.name;
-                        } else {
-                            if ((args[3] ?? "").trim() == "~") {
-                                args[3] = player.name;
-                            }
                         }
                         let target = targetSelectorAllListC(
                             args[3],
@@ -27476,47 +27438,59 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                             vTStr(player.location),
                             player
                         ).find((v) => v.typeId == "minecraft:player") as Player;
-                        if ((args[2] ?? "").trim() == "") {
+                        if (!args[2]?.trim()) {
                             args[2] = String(targetb?.selectedSlotIndex);
                         }
-                        if ((args[1] ?? "").trim() == "") {
+                        if (!args[1]?.trim()) {
                             args[1] = String(target?.selectedSlotIndex);
                         }
                         if (!!!target) {
                             player.sendError(
-                                `§cError: No player matching the first specified target selector was found. `,
+                                `§cError: No player matching the first specified target selector was found.`,
                                 true
                             );
                         } else if (!!!targetb) {
                             player.sendError(
-                                `§cError: No player matching the second specified target selector was found. `,
+                                `§cError: No player matching the second specified target selector was found.`,
+                                true
+                            );
+                        } else if (args[1]?.trim().toLowerCase() === "cursor") {
+                            player.sendError(
+                                `§cError: You cannot swap an item with the cursor inventory slot.`,
+                                true
+                            );
+                        } else if (args[2]?.trim().toLowerCase() === "cursor") {
+                            player.sendError(
+                                `§cError: You cannot swap an item with the cursor inventory slot.`,
                                 true
                             );
                         } else {
-                            system.run(() => {
-                                target
-                                    .getComponent("inventory")
-                                    .container.swapItems(
-                                        Number(
-                                            args[1].replace(
-                                                /^~$/,
-                                                String(target.selectedSlotIndex)
-                                            )
-                                        ),
-                                        Number(
-                                            args[2].replace(
-                                                /^~$/,
-                                                String(
-                                                    targetb.selectedSlotIndex
-                                                )
-                                            )
-                                        ),
+                            const targetSlot = getSlotFromParsedSlot(
+                                parseSlot(args[1]),
+                                {
+                                    container:
+                                        target.getComponent("inventory")
+                                            .container,
+                                    equipment: target.getComponent("equippable"),
+                                    selectedSlotIndex: target.selectedSlotIndex,
+                                }
+                            );
+                            const targetbSlot = getSlotFromParsedSlot(
+                                parseSlot(args[2]),
+                                {
+                                    container:
                                         targetb.getComponent("inventory")
-                                            .container
-                                    );
-                            });
+                                            .container,
+                                    equipment: targetb.getComponent("equippable"),
+                                    selectedSlotIndex: targetb.selectedSlotIndex,
+                                }
+                            );
+                            const targetItem = targetSlot?.getItem();
+                            const targetbItem = targetbSlot?.getItem();
+                            targetSlot.setItem(targetbItem);
+                            targetbSlot.setItem(targetItem);
                             player.sendMessageB(
-                                `Successfully swapped slot ${args[1]} of ${target.name}'s inventory with slot ${args[2]} of ${targetb.name}'s inventory. `
+                                `Successfully swapped slot ${args[1]} of ${target.name}'s inventory with slot ${args[2]} of ${targetb.name}'s inventory.`
                             );
                         }
                     });
@@ -27566,46 +27540,50 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
             case !!switchTest.match(/^takeitem$/):
                 {
                     eventData.cancel = true;
-                    let args = evaluateParametersOld(
-                        ["presetText", "presetText", "string"],
-                        switchTestB
-                    ).args;
-                    if (switchTestB.split(/\s+/g)[2].trim() == "~") {
-                        args[2] = player.name;
-                    }
-                    let target = world
-                        .getAllPlayers()
-                        .find((_) => _.name == args[2]);
-                    if (!!!target) {
-                        player.sendError(
-                            `§cError: Unable to find player with the name ${args[2]}. `,
-                            true
-                        );
-                    } else {
-                        if (switchTestB.split(/\s+/g)[1].trim() == "~") {
-                            args[1] = target.selectedSlotIndex;
+                    system.run(()=>{
+                        let args = evaluateParameters(
+                            switchTestB,
+                            ["presetText", "f-t", "presetText", "targetSelector"],
+                        ).args;
+                        if (!args[3]?.trim() || args[3].trim() === "~") {
+                            args[3] = player.name;
                         }
-                        let slot = getSlotFromParsedSlot(
-                            parseSlot(String(args[1])),
-                            {
-                                container:
-                                    target?.getComponent("inventory")
-                                        ?.container,
-                                equipment: target?.getComponent("equippable"),
-                                selectedSlotIndex: target?.selectedSlotIndex,
-                            }
-                        );
-                        system.run(() => {
-                            if (String(args[1]).match(/^\d+$/)) {
+                        let target = targetSelectorAllListC(
+                            args[3],
+                            "",
+                            vTStr(player.location),
+                            player
+                        ).find((v) => v.typeId == "minecraft:player") as Player;
+                        if (!args[2]?.trim()) {
+                            args[2] = String(target?.selectedSlotIndex);
+                        }
+                        if (!target) {
+                            player.sendError(
+                                `§cError: No player matching the specified target selector was found.`,
+                                true
+                            );
+                        } else {
+                            const slot = getSlotFromParsedSlot(
+                                parseSlot(args[2]),
+                                {
+                                    container:
+                                        target.getComponent("inventory")
+                                            .container,
+                                    equipment: target.getComponent("equippable"),
+                                    selectedSlotIndex: target.selectedSlotIndex,
+                                    cursor: target.getComponent("cursor_inventory"),
+                                }
+                            );
+                            if (args[1]?.t && /^\d+$/.test(String(args[2].trim() === "~" || !args[2] ? target.selectedSlotIndex : args[2]))) {
                                 target
                                     .getComponent("inventory")
                                     .container.transferItem(
-                                        Number(args[1]),
+                                        Number(args[2].trim() === "~" || !args[2] ? target.selectedSlotIndex : args[2]),
                                         player.getComponent("inventory")
                                             .container
                                     );
                             } else {
-                                player
+                                const remainingStack: ItemStack | undefined = player
                                     .getComponent("inventory")
                                     .container.addItem(
                                         slot instanceof
@@ -27616,12 +27594,15 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 (slot instanceof PlayerCursorInventoryComponent
                                     ? slot.clear
                                     : slot.setItem)();
+                                if(remainingStack) {
+                                    player.dimension.spawnItem(remainingStack, player.location);
+                                }
                             }
                             player.sendMessageB(
-                                `Successfully took item from ${args[2]}'s inventory. `
+                                `Successfully took item from slot ${args[2]} of ${args[3]}'s inventory.`
                             );
-                        });
-                    }
+                        }
+                    });
                 }
                 break;
             case !!switchTest.match(/^swapinventories$/) ||
@@ -30612,7 +30593,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                 },
                                                 {
                                                     blockMask: mask,
-                                                    minMSBetweenTickWaits: 2500,
+                                                    minMSBetweenTickWaits: config.system.defaultMinMSBetweenTickWaits,
                                                     replacemode: args[1].c,
                                                     integrity: 100,
                                                     liteMode: false,
@@ -30765,7 +30746,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                 },
                                                 {
                                                     blockMask: mask,
-                                                    minMSBetweenTickWaits: 2500,
+                                                    minMSBetweenTickWaits: config.system.defaultMinMSBetweenTickWaits,
                                                     replacemode: args[1].c,
                                                     integrity: 100,
                                                     liteMode: false,
@@ -30918,7 +30899,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                 },
                                                 {
                                                     blockMask: mask,
-                                                    minMSBetweenTickWaits: 2500,
+                                                    minMSBetweenTickWaits: config.system.defaultMinMSBetweenTickWaits,
                                                     replacemode: args[1].c,
                                                     integrity: 100,
                                                     liteMode: false,
@@ -31071,7 +31052,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                 },
                                                 {
                                                     blockMask: mask,
-                                                    minMSBetweenTickWaits: 2500,
+                                                    minMSBetweenTickWaits: config.system.defaultMinMSBetweenTickWaits,
                                                     replacemode: args[1].c,
                                                     integrity: 100,
                                                     liteMode: false,
@@ -31224,7 +31205,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                 },
                                                 {
                                                     blockMask: mask,
-                                                    minMSBetweenTickWaits: 2500,
+                                                    minMSBetweenTickWaits: config.system.defaultMinMSBetweenTickWaits,
                                                     replacemode: args[1].c,
                                                     integrity: 100,
                                                     liteMode: false,
@@ -31383,7 +31364,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                 },
                                                 {
                                                     blockMask: mask,
-                                                    minMSBetweenTickWaits: 2500,
+                                                    minMSBetweenTickWaits: config.system.defaultMinMSBetweenTickWaits,
                                                     replacemode: args[1].c,
                                                     integrity: 100,
                                                     liteMode: false,
@@ -31560,7 +31541,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                 },
                                                 {
                                                     blockMask: mask,
-                                                    minMSBetweenTickWaits: 2500,
+                                                    minMSBetweenTickWaits: config.system.defaultMinMSBetweenTickWaits,
                                                     replacemode: args[1].c,
                                                     integrity: 100,
                                                     liteMode: false,
@@ -31737,7 +31718,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                 },
                                                 {
                                                     blockMask: mask,
-                                                    minMSBetweenTickWaits: 2500,
+                                                    minMSBetweenTickWaits: config.system.defaultMinMSBetweenTickWaits,
                                                     replacemode: args[1].c,
                                                     integrity: 100,
                                                     liteMode: false,
@@ -31785,6 +31766,74 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                         } finally {
                                             tac.forEach((tab) => tab?.remove());
                                         }
+                                    });
+                                } catch (e) {
+                                    player.sendError("§c" + e + e.stack, true);
+                                }
+                            });
+                        }
+                    }
+                }
+                break;
+            case !!switchTest.match(/^\\loadchunks$/) || !!switchTest.match(/^\\lc$/):
+                {
+                    eventData.cancel = true;
+                    const args = evaluateParameters(switchTestB, [
+                        "presetText",
+                        "f-v"
+                    ]).args;
+                    const coordinatesa = player.getDynamicProperty("pos1") as
+                        | Vector3
+                        | undefined;
+                    const coordinatesb = player.getDynamicProperty("pos2") as
+                        | Vector3
+                        | undefined;
+                    const ca = {
+                        x: Math.min(coordinatesa.x, coordinatesb.x),
+                        y: Math.min(coordinatesa.y, coordinatesb.y),
+                        z: Math.min(coordinatesa.z, coordinatesb.z),
+                    };
+                    const cb = {
+                        x: Math.max(coordinatesa.x, coordinatesb.x),
+                        y: Math.max(coordinatesa.y, coordinatesb.y),
+                        z: Math.max(coordinatesa.z, coordinatesb.z),
+                    };
+                    const dimensiona = world.getDimension(
+                        (player.getDynamicProperty("posD") ??
+                            player.dimension.id) as string
+                    ) as Dimension | undefined;
+                    if (!!!coordinatesa) {
+                        player.sendMessageB("§cError: pos1 is not set.");
+                    } else {
+                        if (!!!coordinatesb) {
+                            player.sendMessageB("§cError: pos2 is not set.");
+                        } else {
+                            system.run(() => {
+                                let ta: Entity[];
+                                try {
+                                    generateTickingAreaFillCoordinatesC(
+                                        player.location,
+                                        (() => {
+                                            let a = new CompoundBlockVolume();
+                                            a.pushVolume({
+                                                volume: new BlockVolume(ca, cb),
+                                            });
+                                            return a;
+                                        })(),
+                                        dimensiona
+                                    ).then((tac) => {
+                                        if(args[1].v){
+                                            tac.forEach((tab) => {
+                                                try {
+                                                    tab.triggerEvent("andexdb:make_tickingarea_visible");
+                                                } catch (e) {
+                                                    console.error(e, e.stack);
+                                                }
+                                            });
+                                        }
+                                        player.sendMessageB(`Spawned ${tac.length} ticking area(s).`);
+                                    }).catch((e)=>{
+                                        player.sendError("§cError while loading chunks: " + e + e.stack, true);
                                     });
                                 } catch (e) {
                                     player.sendError("§c" + e + e.stack, true);
@@ -31886,7 +31935,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                               b.states
                                                           );
                                                 },
-                                                { minMSBetweenYields: 2500 },
+                                                { minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits },
                                                 args[1].c,
                                                 100
                                             ).then(
@@ -32042,7 +32091,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                               b.states
                                                           );
                                                 },
-                                                { minMSBetweenYields: 2500 },
+                                                { minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits },
                                                 args[1].c,
                                                 integrity
                                             ).then(
@@ -32178,7 +32227,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                 dimensiona,
                                                 {
                                                     blockMask: mask,
-                                                    minMSBetweenTickWaits: 2500,
+                                                    minMSBetweenTickWaits: config.system.defaultMinMSBetweenTickWaits,
                                                     integrity: 100,
                                                     liteMode: false,
                                                 }
@@ -32308,7 +32357,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                 dimensiona,
                                                 {
                                                     blockMask: mask,
-                                                    minMSBetweenTickWaits: 2500,
+                                                    minMSBetweenTickWaits: config.system.defaultMinMSBetweenTickWaits,
                                                     integrity: 100,
                                                     liteMode: false,
                                                 }
@@ -32458,7 +32507,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                         matchingblock[0],
                                                     matchingBlockStates:
                                                         matchingblock[1],
-                                                    minMSBetweenYields: 2500,
+                                                    minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                 },
                                                 args[1].c,
                                                 100
@@ -32618,7 +32667,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                 {
                                                     blockMask:
                                                         mask,
-                                                    minMSBetweenTickWaits: 2500,
+                                                    minMSBetweenTickWaits: config.system.defaultMinMSBetweenTickWaits,
                                                     replacemode: args[1].c,
                                                     integrity: 100,
                                                     liteMode: false,
@@ -32794,7 +32843,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                 },
                                                 {
                                                     blockMask: mask,
-                                                    minMSBetweenTickWaits: 2500,
+                                                    minMSBetweenTickWaits: config.system.defaultMinMSBetweenTickWaits,
                                                     replacemode: args[1].c,
                                                     integrity: 100,
                                                     liteMode: false,
@@ -32972,7 +33021,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                 },
                                                 {
                                                     blockMask: mask,
-                                                    minMSBetweenTickWaits: 2500,
+                                                    minMSBetweenTickWaits: config.system.defaultMinMSBetweenTickWaits,
                                                     replacemode: args[1].c,
                                                     integrity: 100,
                                                     liteMode: false,
@@ -33152,7 +33201,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                 },
                                                 {
                                                     blockMask: mask,
-                                                    minMSBetweenTickWaits: 2500,
+                                                    minMSBetweenTickWaits: config.system.defaultMinMSBetweenTickWaits,
                                                     replacemode: args[1].c,
                                                     integrity: 100,
                                                     liteMode: false,
@@ -33331,7 +33380,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                 },
                                                 {
                                                     blockMask: mask,
-                                                    minMSBetweenTickWaits: 2500,
+                                                    minMSBetweenTickWaits: config.system.defaultMinMSBetweenTickWaits,
                                                     replacemode: args[1].c,
                                                     integrity: 100,
                                                     liteMode: false,
@@ -33996,7 +34045,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                         "air",
                                                         undefined,
                                                         {
-                                                            minMSBetweenYields: 5000,
+                                                            minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                         },
                                                         undefined,
                                                         true,
@@ -35755,7 +35804,7 @@ ${command.dp}\\itfill <offsetx: float> <offsety: float> <offsetz: float> <thickn
                                                             sgmatchingblock[0],
                                                         matchingBlockStates:
                                                             sgmatchingblock[1],
-                                                        minMSBetweenYields: 5000,
+                                                        minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                     },
                                                     undefined,
                                                     sgreplacemode,
@@ -35855,7 +35904,7 @@ ${command.dp}\\itfill <offsetx: float> <offsety: float> <offsetz: float> <thickn
                                                             sgmatchingblock[0],
                                                         matchingBlockStates:
                                                             sgmatchingblock[1],
-                                                        minMSBetweenYields: 5000,
+                                                        minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                     },
                                                     undefined,
                                                     sgreplacemode,
@@ -35995,7 +36044,7 @@ ${command.dp}\\itfill <offsetx: float> <offsety: float> <offsetz: float> <thickn
                                                             homatchingblock[0],
                                                         matchingBlockStates:
                                                             homatchingblock[1],
-                                                        minMSBetweenYields: 5000,
+                                                        minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                     },
                                                     undefined,
                                                     horeplacemode,
@@ -36122,7 +36171,7 @@ ${command.dp}\\itfill <offsetx: float> <offsety: float> <offsetz: float> <thickn
                                                             omatchingblock[0],
                                                         matchingBlockStates:
                                                             omatchingblock[1],
-                                                        minMSBetweenYields: 5000,
+                                                        minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                     },
                                                     undefined,
                                                     oreplacemode,
@@ -36240,7 +36289,7 @@ ${command.dp}\\itfill <offsetx: float> <offsety: float> <offsetz: float> <thickn
                                                             hsmatchingblock[0],
                                                         matchingBlockStates:
                                                             hsmatchingblock[1],
-                                                        minMSBetweenYields: 5000,
+                                                        minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                     },
                                                     undefined,
                                                     hsreplacemode,
@@ -36358,7 +36407,7 @@ ${command.dp}\\itfill <offsetx: float> <offsety: float> <offsetz: float> <thickn
                                                             hsmatchingblock[0],
                                                         matchingBlockStates:
                                                             hsmatchingblock[1],
-                                                        minMSBetweenYields: 5000,
+                                                        minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                     },
                                                     undefined,
                                                     hsreplacemode,
@@ -36475,7 +36524,7 @@ ${command.dp}\\itfill <offsetx: float> <offsety: float> <offsetz: float> <thickn
                                                             ccmatchingblock[0],
                                                         matchingBlockStates:
                                                             ccmatchingblock[1],
-                                                        minMSBetweenYields: 5000,
+                                                        minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                     },
                                                     undefined,
                                                     ccreplacemode,
@@ -36587,7 +36636,7 @@ ${command.dp}\\itfill <offsetx: float> <offsety: float> <offsetz: float> <thickn
                                                             ccmatchingblock[0],
                                                         matchingBlockStates:
                                                             ccmatchingblock[1],
-                                                        minMSBetweenYields: 5000,
+                                                        minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                     },
                                                     undefined,
                                                     ccreplacemode,
@@ -38594,7 +38643,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                             matchingblock[0],
                                                         matchingBlockStates:
                                                             matchingblock[1],
-                                                        minMSBetweenYields: 5000,
+                                                        minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                     },
                                                     undefined,
                                                     replacemode,
@@ -38701,7 +38750,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                             matchingblock[0],
                                                         matchingBlockStates:
                                                             matchingblock[1],
-                                                        minMSBetweenYields: 5000,
+                                                        minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                     },
                                                     undefined,
                                                     args[7] ?? true,
@@ -38930,7 +38979,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                             matchingblock[0],
                                                         matchingBlockStates:
                                                             matchingblock[1],
-                                                        minMSBetweenYields: 5000,
+                                                        minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                     },
                                                     undefined,
                                                     replacemode,
@@ -39034,7 +39083,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                     firstblockstates,
                                                     {
                                                         matchingBlock: "air",
-                                                        minMSBetweenYields: 5000,
+                                                        minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                     },
                                                     undefined,
                                                     replacemode,
@@ -39141,7 +39190,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                             matchingblock[0],
                                                         matchingBlockStates:
                                                             matchingblock[1],
-                                                        minMSBetweenYields: 5000,
+                                                        minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                     },
                                                     undefined,
                                                     replacemode,
@@ -39248,7 +39297,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                             matchingblock[0],
                                                         matchingBlockStates:
                                                             matchingblock[1],
-                                                        minMSBetweenYields: 5000,
+                                                        minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                     },
                                                     undefined,
                                                     replacemode,
@@ -39355,7 +39404,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                             matchingblock[0],
                                                         matchingBlockStates:
                                                             matchingblock[1],
-                                                        minMSBetweenYields: 5000,
+                                                        minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                     },
                                                     undefined,
                                                     replacemode,
@@ -39519,7 +39568,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                             sgmatchingblock[0],
                                                         matchingBlockStates:
                                                             sgmatchingblock[1],
-                                                        minMSBetweenYields: 5000,
+                                                        minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                     },
                                                     undefined,
                                                     sgreplacemode,
@@ -39619,7 +39668,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                             sgmatchingblock[0],
                                                         matchingBlockStates:
                                                             sgmatchingblock[1],
-                                                        minMSBetweenYields: 5000,
+                                                        minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                     },
                                                     undefined,
                                                     sgreplacemode,
@@ -39738,7 +39787,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                                 homatchingblock[0],
                                                             matchingBlockStates:
                                                                 homatchingblock[1],
-                                                            minMSBetweenYields: 5000,
+                                                            minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                         },
                                                         undefined,
                                                         horeplacemode,
@@ -39853,7 +39902,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                                 omatchingblock[0],
                                                             matchingBlockStates:
                                                                 omatchingblock[1],
-                                                            minMSBetweenYields: 5000,
+                                                            minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                         },
                                                         undefined,
                                                         oreplacemode,
@@ -39959,7 +40008,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                                 hsmatchingblock[0],
                                                             matchingBlockStates:
                                                                 hsmatchingblock[1],
-                                                            minMSBetweenYields: 5000,
+                                                            minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                         },
                                                         undefined,
                                                         hsreplacemode,
@@ -40065,7 +40114,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                                 hsmatchingblock[0],
                                                             matchingBlockStates:
                                                                 hsmatchingblock[1],
-                                                            minMSBetweenYields: 5000,
+                                                            minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                         },
                                                         undefined,
                                                         hsreplacemode,
@@ -40170,7 +40219,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                                 ccmatchingblock[0],
                                                             matchingBlockStates:
                                                                 ccmatchingblock[1],
-                                                            minMSBetweenYields: 5000,
+                                                            minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                         },
                                                         undefined,
                                                         ccreplacemode,
@@ -40269,7 +40318,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                                 ccmatchingblock[0],
                                                             matchingBlockStates:
                                                                 ccmatchingblock[1],
-                                                            minMSBetweenYields: 5000,
+                                                            minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                                         },
                                                         undefined,
                                                         ccreplacemode,
@@ -43793,6 +43842,10 @@ ${command.dp}snapshot list`);
                 !!switchTest.match(/^selr$/):
                 {
                     eventData.cancel = true;
+                    const args = evaluateParameters(switchTestB, [
+                        "presetText",
+                        "number"
+                    ]).args;
                     srun(async ()=>{
                         var msSinceLastTickWait = Date.now();
                         const begin = {
@@ -43806,7 +43859,7 @@ ${command.dp}snapshot list`);
                             z: Math.max(player.worldEditSelection.pos1.z, player.worldEditSelection.pos2.z),
                         }
                         const molangVariables = new MolangVariableMap();
-                        molangVariables.setFloat("variable.max_lifetime", 10);
+                        molangVariables.setFloat("variable.max_lifetime", args[1] ?? 10);
                         const dimension = player.worldEditSelection.dimension
                         const ta = await generateTickingAreaFillCoordinatesC(
                             player.location,
@@ -44389,7 +44442,7 @@ ${command.dp}snapshot list`);
                                             matchingBlock: firstblockname,
                                             matchingBlockStates:
                                                 firstblockstates,
-                                            minMSBetweenYields: 2500,
+                                            minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
                                         },
                                         undefined,
                                         args[1].c,
@@ -45177,7 +45230,7 @@ ${command.dp}snapshot list`);
                                         from,
                                         to,
                                         player.dimension,
-                                        { minMSBetweenYields: 2500 },
+                                        { minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits },
                                         100
                                     ).then(
                                         (a) => {

@@ -79,7 +79,7 @@ export declare class moduleImportsConfig {
         ui: "none" | "disableAll" | "enableAll" | "enableAllNonDeprecated" | undefined | null;
         utilities: "none" | "disableAll" | "enableAll" | "enableAllNonDeprecated" | undefined | null;
     };
-    static get default(): moduleImportNamesToModuleImportsConfigObjectMapper<0>;
+    static get default(): moduleImportNamesToModuleImportsConfigObjectMapper<1>;
     /**
      *
      * @param filePath The path of the file, should be a value in the {@link optionalModuleObjectImportFilePaths} array.

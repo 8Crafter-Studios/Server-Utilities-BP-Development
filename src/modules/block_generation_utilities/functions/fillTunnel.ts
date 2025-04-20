@@ -65,7 +65,7 @@ export async function fillTunnel<LiteModeEnabled extends boolean = false>(
     const centerX = center.x;
     const centerY = center.y;
     const centerZ = center.z;
-    const minMSBetweenTickWaits = options?.minMSBetweenTickWaits ?? 2000;
+    const minMSBetweenTickWaits = options?.minMSBetweenTickWaits ?? config.system.defaultMinMSBetweenTickWaits;
 
     const isWithinCylinderWall = (x: number, y: number, z: number) => {
         switch (axis) {

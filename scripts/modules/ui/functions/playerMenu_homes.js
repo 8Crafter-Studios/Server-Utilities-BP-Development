@@ -42,7 +42,7 @@ export async function playerMenu_homes(sourceEntitya) {
         switch ((!!homes[r.selection] ? "home" : undefined) ?? ["newHome", "back", "close"][r.selection - homes.length]) {
             case "home":
                 const home = homes[r.selection];
-                switch (["teleport", "delete", "back", "close"][(await showActions(sourceEntity, "Home Details", `${home.name}\nDimension${dimensionTypeDisplayFormattingD[home.location.dimension.id]}`, ["Teleport", "textures/items/ender_pearl"], ["Delete", "textures/ui/trash_default"], ["Back", "textures/ui/arrow_left"], ["Close", "textures/ui/crossout"])).selection]) {
+                switch (["teleport", "delete", "back", "close"][(await showActions(sourceEntity, customFormUICodes.action.titles.formStyles.medium + "Home Details", `${home.name}\nDimension: ${dimensionTypeDisplayFormattingD[home.location.dimension.id]}`, [customFormUICodes.action.buttons.positions.main_only + "Teleport", "textures/items/ender_pearl"], [customFormUICodes.action.buttons.positions.main_only + "Delete", "textures/ui/trash_default"], [customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left"], [customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout"])).selection]) {
                     case "teleport":
                         if (home.location.dimension !== overworld && !config.homeSystem.allowHomesInOtherDimensions) {
                             if ((await showMessage(sourceEntity, "Error", `§cSorry but homes in dimensions other than the overworld have been disabled.`, "Back", "Close")).selection === 0) {
@@ -147,7 +147,7 @@ export async function playerMenu_homes(sourceEntitya) {
                     }
                 }
                 const location = sourceEntity.dimensionLocation;
-                const r = await new ModalFormData().title("New Home").textField(`Location: ${vTStr(location)}\nDimension: ${dimensionTypeDisplayFormattingD[location.dimension.id]}\n\nPlease enter the name for your new home below.`, "Home Name").submitButton("Create Home").forceShow(sourceEntity);
+                const r = await new ModalFormData().title(customFormUICodes.modal.titles.formStyles.medium + "New Home").label(`Location: ${vTStr(location)}\nDimension: ${dimensionTypeDisplayFormattingD[location.dimension.id]}`).divider().textField("Please enter the name for your new home below.", "Home Name").submitButton("Create Home").forceShow(sourceEntity);
                 if (r.canceled) {
                     return await playerMenu_homes(sourceEntity);
                 }

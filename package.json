@@ -1,20 +1,37 @@
 {
-  "name": "debug-sticks",
-  "version": "1.35.0-preview.20+BUILD.1",
-  "description": "",
-  "main": "scripts/Main.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "compile": "tsc"
-  },
+  "name": "8crafters-server-utilities-bp",
+  "version": "1.35.0-preview.20+BUILD.2",
+  "description": "8Crafter's Server Utilities & Debug Sticks BP",
   "hintConfig": {
     "hints": {
       "1241": "off"
     }
   },
-  "keywords": [],
-  "author": "8Crafter",
+  "keywords": [
+    "8Crafter",
+    "MCBE",
+    "Minecraft",
+    "Minecraft Bedrock Edition",
+    "Add-On",
+    "RP",
+    "Resource Pack"
+  ],
+  "homepage": "https://wiki.8crafter.com/andexdb",
+  "bugs": {
+    "url": "https://github.com/Andexter8/8Crafter-s-Debug-Sticks-BP-Development/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Andexter8/8Crafter-s-Debug-Sticks-BP-Development.git"
+  },
   "license": "ISC",
+  "author": "8Crafter",
+  "type": "module",
+  "main": "scripts/init.js",
+  "scripts": {
+    "changeVersionNumber": "node changeVersionNumber.js -vp -mp",
+    "compile": "tsc"
+  },
   "dependencies": {
     "@minecraft/common": "^1.1.0",
     "@minecraft/debug-utilities": "^1.0.0-beta.1.21.62-stable",
@@ -37,6 +54,8 @@
   },
   "devDependencies": {
     "@types/semver": "^7.5.8",
-    "esbuild": "0.20.2"
+    "esbuild": "0.20.2",
+    "json5": "^2.2.3",
+    "prompt-sync": "^4.2.0"
   }
 }

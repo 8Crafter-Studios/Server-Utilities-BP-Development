@@ -71,7 +71,7 @@ export async function playerMenu_about_contributors(sourceEntitya: Entity | exec
                             await showActions(
                                 sourceEntity,
                                 "terpyFTP",
-                                "§aRole: §bHelps with testing stuff.§r\n§dDiscord: §bterpyftp§r",
+                                "§aRole: §bHelped with testing the player menu.§r\n§dDiscord: §bterpyftp§r",
                                 ["Back", "textures/ui/arrow_left"],
                                 ["Close", "textures/ui/crossout"]
                             )

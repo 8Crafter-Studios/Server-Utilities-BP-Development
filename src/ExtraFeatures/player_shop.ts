@@ -508,7 +508,7 @@ Shop Owner: ${this.playerName}${!!this?.mainPageBodyText ? "\n§r" + this.mainPa
     async buyItem(player: Player, item: PlayerSavedShopItem, path: ["buy" | "sell", ...(string | number)[]], itemIndex: number): Promise<0 | 1> {
         try {
             const infoForm = new ActionFormData();
-            infoForm.title("Item Details");
+            infoForm.title(customFormUICodes.action.titles.formStyles.medium + "Item Details");
             infoForm.body(
                 `§a${item.title}
 §r§6Stock: ${item.remainingStock}
@@ -524,10 +524,10 @@ ${
 }
 }`
             );
-            infoForm.button("Proceed to buy item");
-            infoForm.button("More Details");
-            infoForm.button("Back", "textures/ui/arrow_left");
-            infoForm.button("Close", "textures/ui/crossout");
+            infoForm.button(customFormUICodes.action.buttons.positions.main_only + "Proceed to buy item");
+            infoForm.button(customFormUICodes.action.buttons.positions.main_only + "More Details");
+            infoForm.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
+            infoForm.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
             const ifr = await infoForm.forceShow(player);
             if (ifr.canceled || ifr.selection == 2) {
                 return 1;
@@ -551,7 +551,7 @@ ${
                 const itemStack = entity.getComponent("inventory")?.container?.getItem(0);
                 entity.remove();
                 const infoForm = new ActionFormData();
-                infoForm.title("Item Details");
+                infoForm.title(customFormUICodes.action.titles.formStyles.medium + "Item Details");
                 infoForm.body(
                     !!!itemStack
                         ? `§a${item.title}
@@ -606,9 +606,9 @@ ${
                                   : item.itemDetails.enchantments
                           }`
                 );
-                infoForm.button("Proceed to buy item");
-                infoForm.button("Back");
-                infoForm.button("Close");
+                infoForm.button(customFormUICodes.action.buttons.positions.main_only + "Proceed to buy item");
+                infoForm.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back");
+                infoForm.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close");
                 const ifrb = await infoForm.forceShow(player);
                 if (ifrb.canceled || ifrb.selection == 1) {
                     return 1;
@@ -621,7 +621,7 @@ ${
                 return ((await showMessage(player, "Out Of Stock", "This item is out of stock.", "Go Back", "Close Shop")).selection == 0).toNumber();
             }
             const form = new ModalFormData();
-            form.title("Buy " + item.title);
+            form.title(customFormUICodes.modal.titles.formStyles.medium + "Buy " + item.title);
             form.slider(
                 `§a${item.title}\n§r§gPrice: ${item.price}\n\n§fHow many would you like to buy?`,
                 0,
@@ -796,7 +796,7 @@ ${
     ): Promise<0 | 1> {
         try {
             const infoForm = new ActionFormData();
-            infoForm.title("Item Details");
+            infoForm.title(customFormUICodes.action.titles.formStyles.medium + "Item Details");
             infoForm.body(
                 `§a${item.title}
 §r§6Amount Wanted: ${item.amountWanted}
@@ -817,12 +817,12 @@ ${
                           }`
                 }`
             );
-            infoForm.button("Proceed to sell item");
+            infoForm.button(customFormUICodes.action.buttons.positions.main_only + "Proceed to sell item");
             if (item.itemType == "player_shop_sellable_advanced") {
-                infoForm.button("More Details");
+                infoForm.button(customFormUICodes.action.buttons.positions.main_only + "More Details");
             }
-            infoForm.button("Back", "textures/ui/arrow_left");
-            infoForm.button("Close", "textures/ui/crossout");
+            infoForm.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
+            infoForm.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
             const ifr = await infoForm.forceShow(player);
             if (ifr.canceled || ifr.selection == 1 + +(item.itemType == "player_shop_sellable_advanced")) {
                 return 1;
@@ -832,7 +832,7 @@ ${
             }
             if (ifr.selection == (item.itemType == "player_shop_sellable_advanced" ? 1 : -1)) {
                 const infoForm = new ActionFormData();
-                infoForm.title("Item Details");
+                infoForm.title(customFormUICodes.action.titles.formStyles.medium + "Item Details");
                 infoForm.body(
                     `§a${item.title}
 §r§6Amount Wanted: ${item.amountWanted}
@@ -930,9 +930,9 @@ ${
                               }`
                     }`
                 );
-                infoForm.button("Proceed to buy item");
-                infoForm.button("Back");
-                infoForm.button("Close");
+                infoForm.button(customFormUICodes.action.buttons.positions.main_only + "Proceed to buy item");
+                infoForm.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back");
+                infoForm.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close");
                 const ifrb = await infoForm.forceShow(player);
                 if (ifrb.canceled || ifrb.selection == 1) {
                     return 1;
@@ -945,7 +945,7 @@ ${
                 return ((await showMessage(player, "Out Of Stock", "This item is out of stock.", "Go Back", "Close Shop")).selection == 0).toNumber();
             }
             const form = new ModalFormData();
-            form.title("Sell " + item.title);
+            form.title(customFormUICodes.modal.titles.formStyles.medium + "Sell " + item.title);
             form.slider(
                 `§a${item.title}\n§gValue: ${item.value}${
                     item.amountWanted <= 0 ? "\n§cThe owner of this shop is not accepting any more of this item." : ""

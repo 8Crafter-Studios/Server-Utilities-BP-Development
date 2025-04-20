@@ -486,7 +486,7 @@ export class ServerShop {
     async buyItem(player: Player, item: ShopItem): Promise<0 | 1> {
         try {
             const infoForm = new ActionFormData();
-            infoForm.title("Item Details");
+            infoForm.title(customFormUICodes.action.titles.formStyles.medium + "Item Details");
             infoForm.body(
                 `§a${item.title}
 §r§gPrice: ${item.price}
@@ -506,12 +506,12 @@ export class ServerShop {
                         : ""
                 }`
             );
-            infoForm.button("Proceed to buy item");
+            infoForm.button(customFormUICodes.action.buttons.positions.main_only + "Proceed to buy item");
             if (item.itemType != "giveCommand") {
-                infoForm.button("More Details");
+                infoForm.button(customFormUICodes.action.buttons.positions.main_only + "More Details");
             }
-            infoForm.button("Back", "textures/ui/arrow_left");
-            infoForm.button("Close", "textures/ui/crossout");
+            infoForm.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
+            infoForm.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
             const ifr = await infoForm.forceShow(player);
             if (ifr.canceled || ifr.selection == 1 + +(item.itemType != "giveCommand")) {
                 return 1;
@@ -521,7 +521,7 @@ export class ServerShop {
             }
             if (ifr.selection == (item.itemType != "giveCommand" ? 1 : -1)) {
                 const infoForm = new ActionFormData();
-                infoForm.title("Item Details");
+                infoForm.title(customFormUICodes.action.titles.formStyles.medium + "Item Details");
                 if (item.itemType == "pre-made") {
                     world.structureManager.place(item.structureID, player.dimension, Vector.add(player.location, { x: 0, y: 10, z: 0 }), {
                         includeBlocks: false,
@@ -610,9 +610,9 @@ export class ServerShop {
                     );
                 } else {
                 }
-                infoForm.button("Proceed to buy item");
-                infoForm.button("Back");
-                infoForm.button("Close");
+                infoForm.button(customFormUICodes.action.buttons.positions.main_only + "Proceed to buy item");
+                infoForm.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back");
+                infoForm.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close");
                 const ifrb = await infoForm.forceShow(player);
                 if (ifrb.canceled || ifrb.selection == 1) {
                     return 1;
@@ -625,7 +625,7 @@ export class ServerShop {
                 return ((await showMessage(player, "Out Of Stock", "This item is out of stock.", "Go Back", "Close Shop")).selection==0).toNumber()
             }*/
             const form = new ModalFormData();
-            form.title("Buy " + item.title);
+            form.title(customFormUICodes.modal.titles.formStyles.medium + "Buy " + item.title);
             form.slider(`§a${item.title}\n§gPrice: ${item.price}\n§fHow many would you like to buy?`, 0, item.max ?? 64, item.step ?? 1, item.step ?? 1);
             const r = await form.forceShow(player);
             if (r.canceled == true || (r.formValues[0] as number) == 0) {
@@ -713,16 +713,16 @@ export class ServerShop {
     async sellItem(player: Player, item: SellableShopItem) {
         try {
             const infoForm = new ActionFormData();
-            infoForm.title("Item Details");
+            infoForm.title(customFormUICodes.action.titles.formStyles.medium + "Item Details");
             infoForm.body(
                 `§a${item.title}
 §r§6Amount Wanted: ${item.amountWanted}
 §r§gvalue: ${item.value}
 §r§bItem Type: §a${item.itemID}`
             );
-            infoForm.button("Proceed to sell item");
-            infoForm.button("Back", "textures/ui/arrow_left");
-            infoForm.button("Close", "textures/ui/crossout");
+            infoForm.button(customFormUICodes.action.buttons.positions.main_only + "Proceed to sell item");
+            infoForm.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
+            infoForm.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
             const ifr = await infoForm.forceShow(player);
             if (ifr.canceled || ifr.selection == 1) {
                 return 1;
@@ -731,7 +731,7 @@ export class ServerShop {
                 return 0;
             }
             const form = new ModalFormData();
-            form.title("Sell " + item.title);
+            form.title(customFormUICodes.modal.titles.formStyles.medium + "Sell " + item.title);
             form.slider(`§a${item.title}\n§gValue: ${item.value}\n§fHow many would you like to sell?`, 0, item.max ?? 64, item.step ?? 1, item.step ?? 1);
             const r = await form.forceShow(player);
             if (r.canceled == true || (r.formValues[0] as number) == 0) {

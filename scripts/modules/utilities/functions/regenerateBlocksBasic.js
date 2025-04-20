@@ -44,7 +44,7 @@ export async function regenerateBlocksBasic(corner1, corner2, dimension, radius,
     var unloadedBlockCount = 0n;
     var unloadedSurroundingBlockCount = 0n;
     const opts = {
-        minMSBetweenTickWaits: options?.minMSBetweenTickWaits ?? 2000,
+        minMSBetweenTickWaits: options?.minMSBetweenTickWaits ?? config.system.defaultMinMSBetweenTickWaits,
         ignoreAir: options?.ignoreAir ?? true,
         onlyReplaceAir: options?.onlyReplaceAir ?? true,
         airPriority: options?.airPriority ?? 0.5,

@@ -98,7 +98,7 @@ export async function fillHollowSphere<LiteModeEnabled extends boolean = false>(
                                     }
                                 }
                                 index++;
-                                if (Date.now() - msSinceLastTickWait >= (options?.minMSBetweenTickWaits ?? 2000)) {
+                                if (Date.now() - msSinceLastTickWait >= (options?.minMSBetweenTickWaits ?? config.system.defaultMinMSBetweenTickWaits)) {
                                     await waitTick();
                                     msSinceLastTickWait = Date.now();
                                 }
@@ -132,7 +132,7 @@ export async function fillHollowSphere<LiteModeEnabled extends boolean = false>(
                                     }
                                 }
                                 index++;
-                                if (Date.now() - msSinceLastTickWait >= (options?.minMSBetweenTickWaits ?? 2000)) {
+                                if (Date.now() - msSinceLastTickWait >= (options?.minMSBetweenTickWaits ?? config.system.defaultMinMSBetweenTickWaits)) {
                                     await waitTick();
                                     msSinceLastTickWait = Date.now();
                                 }
@@ -167,7 +167,7 @@ export async function fillHollowSphere<LiteModeEnabled extends boolean = false>(
                                     }
                                 }
                                 index++;
-                                if (Date.now() - msSinceLastTickWait >= (options?.minMSBetweenTickWaits ?? 2000)) {
+                                if (Date.now() - msSinceLastTickWait >= (options?.minMSBetweenTickWaits ?? config.system.defaultMinMSBetweenTickWaits)) {
                                     await waitTick();
                                     msSinceLastTickWait = Date.now();
                                 }
@@ -197,7 +197,7 @@ export async function fillHollowSphere<LiteModeEnabled extends boolean = false>(
                                     }
                                 }
                                 index++;
-                                if (Date.now() - msSinceLastTickWait >= (options?.minMSBetweenTickWaits ?? 2000)) {
+                                if (Date.now() - msSinceLastTickWait >= (options?.minMSBetweenTickWaits ?? config.system.defaultMinMSBetweenTickWaits)) {
                                     await waitTick();
                                     msSinceLastTickWait = Date.now();
                                 }
@@ -239,7 +239,7 @@ export async function fillHollowSphere<LiteModeEnabled extends boolean = false>(
                                     }
                                 }
                                 index++;
-                                if (Date.now() - msSinceLastTickWait >= (options?.minMSBetweenTickWaits ?? 2000)) {
+                                if (Date.now() - msSinceLastTickWait >= (options?.minMSBetweenTickWaits ?? config.system.defaultMinMSBetweenTickWaits)) {
                                     await waitTick();
                                     msSinceLastTickWait = Date.now();
                                 }
@@ -275,7 +275,7 @@ export async function fillHollowSphere<LiteModeEnabled extends boolean = false>(
                                     }
                                 }
                                 index++;
-                                if (Date.now() - msSinceLastTickWait >= (options?.minMSBetweenTickWaits ?? 2000)) {
+                                if (Date.now() - msSinceLastTickWait >= (options?.minMSBetweenTickWaits ?? config.system.defaultMinMSBetweenTickWaits)) {
                                     await waitTick();
                                     msSinceLastTickWait = Date.now();
                                 }
@@ -311,7 +311,7 @@ export async function fillHollowSphere<LiteModeEnabled extends boolean = false>(
                                     }
                                 }
                                 index++;
-                                if (Date.now() - msSinceLastTickWait >= (options?.minMSBetweenTickWaits ?? 2000)) {
+                                if (Date.now() - msSinceLastTickWait >= (options?.minMSBetweenTickWaits ?? config.system.defaultMinMSBetweenTickWaits)) {
                                     await waitTick();
                                     msSinceLastTickWait = Date.now();
                                 }
@@ -343,7 +343,7 @@ export async function fillHollowSphere<LiteModeEnabled extends boolean = false>(
                                     }
                                 }
                                 index++;
-                                if (Date.now() - msSinceLastTickWait >= (options?.minMSBetweenTickWaits ?? 2000)) {
+                                if (Date.now() - msSinceLastTickWait >= (options?.minMSBetweenTickWaits ?? config.system.defaultMinMSBetweenTickWaits)) {
                                     await waitTick();
                                     msSinceLastTickWait = Date.now();
                                 }
@@ -393,7 +393,7 @@ export async function fillHollowSphere<LiteModeEnabled extends boolean = false>(
                                     }
                                 }
                                 index++;
-                                if (Date.now() - msSinceLastTickWait >= (options?.minMSBetweenTickWaits ?? 2000)) {
+                                if (Date.now() - msSinceLastTickWait >= (options?.minMSBetweenTickWaits ?? config.system.defaultMinMSBetweenTickWaits)) {
                                     await waitTick();
                                     msSinceLastTickWait = Date.now();
                                 }
@@ -432,7 +432,7 @@ export async function fillHollowSphere<LiteModeEnabled extends boolean = false>(
                                     }
                                 }
                                 index++;
-                                if (Date.now() - msSinceLastTickWait >= (options?.minMSBetweenTickWaits ?? 2000)) {
+                                if (Date.now() - msSinceLastTickWait >= (options?.minMSBetweenTickWaits ?? config.system.defaultMinMSBetweenTickWaits)) {
                                     await waitTick();
                                     msSinceLastTickWait = Date.now();
                                 }
@@ -472,7 +472,7 @@ export async function fillHollowSphere<LiteModeEnabled extends boolean = false>(
                                     }
                                 }
                                 index++;
-                                if (Date.now() - msSinceLastTickWait >= (options?.minMSBetweenTickWaits ?? 2000)) {
+                                if (Date.now() - msSinceLastTickWait >= (options?.minMSBetweenTickWaits ?? config.system.defaultMinMSBetweenTickWaits)) {
                                     await waitTick();
                                     msSinceLastTickWait = Date.now();
                                 }
@@ -507,7 +507,7 @@ export async function fillHollowSphere<LiteModeEnabled extends boolean = false>(
                                     }
                                 }
                                 index++;
-                                if (Date.now() - msSinceLastTickWait >= (options?.minMSBetweenTickWaits ?? 2000)) {
+                                if (Date.now() - msSinceLastTickWait >= (options?.minMSBetweenTickWaits ?? config.system.defaultMinMSBetweenTickWaits)) {
                                     await waitTick();
                                     msSinceLastTickWait = Date.now();
                                 }
@@ -554,7 +554,7 @@ export async function fillHollowSphere<LiteModeEnabled extends boolean = false>(
                                     }
                                 }
                                 index++;
-                                if (Date.now() - msSinceLastTickWait >= (options?.minMSBetweenTickWaits ?? 2000)) {
+                                if (Date.now() - msSinceLastTickWait >= (options?.minMSBetweenTickWaits ?? config.system.defaultMinMSBetweenTickWaits)) {
                                     await waitTick();
                                     msSinceLastTickWait = Date.now();
                                 }
@@ -595,7 +595,7 @@ export async function fillHollowSphere<LiteModeEnabled extends boolean = false>(
                                     }
                                 }
                                 index++;
-                                if (Date.now() - msSinceLastTickWait >= (options?.minMSBetweenTickWaits ?? 2000)) {
+                                if (Date.now() - msSinceLastTickWait >= (options?.minMSBetweenTickWaits ?? config.system.defaultMinMSBetweenTickWaits)) {
                                     await waitTick();
                                     msSinceLastTickWait = Date.now();
                                 }
@@ -636,7 +636,7 @@ export async function fillHollowSphere<LiteModeEnabled extends boolean = false>(
                                     }
                                 }
                                 index++;
-                                if (Date.now() - msSinceLastTickWait >= (options?.minMSBetweenTickWaits ?? 2000)) {
+                                if (Date.now() - msSinceLastTickWait >= (options?.minMSBetweenTickWaits ?? config.system.defaultMinMSBetweenTickWaits)) {
                                     await waitTick();
                                     msSinceLastTickWait = Date.now();
                                 }
@@ -673,7 +673,7 @@ export async function fillHollowSphere<LiteModeEnabled extends boolean = false>(
                                     }
                                 }
                                 index++;
-                                if (Date.now() - msSinceLastTickWait >= (options?.minMSBetweenTickWaits ?? 2000)) {
+                                if (Date.now() - msSinceLastTickWait >= (options?.minMSBetweenTickWaits ?? config.system.defaultMinMSBetweenTickWaits)) {
                                     await waitTick();
                                     msSinceLastTickWait = Date.now();
                                 }

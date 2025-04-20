@@ -57,14 +57,14 @@ export async function playerMenu_homes(sourceEntitya: Entity | executeCommandPla
                             (
                                 await showActions(
                                     sourceEntity,
-                                    "Home Details",
-                                    `${home.name}\nDimension${
+                                    customFormUICodes.action.titles.formStyles.medium + "Home Details",
+                                    `${home.name}\nDimension: ${
                                         dimensionTypeDisplayFormattingD[home.location.dimension.id as keyof typeof dimensionTypeDisplayFormattingD]
                                     }`,
-                                    ["Teleport", "textures/items/ender_pearl"],
-                                    ["Delete", "textures/ui/trash_default"],
-                                    ["Back", "textures/ui/arrow_left"],
-                                    ["Close", "textures/ui/crossout"]
+                                    [customFormUICodes.action.buttons.positions.main_only + "Teleport", "textures/items/ender_pearl"],
+                                    [customFormUICodes.action.buttons.positions.main_only + "Delete", "textures/ui/trash_default"],
+                                    [customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left"],
+                                    [customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout"]
                                 )
                             ).selection
                         ]
@@ -211,7 +211,7 @@ export async function playerMenu_homes(sourceEntitya: Entity | executeCommandPla
                         }
                     }
                     const location = sourceEntity.dimensionLocation;
-                    const r = await new ModalFormData().title("New Home").textField(`Location: ${vTStr(location)}\nDimension: ${dimensionTypeDisplayFormattingD[location.dimension.id as keyof typeof dimensionTypeDisplayFormattingD]}\n\nPlease enter the name for your new home below.`, "Home Name").submitButton("Create Home").forceShow(sourceEntity);
+                    const r = await new ModalFormData().title(customFormUICodes.modal.titles.formStyles.medium + "New Home").label(`Location: ${vTStr(location)}\nDimension: ${dimensionTypeDisplayFormattingD[location.dimension.id as keyof typeof dimensionTypeDisplayFormattingD]}`).divider().textField("Please enter the name for your new home below.", "Home Name").submitButton("Create Home").forceShow(sourceEntity);
                     if(r.canceled){
                         return await playerMenu_homes(sourceEntity);
                     }

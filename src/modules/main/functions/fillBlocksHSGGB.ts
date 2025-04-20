@@ -72,7 +72,7 @@ export async function fillBlocksHSGGB(
                     },
                     {
                         integrity,
-                        minMSBetweenYields: options?.minMSBetweenYields ?? 5000,
+                        minMSBetweenYields: options?.minMSBetweenYields ?? config.system.defaultMinMSBetweenTickWaits,
                     }
                 )
             );
@@ -99,7 +99,7 @@ export async function fillBlocksHSGGB(
                     },
                     {
                         integrity,
-                        minMSBetweenYields: options?.minMSBetweenYields ?? 5000,
+                        minMSBetweenYields: options?.minMSBetweenYields ?? config.system.defaultMinMSBetweenTickWaits,
                     }
                 )
             );
@@ -148,7 +148,7 @@ export async function fillBlocksHSGGB(
                     },
                     {
                         integrity,
-                        minMSBetweenYields: options?.minMSBetweenYields ?? 5000,
+                        minMSBetweenYields: options?.minMSBetweenYields ?? config.system.defaultMinMSBetweenTickWaits,
                     }
                 )
             );
@@ -195,7 +195,7 @@ export async function fillBlocksHSGGB(
                     },
                     {
                         integrity,
-                        minMSBetweenYields: options?.minMSBetweenYields ?? 5000,
+                        minMSBetweenYields: options?.minMSBetweenYields ?? config.system.defaultMinMSBetweenTickWaits,
                     }
                 )
             );
