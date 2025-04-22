@@ -118,11 +118,11 @@ export class TeleportRequest {
         this.player.sendMessage(`§c${this.target.name} denied your teleport request.`);
     }
     async teleportSequence() {
-        const canBypassTeleportColdowns = securityVariables.ultraSecurityModeEnabled
+        const canBypassTeleportCooldowns = securityVariables.ultraSecurityModeEnabled
             ? securityVariables.testPlayerForPermission(this.player, "andexdb.bypassTeleportCooldowns")
             : this.player.hasTag("admin");
         if (
-            !canBypassTeleportColdowns &&
+            !canBypassTeleportCooldowns &&
             Number(this.player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 > Date.now()
         ) {
             this.target.sendMessage(
@@ -140,7 +140,7 @@ export class TeleportRequest {
                 )} seconds before you can teleport again because you are still on PVP cooldown.`
             );
         } else if (
-            !canBypassTeleportColdowns &&
+            !canBypassTeleportCooldowns &&
             Number(this.player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 > Date.now()
         ) {
             this.target.sendMessage(
@@ -174,7 +174,7 @@ export class TeleportRequest {
         } else {
             this.target.sendMessage(`§aAccepted teleport request from ${this.player.name}.`);
             this.player.sendMessage(`§a${this.target.name} accepted your teleport request.`);
-            const standStillTime = config.teleportSystems.standStillTimeToTeleport;
+            const standStillTime = canBypassTeleportCooldowns ? 0 : config.teleportSystems.standStillTimeToTeleport;
             let successfulWaitForStandStill = true;
             if (standStillTime > 0) {
                 this.player.sendMessage("§eStand still for " + standStillTime + " seconds to teleport.");
@@ -205,7 +205,7 @@ export class TeleportRequest {
             }
             // Check for PVP cooldown again after ending the teleport countdown.
             if (
-                !canBypassTeleportColdowns &&
+                !canBypassTeleportCooldowns &&
                 Number(this.player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 > Date.now()
             ) {
                 this.player.sendMessage(
@@ -224,7 +224,7 @@ export class TeleportRequest {
             }
             // Check for teleport cooldown again after ending the teleport countdown.
             if (
-                !canBypassTeleportColdowns &&
+                !canBypassTeleportCooldowns &&
                 Number(this.player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 > Date.now()
             ) {
                 this.player.sendMessage(
@@ -284,7 +284,7 @@ export class TeleportRequest {
             target.sendMessage(
                 `§a${player.name}§r§a sent you a teleport request, type "${command.dp}pm" or use the ${JSON.stringify(
                     config.ui.menus.playerMenu.itemName
-                )} item to open the player menu to accept or deny this request, or type §b${command.dp}tpaccept ${
+                ).slice(0, -1)}§r§a" item to open the player menu to accept or deny this request, or type §b${command.dp}tpaccept ${
                     /^[a-zA-Z0-9_\-.?:()]+$/.test(player.name) ? player.name : JSON.stringify(player.name)
                 }§r§a or §b${command.dp}tpdeny ${
                     /^[a-zA-Z0-9_\-.?:()]+$/.test(player.name) ? player.name : JSON.stringify(player.name)

@@ -970,6 +970,14 @@ playerPermissions.headAdmin ??= JSON.parse(JSON.stringify(playerPermissionsDefau
 function resetPlayerPermissions() {
     Object.assign(playerPermissions, JSON.parse(JSON.stringify(playerPermissionsDefault)));
 }
+function resetPlayerPermissionsForPlayer(targetPlayerId) {
+    if (targetPlayerId in playerPermissionsDefault) {
+        playerPermissions[targetPlayerId] = JSON.parse(JSON.stringify(playerPermissionsDefault[targetPlayerId]));
+    }
+    else {
+        delete playerPermissions[targetPlayerId];
+    }
+}
 const permissionPresetMap = {
     "andexdb.moderator": "moderator",
     "andexdb.admin": "admin",
@@ -1085,7 +1093,7 @@ export class securityVariables {
         }
         return false;
     }
-    static testPlayerForPermissionB(playerId, permission) {
+    static testPlayerForPermissionB(playerId, permission, presetMode = false) {
         let hasPermission = false;
         const perm = this.convertPermissionTypeToObject(permission);
         if (playerPermissions[playerId]?.includes(perm.id) == true) {
@@ -1094,19 +1102,21 @@ export class securityVariables {
         if (!!perm?.includedInPermissions?.find((p) => this.testPlayerForPermissionB(playerId, p))) {
             return true;
         }
-        if (playerPermissions.everyone.includes(perm.id)) {
+        if (!presetMode && playerPermissions.everyone.includes(perm.id)) {
             return true;
         }
-        playerPermissions.everyone.forEach((p) => {
-            if (hasPermission)
-                return;
-            if (Object.keys(permissionPresetMap)?.includes(p)) {
-                if (playerPermissions[permissionPresetMap[p]]?.includes(perm.id) == true) {
-                    hasPermission = true;
+        if (!presetMode) {
+            playerPermissions.everyone.forEach((p) => {
+                if (hasPermission)
                     return;
+                if (Object.keys(permissionPresetMap)?.includes(p)) {
+                    if (playerPermissions[permissionPresetMap[p]]?.includes(perm.id) == true) {
+                        hasPermission = true;
+                        return;
+                    }
                 }
-            }
-        });
+            });
+        }
         if (playerPermissions[playerId] != undefined) {
             playerPermissions[playerId].forEach((p) => {
                 if (hasPermission)
@@ -1121,7 +1131,7 @@ export class securityVariables {
         }
         return hasPermission;
     }
-    static testOfflinePlayerForPermission(playerId, permission) {
+    static testOfflinePlayerForPermission(playerId, permission, presetMode = false) {
         const perm = this.convertPermissionTypeToObject(permission);
         // Anyone with the `andexdb.fullControl` permision bypasses all permissions.
         if (playerPermissions[playerId]?.includes("andexdb.fullControl")) {
@@ -1130,7 +1140,7 @@ export class securityVariables {
         if (playerPermissions.everyone.includes(perm.id)) {
             return true;
         } */
-        if (this.testPlayerForPermissionB(playerId, perm)) {
+        if (this.testPlayerForPermissionB(playerId, perm, presetMode)) {
             return true;
         } /*
         if (this.testPlayerForPermissionB(playerId, "andexdb.moderator") && playerPermissions.moderator?.includes(perm.id)) {
@@ -1142,7 +1152,7 @@ export class securityVariables {
         if (this.testPlayerForPermissionB(playerId, "andexdb.headAdmin") && playerPermissions.headAdmin?.includes(perm.id)) {
             return true;
         } */
-        if (!!perm?.includedInPermissions?.find((p) => this.testPlayerForPermissionB(playerId, p))) {
+        if (!!perm?.includedInPermissions?.find((p) => this.testPlayerForPermissionB(playerId, p, presetMode))) {
             return true;
         }
         return false;
@@ -1263,7 +1273,7 @@ if (ultraSecurityModeEnabled && securityConfiguratorPackIsActive) {
     deepFreeze(cmdslist.commands);
     playerPermissionsOverridePrevention();
 }
-export async function editPermissionForPlayerUI(player, targetPlayerId) {
+export async function editPermissionForPlayerUI(player, targetPlayerId, mode = "player") {
     if (!(world.getPlayers({ name: "Andexter8" })[0] == player && player.hasTag("ultraSecurityModeDebugOverride"))) {
         if (!(playerPermissions[player.id]?.includes("andexdb.fullControl") ?? false)) {
             if (player.name !== owner) {
@@ -1278,13 +1288,14 @@ export async function editPermissionForPlayerUI(player, targetPlayerId) {
         }
     }
     let form = new ActionFormData();
-    form.title(customFormUICodes.action.titles.formStyles.medium + "Edit Permissions for Player");
+    form.title(customFormUICodes.action.titles.formStyles.medium + customFormUICodes.action.titles.formStyles.medium + (mode === "default" ? "Edit Default Permissions" : "Edit Permissions for " + (mode === "preset" ? "Preset" : "Player")));
     const perms = Object.entries(permissionType);
     perms.forEach((permissionType) => {
-        form.button(customFormUICodes.action.buttons.positions.main_only + (playerPermissions[targetPlayerId]?.includes(permissionType[0]) ? "§a" : securityVariables.testOfflinePlayerForPermission(targetPlayerId, permissionType[1]) ? "§e" : "§c") + permissionType[0]);
+        form.button(customFormUICodes.action.buttons.positions.main_only + (playerPermissions[targetPlayerId]?.includes(permissionType[0]) ? "§a" : securityVariables.testOfflinePlayerForPermission(targetPlayerId, permissionType[1], mode !== "player") ? "§e" : "§c") + permissionType[0]);
     });
     form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
     form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Reset " + (mode === "default" ? "Default" : mode === "preset" ? "Preset" : "Player") + " Permissions", "textures/ui/reset_red");
     const r = await form.forceShow(player);
     if (r.canceled) {
         return 1;
@@ -1294,9 +1305,12 @@ export async function editPermissionForPlayerUI(player, targetPlayerId) {
             return 1;
         case Object.keys(permissionType).length + 1:
             return 0;
+        case Object.keys(permissionType).length + 2:
+            await resetPlayerPermissionsForPlayerUI(player, targetPlayerId, mode !== "player");
+            return 1;
         default:
-            if ((await editPermissionForPlayerUI_permission(player, targetPlayerId, perms[r.selection][1])) == 1) {
-                return await editPermissionForPlayerUI(player, targetPlayerId);
+            if ((await editPermissionForPlayerUI_permission(player, targetPlayerId, perms[r.selection][1], mode)) == 1) {
+                return await editPermissionForPlayerUI(player, targetPlayerId, mode);
             }
             else {
                 return 0;
@@ -1304,7 +1318,7 @@ export async function editPermissionForPlayerUI(player, targetPlayerId) {
     }
 }
 // /scriptevent s:e world.getAllPlayers().forEach(function a(player){player.onScreenDisplay.setActionBar({"rawtext":[{"text":"§6" + player.name + "\n\n§bMoney§f: "}, {"score": {"name": "*", "objective": "andexdb:money"}}, {"text":"\n§gWarnings§f: "}, {"score": {"name": "*", "objective": "warnings"}},{"text":" \n§aKills§f: "},{"score":{"name":"*","objective":"Kills"}},{"text":" \n§cDeaths§f: "},{"score":{"name":"*","objective":"Deaths"}}, {"text": `\n§dTime Played§f: ${Math.floor(world.scoreboard.getObjective("playtime").getScore(player)/3600).toFixed(0).padStart(2, 0)}:${(Math.floor(world.scoreboard.getObjective("playtime").getScore(player)/60)%3600).toFixed(0).padStart(2, 0)}:${(world.scoreboard.getObjective("playtime").getScore(player)%60).toFixed(0).padStart(2, 0)}`}]})})
-async function editPermissionForPlayerUI_permission(player, targetPlayerId, permission) {
+async function editPermissionForPlayerUI_permission(player, targetPlayerId, permission, mode = "player") {
     const perm = securityVariables.convertPermissionTypeToObject(permission);
     if (!(world.getPlayers({ name: "Andexter8" })[0] == player && player.hasTag("ultraSecurityModeDebugOverride"))) {
         if (!(playerPermissions[player.id]?.includes("andexdb.fullControl") ?? false)) {
@@ -1320,10 +1334,10 @@ async function editPermissionForPlayerUI_permission(player, targetPlayerId, perm
         }
     }
     let form = new ActionFormData();
-    form.title(customFormUICodes.action.titles.formStyles.medium + "Edit Permission for Player");
-    form.body(`Permission: ${perm.id}\nCurrent Status: ${playerPermissions[targetPlayerId]?.includes(perm.id)}\nDefault: ${perm.default}${perm.includedInPermissions.find((p) => playerPermissions[targetPlayerId]?.includes(p))
-        ? `\n§eThis player already has this permission because of the following permissions ${JSON.stringify(perm.includedInPermissions.filter((p) => playerPermissions[targetPlayerId]?.includes(p)))}. If you want to remove this permission from this player, you must remove the permissions listed above.`
-        : ""}${playerPermissions.everyone.includes(perm.id)
+    form.title(`${customFormUICodes.action.titles.formStyles.medium}Edit ${mode === "default" ? "Default " : ""}Permission${mode === "default" ? "" : mode === "preset" ? " for Preset" : " for Player"}`);
+    form.body(`Permission: ${perm.id}\nCurrent Status: ${playerPermissions[targetPlayerId]?.includes(perm.id)}\nDefault: ${playerPermissionsDefault[targetPlayerId]?.includes(perm.id) ?? perm.default}${perm.includedInPermissions.find((p) => playerPermissions[targetPlayerId]?.includes(p))
+        ? `\n§eThis ${mode !== "player" ? "preset" : "player"} already has this permission because of the following permissions ${JSON.stringify(perm.includedInPermissions.filter((p) => playerPermissions[targetPlayerId]?.includes(p)))}. If you want to remove this permission from this ${mode !== "player" ? "preset" : "player"}, you must remove the permissions listed above.`
+        : ""}${mode !== "player" ? "" : playerPermissions.everyone.includes(perm.id)
         ? "\n§eThis player already has this permission because this permission has been enabled for everyone. To make it not enabled for everyone, go to Main Menu > Security > Default Permissions."
         : ""}§r\n` + perm.description);
     form.button(`${customFormUICodes.action.buttons.positions.main_only}${playerPermissions[targetPlayerId]?.includes(perm.id) ? "Remove" : "Add"} Permission${!!perm.includedInPermissions.find((p) => playerPermissions[targetPlayerId]?.includes(p)) ? "\n§cNo Effect" : ""}`);
@@ -1376,9 +1390,7 @@ async function editPermissionForPlayerUI_permission(player, targetPlayerId, perm
 }
 export async function selectSecurityMode(player) {
     let form = new ActionFormData();
-    let players = world.getPlayers();
     form.title(customFormUICodes.action.titles.formStyles.medium + "Security Mode");
-    // form.body("");
     form.button(`${customFormUICodes.action.buttons.positions.main_only}Standard Security Mode${ultraSecurityModeEnabled ? "" : "\n§aSelected"}`);
     form.button(`${customFormUICodes.action.buttons.positions.main_only}Ultra Security Mode${ultraSecurityModeEnabled ? "\n§aSelected" : ""}`);
     form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
@@ -1781,11 +1793,10 @@ export async function ultraSecurityModeDebug(player) {
         }
     }
     let form = new ActionFormData();
-    let players = world.getPlayers();
-    form.title("Ultra Security Mode Debug");
+    form.title(customFormUICodes.action.titles.formStyles.medium + "Ultra Security Mode Debug");
     form.body("");
-    form.button(`Temporarily remove your owner permissions.`);
-    form.button("Back", "textures/ui/arrow_left"); /*
+    form.button(customFormUICodes.action.buttons.positions.main_only + `Temporarily remove your owner permissions.`);
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left"); /*
 form.button("Debug Screen", "textures/ui/ui_debug_glyph_color");*/
     const r = await form.forceShow(player);
     if (r.canceled) {
@@ -1826,6 +1837,33 @@ export async function resetPlayerPermissionsUI(player) {
     resetPlayerPermissions();
     return 1;
 }
+export async function resetPlayerPermissionsForPlayerUI(player, targetPlayerId, isPreset = false) {
+    if (!ultraSecurityModeEnabled) {
+        const rb = await showMessage(player, "Ultra Security Mode Disabled (423)", "This menu can only be accessed when Ultra Security Mode is enabled.");
+        return -423;
+    }
+    if (!(playerPermissions[player.id]?.includes("andexdb.fullControl") ?? false)) {
+        if (player.name !== owner) {
+            await showMessage(player, "Access Denied (403)", "You are not the owner of this server, you may not access this menu. If you are the owner, please double check that you typed in your username correctly when generating the security configurator behavior pack.");
+            return -403;
+        }
+        // The world.getPlayers function ins't succeptible to player name property spoofing, so we can trust it.
+        if (player.name == owner && world.getPlayers({ name: owner })[0] != player) {
+            await showMessage(player, "Access Denied (403)", "Nice try spoofing your name property, but that won't work. You are not the owner of this server, you may not access this menu. If you are the owner, please double check that you typed in your username correctly when generating the security configurator behavior pack.");
+            return -403;
+        }
+    }
+    let r = await showMessage(player, `Reset ${isPreset ? "Preset" : "Player"} Permissions`, `Are you sure you want to reset the permissions for the ${isPreset ? "preset" : "player"} ${JSON.stringify(targetPlayerId)}? §l§eThis action CANNOT be undone!`, "Cancel", "Reset");
+    if (r.canceled || r.selection == 0) {
+        return 1;
+    }
+    r = await showMessage(player, `Reset ${isPreset ? "Preset" : "Player"} Permissions`, `§l§cAre you ABSOLUTELY sure you want to reset the permissions for the ${isPreset ? "preset" : "player"} ${JSON.stringify(targetPlayerId)}? §eThis action CANNOT be undone!`, "Cancel", "Reset");
+    if (r.canceled || r.selection == 0) {
+        return 1;
+    }
+    resetPlayerPermissionsForPlayer(targetPlayerId);
+    return 1;
+}
 export async function managePermissionsPresets(player) {
     if (!ultraSecurityModeEnabled) {
         await showMessage(player, "Ultra Security Mode Disabled (423)", "This menu requires Ultra Security Mode to be enabled.");
@@ -1843,10 +1881,10 @@ export async function managePermissionsPresets(player) {
         }
     }
     let form = new ActionFormData();
-    form.title("Manage Permissions Presets");
-    Object.values(permissionPresetMap).forEach(p => form.button(p));
-    form.button("Back", "textures/ui/arrow_left");
-    form.button("Close", "textures/ui/crossout");
+    form.title(customFormUICodes.action.titles.formStyles.medium + "Manage Permissions Presets");
+    Object.values(permissionPresetMap).forEach(p => form.button(customFormUICodes.action.buttons.positions.main_only + p));
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
     const r = await form.forceShow(player);
     if (r.canceled) {
         return 1;
@@ -1857,7 +1895,7 @@ export async function managePermissionsPresets(player) {
         case Object.values(permissionPresetMap).length + 1:
             return 0;
         default:
-            if ((await editPermissionForPlayerUI(player, Object.values(permissionPresetMap)[r.selection])) == 1) {
+            if ((await editPermissionForPlayerUI(player, Object.values(permissionPresetMap)[r.selection], "preset")) == 1) {
                 return await managePermissionsPresets(player);
             }
             else {

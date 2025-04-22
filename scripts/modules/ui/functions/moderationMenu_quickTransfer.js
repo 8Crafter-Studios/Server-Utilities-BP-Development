@@ -42,7 +42,7 @@ export async function moderationMenu_quickTransfer(sourceEntity) {
                 case "player": {
                     const target = playerslist[r.selection];
                     const form = new ModalFormData();
-                    form.title(customFormUICodes.action.titles.formStyles.medium + "Kick " + target.name);
+                    form.title(customFormUICodes.action.titles.formStyles.medium + "Transfer " + target.name);
                     form.textField("IP Address", "play.cubecraft.net");
                     form.textField("Port", "19132");
                     const rb = await form.forceShow(player);

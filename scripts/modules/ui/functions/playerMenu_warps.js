@@ -24,7 +24,7 @@ export async function playerMenu_warps(sourceEntity) {
                     return 0;
                 }
             }
-            const canBypassTeleportColdowns = securityVariables.ultraSecurityModeEnabled ? securityVariables.testPlayerForPermission(player, "andexdb.bypassTeleportCooldowns") : player.hasTag("admin");
+            const canBypassTeleportCooldowns = securityVariables.ultraSecurityModeEnabled ? securityVariables.testPlayerForPermission(player, "andexdb.bypassTeleportCooldowns") : player.hasTag("admin");
             const canAccessManageWarpsUI = securityVariables.ultraSecurityModeEnabled ? securityVariables.testPlayerForPermission(player, "andexdb.accessManageWarpsUI") : player.hasTag("admin");
             let form = new ActionFormData();
             form.title(customFormUICodes.action.titles.formStyles.medium + "Warps");
@@ -53,7 +53,7 @@ export async function playerMenu_warps(sourceEntity) {
                     }
                     // Check for PVP cooldown before starting the teleport countdown.
                     // If the player has permission, they can bypass the cooldown.
-                    if (!canBypassTeleportColdowns && Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 > Date.now()) {
+                    if (!canBypassTeleportCooldowns && Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 > Date.now()) {
                         player.sendMessage(`§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) +
                             config.teleportSystems.pvpCooldownToTeleport * 1000 -
                             Date.now()) /
@@ -62,14 +62,14 @@ export async function playerMenu_warps(sourceEntity) {
                     }
                     // Check for teleport cooldown before starting the teleport countdown.
                     // If the player has permission, they can bypass the cooldown.
-                    if (!canBypassTeleportColdowns &&
+                    if (!canBypassTeleportCooldowns &&
                         Number(player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 > Date.now()) {
                         player.sendMessage(`§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 - Date.now()) /
                             1000)} seconds before you can teleport again because you are still on cooldown.`);
                         return 0;
                     }
                     // If the player has permission, they can bypass the countdown.
-                    const standStillTime = canBypassTeleportColdowns ? 0 : config.teleportSystems.standStillTimeToTeleport;
+                    const standStillTime = canBypassTeleportCooldowns ? 0 : config.teleportSystems.standStillTimeToTeleport;
                     if (standStillTime > 0) {
                         player.sendMessage("§eStand still for " + standStillTime + " seconds to teleport.");
                         await waitTicks(20);
@@ -85,7 +85,7 @@ export async function playerMenu_warps(sourceEntity) {
                         await waitTicks(20);
                     }
                     // Check for PVP cooldown again after ending the teleport countdown.
-                    if (!canBypassTeleportColdowns && Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 > Date.now()) {
+                    if (!canBypassTeleportCooldowns && Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 > Date.now()) {
                         player.sendMessage(`§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) +
                             config.teleportSystems.pvpCooldownToTeleport * 1000 -
                             Date.now()) /
@@ -94,7 +94,7 @@ export async function playerMenu_warps(sourceEntity) {
                         return 0;
                     }
                     // Check for teleport cooldown again after ending the teleport countdown.
-                    if (!canBypassTeleportColdowns && Number(player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 > Date.now()) {
+                    if (!canBypassTeleportCooldowns && Number(player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 > Date.now()) {
                         player.sendMessage(`§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 - Date.now()) /
                             1000)} seconds before you can teleport again because you are still on cooldown.`);
                         return 0;

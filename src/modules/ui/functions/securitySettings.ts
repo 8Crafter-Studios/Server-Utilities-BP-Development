@@ -56,11 +56,10 @@ export async function securitySettings(sourceEntity: loosePlayerType): Promise<-
             }
             let form = new ActionFormData();
             form.title(customFormUICodes.action.titles.formStyles.gridMenu + "Security");
-            form.body("Choose menu to open. ");
             form.button(customFormUICodes.action.buttons.positions.main_only + "View Players With Permissions", "textures/ui/permissions_op_crown");
             form.button(customFormUICodes.action.buttons.positions.main_only + "Manage Default Permissions", "textures/ui/icon_setting");
             form.button(customFormUICodes.action.buttons.positions.main_only + "Manage Permissions Presets", "textures/ui/icon_setting");
-            form.button(customFormUICodes.action.buttons.positions.main_only + "Reset Permissions", "textures/ui/icon_setting");
+            form.button(customFormUICodes.action.buttons.positions.main_only + "Reset Permissions", "textures/ui/reset_red");
             form.button(customFormUICodes.action.buttons.positions.main_only + "Settings", "textures/ui/icon_setting");
             form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
             form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
@@ -106,7 +105,7 @@ export async function securitySettings(sourceEntity: loosePlayerType): Promise<-
                         } else {
                             return 0;
                         }
-                    } else if ((await editPermissionForPlayerUI(player as Player, "everyone")) == 1) {
+                    } else if ((await editPermissionForPlayerUI(player as Player, "everyone", "default")) == 1) {
                         continue;
                     } else {
                         return 0;
@@ -196,7 +195,7 @@ export async function securitySettings_settingsSelection(sourceEntity: loosePlay
                         "Ultra Security Mode Settings (Coming Soon!)",
                     "textures/ui/icon_setting"
                 );
-                form.button(customFormUICodes.action.buttons.positions.main_only + "Ultra Security Mode Debug", "textures/ui/icon_setting");
+                form.button(customFormUICodes.action.buttons.positions.main_only + "Ultra Security Mode Debug", "textures/ui/debug_glyph_color");
             }
             form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
             form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
