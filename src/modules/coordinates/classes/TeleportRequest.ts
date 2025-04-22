@@ -290,8 +290,8 @@ export class TeleportRequest {
                     /^[a-zA-Z0-9_\-.?:()]+$/.test(player.name) ? player.name : JSON.stringify(player.name)
                 }§r§a to accept or deny this request, this request will expire in ${
                     config.tpaSystem.timeoutDuration < 0
-                        ? "-" + moment().preciseDiff(moment(config.tpaSystem.timeoutDuration * 1000))
-                        : moment().preciseDiff(moment(config.tpaSystem.timeoutDuration * 1000))
+                        ? "-" + moment().preciseDiff(moment(Date.now() + config.tpaSystem.timeoutDuration * 1000))
+                        : moment().preciseDiff(moment(Date.now() + config.tpaSystem.timeoutDuration * 1000))
                 }.`
             );
         } else {
@@ -302,8 +302,8 @@ export class TeleportRequest {
                     /^[a-zA-Z0-9_\-.?:()]+$/.test(player.name) ? player.name : JSON.stringify(player.name)
                 }§r§a to accept or deny this request, this request will expire in ${
                     config.tpaSystem.timeoutDuration < 0
-                        ? "-" + moment().preciseDiff(moment(config.tpaSystem.timeoutDuration * 1000))
-                        : moment().preciseDiff(moment(config.tpaSystem.timeoutDuration * 1000))
+                        ? "-" + moment().preciseDiff(moment(Date.now() + config.tpaSystem.timeoutDuration * 1000))
+                        : moment().preciseDiff(moment(Date.now() + config.tpaSystem.timeoutDuration * 1000))
                 }.`
             );
         }

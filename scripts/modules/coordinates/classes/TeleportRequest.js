@@ -238,13 +238,13 @@ export class TeleportRequest {
         const request = new TeleportRequest(player, target, sendTime);
         if (config.ui.menus.playerMenu.enabled) {
             target.sendMessage(`§a${player.name}§r§a sent you a teleport request, type "${command.dp}pm" or use the ${JSON.stringify(config.ui.menus.playerMenu.itemName)} item to open the player menu to accept or deny this request, or type §b${command.dp}tpaccept ${/^[a-zA-Z0-9_\-.?:()]+$/.test(player.name) ? player.name : JSON.stringify(player.name)}§r§a or §b${command.dp}tpdeny ${/^[a-zA-Z0-9_\-.?:()]+$/.test(player.name) ? player.name : JSON.stringify(player.name)}§r§a to accept or deny this request, this request will expire in ${config.tpaSystem.timeoutDuration < 0
-                ? "-" + moment().preciseDiff(moment(config.tpaSystem.timeoutDuration * 1000))
-                : moment().preciseDiff(moment(config.tpaSystem.timeoutDuration * 1000))}.`);
+                ? "-" + moment().preciseDiff(moment(Date.now() + config.tpaSystem.timeoutDuration * 1000))
+                : moment().preciseDiff(moment(Date.now() + config.tpaSystem.timeoutDuration * 1000))}.`);
         }
         else {
             target.sendMessage(`§a${player.name}§r§a sent you a teleport request, type §b${command.dp}tpaccept ${/^[a-zA-Z0-9_\-.?:()]+$/.test(player.name) ? player.name : JSON.stringify(player.name)}§r§a or §b${command.dp}tpdeny ${/^[a-zA-Z0-9_\-.?:()]+$/.test(player.name) ? player.name : JSON.stringify(player.name)}§r§a to accept or deny this request, this request will expire in ${config.tpaSystem.timeoutDuration < 0
-                ? "-" + moment().preciseDiff(moment(config.tpaSystem.timeoutDuration * 1000))
-                : moment().preciseDiff(moment(config.tpaSystem.timeoutDuration * 1000))}.`);
+                ? "-" + moment().preciseDiff(moment(Date.now() + config.tpaSystem.timeoutDuration * 1000))
+                : moment().preciseDiff(moment(Date.now() + config.tpaSystem.timeoutDuration * 1000))}.`);
         }
     }
     static getRequestsFromPlayer(fromPlayer) {
