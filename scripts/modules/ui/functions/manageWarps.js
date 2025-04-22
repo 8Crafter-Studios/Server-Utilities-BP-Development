@@ -99,7 +99,7 @@ export async function manageWarps(sourceEntity) {
                         }
                         case "edit": {
                             const r = await new ModalFormData()
-                                .title(customFormUICodes.modal.titles.formStyles.medium + "New Warp")
+                                .title(customFormUICodes.modal.titles.formStyles.medium + "Edit Warp")
                                 .textField(`Warp Display Name`, "Warp Name", warp.displayName)
                                 .textField(`Warp Location. ex. 172.41 76 29.5`, "x y z", vTStr(warp.location))
                                 .dropdown("Warp Dimension", dimensionsd.map((d) => dimensionTypeDisplayFormattingE[d]), dimensionsd.indexOf(warp.dimension))

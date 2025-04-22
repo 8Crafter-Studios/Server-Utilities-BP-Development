@@ -245,6 +245,7 @@ Give all players health boost with the level equal to their XP level:
     "\\\\walls" = "Replaces the walls of the selected area with the selected block type.",
     "\\\\ceil" = "Replaces the ceiling of the selected area with the selected block type.",
     "\\\\floor" = "Replaces the floor of the selected area with the selected block type.",
+    "\\\\loadchunks" = "Loads the chunks in the selected area.",
     "\\\\set" = "Sets the blocks between the selected area to the selected block type.",
     "\\\\seti" = "Sets the blocks between the selected area to the selected block type with the specified integrity.",
     "\\\\drain" = "Drains the blocks between the selected area.",

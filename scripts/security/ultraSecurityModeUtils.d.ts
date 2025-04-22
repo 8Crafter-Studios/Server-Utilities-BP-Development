@@ -636,6 +636,19 @@ Note: Unless the player has the 'andexdb.fullControl' permission, the player can
         readonly description: "Allows the player to bypass all forms of spawn protection.\n    This permission is included in the 'andexdb.headAdmin' permission.\n    This permission is included in the 'andexdb.admin' permission.";
         readonly additionalPrompts: [];
     };
+    /**
+     * Allows the player to bypass all teleport cooldowns.
+     * This permission is included in the `andexdb.headAdmin` permission.
+     * This permission is included in the `andexdb.admin` permission.
+     * This permission is included in the `andexdb.moderator` permission.
+     */
+    readonly "andexdb.bypassTeleportCooldowns": {
+        readonly id: "andexdb.bypassTeleportCooldowns";
+        readonly default: false;
+        readonly includedInPermissions: [];
+        readonly description: "Allows the player to bypass all teleport cooldowns.\n    This permission is included in the 'andexdb.headAdmin' permission.\n    This permission is included in the 'andexdb.admin' permission.\n    This permission is included in the 'andexdb.moderator' permission.";
+        readonly additionalPrompts: [];
+    };
 }>;
 declare global {
     const permissionType: typeof permissionTypes;

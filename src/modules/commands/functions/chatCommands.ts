@@ -197,6 +197,8 @@ import { fillStretchedSphere } from "modules/block_generation_utilities/function
 import { fillOutline } from "modules/block_generation_utilities/functions/fillOutline";
 import { playerMenu } from "modules/ui/functions/playerMenu";
 import { protectedAreaCategories, ProtectedAreas } from "init/variables/protectedAreaVariables";
+import { securityVariables } from "security/ultraSecurityModeUtils";
+import { TeleportRequest } from "modules/coordinates/classes/TeleportRequest";
 
 export function chatCommands(params: {
     returnBeforeChatSend: boolean | undefined;
@@ -9049,7 +9051,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                         ) == undefined
                     ) {
                         case false /*
-                if (newMessage.split(" ").slice(5).join(" ").replaceAll(/(?<!\\p)\\n/g, "\n").replaceAll(/(?<!\\p)\\s/g, "\s").replaceAll(/(?<!\\p)\\0/g, "\0").replaceAll(/(?<!\\p)\\r/g, "\r").replaceAll(/(?<!\\p)\\t/g, "\t").replaceAll(/(?<!\\p)\\v/g, "\v").replaceAll(/(?<!\\p)\\f/g, "\f").replaceAll(/(?<!\\p)\\k/g, "\k").replaceAll(/(?<!\\p)\\p/g, "").replaceAll(", ", " ") == ""){*/ /*player.sendMessageB("§cError: missing required \"name\" field. "); */ /*break; */ /*}*/:
+                if (newMessage.split(" ").slice(5).join(" ").replaceAll(/(?<!\\p)\\n/g, "\n").replaceAll(/(?<!\\p)\\s/g, "\s").replaceAll(/(?<!\\p)\\0/g, "\0").replaceAll(/(?<!\\p)\\r/g, "\r").replaceAll(/(?<!\\p)\\t/g, "\t").replaceAll(/(?<!\\p)\\v/g, "\v").replaceAll(/(?<!\\p)\\f/g, "\f").replaceAll(/(?<!\\p)\\k/g, "\k").replaceAll(/(?<!\\p)\\p/g, "").replaceAll(", ", " ") == ""){*/ /*player.sendError("§cError: missing required \"name\" field. ", true); */ /*break; */ /*}*/:
                             try {
                                 warpList[
                                     warpList.findIndex(
@@ -10970,12 +10972,13 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                 break;
                             case "go":
                             case "warp":
-                            case "teleport":
-                                if (Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 > Date.now()) {
+                            case "teleport": {
+                                const canBypassTeleportColdowns = securityVariables.ultraSecurityModeEnabled ? securityVariables.testPlayerForPermission(player, "andexdb.bypassTeleportCooldowns") : player.hasTag("admin");
+                                if (!canBypassTeleportColdowns && Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 > Date.now()) {
                                     player.sendMessageB(
                                         `§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 - Date.now())/1000)} seconds before you can teleport again because you are still on PVP cooldown.`
                                     );
-                                } else if (Number(player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 > Date.now()) {
+                                } else if (!canBypassTeleportColdowns && Number(player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 > Date.now()) {
                                     player.sendMessageB(
                                         `§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 - Date.now())/1000)} seconds before you can teleport again because you are still on cooldown.`
                                     );
@@ -11001,7 +11004,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                         );
                                     } else {
                                         srun(async () => {
-                                            const standStillTime = config.teleportSystems.standStillTimeToTeleport;
+                                            const standStillTime = canBypassTeleportColdowns ? 0 : config.teleportSystems.standStillTimeToTeleport;
                                             if(standStillTime > 0){
                                                 player.sendMessageB("§eStand still for " + standStillTime + " seconds to teleport.");
                                                 await waitTicks(20);
@@ -11017,7 +11020,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                                 await waitTicks(20);
                                             }
                                             // Check for PVP cooldown again after ending the teleport countdown.
-                                            if (Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 > Date.now()) {
+                                            if (!canBypassTeleportColdowns && Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 > Date.now()) {
                                                 player.sendMessageB(
                                                     `§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 - Date.now())/1000)} seconds before you can teleport again because you are still on PVP cooldown.`
                                                 );
@@ -11025,7 +11028,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                                 return 0;
                                             }
                                             // Check for teleport cooldown again after ending the teleport countdown.
-                                            if (Number(player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 > Date.now()) {
+                                            if (!canBypassTeleportColdowns && Number(player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 > Date.now()) {
                                                 player.sendMessageB(
                                                     `§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 - Date.now())/1000)} seconds before you can teleport again because you are still on cooldown.`
                                                 );
@@ -11053,6 +11056,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                     );
                                 }
                                 break;
+                            }
                             case "clear":
                                 HomeSystem.getHomesForPlayer(player).forEach(
                                     (h) => h.remove()
@@ -11184,6 +11188,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
             case !!switchTest.match(/^spawn$/):
                 {
                     eventData.cancel = true;
+                    const canBypassTeleportColdowns = securityVariables.ultraSecurityModeEnabled ? securityVariables.testPlayerForPermission(player, "andexdb.bypassTeleportCooldowns") : player.hasTag("admin");
                     if (config.spawnCommandLocation.x == undefined) {
                         player.sendMessageB(
                             '§cError: This command cannot be used becuase no spawn teleport location has been set. It can be configured at "Main Menu>Settings>General Settings>spawnCommandLocation"'
@@ -11196,17 +11201,17 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                         player.sendMessageB(
                             '§cSorry but you cannot teleport to spawn because you are in a different dimension than spawn and cross-dimensional spawn teleports have been disabled.'
                         );
-                    } else if (Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 > Date.now()) {
+                    } else if (!canBypassTeleportColdowns && Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 > Date.now()) {
                         player.sendMessageB(
                             `§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 - Date.now())/1000)} seconds before you can teleport again because you are still on PVP cooldown.`
                         );
-                    } else if (Number(player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 > Date.now()) {
+                    } else if (!canBypassTeleportColdowns && Number(player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 > Date.now()) {
                         player.sendMessage(
                             `§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 - Date.now())/1000)} seconds before you can teleport again because you are still on cooldown.`
                         );
                     } else {
                         srun(async () => {
-                            const standStillTime = config.teleportSystems.standStillTimeToTeleport;
+                            const standStillTime = canBypassTeleportColdowns ? 0 : config.teleportSystems.standStillTimeToTeleport;
                             if(standStillTime > 0){
                                 player.sendMessageB("§eStand still for " + standStillTime + " seconds to teleport.");
                                 await waitTicks(20);
@@ -11222,7 +11227,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                 await waitTicks(20);
                             }
                             // Check for PVP cooldown again after ending the teleport countdown.
-                            if (Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 > Date.now()) {
+                            if (!canBypassTeleportColdowns && Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 > Date.now()) {
                                 player.sendMessageB(
                                     `§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 - Date.now())/1000)} seconds before you can teleport again because you are still on PVP cooldown.`
                                 );
@@ -11230,7 +11235,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                 return 0;
                             }
                             // Check for teleport cooldown again after ending the teleport countdown.
-                            if (Number(player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 > Date.now()) {
+                            if (!canBypassTeleportColdowns && Number(player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 > Date.now()) {
                                 player.sendMessageB(
                                     `§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 - Date.now())/1000)} seconds before you can teleport again because you are still on cooldown.`
                                 );
@@ -11258,11 +11263,12 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                     eventData.cancel = true;
                     // /scriptevent andexdb:spawnSimulatedPlayer t§ee§as§ft §4P§dl§layer|~~~|overworld|~~~
                     if (config.tpaSystem.tpaSystemEnabled) {
-                        if (Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 > Date.now()) {
+                        const canBypassTeleportColdowns = securityVariables.ultraSecurityModeEnabled ? securityVariables.testPlayerForPermission(player, "andexdb.bypassTeleportCooldowns") : player.hasTag("admin");
+                        if (!canBypassTeleportColdowns && Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 > Date.now()) {
                             player.sendMessageB(
                                 `§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 - Date.now())/1000)} seconds before you can teleport again because you are still on PVP cooldown.`
                             );
-                        } else if (Number(player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 > Date.now()) {
+                        } else if (!canBypassTeleportColdowns && Number(player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 > Date.now()) {
                             player.sendMessage(
                                 `§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 - Date.now())/1000)} seconds before you can teleport again because you are still on cooldown.`
                             );
@@ -11283,225 +11289,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                     (v) => v.typeId == "minecraft:player"
                                 )[0] as Player;
                                 if (!!target) {
-                                    if (target.dimension !== player.dimension && !config.teleportSystems.allowCrossDimensionalTeleport) {
-                                        player.sendMessageB(
-                                            '§cSorry but you cannot send a teleport request to that player because you are in a different dimension than that player and all cross-dimensional teleports have been disabled.'
-                                        );
-                                    } else if (target.dimension !== player.dimension && !config.tpaSystem.allowCrossDimensionalTeleport) {
-                                        player.sendMessageB(
-                                            '§cSorry but you cannot send a teleport request to that player because you are in a different dimension than that player and cross-dimensional teleport requests have been disabled.'
-                                        );
-                                    }
-                                    //requestChatInput(player, "a").then(v=>psend(player, "as")); srun(()=>requestChatInput(player, "b").then(v=>psend(player, "bs")));
-                                    player.sendMessageB(
-                                        `§aSent a teleport request to "${target.name}".`
-                                    );
-                                    requestConditionalChatInput(
-                                        target,
-                                        (player, message) =>
-                                            message.toLowerCase().trim() == "y" ||
-                                            message.toLowerCase().trim() == "n",
-                                        {
-                                            requestMessage: `§a${
-                                                player.name
-                                            } sent you a teleport request, type "y" to accept or "n" to deny, this request will expire in ${
-                                                config.tpaSystem.timeoutDuration ==
-                                                60
-                                                    ? "1 minute"
-                                                    : (
-                                                        config.tpaSystem
-                                                            .timeoutDuration / 60
-                                                    ).floor() == 1
-                                                    ? `1 minute and ${(
-                                                        config.tpaSystem
-                                                            .timeoutDuration % 60
-                                                    ).floor()} second${
-                                                        (
-                                                            config.tpaSystem
-                                                                .timeoutDuration %
-                                                            60
-                                                        ).floor() != 1
-                                                            ? "s"
-                                                            : ""
-                                                    }`
-                                                    : (
-                                                        config.tpaSystem
-                                                            .timeoutDuration / 60
-                                                    ).floor() == 0
-                                                    ? `${(
-                                                        config.tpaSystem
-                                                            .timeoutDuration % 60
-                                                    ).floor()} second${
-                                                        (
-                                                            config.tpaSystem
-                                                                .timeoutDuration %
-                                                            60
-                                                        ).floor() != 1
-                                                            ? "s"
-                                                            : ""
-                                                    }`
-                                                    : `${(
-                                                        config.tpaSystem
-                                                            .timeoutDuration / 60
-                                                    ).floor()} minutes and ${(
-                                                        config.tpaSystem
-                                                            .timeoutDuration % 60
-                                                    ).floor()} second${
-                                                        (
-                                                            config.tpaSystem
-                                                                .timeoutDuration %
-                                                            60
-                                                        ).floor() != 1
-                                                            ? "s"
-                                                            : ""
-                                                    }`
-                                            }.`,
-                                            expireMs:
-                                                config.tpaSystem.timeoutDuration *
-                                                1000,
-                                        }
-                                    )
-                                        .then(async (t) => {
-                                            if (t.toLowerCase().trim() == "y") {
-                                                if (Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 > Date.now()) {
-                                                    target.sendMessage(
-                                                        `§cAccepted teleport request from "${player.name}", but they can't teleport to you right now because they have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 - Date.now())/1000)} seconds before they can teleport again because they are still on PVP cooldown.`
-                                                    );
-                                                    player.sendMessageB(
-                                                        `§c"${target.name}" accepted your teleport request, but you can't teleport to them right now because you have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 - Date.now())/1000)} seconds before you can teleport again because you are still on PVP cooldown.`
-                                                    );
-                                                } else if (Number(player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 > Date.now()) {
-                                                    target.sendMessage(
-                                                        `§cAccepted teleport request from "${player.name}", but they can't teleport to you right now because they have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 - Date.now())/1000)} seconds before they can teleport again because they are still on cooldown.`
-                                                    );
-                                                    player.sendMessageB(
-                                                        `§c"${target.name}" accepted your teleport request, but you can't teleport to them right now because you have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 - Date.now())/1000)} seconds before you can teleport again because you are still on cooldown.`
-                                                    );
-                                                } else if (target.dimension !== player.dimension && !config.teleportSystems.allowCrossDimensionalTeleport) {
-                                                    target.sendMessage(
-                                                        `§cAccepted teleport request from "${player.name}", but they can't teleport to you right now because you are in a different dimension than that player and all cross-dimensional teleports have been disabled.`
-                                                    );
-                                                    player.sendMessageB(
-                                                        `§c"${target.name}" accepted your teleport request, but you can't teleport to them right now because you are in a different dimension than that player and all cross-dimensional teleports have been disabled.`
-                                                    );
-                                                } else if (target.dimension !== player.dimension && !config.tpaSystem.allowCrossDimensionalTeleport) {
-                                                    target.sendMessage(
-                                                        `§cAccepted teleport request from "${player.name}", but they can't teleport to you right now because you are in a different dimension than that player and cross-dimensional teleport requests have been disabled.`
-                                                    );
-                                                    player.sendMessageB(
-                                                        `§c"${target.name}" accepted your teleport request, but you can't teleport to them right now because you are in a different dimension than that player and cross-dimensional teleport requests have been disabled.`
-                                                    );
-                                                } else {
-                                                    target.sendMessage(
-                                                        `§aAccepted teleport request from "${player.name}".`
-                                                    );
-                                                    player.sendMessageB(
-                                                        `§c"${target.name}" accepted your teleport request.`
-                                                    );
-                                                    const standStillTime = config.teleportSystems.standStillTimeToTeleport;
-                                                    let successfulWaitForStandStill = true;
-                                                    if(standStillTime > 0){
-                                                        player.sendMessageB("§eStand still for " + standStillTime + " seconds to teleport.");
-                                                        await waitTicks(20);
-                                                        const start = Date.now();
-                                                        while(!Vector.equals(player.getVelocity(), Vector.zero)){
-                                                            if(Date.now() - start > 10000){
-                                                                successfulWaitForStandStill = false;
-                                                                player.sendMessageB(`§cYou took too long to start standing still so your teleport to "${target.name}" was canceled.`);
-                                                                target.sendMessage(
-                                                                    `§c"${player.name}" took to long to start standing still so their teleport to you was canceled.`
-                                                                );
-                                                                break;
-                                                            }
-                                                            await waitTick();
-                                                        }
-                                                    }
-                                                    if(!successfulWaitForStandStill){
-                                                        return 0;
-                                                    }
-                                                    const playerPosition = player.player.location;
-                                                    let successful = true;
-                                                    for(let i = 0; i<standStillTime; i++){
-                                                        if(!Vector.equals(player.player.location, playerPosition)){
-                                                            successful = false;
-                                                            break;
-                                                        };
-                                                        player.sendMessageB("§bTeleporting in " + (standStillTime - i));
-                                                        await waitTicks(20);
-                                                    }
-                                                    // Check for PVP cooldown again after ending the teleport countdown.
-                                                    if (Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 > Date.now()) {
-                                                        player.sendMessageB(
-                                                            `§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 - Date.now())/1000)} seconds before you can teleport again because you are still on PVP cooldown, as a result of you entering PVP cooldown, your teleport to "${target.name}" was canceled.`
-                                                        );
-                                                        target.sendMessage(
-                                                            `§c"${player.name}" entered PVP cooldown so their teleport to you was canceled.`
-                                                        );
-                                                        successful = false;
-                                                        return 0;
-                                                    }
-                                                    // Check for teleport cooldown again after ending the teleport countdown.
-                                                    if (Number(player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 > Date.now()) {
-                                                        player.sendMessageB(
-                                                            `§cSorry but you have to wait another ${Math.round((Number(player.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 - Date.now())/1000)} seconds before you can teleport again because you are still on cooldown.`
-                                                        );
-                                                        target.sendMessage(
-                                                            `§c"${player.name}" entered cooldown so their teleport to you was canceled.`
-                                                        );
-                                                        return 0;
-                                                    }
-                                                    if(successful){
-                                                        try{
-                                                            player.teleport(target.location, {dimension: target.dimension});
-                                                            player.setDynamicProperty("lastTeleportTime", Date.now());
-                                                            player.sendMessageB(
-                                                                `§aSuccessfully teleported to "${target.name}".`
-                                                            );
-                                                        }catch(e){
-                                                            player.sendMessageB("§cAn error occurred while trying to teleport you to your home: " + e + e.stack);
-                                                            target.sendMessage(`§cAn error occurred while "${target.name}" was trying to teleport to you.`);
-                                                        }
-                                                    }else{
-                                                        player.sendMessageB("§cTeleport canceled.");
-                                                        target.sendMessage(
-                                                            `§c"${player.name}" moved so their teleport to you was canceled.`
-                                                        );
-                                                    }
-                                                }
-                                            } else {
-                                                target.sendMessage(
-                                                    `§cDenied "${player.name}"'s teleport request.`
-                                                );
-                                                player.sendMessageB(
-                                                    `§c"${target.name}" denied your teleport request.`
-                                                );
-                                            }
-                                        })
-                                        .catch((e) => {
-                                            if (e instanceof TimeoutError) {
-                                                psend(
-                                                    target,
-                                                    `§c${player.name}'s teleport request timed out.`
-                                                );
-                                                psend(
-                                                    player,
-                                                    `§cThe teleport request to ${target.name} timed out.`
-                                                );
-                                            } else if (e instanceof ExpireError) {
-                                                psend(
-                                                    target,
-                                                    `§c${player.name}'s teleport request expired.`
-                                                );
-                                                psend(
-                                                    player,
-                                                    `§cThe teleport request to ${target.name} expired.`
-                                                );
-                                            } else
-                                                psend(
-                                                    player,
-                                                    "§c" + e + " " + e.stack
-                                                );
-                                        });
+                                    TeleportRequest.send(player, target);
                                 } else {
                                     player.sendError(
                                         `§cError: Unable to find player.`,
@@ -11511,34 +11299,143 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                             });
                         }
                     } else {
-                        player.sendMessageB(
-                            '§cTPASystemDisabledError: This command cannot be used becuase the experimental teleport request system is not enabled. It can be enabled at "Main Menu>Settings>TPA System>Enable TPA System"'
+                        player.sendError(
+                            '§cTPASystemDisabledError: This command cannot be used becuase the teleport request system is not enabled. It can be enabled at "Main Menu>Settings>TPA System>Enable TPA System"',
+                            true
                         );
                     }
                 }
-                break; /*
-    case !!switchTest.match(/^tpablock$/): {
-        eventData.cancel = true;
-        if(config.tpaSystem.tpaSystemEnabled){
-            srun(()=>{
-            let args = evaluateParameters(switchTestB, ["presetText", "targetSelector", "string"]).args
-            let target = targetSelectorAllListC(args[1], "", vTStr(player.location), player).filter(v=>v.typeId=="minecraft:player")[0] as Player
-            if(!!target){
-                requestConditionalChatInput(target, (player, message)=>(message.trim()=="y"||message.trim()=="n"), {requestMessage: `§a${player.name} sent you a teleport request, type "y" to accept or "n" to deny, this request will expire in 1 minute.`}).then(t=>{
-                    if(t.trim()=="y"){
-                        player.teleport(target.location, {dimension: target.dimension})
-                        player.sendMessageB(`Successfully teleported to "${target.name}".`)
+                break;
+            case !!switchTest.match(/^tpaccept$/): {
+                eventData.cancel = true;
+                if(config.tpaSystem.tpaSystemEnabled){
+                    srun(()=>{
+                    let args = evaluateParameters(switchTestB, ["presetText", "targetSelector"]).args
+                    let targets = targetSelectorAllListC(args[1], "", vTStr(player.location), player).filter(v=>v.typeId=="minecraft:player") as Player[]
+                    if(targets?.length > 0){
+                        const matchedRequests = TeleportRequest.getRequestsToPlayer(player).filter(r=>targets.some(p=>r.player?.id === p.id));
+                        if(matchedRequests.length === 0) {
+                            if(targets.length === 1) {
+                                player.sendError(`§c${targets[0].name} has not sent you a teleport request.`, true);
+                            }else{
+                                player.sendError(`§cNone of the ${targets.length} players matching the specified target selector have sent you any teleport requests.`, true);
+                            }
+                        } else {
+                            (async function acceptTeleportRequests(){
+                                const successfullRequests: TeleportRequest[] = [];
+                                const failedRequests: TeleportRequest[] = [];
+                                for (const request of matchedRequests) {
+                                    if(await request.accept()){
+                                        successfullRequests.push(request);
+                                    }else{
+                                        failedRequests.push(request);
+                                    };
+                                };
+                                switch (successfullRequests.length) {
+                                    case 0:
+                                        break;
+                                    case 1:
+                                        player.sendMessageB("Successfully accepted 1 teleport request.");
+                                        break;
+                                    default:
+                                        player.sendMessageB(`Successfully accepted ${successfullRequests.length} teleport requests.`);
+                                }
+                                switch (failedRequests.length) {
+                                    case 0:
+                                        break;
+                                    case 1:
+                                        player.sendError("§cFailed to accept 1 teleport request.", true);
+                                        break;
+                                    default:
+                                        player.sendError(`§cFailed to accept ${successfullRequests.length} teleport requests.`, true);
+                                }
+                            })();
+                        }
                     }else{
-                        player.sendMessageB(`"${target.name}" denied your teleport request.`)
+                        player.sendError(`§cError: No players matching the specified target selector were found.`, true)
                     }
-                }).catch(e=>{if(e instanceof TimeoutError){psend(target, `§c${player.name}'s teleport request expired.`); psend(player, "§cTeleport request timed out.")}else if(e instanceof ExpireError){psend(player, "§cTeleport request expired.")}else psend(player, "§c"+e+" "+e.stack)})
-            }else{player.sendError(`§cError: Unable to find player.`, true)}
-            })
-        }else{
-            player.sendMessageB("§cError: This command cannot be used becuase the experimental teleport request system is not enabled. It can be enabled at \"Main Menu>Settings>TPA System>Enable Teleport Request System\"")
-        }
-    }
-    break; */ // COMING SOON!
+                    })
+                }else{
+                    player.sendError("§cError: This command cannot be used becuase the teleport request system is not enabled. It can be enabled at \"Main Menu>Settings>TPA System>Enable Teleport Request System\"", true)
+                }
+            }
+            break;
+            case !!switchTest.match(/^tpdeny$/): {
+                eventData.cancel = true;
+                if(config.tpaSystem.tpaSystemEnabled){
+                    srun(()=>{
+                    let args = evaluateParameters(switchTestB, ["presetText", "targetSelector"]).args
+                    let targets = targetSelectorAllListC(args[1], "", vTStr(player.location), player).filter(v=>v.typeId=="minecraft:player") as Player[]
+                    if(targets?.length > 0){
+                        const matchedRequests = TeleportRequest.getRequestsToPlayer(player).filter(r=>targets.some(p=>r.player?.id === p.id));
+                        if(matchedRequests.length === 0) {
+                            if(targets.length === 1) {
+                                player.sendError(`§c${targets[0].name} has not sent you a teleport request.`, true);
+                            }else{
+                                player.sendError(`§cNone of the ${targets.length} players matching the specified target selector have sent you any teleport requests.`, true);
+                            }
+                        } else {
+                            (function denyTeleportRequests(){
+                                const successfullRequests: TeleportRequest[] = [];
+                                const failedRequests: TeleportRequest[] = [];
+                                for (const request of matchedRequests) {
+                                    if(request.deny()){
+                                        successfullRequests.push(request);
+                                    }else{
+                                        failedRequests.push(request);
+                                    };
+                                };
+                                switch (successfullRequests.length) {
+                                    case 0:
+                                        break;
+                                    case 1:
+                                        player.sendMessageB("Successfully denied 1 teleport request.");
+                                        break;
+                                    default:
+                                        player.sendMessageB(`Successfully denied ${successfullRequests.length} teleport requests.`);
+                                }
+                                switch (failedRequests.length) {
+                                    case 0:
+                                        break;
+                                    case 1:
+                                        player.sendError("§cFailed to deny 1 teleport request.", true);
+                                        break;
+                                    default:
+                                        player.sendError(`§cFailed to deny ${successfullRequests.length} teleport requests.`, true);
+                                }
+                            })();
+                        }
+                    }else{
+                        player.sendError(`§cError: No players matching the specified target selector were found.`, true)
+                    }
+                    })
+                }else{
+                    player.sendError("§cError: This command cannot be used becuase the teleport request system is not enabled. It can be enabled at \"Main Menu>Settings>TPA System>Enable Teleport Request System\"", true)
+                }
+            }
+            break; /*
+            case !!switchTest.match(/^tpablock$/): {
+                eventData.cancel = true;
+                if(config.tpaSystem.tpaSystemEnabled){
+                    srun(()=>{
+                    let args = evaluateParameters(switchTestB, ["presetText", "targetSelector", "string"]).args
+                    let target = targetSelectorAllListC(args[1], "", vTStr(player.location), player).filter(v=>v.typeId=="minecraft:player")[0] as Player
+                    if(!!target){
+                        requestConditionalChatInput(target, (player, message)=>(message.trim()=="y"||message.trim()=="n"), {requestMessage: `§a${player.name} sent you a teleport request, type "y" to accept or "n" to deny, this request will expire in 1 minute.`}).then(t=>{
+                            if(t.trim()=="y"){
+                                player.teleport(target.location, {dimension: target.dimension})
+                                player.sendMessageB(`Successfully teleported to "${target.name}".`)
+                            }else{
+                                player.sendMessageB(`"${target.name}" denied your teleport request.`)
+                            }
+                        }).catch(e=>{if(e instanceof TimeoutError){psend(target, `§c${player.name}'s teleport request expired.`); psend(player, "§cTeleport request timed out.")}else if(e instanceof ExpireError){psend(player, "§cTeleport request expired.")}else psend(player, "§c"+e+" "+e.stack)})
+                    }else{player.sendError(`§cError: Unable to find player.`, true)}
+                    })
+                }else{
+                    player.sendError("§cError: This command cannot be used becuase the teleport request system is not enabled. It can be enabled at \"Main Menu>Settings>TPA System>Enable Teleport Request System\"", true)
+                }
+            }
+            break; */ // COMING SOON!
 
             case !!switchTest.match(/^summon$/):
                 {
@@ -29994,10 +29891,10 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                             player.dimension.id) as string
                     ) as Dimension | undefined;
                     if (!!!coordinatesa) {
-                        player.sendMessageB("§cError: pos1 is not set.");
+                        player.sendError("§cError: pos1 is not set.", true);
                     } else {
                         if (!!!coordinatesb) {
-                            player.sendMessageB("§cError: pos2 is not set.");
+                            player.sendError("§cError: pos2 is not set.", true);
                         } else {
                             let args = evaluateParameters(
                                 switchTestB,
@@ -30336,10 +30233,10 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                     const cb = player.worldEditSelection.maxPos;
                     const dimensiona = player.worldEditSelection.dimension;
                     if (!!!ca) {
-                        player.sendMessageB("§cError: pos1 is not set.");
+                        player.sendError("§cError: pos1 is not set.", true);
                     } else {
                         if (!!!cb) {
-                            player.sendMessageB("§cError: pos2 is not set.");
+                            player.sendError("§cError: pos2 is not set.", true);
                         } else {
                             system.run(() => {
                                 let ta: Entity[];
@@ -30441,10 +30338,10 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                             player.dimension.id) as string
                     ) as Dimension | undefined;
                     if (!!!coordinatesa) {
-                        player.sendMessageB("§cError: pos1 is not set.");
+                        player.sendError("§cError: pos1 is not set.", true);
                     } else {
                         if (!!!coordinatesb) {
-                            player.sendMessageB("§cError: pos2 is not set.");
+                            player.sendError("§cError: pos2 is not set.", true);
                         } else {
                             system.run(() => {
                                 let ta: Entity[];
@@ -30529,10 +30426,10 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                             player.dimension.id) as string
                     ) as Dimension | undefined;
                     if (!!!coordinatesa) {
-                        player.sendMessageB("§cError: pos1 is not set.");
+                        player.sendError("§cError: pos1 is not set.", true);
                     } else {
                         if (!!!coordinatesb) {
-                            player.sendMessageB("§cError: pos2 is not set.");
+                            player.sendError("§cError: pos2 is not set.", true);
                         } else {
                             system.run(() => {
                                 let ta: Entity[];
@@ -30682,10 +30579,10 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                             player.dimension.id) as string
                     ) as Dimension | undefined;
                     if (!!!coordinatesa) {
-                        player.sendMessageB("§cError: pos1 is not set.");
+                        player.sendError("§cError: pos1 is not set.", true);
                     } else {
                         if (!!!coordinatesb) {
-                            player.sendMessageB("§cError: pos2 is not set.");
+                            player.sendError("§cError: pos2 is not set.", true);
                         } else {
                             system.run(() => {
                                 let ta: Entity[];
@@ -30835,10 +30732,10 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                             player.dimension.id) as string
                     ) as Dimension | undefined;
                     if (!!!coordinatesa) {
-                        player.sendMessageB("§cError: pos1 is not set.");
+                        player.sendError("§cError: pos1 is not set.", true);
                     } else {
                         if (!!!coordinatesb) {
-                            player.sendMessageB("§cError: pos2 is not set.");
+                            player.sendError("§cError: pos2 is not set.", true);
                         } else {
                             system.run(() => {
                                 let ta: Entity[];
@@ -30988,10 +30885,10 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                             player.dimension.id) as string
                     ) as Dimension | undefined;
                     if (!!!coordinatesa) {
-                        player.sendMessageB("§cError: pos1 is not set.");
+                        player.sendError("§cError: pos1 is not set.", true);
                     } else {
                         if (!!!coordinatesb) {
-                            player.sendMessageB("§cError: pos2 is not set.");
+                            player.sendError("§cError: pos2 is not set.", true);
                         } else {
                             system.run(() => {
                                 let ta: Entity[];
@@ -31141,10 +31038,10 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                             player.dimension.id) as string
                     ) as Dimension | undefined;
                     if (!!!coordinatesa) {
-                        player.sendMessageB("§cError: pos1 is not set.");
+                        player.sendError("§cError: pos1 is not set.", true);
                     } else {
                         if (!!!coordinatesb) {
-                            player.sendMessageB("§cError: pos2 is not set.");
+                            player.sendError("§cError: pos2 is not set.", true);
                         } else {
                             system.run(() => {
                                 let ta: Entity[];
@@ -31300,10 +31197,10 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                             player.dimension.id) as string
                     ) as Dimension | undefined;
                     if (!!!coordinatesa) {
-                        player.sendMessageB("§cError: pos1 is not set.");
+                        player.sendError("§cError: pos1 is not set.", true);
                     } else {
                         if (!!!coordinatesb) {
-                            player.sendMessageB("§cError: pos2 is not set.");
+                            player.sendError("§cError: pos2 is not set.", true);
                         } else {
                             system.run(() => {
                                 let ta: Entity[];
@@ -31475,10 +31372,10 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                             player.dimension.id) as string
                     ) as Dimension | undefined;
                     if (!!!coordinatesa) {
-                        player.sendMessageB("§cError: pos1 is not set.");
+                        player.sendError("§cError: pos1 is not set.", true);
                     } else {
                         if (!!!coordinatesb) {
-                            player.sendMessageB("§cError: pos2 is not set.");
+                            player.sendError("§cError: pos2 is not set.", true);
                         } else {
                             system.run(() => {
                                 let ta: Entity[];
@@ -31652,10 +31549,10 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                             player.dimension.id) as string
                     ) as Dimension | undefined;
                     if (!!!coordinatesa) {
-                        player.sendMessageB("§cError: pos1 is not set.");
+                        player.sendError("§cError: pos1 is not set.", true);
                     } else {
                         if (!!!coordinatesb) {
-                            player.sendMessageB("§cError: pos2 is not set.");
+                            player.sendError("§cError: pos2 is not set.", true);
                         } else {
                             system.run(() => {
                                 let ta: Entity[];
@@ -31803,10 +31700,10 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                             player.dimension.id) as string
                     ) as Dimension | undefined;
                     if (!!!coordinatesa) {
-                        player.sendMessageB("§cError: pos1 is not set.");
+                        player.sendError("§cError: pos1 is not set.", true);
                     } else {
                         if (!!!coordinatesb) {
-                            player.sendMessageB("§cError: pos2 is not set.");
+                            player.sendError("§cError: pos2 is not set.", true);
                         } else {
                             system.run(() => {
                                 let ta: Entity[];
@@ -31873,10 +31770,10 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                             player.dimension.id) as string
                     ) as Dimension | undefined;
                     if (!!!coordinatesa) {
-                        player.sendMessageB("§cError: pos1 is not set.");
+                        player.sendError("§cError: pos1 is not set.", true);
                     } else {
                         if (!!!coordinatesb) {
-                            player.sendMessageB("§cError: pos2 is not set.");
+                            player.sendError("§cError: pos2 is not set.", true);
                         } else {
                             system.run(() => {
                                 let ta: Entity[];
@@ -32029,10 +31926,10 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                             player.dimension.id) as string
                     ) as Dimension | undefined;
                     if (!!!coordinatesa) {
-                        player.sendMessageB("§cError: pos1 is not set.");
+                        player.sendError("§cError: pos1 is not set.", true);
                     } else {
                         if (!!!coordinatesb) {
-                            player.sendMessageB("§cError: pos2 is not set.");
+                            player.sendError("§cError: pos2 is not set.", true);
                         } else {
                             system.run(() => {
                                 let ta: Entity[];
@@ -32182,10 +32079,10 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                             player.dimension.id) as string
                     ) as Dimension | undefined;
                     if (!!!coordinatesa) {
-                        player.sendMessageB("§cError: pos1 is not set.");
+                        player.sendError("§cError: pos1 is not set.", true);
                     } else {
                         if (!!!coordinatesb) {
-                            player.sendMessageB("§cError: pos2 is not set.");
+                            player.sendError("§cError: pos2 is not set.", true);
                         } else {
                             system.run(() => {
                                 let ta: Entity[];
@@ -32312,10 +32209,10 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                             player.dimension.id) as string
                     ) as Dimension | undefined;
                     if (!!!coordinatesa) {
-                        player.sendMessageB("§cError: pos1 is not set.");
+                        player.sendError("§cError: pos1 is not set.", true);
                     } else {
                         if (!!!coordinatesb) {
-                            player.sendMessageB("§cError: pos2 is not set.");
+                            player.sendError("§cError: pos2 is not set.", true);
                         } else {
                             system.run(() => {
                                 let ta: Entity[];
@@ -32458,10 +32355,10 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                     ) as Dimension | undefined;
                     const airpermutation = BlockPermutation.resolve("air");
                     if (!!!coordinatesa) {
-                        player.sendMessageB("§cError: pos1 is not set.");
+                        player.sendError("§cError: pos1 is not set.", true);
                     } else {
                         if (!!!coordinatesb) {
-                            player.sendMessageB("§cError: pos2 is not set.");
+                            player.sendError("§cError: pos2 is not set.", true);
                         } else {
                             system.run(() => {
                                 let ta: Entity[];
@@ -32588,10 +32485,10 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         | Vector3
                         | undefined;
                     if (!!!coordinatesa) {
-                        player.sendMessageB("§cError: pos1 is not set.");
+                        player.sendError("§cError: pos1 is not set.", true);
                     } else {
                         if (!!!coordinatesb) {
-                            player.sendMessageB("§cError: pos2 is not set.");
+                            player.sendError("§cError: pos2 is not set.", true);
                         } else {
                             const ca = {
                                 x: Math.min(coordinatesa.x, coordinatesb.x),
@@ -32749,10 +32646,10 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                             player.dimension.id) as string
                     ) as Dimension | undefined;
                     if (!!!coordinatesa) {
-                        player.sendMessageB("§cError: pos1 is not set.");
+                        player.sendError("§cError: pos1 is not set.", true);
                     } else {
                         if (!!!coordinatesb) {
-                            player.sendMessageB("§cError: pos2 is not set.");
+                            player.sendError("§cError: pos2 is not set.", true);
                         } else {
                             system.run(() => {
                                 let ta: Entity[];
@@ -32926,10 +32823,10 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                     ) as Dimension | undefined;
                     console.log(JSON.stringify({coordinatesa, coordinatesb, center, radius, stretch}));
                     if (!!!coordinatesa) {
-                        player.sendMessageB("§cError: pos1 is not set.");
+                        player.sendError("§cError: pos1 is not set.", true);
                     } else {
                         if (!!!coordinatesb) {
-                            player.sendMessageB("§cError: pos2 is not set.");
+                            player.sendError("§cError: pos2 is not set.", true);
                         } else {
                             system.run(() => {
                                 let ta: Entity[];
@@ -33106,10 +33003,10 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                             player.dimension.id) as string
                     ) as Dimension | undefined;
                     if (!!!coordinatesa) {
-                        player.sendMessageB("§cError: pos1 is not set.");
+                        player.sendError("§cError: pos1 is not set.", true);
                     } else {
                         if (!!!coordinatesb) {
-                            player.sendMessageB("§cError: pos2 is not set.");
+                            player.sendError("§cError: pos2 is not set.", true);
                         } else {
                             system.run(() => {
                                 let ta: Entity[];
@@ -33284,10 +33181,10 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                             player.dimension.id) as string
                     ) as Dimension | undefined;
                     if (!!!coordinatesa) {
-                        player.sendMessageB("§cError: pos1 is not set.");
+                        player.sendError("§cError: pos1 is not set.", true);
                     } else {
                         if (!!!coordinatesb) {
-                            player.sendMessageB("§cError: pos2 is not set.");
+                            player.sendError("§cError: pos2 is not set.", true);
                         } else {
                             system.run(() => {
                                 let ta: Entity[];
@@ -33465,10 +33362,10 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                             player.dimension.id) as string
                     ) as Dimension | undefined;
                     if (!!!coordinatesa) {
-                        player.sendMessageB("§cError: pos1 is not set.");
+                        player.sendError("§cError: pos1 is not set.", true);
                     } else {
                         if (!!!coordinatesb) {
-                            player.sendMessageB("§cError: pos2 is not set.");
+                            player.sendError("§cError: pos2 is not set.", true);
                         } else {
                             const blocktypes = BlockTypes.getAll();
                             system.run(() => {
@@ -33587,10 +33484,10 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                             player.dimension.id) as string
                     ) as Dimension | undefined;
                     if (!!!coordinatesa) {
-                        player.sendMessageB("§cError: pos1 is not set.");
+                        player.sendError("§cError: pos1 is not set.", true);
                     } else {
                         if (!!!coordinatesb) {
-                            player.sendMessageB("§cError: pos2 is not set.");
+                            player.sendError("§cError: pos2 is not set.", true);
                         } else {
                             const blocktypes = BlockTypes.getAll();
                             system.run(() => {
@@ -33713,10 +33610,10 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                             player.dimension.id) as string
                     ) as Dimension | undefined;
                     if (!!!coordinatesa) {
-                        player.sendMessageB("§cError: pos1 is not set.");
+                        player.sendError("§cError: pos1 is not set.", true);
                     } else {
                         if (!!!coordinatesb) {
-                            player.sendMessageB("§cError: pos2 is not set.");
+                            player.sendError("§cError: pos2 is not set.", true);
                         } else {
                             const blocktypes = BlockTypes.getAll();
                             system.run(() => {
@@ -33840,7 +33737,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 player.dimension.id) as string
                         ) as Dimension | undefined;
                         if (!!!coordinatesa) {
-                            player.sendMessageB("§cError: pos1 is not set.");
+                            player.sendError("§cError: pos1 is not set.", true);
                         } else {
                             if (!!!coordinatesb) {
                                 player.sendMessageB(
@@ -33970,7 +33867,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 player.dimension.id) as string
                         ) as Dimension | undefined;
                         if (!!!coordinatesa) {
-                            player.sendMessageB("§cError: pos1 is not set.");
+                            player.sendError("§cError: pos1 is not set.", true);
                         } else {
                             if (!!!coordinatesb) {
                                 player.sendMessageB(
@@ -34114,7 +34011,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 player.dimension.id) as string
                         ) as Dimension | undefined;
                         if (!!!coordinatesa) {
-                            player.sendMessageB("§cError: pos1 is not set.");
+                            player.sendError("§cError: pos1 is not set.", true);
                         } else {
                             if (!!!coordinatesb) {
                                 player.sendMessageB(

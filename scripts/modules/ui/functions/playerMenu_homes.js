@@ -8,6 +8,7 @@ import { vTStr } from "modules/commands/functions/vTStr";
 import { showMessage } from "modules/utilities/functions/showMessage";
 import { Home } from "modules/commands/classes/Home";
 import { customFormUICodes } from "../constants/customFormUICodes";
+import { securityVariables } from "security/ultraSecurityModeUtils";
 export async function playerMenu_homes(sourceEntitya) {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
     if (!(sourceEntity instanceof Player)) {
@@ -27,6 +28,7 @@ export async function playerMenu_homes(sourceEntitya) {
             return 0;
         }
     }
+    const canBypassTeleportColdowns = securityVariables.ultraSecurityModeEnabled ? securityVariables.testPlayerForPermission(sourceEntity, "andexdb.bypassTeleportCooldowns") : sourceEntity.hasTag("admin");
     let form = new ActionFormData();
     form.title(customFormUICodes.action.titles.formStyles.medium + "Homes");
     const homes = HomeSystem.getHomesForPlayer(sourceEntity.id);
@@ -78,7 +80,7 @@ export async function playerMenu_homes(sourceEntitya) {
                             sourceEntity.sendMessage(`§cSorry but you have to wait another ${Math.round((Number(sourceEntity.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on cooldown.`);
                             return 0;
                         }
-                        const standStillTime = config.teleportSystems.standStillTimeToTeleport;
+                        const standStillTime = canBypassTeleportColdowns ? 0 : config.teleportSystems.standStillTimeToTeleport;
                         if (standStillTime > 0) {
                             sourceEntity.sendMessage("§eStand still for " + standStillTime + " seconds to teleport.");
                             await waitTicks(20);
@@ -95,13 +97,13 @@ export async function playerMenu_homes(sourceEntitya) {
                             await waitTicks(20);
                         }
                         // Check for PVP cooldown again after ending the teleport countdown.
-                        if (Number(sourceEntity.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 > Date.now()) {
+                        if (!canBypassTeleportColdowns && Number(sourceEntity.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 > Date.now()) {
                             sourceEntity.sendMessage(`§cSorry but you have to wait another ${Math.round((Number(sourceEntity.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on PVP cooldown.`);
                             successful = false;
                             return 0;
                         }
                         // Check for teleport cooldown again after ending the teleport countdown.
-                        if (Number(sourceEntity.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 > Date.now()) {
+                        if (!canBypassTeleportColdowns && Number(sourceEntity.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 > Date.now()) {
                             sourceEntity.sendMessage(`§cSorry but you have to wait another ${Math.round((Number(sourceEntity.getDynamicProperty("lastTeleportTime") ?? 0) + config.teleportSystems.teleportCooldown * 1000 - Date.now()) / 1000)} seconds before you can teleport again because you are still on cooldown.`);
                             return 0;
                         }

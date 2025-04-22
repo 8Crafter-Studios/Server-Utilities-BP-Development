@@ -250,6 +250,7 @@ export declare const commandsyntaxes: {
     "\\\\generatejs2d": string;
     "\\\\generatecallback2d": string;
     "\\\\generates2d": string;
+    "\\\\loadchunks": string;
     "\\\\stack": string;
     "\\\\selectmode": string;
     "\\\\ceil": string;

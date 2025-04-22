@@ -811,6 +811,22 @@ This permission is included in the 'andexdb.moderator' permission.`,
     This permission is included in the 'andexdb.admin' permission.`,
             additionalPrompts: [],
         },
+        /**
+         * Allows the player to bypass all teleport cooldowns.
+         * This permission is included in the `andexdb.headAdmin` permission.
+         * This permission is included in the `andexdb.admin` permission.
+         * This permission is included in the `andexdb.moderator` permission.
+         */
+        "andexdb.bypassTeleportCooldowns": {
+            id: "andexdb.bypassTeleportCooldowns",
+            default: false,
+            includedInPermissions: [],
+            description: `Allows the player to bypass all teleport cooldowns.
+    This permission is included in the 'andexdb.headAdmin' permission.
+    This permission is included in the 'andexdb.admin' permission.
+    This permission is included in the 'andexdb.moderator' permission.`,
+            additionalPrompts: [],
+        },
     } as const)
 );
 
@@ -893,6 +909,7 @@ const playerPermissionsDefault = Object.freeze({
         "andexdb.canUseInventoryController",
         "andexdb.canUseEntityControllerItems",
         "andexdb.canUseEntityDebugSticks",
+        "andexdb.bypassTeleportCooldowns",
     ],
     admin: [
         "andexdb.moderator",
@@ -928,6 +945,7 @@ const playerPermissionsDefault = Object.freeze({
         "andexdb.canUseEntityDebugSticks",
         "andexdb.useWorldEdit",
         "andexdb.bypassProtectedAreas",
+        "andexdb.bypassTeleportCooldowns",
     ],
     headAdmin: [
         "andexdb.admin",
@@ -970,6 +988,7 @@ const playerPermissionsDefault = Object.freeze({
         "andexdb.canUseEntityDebugSticks",
         "andexdb.useWorldEdit",
         "andexdb.bypassProtectedAreas",
+        "andexdb.bypassTeleportCooldowns",
     ],
 } as const satisfies Record<string, (keyof typeof permissionTypes)[]>);
 // overworld.spawnEntity("minecart", {x: 32, y: 142, z: 0}, {initialPersistence: true}).applyImpulse(Vector.back); overworld.spawnEntity("minecart", {x: -32, y: 142, z: 0}, {initialPersistence: true}).applyImpulse(Vector.forward); overworld.spawnEntity("minecart", {x: 0, y: 142, z: 32}, {initialPersistence: true}).applyImpulse(Vector.right); overworld.spawnEntity("minecart", {x: 0, y: 142, z: -32}, {initialPersistence: true}).applyImpulse(Vector.left);
