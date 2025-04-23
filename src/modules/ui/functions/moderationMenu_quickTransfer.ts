@@ -7,7 +7,7 @@ import { transferPlayer } from "@minecraft/server-admin";
 import { securityVariables } from "security/ultraSecurityModeUtils";
 
 /**
- * Shows the quick kick menu of the moderation menu.
+ * Shows the quick transfer menu of the moderation menu.
  *
  * @param {loosePlayerType} sourceEntity - The player viewing the UI.
  * @returns {Promise<0 | 1>} A promise that resolves to `0` if the previous menu should be closed, or `1` if the previous menu should be reopened.
@@ -44,7 +44,7 @@ export async function moderationMenu_quickTransfer(sourceEntity: loosePlayerType
             form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Refresh", "textures/ui/refresh");
             const r = await form.forceShow(player);
             if (r.canceled) return 1 as const;
-            switch ((!!playerslist[r.selection] ? "player" : undefined) ?? (["back", "close", "refresh"] as const)[r.selection]) {
+            switch ((!!playerslist[r.selection] ? "player" : undefined) ?? (["back", "close", "refresh"] as const)[r.selection - playerslist.length]) {
                 case "player": {
                     const target = playerslist[r.selection];
                     const form = new ModalFormData();

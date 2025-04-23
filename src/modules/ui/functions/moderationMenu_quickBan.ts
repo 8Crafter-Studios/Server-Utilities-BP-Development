@@ -30,7 +30,7 @@ export async function moderationMenu_quickBan(sourceEntity: loosePlayerType): Pr
             form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Refresh", "textures/ui/refresh");
             const r = await form.forceShow(player);
             if (r.canceled) return 1 as const;
-            switch ((!!playerslist[r.selection] ? "player" : undefined) ?? (["back", "close", "refresh"] as const)[r.selection]) {
+            switch ((!!playerslist[r.selection] ? "player" : undefined) ?? (["back", "close", "refresh"] as const)[r.selection - playerslist.length]) {
                 case "player":
                     return await addIDBanOnPlayer(player, playerslist[r.selection]);
                 case "back":

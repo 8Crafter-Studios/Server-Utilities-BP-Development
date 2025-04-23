@@ -28,7 +28,7 @@ export async function moderationMenu_quickKick(sourceEntity) {
             const r = await form.forceShow(player);
             if (r.canceled)
                 return 1;
-            switch ((!!playerslist[r.selection] ? "player" : undefined) ?? ["back", "close", "refresh"][r.selection]) {
+            switch ((!!playerslist[r.selection] ? "player" : undefined) ?? ["back", "close", "refresh"][r.selection - playerslist.length]) {
                 case "player": {
                     const target = playerslist[r.selection];
                     const form = new ModalFormData();

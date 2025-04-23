@@ -131,6 +131,7 @@ const main = await moduleImportsConfig.import("main");
 const coords = await moduleImportsConfig.import("coordinates");
 const cmds = await moduleImportsConfig.import("commands");
 const bans = await moduleImportsConfig.import("ban");
+const moderation = await moduleImportsConfig.import("moderation");
 const uis = await moduleImportsConfig.import("ui");
 const playersave = await moduleImportsConfig.import("player_save");
 const spawnprot = await moduleImportsConfig.import("spawn_protection");
@@ -255,6 +256,12 @@ const modulesMap = {
      * @path `modules/ban/`
      */
     bans: bans as UnionToIntersection<optionalModuleObjectImportFilePathsImportMap[(typeof moduleOptionalImportPathMap)["ban"][number]]>,
+    /**
+     * This module contains classes, constants, functions, and types for working with the moderation system.
+     * @namespace
+     * @path `modules/moderation/`
+     */
+    moderation: moderation as UnionToIntersection<optionalModuleObjectImportFilePathsImportMap[(typeof moduleOptionalImportPathMap)["moderation"][number]]>,
     /**
      * This module contains constants, functions, and types for working with the UI system.
      * @namespace

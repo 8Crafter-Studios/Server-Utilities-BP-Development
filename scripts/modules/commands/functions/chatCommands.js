@@ -4823,7 +4823,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                 eventData.cancel = true;
                 system.run(() => {
                     try {
-                        player.runCommand("/gamemode c");
+                        player.setGameMode(1);
                     }
                     catch (e) {
                         player.sendError("§c" + e + e.stack, true);
@@ -4835,7 +4835,27 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                         player.location.z).forEach((entity) => {
                         entity.sendMessage(String("{§l§dCMDFEED§r§f}[" +
                             player.name +
-                            "§r§f]: Set gamemode to creative. "));
+                            "§r§f]: Set gamemode to creative."));
+                    });
+                });
+                break;
+            case !!switchTest.match(/^gmg$/):
+                eventData.cancel = true;
+                system.run(() => {
+                    try {
+                        player.setGameMode(7);
+                    }
+                    catch (e) {
+                        player.sendError("§c" + e + e.stack, true);
+                    }
+                    targetSelectorAllListE("@a [tag=canSeeCustomChatCommandFeedbackFromMods]", player.location.x +
+                        " " +
+                        player.location.y +
+                        " " +
+                        player.location.z).forEach((entity) => {
+                        entity.sendMessage(String("{§l§dCMDFEED§r§f}[" +
+                            player.name +
+                            "§r§f]: Set gamemode to god."));
                     });
                 });
                 break;
@@ -4843,7 +4863,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                 eventData.cancel = true;
                 system.run(() => {
                     try {
-                        player.runCommand("/gamemode s");
+                        player.setGameMode(0);
                     }
                     catch (e) {
                         player.sendError("§c" + e + e.stack, true);
@@ -4855,7 +4875,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                         player.location.z).forEach((entity) => {
                         entity.sendMessage(String("{§l§dCMDFEED§r§f}[" +
                             player.name +
-                            "§r§f]: Set gamemode to survival. "));
+                            "§r§f]: Set gamemode to survival."));
                     });
                 });
                 break;
@@ -4863,7 +4883,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                 eventData.cancel = true;
                 system.run(() => {
                     try {
-                        player.runCommand("/gamemode a");
+                        player.setGameMode(2);
                     }
                     catch (e) {
                         player.sendError("§c" + e + e.stack, true);
@@ -4875,7 +4895,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                         player.location.z).forEach((entity) => {
                         entity.sendMessage(String("{§l§dCMDFEED§r§f}[" +
                             player.name +
-                            "§r§f]: Set gamemode to adventure. "));
+                            "§r§f]: Set gamemode to adventure."));
                     });
                 });
                 break;
@@ -4883,7 +4903,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                 eventData.cancel = true;
                 system.run(() => {
                     try {
-                        player.runCommand("/gamemode d");
+                        player.setGameMode(5);
                     }
                     catch (e) {
                         player.sendError("§c" + e + e.stack, true);
@@ -4895,7 +4915,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                         player.location.z).forEach((entity) => {
                         entity.sendMessage(String("{§l§dCMDFEED§r§f}[" +
                             player.name +
-                            "§r§f]: Set gamemode to default. "));
+                            "§r§f]: Set gamemode to default."));
                     });
                 });
                 break;
@@ -4903,7 +4923,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                 eventData.cancel = true;
                 system.run(() => {
                     try {
-                        player.runCommand("/gamemode spectator");
+                        player.setGameMode(6);
                     }
                     catch (e) {
                         player.sendError("§c" + e + e.stack, true);
@@ -4915,55 +4935,64 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                         player.location.z).forEach((entity) => {
                         entity.sendMessage(String("{§l§dCMDFEED§r§f}[" +
                             player.name +
-                            "§r§f]: Set gamemode to spectator. "));
+                            "§r§f]: Set gamemode to spectator."));
                     });
                 });
                 break;
             case !!switchTest.match(/^gmr$/):
                 eventData.cancel = true;
                 system.run(() => {
-                    switch (Math.round(Math.random() * 4)) {
+                    try {
+                        const randomGameModeList = [
+                            0, // Survival
+                            1, // Creative
+                            2, // Adventure
+                            5, // Default
+                            6, // Spectator
+                            7, // God
+                        ];
+                        player.setGameMode(randomGameModeList[Math.floor(Math.random() * randomGameModeList.length)]);
+                    }
+                    catch (e) {
+                        player.sendError("§c" + e + e.stack, true);
+                    }
+                    /* switch (Math.round(Math.random() * 4)) {
                         case 0:
                             try {
                                 player.runCommand("/gamemode c");
-                            }
-                            catch (e) {
+                            } catch (e) {
                                 player.sendError("§c" + e + e.stack, true);
                             }
                             break;
                         case 1:
                             try {
                                 player.runCommand("/gamemode s");
-                            }
-                            catch (e) {
+                            } catch (e) {
                                 player.sendError("§c" + e + e.stack, true);
                             }
                             break;
                         case 2:
                             try {
                                 player.runCommand("/gamemode a");
-                            }
-                            catch (e) {
+                            } catch (e) {
                                 player.sendError("§c" + e + e.stack, true);
                             }
                             break;
                         case 3:
                             try {
                                 player.runCommand("/gamemode d");
-                            }
-                            catch (e) {
+                            } catch (e) {
                                 player.sendError("§c" + e + e.stack, true);
                             }
                             break;
                         case 4:
                             try {
                                 player.runCommand("/gamemode spectator");
-                            }
-                            catch (e) {
+                            } catch (e) {
                                 player.sendError("§c" + e + e.stack, true);
                             }
                             break;
-                    } /*
+                    } */ /*
                 try{player.runCommand("/gamemode random")}catch(e){player.sendError("§c" + e + e.stack, true)}*/
                     targetSelectorAllListE("@a [tag=canSeeCustomChatCommandFeedbackFromMods]", player.location.x +
                         " " +
@@ -4972,7 +5001,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                         player.location.z).forEach((entity) => {
                         entity.sendMessage(String("{§l§dCMDFEED§r§f}[" +
                             player.name +
-                            "§r§f]: Set gamemode to random. "));
+                            "§r§f]: Set gamemode to random."));
                     });
                 });
                 break; /*

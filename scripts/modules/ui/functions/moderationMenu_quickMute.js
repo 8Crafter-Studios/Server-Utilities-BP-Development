@@ -29,7 +29,7 @@ export async function moderationMenu_quickMute(sourceEntity) {
             const r = await form.forceShow(player);
             if (r.canceled)
                 return 1;
-            switch ((!!playerslist[r.selection] ? "player" : undefined) ?? ["back", "close", "refresh"][r.selection]) {
+            switch ((!!playerslist[r.selection] ? "player" : undefined) ?? ["back", "close", "refresh"][r.selection - playerslist.length]) {
                 case "player":
                     return await addMuteOnPlayer(player, playerslist[r.selection].name);
                 case "back":

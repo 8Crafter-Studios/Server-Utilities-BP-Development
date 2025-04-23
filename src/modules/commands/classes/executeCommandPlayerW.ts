@@ -467,7 +467,7 @@ export class executeCommandPlayerW {
     sendMessage(message: string | RawMessage | (string | RawMessage)[]) {
         return this.player?.sendMessage(message);
     }
-    setGameMode(gameMode?: GameMode) {
+    setGameMode(gameMode?: GameMode | number) {
         return this.player?.setGameMode(gameMode);
     }
     setOp(isOp: boolean) {

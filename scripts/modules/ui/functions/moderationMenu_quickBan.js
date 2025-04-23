@@ -29,7 +29,7 @@ export async function moderationMenu_quickBan(sourceEntity) {
             const r = await form.forceShow(player);
             if (r.canceled)
                 return 1;
-            switch ((!!playerslist[r.selection] ? "player" : undefined) ?? ["back", "close", "refresh"][r.selection]) {
+            switch ((!!playerslist[r.selection] ? "player" : undefined) ?? ["back", "close", "refresh"][r.selection - playerslist.length]) {
                 case "player":
                     return await addIDBanOnPlayer(player, playerslist[r.selection]);
                 case "back":

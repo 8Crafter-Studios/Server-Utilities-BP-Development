@@ -7,6 +7,7 @@ import { showMessage } from "modules/utilities/functions/showMessage";
 import { extractPlayerFromLooseEntityType } from "modules/utilities/functions/extractPlayerFromLooseEntityType";
 import type { loosePlayerType } from "modules/utilities/types/loosePlayerType";
 import { moderationMenu_quickActions } from "./moderationMenu_quickActions";
+import { manageMutes } from "./manageMutes";
 
 /**
  * Displays and handles the moderation menu for a given entity.
@@ -35,6 +36,7 @@ export async function moderationMenu(sourceEntity: loosePlayerType): Promise<-2 
                 "textures/ui/hammer_l"
             );
             form.button(customFormUICodes.action.buttons.positions.main_only + "Manage Bans", "textures/ui/friend_glyph_desaturated");
+            form.button(customFormUICodes.action.buttons.positions.main_only + "Manage Mutes", "textures/ui/mute_on");
             form.button(customFormUICodes.action.buttons.positions.main_only + "Anti-Spam", "textures/ui/mute_on");
             form.button(
                 customFormUICodes.action.buttons.positions.main_only + customFormUICodes.action.buttons.options.disabled + "§4Anti-Cheat\n§f(§cComing Soon!§f)",
@@ -53,7 +55,7 @@ export async function moderationMenu(sourceEntity: loosePlayerType): Promise<-2 
             if (r.canceled) return 1 as const;
 
             let response = r.selection;
-            switch ((["quickActions", "manageBans", "antiSpam", "anticheat", "bannedItems", "back", "close"] as const)[response]) {
+            switch ((["quickActions", "manageBans", "manageMutes", "antiSpam", "anticheat", "bannedItems", "back", "close"] as const)[response]) {
                 case "quickActions":
                     if ((await moderationMenu_quickActions(player)) == 1) {
                         continue;
@@ -63,6 +65,13 @@ export async function moderationMenu(sourceEntity: loosePlayerType): Promise<-2 
 
                 case "manageBans":
                     if ((await manageBans(player)) == 1) {
+                        continue;
+                    } else {
+                        return 0;
+                    }
+
+                case "manageMutes":
+                    if ((await manageMutes(sourceEntity)) == 1) {
                         continue;
                     } else {
                         return 0;

@@ -122,6 +122,12 @@ declare const modulesMap: {
      */
     bans: UnionToIntersection<optionalModuleObjectImportFilePathsImportMap[(typeof moduleOptionalImportPathMap)["ban"][number]]>;
     /**
+     * This module contains classes, constants, functions, and types for working with the moderation system.
+     * @namespace
+     * @path `modules/moderation/`
+     */
+    moderation: UnionToIntersection<optionalModuleObjectImportFilePathsImportMap[(typeof moduleOptionalImportPathMap)["moderation"][number]]>;
+    /**
      * This module contains constants, functions, and types for working with the UI system.
      * @namespace
      * @path `modules/ui/`
