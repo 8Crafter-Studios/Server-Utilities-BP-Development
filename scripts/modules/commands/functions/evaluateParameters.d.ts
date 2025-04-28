@@ -72,9 +72,20 @@ export declare function evaluateParameters<T extends evaluateParametersParameter
             type: `-${string}`;
         } ? string : T[Index] extends {
             type: `f-${string}`;
-        } ? T[Index] extends `f-${infer Flags}` ? {
+        } ? T[Index] extends {
+            type: `f-${infer Flags}`;
+        } ? {
             [key in Split<Flags>[number]]: boolean;
-        } : never : any | undefined;
+        } : never : T[Index] extends {
+            type: `ignorableNamedParameter`;
+        } ? T[Index] extends {
+            type: `ignorableNamedParameter`;
+            name: infer Name;
+            valueType?: infer ValueType extends Exclude<evaluateParametersParameter, {
+                type: "ignorableNamedParameter";
+            }>;
+            delimeter?: infer Delimeter;
+        } ? (ValueType extends undefined ? string : ValueType extends "string" ? string : ValueType extends "number" ? number : ValueType extends "boolean" ? boolean : never) | null | undefined : never : any | undefined;
     };
     err: [Error, any][];
 };

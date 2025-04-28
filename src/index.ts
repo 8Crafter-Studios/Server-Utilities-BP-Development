@@ -81,6 +81,8 @@ import * as ipc from "ipc";
 import moment from "moment";
 import "intl";
 import "intl.locales";
+import alea from "alea";
+import * as simplexNoise from "simplex-noise";
 Object.defineProperties(globalThis, {
     IPC: {
         value: ipc.IPC,
@@ -324,6 +326,18 @@ const modulesMap = {
      * @namespace
      */
     moment,
+    /**
+     * The `alea` module.
+     * @see {@link https://www.npmjs.com/package/alea}
+     * @namespace
+     */
+    alea,
+    /**
+     * The `simplex-noise` module.
+     * @see {@link https://www.npmjs.com/package/simplex-noise}
+     * @namespace
+     */
+    simplexNoise,
     /**
      * The `@minecraft/server` module.
      *

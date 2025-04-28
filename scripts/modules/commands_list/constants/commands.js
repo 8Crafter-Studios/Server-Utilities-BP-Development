@@ -237,6 +237,44 @@ export const commands = [
         type: "built-in",
         requiredTags: ["canUseChatCommands"],
         formatting_code: "§r§f",
+        commandName: "\\\\expandselection",
+        escregexp: {
+            v: "^\\\\expandselection$",
+        },
+        aliases: [
+            {
+                commandName: "\\\\exsel",
+                escregexp: {
+                    v: "^\\\\exsel$",
+                },
+            },
+            {
+                commandName: "\\\\es",
+                escregexp: {
+                    v: "^\\\\es$",
+                },
+            },
+        ],
+        formats: [
+            {
+                format: "\\expandselection",
+            },
+        ],
+        command_version: "1.0.0",
+        description: "",
+        category: ["worldedit"],
+        commandSettingsId: "built-inCommandSettings:\\expandselection",
+        deprecated: false,
+        functional: true,
+        hidden: false,
+        enabled: true,
+        undoSupported: -1,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
+    },
+    {
+        type: "built-in",
+        requiredTags: ["canUseChatCommands"],
+        formatting_code: "§r§f",
         commandName: "\\\\flood",
         escregexp: {
             v: "^\\\\flood$",
@@ -390,6 +428,29 @@ export const commands = [
         description: "",
         category: ["system", "world", "server", "worldedit"],
         commandSettingsId: "built-inCommandSettings:\\generates",
+        deprecated: false,
+        functional: true,
+        hidden: false,
+        enabled: true,
+        ultraSecurityModeSecurityLevel: "WorldEdit",
+    },
+    {
+        type: "built-in",
+        requiredTags: ["canUseChatCommands"],
+        formatting_code: "§r§f",
+        commandName: "\\\\generateterrain",
+        escregexp: {
+            v: "^\\\\generateterrain$",
+        },
+        formats: [
+            {
+                format: "\\generateterrain",
+            },
+        ],
+        command_version: "1.0.0",
+        description: "",
+        category: ["system", "world", "server", "worldedit"],
+        commandSettingsId: "built-inCommandSettings:\\generateterrain",
         deprecated: false,
         functional: true,
         hidden: false,

@@ -1,19 +1,19 @@
-import type { Vector2 } from "@minecraft/server";
+import type { BoundingBox, Vector2, VectorXZ } from "@minecraft/server";
 
 export function chunkIndexToBoundingBoxXZB(
-    chunkIndex: Vector2,
+    chunkIndex: VectorXZ,
     heightRange: { min: number; max: number; } = { min: -64, max: 320 }
-) {
+): BoundingBox {
     return {
-        from: {
+        min: {
             x: Math.floor(chunkIndex.x * 16),
             y: heightRange.min,
-            z: Math.floor(chunkIndex.y * 16),
+            z: Math.floor(chunkIndex.z * 16),
         },
-        to: {
+        max: {
             x: Math.round(chunkIndex.x * 16 + 15),
             y: heightRange.max,
-            z: Math.round(chunkIndex.y * 16 + 15),
+            z: Math.round(chunkIndex.z * 16 + 15),
         },
     };
 }

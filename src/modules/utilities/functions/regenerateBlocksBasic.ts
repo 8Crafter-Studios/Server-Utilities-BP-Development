@@ -197,7 +197,6 @@ export async function regenerateBlocksBasic(
      */
     error?: Error;
 }> {
-    console.log(1);
     const startTime = Date.now();
     const startTick = system.currentTick;
     var successfulRegenerations = 0n;
@@ -207,7 +206,6 @@ export async function regenerateBlocksBasic(
     var totalTimeSpentRegenerating = 0;
     var unloadedBlockCount = 0n;
     var unloadedSurroundingBlockCount = 0n;
-    type a = Omit<{a: 1, b: 2}, 'b'>
     const opts = {
         minMSBetweenTickWaits: options?.minMSBetweenTickWaits ?? config.system.defaultMinMSBetweenTickWaits,
         ignoreAir: options?.ignoreAir ?? true,

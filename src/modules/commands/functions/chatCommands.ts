@@ -40,6 +40,7 @@ import {
     EntityComponentTypes,
     Direction,
     MolangVariableMap,
+    BlockVolumeBase,
 } from "@minecraft/server";
 import { uiManager } from "@minecraft/server-ui";
 import { listoftransformrecipes } from "Assets/constants/transformrecipes";
@@ -199,6 +200,7 @@ import { playerMenu } from "modules/ui/functions/playerMenu";
 import { protectedAreaCategories, ProtectedAreas } from "init/variables/protectedAreaVariables";
 import { securityVariables } from "security/ultraSecurityModeUtils";
 import { TeleportRequest } from "modules/coordinates/classes/TeleportRequest";
+import { biomeToDefaultTerrainDetailsMap, generateTerrainV2, type TerrainGeneratorBiome } from "modules/utilities/functions/generateTerrain";
 
 export function chatCommands(params: {
     returnBeforeChatSend: boolean | undefined;
@@ -30163,7 +30165,8 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                 {
                     eventData.cancel = true;
                     const chunk = chunkIndexToBoundingBox(
-                        getChunkIndex(player.location)
+                        getChunkIndex(player.location),
+                        [player.dimension.heightRange.min, player.dimension.heightRange.max - 1]
                     );
                     player.setDynamicProperty("pos1", chunk.from);
                     player.setDynamicProperty("pos2", chunk.to);
@@ -30255,6 +30258,195 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                     );
                 }
                 break;
+            case !!switchTest.match(/^\\expandselection$/) || !!switchTest.match(/^\\exsel$/) || !!switchTest.match(/^\\es$/):
+                {
+                    eventData.cancel = true;
+                    const validExpansionModes = ["up", "down", "north", "south", "east", "west", "scale", "scalex", "scaley", "scalez"] as const;
+                    const args = evaluateParameters(switchTestB, [
+                        "presetText",
+                        "string",
+                        "string",
+                    ]).args;
+                    if (!args[1]) {
+                        throw new TypeError(`Missing expansion mode parameter, it should be one of the following: ${validExpansionModes.join(",")}.`);
+                    }
+                    if (!args[2]?.toNumber()) {
+                        throw new TypeError(`Invalid number passed to the value parameter, expected a finite float but got ${args[2]} instead.`);
+                    }
+                    switch (args[1].toLowerCase() as typeof validExpansionModes[number]) {
+                        case "up":
+                        case "north":
+                        case "east":
+                            if (Vector.equals(modules.mcMath.Vector3Utils.multiply(
+                                diroffsetmapb(args[1].toLowerCase()),
+                                player.worldEditSelection.pos2,
+                            ), modules.mcMath.Vector3Utils.multiply(
+                                diroffsetmapb(args[1].toLowerCase()),
+                                player.worldEditSelection.maxPos,
+                            ))) {
+                                player.worldEditSelection.pos2 = Vector.add(
+                                    player.worldEditSelection.pos2,
+                                    Vector.scale(
+                                        diroffsetmapb(args[1].toLowerCase()),
+                                        Number(args[2])
+                                    )
+                                );
+                            } else {
+                                player.worldEditSelection.pos1 = Vector.add(
+                                    player.worldEditSelection.pos1,
+                                    Vector.scale(
+                                        diroffsetmapb(args[1].toLowerCase()),
+                                        Number(args[2])
+                                    )
+                                );
+                            }
+                            player.sendMessageB(
+                                `Successfully expanded the selection ${args[2]} blocks ${
+                                    args[1]
+                                } (${vTStr(
+                                    player.worldEditSelection.pos1
+                                )} to ${vTStr(
+                                    player.worldEditSelection.pos2
+                                )}).`
+                            );
+                            break;
+                        case "down":
+                        case "west":
+                        case "south":
+                            if (Vector.equals(modules.mcMath.Vector3Utils.multiply(
+                                diroffsetmapb(args[1].toLowerCase()),
+                                player.worldEditSelection.pos1,
+                            ), modules.mcMath.Vector3Utils.multiply(
+                                diroffsetmapb(args[1].toLowerCase()),
+                                player.worldEditSelection.minPos,
+                            ))) {
+                                player.worldEditSelection.pos1 = Vector.add(
+                                    player.worldEditSelection.pos1,
+                                    Vector.scale(
+                                        diroffsetmapb(args[1].toLowerCase()),
+                                        Number(args[2])
+                                    )
+                                );
+                            } else {
+                                player.worldEditSelection.pos2 = Vector.add(
+                                    player.worldEditSelection.pos2,
+                                    Vector.scale(
+                                        diroffsetmapb(args[1].toLowerCase()),
+                                        Number(args[2])
+                                    )
+                                );
+                            }
+                            player.sendMessageB(
+                                `Successfully expanded the selection ${args[2]} blocks ${
+                                    args[1]
+                                } (${vTStr(
+                                    player.worldEditSelection.pos1
+                                )} to ${vTStr(
+                                    player.worldEditSelection.pos2
+                                )}).`
+                            );
+                            break;
+                        case "scale": {
+                            const values = {
+                                pos1: player.worldEditSelection.pos1,
+                                pos2: player.worldEditSelection.pos2,
+                                centerToCornerDifference: Vector.scale(Vector.subtract(player.worldEditSelection.maxPos, player.worldEditSelection.minPos), 0.5),
+                                center: Vector.subtract(player.worldEditSelection.maxPos, Vector.scale(Vector.subtract(player.worldEditSelection.maxPos, player.worldEditSelection.minPos), 0.5)),
+                            }
+                            for (const axis of ["x", "y", "z"] as const) {
+                                if (values.pos1[axis] < values.pos2[axis]) {
+                                    const distance = (values.centerToCornerDifference[axis] * Number(args[2]));
+                                    values.pos1[axis] = values.center[axis] - distance;
+                                    values.pos2[axis] = values.center[axis] + distance;
+                                } else {
+                                    const distance = (values.centerToCornerDifference[axis] * Number(args[2]));
+                                    values.pos1[axis] = values.center[axis] + distance;
+                                    values.pos2[axis] = values.center[axis] - distance;
+                                }
+                            }
+                            player.worldEditSelection.pos1 = Vector.scale(
+                                player.worldEditSelection.pos1,
+                                Number(args[2])
+                            );
+                        }
+                        break;
+                        case "scalex": {
+                            const values = {
+                                pos1: player.worldEditSelection.pos1,
+                                pos2: player.worldEditSelection.pos2,
+                                centerToCornerDifference: Vector.scale(Vector.subtract(player.worldEditSelection.maxPos, player.worldEditSelection.minPos), 0.5),
+                                center: Vector.subtract(player.worldEditSelection.maxPos, Vector.scale(Vector.subtract(player.worldEditSelection.maxPos, player.worldEditSelection.minPos), 0.5)),
+                            }
+                            for (const axis of ["x"] as const) {
+                                if (values.pos1[axis] < values.pos2[axis]) {
+                                    const distance = (values.centerToCornerDifference[axis] * Number(args[2]));
+                                    values.pos1[axis] = values.center[axis] - distance;
+                                    values.pos2[axis] = values.center[axis] + distance;
+                                } else {
+                                    const distance = (values.centerToCornerDifference[axis] * Number(args[2]));
+                                    values.pos1[axis] = values.center[axis] + distance;
+                                    values.pos2[axis] = values.center[axis] - distance;
+                                }
+                            }
+                            player.worldEditSelection.pos1 = Vector.scale(
+                                player.worldEditSelection.pos1,
+                                Number(args[2])
+                            );
+                        }
+                        break;
+                        case "scaley": {
+                            const values = {
+                                pos1: player.worldEditSelection.pos1,
+                                pos2: player.worldEditSelection.pos2,
+                                centerToCornerDifference: Vector.scale(Vector.subtract(player.worldEditSelection.maxPos, player.worldEditSelection.minPos), 0.5),
+                                center: Vector.subtract(player.worldEditSelection.maxPos, Vector.scale(Vector.subtract(player.worldEditSelection.maxPos, player.worldEditSelection.minPos), 0.5)),
+                            }
+                            for (const axis of ["y"] as const) {
+                                if (values.pos1[axis] < values.pos2[axis]) {
+                                    const distance = (values.centerToCornerDifference[axis] * Number(args[2]));
+                                    values.pos1[axis] = values.center[axis] - distance;
+                                    values.pos2[axis] = values.center[axis] + distance;
+                                } else {
+                                    const distance = (values.centerToCornerDifference[axis] * Number(args[2]));
+                                    values.pos1[axis] = values.center[axis] + distance;
+                                    values.pos2[axis] = values.center[axis] - distance;
+                                }
+                            }
+                            player.worldEditSelection.pos1 = Vector.scale(
+                                player.worldEditSelection.pos1,
+                                Number(args[2])
+                            );
+                        }
+                        break;
+                        case "scalez": {
+                            const values = {
+                                pos1: player.worldEditSelection.pos1,
+                                pos2: player.worldEditSelection.pos2,
+                                centerToCornerDifference: Vector.scale(Vector.subtract(player.worldEditSelection.maxPos, player.worldEditSelection.minPos), 0.5),
+                                center: Vector.subtract(player.worldEditSelection.maxPos, Vector.scale(Vector.subtract(player.worldEditSelection.maxPos, player.worldEditSelection.minPos), 0.5)),
+                            }
+                            for (const axis of ["z"] as const) {
+                                if (values.pos1[axis] < values.pos2[axis]) {
+                                    const distance = (values.centerToCornerDifference[axis] * Number(args[2]));
+                                    values.pos1[axis] = values.center[axis] - distance;
+                                    values.pos2[axis] = values.center[axis] + distance;
+                                } else {
+                                    const distance = (values.centerToCornerDifference[axis] * Number(args[2]));
+                                    values.pos1[axis] = values.center[axis] + distance;
+                                    values.pos2[axis] = values.center[axis] - distance;
+                                }
+                            }
+                            player.worldEditSelection.pos1 = Vector.scale(
+                                player.worldEditSelection.pos1,
+                                Number(args[2])
+                            );
+                        }
+                        break;
+                        default:
+                            throw new TypeError(`Invalid expansion mode: ${args[1]}. Expected one of: ${validExpansionModes.join(",")}.`);
+                    }
+                }
+                break;
             case !!switchTest.match(/^\\regenerateblocks$/):
                 {
                     eventData.cancel = true;
@@ -30290,7 +30482,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                             return a;
                                         })(),
                                         dimensiona
-                                    ).then((tac) => {
+                                    ).then(async (tac) => {
                                         ta = tac;
                                         try {
                                             undoClipboard.save(
@@ -30310,7 +30502,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                             );
                                         }
                                         try {
-                                            regenerateBlocksBasic(ca, cb, dimensiona, radius, {
+                                            await regenerateBlocksBasic(ca, cb, dimensiona, radius, {
                                                 ignoreAir: !args[1].i,
                                                 onlyReplaceAir: !args[1].s,
                                                 ignoreNotYetGeneratedAir: args[1].a,
@@ -30335,6 +30527,211 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 }
                             });
                         }
+                    }
+                }
+                break;
+            case !!switchTest.match(/^\\generateterrain$/):
+                {
+                    eventData.cancel = true;
+                    const args = evaluateParameters(switchTestB, [
+                        "presetText",
+                        "f-bod",
+                        "string", // Biome
+                        {
+                            type: "ignorableNamedParameter",
+                            name: "seed",
+                            valueType: "string",
+                            delimeter: "=",
+                            nameIsCaseSensitive: false,
+                        },
+                        {
+                            type: "ignorableNamedParameter",
+                            name: "baseHeight",
+                            valueType: "number",
+                            delimeter: "=",
+                            nameIsCaseSensitive: false,
+                        },
+                        {
+                            type: "ignorableNamedParameter",
+                            name: "heightVariation",
+                            valueType: "number",
+                            delimeter: "=",
+                            nameIsCaseSensitive: false,
+                        },
+                        {
+                            type: "ignorableNamedParameter",
+                            name: "waterLevel",
+                            valueType: "string",
+                            delimeter: "=",
+                            nameIsCaseSensitive: false,
+                        },
+                        {
+                            type: "ignorableNamedParameter",
+                            name: "generatorType",
+                            valueType: "string",
+                            delimeter: "=",
+                            nameIsCaseSensitive: false,
+                        },
+                        {
+                            type: "ignorableNamedParameter",
+                            name: "msbt",
+                            valueType: "number",
+                            delimeter: "=",
+                            nameIsCaseSensitive: false,
+                        },
+                        {
+                            type: "ignorableNamedParameter",
+                            name: "oreGenerationMode",
+                            valueType: "string",
+                            delimeter: "=",
+                            nameIsCaseSensitive: false,
+                        },
+                        {
+                            type: "ignorableNamedParameter",
+                            name: "noiseOffsetX",
+                            valueType: "number",
+                            delimeter: "=",
+                            nameIsCaseSensitive: false,
+                        },
+                        {
+                            type: "ignorableNamedParameter",
+                            name: "noiseOffsetY",
+                            valueType: "number",
+                            delimeter: "=",
+                            nameIsCaseSensitive: false,
+                        },
+                        {
+                            type: "ignorableNamedParameter",
+                            name: "noiseOffsetZ",
+                            valueType: "number",
+                            delimeter: "=",
+                            nameIsCaseSensitive: false,
+                        },
+                        {
+                            type: "ignorableNamedParameter",
+                            name: "noiseScaleX",
+                            valueType: "number",
+                            delimeter: "=",
+                            nameIsCaseSensitive: false,
+                        },
+                        {
+                            type: "ignorableNamedParameter",
+                            name: "noiseScaleY",
+                            valueType: "number",
+                            delimeter: "=",
+                            nameIsCaseSensitive: false,
+                        },
+                        {
+                            type: "ignorableNamedParameter",
+                            name: "noiseScaleZ",
+                            valueType: "number",
+                            delimeter: "=",
+                            nameIsCaseSensitive: false,
+                        },
+                    ]).args;
+                    const ca = player.worldEditSelection.minPos;
+                    const cb = player.worldEditSelection.maxPos;
+                    const dimensiona = player.worldEditSelection.dimension;
+                    if (!!!ca) {
+                        player.sendError("§cError: pos1 is not set.", true);
+                    } else if (!!!cb) {
+                        player.sendError("§cError: pos2 is not set.", true);
+                    } else if (!["v1", "v2"].includes(args[9] ?? "v2")) {
+                        player.sendError(`§cUnsupported ore generation mode: ${args[9]}. Expected one of: "v1", "v2".`, true);
+                    } else if (!["normal", "nether", "end", "fractal"].includes(args[7] ?? "normal")) {
+                        player.sendError(`§cUnsupported generator type: ${args[7]}. Expected one of: "normal", "nether", "end", "fractal".`, true);
+                    } else if (!Object.keys(biomeToDefaultTerrainDetailsMap).includes(args[2] ?? "undefined")) {
+                        player.sendError(
+                            `§cUnsupported biome type: ${args[2]}. Supported biome types: ${Object.keys(biomeToDefaultTerrainDetailsMap).join(", ")}`,
+                            true
+                        );
+                    } else {
+                        system.run(() => {
+                            let ta: Entity[];
+                            try {
+                                generateTickingAreaFillCoordinatesC(
+                                    player.location,
+                                    (() => {
+                                        let a = new CompoundBlockVolume();
+                                        a.pushVolume({
+                                            volume: new BlockVolume(ca, cb),
+                                        });
+                                        return a;
+                                    })(),
+                                    dimensiona
+                                ).then(async (tac) => {
+                                    ta = tac;
+                                    try {
+                                        undoClipboard.save(dimensiona, { from: ca, to: cb }, Date.now(), {
+                                            includeBlocks: true,
+                                            includeEntities: false,
+                                            saveMode: config.undoClipboardMode,
+                                        });
+                                    } catch (e) {
+                                        player.sendMessageB("§c" + e + " " + e.stack);
+                                    }
+                                    try {
+                                        const result = await generateTerrainV2(
+                                            ca,
+                                            cb,
+                                            dimensiona,
+                                            args[2] as TerrainGeneratorBiome,
+                                            args[3]?.toNumber() ?? Math.random(),
+                                            {
+                                                baseHeight: args[4] ?? undefined,
+                                                generateBlobs: args[1].b,
+                                                generateOres: args[1].o,
+                                                generatorType: (args[7] as any) ?? undefined,
+                                                heightVariation: args[5] ?? undefined,
+                                                waterLevel: args[6].toLowerCase() === "false" ? false : args[6].toNumber() ?? undefined,
+                                                minMSBetweenTickWaits: args[8] ?? config.system.defaultMinMSBetweenTickWaits,
+                                                oreGenerationMode: (args[9] as any) ?? undefined,
+                                                offset: {
+                                                    x: args[10] ?? undefined,
+                                                    y: args[11] ?? undefined,
+                                                    z: args[12] ?? undefined,
+                                                },
+                                                scale: {
+                                                    x: args[13] ?? undefined,
+                                                    y: args[14] ?? undefined,
+                                                    z: args[15] ?? undefined,
+                                                },
+                                            }
+                                        );
+                                        player.sendMessageB(
+                                            `${result.totalBlocksGenerated == 0n ? "§c" : ""}${result.totalBlocksGenerated} blocks replaced in ${
+                                                result.totalTime
+                                            } ms over ${result.totalTicks} tick${result.totalTicks == 1 ? "" : "s"} with ${
+                                                result.totalTimeSpentGenerating
+                                            } ms spent actually generating blocks`
+                                        );
+                                        if (args[1].d) {
+                                            player.sendMessageB(`Terrain Generation Debug Statistics:
+Total Blocks Generated: ${result.totalBlocksGenerated}
+Terrain Blocks Generated: ${result.blocksGenerated}
+Ores Generated: ${result.oresGenerated}
+Blobs Generated: ${result.blobsGenerated}
+Ore Blocks Generated: ${result.oreBlocksGenerated}
+Blob Blocks Generated: ${result.blobBlocksGenerated}
+Total Ores and Blobs Generated: ${result.totalOresAndBlobsGenerated}
+Start Tick: ${result.startTick}
+End Tick: ${result.endTick}
+Total Ticks: ${result.totalTicks}
+Start Time: ${result.startTime}
+End Time: ${result.endTime}
+Total Time: ${result.totalTime}
+Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
+                                        }
+                                    } catch (e) {
+                                        player.sendError("§c" + e + e.stack, true);
+                                    } finally {
+                                        tac.forEach((tab) => tab?.remove());
+                                    }
+                                });
+                            } catch (e) {
+                                player.sendError("§c" + e + e.stack, true);
+                            }
+                        });
                     }
                 }
                 break;
@@ -32354,7 +32751,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                     eventData.cancel = true;
                     const args = evaluateParameters(switchTestB, [
                         "presetText",
-                        "f-c",
+                        "f-cf",
                         "block",
                     ]).args;
                     const lastblockname = args[2]?.id;
@@ -32433,62 +32830,72 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                         }
                                         const blocktypes = BlockTypes.getAll();
                                         try {
-                                            fillBlocksHFGB(
-                                                ca,
-                                                cb,
-                                                dimensiona,
-                                                () => airpermutation,
-                                                {
-                                                    matchingBlock:
-                                                        matchingblock[0],
-                                                    matchingBlockStates:
-                                                        matchingblock[1],
-                                                    minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
-                                                },
-                                                args[1].c,
-                                                100
-                                            ).then(
-                                                (a) => {
-                                                    player.sendMessageB(
-                                                        `${
-                                                            a.counter == 0
-                                                                ? "§c"
-                                                                : ""
-                                                        }${
-                                                            a.counter
-                                                        } blocks replaced in ${
-                                                            a.completionData
-                                                                .endTime -
-                                                            a.completionData
-                                                                .startTime
-                                                        } ms over ${
-                                                            a.completionData
-                                                                .endTick -
-                                                            a.completionData
-                                                                .startTick
-                                                        } tick${
-                                                            a.completionData
-                                                                .endTick -
-                                                                a.completionData
-                                                                    .startTick ==
-                                                            1
-                                                                ? ""
-                                                                : "s"
-                                                        }${
-                                                            a.completionData
-                                                                .containsUnloadedChunks
-                                                                ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                                : ""
-                                                        }`
-                                                    );
-                                                },
-                                                (e) => {
-                                                    player.sendError(
-                                                        "§c" + e + e.stack,
-                                                        true
-                                                    );
+                                            if (args[1].f) {
+                                                let i = 0n;
+                                                let startTime = Date.now();
+                                                for (const loc of dimensiona.getBlocks(new BlockVolume(ca, cb), {excludeTypes: ["minecraft:air"]}, true).getBlockLocationIterator()) {
+                                                    dimensiona.setBlockType(loc, "minecraft:air");
+                                                    i++;
                                                 }
-                                            );
+                                                player.sendMessageB(`${i == 0n ? "§c" : ""}${i} blocks replaced in ${Date.now() - startTime} ms`);
+                                            } else {
+                                                fillBlocksHFGB(
+                                                    ca,
+                                                    cb,
+                                                    dimensiona,
+                                                    () => airpermutation,
+                                                    {
+                                                        matchingBlock:
+                                                            matchingblock[0],
+                                                        matchingBlockStates:
+                                                            matchingblock[1],
+                                                        minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits,
+                                                    },
+                                                    args[1].c,
+                                                    100
+                                                ).then(
+                                                    (a) => {
+                                                        player.sendMessageB(
+                                                            `${
+                                                                a.counter == 0
+                                                                    ? "§c"
+                                                                    : ""
+                                                            }${
+                                                                a.counter
+                                                            } blocks replaced in ${
+                                                                a.completionData
+                                                                    .endTime -
+                                                                a.completionData
+                                                                    .startTime
+                                                            } ms over ${
+                                                                a.completionData
+                                                                    .endTick -
+                                                                a.completionData
+                                                                    .startTick
+                                                            } tick${
+                                                                a.completionData
+                                                                    .endTick -
+                                                                    a.completionData
+                                                                        .startTick ==
+                                                                1
+                                                                    ? ""
+                                                                    : "s"
+                                                            }${
+                                                                a.completionData
+                                                                    .containsUnloadedChunks
+                                                                    ? "; Some blocks were not generated because they were in unloaded chunks. "
+                                                                    : ""
+                                                            }`
+                                                        );
+                                                    },
+                                                    (e) => {
+                                                        player.sendError(
+                                                            "§c" + e + e.stack,
+                                                            true
+                                                        );
+                                                    }
+                                                );
+                                            }
                                         } catch (e) {
                                             player.sendError(
                                                 "§c" + e + e.stack,

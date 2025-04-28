@@ -20,7 +20,9 @@ export function evaluateParameters(commandstring, parameters) {
             : { type: v, vectorCount: undefined, maxLength: undefined }
         : v?.type == "Vectors"
             ? v
-            : v)
+            : v?.type === "ignorableNamedParameter"
+                ? v
+                : v)
         .forEach((p, i) => {
         switch (true) {
             case paramEval.trim() == "":
@@ -43,21 +45,13 @@ export function evaluateParameters(commandstring, parameters) {
             case p.type == "presetText":
                 {
                     argumentsa.push(paramEval.trimStart().split(" ")[0]);
-                    paramEval = paramEval
-                        .trimStart()
-                        .split(" ")
-                        .slice(1)
-                        .join(" ");
+                    paramEval = paramEval.trimStart().split(" ").slice(1).join(" ");
                 }
                 break;
             case p.type == "number":
                 {
                     argumentsa.push(Number(paramEval.trimStart().split(" ")[0]));
-                    paramEval = paramEval
-                        .trimStart()
-                        .split(" ")
-                        .slice(1)
-                        .join(" ");
+                    paramEval = paramEval.trimStart().split(" ").slice(1).join(" ");
                 }
                 break;
             case p.type == "boolean":
@@ -71,18 +65,13 @@ export function evaluateParameters(commandstring, parameters) {
                             .replace(/^f$/i, "false")
                             .replace(/^true$/i, "true")
                             .replace(/^false$/i, "false"))));
-                    paramEval = paramEval
-                        .trimStart()
-                        .split(" ")
-                        .slice(1)
-                        .join(" ");
+                    paramEval = paramEval.trimStart().split(" ").slice(1).join(" ");
                 }
                 break;
             case p.type == "neboolean":
                 {
                     try {
-                        argumentsa.push(paramEval.trimStart().split(" ")[0]?.trim?.() ==
-                            ""
+                        argumentsa.push(paramEval.trimStart().split(" ")[0]?.trim?.() == ""
                             ? undefined
                             : Boolean(JSON.parse(paramEval
                                 .trimStart()
@@ -91,11 +80,7 @@ export function evaluateParameters(commandstring, parameters) {
                                 .replace(/^f$/i, "false")
                                 .replace(/^true$/i, "true")
                                 .replace(/^false$/i, "false"))));
-                        paramEval = paramEval
-                            .trimStart()
-                            .split(" ")
-                            .slice(1)
-                            .join(" ");
+                        paramEval = paramEval.trimStart().split(" ").slice(1).join(" ");
                     }
                     catch {
                         argumentsa.push(undefined);
@@ -110,10 +95,7 @@ export function evaluateParameters(commandstring, parameters) {
                     }
                     else if (paramEval.trimStart().startsWith('"')) {
                         let value = getParametersFromString(paramEval.trimStart()).resultsincludingunmodified[0];
-                        paramEval =
-                            paramEval
-                                .trimStart()
-                                .slice(value?.s?.length + 1) ?? "";
+                        paramEval = paramEval.trimStart().slice(value?.s?.length + 1) ?? "";
                         try {
                             argumentsa.push(value?.v);
                         }
@@ -124,28 +106,18 @@ export function evaluateParameters(commandstring, parameters) {
                     }
                     else {
                         argumentsa.push(paramEval.trimStart().split(" ")[0]);
-                        paramEval = paramEval
-                            .trimStart()
-                            .split(" ")
-                            .slice(1)
-                            .join(" ");
+                        paramEval = paramEval.trimStart().split(" ").slice(1).join(" ");
                     }
                 }
                 break;
             case p.type == "non-booleanString":
                 {
-                    if (["true", "false", "t", "f", "1", "0"].includes(paramEval
-                        .trimStart()
-                        .split(" ")[0]
-                        .toLowerCase())) {
+                    if (["true", "false", "t", "f", "1", "0"].includes(paramEval.trimStart().split(" ")[0].toLowerCase())) {
                         argumentsa.push(undefined);
                     }
                     else if (paramEval.trimStart().startsWith('"')) {
                         let value = getParametersFromString(paramEval.trimStart()).resultsincludingunmodified[0];
-                        paramEval =
-                            paramEval
-                                .trimStart()
-                                .slice(value?.s?.length + 1) ?? "";
+                        paramEval = paramEval.trimStart().slice(value?.s?.length + 1) ?? "";
                         try {
                             argumentsa.push(value?.v);
                         }
@@ -156,33 +128,15 @@ export function evaluateParameters(commandstring, parameters) {
                     }
                     else {
                         argumentsa.push(paramEval.trimStart().split(" ")[0]);
-                        paramEval = paramEval
-                            .trimStart()
-                            .split(" ")
-                            .slice(1)
-                            .join(" ");
+                        paramEval = paramEval.trimStart().split(" ").slice(1).join(" ");
                     } //1870//7018
                 }
                 break;
             case !!p.type.match(/^-[a-zA-Z0-9!@#$%^&*<>,.~]+$/):
                 {
-                    if (!!paramEval
-                        .trimStart()
-                        .match(new RegExp(`(?<=^\\-)(${p.type
-                        .slice(1)
-                        .split("")
-                        .join("|")})+(?=$|\\s)`))) {
-                        let value = paramEval
-                            .trimStart()
-                            .match(new RegExp(`(?<=^\\-)(${p.type
-                            .slice(1)
-                            .split("")
-                            .join("|")})+(?=$|\\s)`))[0];
-                        paramEval =
-                            paramEval
-                                .trimStart()
-                                .slice(paramEval.trimStart().indexOf(value) +
-                                value.length) ?? "";
+                    if (!!paramEval.trimStart().match(new RegExp(`(?<=^\\-)(${p.type.slice(1).split("").join("|")})+(?=$|\\s)`))) {
+                        let value = paramEval.trimStart().match(new RegExp(`(?<=^\\-)(${p.type.slice(1).split("").join("|")})+(?=$|\\s)`))[0];
+                        paramEval = paramEval.trimStart().slice(paramEval.trimStart().indexOf(value) + value.length) ?? "";
                         try {
                             argumentsa.push(value);
                         }
@@ -198,23 +152,9 @@ export function evaluateParameters(commandstring, parameters) {
                 break;
             case !!p.type.match(/^f-[a-zA-Z0-9!@#$%^&*<>,.~]+$/):
                 {
-                    if (!!paramEval
-                        .trimStart()
-                        .match(new RegExp(`(?<=^\\-)(${p.type
-                        .slice(2)
-                        .split("")
-                        .join("|")})+(?=$|\\s)`))) {
-                        let value = paramEval
-                            .trimStart()
-                            .match(new RegExp(`(?<=^\\-)(${p.type
-                            .slice(2)
-                            .split("")
-                            .join("|")})+(?=$|\\s)`))[0];
-                        paramEval =
-                            paramEval
-                                .trimStart()
-                                .slice(paramEval.trimStart().indexOf(value) +
-                                value.length) ?? "";
+                    if (!!paramEval.trimStart().match(new RegExp(`(?<=^\\-)(${p.type.slice(2).split("").join("|")})+(?=$|\\s)`))) {
+                        let value = paramEval.trimStart().match(new RegExp(`(?<=^\\-)(${p.type.slice(2).split("").join("|")})+(?=$|\\s)`))[0];
+                        paramEval = paramEval.trimStart().slice(paramEval.trimStart().indexOf(value) + value.length) ?? "";
                         try {
                             argumentsa.push(Object.fromEntries(p.type
                                 .slice(2)
@@ -240,12 +180,9 @@ export function evaluateParameters(commandstring, parameters) {
             case p.type == "json":
                 {
                     let value = getParametersFromString(paramEval.trimStart()).resultsincludingunmodified[0];
-                    paramEval =
-                        paramEval.trimStart().slice(value?.s?.length + 1) ??
-                            "";
+                    paramEval = paramEval.trimStart().slice(value?.s?.length + 1) ?? "";
                     try {
-                        argumentsa.push(value?.v ??
-                            JSONParse(value?.s ?? paramEval, true));
+                        argumentsa.push(value?.v ?? JSONParse(value?.s ?? paramEval, true));
                     }
                     catch (e) {
                         ea.push([e, e.stack]);
@@ -255,25 +192,16 @@ export function evaluateParameters(commandstring, parameters) {
                 break;
             case p.type == "blockStates":
                 {
-                    if (paramEval.indexOf("[") == -1 &&
-                        paramEval.indexOf("{") == -1) {
+                    if (paramEval.indexOf("[") == -1 && paramEval.indexOf("{") == -1) {
                         argumentsa.push(undefined);
                     }
-                    else if ((paramEval.indexOf("[") == -1
-                        ? Infinity
-                        : paramEval.indexOf("[")) <
-                        (paramEval.indexOf("{") == -1
-                            ? Infinity
-                            : paramEval.indexOf("{"))) {
-                        let value = getParametersFromString(paramEval
-                            .replaceAll("=", ":")
-                            .replaceAll("[", "{")
-                            .replaceAll("]", "}")).resultsincludingunmodified[0];
-                        paramEval =
-                            paramEval.slice(value?.s?.length + 1) ?? "";
+                    else if ((paramEval.indexOf("[") == -1 ? Infinity : paramEval.indexOf("[")) <
+                        (paramEval.indexOf("{") == -1 ? Infinity : paramEval.indexOf("{"))) {
+                        let value = getParametersFromString(paramEval.replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"))
+                            .resultsincludingunmodified[0];
+                        paramEval = paramEval.slice(value?.s?.length + 1) ?? "";
                         try {
-                            argumentsa.push(value?.v ??
-                                JSONParse(value?.s ?? "undefined", true));
+                            argumentsa.push(value?.v ?? JSONParse(value?.s ?? "undefined", true));
                         }
                         catch (e) {
                             ea.push([e, e.stack]);
@@ -281,13 +209,10 @@ export function evaluateParameters(commandstring, parameters) {
                         }
                     }
                     else {
-                        let value = getParametersFromString(paramEval)
-                            .resultsincludingunmodified[0];
-                        paramEval =
-                            paramEval.slice(value?.s?.length + 1) ?? "";
+                        let value = getParametersFromString(paramEval).resultsincludingunmodified[0];
+                        paramEval = paramEval.slice(value?.s?.length + 1) ?? "";
                         try {
-                            argumentsa.push(value?.v ??
-                                JSONParse(value?.s ?? "undefined", true));
+                            argumentsa.push(value?.v ?? JSONParse(value?.s ?? "undefined", true));
                         }
                         catch (e) {
                             ea.push([e, e.stack]);
@@ -299,8 +224,7 @@ export function evaluateParameters(commandstring, parameters) {
             case p.type == "blockPattern":
                 {
                     const ep = BlockPattern.extractWRaw(paramEval.trimStart());
-                    paramEval =
-                        paramEval.slice(paramEval.indexOf(ep.raw) + ep.raw.length) ?? "";
+                    paramEval = paramEval.slice(paramEval.indexOf(ep.raw) + ep.raw.length) ?? "";
                     try {
                         argumentsa.push(ep.parsed);
                     }
@@ -313,8 +237,7 @@ export function evaluateParameters(commandstring, parameters) {
             case p.type == "block":
                 {
                     const ep = parseBlockMatcherType(paramEval.trimStart());
-                    paramEval =
-                        paramEval.slice(paramEval.indexOf(ep.raw) + ep.raw.length) ?? "";
+                    paramEval = paramEval.slice(paramEval.indexOf(ep.raw) + ep.raw.length) ?? "";
                     try {
                         argumentsa.push(ep.block);
                     }
@@ -327,8 +250,7 @@ export function evaluateParameters(commandstring, parameters) {
             case p.type == "blockMask":
                 {
                     const ep = BlockMask.extractWRaw(paramEval.trimStart());
-                    paramEval =
-                        paramEval.slice(paramEval.indexOf(ep.raw) + ep.raw.length) ?? "";
+                    paramEval = paramEval.slice(paramEval.indexOf(ep.raw) + ep.raw.length) ?? "";
                     try {
                         argumentsa.push(ep.parsed);
                     }
@@ -343,17 +265,10 @@ export function evaluateParameters(commandstring, parameters) {
                     if (!paramEval.trimStart().startsWith("@")) {
                         if (paramEval.trimStart().startsWith('"')) {
                             let value = getParametersFromString(paramEval.trimStart()).resultsincludingunmodified[0];
-                            paramEval =
-                                paramEval
-                                    .trimStart()
-                                    .slice(value?.s?.length) ?? "";
-                            paramEval =
-                                paramEval.slice(+(paramEval[0] == " ")) ??
-                                    "";
+                            paramEval = paramEval.trimStart().slice(value?.s?.length) ?? "";
+                            paramEval = paramEval.slice(+(paramEval[0] == " ")) ?? "";
                             try {
-                                argumentsa.push(!!!value?.v
-                                    ? undefined
-                                    : '"' + value?.v + '"');
+                                argumentsa.push(!!!value?.v ? undefined : '"' + value?.v + '"');
                             }
                             catch (e) {
                                 ea.push([e, e.stack]);
@@ -362,23 +277,13 @@ export function evaluateParameters(commandstring, parameters) {
                         }
                         else {
                             argumentsa.push(paramEval.trimStart().split(" ")[0]);
-                            paramEval = paramEval
-                                .trimStart()
-                                .split(" ")
-                                .slice(1)
-                                .join(" ")
-                                .trimStart();
+                            paramEval = paramEval.trimStart().split(" ").slice(1).join(" ").trimStart();
                         }
                     }
                     else {
-                        if (!!paramEval
-                            .trimStart()
-                            .match(/^@[a-zA-Z]\s*(?![\s\[])/)) {
-                            let value = paramEval
-                                .trimStart()
-                                .match(/^@[seapvrc]/)[0];
-                            paramEval =
-                                paramEval.slice(paramEval.indexOf(value) + value?.length) ?? "";
+                        if (!!paramEval.trimStart().match(/^@[a-zA-Z]\s*(?![\s\[])/)) {
+                            let value = paramEval.trimStart().match(/^@[seapvrc]/)[0];
+                            paramEval = paramEval.slice(paramEval.indexOf(value) + value?.length) ?? "";
                             try {
                                 argumentsa.push(value);
                             }
@@ -389,8 +294,7 @@ export function evaluateParameters(commandstring, parameters) {
                         }
                         else {
                             let value = extractSelectors(paramEval)[0];
-                            paramEval =
-                                paramEval.slice(paramEval.indexOf(value) + value?.length) ?? "";
+                            paramEval = paramEval.slice(paramEval.indexOf(value) + value?.length) ?? "";
                             try {
                                 argumentsa.push(value);
                             }
@@ -405,8 +309,7 @@ export function evaluateParameters(commandstring, parameters) {
             case p.type == "Vector" || (p?.type ?? p) == "Vector1":
                 {
                     let value = paramEval.match(/(?<!(?<!^([^"]*["][^"]*)+)(([^"]*(?<!([^\\])(\\\\)*?\\)"){2})*([^"]*(?<!([^\\])(\\\\)*?\\)")[^"]*)(((?<=[\s\~\!\^\%\&\*\d])|^)[\~\!\^\%\&\*]([\-\+]?\d+(\.\d+)?)?|((?<=\s)|^)[\-\+]?\d+(\.\d+)?)(?!([^"]*(?<!([^\\])(\\\\)*?\\)")[^"]*(([^"]*(?<!([^\\])(\\\\)*?\\)"){2})*(?!([^"]*["][^"]*)+$))/g)?.[0];
-                    paramEval =
-                        paramEval.slice(paramEval.indexOf(value) + value?.length) ?? "";
+                    paramEval = paramEval.slice(paramEval.indexOf(value) + value?.length) ?? "";
                     if (paramEval.startsWith(" ")) {
                         paramEval = paramEval.slice(1) ?? "";
                     }
@@ -422,8 +325,7 @@ export function evaluateParameters(commandstring, parameters) {
             case !!p.type.match(/^Vector[2-8]$/):
                 {
                     let value = paramEval.match(new RegExp(String.raw `(?<!(?<!^([^"]*["][^"]*)+)(([^"]*(?<!([^\\])(\\\\)*?\\)"){2})*([^"]*(?<!([^\\])(\\\\)*?\\)")[^"]*)(((((?<=[\s\~\!\^\%\&\*\d])|^)[\~\!\^\%\&\*](?:[\-\+]?\d+(\.\d+)?)?)|(((?<=\s)|^)[\-\+]?\d+(\.\d+)?))\s*?){${p.type.slice(6)}}(?!([^"]*(?<!([^\\])(\\\\)*?\\)")[^"]*(([^"]*(?<!([^\\])(\\\\)*?\\)"){2})*(?!([^"]*["][^"]*)+$))`))?.[0];
-                    paramEval =
-                        paramEval.slice(paramEval.indexOf(value) + value?.length) ?? "";
+                    paramEval = paramEval.slice(paramEval.indexOf(value) + value?.length) ?? "";
                     if (paramEval.startsWith(" ")) {
                         paramEval = paramEval.slice(1) ?? "";
                     }
@@ -439,8 +341,7 @@ export function evaluateParameters(commandstring, parameters) {
             case p.type == "Vectors":
                 {
                     let value = paramEval.match(new RegExp(String.raw `(?<!(?<!^([^"]*["][^"]*)+)(([^"]*(?<!([^\\])(\\\\)*?\\)"){2})*([^"]*(?<!([^\\])(\\\\)*?\\)")[^"]*)(((((?<=[\s\~\!\^\%\&\*\d])|^)[\~\!\^\%\&\*](?:[\-\+]?\d+(\.\d+)?)?)|(((?<=\s)|^)[\-\+]?\d+(\.\d+)?))\s*?){${p.vectorCount ?? 3}}(?!([^"]*(?<!([^\\])(\\\\)*?\\)")[^"]*(([^"]*(?<!([^\\])(\\\\)*?\\)"){2})*(?!([^"]*["][^"]*)+$))`))?.[0];
-                    paramEval =
-                        paramEval.slice(paramEval.indexOf(value) + value?.length) ?? "";
+                    paramEval = paramEval.slice(paramEval.indexOf(value) + value?.length) ?? "";
                     if (paramEval.startsWith(" ")) {
                         paramEval = paramEval.slice(1) ?? "";
                     }
@@ -449,6 +350,57 @@ export function evaluateParameters(commandstring, parameters) {
                     }
                     catch (e) {
                         ea.push([e, e.stack]);
+                        argumentsa.push(null);
+                    }
+                }
+                break;
+            case p.type == "ignorableNamedParameter":
+                {
+                    if ((p.nameIsCaseSensitive ?? false) ? paramEval.trimStart().startsWith(`${p.name}${p.delimeter ?? "="}`) : paramEval.trimStart().toLowerCase().startsWith(`${p.name}${p.delimeter ?? "="}`.toLowerCase())) {
+                        paramEval = paramEval.trimStart().slice(`${p.name}${p.delimeter ?? "="}`.length);
+                        const valueType = typeof p.valueType === "string" ? { type: p.valueType } : p.valueType;
+                        switch (valueType.type) {
+                            case "string":
+                                if (paramEval.startsWith('""')) {
+                                    argumentsa.push("");
+                                    paramEval = paramEval.slice(2);
+                                }
+                                else if (paramEval.startsWith('"')) {
+                                    let value = getParametersFromString(paramEval).resultsincludingunmodified[0];
+                                    paramEval = paramEval.slice(value?.s?.length + 1) ?? "";
+                                    try {
+                                        argumentsa.push(value?.v);
+                                    }
+                                    catch (e) {
+                                        ea.push([e, e.stack]);
+                                        argumentsa.push(null);
+                                    }
+                                }
+                                else {
+                                    argumentsa.push(paramEval.split(" ")[0]);
+                                    paramEval = paramEval.split(" ").slice(1).join(" ");
+                                }
+                                break;
+                            case "number":
+                                argumentsa.push(Number(paramEval.split(" ")[0]));
+                                paramEval = paramEval.split(" ").slice(1).join(" ");
+                                break;
+                            case "boolean":
+                                argumentsa.push(paramEval.split(" ")[0]?.trim?.() == ""
+                                    ? undefined
+                                    : Boolean(JSON.parse(paramEval
+                                        .split(" ")[0]
+                                        .replace(/^t$/i, "true")
+                                        .replace(/^f$/i, "false")
+                                        .replace(/^true$/i, "true")
+                                        .replace(/^false$/i, "false"))));
+                                paramEval = paramEval.split(" ").slice(1).join(" ");
+                                break;
+                            default:
+                                throw new TypeError(`Unsupported value type: ${JSON.stringify(p.valueType)}`);
+                        }
+                    }
+                    else {
                         argumentsa.push(null);
                     }
                 }
