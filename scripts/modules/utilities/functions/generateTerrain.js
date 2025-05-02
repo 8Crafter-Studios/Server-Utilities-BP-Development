@@ -8,6 +8,7 @@ import { getChunkIndexD } from "modules/coordinates/functions/getChunkIndexD";
 // ${ase}dcsend(await modules.utils.generateTerrainV2(player.worldEditSelection.pos1, player.worldEditSelection.pos2, overworld, "minecraft:plains", 334278, 10, 60, {offset: {}, scale: {}, generateOres: true, minMSBetweenTickWaits: 100}))
 // ${ase}dcsend(await modules.utils.generateTerrainV2(player.worldEditSelection.pos1, player.worldEditSelection.pos2, overworld, "minecraft:plains", 334278, 60, {offset: {}, scale: {}, generateOres: true, generateBlobs: true, minMSBetweenTickWaits: 100, generationMode: "v2", heightVariation: 10}))
 // ${ase}dcsend(await modules.utils.generateTerrainV2(player.worldEditSelection.pos1, player.worldEditSelection.pos2, overworld, "andexdb:test_1", 334278, 60, {offset: {}, scale: {}, generateOres: true, generateBlobs: true, minMSBetweenTickWaits: 100, generationMode: "v2", heightVariation: 10, getBlockTypeFunction: (a, b, c, d, v)=>Math.random()>0.5 ? "andexsa:rtx_mirror" : "andexsa:rtx_light"}))
+// \\generateterrain minecraft:hell 123.41322
 export function generateTerrain(corner1, corner2, dimension, biome, seed, heightVariation = 10, baseHeight = 64) {
     const minX = Math.min(corner1.x, corner2.x);
     const maxX = Math.max(corner1.x, corner2.x);
@@ -126,8 +127,11 @@ export const biomeToDefaultTerrainDetailsMap = {
     "minecraft:hell": {
         heightVariation: 100,
         waterLevel: false,
+        lavaLevel: 31,
         generatorType: "nether",
-        netherAirThresholdFunc: (value, pos) => pos.y < 20 || pos.y > 108 || value < 0.5,
+        netherAirThresholdFunc: (value, pos) => pos.y < 10 ||
+            pos.y > 118 ||
+            value > 0.1 - (pos.y <= 78 && pos.y >= 50 ? 0 : 1 / Math.sqrt(Math.min(Math.abs(118 - pos.y) / 40, Math.abs(pos.y - 10) / 40)) - 1),
         baseHeight: 40,
         baseOffset: { x: 0, y: 0, z: 0 },
         baseScale: { x: 1, y: 1, z: 1 },
@@ -135,26 +139,38 @@ export const biomeToDefaultTerrainDetailsMap = {
     "minecraft:crimson_forest": {
         heightVariation: 100,
         waterLevel: false,
+        lavaLevel: 31,
         generatorType: "nether",
-        netherAirThresholdFunc: (value, pos) => pos.y < 20 || pos.y > 108 || value < 0.5,
+        netherAirThresholdFunc: (value, pos) => pos.y < 10 ||
+            pos.y > 118 ||
+            value > 0.1 - (pos.y <= 78 && pos.y >= 50 ? 0 : 1 / Math.sqrt(Math.min(Math.abs(118 - pos.y) / 40, Math.abs(pos.y - 10) / 40)) - 1),
     },
     "minecraft:warped_forest": {
         heightVariation: 100,
         waterLevel: false,
+        lavaLevel: 31,
         generatorType: "nether",
-        netherAirThresholdFunc: (value, pos) => pos.y < 20 || pos.y > 108 || value < 0.5,
+        netherAirThresholdFunc: (value, pos) => pos.y < 10 ||
+            pos.y > 118 ||
+            value > 0.1 - (pos.y <= 78 && pos.y >= 50 ? 0 : 1 / Math.sqrt(Math.min(Math.abs(118 - pos.y) / 40, Math.abs(pos.y - 10) / 40)) - 1),
     },
     "minecraft:basalt_deltas": {
         heightVariation: 20,
         waterLevel: false,
+        lavaLevel: 31,
         generatorType: "nether",
-        netherAirThresholdFunc: (value, pos) => pos.y < 20 || pos.y > 108 || value < 0.5,
+        netherAirThresholdFunc: (value, pos) => pos.y < 10 ||
+            pos.y > 118 ||
+            value > 0.1 - (pos.y <= 78 && pos.y >= 50 ? 0 : 1 / Math.sqrt(Math.min(Math.abs(118 - pos.y) / 40, Math.abs(pos.y - 10) / 40)) - 1),
     },
     "minecraft:soulsand_valley": {
         heightVariation: 100,
         waterLevel: false,
+        lavaLevel: 31,
         generatorType: "nether",
-        netherAirThresholdFunc: (value, pos) => pos.y < 20 || pos.y > 108 || value < 0.5,
+        netherAirThresholdFunc: (value, pos) => pos.y < 10 ||
+            pos.y > 118 ||
+            value > 0.1 - (pos.y <= 78 && pos.y >= 50 ? 0 : 1 / Math.sqrt(Math.min(Math.abs(118 - pos.y) / 40, Math.abs(pos.y - 10) / 40)) - 1),
     },
     "minecraft:the_end": { heightVariation: 5, baseHeight: 60, waterLevel: false, generatorType: "end" },
     "andexdb:test_1": { heightVariation: 10, baseHeight: 64, waterLevel: false, generatorType: "nether" },
@@ -168,6 +184,11 @@ export const biomeToDefaultTerrainDetailsMap = {
  * @param {TerrainGeneratorBiome} biome The biome type to generate the terrain in.
  * @param {number} seed The seed to use to generate the terrain.
  * @param {GenerateTerrainOptions} [options={}] The options to use to generate the terrain.
+ * @returns {Promise<GenerateTerrainV2Result>} A promise that resolves with an object containing details about the terrain generation process.
+ *
+ * @todo Caves
+ * @todo Foliage
+ * @todo Block with air above it variants
  */
 export async function generateTerrainV2(corner1, corner2, dimension, biome, seed, options = {}) {
     const startTime = Date.now();
@@ -202,10 +223,11 @@ export async function generateTerrainV2(corner1, corner2, dimension, biome, seed
         heightVariation: options.heightVariation ?? biomeToDefaultTerrainDetailsMap[biome]?.heightVariation ?? 10,
         baseHeight: options.baseHeight ?? biomeToDefaultTerrainDetailsMap[biome]?.baseHeight ?? 63,
         waterLevel: options.waterLevel ?? biomeToDefaultTerrainDetailsMap[biome]?.waterLevel ?? false,
+        lavaLevel: options.lavaLevel ?? biomeToDefaultTerrainDetailsMap[biome]?.lavaLevel ?? false,
         generatorType: options.generatorType ?? biomeToDefaultTerrainDetailsMap[biome]?.generatorType ?? "normal",
         netherAirThresholdFunc: options.netherAirThresholdFunc ?? biomeToDefaultTerrainDetailsMap[biome]?.netherAirThresholdFunc ?? ((value, y) => value > 0),
-        offset: Vector.add({ ...Vector.zero, ...biomeToDefaultTerrainDetailsMap[biome]?.baseOffset }, { ...Vector.zero, ...options.offset }),
-        scale: Vector.multiply({ ...Vector.one, ...biomeToDefaultTerrainDetailsMap[biome]?.baseScale }, { ...Vector.one, ...options.scale }),
+        offset: Vector.add({ ...Vector.zero, ...biomeToDefaultTerrainDetailsMap[biome]?.baseOffset }, Vector.add(Vector.zero, { ...options.offset })),
+        scale: Vector.multiply({ ...Vector.one, ...biomeToDefaultTerrainDetailsMap[biome]?.baseScale }, Vector.add(Vector.one, { ...options.scale })),
         minMSBetweenTickWaits: options?.minMSBetweenTickWaits ?? config.system.defaultMinMSBetweenTickWaits,
     };
     const includedOreFeatureCategories = {
@@ -227,8 +249,8 @@ export async function generateTerrainV2(corner1, corner2, dimension, biome, seed
                     ? 1
                     : 12 + Math.floor(((2 / Math.sqrt(heightNoiseValue) - 2) * opts.heightVariation * (1 - heightNoiseValue) * 2) / opts.scale.y);
                 // console.log(minHeight, maxHeight);
-                for (let y = minHeight; y <= maxHeight; y++) {
-                    const blockType = getBlockTypeFunc(y, maxHeight, opts.baseHeight, biome, noise.noise3D(((x + opts.offset.x) / 100) * opts.scale.x, ((y + opts.offset.y) / 100) * opts.scale.y, ((z + opts.offset.z) / 100) * opts.scale.z), heightNoiseValue);
+                for (let y = Math.max(minHeight, minY); y <= Math.min(maxHeight, maxY); y++) {
+                    const blockType = getBlockTypeFunc({ x, y, z }, maxHeight, opts.baseHeight, biome, noise, heightNoiseValue, opts.offset, opts.scale);
                     dimension.setBlockType({ x, y, z }, blockType);
                     blocksGenerated++;
                     index++;
@@ -246,9 +268,19 @@ export async function generateTerrainV2(corner1, corner2, dimension, biome, seed
             for (let z = minZ; z <= maxZ; z++) {
                 for (let y = minY; y <= maxY; y++) {
                     if (opts.netherAirThresholdFunc(noise.noise3D(((x + opts.offset.x) / 100) * opts.scale.x, ((y + opts.offset.y) / 100) * opts.scale.y, ((z + opts.offset.z) / 100) * opts.scale.z), { x, y, z }, noise, opts.offset, opts.scale)) {
-                        const blockType = getBlockTypeFunc(y, maxY, opts.baseHeight, biome, noise.noise3D(((x + opts.offset.x) / 100) * opts.scale.x, ((y + opts.offset.y) / 100) * opts.scale.y, ((z + opts.offset.z) / 100) * opts.scale.z), noise.noise2D(((x + opts.offset.x) / 100) * opts.scale.x, ((z + opts.offset.z) / 100) * opts.scale.z));
+                        const blockType = getBlockTypeFunc({ x, y, z }, maxY, opts.baseHeight, biome, noise, noise.noise2D(((x + opts.offset.x) / 100) * opts.scale.x, ((z + opts.offset.z) / 100) * opts.scale.z), opts.offset, opts.scale);
                         dimension.setBlockType({ x, y, z }, blockType);
                         blocksGenerated++;
+                    }
+                    else if (opts.waterLevel !== false &&
+                        y <= opts.waterLevel &&
+                        (opts.lavaLevel === false || opts.lavaLevel > opts.waterLevel || opts.lavaLevel < y)) {
+                        dimension.setBlockType({ x, y, z }, "minecraft:water");
+                    }
+                    else if (opts.lavaLevel !== false &&
+                        y <= opts.lavaLevel &&
+                        (opts.waterLevel === false || opts.waterLevel > opts.lavaLevel || opts.waterLevel < y)) {
+                        dimension.setBlockType({ x, y, z }, "minecraft:lava");
                     }
                     index++;
                     if (Date.now() - msSinceLastTickWait >= opts.minMSBetweenTickWaits) {
@@ -394,8 +426,8 @@ export async function generateTerrainV2(corner1, corner2, dimension, biome, seed
             for (let z = minZ; z <= maxZ; z++) {
                 const heightNoiseValue = noise.noise2D(((x + opts.offset.x) / 100) * opts.scale.x, ((z + opts.offset.z) / 100) * opts.scale.z);
                 const height = opts.baseHeight + Math.floor(heightNoiseValue * opts.heightVariation);
-                for (let y = minY; y <= height; y++) {
-                    const blockType = getBlockTypeFunc(y, height, opts.baseHeight, biome, noise.noise3D(((x + opts.offset.x) / 100) * opts.scale.x, ((y + opts.offset.y) / 100) * opts.scale.y, ((z + opts.offset.z) / 100) * opts.scale.z), heightNoiseValue);
+                for (let y = minY; y <= Math.min(height, maxY); y++) {
+                    const blockType = getBlockTypeFunc({ x, y, z }, height, opts.baseHeight, biome, noise, heightNoiseValue, opts.offset, opts.scale);
                     dimension.setBlockType({ x, y, z }, blockType);
                     blocksGenerated++;
                     index++;
@@ -405,9 +437,18 @@ export async function generateTerrainV2(corner1, corner2, dimension, biome, seed
                         msSinceLastTickWait = Date.now();
                     }
                 }
-                if (opts.waterLevel !== false && height < opts.waterLevel) {
-                    for (let y = height + 1; y <= opts.waterLevel; y++) {
+                if (opts.waterLevel !== false &&
+                    height < opts.waterLevel &&
+                    (opts.lavaLevel === false || opts.lavaLevel > opts.waterLevel || opts.lavaLevel < height)) {
+                    for (let y = height + 1; y <= Math.min(opts.waterLevel, maxY); y++) {
                         dimension.setBlockType({ x, y, z }, "minecraft:water");
+                    }
+                }
+                else if (opts.lavaLevel !== false &&
+                    height < opts.lavaLevel &&
+                    (opts.waterLevel === false || opts.waterLevel > opts.lavaLevel || opts.waterLevel < height)) {
+                    for (let y = height + 1; y <= Math.min(opts.lavaLevel, maxY); y++) {
+                        dimension.setBlockType({ x, y, z }, "minecraft:lava");
                     }
                 }
             }
@@ -1141,7 +1182,7 @@ export async function placeOres(options) {
                     oresActuallyPlaced++;
                     const deepslateNoiseValue = "deepslateVariant" in blockTypeData && y < 8
                         ? y > 0
-                            ? noise.noise3D(((x + (options.offset?.x ?? 0)) / 100) * (options.scale?.x ?? 1), ((y + (options.offset?.y ?? 0)) / 100) * (options.scale?.y ?? 1), ((z + (options.offset?.z ?? 0)) / 100) * (options.scale?.z ?? 1))
+                            ? noise.noise3D(((x + (options.offset?.x ?? 0)) / 100) * (options.scale?.x ?? 1), (y + (options.offset?.y ?? 0)) * (options.scale?.y ?? 1), ((z + (options.offset?.z ?? 0)) / 100) * (options.scale?.z ?? 1))
                             : 1
                         : 0;
                     if ("deepslateVariant" in blockTypeData && deepslateNoiseValue > 0) {
@@ -1185,7 +1226,7 @@ export async function placeOres(options) {
                                                             oresActuallyPlaced++;
                                                             const deepslateNoiseValue = "deepslateVariant" in blockTypeData && blockY < 8
                                                                 ? blockY > 0
-                                                                    ? noise.noise3D(((blockX + (options.offset?.x ?? 0)) / 100) * (options.scale?.x ?? 1), ((blockY + (options.offset?.y ?? 0)) / 100) * (options.scale?.y ?? 1), ((blockZ + (options.offset?.z ?? 0)) / 100) * (options.scale?.z ?? 1))
+                                                                    ? noise.noise3D(((blockX + (options.offset?.x ?? 0)) / 100) * (options.scale?.x ?? 1), (blockY + (options.offset?.y ?? 0)) * (options.scale?.y ?? 1), ((blockZ + (options.offset?.z ?? 0)) / 100) * (options.scale?.z ?? 1))
                                                                     : 1
                                                                 : 0;
                                                             if ("deepslateVariant" in blockTypeData && deepslateNoiseValue > 0) {
@@ -1250,7 +1291,7 @@ export async function placeOres(options) {
                                                     oresActuallyPlaced++;
                                                     const deepslateNoiseValue = "deepslateVariant" in blockTypeData && y < 8
                                                         ? y > 0
-                                                            ? noise.noise3D(((x + (options.offset?.x ?? 0)) / 100) * (options.scale?.x ?? 1), ((y + (options.offset?.y ?? 0)) / 100) * (options.scale?.y ?? 1), ((z + (options.offset?.z ?? 0)) / 100) * (options.scale?.z ?? 1))
+                                                            ? noise.noise3D(((x + (options.offset?.x ?? 0)) / 100) * (options.scale?.x ?? 1), (y + (options.offset?.y ?? 0)) * (options.scale?.y ?? 1), ((z + (options.offset?.z ?? 0)) / 100) * (options.scale?.z ?? 1))
                                                             : 1
                                                         : 0;
                                                     if ("deepslateVariant" in blockTypeData && deepslateNoiseValue > 0) {
@@ -1464,62 +1505,71 @@ function getUndergroundBlockTypeBasedOnBiomeDistribution(y: number, biome: Biome
             
     }
 } */
-export function getBlockTypeV2(y, localMaxHeight, baseHeight, biome, noiseValue, heightNoiseValue) {
+export function getBlockTypeV2(pos, localMaxHeight, baseHeight, biome, noise, heightNoiseValue, offset, scale) {
     switch (biome) {
         case "minecraft:plains":
-        case "minecraft:river":
-            if (y <= -60) {
+        case "minecraft:river": {
+            const n = noise.noise3D(((pos.x + offset.x) / 100) * scale.x, ((pos.y + offset.y) / 100) * scale.y, ((pos.z + offset.z) / 100) * scale.z);
+            if (pos.y <= -60) {
                 return "bedrock";
             }
-            else if (y <= -16) {
+            else if (pos.y <= -16) {
                 return "deepslate";
             }
-            else if (y > -16 && y < 0) {
-                return noiseValue > 0 ? "deepslate" : "stone";
+            else if (pos.y > -16 && pos.y < 0) {
+                return n > 0 ? "deepslate" : "stone";
             }
-            else if (y < localMaxHeight - 5) {
+            else if (pos.y < localMaxHeight - 5) {
                 return "stone";
             }
-            else if (y < localMaxHeight - 3) {
+            else if (pos.y < localMaxHeight - 3) {
                 return "dirt";
             }
-            else if (y < localMaxHeight) {
+            else if (pos.y < localMaxHeight) {
                 return "dirt";
             }
             else {
                 return "grass_block";
             }
-        case "minecraft:frozen_peaks":
-            if (y <= -60) {
+        }
+        case "minecraft:frozen_peaks": {
+            const n = noise.noise3D(((pos.x + offset.x) / 100) * scale.x, ((pos.y + offset.y) / 100) * scale.y, ((pos.z + offset.z) / 100) * scale.z);
+            if (pos.y <= -60) {
                 return "bedrock";
             }
-            else if (y <= -16) {
+            else if (pos.y <= -16) {
                 return "deepslate";
             }
-            else if (y > -16 && y < 0) {
-                return noiseValue > 0 ? "deepslate" : "stone";
+            else if (pos.y > -16 && pos.y < 0) {
+                return n > 0 ? "deepslate" : "stone";
             }
-            else if (y < localMaxHeight - (Math.abs(noiseValue) > 0.8 ? 4 : 3)) {
+            else if (pos.y < localMaxHeight - (Math.abs(n) > 0.8 ? 4 : 3)) {
                 return "stone";
             }
             else {
-                return Math.abs(noiseValue) % 0.1 > 0.09 ? "ice" : "packed_ice";
+                return Math.abs(n) % 0.1 > 0.09 ? "ice" : "packed_ice";
             }
+        }
         // TO-DO
-        case "minecraft:hell":
-            if (y < 0 || y > 127) {
+        case "minecraft:hell": {
+            if (pos.y < 0 || pos.y > 127) {
                 return "air";
             }
-            else if (y <= 4 || y >= 124) {
+            else if (pos.y <= 4 || pos.y >= 124) {
                 return "bedrock";
             } /*  if (y <= -16 + Math.floor(heightNoiseValue * 45) || y >= 100 - Math.floor(heightNoiseValue * 5)) */
             else {
+                const n = noise.noise4D(((pos.x + offset.x) / 100) * scale.x, ((pos.y + offset.y) / 100) * scale.y, ((pos.z + offset.z) / 100) * scale.z, Math.sqrt(pos.y ** 2 + pos.x ** 2 + pos.z ** 2));
+                if (Math.abs(n) % 0.1 >= 0.00055 && Math.abs(n) % 0.1 < 0.0006) {
+                    return "lava";
+                }
                 return "netherrack";
             } /*  else {
-            return "air";
-        } */
+                return "air";
+            } */
+        }
         case "minecraft:the_end":
-            if (y <= 13 + Math.floor(heightNoiseValue * 5)) {
+            if (pos.y <= 13 + Math.floor(heightNoiseValue * 5)) {
                 return "air";
             }
             else {
@@ -1527,6 +1577,8 @@ export function getBlockTypeV2(y, localMaxHeight, baseHeight, biome, noiseValue,
             }
         case "andexdb:test_1":
             return "emerald_block";
+        default:
+            return "andexdb:invalid_block_placeholder";
     }
 }
 const biomePresets = {

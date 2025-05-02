@@ -201,6 +201,7 @@ import { protectedAreaCategories, ProtectedAreas } from "init/variables/protecte
 import { securityVariables } from "security/ultraSecurityModeUtils";
 import { TeleportRequest } from "modules/coordinates/classes/TeleportRequest";
 import { biomeToDefaultTerrainDetailsMap, generateTerrainV2, type TerrainGeneratorBiome } from "modules/utilities/functions/generateTerrain";
+import type { VerifyConstraint } from "modules/utilities/functions/filterProperties";
 
 export function chatCommands(params: {
     returnBeforeChatSend: boolean | undefined;
@@ -30536,9 +30537,13 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                     const args = evaluateParameters(switchTestB, [
                         "presetText",
                         "f-bod",
-                        "string", // Biome
+                        {
+                            type: "string",
+                            key: "biome",
+                        },
                         {
                             type: "ignorableNamedParameter",
+                            key: "seed",
                             name: "seed",
                             valueType: "string",
                             delimeter: "=",
@@ -30546,6 +30551,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         },
                         {
                             type: "ignorableNamedParameter",
+                            key: "baseHeight",
                             name: "baseHeight",
                             valueType: "number",
                             delimeter: "=",
@@ -30553,6 +30559,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         },
                         {
                             type: "ignorableNamedParameter",
+                            key: "heightVariation",
                             name: "heightVariation",
                             valueType: "number",
                             delimeter: "=",
@@ -30560,6 +30567,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         },
                         {
                             type: "ignorableNamedParameter",
+                            key: "waterLevel",
                             name: "waterLevel",
                             valueType: "string",
                             delimeter: "=",
@@ -30567,6 +30575,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         },
                         {
                             type: "ignorableNamedParameter",
+                            key: "generatorType",
                             name: "generatorType",
                             valueType: "string",
                             delimeter: "=",
@@ -30574,6 +30583,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         },
                         {
                             type: "ignorableNamedParameter",
+                            key: "minMSBetweenTickWaits",
                             name: "msbt",
                             valueType: "number",
                             delimeter: "=",
@@ -30581,6 +30591,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         },
                         {
                             type: "ignorableNamedParameter",
+                            key: "oreGenerationMode",
                             name: "oreGenerationMode",
                             valueType: "string",
                             delimeter: "=",
@@ -30588,6 +30599,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         },
                         {
                             type: "ignorableNamedParameter",
+                            key: "noiseOffsetX",
                             name: "noiseOffsetX",
                             valueType: "number",
                             delimeter: "=",
@@ -30595,6 +30607,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         },
                         {
                             type: "ignorableNamedParameter",
+                            key: "noiseOffsetY",
                             name: "noiseOffsetY",
                             valueType: "number",
                             delimeter: "=",
@@ -30602,6 +30615,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         },
                         {
                             type: "ignorableNamedParameter",
+                            key: "noiseOffsetZ",
                             name: "noiseOffsetZ",
                             valueType: "number",
                             delimeter: "=",
@@ -30609,6 +30623,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         },
                         {
                             type: "ignorableNamedParameter",
+                            key: "noiseScaleX",
                             name: "noiseScaleX",
                             valueType: "number",
                             delimeter: "=",
@@ -30616,6 +30631,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         },
                         {
                             type: "ignorableNamedParameter",
+                            key: "noiseScaleY",
                             name: "noiseScaleY",
                             valueType: "number",
                             delimeter: "=",
@@ -30623,12 +30639,14 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         },
                         {
                             type: "ignorableNamedParameter",
+                            key: "noiseScaleZ",
                             name: "noiseScaleZ",
                             valueType: "number",
                             delimeter: "=",
                             nameIsCaseSensitive: false,
                         },
-                    ]).args;
+                ]).args;
+                console.log(JSONB.stringify(args));
                     const ca = player.worldEditSelection.minPos;
                     const cb = player.worldEditSelection.maxPos;
                     const dimensiona = player.worldEditSelection.dimension;
@@ -30636,13 +30654,13 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         player.sendError("§cError: pos1 is not set.", true);
                     } else if (!!!cb) {
                         player.sendError("§cError: pos2 is not set.", true);
-                    } else if (!["v1", "v2"].includes(args[9] ?? "v2")) {
-                        player.sendError(`§cUnsupported ore generation mode: ${args[9]}. Expected one of: "v1", "v2".`, true);
-                    } else if (!["normal", "nether", "end", "fractal"].includes(args[7] ?? "normal")) {
-                        player.sendError(`§cUnsupported generator type: ${args[7]}. Expected one of: "normal", "nether", "end", "fractal".`, true);
-                    } else if (!Object.keys(biomeToDefaultTerrainDetailsMap).includes(args[2] ?? "undefined")) {
+                    } else if (!["v1", "v2"].includes(args.oreGenerationMode ?? "v2")) {
+                        player.sendError(`§cUnsupported ore generation mode: ${args.oreGenerationMode}. Expected one of: "v1", "v2".`, true);
+                    } else if (!["normal", "nether", "end", "fractal"].includes(args.generatorType ?? "normal")) {
+                        player.sendError(`§cUnsupported generator type: ${args.generatorType}. Expected one of: "normal", "nether", "end", "fractal".`, true);
+                    } else if (!Object.keys(biomeToDefaultTerrainDetailsMap).includes(args.biome ?? "undefined")) {
                         player.sendError(
-                            `§cUnsupported biome type: ${args[2]}. Supported biome types: ${Object.keys(biomeToDefaultTerrainDetailsMap).join(", ")}`,
+                            `§cUnsupported biome type: ${args.biome}. Supported biome types: ${Object.keys(biomeToDefaultTerrainDetailsMap).join(", ")}`,
                             true
                         );
                     } else {
@@ -30675,26 +30693,26 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                             ca,
                                             cb,
                                             dimensiona,
-                                            args[2] as TerrainGeneratorBiome,
-                                            args[3]?.toNumber() ?? Math.random(),
+                                            args.biome as TerrainGeneratorBiome,
+                                            args.seed ? args.seed?.toNumber() ?? Math.random() : Math.random(),
                                             {
-                                                baseHeight: args[4] ?? undefined,
+                                                baseHeight: args.baseHeight ?? undefined,
                                                 generateBlobs: args[1].b,
                                                 generateOres: args[1].o,
-                                                generatorType: (args[7] as any) ?? undefined,
-                                                heightVariation: args[5] ?? undefined,
-                                                waterLevel: args[6].toLowerCase() === "false" ? false : args[6].toNumber() ?? undefined,
-                                                minMSBetweenTickWaits: args[8] ?? config.system.defaultMinMSBetweenTickWaits,
-                                                oreGenerationMode: (args[9] as any) ?? undefined,
+                                                generatorType: (args.generatorType as any) ?? undefined,
+                                                heightVariation: args.heightVariation ?? undefined,
+                                                waterLevel: args.waterLevel?.toLowerCase() === "false" ? false : args.waterLevel?.toNumber() ?? undefined,
+                                                minMSBetweenTickWaits: args.minMSBetweenTickWaits ?? config.system.defaultMinMSBetweenTickWaits,
+                                                oreGenerationMode: (args.oreGenerationMode as any) ?? undefined,
                                                 offset: {
-                                                    x: args[10] ?? undefined,
-                                                    y: args[11] ?? undefined,
-                                                    z: args[12] ?? undefined,
+                                                    x: args.noiseOffsetX ?? undefined,
+                                                    y: args.noiseOffsetY ?? undefined,
+                                                    z: args.noiseOffsetZ ?? undefined,
                                                 },
                                                 scale: {
-                                                    x: args[13] ?? undefined,
-                                                    y: args[14] ?? undefined,
-                                                    z: args[15] ?? undefined,
+                                                    x: args.noiseScaleX ?? undefined,
+                                                    y: args.noiseScaleY ?? undefined,
+                                                    z: args.noiseScaleZ ?? undefined,
                                                 },
                                             }
                                         );
@@ -34796,7 +34814,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     icon_path: string
                                 ];
                                 if (
-                                    !spawnProtectionTypeList.includes(args[2])
+                                    args[2].endsWith(":") && !spawnProtectionTypeList.includes(args[2]) && !ProtectedAreas.areas.advancedAreaCategories.some((c) => c.id === args[2])
                                 ) {
                                     player.sendError(
                                         `§cError: ${
@@ -34808,7 +34826,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     );
                                     return;
                                 }
-                                if(!ProtectedAreas.areas.advancedAreaCategories.some((c) => c.id === args[2])){
+                                if(!args[2].endsWith(":") && !ProtectedAreas.areas.advancedAreaCategories.some((c) => c.id === args[2])){
                                     player.sendError(
                                         `§cError: The custom protected area category ${
                                             JSON.stringify(args[2])

@@ -952,7 +952,7 @@ export const commands = [
                 format: "\\\\protectarea",
             },
         ],
-        command_version: "1.0.0",
+        command_version: "2.0.0",
         description: "",
         category: ["system", "world", "server", "worldedit"],
         commandSettingsId: "built-inCommandSettings:\\protectarea",

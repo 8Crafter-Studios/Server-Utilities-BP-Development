@@ -36,6 +36,7 @@ import "./prototypeExtensions/String";
 import "./prototypeExtensions/world";
 import "./globals/globalMCImports";
 import "./classes/config";
+import "./classes/events";
 import "./classes/moduleImportsConfig";
 import "./classes/PlayerNotifications";
 import "./classes/PlayerPermissions";

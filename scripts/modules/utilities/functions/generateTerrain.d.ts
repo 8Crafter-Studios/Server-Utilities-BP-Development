@@ -59,6 +59,19 @@ export interface GenerateTerrainOptions {
      */
     waterLevel?: BiomeToDefaultTerrainDetailsMapType[keyof BiomeToDefaultTerrainDetailsMapType]["waterLevel"];
     /**
+     * The lava level to use for the terrain.
+     *
+     * If set to false, no lava will be generated.
+     *
+     * @see {@link BiomeToDefaultTerrainDetailsValue.lavaLevel}
+     *
+     * @default
+     * ```typescript
+     * biomeToDefaultTerrainDetailsMap[biome]["lavaLevel"] ?? false
+     * ```
+     */
+    lavaLevel?: BiomeToDefaultTerrainDetailsMapType[keyof BiomeToDefaultTerrainDetailsMapType]["lavaLevel"];
+    /**
      * The generator type to use for the terrain of the biome type.
      *
      * Generator Types:
@@ -189,11 +202,11 @@ export interface GenerateTerrainOptions {
      * @see {@link GenerateTerrainGetBlockTypeFunction}
      * @see {@link getBlockTypeV2}
      *
-     * @param {number} y The y coordinate of the block that the block type is being retrieved for.
+     * @param {Vector3} pos The coordinates of the block that the block type is being retrieved for.
      * @param {number} localMaxHeight The maximum height of the terrain and the block's x and z coordinates.
      * @param {number} baseHeight The base height of the terrain.
      * @param {TerrainGeneratorBiome} biome The biome the block is being generated in.
-     * @param {number} noiseValue The current noise value. It is a float from `-1` to `1` (inclusive).
+     * @param {ReturnType<typeof getNoise>} noise The noise functions.
      * @param {number} heightNoiseValue The noise value used to determine the `localMaxHeight` value.
      * @returns {string} The block type to generate.
      *
@@ -222,6 +235,16 @@ export interface BiomeToDefaultTerrainDetailsValue {
      * @default false
      */
     waterLevel?: number | false;
+    /**
+     * The lava level to use for the terrain of the biome type.
+     *
+     * If not specified, or set to false, it will not have lava.
+     *
+     * If the user specifies a lava level, it will override this.
+     *
+     * @default false
+     */
+    lavaLevel?: number | false;
     /**
      * The generator type to use for the terrain of the biome type.
      *
@@ -283,26 +306,16 @@ export declare const biomeToDefaultTerrainDetailsMap: BiomeToDefaultTerrainDetai
 /**
  * A function used to determine the block type to generate for the {@link generateTerrainV2} function.
  *
- * @param {number} y The y coordinate of the block that the block type is being retrieved for.
+ * @param {Vector3} pos The coordinates of the block that the block type is being retrieved for.
  * @param {number} localMaxHeight The maximum height of the terrain and the block's x and z coordinates.
  * @param {number} baseHeight The base height of the terrain.
  * @param {TerrainGeneratorBiome} biome The biome the block is being generated in.
- * @param {number} noiseValue The current noise value. It is a float from `-1` to `1` (inclusive).
+ * @param {ReturnType<typeof getNoise>} noise The noise functions.
  * @param {number} heightNoiseValue The noise value used to determine the `localMaxHeight` value.
  * @returns {string} The block type to generate.
  */
-export type GenerateTerrainGetBlockTypeFunction = (y: number, localMaxHeight: number, baseHeight: number, biome: TerrainGeneratorBiome, noiseValue: number, heightNoiseValue: number) => string;
-/**
- * Generates terrain.
- *
- * @param {Vector3} corner1 The first corner of the area to generate the terrain in.
- * @param {Vector3} corner2 The opposite corner of the area to generate the terrain in.
- * @param {Dimension} dimension The dimension to generate the terrain in.
- * @param {TerrainGeneratorBiome} biome The biome type to generate the terrain in.
- * @param {number} seed The seed to use to generate the terrain.
- * @param {GenerateTerrainOptions} [options={}] The options to use to generate the terrain.
- */
-export declare function generateTerrainV2(corner1: Vector3, corner2: Vector3, dimension: Dimension, biome: TerrainGeneratorBiome, seed: number, options?: GenerateTerrainOptions): Promise<{
+export type GenerateTerrainGetBlockTypeFunction = (pos: Vector3, localMaxHeight: number, baseHeight: number, biome: TerrainGeneratorBiome, noise: ReturnType<typeof getNoise>, heightNoiseValue: number, offset: Vector3, scale: Vector3) => string;
+export interface GenerateTerrainV2Result {
     startTick: number;
     startTime: number;
     endTick: number;
@@ -317,7 +330,23 @@ export declare function generateTerrainV2(corner1: Vector3, corner2: Vector3, di
     blobBlocksGenerated: bigint;
     totalBlocksGenerated: bigint;
     totalOresAndBlobsGenerated: bigint;
-}>;
+}
+/**
+ * Generates terrain.
+ *
+ * @param {Vector3} corner1 The first corner of the area to generate the terrain in.
+ * @param {Vector3} corner2 The opposite corner of the area to generate the terrain in.
+ * @param {Dimension} dimension The dimension to generate the terrain in.
+ * @param {TerrainGeneratorBiome} biome The biome type to generate the terrain in.
+ * @param {number} seed The seed to use to generate the terrain.
+ * @param {GenerateTerrainOptions} [options={}] The options to use to generate the terrain.
+ * @returns {Promise<GenerateTerrainV2Result>} A promise that resolves with an object containing details about the terrain generation process.
+ *
+ * @todo Caves
+ * @todo Foliage
+ * @todo Block with air above it variants
+ */
+export declare function generateTerrainV2(corner1: Vector3, corner2: Vector3, dimension: Dimension, biome: TerrainGeneratorBiome, seed: number, options?: GenerateTerrainOptions): Promise<GenerateTerrainV2Result>;
 /**
  * The options to use for generating ores.
  */
@@ -952,4 +981,4 @@ export declare function placeOres(options: OreGenerationOptions): Promise<{
     blobBlocksGenerated: bigint;
 }>;
 export declare function getBlockType(y: number, baseHeight: number, biome: string, noiseValue: number): string;
-export declare function getBlockTypeV2(y: number, localMaxHeight: number, baseHeight: number, biome: TerrainGeneratorBiome, noiseValue: number, heightNoiseValue: number): string;
+export declare function getBlockTypeV2(pos: Vector3, localMaxHeight: number, baseHeight: number, biome: TerrainGeneratorBiome, noise: ReturnType<typeof getNoise>, heightNoiseValue: number, offset: Vector3, scale: Vector3): string;

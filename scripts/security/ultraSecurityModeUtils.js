@@ -9,6 +9,7 @@ import { saveStringToDynamicProperties } from "modules/utilities/functions/saveS
 import { mainMenu } from "modules/ui/functions/mainMenu";
 import { commandCategoriesDisplay } from "modules/ui/functions/commandCategoriesDisplay";
 import { customFormUICodes } from "modules/ui/constants/customFormUICodes";
+import { manageEventSubscriptions } from "modules/ui/functions/manageEventSubscriptions";
 let ownerUsingDiablePermissionsDebug = false;
 const deepFreeze = (obj) => {
     if (obj && typeof obj === "object" && !Object.isFrozen(obj)) {
@@ -232,6 +233,27 @@ const permissionTypes = Object.freeze(permissionTypesChecker({
             {
                 title: "§l§cWARNING!",
                 prompt: "Are you sure you want to give this player the ability to run any vanilla command in the chat with the '${r}' or '${run}' escape sequence?",
+                default: false,
+            },
+        ],
+    },
+    /**
+     * Allows the player to run arbitrary JavaScript code.
+     * This allows the player to access menus like the {@link manageEventSubscriptions | Manage Event Subscriptions} menu.
+     * This permission is included in the `andexdb.headAdmin` permission.
+     * This permission is included in the `andexdb.admin` permission.
+     */
+    "andexdb.useScriptEval": {
+        id: "andexdb.useScriptEval",
+        default: false,
+        includedInPermissions: [],
+        description: `Allows the player to run arbitrary JavaScript code.
+    This permission is included in the 'andexdb.headAdmin' permission.
+    This permission is included in the 'andexdb.admin' permission.`,
+        additionalPrompts: [
+            {
+                title: "§l§cWARNING!",
+                prompt: "Are you sure you want to give this player the ability to run arbitrary JavaScript code in the chat with the '${se}' or '${scripteval}' escape sequence?",
                 default: false,
             },
         ],
@@ -886,6 +908,7 @@ const playerPermissionsDefault = Object.freeze({
         "andexdb.useModeratorLevelCommands",
         "andexdb.useScriptEvalEscapeSequence",
         "andexdb.useCommandsRunningEscapeSequence",
+        "andexdb.useScriptEval",
         "andexdb.banPlayers",
         "andexdb.unbanPlayers",
         "andexdb.accessManageBansUI",
@@ -924,6 +947,7 @@ const playerPermissionsDefault = Object.freeze({
         "andexdb.useModeratorLevelCommands",
         "andexdb.useScriptEvalEscapeSequence",
         "andexdb.useCommandsRunningEscapeSequence",
+        "andexdb.useScriptEval",
         "andexdb.banPlayers",
         "andexdb.unbanPlayers",
         "andexdb.accessManageBansUI",

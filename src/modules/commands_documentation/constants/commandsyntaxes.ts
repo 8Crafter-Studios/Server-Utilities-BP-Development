@@ -610,6 +610,7 @@ ${command.dp}snapshot list`,
     "\\\\chunk": `${command.dp}\\chunk`,
     "\\\\shift": `${command.dp}\\shift <direction: {north}|{south}|{east}|{west}|{up}|{down}> <distance: float>`,
     "\\\\offset": `${command.dp}\\offset [x: float] [y: float] [z: float]`,
+    "\\\\expandselection": `${command.dp}\\expandselection <mode: {up}|{down}|{north}|{south}|{east}|{west}|{scale}|{scalex}|{scaley}|{scalez}> <amount: float>`,
     "\\\\cyl": `${command.dp}\\cyl [-c] <axis: {x}|{y}|{z}> <blockPattern: BlockPattern> [mask: Mask]`,
     "\\\\tube": `${command.dp}\\tube [-c] <axis: {x}|{y}|{z}> <blockPattern: BlockPattern> [mask: Mask]`,
     "\\\\sphere": `${command.dp}\\sphere [-c] <radius: float> <blockPattern: BlockPattern> [mask: Mask]`,
@@ -644,6 +645,7 @@ ${command.dp}snapshot list`,
     "\\\\replace": `${command.dp}\\replace <blockPattern: BlockPattern> [mask: Mask]`,
     "\\\\maze": `${command.dp}\\maze [wallBlockType: Block[?=minecraft:stone]] [airBlockType: Block[?=minecraft:air]] [entranceDirection: ({North}|{South}|{East}|{West})[?=North]] [exitDirection: ({North}|{South}|{East}|{West})[?=South]] [complexity: int[?=0]]`,
     "\\\\regenerateblocks": `${command.dp}\\regenerateblocks [-isabd] [radiusAroundAreaToUseToDetermineGeneratedBlockType: float[?=5]] [verticalDistancePriority: float[?=1.5]] [horizontalDistancePriority: float[?=1.2]] [randomization: float[?=0.2]] [airPriority: float[?=0.5]]`,
+    "\\\\generateterrain": `${command.dp}\\generateterrain [-bod] <biome: TerrainGeneratorBiome> {[seed: float[?=Math.random()]]} {[baseHeight: int]} {[heightVariation: float]} {[waterLevel: (int|false)[??=default]]} {[generatorType: ({normal}|{nether}|{end}|{fractal})[?=normal]]} {[minMSBetweenTickWaits: int[?=config.system.defaultMinMSBetweenTickWaits,parameterName=msbt]]} {[oreGenerationMode: ({v1}|{v2})[?="v2"]]} {[noiseOffsetX: float[?=0]]]} {[noiseOffsetY: float[?=0]]]} {[noiseOffsetZ: float[?=0]]]} {[noiseScaleX: float[?=1]]} {[noiseScaleY: float[?=1]]} {[noiseScaleZ: float[?=1]]}`,
     "\\\\idtfill": `${command.dp}\\idtfill <integrity: float> <tileName: Block> {blockStates: block states} <ifillMode: replace|fill|cube|keep|walls|hollow|outline|pillars§c|floor|ceilling|diamond|hourglass§r> {replaceTileName: Block} {replaceBlockStates: block states} [clearContainers: boolean]
 ${command.dp}\\idtfill <integrity: float> <tileName: Block|random> {blockStates: block states} [clearContainers: boolean]
 ${command.dp}\\idtfill <integrity: float> <skygridSize: float> <tileName: Block> <blockStates: block states> <mode: {skygrid}|{inverseskygrid}> <replaceTileName: Block> [replaceBlockStates: block states] [clearContainers: boolean]

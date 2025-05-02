@@ -227,6 +227,7 @@ export declare const commandsyntaxes: {
     "\\\\chunk": string;
     "\\\\shift": string;
     "\\\\offset": string;
+    "\\\\expandselection": string;
     "\\\\cyl": string;
     "\\\\tube": string;
     "\\\\sphere": string;
@@ -261,6 +262,7 @@ export declare const commandsyntaxes: {
     "\\\\replace": string;
     "\\\\maze": string;
     "\\\\regenerateblocks": string;
+    "\\\\generateterrain": string;
     "\\\\idtfill": string;
     "\\\\itfill": string;
     disconnect: string;

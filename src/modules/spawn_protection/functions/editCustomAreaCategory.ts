@@ -399,10 +399,11 @@ Icon Path: ${category.icon_path ?? "None"}`
                                 player,
                                 customFormUICodes.action.titles.formStyles.medium + "Raw Data",
                                 JSONB.stringify(category, undefined, 4),
+                                [customFormUICodes.action.buttons.positions.main_only + "Done"],
                                 [customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left"],
                                 [customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout"]
                             )
-                        ).selection !== 1
+                        ).selection !== 2
                     ) {
                         continue;
                     } else {

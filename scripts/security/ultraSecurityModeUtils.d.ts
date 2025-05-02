@@ -186,6 +186,23 @@ declare const permissionTypes: Readonly<{
         }];
     };
     /**
+     * Allows the player to run arbitrary JavaScript code.
+     * This allows the player to access menus like the {@link manageEventSubscriptions | Manage Event Subscriptions} menu.
+     * This permission is included in the `andexdb.headAdmin` permission.
+     * This permission is included in the `andexdb.admin` permission.
+     */
+    readonly "andexdb.useScriptEval": {
+        readonly id: "andexdb.useScriptEval";
+        readonly default: false;
+        readonly includedInPermissions: [];
+        readonly description: "Allows the player to run arbitrary JavaScript code.\n    This permission is included in the 'andexdb.headAdmin' permission.\n    This permission is included in the 'andexdb.admin' permission.";
+        readonly additionalPrompts: [{
+            readonly title: "§l§cWARNING!";
+            readonly prompt: "Are you sure you want to give this player the ability to run arbitrary JavaScript code in the chat with the '${se}' or '${scripteval}' escape sequence?";
+            readonly default: false;
+        }];
+    };
+    /**
      * Allows the player to have the ability to transfer players to other servers through the moderation quick actions UI.
      */
     readonly "andexdb.transferPlayers": {

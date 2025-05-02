@@ -5,6 +5,7 @@ import { showMessage } from "modules/utilities/functions/showMessage";
 import { evalAutoScriptSettings } from "./evalAutoScriptSettings";
 import { extractPlayerFromLooseEntityType } from "modules/utilities/functions/extractPlayerFromLooseEntityType";
 import type { loosePlayerType } from "modules/utilities/types/loosePlayerType";
+import { manageEventSubscriptions } from "./manageEventSubscriptions";
 
 /**
  * Displays and handles the advanced settings form for a given entity.
@@ -29,7 +30,8 @@ export async function advancedSettings(sourceEntity: loosePlayerType): Promise<0
             const form = new ActionFormData();
             form.title(customFormUICodes.action.titles.formStyles.gridMenu + "Advanced Settings");
             form.button(customFormUICodes.action.buttons.positions.main_only + "Debug", "textures/ui/icon_setting");
-            form.button(customFormUICodes.action.buttons.positions.main_only + "Eval Auto Execute Settings", "textures/ui/automation_glyph_color");
+            form.button(customFormUICodes.action.buttons.positions.main_only + "Manage Event Subscriptions", "textures/ui/ChainSquare");
+            form.button(customFormUICodes.action.buttons.positions.main_only + "Eval Auto Execute Settings (§nDeprecated)", "textures/ui/automation_glyph_color");
             form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
             form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
 
@@ -37,16 +39,22 @@ export async function advancedSettings(sourceEntity: loosePlayerType): Promise<0
             if (r.canceled) return 1;
 
             let response = r.selection;
-            switch ((["debug", "evalAutoExecuteSettings", "back", "close"] as const)[response]) {
+            switch ((["debug", "manageEventSubscriptions", "evalAutoExecuteSettings", "back", "close"] as const)[response]) {
                 case "debug":
                     if ((await addonDebugUI(player)) === 1) {
-                        return await advancedSettings(player);
+                        continue;
+                    } else {
+                        return 0;
+                    }
+                case "manageEventSubscriptions":
+                    if ((await manageEventSubscriptions(player)) === 1) {
+                        continue;
                     } else {
                         return 0;
                     }
                 case "evalAutoExecuteSettings":
                     if ((await evalAutoScriptSettings(player)) === 1) {
-                        return await advancedSettings(player);
+                        continue;
                     } else {
                         return 0;
                     }

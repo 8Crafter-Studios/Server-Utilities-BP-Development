@@ -54,11 +54,11 @@ export function chatSendMessageEvaluator(
         tags?: string[];
         dimension?: keyof typeof dimensionTypeDisplayFormatting;
         messageFormatting?: string;
-        messageGradientMode?: string;
+        messageGradientMode?: keyof typeof patternFunctionList;
         nameFormatting?: string;
-        nameGradientMode?: string;
+        nameGradientMode?: keyof typeof patternFunctionList;
         separatorFormatting?: string;
-        separatorGradientMode?: string;
+        separatorGradientMode?: keyof typeof patternFunctionList;
         showDimension?: boolean;
         /**
          * Coming Soon!
@@ -79,18 +79,164 @@ export function chatSendMessageEvaluator(
     return chatSendMessageEvaluator_players(chatSendMessageEvaluator_prePlayers(message, displayName, options), options);
 }
 
+export interface chatSendMessageEvaluator_prePlayersOutput {
+    /**
+     * The message formatting to use.
+     *
+     * Should be a string of formatting codes.
+     *
+     * @see https://minecraft.wiki/w/Formatting_codes
+     *
+     * @default ""
+     *
+     * @example
+     * ```ts
+     * "§r§l§o§4"
+     * ```
+     */
+    messageFormatting: string;
+    /**
+     * The message gradient mode that was used.
+     *
+     * If undefined, no gradient was used.
+     *
+     * @type {keyof typeof patternFunctionList | undefined}
+     *
+     * @default undefined
+     */
+    readonly messageGradientMode: keyof typeof patternFunctionList;
+    /**
+     * The name formatting to use.
+     *
+     * Should be a string of formatting codes.
+     *
+     * @see https://minecraft.wiki/w/Formatting_codes
+     *
+     * @default ""
+     *
+     * @example
+     * ```ts
+     * "§r§l§o§4"
+     * ```
+     */
+    nameFormatting: string;
+    /**
+     * The message gradient mode that was used.
+     *
+     * If undefined, no gradient was used.
+     *
+     * @type {keyof typeof patternFunctionList | undefined}
+     *
+     * @default undefined
+     */
+    readonly nameGradientMode: keyof typeof patternFunctionList;
+    /**
+     * The separator formatting to use.
+     *
+     * Should be a string of formatting codes.
+     *
+     * @see https://minecraft.wiki/w/Formatting_codes
+     *
+     * @default ""
+     *
+     * @example
+     * ```ts
+     * "§r§l§o§4"
+     * ```
+     */
+    separatorFormatting: string;
+    /**
+     * The message gradient mode that was used.
+     *
+     * If undefined, no gradient was used.
+     *
+     * @type {keyof typeof patternFunctionList | undefined}
+     *
+     * @default undefined
+     */
+    readonly separatorGradientMode: keyof typeof patternFunctionList;
+    /**
+     * Whether to show the player's dimension in the message.
+     *
+     * @type {boolean}
+     *
+     * @default false
+     */
+    showDimension: boolean;
+    //        showHealth,
+    /**
+     * The player's evaluated rank string.
+     *
+     * @type {string}
+     */
+    rank: string;
+    /**
+     * The list of ranks the player has.
+     *
+     * If the player has any ranks, it is an array containing those ranks.
+     *
+     * If the player has no ranks and there is a default chat rank set, it is an array containing that rank.
+     *
+     * If the player has no ranks and there is no default chat rank set, it is an empty array.
+     *
+     * @type {string[]}
+     */
+    ranksListWithDefault: string[];
+    /**
+     * The player's evaluated name tag.
+     *
+     * @type {{ value?: string; hidden: boolean; sourceType: "hidden" | "sudo" | "nameTag" | "name" }}
+     */
+    displayName: { value?: string; hidden: boolean; sourceType: "hidden" | "sudo" | "nameTag" | "name" };
+    /**
+     * The player's evaluated name string, including the prefix, suffix, formatting, static color, and gradient.
+     *
+     * @type {string}
+     *
+     * @example "§r§l§o§4Andexter8"
+     */
+    name: string;
+    /**
+     * The player's evaluated name string without the prefix, suffix, formatting, and static color.
+     * It does include the gradient.
+     *
+     * @type {string}
+     *
+     * @example "§a§cAndexter8"
+     */
+    nameb: string;
+    /**
+     * An unused property.
+     *
+     * @deprecated This is not used.
+     */
+    namec: string;
+    /**
+     * The player's evaluated message string, with the gradient already applied if {@link messageGradientMode} was not `undefined`.
+     *
+     * @type {string}
+     */
+    message: string;
+    /**
+     * The player's evaluated dimension string.
+     *
+     * @type {"the overworld" | "the nether" | "the end"}
+     */
+    dimension: "the overworld" | "the nether" | "the end";
+}
+
 export function chatSendMessageEvaluator_prePlayers(
     message: string,
     displayName: ReturnType<typeof chatSend_getDisplayNameFromPlayer>,
     options?: Exclude<Parameters<typeof chatSendMessageEvaluator>[2], "targetPlayerSettings">
-) {
+): chatSendMessageEvaluator_prePlayersOutput {
     const player = options?.player;
     let messageFormatting = options?.messageFormatting ?? "";
-    let messageGradientMode = options?.messageGradientMode ?? undefined;
+    let messageGradientMode: keyof typeof patternFunctionList = options?.messageGradientMode ?? undefined;
     let nameFormatting = options?.nameFormatting ?? "";
-    let nameGradientMode = options?.nameGradientMode ?? undefined;
+    let nameGradientMode: keyof typeof patternFunctionList = options?.nameGradientMode ?? undefined;
     let separatorFormatting = options?.separatorFormatting ?? "";
-    let separatorGradientMode = options?.separatorGradientMode ?? undefined;
+    let separatorGradientMode: keyof typeof patternFunctionList = options?.separatorGradientMode ?? undefined;
     let showDimension = options?.showDimension ?? false;
     //    let showHealth = options?.showHealth;
     if (messageFormatting == "") {
@@ -123,13 +269,13 @@ export function chatSendMessageEvaluator_prePlayers(
                     (options?.playerPersonalSettings?.rankDisplaySuffix ?? config.chatRanks.rankDisplaySuffix));
             break;
     }
-    let name = displayName.hidden
+    let name: string = displayName.hidden
         ? ""
         : (options?.playerPersonalSettings?.nameDisplayPrefix ?? config.chatRanks.nameDisplayPrefix) +
           nameFormatting +
           (!!nameGradientMode ? evaluateChatColorType(displayName.value ?? "", nameGradientMode) : displayName.value ?? "") +
           (options?.playerPersonalSettings?.nameDisplaySuffix ?? config.chatRanks.nameDisplaySuffix);
-    let nameb = displayName.hidden ? "" : !!nameGradientMode ? evaluateChatColorType(displayName.value ?? "", nameGradientMode) : displayName.value ?? "";
+    let nameb: string = displayName.hidden ? "" : !!nameGradientMode ? evaluateChatColorType(displayName.value ?? "", nameGradientMode) : displayName.value ?? "";
     name.length != 0 ? (name += options?.playerPersonalSettings?.chatNameAndMessageSeparator ?? config.chatRanks.chatNameAndMessageSeparator) : undefined; /*
         let rankMode = 0
         for (let index in player.getTags()) {
@@ -724,22 +870,105 @@ export function chatSendMessageEvaluator_players(
     return messageOutput;
 }
 
-export function chatSend_getChatMessageFormatFromPlayerTags(player: Player | { hasTag: (tag: string) => boolean; getTags: () => string[] }): {
+/**
+ * The message format details from a list of player tags.
+ *
+ * @see {@link chatSend_getChatMessageFormatFromPlayerTags}
+ */
+export interface TagChatMessageFormat {
+    /**
+     * The message formatting to use.
+     *
+     * Should be a string of formatting codes.
+     *
+     * @see https://minecraft.wiki/w/Formatting_codes
+     *
+     * @default ""
+     *
+     * @example
+     * ```ts
+     * "§r§l§o§4"
+     * ```
+     */
     messageFormatting: string;
-    messageGradientMode: string;
+    /**
+     * The message gradient mode to use.
+     *
+     * If undefined, no gradient will be used.
+     *
+     * @type {keyof typeof patternFunctionList | undefined}
+     *
+     * @default undefined
+     */
+    messageGradientMode: keyof typeof patternFunctionList;
+    /**
+     * The name formatting to use.
+     *
+     * Should be a string of formatting codes.
+     *
+     * @see https://minecraft.wiki/w/Formatting_codes
+     *
+     * @default ""
+     *
+     * @example
+     * ```ts
+     * "§r§l§o§4"
+     * ```
+     */
     nameFormatting: string;
-    nameGradientMode: string;
+    /**
+     * The message gradient mode to use.
+     *
+     * If undefined, no gradient will be used.
+     *
+     * @type {keyof typeof patternFunctionList | undefined}
+     *
+     * @default undefined
+     */
+    nameGradientMode: keyof typeof patternFunctionList;
+    /**
+     * The separator formatting to use.
+     *
+     * Should be a string of formatting codes.
+     *
+     * @see https://minecraft.wiki/w/Formatting_codes
+     *
+     * @default ""
+     *
+     * @example
+     * ```ts
+     * "§r§l§o§4"
+     * ```
+     */
     separatorFormatting: string;
-    separatorGradientMode: string;
+    /**
+     * The message gradient mode to use.
+     *
+     * If undefined, no gradient will be used.
+     *
+     * @type {keyof typeof patternFunctionList | undefined}
+     *
+     * @default undefined
+     */
+    separatorGradientMode: keyof typeof patternFunctionList;
+    /**
+     * Whether to show the player's dimension in the message.
+     *
+     * @type {boolean}
+     *
+     * @default false
+     */
     showDimension: boolean;
     //    showHealth: boolean;
-} {
+}
+
+export function chatSend_getChatMessageFormatFromPlayerTags(player: Player | { hasTag: (tag: string) => boolean; getTags: () => string[] }): TagChatMessageFormat {
     let messageFormatting: string = "";
-    let messageGradientMode: string = undefined;
+    let messageGradientMode: keyof typeof patternFunctionList = undefined;
     let nameFormatting: string = "";
-    let nameGradientMode: string = undefined;
+    let nameGradientMode: keyof typeof patternFunctionList = undefined;
     let separatorFormatting: string = "";
-    let separatorGradientMode: string = undefined;
+    let separatorGradientMode: keyof typeof patternFunctionList = undefined;
     let showDimension: boolean = false;
     //    let showHealth = false
     if (player.hasTag("messageFormatting:r")) {
@@ -868,7 +1097,7 @@ export function chatSend_getChatMessageFormatFromPlayerTags(player: Player | { h
             if (patternColors.includes(v.slice(13).toLowerCase())) {
                 messageFormatting += patternColorsMap[v.slice(13).toLowerCase() as keyof typeof patternColorsMap];
             } else if (Object.keys(patternFunctionList).includes(v.slice(13).toLowerCase())) {
-                messageGradientMode = v.slice(13).toLowerCase();
+                messageGradientMode = v.slice(13).toLowerCase() as keyof typeof patternFunctionList;
             } else if (
                 [
                     "0",
@@ -1039,7 +1268,7 @@ export function chatSend_getChatMessageFormatFromPlayerTags(player: Player | { h
             if (patternColors.includes(v.slice(10).toLowerCase())) {
                 nameFormatting += patternColorsMap[v.slice(10).toLowerCase() as keyof typeof patternColorsMap];
             } else if (Object.keys(patternFunctionList).includes(v.slice(10).toLowerCase())) {
-                nameGradientMode = v.slice(10).toLowerCase();
+                nameGradientMode = v.slice(10).toLowerCase() as keyof typeof patternFunctionList;
             } else if (
                 [
                     "0",
@@ -1210,7 +1439,7 @@ export function chatSend_getChatMessageFormatFromPlayerTags(player: Player | { h
             if (patternColors.includes(v.slice(15).toLowerCase())) {
                 separatorFormatting += patternColorsMap[v.slice(15).toLowerCase() as keyof typeof patternColorsMap];
             } else if (Object.keys(patternFunctionList).includes(v.slice(15).toLowerCase())) {
-                separatorGradientMode = v.slice(15).toLowerCase();
+                separatorGradientMode = v.slice(15).toLowerCase() as keyof typeof patternFunctionList;
             } else if (
                 [
                     "0",

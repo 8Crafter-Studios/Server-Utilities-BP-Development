@@ -19379,9 +19379,13 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                     const args = evaluateParameters(switchTestB, [
                         "presetText",
                         "f-bod",
-                        "string", // Biome
+                        {
+                            type: "string",
+                            key: "biome",
+                        },
                         {
                             type: "ignorableNamedParameter",
+                            key: "seed",
                             name: "seed",
                             valueType: "string",
                             delimeter: "=",
@@ -19389,6 +19393,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                         },
                         {
                             type: "ignorableNamedParameter",
+                            key: "baseHeight",
                             name: "baseHeight",
                             valueType: "number",
                             delimeter: "=",
@@ -19396,6 +19401,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                         },
                         {
                             type: "ignorableNamedParameter",
+                            key: "heightVariation",
                             name: "heightVariation",
                             valueType: "number",
                             delimeter: "=",
@@ -19403,6 +19409,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                         },
                         {
                             type: "ignorableNamedParameter",
+                            key: "waterLevel",
                             name: "waterLevel",
                             valueType: "string",
                             delimeter: "=",
@@ -19410,6 +19417,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                         },
                         {
                             type: "ignorableNamedParameter",
+                            key: "generatorType",
                             name: "generatorType",
                             valueType: "string",
                             delimeter: "=",
@@ -19417,6 +19425,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                         },
                         {
                             type: "ignorableNamedParameter",
+                            key: "minMSBetweenTickWaits",
                             name: "msbt",
                             valueType: "number",
                             delimeter: "=",
@@ -19424,6 +19433,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                         },
                         {
                             type: "ignorableNamedParameter",
+                            key: "oreGenerationMode",
                             name: "oreGenerationMode",
                             valueType: "string",
                             delimeter: "=",
@@ -19431,6 +19441,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                         },
                         {
                             type: "ignorableNamedParameter",
+                            key: "noiseOffsetX",
                             name: "noiseOffsetX",
                             valueType: "number",
                             delimeter: "=",
@@ -19438,6 +19449,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                         },
                         {
                             type: "ignorableNamedParameter",
+                            key: "noiseOffsetY",
                             name: "noiseOffsetY",
                             valueType: "number",
                             delimeter: "=",
@@ -19445,6 +19457,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                         },
                         {
                             type: "ignorableNamedParameter",
+                            key: "noiseOffsetZ",
                             name: "noiseOffsetZ",
                             valueType: "number",
                             delimeter: "=",
@@ -19452,6 +19465,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                         },
                         {
                             type: "ignorableNamedParameter",
+                            key: "noiseScaleX",
                             name: "noiseScaleX",
                             valueType: "number",
                             delimeter: "=",
@@ -19459,6 +19473,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                         },
                         {
                             type: "ignorableNamedParameter",
+                            key: "noiseScaleY",
                             name: "noiseScaleY",
                             valueType: "number",
                             delimeter: "=",
@@ -19466,12 +19481,14 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                         },
                         {
                             type: "ignorableNamedParameter",
+                            key: "noiseScaleZ",
                             name: "noiseScaleZ",
                             valueType: "number",
                             delimeter: "=",
                             nameIsCaseSensitive: false,
                         },
                     ]).args;
+                    console.log(JSONB.stringify(args));
                     const ca = player.worldEditSelection.minPos;
                     const cb = player.worldEditSelection.maxPos;
                     const dimensiona = player.worldEditSelection.dimension;
@@ -19481,14 +19498,14 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                     else if (!!!cb) {
                         player.sendError("§cError: pos2 is not set.", true);
                     }
-                    else if (!["v1", "v2"].includes(args[9] ?? "v2")) {
-                        player.sendError(`§cUnsupported ore generation mode: ${args[9]}. Expected one of: "v1", "v2".`, true);
+                    else if (!["v1", "v2"].includes(args.oreGenerationMode ?? "v2")) {
+                        player.sendError(`§cUnsupported ore generation mode: ${args.oreGenerationMode}. Expected one of: "v1", "v2".`, true);
                     }
-                    else if (!["normal", "nether", "end", "fractal"].includes(args[7] ?? "normal")) {
-                        player.sendError(`§cUnsupported generator type: ${args[7]}. Expected one of: "normal", "nether", "end", "fractal".`, true);
+                    else if (!["normal", "nether", "end", "fractal"].includes(args.generatorType ?? "normal")) {
+                        player.sendError(`§cUnsupported generator type: ${args.generatorType}. Expected one of: "normal", "nether", "end", "fractal".`, true);
                     }
-                    else if (!Object.keys(biomeToDefaultTerrainDetailsMap).includes(args[2] ?? "undefined")) {
-                        player.sendError(`§cUnsupported biome type: ${args[2]}. Supported biome types: ${Object.keys(biomeToDefaultTerrainDetailsMap).join(", ")}`, true);
+                    else if (!Object.keys(biomeToDefaultTerrainDetailsMap).includes(args.biome ?? "undefined")) {
+                        player.sendError(`§cUnsupported biome type: ${args.biome}. Supported biome types: ${Object.keys(biomeToDefaultTerrainDetailsMap).join(", ")}`, true);
                     }
                     else {
                         system.run(() => {
@@ -19513,24 +19530,24 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                         player.sendMessageB("§c" + e + " " + e.stack);
                                     }
                                     try {
-                                        const result = await generateTerrainV2(ca, cb, dimensiona, args[2], args[3]?.toNumber() ?? Math.random(), {
-                                            baseHeight: args[4] ?? undefined,
+                                        const result = await generateTerrainV2(ca, cb, dimensiona, args.biome, args.seed ? args.seed?.toNumber() ?? Math.random() : Math.random(), {
+                                            baseHeight: args.baseHeight ?? undefined,
                                             generateBlobs: args[1].b,
                                             generateOres: args[1].o,
-                                            generatorType: args[7] ?? undefined,
-                                            heightVariation: args[5] ?? undefined,
-                                            waterLevel: args[6].toLowerCase() === "false" ? false : args[6].toNumber() ?? undefined,
-                                            minMSBetweenTickWaits: args[8] ?? config.system.defaultMinMSBetweenTickWaits,
-                                            oreGenerationMode: args[9] ?? undefined,
+                                            generatorType: args.generatorType ?? undefined,
+                                            heightVariation: args.heightVariation ?? undefined,
+                                            waterLevel: args.waterLevel?.toLowerCase() === "false" ? false : args.waterLevel?.toNumber() ?? undefined,
+                                            minMSBetweenTickWaits: args.minMSBetweenTickWaits ?? config.system.defaultMinMSBetweenTickWaits,
+                                            oreGenerationMode: args.oreGenerationMode ?? undefined,
                                             offset: {
-                                                x: args[10] ?? undefined,
-                                                y: args[11] ?? undefined,
-                                                z: args[12] ?? undefined,
+                                                x: args.noiseOffsetX ?? undefined,
+                                                y: args.noiseOffsetY ?? undefined,
+                                                z: args.noiseOffsetZ ?? undefined,
                                             },
                                             scale: {
-                                                x: args[13] ?? undefined,
-                                                y: args[14] ?? undefined,
-                                                z: args[15] ?? undefined,
+                                                x: args.noiseScaleX ?? undefined,
+                                                y: args.noiseScaleY ?? undefined,
+                                                z: args.noiseScaleZ ?? undefined,
                                             },
                                         });
                                         player.sendMessageB(`${result.totalBlocksGenerated == 0n ? "§c" : ""}${result.totalBlocksGenerated} blocks replaced in ${result.totalTime} ms over ${result.totalTicks} tick${result.totalTicks == 1 ? "" : "s"} with ${result.totalTimeSpentGenerating} ms spent actually generating blocks`);
@@ -22226,11 +22243,11 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     "number",
                                     "string",
                                 ]).args;
-                                if (!spawnProtectionTypeList.includes(args[2])) {
+                                if (args[2].endsWith(":") && !spawnProtectionTypeList.includes(args[2]) && !ProtectedAreas.areas.advancedAreaCategories.some((c) => c.id === args[2])) {
                                     player.sendError(`§cError: ${JSON.stringify(args[2])} is not a valid protected area category, please use one of the following protected area categories: ${JSON.stringify(spawnProtectionTypeList)}.`, true);
                                     return;
                                 }
-                                if (!ProtectedAreas.areas.advancedAreaCategories.some((c) => c.id === args[2])) {
+                                if (!args[2].endsWith(":") && !ProtectedAreas.areas.advancedAreaCategories.some((c) => c.id === args[2])) {
                                     player.sendError(`§cError: The custom protected area category ${JSON.stringify(args[2])} does not exist, please double check your capitalization and spelling.`, true);
                                     return;
                                 }
