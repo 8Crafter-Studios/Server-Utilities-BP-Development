@@ -1508,6 +1508,10 @@ function getUndergroundBlockTypeBasedOnBiomeDistribution(y: number, biome: Biome
 export function getBlockTypeV2(pos, localMaxHeight, baseHeight, biome, noise, heightNoiseValue, offset, scale) {
     switch (biome) {
         case "minecraft:plains":
+        case "minecraft:forest":
+        case "minecraft:forest_hills":
+        case "minecraft:flower_forest":
+        case "minecraft:sunflower_plains":
         case "minecraft:river": {
             const n = noise.noise3D(((pos.x + offset.x) / 100) * scale.x, ((pos.y + offset.y) / 100) * scale.y, ((pos.z + offset.z) / 100) * scale.z);
             if (pos.y <= -60) {
