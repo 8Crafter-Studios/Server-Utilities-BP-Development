@@ -102,14 +102,14 @@ export interface SubscribedEventSavedData<EventTypeID extends SubscribedEventTyp
      * const creationTime: number = Date.now(); // The time the event subscription was created.
      * const number1: number = Math.round(Math.random() * 100000); // Random integer between 0 and 100,000.
      * const number2: number = Math.round(Math.random() * 100000); // Random integer between 0 and 100,000.
-     * const saveID: string = `${creationTime}_${number1}_${number2}`
+     * const saveID: string = `EventSubscription:${creationTime}_${number1}_${number2}`
      * ```
      *
      * @type {string}
      *
      * @default
      * ```typescript
-     * `${Date.now()}_${Math.round(Math.random() * 100000)}_${Math.round(Math.random() * 100000)}`
+     * `EventSubscription:${Date.now()}_${Math.round(Math.random() * 100000)}_${Math.round(Math.random() * 100000)}`
      * ```
      */
     readonly saveID: string;
@@ -145,6 +145,12 @@ export interface SubscribedEventSavedData<EventTypeID extends SubscribedEventTyp
          * @type {string}
          */
         displayIcon?: string;
+        /**
+         * The last time the event subscription was modified.
+         *
+         * @type {number}
+         */
+        lastModified?: number;
         /**
          * Additional metadata for the event subscription.
          */
@@ -4831,7 +4837,7 @@ export class andexdb_ModifiedChatMessageSendBeforeEvent implements ChatSendBefor
  *
  * These callbacks are triggered by the chat ranks system of the add-on, if the chat ranks system is disabled these callbacks will never fire.
  *
- * Note: If the modified chat message send event is cancelled from a subscription to {@link Events.andexdb.beforeEvents.modifiedChatMessageSend}, this event will not fire.
+ * Note: If the modified chat message send event is cancelled from a subscription to {@link Events.andexdb.afterEvents.modifiedChatMessageSend}, this event will not fire.
  */
 export class andexdb_ModifiedChatMessageSendAfterEventSignal {
     public constructor() {}
@@ -5293,12 +5299,12 @@ export class andexdbAfterEvents {
      *
      * This is triggered by the chat ranks system of the add-on, if the chat ranks system is disabled this event will never fire.
      *
-     * Note: If the modified chat message send event is cancelled from a subscription to {@link Events.andexdb.beforeEvents.modifiedChatMessageSend}, this event will not fire.
+     * Note: If the modified chat message send event is cancelled from a subscription to {@link Events.andexdb.afterEvents.modifiedChatMessageSend}, this event will not fire.
      *
      * This property can be read in early-execution mode.
      *
      */
-    readonly modifiedChatMessageSend: andexdb_ModifiedChatMessageSendBeforeEventSignal = new andexdb_ModifiedChatMessageSendBeforeEventSignal();
+    readonly modifiedChatMessageSend: andexdb_ModifiedChatMessageSendAfterEventSignal = new andexdb_ModifiedChatMessageSendAfterEventSignal();
 }
 
 const deepFreeze = <T extends any, CT extends boolean = true>(obj: T, changeTypes?: CT): CT extends true ? ReadonlyDeep<T> : T => {
@@ -5737,6 +5743,22 @@ namespace exports {
             return this.#eventType;
         }
         /**
+         * A reference to the event signal for the event this subscription is for.
+         *
+         * @type {EventSignal}
+         */
+        public get eventTypeSignalReference(): EventSignal {
+            return this.#eventTypeSignalReference;
+        }
+        /**
+         * A reference to the array of loaded event subscriptions for the event this subscription is for.
+         *
+         * @type {SubscribedEvent<EventTypeID, EventSignal>[]}
+         */
+        public get eventTypeLoadedEventsReference(): SubscribedEvent<EventTypeID, EventSignal>[] {
+            return this.#eventTypeLoadedEventsReference;
+        }
+        /**
          * Whether or not the event subscription is valid.
          *
          * True if the event is loaded, false otherwise.
@@ -5756,8 +5778,18 @@ namespace exports {
          * @default undefined
          */
         public get creationTime(): number | undefined {
-            const creationTime = this.data.saveID.match(/^([0-9]+)\_/)?.[1];
+            const creationTime = this.data.saveID.match(/^EventSubscription:([0-9]+)\_/)?.[1];
             return creationTime ? Number(creationTime) : undefined;
+        }
+        /**
+         * The last time the event subscription was modified.
+         *
+         * @type {number | undefined}
+         *
+         * @default this.creationTime
+         */
+        public get lastModified(): number | undefined {
+            return this.data.metadata.lastModified ?? this.creationTime;
         }
         /**
          * Creates a new event subscription.

@@ -374,7 +374,7 @@ clearVelocity*/, debug, fluidContainerColor, fluidContainerFillLevel, potionType
                     .getComponent("sign")
                     .setTextDyeColor(
                         eval(`DyeColor.${signFrontTextColor}`),
-                        SignSide.Back
+                        SignSide.Front
                     );
             }
             if (signBackTextColorEnabled &&
@@ -384,7 +384,7 @@ clearVelocity*/, debug, fluidContainerColor, fluidContainerFillLevel, potionType
                     .getComponent("sign")
                     .setTextDyeColor(
                         eval(`DyeColor.${signBackTextColor}`),
-                        SignSide.Front
+                        SignSide.Back
                     );
             }
             for (let index in blockPropertyValueArray) {

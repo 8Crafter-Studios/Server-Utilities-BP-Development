@@ -30365,10 +30365,8 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                     values.pos2[axis] = values.center[axis] - distance;
                                 }
                             }
-                            player.worldEditSelection.pos1 = Vector.scale(
-                                player.worldEditSelection.pos1,
-                                Number(args[2])
-                            );
+                            player.worldEditSelection.pos1 = values.pos1;
+                            player.worldEditSelection.pos2 = values.pos2;
                         }
                         break;
                         case "scalex": {
@@ -30389,10 +30387,8 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                     values.pos2[axis] = values.center[axis] - distance;
                                 }
                             }
-                            player.worldEditSelection.pos1 = Vector.scale(
-                                player.worldEditSelection.pos1,
-                                Number(args[2])
-                            );
+                            player.worldEditSelection.pos1 = values.pos1;
+                            player.worldEditSelection.pos2 = values.pos2;
                         }
                         break;
                         case "scaley": {
@@ -30413,10 +30409,8 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                     values.pos2[axis] = values.center[axis] - distance;
                                 }
                             }
-                            player.worldEditSelection.pos1 = Vector.scale(
-                                player.worldEditSelection.pos1,
-                                Number(args[2])
-                            );
+                            player.worldEditSelection.pos1 = values.pos1;
+                            player.worldEditSelection.pos2 = values.pos2;
                         }
                         break;
                         case "scalez": {
@@ -30437,10 +30431,8 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                     values.pos2[axis] = values.center[axis] - distance;
                                 }
                             }
-                            player.worldEditSelection.pos1 = Vector.scale(
-                                player.worldEditSelection.pos1,
-                                Number(args[2])
-                            );
+                            player.worldEditSelection.pos1 = values.pos1;
+                            player.worldEditSelection.pos2 = values.pos2;
                         }
                         break;
                         default:

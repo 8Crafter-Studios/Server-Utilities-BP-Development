@@ -42,9 +42,8 @@ export async function uiSettings_menuConfigurations_mainMenu_mainSettings(source
                 }
             }
         }
-        const menuConfig = config.ui.menus.playerMenu;
+        const menuConfig = config.ui.menus.mainMenu;
         type optionsList = {
-            enabled: boolean;
             showDeprecatedButtons: boolean;
             showExperimentalButtons: boolean;
             showNonFunctionalButtons: boolean;
@@ -52,7 +51,6 @@ export async function uiSettings_menuConfigurations_mainMenu_mainSettings(source
             showUpcomingButtons: boolean;
         };
         const includedOptions = [
-            "enabled",
             "showDeprecatedButtons",
             "showExperimentalButtons",
             "showNonFunctionalButtons",
@@ -62,7 +60,6 @@ export async function uiSettings_menuConfigurations_mainMenu_mainSettings(source
         const form = new ModalFormData();
         form.title(customFormUICodes.modal.titles.formStyles.medium + "Main Menu Settings");
         const formOptionsMap = {
-            enabled: () => form.toggle("§l§fEnabled§r§f\nWhether or not the player menu is enabled. Defaults to true.", menuConfig.enabled),
             showDeprecatedButtons: () =>
                 form.toggle("§l§fShow Deprecated Buttons§r§f\nWhether or to show deprecated buttons. Defaults to true.", menuConfig.showDeprecatedButtons),
             showExperimentalButtons: () =>
@@ -92,9 +89,6 @@ export async function uiSettings_menuConfigurations_mainMenu_mainSettings(source
         const options = Object.fromEntries(includedOptions.map((o, i) => [o, r.formValues[i] as optionsList[typeof o]])) as Partial<optionsList>;
         includedOptions.forEach((v: keyof optionsList) => {
             switch (v) {
-                case "enabled":
-                    menuConfig.enabled = options[v];
-                    break;
                 case "showDeprecatedButtons":
                     menuConfig.showDeprecatedButtons = options[v];
                     break;

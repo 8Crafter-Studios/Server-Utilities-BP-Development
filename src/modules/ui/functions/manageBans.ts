@@ -35,7 +35,6 @@ export async function manageBans(
     cachedEntries?: [ban, "id" | "name", "valid" | "expired"][]
 ): Promise<0 | 1> {
     const player = extractPlayerFromLooseEntityType(sourceEntity);
-    [].sort;
     var currentParameters = {
         player,
         pagen,
@@ -277,7 +276,6 @@ export async function manageBansOnPlayer(
     cachedEntries?: [ban, "id" | "name", "valid" | "expired"][]
 ): Promise<0 | 1> {
     const player = extractPlayerFromLooseEntityType(sourceEntity);
-    [].sort;
     var currentParameters = {
         player,
         pagen,

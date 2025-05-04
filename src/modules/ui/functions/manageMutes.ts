@@ -30,7 +30,6 @@ export async function manageMutes(
     cachedEntries?: [playerName: string, status: "online" | "offline"][]
 ): Promise<0 | 1> {
     const player = extractPlayerFromLooseEntityType(sourceEntity);
-    [].sort;
     var currentParameters = {
         player,
         pagen,

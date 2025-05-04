@@ -451,7 +451,7 @@ export async function managePlayers_managePlayer_viewData(sourceEntity: loosePla
             )}`
         );
         form.button(customFormUICodes.action.buttons.positions.main_only + "Done");
-        await form.forceShow(sourceEntity as Player);
+        await form.forceShow(player);
         return 1;
     } catch (e) {
         console.error(e, e.stack);
