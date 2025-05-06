@@ -24,7 +24,7 @@ import { customFormUICodes } from "../constants/customFormUICodes";
  */
 export async function teleportSystemsSettings(sourceEntity: loosePlayerType): Promise<1 | 0> {
     const player = extractPlayerFromLooseEntityType(sourceEntity);
-    try{
+    try {
         if (securityVariables.ultraSecurityModeEnabled) {
             if (securityVariables.testPlayerForPermission(player, "andexdb.accessSettings") == false) {
                 const r = await showMessage(
@@ -58,24 +58,27 @@ export async function teleportSystemsSettings(sourceEntity: loosePlayerType): Pr
         form.title(customFormUICodes.modal.titles.formStyles.medium + "Teleport Systems Settings");
         const formOptionsMap = {
             allowCrossDimensionalTeleport: () =>
-                form.toggle("§l§fAllow Cross-Dimensional Teleport§r§f\nWhether or not players can teleport to locations that are in dimensions other than their current dimensions, applies to all forms of teleportation available to regular players, including the \\spawn commmand, the TPA system, the homes system, the warps system, etc. Defaults to true.", menuConfig.allowCrossDimensionalTeleport),
+                form.toggle(
+                    "§l§fAllow Cross-Dimensional Teleport§r§f\nWhether or not players can teleport to locations that are in dimensions other than their current dimensions, applies to all forms of teleportation available to regular players, including the \\spawn commmand, the TPA system, the homes system, the warps system, etc. Defaults to true.",
+                    { defaultValue: menuConfig.allowCrossDimensionalTeleport }
+                ),
             pvpCooldownToTeleport: () =>
                 form.textField(
                     "§l§fpvpCooldownToTeleport§r§f\nHow long in seconds after getting damaged by another player that the player has to wait before they can teleport with the player menu or commands such as \\spawn, \\home, \\gohome, \\tpa, and \\rtp. Set it to 0 to have no cooldown. Defaults to 15.",
                     "float",
-                    menuConfig.pvpCooldownToTeleport.toString()
+                    { defaultValue: menuConfig.pvpCooldownToTeleport.toString() }
                 ),
             standStillTimeToTeleport: () =>
                 form.textField(
                     "§l§fstandStillTimeToTeleport§r§f\nHow long in seconds that the player has to stand still before they can teleport, if they move during this time period, the teleportation is canceled. Set it to 0 to have players teleport instantly. Defaults to 5.",
                     "float",
-                    menuConfig.standStillTimeToTeleport.toString()
+                    { defaultValue: menuConfig.standStillTimeToTeleport.toString() }
                 ),
             teleportCooldown: () =>
                 form.textField(
                     "§l§fteleportCooldown§r§f\nHow long in seconds after teleporting that the player has to wait before they can teleport again. Set it to 0 to have no cooldown. Defaults to 30.",
                     "float",
-                    menuConfig.teleportCooldown.toString()
+                    { defaultValue: menuConfig.teleportCooldown.toString() }
                 ),
         } as { [key in keyof optionsList]: () => any };
         includedOptions.forEach((o) => formOptionsMap[o]());
@@ -108,5 +111,5 @@ export async function teleportSystemsSettings(sourceEntity: loosePlayerType): Pr
         console.error(e, e.stack);
         // Present the error to the user, and return 1 if they select "Back", and 0 if they select "Close".
         return ((await showMessage(player, "An Error occurred", `An error occurred: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
-    };
+    }
 }

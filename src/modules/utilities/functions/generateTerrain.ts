@@ -1,4 +1,4 @@
-import { type Vector3, type Dimension, type BoundingBox } from "@minecraft/server";
+import { type Vector3, type Dimension, type BlockBoundingBox } from "@minecraft/server";
 import { createNoise2D, createNoise3D, createNoise4D, type NoiseFunction2D, type NoiseFunction3D, type NoiseFunction4D } from "simplex-noise";
 import alea from "alea";
 import { type MinecraftBlockTypes, type MinecraftBiomeTypes } from "@minecraft/vanilla-data.js";
@@ -956,7 +956,7 @@ export interface OreGenerationOptions {
      *
      * The ores can extend past the chunk as long as it is within the {@link corner1} to {@link corner2} range, but their centers will all be within this chunk.
      */
-    chunkBounds: BoundingBox;
+    chunkBounds: BlockBoundingBox;
     /**
      * The ore generation mode to use.
      *

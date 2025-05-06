@@ -1489,10 +1489,10 @@ export class ProtectedAreaTester<
                                               : !prop.targetEntityFilter.excludeTags.some((tag) => data.target.hasTag(tag))) &&
                                           ((prop.targetEntityFilter?.excludeTypes ?? []).length === 0
                                               ? prop.targetEntityFilter?.includeTypes?.some(
-                                                    (type) => data.target.typeId === (EntityTypes.get(type)?.id ?? type)
+                                                    (type) => data.target.typeId === (EntityTypes.get(type as any)?.id ?? type)
                                                 ) ?? true
                                               : !prop.targetEntityFilter.excludeTypes.some(
-                                                    (type) => data.target.typeId === (EntityTypes.get(type)?.id ?? type)
+                                                    (type) => data.target.typeId === (EntityTypes.get(type as any)?.id ?? type)
                                                 ));
                                       break;
                                   }
@@ -1540,10 +1540,10 @@ export class ProtectedAreaTester<
                                                     ? prop.sourceEntityFilter?.includeTypes?.length === 0
                                                         ? true
                                                         : prop.sourceEntityFilter?.includeTypes?.some(
-                                                              (type) => data.source.typeId === (EntityTypes.get(type)?.id ?? type)
+                                                              (type) => data.source.typeId === (EntityTypes.get(type as any)?.id ?? type)
                                                           ) ?? true
                                                     : !prop.sourceEntityFilter.excludeTypes.some(
-                                                          (type) => data.source.typeId === (EntityTypes.get(type)?.id ?? type)
+                                                          (type) => data.source.typeId === (EntityTypes.get(type as any)?.id ?? type)
                                                       ))
                                               : true) && (extraData?.block !== undefined ? prop.mask.testIfMatches(extraData.block, prop.mode) : true);
                                       break;
@@ -1583,10 +1583,10 @@ export class ProtectedAreaTester<
                                               ? prop.sourceEntityFilter?.includeTypes?.length === 0
                                                   ? true
                                                   : prop.sourceEntityFilter?.includeTypes?.some(
-                                                        (type) => data.entity.typeId === (EntityTypes.get(type)?.id ?? type)
+                                                        (type) => data.entity.typeId === (EntityTypes.get(type as any)?.id ?? type)
                                                     ) ?? true
                                               : !prop.sourceEntityFilter.excludeTypes.some(
-                                                    (type) => data.entity.typeId === (EntityTypes.get(type)?.id ?? type)
+                                                    (type) => data.entity.typeId === (EntityTypes.get(type as any)?.id ?? type)
                                                 )) &&
                                           ((prop.effectFilter?.excludeTypes ?? []).length === 0
                                               ? prop.effectFilter?.includeTypes?.length === 0

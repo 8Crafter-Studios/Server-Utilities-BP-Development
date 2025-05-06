@@ -7,6 +7,7 @@ import {
     type RawMessage,
     type Player,
     type Dimension,
+    type EntityIdentifierType,
 } from "@minecraft/server";
 import type Decimal from "decimal.js";
 import type { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
@@ -728,6 +729,18 @@ declare module "@minecraft/server" {
         y: number;
         z: number;
     }
+    interface Dimension {
+        spawnEntity(
+                identifier: string,
+                location: Vector3,
+                options?: SpawnEntityOptions,
+            ): Entity;
+    }
+    /* type EntityIdentifierType<T> = [T] extends [never]
+        ? VanillaEntityIdentifier
+        : T extends string
+        ? VanillaEntityIdentifier | T
+        : never; */
 }
 
 // §ess§gss§6ss§pss§ass§qss§2ss§4ss§5ss§dss§1ss§3ss§7ss§8ss§9ss§0ss§mss§nss§bss§sss§rss§fss§tss§uss§iss§hss§jss

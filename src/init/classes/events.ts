@@ -5336,6 +5336,13 @@ export const signalMap = deepFreeze(
     false
 );
 
+// type SwitchesData = [buttonname: string, toggleevent: string, toggleTexture?: string];
+// type Switches = SwitchesData[];
+// type PluginData = [buttontext: string, texturepath: string, switches: Switches];
+// const plugins: PluginData[] = [];
+// const plugin: PluginData = ["test 1", "textures/ui/toggle_off", [["toggle 1", "/say hi", "textures/ui/toggle_on"]]]
+// ${ase}const plugin = ["test 1", "textures/ui/toggle_off", [["toggle 1", "/say hi", "textures/ui/toggle_on"]]]; overworld.runCommand(`/scriptevent mcbepm:load_plugin ${JSON.stringify(plugin)}`)
+
 namespace exports {
     /**
      * A class for managing event subscriptions.
@@ -5978,6 +5985,7 @@ namespace exports {
 export import SubscribedEvent = exports.SubscribedEvent;
 export import Events = exports.Events;
 import type { chatSendMessageEvaluator_prePlayers, chatSendMessageEvaluator_prePlayersOutput, TagChatMessageFormat } from "modules/chat/functions/chatSendMessageEvaluator";
+import type { ActionFormData } from "@minecraft/server-ui";
 
 Object.defineProperties(globalThis, {
     Events: {

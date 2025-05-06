@@ -4,29 +4,20 @@ import { ModalFormData, ModalFormResponse } from "@minecraft/server-ui";
 import { forceShow } from "modules/ui/functions/forceShow";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 
-export function editorStick(
-    sourceEntitya: Entity | executeCommandPlayerW | Player,
-    message: string = ""
-) {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW
-        ? sourceEntitya.player
-        : sourceEntitya;
+export function editorStick(sourceEntitya: Entity | executeCommandPlayerW | Player, message: string = "") {
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
     let form = new ModalFormData();
     let playerList = world.getPlayers();
     let block = sourceEntity.getBlockFromViewDirection();
     let block2 = block.block;
     let allCoordinates = [];
-    if (message.startsWith("coordinates:") &&
-        message.includes("|") &&
-        message.slice(12).split("|").length == 4) {
+    if (message.startsWith("coordinates:") && message.includes("|") && message.slice(12).split("|").length == 4) {
         allCoordinates = message.slice(12).split("|");
-        block2 = world
-            .getDimension(allCoordinates[0])
-            .getBlock({
-                x: allCoordinates[1].toNumber(),
-                y: allCoordinates[2].toNumber(),
-                z: allCoordinates[3].toNumber(),
-            });
+        block2 = world.getDimension(allCoordinates[0]).getBlock({
+            x: allCoordinates[1].toNumber(),
+            y: allCoordinates[2].toNumber(),
+            z: allCoordinates[3].toNumber(),
+        });
     }
     form.title("Editor Stick");
     form.submitButton("Save");
@@ -34,16 +25,10 @@ export function editorStick(
     try {blockStatesFullList = String([String(blockStatesFullList), block.block.permutation.getAllStates()]); } catch(e){console.error(e, e.stack);}
     try {blockStatesFullList = String([String(blockStatesFullList), block.block.permutation.getAllStates()]).split(","); } catch(e){console.error(e, e.stack);}*/
 
-
     try {
-        BlockPermutation.resolve(
-            "minecraft:bedrock",
-            block2.permutation.getAllStates()
-        );
+        BlockPermutation.resolve("minecraft:bedrock", block2.permutation.getAllStates());
     } catch (e) {
-        if (String(e).includes(
-            'Error: Failed to resolve block "minecraft:bedrock" with properties'
-        )) {
+        if (String(e).includes('Error: Failed to resolve block "minecraft:bedrock" with properties')) {
             blockStatesFullList =
                 "§r§b" +
                 String(e)
@@ -66,82 +51,61 @@ export function editorStick(
     console.warn(targetList);*/ /*
 }*/
 
-
-
-
-
-
-
-
     try {
         form.textField(
             "x: " +
-            block2.x +
-            "\ny: " +
-            block2.y +
-            "\nz: " +
-            block2.z +
-            "\ndimension: " +
-            block2.dimension.id +
-            "\ndistance: " +
-            Vector3Utils.distance(
-                sourceEntity.location,
-                block2.location
-            ) +
-            "\ngetRedstonePower: " +
-            block2.getRedstonePower() +
-            "\nblockFace: " +
-            block.face +
-            "\nblockFaceLocation: { x: " +
-            block.faceLocation.x +
-            ", y: " +
-            block.faceLocation.y +
-            ", z: " +
-            block.faceLocation.z +
-            " }\nsetType",
+                block2.x +
+                "\ny: " +
+                block2.y +
+                "\nz: " +
+                block2.z +
+                "\ndimension: " +
+                block2.dimension.id +
+                "\ndistance: " +
+                Vector3Utils.distance(sourceEntity.location, block2.location) +
+                "\ngetRedstonePower: " +
+                block2.getRedstonePower() +
+                "\nblockFace: " +
+                block.face +
+                "\nblockFaceLocation: { x: " +
+                block.faceLocation.x +
+                ", y: " +
+                block.faceLocation.y +
+                ", z: " +
+                block.faceLocation.z +
+                " }\nsetType",
             "Block Type",
-            block2.typeId
+            { defaultValue: block2.typeId }
         );
     } catch (e) {
         console.error(e, e.stack);
-        form.textField(
-            "setType\nERROR: NO BLOCK SELECTED",
-            "Block Type",
-            "minecraft:air"
-        );
+        form.textField("setType\nERROR: NO BLOCK SELECTED", "Block Type", { defaultValue: "minecraft:air" });
     } /*Error: Failed To resolve block "minecraft:bedrock" with properties */
-    form.toggle("setType Enabled", false);
+    form.toggle("setType Enabled", { defaultValue: false });
     try {
         form.textField(
             "List Of Block Properties: " +
-            blockStatesFullList /*(BlockPermutation.resolve("minecraft:bedrock", block.block.permutation.getAllStates()))*/ +
-            "\nBlock Property Identifier",
+                blockStatesFullList /*(BlockPermutation.resolve("minecraft:bedrock", block.block.permutation.getAllStates()))*/ +
+                "\nBlock Property Identifier",
             "bool_state, num_state, str_state"
         );
     } catch (e) {
         console.error(e, e.type /*e.stack*/);
         console.warn("test: " + String(e).slice(67) /*e.stack*/);
-        form.textField(
-            "Block Property Identifier",
-            "bool_state, num_state, str_state"
-        );
+        form.textField("Block Property Identifier", "bool_state, num_state, str_state");
     }
     form.textField("Block Property Value", 'true, 1, "North"');
-    form.toggle("setProperty Enabled", false); /*
+    form.toggle("setProperty Enabled", { defaultValue: false }); /*
     try {console.warn(block.block.permutation.getAllStates()) } catch(e){console.error(e, e.stack);}
     try {console.warn(block.block.permutation.getAllStates()[0]) } catch(e){console.error(e, e.stack);}
     try {console.warn(block.block.permutation.getAllStates()[0][0]) } catch(e){console.error(e, e.stack);}*/
 
-
-
-
-
     /*form.dropdown("Block Permutation To Set", block.getTags())*/ /*
     form.slider("Selected Slot", 0, 56, 1)*/
-    form.toggle("isWaterlogged", block2.isWaterlogged); /*
+    form.toggle("isWaterlogged", { defaultValue: block2.isWaterlogged }); /*
     form.toggle("Clear Velocity", false)*/
 
-    form.toggle("Debug", false); /*
+    form.toggle("Debug", { defaultValue: false }); /*
     let rawtextf = "["
     function evalRawText(rawtextf: string, rt: RawMessage){
         
@@ -199,170 +163,87 @@ export function editorStick(
     });
     rawtextf = rawtextf + "]"*/
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     try {
         if (block2.getComponent("fluid_container") != undefined) {
             form.textField(
-                `Cauldron Water RGBA Color/Fill Level\n§cRed: §g${block2.getComponent("fluid_container").fluidColor.red}\n§aGreen: §g${block2.getComponent("fluid_container").fluidColor.green}\n§bBlue: §g${block2.getComponent("fluid_container").fluidColor.blue}\n§dAlpha: §g${block2.getComponent("fluid_container").fluidColor.alpha}`,
+                `Cauldron Water RGBA Color/Fill Level\n§cRed: §g${block2.getComponent("fluid_container").fluidColor.red}\n§aGreen: §g${
+                    block2.getComponent("fluid_container").fluidColor.green
+                }\n§bBlue: §g${block2.getComponent("fluid_container").fluidColor.blue}\n§dAlpha: §g${block2.getComponent("fluid_container").fluidColor.alpha}`,
                 `red: 0-1, green: 0-1, blue: 0-1, alpha: 0-1`,
-                `${block2.getComponent("fluid_container").fluidColor.red}, ${block2.getComponent("fluid_container").fluidColor.green}, ${block2.getComponent("fluid_container").fluidColor.blue}, ${block2.getComponent("fluid_container").fluidColor.alpha}`
+                {
+                    defaultValue: `${block2.getComponent("fluid_container").fluidColor.red}, ${block2.getComponent("fluid_container").fluidColor.green}, ${
+                        block2.getComponent("fluid_container").fluidColor.blue
+                    }, ${block2.getComponent("fluid_container").fluidColor.alpha}`,
+                }
             );
-            form.slider(
-                `Cauldron Fill Level\nFill Level: §g${block2.getComponent("fluid_container").fillLevel}`,
-                0,
-                6,
-                1,
-                block2.getComponent("fluid_container").fillLevel
-            );
-            form.textField(
-                `Cauldron Potion Type Contents\nHas Potion: §g${block2.getComponent("fluid_container").getFluidType() ==
-                "Potion"}`,
-                `item type`
-            );
+            form.slider(`Cauldron Fill Level\nFill Level: §g${block2.getComponent("fluid_container").fillLevel}`, 0, 6, {
+                valueStep: 1,
+                defaultValue: block2.getComponent("fluid_container").fillLevel,
+            });
+            form.textField(`Cauldron Potion Type Contents\nHas Potion: §g${block2.getComponent("fluid_container").getFluidType() == "Potion"}`, `item type`);
         } else {
             form.textField(`§4Cauldron RGBA Color`, `§4Unavailable`);
-            form.slider(`§4Cauldron Fill Level (Unavailable)`, 0, 0, 0, 0);
-            form.textField(
-                `§4Cauldron Potion Type Contents`,
-                `§r§4Unavailable`
-            );
+            form.slider(`§4Cauldron Fill Level (Unavailable)`, 0, 0, { valueStep: 0, defaultValue: 0 });
+            form.textField(`§4Cauldron Potion Type Contents`, `§r§4Unavailable`);
         }
     } catch {
         form.textField(`§4Cauldron RGBA Color`, `§4Unavailable`);
-        form.slider(`§4Cauldron Fill Level (Unavailable)`, 0, 0, 0, 0);
+        form.slider(`§4Cauldron Fill Level (Unavailable)`, 0, 0, { valueStep: 0, defaultValue: 0 });
         form.textField(`§4Cauldron Potion Type Contents`, `§r§4Unavailable`);
     }
-    form.toggle("setSignFrontRawText Enabled", false);
+    form.toggle("setSignFrontRawText Enabled", { defaultValue: false });
     if (block2.getComponent("sign") != undefined) {
         form.textField(
-            `Sign Front RawText\nRawText: §g${JSON.stringify(
-                block2.getComponent("sign").getRawText(SignSide.Front)
-            )}`,
+            `Sign Front RawText\nRawText: §g${JSON.stringify(block2.getComponent("sign").getRawText(SignSide.Front))}`,
             `{rawtext: [{text|translate|rawtext|score|with: value, ...}]}`,
-            JSON.stringify(
-                block2.getComponent("sign").getRawText(SignSide.Front)
-            )
+            { defaultValue: JSON.stringify(block2.getComponent("sign").getRawText(SignSide.Front)) }
         );
     } else {
         form.textField(`§4Sign Front RawText`, `§r§4Unavailable`);
     }
-    form.toggle("setSignBackRawText Enabled", false);
+    form.toggle("setSignBackRawText Enabled", { defaultValue: false });
     if (block2.getComponent("sign") != undefined) {
         form.textField(
-            `Sign Back RawText\nRawText: §g${JSON.stringify(
-                block2.getComponent("sign").getRawText(SignSide.Back)
-            )}`,
+            `Sign Back RawText\nRawText: §g${JSON.stringify(block2.getComponent("sign").getRawText(SignSide.Back))}`,
             `{rawtext: [{text|translate|rawtext|score|with: value, ...}]}`,
-            JSON.stringify(
-                block2.getComponent("sign").getRawText(SignSide.Back)
-            )
+            { defaultValue: JSON.stringify(block2.getComponent("sign").getRawText(SignSide.Back)) }
         );
     } else {
         form.textField(`§4Sign Back RawText`, `§r§4Unavailable`);
     }
-    form.toggle("setSignFrontText Enabled", false);
+    form.toggle("setSignFrontText Enabled", { defaultValue: false });
     if (block2.getComponent("sign") != undefined) {
-        form.textField(
-            `Sign Front Text\nRawText: §g${block2
-                .getComponent("sign")
-                .getText(SignSide.Front)}`,
-            `text`,
-            block2.getComponent("sign").getText(SignSide.Front)
-        );
+        form.textField(`Sign Front Text\nRawText: §g${block2.getComponent("sign").getText(SignSide.Front)}`, `text`, {
+            defaultValue: block2.getComponent("sign").getText(SignSide.Front),
+        });
     } else {
         form.textField(`§4Sign Front Text`, `§r§4Unavailable`);
     }
-    form.toggle("setSignBackText Enabled", false);
+    form.toggle("setSignBackText Enabled", { defaultValue: false });
     if (block2.getComponent("sign") != undefined) {
-        form.textField(
-            `Sign Back Text\Text: §g${block2
-                .getComponent("sign")
-                .getText(SignSide.Back)}`,
-            `text`,
-            block2.getComponent("sign").getText(SignSide.Back)
-        );
+        form.textField(`Sign Back Text\Text: §g${block2.getComponent("sign").getText(SignSide.Back)}`, `text`, {
+            defaultValue: block2.getComponent("sign").getText(SignSide.Back),
+        });
     } else {
         form.textField(`§4Sign Back Text`, `§r§4Unavailable`);
     }
-    form.toggle("setSignFrontTextColor Enabled", false);
+    form.toggle("setSignFrontTextColor Enabled", { defaultValue: false });
     if (block2.getComponent("sign") != undefined) {
-        form.textField(
-            `Sign Front Text Color\Text: §g${block2
-                .getComponent("sign")
-                .getTextDyeColor(SignSide.Front)}`,
-            `dye color`,
-            block2.getComponent("sign").getTextDyeColor(SignSide.Front)
-        );
+        form.textField(`Sign Front Text Color\Text: §g${block2.getComponent("sign").getTextDyeColor(SignSide.Front)}`, `dye color`, {
+            defaultValue: block2.getComponent("sign").getTextDyeColor(SignSide.Front),
+        });
     } else {
         form.textField(`§4Sign Front Text Color`, `§r§4Unavailable`);
     }
-    form.toggle("setSignBackTextColor Enabled", false);
+    form.toggle("setSignBackTextColor Enabled", { defaultValue: false });
     if (block2.getComponent("sign") != undefined) {
-        form.textField(
-            `Sign Back Text Color\Text: §g${block2
-                .getComponent("sign")
-                .getTextDyeColor(SignSide.Back)}`,
-            `dye color`,
-            block2.getComponent("sign").getTextDyeColor(SignSide.Back)
-        );
+        form.textField(`Sign Back Text Color\Text: §g${block2.getComponent("sign").getTextDyeColor(SignSide.Back)}`, `dye color`, {
+            defaultValue: block2.getComponent("sign").getTextDyeColor(SignSide.Back),
+        });
     } else {
         form.textField(`§4Sign Back Text Color`, `§r§4Unavailable`);
     }
-    form.toggle("setSignIsWaxed", block2.getComponent("sign")?.isWaxed);
+    form.toggle("setSignIsWaxed", { defaultValue: block2.getComponent("sign")?.isWaxed });
 
     forceShow(form, playerList[playerList.findIndex((x) => x == sourceEntity)])
         .then((ro) => {
@@ -370,9 +251,31 @@ export function editorStick(
             if (r.canceled) return;
 
             let [
-                setType, setTypeEnabled, blockPropertyIdentifier, blockPropertyValue, setPropertyEnabled /*,
-selectedSlotIndex*/, isWaterlogged /*,
-clearVelocity*/, debug, fluidContainerColor, fluidContainerFillLevel, potionType, signFrontRawTextEnabled, signFrontRawText, signBackRawTextEnabled, signBackRawText, signFrontTextEnabled, signFrontText, signBackTextEnabled, signBackText, signFrontTextColorEnabled, signFrontTextColor, signBackTextColorEnabled, signBackTextColor, setSignIsWaxed,
+                setType,
+                setTypeEnabled,
+                blockPropertyIdentifier,
+                blockPropertyValue,
+                setPropertyEnabled /*,
+selectedSlotIndex*/,
+                isWaterlogged /*,
+clearVelocity*/,
+                debug,
+                fluidContainerColor,
+                fluidContainerFillLevel,
+                potionType,
+                signFrontRawTextEnabled,
+                signFrontRawText,
+                signBackRawTextEnabled,
+                signBackRawText,
+                signFrontTextEnabled,
+                signFrontText,
+                signBackTextEnabled,
+                signBackText,
+                signFrontTextColorEnabled,
+                signFrontTextColor,
+                signBackTextColorEnabled,
+                signBackTextColor,
+                setSignIsWaxed,
             ] = (r as ModalFormResponse).formValues as [
                 setType: string,
                 setTypeEnabled: boolean,
@@ -406,17 +309,15 @@ clearVelocity*/, debug, fluidContainerColor, fluidContainerFillLevel, potionType
             blockPropertyValue2 = "";
             let blockPropertyValueArray: Array<any>;
             blockPropertyValueArray = String(blockPropertyValue).split(", ");
-            let blockPropertyValueLength = String(
-                blockPropertyIdentifier
-            ).split(", ").length;
+            let blockPropertyValueLength = String(blockPropertyIdentifier).split(", ").length;
             if (block2.getComponent("fluid_container") != undefined) {
-                if (((c) => `${c.red},${c.green},${c.blue},${c.alpha}`)(
-                    block2.getComponent("fluid_container").fluidColor
-                ) !=
+                if (
+                    ((c) => `${c.red},${c.green},${c.blue},${c.alpha}`)(block2.getComponent("fluid_container").fluidColor) !=
                     fluidContainerColor
                         .split(",")
                         .map((v) => v.trim())
-                        .join()) {
+                        .join()
+                ) {
                     block2.getComponent("fluid_container").fluidColor = {
                         red: fluidContainerColor.split(",")[0].toNumber(),
                         green: fluidContainerColor.split(",")[1].toNumber(),
@@ -424,135 +325,94 @@ clearVelocity*/, debug, fluidContainerColor, fluidContainerFillLevel, potionType
                         alpha: fluidContainerColor.split(",")[3].toNumber(),
                     };
                 }
-                if (fluidContainerFillLevel !=
-                    block2.getComponent("fluid_container").fillLevel) {
-                    block2.getComponent("fluid_container").fillLevel =
-                        fluidContainerFillLevel;
+                if (fluidContainerFillLevel != block2.getComponent("fluid_container").fillLevel) {
+                    block2.getComponent("fluid_container").fillLevel = fluidContainerFillLevel;
                 }
                 if (potionType != "") {
-                    block2
-                        .getComponent("fluid_container")
-                        .setPotion(new ItemStack(potionType, 255));
+                    block2.getComponent("fluid_container").setPotion(new ItemStack(potionType, 255));
                 }
             }
-            if (signFrontRawTextEnabled &&
-                block2.getComponent("sign") !=
-                undefined /*&&/^{(rawtext|score|text|translate|with):/.test((String(signText)))&&/}$/.test((String(signText)))*/) {
-            /*{ translate: "accessibility.list.or.two", with: ["Player 1", "Player 2"] }*/ block2
+            if (
+                signFrontRawTextEnabled &&
+                block2.getComponent("sign") != undefined /*&&/^{(rawtext|score|text|translate|with):/.test((String(signText)))&&/}$/.test((String(signText)))*/
+            ) {
+                /*{ translate: "accessibility.list.or.two", with: ["Player 1", "Player 2"] }*/ block2
                     .getComponent("sign")
-                    .setText(
-                        JSON.parse(String(signFrontRawText)),
-                        SignSide.Front
-                    );
+                    .setText(JSON.parse(String(signFrontRawText)), SignSide.Front);
             }
-            if (signBackRawTextEnabled &&
-                block2.getComponent("sign") !=
-                undefined /*&&/^{(rawtext|score|text|translate|with):/.test((String(signText)))&&/}$/.test((String(signText)))*/) {
-            /*{ translate: "accessibility.list.or.two", with: ["Player 1", "Player 2"] }*/ block2
+            if (
+                signBackRawTextEnabled &&
+                block2.getComponent("sign") != undefined /*&&/^{(rawtext|score|text|translate|with):/.test((String(signText)))&&/}$/.test((String(signText)))*/
+            ) {
+                /*{ translate: "accessibility.list.or.two", with: ["Player 1", "Player 2"] }*/ block2
                     .getComponent("sign")
-                    .setText(
-                        JSON.parse(String(signBackRawText)),
-                        SignSide.Back
-                    );
+                    .setText(JSON.parse(String(signBackRawText)), SignSide.Back);
             }
-            if (signFrontTextEnabled &&
-                block2.getComponent("sign") !=
-                undefined /*&&/^{(rawtext|score|text|translate|with):/.test((String(signText)))&&/}$/.test((String(signText)))*/) {
-            /*{ translate: "accessibility.list.or.two", with: ["Player 1", "Player 2"] }*/ block2
+            if (
+                signFrontTextEnabled &&
+                block2.getComponent("sign") != undefined /*&&/^{(rawtext|score|text|translate|with):/.test((String(signText)))&&/}$/.test((String(signText)))*/
+            ) {
+                /*{ translate: "accessibility.list.or.two", with: ["Player 1", "Player 2"] }*/ block2
                     .getComponent("sign")
-                    .setText(
-                        String(signFrontText).replaceAll("\\n", "\n"),
-                        SignSide.Front
-                    );
+                    .setText(String(signFrontText).replaceAll("\\n", "\n"), SignSide.Front);
             }
-            if (signBackTextEnabled &&
-                block2.getComponent("sign") !=
-                undefined /*&&/^{(rawtext|score|text|translate|with):/.test((String(signText)))&&/}$/.test((String(signText)))*/) {
-            /*{ translate: "accessibility.list.or.two", with: ["Player 1", "Player 2"] }*/ block2
+            if (
+                signBackTextEnabled &&
+                block2.getComponent("sign") != undefined /*&&/^{(rawtext|score|text|translate|with):/.test((String(signText)))&&/}$/.test((String(signText)))*/
+            ) {
+                /*{ translate: "accessibility.list.or.two", with: ["Player 1", "Player 2"] }*/ block2
                     .getComponent("sign")
-                    .setText(
-                        String(signBackText).replaceAll("\\n", "\n"),
-                        SignSide.Back
-                    );
+                    .setText(String(signBackText).replaceAll("\\n", "\n"), SignSide.Back);
             }
-            if (block2.getComponent("sign") !=
-                undefined /*&&/^{(rawtext|score|text|translate|with):/.test((String(signText)))&&/}$/.test((String(signText)))*/) {
-            /*{ translate: "accessibility.list.or.two", with: ["Player 1", "Player 2"] }*/ block2
-                    .getComponent("sign")
-                    .setWaxed(Boolean(setSignIsWaxed));
+            if (
+                block2.getComponent("sign") != undefined /*&&/^{(rawtext|score|text|translate|with):/.test((String(signText)))&&/}$/.test((String(signText)))*/
+            ) {
+                /*{ translate: "accessibility.list.or.two", with: ["Player 1", "Player 2"] }*/ block2.getComponent("sign").setWaxed(Boolean(setSignIsWaxed));
             }
             DyeColor.Blue; //make it save this DyeColor in the imports from @minecraft/server.
-            if (signFrontTextColorEnabled &&
-                block2.getComponent("sign") !=
-                undefined /*&&/^{(rawtext|score|text|translate|with):/.test((String(signText)))&&/}$/.test((String(signText)))*/) {
-            /*{ translate: "accessibility.list.or.two", with: ["Player 1", "Player 2"] }*/ block2
+            if (
+                signFrontTextColorEnabled &&
+                block2.getComponent("sign") != undefined /*&&/^{(rawtext|score|text|translate|with):/.test((String(signText)))&&/}$/.test((String(signText)))*/
+            ) {
+                /*{ translate: "accessibility.list.or.two", with: ["Player 1", "Player 2"] }*/ block2
                     .getComponent("sign")
-                    .setTextDyeColor(
-                        eval(`DyeColor.${signFrontTextColor}`),
-                        SignSide.Front
-                    );
+                    .setTextDyeColor(eval(`DyeColor.${signFrontTextColor}`), SignSide.Front);
             }
-            if (signBackTextColorEnabled &&
-                block2.getComponent("sign") !=
-                undefined /*&&/^{(rawtext|score|text|translate|with):/.test((String(signText)))&&/}$/.test((String(signText)))*/) {
-            /*{ translate: "accessibility.list.or.two", with: ["Player 1", "Player 2"] }*/ block2
+            if (
+                signBackTextColorEnabled &&
+                block2.getComponent("sign") != undefined /*&&/^{(rawtext|score|text|translate|with):/.test((String(signText)))&&/}$/.test((String(signText)))*/
+            ) {
+                /*{ translate: "accessibility.list.or.two", with: ["Player 1", "Player 2"] }*/ block2
                     .getComponent("sign")
-                    .setTextDyeColor(
-                        eval(`DyeColor.${signBackTextColor}`),
-                        SignSide.Back
-                    );
+                    .setTextDyeColor(eval(`DyeColor.${signBackTextColor}`), SignSide.Back);
             }
             for (let index in blockPropertyValueArray) {
-                if (String(blockPropertyValueArray[index]).startsWith('"') &&
-                    String(blockPropertyValueArray[index]).endsWith('"')) {
-                    blockPropertyValueArray[index] = String(
-                        blockPropertyValueArray[index]
-                    ).slice(
-                        1,
-                        String(blockPropertyValueArray[index]).length - 1
-                    );
+                if (String(blockPropertyValueArray[index]).startsWith('"') && String(blockPropertyValueArray[index]).endsWith('"')) {
+                    blockPropertyValueArray[index] = String(blockPropertyValueArray[index]).slice(1, String(blockPropertyValueArray[index]).length - 1);
                 } else {
-                    if (String(blockPropertyValueArray[index]).startsWith(
-                        '"'
-                    ) == false &&
-                        String(blockPropertyValueArray[index]).endsWith('"') ==
-                        false &&
-                        "0123456789.".includes(
-                            String(blockPropertyValueArray[index]).charAt(0)
-                        )) {
-                        blockPropertyValueArray[index] = Number(
-                            blockPropertyValueArray[index]
-                        );
+                    if (
+                        String(blockPropertyValueArray[index]).startsWith('"') == false &&
+                        String(blockPropertyValueArray[index]).endsWith('"') == false &&
+                        "0123456789.".includes(String(blockPropertyValueArray[index]).charAt(0))
+                    ) {
+                        blockPropertyValueArray[index] = Number(blockPropertyValueArray[index]);
                     } else {
-                        if (String(blockPropertyValueArray[index]).startsWith(
-                            '"'
-                        ) == false &&
-                            String(blockPropertyValueArray[index]).endsWith(
-                                '"'
-                            ) == false &&
-                            (String(blockPropertyValueArray[index]) ==
-                                "false" ||
-                                String(blockPropertyValueArray[index]) ==
-                                "true")) {
-                            blockPropertyValueArray[index] = Boolean(
-                                blockPropertyValueArray[index]
-                            );
+                        if (
+                            String(blockPropertyValueArray[index]).startsWith('"') == false &&
+                            String(blockPropertyValueArray[index]).endsWith('"') == false &&
+                            (String(blockPropertyValueArray[index]) == "false" || String(blockPropertyValueArray[index]) == "true")
+                        ) {
+                            blockPropertyValueArray[index] = Boolean(blockPropertyValueArray[index]);
                         } else {
-                            if (String(
-                                blockPropertyValueArray[index]
-                            ).startsWith('"') == false &&
-                                String(blockPropertyValueArray[index]).endsWith(
-                                    '"'
-                                ) == false &&
-                                (String(blockPropertyValueArray[index]) ==
-                                    "false" ||
-                                    String(blockPropertyValueArray[index]) ==
-                                    "true" ||
+                            if (
+                                String(blockPropertyValueArray[index]).startsWith('"') == false &&
+                                String(blockPropertyValueArray[index]).endsWith('"') == false &&
+                                (String(blockPropertyValueArray[index]) == "false" ||
+                                    String(blockPropertyValueArray[index]) == "true" ||
                                     blockPropertyValueArray[index] == false ||
-                                    blockPropertyValueArray[index] == true)) {
-                                blockPropertyValueArray[index] = String(
-                                    blockPropertyValueArray[index]
-                                );
+                                    blockPropertyValueArray[index] == true)
+                            ) {
+                                blockPropertyValueArray[index] = String(blockPropertyValueArray[index]);
                             }
                         }
                     }
@@ -571,22 +431,9 @@ if ((String(blockPropertyValue).startsWith("\"") == false) && (String(blockPrope
         blockPropertyValue2 = String(blockPropertyValue)
     }}}}*/
 
-
-
-
-
-
-
-
-
-
-
-
             if (setTypeEnabled == true) {
                 try {
-                    block2.setType(
-                        BlockTypes.get(String(setType)) /*String(setType)*/
-                    );
+                    block2.setType(BlockTypes.get(String(setType)) /*String(setType)*/);
                 } catch (e) {
                     console.error(e, e.stack);
                 }
@@ -599,9 +446,7 @@ try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(bl
                         try {
                             block2.setPermutation(
                                 BlockPermutation.resolve(block2.typeId, {
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[0]]: blockPropertyValueArray[0],
+                                    [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0],
                                 }) /*block2.permutation.clone().withState(String(blockPropertyIdentifier), blockPropertyValue2).clone().getAllStates()*/
                             );
                         } catch (e) {
@@ -612,12 +457,8 @@ try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(bl
                         try {
                             block2.setPermutation(
                                 BlockPermutation.resolve(block2.typeId, {
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[0]]: blockPropertyValueArray[0],
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[1]]: blockPropertyValueArray[1],
+                                    [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0],
+                                    [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1],
                                 })
                             );
                         } catch (e) {
@@ -628,15 +469,9 @@ try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(bl
                         try {
                             block2.setPermutation(
                                 BlockPermutation.resolve(block2.typeId, {
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[0]]: blockPropertyValueArray[0],
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[1]]: blockPropertyValueArray[1],
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[2]]: blockPropertyValueArray[2],
+                                    [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0],
+                                    [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1],
+                                    [String(blockPropertyIdentifier).split(", ")[2]]: blockPropertyValueArray[2],
                                 })
                             );
                         } catch (e) {
@@ -647,18 +482,10 @@ try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(bl
                         try {
                             block2.setPermutation(
                                 BlockPermutation.resolve(block2.typeId, {
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[0]]: blockPropertyValueArray[0],
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[1]]: blockPropertyValueArray[1],
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[2]]: blockPropertyValueArray[2],
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[3]]: blockPropertyValueArray[3],
+                                    [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0],
+                                    [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1],
+                                    [String(blockPropertyIdentifier).split(", ")[2]]: blockPropertyValueArray[2],
+                                    [String(blockPropertyIdentifier).split(", ")[3]]: blockPropertyValueArray[3],
                                 })
                             );
                         } catch (e) {
@@ -669,21 +496,11 @@ try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(bl
                         try {
                             block2.setPermutation(
                                 BlockPermutation.resolve(block2.typeId, {
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[0]]: blockPropertyValueArray[0],
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[1]]: blockPropertyValueArray[1],
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[2]]: blockPropertyValueArray[2],
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[3]]: blockPropertyValueArray[3],
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[4]]: blockPropertyValueArray[4],
+                                    [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0],
+                                    [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1],
+                                    [String(blockPropertyIdentifier).split(", ")[2]]: blockPropertyValueArray[2],
+                                    [String(blockPropertyIdentifier).split(", ")[3]]: blockPropertyValueArray[3],
+                                    [String(blockPropertyIdentifier).split(", ")[4]]: blockPropertyValueArray[4],
                                 })
                             );
                         } catch (e) {
@@ -694,24 +511,12 @@ try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(bl
                         try {
                             block2.setPermutation(
                                 BlockPermutation.resolve(block2.typeId, {
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[0]]: blockPropertyValueArray[0],
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[1]]: blockPropertyValueArray[1],
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[2]]: blockPropertyValueArray[2],
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[3]]: blockPropertyValueArray[3],
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[4]]: blockPropertyValueArray[4],
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[5]]: blockPropertyValueArray[5],
+                                    [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0],
+                                    [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1],
+                                    [String(blockPropertyIdentifier).split(", ")[2]]: blockPropertyValueArray[2],
+                                    [String(blockPropertyIdentifier).split(", ")[3]]: blockPropertyValueArray[3],
+                                    [String(blockPropertyIdentifier).split(", ")[4]]: blockPropertyValueArray[4],
+                                    [String(blockPropertyIdentifier).split(", ")[5]]: blockPropertyValueArray[5],
                                 })
                             );
                         } catch (e) {
@@ -722,27 +527,13 @@ try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(bl
                         try {
                             block2.setPermutation(
                                 BlockPermutation.resolve(block2.typeId, {
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[0]]: blockPropertyValueArray[0],
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[1]]: blockPropertyValueArray[1],
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[2]]: blockPropertyValueArray[2],
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[3]]: blockPropertyValueArray[3],
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[4]]: blockPropertyValueArray[4],
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[5]]: blockPropertyValueArray[5],
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[6]]: blockPropertyValueArray[6],
+                                    [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0],
+                                    [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1],
+                                    [String(blockPropertyIdentifier).split(", ")[2]]: blockPropertyValueArray[2],
+                                    [String(blockPropertyIdentifier).split(", ")[3]]: blockPropertyValueArray[3],
+                                    [String(blockPropertyIdentifier).split(", ")[4]]: blockPropertyValueArray[4],
+                                    [String(blockPropertyIdentifier).split(", ")[5]]: blockPropertyValueArray[5],
+                                    [String(blockPropertyIdentifier).split(", ")[6]]: blockPropertyValueArray[6],
                                 })
                             );
                         } catch (e) {
@@ -753,30 +544,14 @@ try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(bl
                         try {
                             block2.setPermutation(
                                 BlockPermutation.resolve(block2.typeId, {
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[0]]: blockPropertyValueArray[0],
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[1]]: blockPropertyValueArray[1],
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[2]]: blockPropertyValueArray[2],
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[3]]: blockPropertyValueArray[3],
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[4]]: blockPropertyValueArray[4],
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[5]]: blockPropertyValueArray[5],
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[6]]: blockPropertyValueArray[6],
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[7]]: blockPropertyValueArray[7],
+                                    [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0],
+                                    [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1],
+                                    [String(blockPropertyIdentifier).split(", ")[2]]: blockPropertyValueArray[2],
+                                    [String(blockPropertyIdentifier).split(", ")[3]]: blockPropertyValueArray[3],
+                                    [String(blockPropertyIdentifier).split(", ")[4]]: blockPropertyValueArray[4],
+                                    [String(blockPropertyIdentifier).split(", ")[5]]: blockPropertyValueArray[5],
+                                    [String(blockPropertyIdentifier).split(", ")[6]]: blockPropertyValueArray[6],
+                                    [String(blockPropertyIdentifier).split(", ")[7]]: blockPropertyValueArray[7],
                                 })
                             );
                         } catch (e) {
@@ -787,33 +562,15 @@ try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(bl
                         try {
                             block2.setPermutation(
                                 BlockPermutation.resolve(block2.typeId, {
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[0]]: blockPropertyValueArray[0],
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[1]]: blockPropertyValueArray[1],
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[2]]: blockPropertyValueArray[2],
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[3]]: blockPropertyValueArray[3],
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[4]]: blockPropertyValueArray[4],
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[5]]: blockPropertyValueArray[5],
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[6]]: blockPropertyValueArray[6],
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[7]]: blockPropertyValueArray[7],
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[8]]: blockPropertyValueArray[8],
+                                    [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0],
+                                    [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1],
+                                    [String(blockPropertyIdentifier).split(", ")[2]]: blockPropertyValueArray[2],
+                                    [String(blockPropertyIdentifier).split(", ")[3]]: blockPropertyValueArray[3],
+                                    [String(blockPropertyIdentifier).split(", ")[4]]: blockPropertyValueArray[4],
+                                    [String(blockPropertyIdentifier).split(", ")[5]]: blockPropertyValueArray[5],
+                                    [String(blockPropertyIdentifier).split(", ")[6]]: blockPropertyValueArray[6],
+                                    [String(blockPropertyIdentifier).split(", ")[7]]: blockPropertyValueArray[7],
+                                    [String(blockPropertyIdentifier).split(", ")[8]]: blockPropertyValueArray[8],
                                 })
                             );
                         } catch (e) {
@@ -824,36 +581,16 @@ try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(bl
                         try {
                             block2.setPermutation(
                                 BlockPermutation.resolve(block2.typeId, {
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[0]]: blockPropertyValueArray[0],
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[1]]: blockPropertyValueArray[1],
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[2]]: blockPropertyValueArray[2],
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[3]]: blockPropertyValueArray[3],
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[4]]: blockPropertyValueArray[4],
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[5]]: blockPropertyValueArray[5],
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[6]]: blockPropertyValueArray[6],
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[7]]: blockPropertyValueArray[7],
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[8]]: blockPropertyValueArray[8],
-                                    [String(blockPropertyIdentifier).split(
-                                        ", "
-                                    )[9]]: blockPropertyValueArray[9],
+                                    [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0],
+                                    [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1],
+                                    [String(blockPropertyIdentifier).split(", ")[2]]: blockPropertyValueArray[2],
+                                    [String(blockPropertyIdentifier).split(", ")[3]]: blockPropertyValueArray[3],
+                                    [String(blockPropertyIdentifier).split(", ")[4]]: blockPropertyValueArray[4],
+                                    [String(blockPropertyIdentifier).split(", ")[5]]: blockPropertyValueArray[5],
+                                    [String(blockPropertyIdentifier).split(", ")[6]]: blockPropertyValueArray[6],
+                                    [String(blockPropertyIdentifier).split(", ")[7]]: blockPropertyValueArray[7],
+                                    [String(blockPropertyIdentifier).split(", ")[8]]: blockPropertyValueArray[8],
+                                    [String(blockPropertyIdentifier).split(", ")[9]]: blockPropertyValueArray[9],
                                 })
                             );
                         } catch (e) {
@@ -863,7 +600,6 @@ try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(bl
                     default:
                         break; /*
 break;*/
-
                 }
             }
             try {
@@ -879,15 +615,6 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
     .maxTicks(400)
     .structureName("gametests:mediumglass");*/ /*
     sourceEntity.runCommand("/gametest run gametests:mediumglass")*/
-
-
-
-
-
-
-
-
-
 
             /*BlockType.arguments({id: "minecraft:grass"})*/
             // Do something

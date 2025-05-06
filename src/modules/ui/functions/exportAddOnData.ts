@@ -10,11 +10,14 @@ import { formatBytes } from "modules/utilities/functions/formatBytes";
  */
 export async function exportAddOnData(player: Player): Promise<ModalFormResponse> {
     const data = JSON.stringify(Object.fromEntries(world.getDynamicPropertyIds().map((v) => [v, world.getDynamicProperty(v)])));
-    return await new ModalFormData().title("Export Add-on Data")
+    return await new ModalFormData()
+        .title("Export Add-on Data")
         .textField(
-            `Data (${formatBytes(Uint8Array.from(data, x => x.charCodeAt(0)).byteLength)}), To transfer this data, go to the other world/realm/server with the add-on on, and paste the text from the text box below into the text box in the Import Add-on Data menu (Main Menu > Settings > Import Data).`,
+            `Data (${formatBytes(
+                Uint8Array.from(data, (x) => x.charCodeAt(0)).byteLength
+            )}), To transfer this data, go to the other world/realm/server with the add-on on, and paste the text from the text box below into the text box in the Import Add-on Data menu (Main Menu > Settings > Import Data).`,
             "Data",
-            data
+            { defaultValue: data }
         )
         .submitButton("Done")
         .forceShow(player);

@@ -27,13 +27,13 @@ export async function nbtStructureLoader(sourceEntity: loosePlayerType): Promise
             "§fFor info on how to use this loader, go to §bhttps://www.8crafter.com/debug-sticks-add-on/andexdbnbtstructureloader§f\nNote: When pasting the nbt data into the text box the game might freeze for anywhere from a few seconds to half a hour depending on how much text is being pasted while it is pasting, and then it will unfreeze. \nNBT Data",
             "NBT Data"
         );
-        form.textField("spawn position x", "integer", String(player.location.x));
-        form.textField("spawn position y", "integer", String(player.location.y));
-        form.textField("spawn position z", "integer", String(player.location.z));
+        form.textField("spawn position x", "integer", {defaultValue: String(player.location.x)});
+        form.textField("spawn position y", "integer", {defaultValue: String(player.location.y)});
+        form.textField("spawn position z", "integer", {defaultValue: String(player.location.z)});
         form.dropdown(
             "Dimension",
             dimensions.map((d) => dimensionTypeDisplayFormatting[d.id as keyof typeof dimensionTypeDisplayFormatting]),
-            dimensions.indexOf(player.dimension)
+            { defaultValueIndex: dimensions.indexOf(player.dimension) }
         );
         form.submitButton("Load Java NBT Structure");
         const r = await form.forceShow(player);

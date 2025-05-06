@@ -126,8 +126,8 @@ export async function playerMenu_bounties_list(
                             async () =>
                                 await new ModalFormData()
                                     .title("Search")
-                                    .textField("", "Search", search?.value ?? "")
-                                    .toggle("Case Sensitive", search?.caseSensitive ?? false)
+                                    .textField("", "Search", {defaultValue: search?.value ?? ""})
+                                    .toggle("Case Sensitive", { defaultValue: search?.caseSensitive ?? false })
                                     .submitButton("Search")
                                     .forceShow(sourceEntity as Player)
                         );

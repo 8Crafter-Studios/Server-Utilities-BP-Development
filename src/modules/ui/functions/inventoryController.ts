@@ -1,30 +1,35 @@
-import { Entity, Player, world, EntityInventoryComponent, EquipmentSlot, EntityEquippableComponent, ItemDurabilityComponent, ItemEnchantableComponent, ItemLockMode, ItemStack, BlockInventoryComponent } from "@minecraft/server";
+import {
+    Entity,
+    Player,
+    world,
+    EntityInventoryComponent,
+    EquipmentSlot,
+    EntityEquippableComponent,
+    ItemDurabilityComponent,
+    ItemEnchantableComponent,
+    ItemLockMode,
+    ItemStack,
+    BlockInventoryComponent,
+} from "@minecraft/server";
 import { ModalFormData, ModalFormResponse } from "@minecraft/server-ui";
 import { forceShow } from "modules/ui/functions/forceShow";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 
-export function inventoryController(
-    sourceEntitya: Entity | executeCommandPlayerW | Player
-) {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW
-        ? sourceEntitya.player
-        : sourceEntitya;
+export function inventoryController(sourceEntitya: Entity | executeCommandPlayerW | Player) {
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
     let form2 = new ModalFormData();
     let players = world.getAllPlayers();
     let targetList = [players[0].nameTag];
     for (const index in players) {
         if (Number(index) != 0) {
-            targetList = String([
-                String(targetList),
-                players[index].nameTag,
-            ]).split(",");
+            targetList = String([String(targetList), players[index].nameTag]).split(",");
         }
     }
-    form2.textField("Slot Number", "Slot Number", "0");
-    form2.dropdown("Slot Type", ["Inventory", "Equipment"], 0);
-    form2.dropdown("Player Target", String(targetList).split(","), 0);
-    form2.dropdown("Player Viewer", String(targetList).split(","), 0);
-    form2.toggle("Debug2", false);
+    form2.textField("Slot Number", "Slot Number", { defaultValue: "0" });
+    form2.dropdown("Slot Type", ["Inventory", "Equipment"], { defaultValueIndex: 0 });
+    form2.dropdown("Player Target", String(targetList).split(","), { defaultValueIndex: 0 });
+    form2.dropdown("Player Viewer", String(targetList).split(","), { defaultValueIndex: 0 });
+    form2.toggle("Debug2", { defaultValue: false });
     form2
         .show(sourceEntity as any)
         .then((t) => {
@@ -33,9 +38,7 @@ export function inventoryController(
             let playerTargetB = Number(playerTarget);
             let playerViewerB = Number(playerViewer);
             let inventory: any;
-            inventory = players[playerTargetB].getComponent(
-                "inventory"
-            ) as EntityInventoryComponent; /*
+            inventory = players[playerTargetB].getComponent("inventory") as EntityInventoryComponent; /*
 try{inventory = players[playerTargetB].getComponent("equipment_inventory") as EntityEquipmentInventoryComponent;} catch(e){if (Boolean(debug2) == true) { console.error(e, e.stack); }};*/
 
             let item = inventory.container.getItem(Number(slotNumber));
@@ -49,12 +52,8 @@ try{inventory = players[playerTargetB].getComponent("equipment_inventory") as En
             ];
             if (Number(slotType) == 1) {
                 try {
-                    let a = players[playerTargetB].getComponent(
-                        "equippable"
-                    ) as EntityEquippableComponent;
-                    item = a.getEquipmentSlot(
-                        equipmentPlayerSlotsList[Number(slotNumber)]
-                    );
+                    let a = players[playerTargetB].getComponent("equippable") as EntityEquippableComponent;
+                    item = a.getEquipmentSlot(equipmentPlayerSlotsList[Number(slotNumber)]);
                 } catch (e) {
                     if (Boolean(debug2) == true) {
                         console.error(e, e.stack);
@@ -63,9 +62,7 @@ try{inventory = players[playerTargetB].getComponent("equipment_inventory") as En
             }
             function getDurability() {
                 try {
-                    return item.getComponent(
-                        "minecraft:durability"
-                    ) as ItemDurabilityComponent;
+                    return item.getComponent("minecraft:durability") as ItemDurabilityComponent;
                 } catch (e) {
                     if (Boolean(debug2) == true) {
                         console.error(e, e.stack);
@@ -75,9 +72,7 @@ try{inventory = players[playerTargetB].getComponent("equipment_inventory") as En
             }
             function getEnchantments() {
                 try {
-                    return item.getComponent(
-                        "minecraft:enchantments"
-                    ) as ItemEnchantableComponent;
+                    return item.getComponent("minecraft:enchantments") as ItemEnchantableComponent;
                 } catch (e) {
                     if (Boolean(debug2) == true) {
                         console.error(e, e.stack);
@@ -150,34 +145,21 @@ console.warn(itemNameTextCalculator());*/
 console.warn(item.nameTag);*/ /*
         console.warn(Array(item.getLore().toString()).join(""));*/
 
-
             form.title("Item Modifier / Lore");
             form.textField(
                 "Item Type: " +
-                currentValueItemType +
-                "\nItem Name\nTo type multiple lines just put \\\\newline in between each line. \nTo clear item name just leave field blank. ",
+                    currentValueItemType +
+                    "\nItem Name\nTo type multiple lines just put \\\\newline in between each line. \nTo clear item name just leave field blank. ",
                 "Item Name",
                 itemNameTextField /*(String(item.nameTag))*/
             );
-            form.textField(
-                "Item Lore\nTo type multiple lines just put \\\\newline in between each line. ",
-                "Item Lore",
-                itemLoreTextField
-            );
-            form.textField(
-                "Can Destroy",
-                "Can Destroy",
-                "" /*(String(item.getCanDestroy()))*/
-            );
-            form.textField(
-                "Can Place On",
-                "Can Place On",
-                "" /*(String(item.getCanPlaceOn()))*/
-            );
-            form.textField("Trigger Event", "Trigger Event", "");
-            form.toggle("Set Count", false);
-            form.slider("Count", 0, 255, 1, currentValueItemAmount);
-            form.toggle("keepOnDeath", itemKeepOnDeath);
+            form.textField("Item Lore\nTo type multiple lines just put \\\\newline in between each line. ", "Item Lore", { defaultValue: itemLoreTextField });
+            form.textField("Can Destroy", "Can Destroy", { defaultValue: "" /*(String(item.getCanDestroy()))*/ });
+            form.textField("Can Place On", "Can Place On", { defaultValue: "" /*(String(item.getCanPlaceOn()))*/ });
+            form.textField("Trigger Event", "Trigger Event", { defaultValue: "" });
+            form.toggle("Set Count", { defaultValue: false });
+            form.slider("Count", 0, 255, { valueStep: 1, defaultValue: currentValueItemAmount });
+            form.toggle("keepOnDeath", { defaultValue: itemKeepOnDeath });
             function getItemLockMode(mode?: Number, input?: Number) {
                 try {
                     if (mode == 1) {
@@ -220,185 +202,107 @@ console.warn(item.nameTag);*/ /*
                 }
             }
             let itemLockModeIndex = Number(getItemLockMode(1));
-            form.dropdown(
-                "lockMode",
-                ["inventory", "none", "slot"],
-                Number(itemLockModeIndex)
-            );
-            form.toggle("setLore", false);
-            form.toggle("clearLore", false);
-            form.toggle("New Item", false);
-            form.textField("Item Type", "Item Type", "");
-            form.textField("Item Count", "Item Count", "1"); /*
-form.textField("Item Data", "Trigger Event", "");*/
+            form.dropdown("lockMode", ["inventory", "none", "slot"], { defaultValueIndex: Number(itemLockModeIndex) });
+            form.toggle("setLore", { defaultValue: false });
+            form.toggle("clearLore", { defaultValue: false });
+            form.toggle("New Item", { defaultValue: false });
+            form.textField("Item Type", "Item Type", { defaultValue: "" });
+            form.textField("Item Count", "Item Count", { defaultValue: "1" }); /*
+form.textField("Item Data", "Trigger Event", {defaultValue: ""});*/
 
-            form.toggle("Move Item", false);
-            form.textField("From Slot", "From Slot", "0");
-            form.textField("To Slot", "To Slot", "1");
-            form.dropdown(
-                "From Container Type",
-                [
-                    "Player",
-                    "§4Facing Entity",
-                    "§4Entity At Block Location",
-                    "§4Facing Block",
-                    "Block At Block Location",
-                ],
-                0
-            );
-            form.dropdown(
-                "From Contriner Player",
-                String(targetList).split(","),
-                0
-            );
-            form.textField(
-                "From Container Block",
-                "overworld, 500, 60, 500",
-                players[playerTargetB].dimension.id +
-                ", " +
-                players[playerTargetB].location.x +
-                ", " +
-                players[playerTargetB].location.y +
-                ", " +
-                players[playerTargetB].location.z
-            );
-            form.dropdown(
-                "To Container Type",
-                [
-                    "Player",
-                    "§4Facing Entity",
-                    "§4Entity At Block Location",
-                    "§4Facing Block",
-                    "Block At Block Location",
-                ],
-                0
-            );
-            form.dropdown(
-                "To Container Player",
-                String(targetList).split(","),
-                0
-            );
-            form.textField(
-                "To Container Block",
-                "overworld, 500, 60, 500",
-                players[playerTargetB].dimension.id +
-                ", " +
-                players[playerTargetB].location.x +
-                ", " +
-                players[playerTargetB].location.y +
-                ", " +
-                players[playerTargetB].location.z
-            );
-            form.toggle("Swap Items", false);
-            form.textField("Slot", "Slot", "0");
-            form.textField("Other Slot", "Other Slot", "1");
-            form.dropdown(
-                "Container Type",
-                [
-                    "Player",
-                    "§4Facing Entity",
-                    "§4Entity At Block Location",
-                    "§4Facing Block",
-                    "Block At Block Location",
-                ],
-                0
-            );
-            form.dropdown("Container Player", String(targetList).split(","), 0);
-            form.textField(
-                "Container Block",
-                "overworld, 500, 60, 500",
-                players[playerTargetB].dimension.id +
-                ", " +
-                players[playerTargetB].location.x +
-                ", " +
-                players[playerTargetB].location.y +
-                ", " +
-                players[playerTargetB].location.z
-            );
-            form.dropdown(
-                "Other Container Type",
-                [
-                    "Player",
-                    "§4Facing Entity",
-                    "§4Entity At Block Location",
-                    "§4Facing Block",
-                    "Block At Block Location",
-                ],
-                0
-            );
-            form.dropdown(
-                "Other Container Player",
-                String(targetList).split(","),
-                0
-            );
-            form.textField(
-                "Other Container Block",
-                "overworld, 500, 60, 500",
-                players[playerTargetB].dimension.id +
-                ", " +
-                players[playerTargetB].location.x +
-                ", " +
-                players[playerTargetB].location.y +
-                ", " +
-                players[playerTargetB].location.z
-            );
-            form.toggle("Transfer Item", false);
-            form.textField("From Slot", "From Slot", "0");
-            form.dropdown(
-                "From Container Type",
-                [
-                    "Player",
-                    "§4Facing Entity",
-                    "§4Entity At Block Location",
-                    "§4Facing Block",
-                    "Block At Block Location",
-                ],
-                0
-            );
-            form.dropdown(
-                "From Container Player",
-                String(targetList).split(","),
-                0
-            );
-            form.textField(
-                "From Container Block",
-                "overworld, 500, 60, 500",
-                players[playerTargetB].dimension.id +
-                ", " +
-                players[playerTargetB].location.x +
-                ", " +
-                players[playerTargetB].location.y +
-                ", " +
-                players[playerTargetB].location.z
-            );
-            form.dropdown(
-                "To Container Type",
-                [
-                    "Player",
-                    "§4Facing Entity",
-                    "§4Entity At Block Location",
-                    "§4Facing Block",
-                    "Block At Block Location",
-                ],
-                0
-            );
-            form.dropdown(
-                "To Container Player",
-                String(targetList).split(","),
-                0
-            );
-            form.textField(
-                "To Container Block",
-                "overworld, 500, 60, 500",
-                players[playerTargetB].dimension.id +
-                ", " +
-                players[playerTargetB].location.x +
-                ", " +
-                players[playerTargetB].location.y +
-                ", " +
-                players[playerTargetB].location.z
-            );
-            form.toggle("Debug", false);
+            form.toggle("Move Item", { defaultValue: false });
+            form.textField("From Slot", "From Slot", { defaultValue: "0" });
+            form.textField("To Slot", "To Slot", { defaultValue: "1" });
+            form.dropdown("From Container Type", ["Player", "§4Facing Entity", "§4Entity At Block Location", "§4Facing Block", "Block At Block Location"], {
+                defaultValueIndex: 0,
+            });
+            form.dropdown("From Contriner Player", String(targetList).split(","), { defaultValueIndex: 0 });
+            form.textField("From Container Block", "overworld, 500, 60, 500", {
+                defaultValue:
+                    players[playerTargetB].dimension.id +
+                    ", " +
+                    players[playerTargetB].location.x +
+                    ", " +
+                    players[playerTargetB].location.y +
+                    ", " +
+                    players[playerTargetB].location.z,
+            });
+            form.dropdown("To Container Type", ["Player", "§4Facing Entity", "§4Entity At Block Location", "§4Facing Block", "Block At Block Location"], {
+                defaultValueIndex: 0,
+            });
+            form.dropdown("To Container Player", String(targetList).split(","), { defaultValueIndex: 0 });
+            form.textField("To Container Block", "overworld, 500, 60, 500", {
+                defaultValue:
+                    players[playerTargetB].dimension.id +
+                    ", " +
+                    players[playerTargetB].location.x +
+                    ", " +
+                    players[playerTargetB].location.y +
+                    ", " +
+                    players[playerTargetB].location.z,
+            });
+            form.toggle("Swap Items", { defaultValue: false });
+            form.textField("Slot", "Slot", { defaultValue: "0" });
+            form.textField("Other Slot", "Other Slot", { defaultValue: "1" });
+            form.dropdown("Container Type", ["Player", "§4Facing Entity", "§4Entity At Block Location", "§4Facing Block", "Block At Block Location"], {
+                defaultValueIndex: 0,
+            });
+            form.dropdown("Container Player", String(targetList).split(","), { defaultValueIndex: 0 });
+            form.textField("Container Block", "overworld, 500, 60, 500", {
+                defaultValue:
+                    players[playerTargetB].dimension.id +
+                    ", " +
+                    players[playerTargetB].location.x +
+                    ", " +
+                    players[playerTargetB].location.y +
+                    ", " +
+                    players[playerTargetB].location.z,
+            });
+            form.dropdown("Other Container Type", ["Player", "§4Facing Entity", "§4Entity At Block Location", "§4Facing Block", "Block At Block Location"], {
+                defaultValueIndex: 0,
+            });
+            form.dropdown("Other Container Player", String(targetList).split(","), { defaultValueIndex: 0 });
+            form.textField("Other Container Block", "overworld, 500, 60, 500", {
+                defaultValue:
+                    players[playerTargetB].dimension.id +
+                    ", " +
+                    players[playerTargetB].location.x +
+                    ", " +
+                    players[playerTargetB].location.y +
+                    ", " +
+                    players[playerTargetB].location.z,
+            });
+            form.toggle("Transfer Item", { defaultValue: false });
+            form.textField("From Slot", "From Slot", { defaultValue: "0" });
+            form.dropdown("From Container Type", ["Player", "§4Facing Entity", "§4Entity At Block Location", "§4Facing Block", "Block At Block Location"], {
+                defaultValueIndex: 0,
+            });
+            form.dropdown("From Container Player", String(targetList).split(","), { defaultValueIndex: 0 });
+            form.textField("From Container Block", "overworld, 500, 60, 500", {
+                defaultValue:
+                    players[playerTargetB].dimension.id +
+                    ", " +
+                    players[playerTargetB].location.x +
+                    ", " +
+                    players[playerTargetB].location.y +
+                    ", " +
+                    players[playerTargetB].location.z,
+            });
+            form.dropdown("To Container Type", ["Player", "§4Facing Entity", "§4Entity At Block Location", "§4Facing Block", "Block At Block Location"], {
+                defaultValueIndex: 0,
+            });
+            form.dropdown("To Container Player", String(targetList).split(","), { defaultValueIndex: 0 });
+            form.textField("To Container Block", "overworld, 500, 60, 500", {
+                defaultValue:
+                    players[playerTargetB].dimension.id +
+                    ", " +
+                    players[playerTargetB].location.x +
+                    ", " +
+                    players[playerTargetB].location.y +
+                    ", " +
+                    players[playerTargetB].location.z,
+            });
+            form.toggle("Debug", { defaultValue: false });
 
             forceShow(form, players[playerViewerB])
                 .then((r) => {
@@ -407,109 +311,82 @@ form.textField("Item Data", "Trigger Event", "");*/
 
                     // This will assign every input their own variable
                     let [
-                        itemName, itemLore, canDestroy, canPlaceOn, triggerEvent, setAmount, amount, keepOnDeath, lockMode, setLore, clearLore, newItem, newItemType, newItemCount /*, newItemData*/, moveItem, moveFromSlot, moveToSlot, moveFromContainerType, moveFromContainer, moveFromContainerBlock, moveToContainerType, moveToContainer, moveToContainerBlock, swapItems, swapSlot, swapOtherSlot, swapContainerType, swapContainer, swapContainerBlock, swapOtherContainerType, swapOtherContainer, swapOtherContainerBlock, transferItem, transferFromSlot, transferFromContainerType, transferFromContainer, transferFromContainerBlock, transferToContainerType, transferToContainer, transferToContainerBlock, debug,
+                        itemName,
+                        itemLore,
+                        canDestroy,
+                        canPlaceOn,
+                        triggerEvent,
+                        setAmount,
+                        amount,
+                        keepOnDeath,
+                        lockMode,
+                        setLore,
+                        clearLore,
+                        newItem,
+                        newItemType,
+                        newItemCount /*, newItemData*/,
+                        moveItem,
+                        moveFromSlot,
+                        moveToSlot,
+                        moveFromContainerType,
+                        moveFromContainer,
+                        moveFromContainerBlock,
+                        moveToContainerType,
+                        moveToContainer,
+                        moveToContainerBlock,
+                        swapItems,
+                        swapSlot,
+                        swapOtherSlot,
+                        swapContainerType,
+                        swapContainer,
+                        swapContainerBlock,
+                        swapOtherContainerType,
+                        swapOtherContainer,
+                        swapOtherContainerBlock,
+                        transferItem,
+                        transferFromSlot,
+                        transferFromContainerType,
+                        transferFromContainer,
+                        transferFromContainerBlock,
+                        transferToContainerType,
+                        transferToContainer,
+                        transferToContainerBlock,
+                        debug,
                     ] = (r as ModalFormResponse).formValues; /*
 console.warn(r.formValues);*/
 
-
-
-
                     /*let item = inventory.container.getItem(Number(slotNumber));
         if (Number(slotType) == 1) { try{let a = players[playerTargetB].getComponent("equipment_inventory") as EntityEquipmentInventoryComponent; item = a.getEquipmentSlot(equipmentPlayerSlotsList[Number(slotNumber)])} catch(e){if (Boolean(debug2) == true) { console.error(e, e.stack); }};};*/
-                    let transferFromContainerBlockB = world
-                        .getDimension(
-                            String(transferFromContainerBlock).split(", ")[0]
-                        )
-                        .getBlock({
-                            x: Number(
-                                String(transferFromContainerBlock).split(
-                                    ", "
-                                )[1]
-                            ),
-                            y: Number(
-                                String(transferFromContainerBlock).split(
-                                    ", "
-                                )[2]
-                            ),
-                            z: Number(
-                                String(transferFromContainerBlock).split(
-                                    ", "
-                                )[3]
-                            ),
-                        });
-                    let transferToContainerBlockB = world
-                        .getDimension(
-                            String(transferToContainerBlock).split(", ")[0]
-                        )
-                        .getBlock({
-                            x: Number(
-                                String(transferToContainerBlock).split(", ")[1]
-                            ),
-                            y: Number(
-                                String(transferToContainerBlock).split(", ")[2]
-                            ),
-                            z: Number(
-                                String(transferToContainerBlock).split(", ")[3]
-                            ),
-                        });
-                    let moveFromContainerBlockB = world
-                        .getDimension(
-                            String(moveFromContainerBlock).split(", ")[0]
-                        )
-                        .getBlock({
-                            x: Number(
-                                String(moveFromContainerBlock).split(", ")[1]
-                            ),
-                            y: Number(
-                                String(moveFromContainerBlock).split(", ")[2]
-                            ),
-                            z: Number(
-                                String(moveFromContainerBlock).split(", ")[3]
-                            ),
-                        });
-                    let moveToContainerBlockB = world
-                        .getDimension(
-                            String(moveToContainerBlock).split(", ")[0]
-                        )
-                        .getBlock({
-                            x: Number(
-                                String(moveToContainerBlock).split(", ")[1]
-                            ),
-                            y: Number(
-                                String(moveToContainerBlock).split(", ")[2]
-                            ),
-                            z: Number(
-                                String(moveToContainerBlock).split(", ")[3]
-                            ),
-                        });
-                    let swapContainerBlockB = world
-                        .getDimension(String(swapContainerBlock).split(", ")[0])
-                        .getBlock({
-                            x: Number(
-                                String(swapContainerBlock).split(", ")[1]
-                            ),
-                            y: Number(
-                                String(swapContainerBlock).split(", ")[2]
-                            ),
-                            z: Number(
-                                String(swapContainerBlock).split(", ")[3]
-                            ),
-                        });
-                    let swapOtherContainerBlockB = world
-                        .getDimension(
-                            String(swapOtherContainerBlock).split(", ")[0]
-                        )
-                        .getBlock({
-                            x: Number(
-                                String(swapOtherContainerBlock).split(", ")[1]
-                            ),
-                            y: Number(
-                                String(swapOtherContainerBlock).split(", ")[2]
-                            ),
-                            z: Number(
-                                String(swapOtherContainerBlock).split(", ")[3]
-                            ),
-                        });
+                    let transferFromContainerBlockB = world.getDimension(String(transferFromContainerBlock).split(", ")[0]).getBlock({
+                        x: Number(String(transferFromContainerBlock).split(", ")[1]),
+                        y: Number(String(transferFromContainerBlock).split(", ")[2]),
+                        z: Number(String(transferFromContainerBlock).split(", ")[3]),
+                    });
+                    let transferToContainerBlockB = world.getDimension(String(transferToContainerBlock).split(", ")[0]).getBlock({
+                        x: Number(String(transferToContainerBlock).split(", ")[1]),
+                        y: Number(String(transferToContainerBlock).split(", ")[2]),
+                        z: Number(String(transferToContainerBlock).split(", ")[3]),
+                    });
+                    let moveFromContainerBlockB = world.getDimension(String(moveFromContainerBlock).split(", ")[0]).getBlock({
+                        x: Number(String(moveFromContainerBlock).split(", ")[1]),
+                        y: Number(String(moveFromContainerBlock).split(", ")[2]),
+                        z: Number(String(moveFromContainerBlock).split(", ")[3]),
+                    });
+                    let moveToContainerBlockB = world.getDimension(String(moveToContainerBlock).split(", ")[0]).getBlock({
+                        x: Number(String(moveToContainerBlock).split(", ")[1]),
+                        y: Number(String(moveToContainerBlock).split(", ")[2]),
+                        z: Number(String(moveToContainerBlock).split(", ")[3]),
+                    });
+                    let swapContainerBlockB = world.getDimension(String(swapContainerBlock).split(", ")[0]).getBlock({
+                        x: Number(String(swapContainerBlock).split(", ")[1]),
+                        y: Number(String(swapContainerBlock).split(", ")[2]),
+                        z: Number(String(swapContainerBlock).split(", ")[3]),
+                    });
+                    let swapOtherContainerBlockB = world.getDimension(String(swapOtherContainerBlock).split(", ")[0]).getBlock({
+                        x: Number(String(swapOtherContainerBlock).split(", ")[1]),
+                        y: Number(String(swapOtherContainerBlock).split(", ")[2]),
+                        z: Number(String(swapOtherContainerBlock).split(", ")[3]),
+                    });
                     let durability2 = getDurability();
                     let enchantments2 = getEnchantments(); /*
 for (const index in inventory.) {
@@ -517,10 +394,6 @@ for (const index in inventory.) {
     targetList = String([String(targetList), players[index].nameTag]).split(",");
     }
 }*/
-
-
-
-
 
                     let newItemNameTag = String(itemName).split("\\\\newline");
                     try {
@@ -547,9 +420,7 @@ for (const index in inventory.) {
                         }
                     }
                     try {
-                        item.lockMode = String(
-                            getItemLockMode(0, Number(lockMode))
-                        ) as ItemLockMode;
+                        item.lockMode = String(getItemLockMode(0, Number(lockMode))) as ItemLockMode;
                     } catch (e) {
                         if (Boolean(debug2) == true) {
                             console.error(e, e.stack);
@@ -597,15 +468,9 @@ try{ durability2.damage = Number(10); } catch(e){if (Boolean(debug2) == true) { 
             enchantment.level = 5
             try{ const enchantments3 = enchantments2.enchantments; enchantments3.addEnchantment(enchantment); enchantments2.enchantments = enchantments3} catch(e){if (Boolean(debug2) == true) { console.error(e, e.stack)}; }*/
 
-
-
-
                     if (Boolean(newItem) == true) {
                         try {
-                            item = new ItemStack(
-                                String(newItemType),
-                                Number(newItemCount)
-                            );
+                            item = new ItemStack(String(newItemType), Number(newItemCount));
                         } catch (e) {
                             console.error(e, e.stack);
                         }
@@ -615,13 +480,8 @@ try{ durability2.damage = Number(10); } catch(e){if (Boolean(debug2) == true) { 
                     }
                     if (Number(slotType) == 1) {
                         try {
-                            let a = players[playerTargetB].getComponent(
-                                "equippable"
-                            ) as EntityEquippableComponent;
-                            a.setEquipment(
-                                equipmentPlayerSlotsList[Number(slotNumber)],
-                                item.clone()
-                            );
+                            let a = players[playerTargetB].getComponent("equippable") as EntityEquippableComponent;
+                            a.setEquipment(equipmentPlayerSlotsList[Number(slotNumber)], item.clone());
                         } catch (e) {
                             if (Boolean(debug2) == true) {
                                 console.error(e, e.stack);
@@ -629,10 +489,7 @@ try{ durability2.damage = Number(10); } catch(e){if (Boolean(debug2) == true) { 
                         }
                     } else {
                         try {
-                            inventory.container.setItem(
-                                Number(slotNumber),
-                                item
-                            );
+                            inventory.container.setItem(Number(slotNumber), item);
                         } catch (e) {
                             console.error(e, e.stack);
                         }
@@ -647,28 +504,18 @@ try{ durability2.damage = Number(10); } catch(e){if (Boolean(debug2) == true) { 
                         moveFromContainerB = players[Number(moveFromContainer)].getComponent("inventory") as EntityInventoryComponent;
                         switch (moveFromContainerType) {
                             case 4:
-                                moveFromContainerB =
-                                    moveFromContainerBlockB.getComponent(
-                                        "inventory"
-                                    ) as BlockInventoryComponent;
+                                moveFromContainerB = moveFromContainerBlockB.getComponent("inventory") as BlockInventoryComponent;
                                 break;
                         }
                         let moveToContainerB: any;
                         moveToContainerB = players[Number(moveToContainer)].getComponent("inventory") as EntityInventoryComponent;
                         switch (moveToContainerType) {
                             case 4:
-                                moveToContainerB =
-                                    moveToContainerBlockB.getComponent(
-                                        "inventory"
-                                    ) as BlockInventoryComponent;
+                                moveToContainerB = moveToContainerBlockB.getComponent("inventory") as BlockInventoryComponent;
                                 break;
                         }
                         try {
-                            moveFromContainerB.container.moveItem(
-                                Number(moveFromSlot),
-                                Number(moveToSlot),
-                                moveToContainerB.container
-                            );
+                            moveFromContainerB.container.moveItem(Number(moveFromSlot), Number(moveToSlot), moveToContainerB.container);
                         } catch (e) {
                             console.error(e, e.stack);
                         }
@@ -682,19 +529,12 @@ try{ durability2.damage = Number(10); } catch(e){if (Boolean(debug2) == true) { 
                         swapContainerB = players[Number(swapContainer)].getComponent("inventory") as EntityInventoryComponent;
                         let itemA: any;
                         itemA = undefined;
-                        if (Number(swapSlot) > 35 &&
-                            Number(swapContainerType) == 0) {
+                        if (Number(swapSlot) > 35 && Number(swapContainerType) == 0) {
                             try {
-                                swapContainerB = players[playerTargetB].getComponent(
-                                    "equippable"
-                                ) as EntityEquippableComponent;
+                                swapContainerB = players[playerTargetB].getComponent("equippable") as EntityEquippableComponent;
                                 swapSlot = Number(swapSlot) - 36;
                                 mode = 1;
-                                itemA = swapContainerB
-                                    .getEquipment(
-                                        equipmentPlayerSlotsList[Number(swapSlot)]
-                                    )
-                                    .clone();
+                                itemA = swapContainerB.getEquipment(equipmentPlayerSlotsList[Number(swapSlot)]).clone();
                             } catch (e) {
                                 if (Boolean(debug2) == true) {
                                     console.error(e, e.stack);
@@ -703,10 +543,7 @@ try{ durability2.damage = Number(10); } catch(e){if (Boolean(debug2) == true) { 
                         }
                         switch (swapContainerType) {
                             case 4:
-                                swapContainerB =
-                                    swapContainerBlockB.getComponent(
-                                        "inventory"
-                                    ) as BlockInventoryComponent;
+                                swapContainerB = swapContainerBlockB.getComponent("inventory") as BlockInventoryComponent;
                                 break;
                         }
                         let swapOtherContainerB: any;
@@ -715,20 +552,14 @@ try{ durability2.damage = Number(10); } catch(e){if (Boolean(debug2) == true) { 
                         itemB = undefined;
                         if (Number(swapOtherSlot) > 35) {
                             try {
-                                swapOtherContainerB = players[playerTargetB].getComponent(
-                                    "equippable"
-                                ) as EntityEquippableComponent;
+                                swapOtherContainerB = players[playerTargetB].getComponent("equippable") as EntityEquippableComponent;
                                 swapOtherSlot = Number(swapOtherSlot) - 36;
                                 if (mode == 1) {
                                     mode = 2;
                                 } else {
                                     mode = 3;
                                 }
-                                itemB = swapOtherContainerB
-                                    .getEquipment(
-                                        equipmentPlayerSlotsList[Number(swapOtherSlot)]
-                                    )
-                                    .clone();
+                                itemB = swapOtherContainerB.getEquipment(equipmentPlayerSlotsList[Number(swapOtherSlot)]).clone();
                             } catch (e) {
                                 if (Boolean(debug2) == true) {
                                     console.error(e, e.stack);
@@ -737,26 +568,19 @@ try{ durability2.damage = Number(10); } catch(e){if (Boolean(debug2) == true) { 
                         }
                         switch (swapOtherContainerType) {
                             case 4:
-                                swapOtherContainerB =
-                                    swapOtherContainerBlockB.getComponent(
-                                        "inventory"
-                                    ) as BlockInventoryComponent;
+                                swapOtherContainerB = swapOtherContainerBlockB.getComponent("inventory") as BlockInventoryComponent;
                                 break;
                         }
                         try {
                             if (itemB == undefined) {
-                                itemB = swapOtherContainerB.container
-                                    .getItem(Number(swapOtherSlot))
-                                    .clone();
+                                itemB = swapOtherContainerB.container.getItem(Number(swapOtherSlot)).clone();
                             }
                         } catch (e) {
                             console.error(e, e.stack);
                         }
                         try {
                             if (itemA == undefined) {
-                                itemA = swapContainerB.container
-                                    .getItem(Number(swapSlot))
-                                    .clone();
+                                itemA = swapContainerB.container.getItem(Number(swapSlot)).clone();
                             }
                         } catch (e) {
                             console.error(e, e.stack);
@@ -765,11 +589,7 @@ try{ durability2.damage = Number(10); } catch(e){if (Boolean(debug2) == true) { 
                             case 0:
                                 console.warn("Mode: 0");
                                 try {
-                                    swapContainerB.container.swapItems(
-                                        Number(swapSlot),
-                                        Number(swapOtherSlot),
-                                        swapOtherContainerB
-                                    );
+                                    swapContainerB.container.swapItems(Number(swapSlot), Number(swapOtherSlot), swapOtherContainerB);
                                 } catch (e) {
                                     console.error(e, e.stack);
                                 }
@@ -777,18 +597,12 @@ try{ durability2.damage = Number(10); } catch(e){if (Boolean(debug2) == true) { 
                             case 1:
                                 console.warn("Mode: 1");
                                 try {
-                                    swapContainerB.setEquipment(
-                                        equipmentPlayerSlotsList[Number(swapOtherSlot)],
-                                        itemB
-                                    );
+                                    swapContainerB.setEquipment(equipmentPlayerSlotsList[Number(swapOtherSlot)], itemB);
                                 } catch (e) {
                                     console.error(e, e.stack);
                                 }
                                 try {
-                                    swapOtherContainerB.container.setItem(
-                                        Number(swapOtherSlot),
-                                        itemA
-                                    );
+                                    swapOtherContainerB.container.setItem(Number(swapOtherSlot), itemA);
                                 } catch (e) {
                                     console.error(e, e.stack);
                                 }
@@ -796,18 +610,12 @@ try{ durability2.damage = Number(10); } catch(e){if (Boolean(debug2) == true) { 
                             case 3:
                                 console.warn("Mode: 3");
                                 try {
-                                    swapOtherContainerB.setEquipment(
-                                        equipmentPlayerSlotsList[Number(swapOtherSlot)],
-                                        itemA
-                                    );
+                                    swapOtherContainerB.setEquipment(equipmentPlayerSlotsList[Number(swapOtherSlot)], itemA);
                                 } catch (e) {
                                     console.error(e, e.stack);
                                 }
                                 try {
-                                    swapContainerB.container.setItem(
-                                        Number(swapSlot),
-                                        itemB
-                                    );
+                                    swapContainerB.container.setItem(Number(swapSlot), itemB);
                                 } catch (e) {
                                     console.error(e, e.stack);
                                 }
@@ -815,18 +623,12 @@ try{ durability2.damage = Number(10); } catch(e){if (Boolean(debug2) == true) { 
                             case 2:
                                 console.warn("Mode: 2");
                                 try {
-                                    swapContainerB.setEquipment(
-                                        equipmentPlayerSlotsList[Number(swapSlot)],
-                                        itemA
-                                    );
+                                    swapContainerB.setEquipment(equipmentPlayerSlotsList[Number(swapSlot)], itemA);
                                 } catch (e) {
                                     console.error(e, e.stack);
                                 }
                                 try {
-                                    swapOtherContainerB.setEquipment(
-                                        equipmentPlayerSlotsList[Number(swapOtherSlot)],
-                                        itemB
-                                    );
+                                    swapOtherContainerB.setEquipment(equipmentPlayerSlotsList[Number(swapOtherSlot)], itemB);
                                 } catch (e) {
                                     console.error(e, e.stack);
                                 }
@@ -841,40 +643,25 @@ try{ durability2.damage = Number(10); } catch(e){if (Boolean(debug2) == true) { 
                         transferFromContainerB = players[Number(transferFromContainer)].getComponent("inventory") as EntityInventoryComponent;
                         switch (transferFromContainerType) {
                             case 4:
-                                transferFromContainerB =
-                                    transferFromContainerBlockB.getComponent(
-                                        "inventory"
-                                    ) as BlockInventoryComponent;
+                                transferFromContainerB = transferFromContainerBlockB.getComponent("inventory") as BlockInventoryComponent;
                                 break;
                         }
                         let transferToContainerB: any;
                         transferToContainerB = players[Number(transferToContainer)].getComponent("inventory") as EntityInventoryComponent;
                         switch (transferToContainerType) {
                             case 4:
-                                transferToContainerB =
-                                    transferToContainerBlockB.getComponent(
-                                        "inventory"
-                                    ) as BlockInventoryComponent;
+                                transferToContainerB = transferToContainerBlockB.getComponent("inventory") as BlockInventoryComponent;
                                 break;
                         }
                         try {
-                            transferFromContainerB.container.transferItem(
-                                Number(transferFromSlot),
-                                transferToContainerB.container
-                            );
+                            transferFromContainerB.container.transferItem(Number(transferFromSlot), transferToContainerB.container);
                         } catch (e) {
                             console.error(e, e.stack);
                         }
                     }
                     if (Boolean(debug) == true) {
-                        console.warn(
-                            "Form Values",
-                            (r as ModalFormResponse).formValues
-                        );
-                        console.warn([
-                            "Item Components: ",
-                            item.getComponents(),
-                        ]);
+                        console.warn("Form Values", (r as ModalFormResponse).formValues);
+                        console.warn(["Item Components: ", item.getComponents()]);
                         console.warn(item.getTags());
                         console.warn(players);
                         console.warn(players[0]);
@@ -883,9 +670,6 @@ try{ durability2.damage = Number(10); } catch(e){if (Boolean(debug2) == true) { 
         console.error(e, e.stack)};
     try {console.warn(item.getCanPlaceOn());} catch(e){
         console.error(e, e.stack)};*/
-
-
-
 
                         console.warn(item.isStackable);
                         console.warn(item.maxAmount);
@@ -899,43 +683,27 @@ try{ durability2.damage = Number(10); } catch(e){if (Boolean(debug2) == true) { 
                             console.error(e, e.stack);
                         }
                         try {
-                            console.warn([
-                                "Damage Chance: ",
-                                durability.getDamageChance(),
-                            ]);
+                            console.warn(["Damage Chance: ", durability.getDamageChance()]);
                         } catch (e) {
                             console.error(e, e.stack);
                         }
                         try {
-                            console.warn([
-                                "Damage Range: ",
-                                durability.getDamageChanceRange(),
-                            ]);
+                            console.warn(["Damage Range: ", durability.getDamageChanceRange()]);
                         } catch (e) {
                             console.error(e, e.stack);
                         }
                         try {
-                            console.warn([
-                                "Max Durability: ",
-                                durability.maxDurability,
-                            ]);
+                            console.warn(["Max Durability: ", durability.maxDurability]);
                         } catch (e) {
                             console.error(e, e.stack);
                         }
                         let componentList = [item.getComponents()[0].typeId];
                         for (const index in players) {
                             if (Number(index) != 0) {
-                                componentList = String([
-                                    String(componentList),
-                                    item.getComponents()[index].typeId,
-                                ]).split(",");
+                                componentList = String([String(componentList), item.getComponents()[index].typeId]).split(",");
                             }
                         }
-                        console.warn(
-                            String([
-                                "Item Components: " + String(componentList),
-                            ])
-                        );
+                        console.warn(String(["Item Components: " + String(componentList)]));
                     }
 
                     // Do something

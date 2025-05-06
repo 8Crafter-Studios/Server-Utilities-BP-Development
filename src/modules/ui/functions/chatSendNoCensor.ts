@@ -18,7 +18,7 @@ export function chatSendNoCensor(
         form.dropdown(
             "As Player",
             playerList.map((p) => p.name),
-            playerList.indexOf(sourceEntity as Player)
+            { defaultValueIndex: playerList.indexOf(sourceEntity as Player) }
         );
         form.submitButton("Send");
         forceShow(form, sourceEntity as any)

@@ -116,8 +116,11 @@ export async function managePlayers(
     }
     const displayPlayersB: [online: savedPlayer[], offline: savedPlayer[], banned: savedPlayer[]] = [[], [], []];
     displayPlayersB[0] = displayPlayers[0].slice(page * maxplayersperpage, (page + 1) * maxplayersperpage);
-    displayPlayersB[1] = displayPlayers[1].slice(page * maxplayersperpage, Math.max(0, ((page + 1) * maxplayersperpage) - displayPlayersB[0].length));
-    displayPlayersB[2] = displayPlayers[2].slice(page * maxplayersperpage, Math.max(0, (page + 1) * maxplayersperpage - (displayPlayersB[0].length + displayPlayersB[1].length)));
+    displayPlayersB[1] = displayPlayers[1].slice(page * maxplayersperpage, Math.max(0, (page + 1) * maxplayersperpage - displayPlayersB[0].length));
+    displayPlayersB[2] = displayPlayers[2].slice(
+        page * maxplayersperpage,
+        Math.max(0, (page + 1) * maxplayersperpage - (displayPlayersB[0].length + displayPlayersB[1].length))
+    );
 
     const numsavedplayers = displayPlayers[0].length + displayPlayers[1].length + displayPlayers[2].length;
     const numonlinesavedplayers = displayPlayers[0].length;
@@ -173,37 +176,43 @@ export async function managePlayers(
     form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
     form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
     form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Refresh", "textures/ui/refresh_hover");
-    return await form.forceShow(player)
+    return await form
+        .forceShow(player)
         .then(async (ra) => {
             let r = ra as ActionFormResponse;
             if (r.canceled) return 1;
             switch (r.selection) {
-                case 0:
-                    {
-                        const rb = await tryget(
-                            async () =>
-                                await new ModalFormData()
-                                    .title("Search")
-                                    .textField("", "Search", search?.value ?? "")
-                                    .toggle("Case Sensitive", search?.caseSensitive ?? false)
-                                    .toggle("Search Player Names", search?.searchNames ?? true)
-                                    .toggle("Search Player IDs", search?.searchIds ?? true)
-                                    .toggle("Search Last Online Dates", search?.searchLastOnlineDates ?? false)
-                                    .toggle("Search Last Online Times", search?.searchLastOnlineTimes ?? false)
-                                    .submitButton("Search")
-                                    .forceShow(player)
-                        );
-                        if (!!!rb || rb?.canceled == true) {
-                            return await managePlayers(player, page, maxplayersperpage, search, displayPlayers);
-                        }
-                        return await managePlayers(player, undefined, maxplayersperpage, {
+                case 0: {
+                    const rb = await tryget(
+                        async () =>
+                            await new ModalFormData()
+                                .title("Search")
+                                .textField("", "Search", { defaultValue: search?.value ?? "" })
+                                .toggle("Case Sensitive", { defaultValue: search?.caseSensitive ?? false })
+                                .toggle("Search Player Names", { defaultValue: search?.searchNames ?? true })
+                                .toggle("Search Player IDs", { defaultValue: search?.searchIds ?? true })
+                                .toggle("Search Last Online Dates", { defaultValue: search?.searchLastOnlineDates ?? false })
+                                .toggle("Search Last Online Times", { defaultValue: search?.searchLastOnlineTimes ?? false })
+                                .submitButton("Search")
+                                .forceShow(player)
+                    );
+                    if (!!!rb || rb?.canceled == true) {
+                        return await managePlayers(player, page, maxplayersperpage, search, displayPlayers);
+                    }
+                    return await managePlayers(
+                        player,
+                        undefined,
+                        maxplayersperpage,
+                        {
                             value: rb.formValues[0] as string,
                             caseSensitive: rb.formValues[1] as boolean,
                             searchNames: rb.formValues[2] as boolean,
                             searchIds: rb.formValues[3] as boolean,
                             searchLastOnlineDates: rb.formValues[4] as boolean,
                             searchLastOnlineTimes: rb.formValues[5] as boolean,
-                        }, undefined); /*
+                        },
+                        undefined
+                    ); /*
             return await showMessage(player, undefined, "§cSorry, the search feature has not been implemented yet.", "Back", "Close").then(async r=>{
                 if(r.selection==0){
                     return await managePlayers(player, page, maxplayersperpage, search, displayPlayers);
@@ -211,7 +220,7 @@ export async function managePlayers(
                     return 0;
                 }
             })*/
-                    }
+                }
                 case 1:
                     return await managePlayers(player, Math.max(0, page - 1), maxplayersperpage, search, displayPlayers);
                 case 2: {

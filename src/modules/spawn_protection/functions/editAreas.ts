@@ -8,23 +8,19 @@ import { securityVariables } from "security/ultraSecurityModeUtils";
 import { showMessage } from "modules/utilities/functions/showMessage";
 
 /**
- * 
+ *
  * @todo Make this menu have pages.
- * @param player 
- * @param prefix 
- * @returns 
+ * @param player
+ * @param prefix
+ * @returns
  */
-export async function editAreas(player: Player, prefix: typeof protectedAreaCategories[number]): Promise<0 | 1> {
+export async function editAreas(player: Player, prefix: (typeof protectedAreaCategories)[number]): Promise<0 | 1> {
     if (arguments.length !== 1) {
-        throw new TypeError(
-            `Incorrect number of arguments to function. Expected 1, received ${arguments.length}.`
-        );
+        throw new TypeError(`Incorrect number of arguments to function. Expected 1, received ${arguments.length}.`);
     }
     if (!(player instanceof Player)) {
         throw new TypeError(
-            "Invalid Player. Function argument [0] (player) expected an instance of the Player class, but instead got " +
-                getDetailedType(player) +
-                "."
+            "Invalid Player. Function argument [0] (player) expected an instance of the Player class, but instead got " + getDetailedType(player) + "."
         );
     }
     if (securityVariables.ultraSecurityModeEnabled) {
@@ -57,7 +53,7 @@ export async function editAreas(player: Player, prefix: typeof protectedAreaCate
         );
         // b[i] = String(world.getDynamicProperty("v2:" + prefix + ":" + a.id));
     });
-    if(areas.length === 0){
+    if (areas.length === 0) {
         form1234.body("No areas in this built-in category were found.");
     }
     form1234.button(customFormUICodes.action.buttons.positions.main_only + "Add New", /*"textures/ui/check_mark"*/ "textures/ui/color_plus");
@@ -67,23 +63,27 @@ export async function editAreas(player: Player, prefix: typeof protectedAreaCate
     form1234.title(customFormUICodes.action.titles.formStyles.medium + prefix);
     return await forceShow(form1234, player).then(async (t) => {
         if (t.canceled) return 1;
-        switch (
-                (!!areas[t.selection] ? "area" : undefined) ??
-                (["new", "back", "close", "refresh"] as const)[t.selection - areas.length]
-        ) {
+        switch ((!!areas[t.selection] ? "area" : undefined) ?? (["new", "back", "close", "refresh"] as const)[t.selection - areas.length]) {
             case "new":
                 form12345.title("New Protected Area");
                 form12345.textField("Identifier Name", "myArea");
                 form12345.textField("From", "x1, y1, z1");
                 form12345.textField("To", "x2, y2, z2");
-                form12345.dropdown("Dimension", ["Overworld", "Nether", "The End"], dimensions.indexOf(player.dimension));
+                form12345.dropdown("Dimension", ["Overworld", "Nether", "The End"], { defaultValueIndex: dimensions.indexOf(player.dimension) });
                 form12345.dropdown("Mode", ["Protection", "Anti-Protection"]);
                 form12345.textField("Icon Path (Optional)", "text");
                 form12345.submitButton("Add");
 
                 return await forceShow(form12345, player).then(async (q) => {
                     if (q.canceled) return await editAreas(player, prefix);
-                    const [id, from, to, dimension, mode, icon_path] = (q as ModalFormResponse).formValues as [id: string, from: string, to: string, dimension: 0 | 1 | 2, mode: 0 | 1, icon_path: string];
+                    const [id, from, to, dimension, mode, icon_path] = (q as ModalFormResponse).formValues as [
+                        id: string,
+                        from: string,
+                        to: string,
+                        dimension: 0 | 1 | 2,
+                        mode: 0 | 1,
+                        icon_path: string
+                    ];
                     const newValue = {
                         from: {
                             x: Number(String(from).split(",")[0]),
@@ -97,18 +97,15 @@ export async function editAreas(player: Player, prefix: typeof protectedAreaCate
                         },
                         dimension: dimension,
                         mode: mode,
-                        icon_path: (icon_path ?? "") == "" ? undefined : icon_path as string,
+                        icon_path: (icon_path ?? "") == "" ? undefined : (icon_path as string),
                     };
-                    world.setDynamicProperty(
-                        "v2:" + prefix + id,
-                        JSON.stringify(newValue)
-                    );
-                    ProtectedAreas.areas[prefix][dimensionse[dimension]].push({ id, ...newValue});
+                    world.setDynamicProperty("v2:" + prefix + id, JSON.stringify(newValue));
+                    ProtectedAreas.areas[prefix][dimensionse[dimension]].push({ id, ...newValue });
                     return await editAreas(player, prefix);
                 });
-            case "back": /*
+            case "back" /*
     editPistonExtensionAreas(player)*/ /*
-            screenForm123(); */
+            screenForm123(); */:
                 return 1;
             case "close":
                 return 0;
@@ -134,11 +131,11 @@ export async function editAreas(player: Player, prefix: typeof protectedAreaCate
                         case 0: {
                             const defaults = areas[Number((t as ActionFormResponse).selection)];
                             form12345.title("Edit Protected Area");
-                            form123456.textField("From", "x1, y1, z1", `${defaults.from.x}, ${defaults.from.y}, ${defaults.from.z}`);
-                            form123456.textField("To", "x2, y2, z2", `${defaults.to.x}, ${defaults.to.y}, ${defaults.to.z}`);
-                            form123456.dropdown("Dimension", ["Overworld", "Nether", "The End"], defaults.dimension);
-                            form123456.dropdown("Mode", ["Protection", "Anti-Protection"], defaults.mode);
-                            form123456.textField("Icon Path (Optional)", "text", defaults.icon_path ?? "");
+                            form123456.textField("From", "x1, y1, z1", { defaultValue: `${defaults.from.x}, ${defaults.from.y}, ${defaults.from.z}` });
+                            form123456.textField("To", "x2, y2, z2", { defaultValue: `${defaults.to.x}, ${defaults.to.y}, ${defaults.to.z}` });
+                            form123456.dropdown("Dimension", ["Overworld", "Nether", "The End"], { defaultValueIndex: defaults.dimension });
+                            form123456.dropdown("Mode", ["Protection", "Anti-Protection"], { defaultValueIndex: defaults.mode });
+                            form123456.textField("Icon Path (Optional)", "text", { defaultValue: defaults.icon_path ?? "" });
                             form123456.submitButton("Save");
 
                             return await forceShow(form123456, player).then(async (q) => {
@@ -157,30 +154,39 @@ export async function editAreas(player: Player, prefix: typeof protectedAreaCate
                                     },
                                     dimension: dimension as 0 | 1 | 2,
                                     mode: mode as 0 | 1,
-                                    icon_path: (icon_path ?? "") == "" ? undefined : icon_path as string,
+                                    icon_path: (icon_path ?? "") == "" ? undefined : (icon_path as string),
                                 };
-                                if(defaults.dimension === dimension){
-                                    ProtectedAreas.areas[prefix][dimensionse[dimension as number]].splice(ProtectedAreas.areas[prefix][dimensionse[dimension as number]].findIndex(a=>a.id === defaults.id), 1, {
-                                        id: defaults.id,
-                                        ...newValue,
-                                    });
-                                }else{
-                                    ProtectedAreas.areas[prefix][dimensionse[defaults.dimension]].splice(ProtectedAreas.areas[prefix][dimensionse[defaults.dimension as number]].findIndex(a=>a.id === defaults.id), 1);
+                                if (defaults.dimension === dimension) {
+                                    ProtectedAreas.areas[prefix][dimensionse[dimension as number]].splice(
+                                        ProtectedAreas.areas[prefix][dimensionse[dimension as number]].findIndex((a) => a.id === defaults.id),
+                                        1,
+                                        {
+                                            id: defaults.id,
+                                            ...newValue,
+                                        }
+                                    );
+                                } else {
+                                    ProtectedAreas.areas[prefix][dimensionse[defaults.dimension]].splice(
+                                        ProtectedAreas.areas[prefix][dimensionse[defaults.dimension as number]].findIndex((a) => a.id === defaults.id),
+                                        1
+                                    );
                                     ProtectedAreas.areas[prefix][dimensionse[dimension as number]].push({
                                         id: defaults.id,
                                         ...newValue,
                                     });
                                 }
-                                world.setDynamicProperty(
-                                    "v2:" + prefix + ":" + defaults.id,
-                                    JSON.stringify(newValue)
-                                );
+                                world.setDynamicProperty("v2:" + prefix + ":" + defaults.id, JSON.stringify(newValue));
                                 return await editAreas(player, prefix);
                             });
                         }
                         case 1:
                             world.setDynamicProperty(areas[t.selection].id, undefined);
-                            ProtectedAreas.areas[prefix][dimensionse[areas[t.selection].dimension]].splice(ProtectedAreas.areas[prefix][dimensionse[areas[t.selection].dimension as number]].findIndex(a=>a.id === areas[t.selection].id), 1);
+                            ProtectedAreas.areas[prefix][dimensionse[areas[t.selection].dimension]].splice(
+                                ProtectedAreas.areas[prefix][dimensionse[areas[t.selection].dimension as number]].findIndex(
+                                    (a) => a.id === areas[t.selection].id
+                                ),
+                                1
+                            );
                             return await editAreas(player, prefix);
                         case 2:
                             return await editAreas(player, prefix);

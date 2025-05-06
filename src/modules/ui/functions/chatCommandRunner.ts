@@ -5,12 +5,8 @@ import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPl
 import { chatCommands } from "modules/commands/functions/chatCommands";
 import { customFormUICodes } from "../constants/customFormUICodes";
 
-export function chatCommandRunner(
-    sourceEntitya: Entity | executeCommandPlayerW | Player
-) {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW
-        ? sourceEntitya.player
-        : sourceEntitya;
+export function chatCommandRunner(sourceEntitya: Entity | executeCommandPlayerW | Player) {
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
     system.run(() => {
         let form = new ModalFormData();
         let playerList = world.getAllPlayers();
@@ -19,7 +15,7 @@ export function chatCommandRunner(
         form.dropdown(
             "As Player",
             playerList.map((p) => p.name),
-            playerList.indexOf(sourceEntity as Player)
+            { defaultValueIndex: playerList.indexOf(sourceEntity as Player) }
         );
         form.submitButton("Run Chat Command");
         forceShow(form, sourceEntity as any)
@@ -33,20 +29,17 @@ export function chatCommandRunner(
 
                 chatCommands({
                     returnBeforeChatSend: false,
-                    player: playerList[asPlayer as number] ??
-                        (sourceEntity as Player),
+                    player: playerList[asPlayer as number] ?? (sourceEntity as Player),
                     newMessage: message as string,
                     event: {
                         cancel: false,
                         message: message as string,
-                        sender: playerList[asPlayer as number] ??
-                            (sourceEntity as Player),
+                        sender: playerList[asPlayer as number] ?? (sourceEntity as Player),
                     },
                     eventData: {
                         cancel: false,
                         message: message as string,
-                        sender: playerList[asPlayer as number] ??
-                            (sourceEntity as Player),
+                        sender: playerList[asPlayer as number] ?? (sourceEntity as Player),
                     },
                     fromExecute: true,
                 });
@@ -61,9 +54,4 @@ export function chatCommandRunner(
 catch(e) {
     console.error(e, e.stack);
 };*/
-
-
-
-
-
 }

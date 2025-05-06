@@ -138,14 +138,14 @@ export async function manageWarps(sourceEntity: loosePlayerType): Promise<0 | 1>
                         case "edit": {
                             const r = await new ModalFormData()
                                 .title(customFormUICodes.modal.titles.formStyles.medium + "Edit Warp")
-                                .textField(`Warp Display Name`, "Warp Name", warp.displayName)
-                                .textField(`Warp Location. ex. 172.41 76 29.5`, "x y z", vTStr(warp.location))
+                                .textField(`Warp Display Name`, "Warp Name", { defaultValue: warp.displayName })
+                                .textField(`Warp Location. ex. 172.41 76 29.5`, "x y z", { defaultValue: vTStr(warp.location) })
                                 .dropdown(
                                     "Warp Dimension",
                                     dimensionsd.map((d) => dimensionTypeDisplayFormattingE[d]),
-                                    dimensionsd.indexOf(warp.dimension)
+                                    { defaultValueIndex: dimensionsd.indexOf(warp.dimension) }
                                 )
-                                .textField(`Warp Button Icon Path. (Optional)`, "textures/items/ender_pearl", warp.icon)
+                                .textField(`Warp Button Icon Path. (Optional)`, "textures/items/ender_pearl", { defaultValue: warp.icon })
                                 .submitButton("Save Changes")
                                 .forceShow(player);
                             if (r.canceled) {

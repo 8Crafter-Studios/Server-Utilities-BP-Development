@@ -157,8 +157,8 @@ export async function manageEventSubscriptions_event<EventTypeID extends Subscri
                             async () =>
                                 await new ModalFormData()
                                     .title("Search")
-                                    .textField("", "Search", search?.value ?? "")
-                                    .toggle("Case Sensitive", search?.caseSensitive ?? false)
+                                    .textField("", "Search", { defaultValue: search?.value ?? "" })
+                                    .toggle("Case Sensitive", { defaultValue: search?.caseSensitive ?? false })
                                     .submitButton("Search")
                                     .forceShow(player)
                         );
@@ -269,10 +269,10 @@ export async function manageEventSubscriptions_event_newSubscription<EventTypeID
     };
     while (true) {
         const form = new ModalFormData();
-        form.textField("Display Name", "string", defaultOptions.displayName);
-        form.textField("Icon Path", "texture path", defaultOptions.iconPath);
-        form.textField("Code\nex. (event)=>{event.cancel=true}", "JavaScript", defaultOptions.code);
-        form.toggle("Enabled", defaultOptions.enabled);
+        form.textField("Display Name", "string", { defaultValue: defaultOptions.displayName });
+        form.textField("Icon Path", "texture path", { defaultValue: defaultOptions.iconPath });
+        form.textField("Code\nex. (event)=>{event.cancel=true}", "JavaScript", { defaultValue: defaultOptions.code });
+        form.toggle("Enabled", { defaultValue: defaultOptions.enabled });
         form.submitButton("Subscribe");
         const r = await form.forceShow(player);
         if (r.canceled) return 1 as const;
@@ -562,14 +562,14 @@ export async function manageEventSubscriptions_event_subscription_settings<Event
 ): Promise<1> {
     const player = extractPlayerFromLooseEntityType(sourceEntity);
     const form = new ModalFormData();
-    form.textField("Display Name", "string", subscription.data.metadata.displayName);
-    form.textField("Icon Path", "texture path", subscription.data.metadata.displayIcon);
+    form.textField("Display Name", "string", { defaultValue: subscription.data.metadata.displayName });
+    form.textField("Icon Path", "texture path", { defaultValue: subscription.data.metadata.displayIcon });
     form.submitButton("Save");
     const r = await form.forceShow(player);
     if (r.canceled) return 1 as const;
     let modified: boolean = false;
     if ((r.formValues![0] as string) !== "") {
-        if (subscription.data.metadata.displayName !== r.formValues?.[0] as string) {
+        if (subscription.data.metadata.displayName !== (r.formValues?.[0] as string)) {
             subscription.data.metadata.displayName = r.formValues?.[0] as string;
             modified = true;
         }
@@ -580,7 +580,7 @@ export async function manageEventSubscriptions_event_subscription_settings<Event
         }
     }
     if ((r.formValues![1] as string) !== "") {
-        if (subscription.data.metadata.displayIcon !== r.formValues?.[1] as string) {
+        if (subscription.data.metadata.displayIcon !== (r.formValues?.[1] as string)) {
             subscription.data.metadata.displayIcon = r.formValues?.[1] as string;
             modified = true;
         }
@@ -612,7 +612,7 @@ export async function manageEventSubscriptions_event_subscription_editCode<Event
 ): Promise<0 | 1> {
     const player = extractPlayerFromLooseEntityType(sourceEntity);
     const form = new ModalFormData();
-    form.textField("Code", "JavaScript", subscription.data.code);
+    form.textField("Code", "JavaScript", { defaultValue: subscription.data.code });
     form.submitButton("Save");
     const r = await form.forceShow(player);
     if (r.canceled) return 1 as const;

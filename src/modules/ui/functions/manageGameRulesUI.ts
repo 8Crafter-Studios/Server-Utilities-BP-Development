@@ -8,13 +8,13 @@ import { customFormUICodes } from "../constants/customFormUICodes";
 
 /**
  * Manages the game rules UI for a given source entity.
- * 
+ *
  * @param sourceEntitya - The source entity which can be of type Entity, executeCommandPlayerW, or Player.
  * @returns A promise that resolves to:
  * - `1` if the operation was successful or if the user canceled the form.
  * - `0` if the user does not have permission to access the menu.
  * - `-2` if an error occurred during the operation.
- * 
+ *
  * The function performs the following steps:
  * 1. Checks if ultra security mode is enabled.
  * 2. If enabled, verifies if the player has the required permission to access the settings.
@@ -24,18 +24,20 @@ import { customFormUICodes } from "../constants/customFormUICodes";
  * 6. Submits the form and updates the game rules based on user input.
  * 7. Handles any errors that occur during the form submission and updates.
  */
-export async function manageGameRulesUI(
-    sourceEntitya: Entity | executeCommandPlayerW | Player
-): Promise<1 | -2 | 0> {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW
-        ? sourceEntitya.player
-        : sourceEntitya;
+export async function manageGameRulesUI(sourceEntitya: Entity | executeCommandPlayerW | Player): Promise<1 | -2 | 0> {
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
     if (securityVariables.ultraSecurityModeEnabled) {
-        if(securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.accessSettings") == false){
-            const r = await showMessage(sourceEntity as Player, "Access Denied (403)", "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.accessSettings", "Go Back", "Close");
-            if(r.canceled || r.selection == 0){
+        if (securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.accessSettings") == false) {
+            const r = await showMessage(
+                sourceEntity as Player,
+                "Access Denied (403)",
+                "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.accessSettings",
+                "Go Back",
+                "Close"
+            );
+            if (r.canceled || r.selection == 0) {
                 return 1;
-            }else{
+            } else {
                 return 0;
             }
         }
@@ -44,16 +46,17 @@ export async function manageGameRulesUI(
     const ruleNames = Object.getOwnPropertyNames(GameRules.prototype)
         .filter((r) => r != "constructor")
         .sort(
-            (a, b) => -+(typeof world.gameRules[a as keyof typeof world.gameRules] != typeof world.gameRules[b as keyof typeof world.gameRules]) *
+            (a, b) =>
+                -+(typeof world.gameRules[a as keyof typeof world.gameRules] != typeof world.gameRules[b as keyof typeof world.gameRules]) *
                 (2 * +(typeof world.gameRules[a as keyof typeof world.gameRules] == "number") - 1)
         );
     const ruleValues = world.gameRules;
     form2.title(customFormUICodes.modal.titles.formStyles.fullscreen + "Manage Game Rules");
     ruleNames.forEach((r) => {
         if (typeof ruleValues[r as keyof typeof world.gameRules] == "number") {
-            form2.textField(r, "number", String(ruleValues[r as keyof typeof world.gameRules]));
+            form2.textField(r, "number", { defaultValue: String(ruleValues[r as keyof typeof world.gameRules]) });
         } else {
-            form2.toggle(r, Boolean(ruleValues[r as keyof typeof world.gameRules]));
+            form2.toggle(r, { defaultValue: Boolean(ruleValues[r as keyof typeof world.gameRules]) });
         }
     });
     form2.submitButton("Save");
@@ -65,9 +68,7 @@ export async function manageGameRulesUI(
                 t.formValues.forEach((v, i) => {
                     if (ruleValues[ruleNames[i] as keyof typeof world.gameRules] != v) {
                         (ruleValues[ruleNames[i] as keyof typeof world.gameRules] as number | boolean) =
-                            typeof ruleValues[ruleNames[i] as keyof typeof world.gameRules] == "number"
-                                ? Number(v)
-                                : v as boolean;
+                            typeof ruleValues[ruleNames[i] as keyof typeof world.gameRules] == "number" ? Number(v) : (v as boolean);
                     }
                 });
             } catch (e) {

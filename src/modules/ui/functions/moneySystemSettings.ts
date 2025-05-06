@@ -36,12 +36,12 @@ export async function moneySystemSettings(
     form.title(customFormUICodes.modal.titles.formStyles.medium + "Money System Settings");
     form.toggle(
         "§l§fUse Scoreboard-Based Money System§r§f\nWhether or not to use a scoreboard-based money system instead of a dynamic property-based one.\nEnabling this option will cause the money system to max out at the 32-bit integer limit (approximately 2.1 billion), but will allow for modifying a player's money with the /scoreboard command instead of having to use the main menu or use script eval.\nWhen this option is disabled the limit is 10^32767. So basically infinite.\nDefaults to false.",
-        config.moneySystem.useScoreboardBasedMoneySystem
+        { defaultValue: config.moneySystem.useScoreboardBasedMoneySystem }
     );
     form.textField(
         "§l§fScoreboard Name§r§f\nThe name of the scoreboard to use for the money system.\nDefaults to \"andexdb:money\".",
         "andexdb:money",
-        config.moneySystem.scoreboardName
+        { defaultValue: config.moneySystem.scoreboardName }
     );
     form.submitButton("Save");
     return await forceShow(form, sourceEntity as Player)

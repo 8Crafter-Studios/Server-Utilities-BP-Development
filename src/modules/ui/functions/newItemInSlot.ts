@@ -12,8 +12,8 @@ export function newItemInSlot(
         : sourceEntitya;
     let form = new ModalFormData();
     form.title("New Item");
-    form.textField("Item Type", "Item Id", "minecraft:grass_block");
-    form.textField("Count", "int", "1");
+    form.textField("Item Type", "Item Id", {defaultValue: "minecraft:grass_block"});
+    form.textField("Count", "int", {defaultValue: "1"});
     form.submitButton("Create Item");
     forceShow(form, sourceEntity as Player)
         .then((ra) => {

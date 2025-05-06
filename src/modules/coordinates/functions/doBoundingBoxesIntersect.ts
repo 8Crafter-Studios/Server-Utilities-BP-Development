@@ -1,6 +1,6 @@
-import type { BoundingBox } from "@minecraft/server";
+import type { BlockBoundingBox } from "@minecraft/server";
 
-export function doBoundingBoxesIntersect(box1: BoundingBox, box2: BoundingBox) {
+export function doBoundingBoxesIntersect(box1: BlockBoundingBox, box2: BlockBoundingBox) {
     // Check for intersection along each axis
     const intersectX = box1.min.x <= box2.max.x && box1.max.x >= box2.min.x;
     const intersectY = box1.min.y <= box2.max.y && box1.max.y >= box2.min.y;

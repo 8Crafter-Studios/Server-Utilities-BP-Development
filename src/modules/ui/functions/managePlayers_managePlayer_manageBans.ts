@@ -94,7 +94,7 @@ export async function managePlayers_managePlayer_manageBans(
                     form5.textField(
                         "Reason",
                         "JavaScript Object ex. `Date:\n ${new\n Date(Date.now()).to\nLoca\nleString()}`",
-                        '"§cYOU HAVE BEEN BANNED BY THE BAN HAMMER\\nBanned By: {bannedByName}\\nBanned Until: {unbanDate}\\nBanned On: {banDate}\\nTime Remaining: {timeRemaining}"'
+                        { defaultValue: '"§cYOU HAVE BEEN BANNED BY THE BAN HAMMER\\nBanned By: {bannedByName}\\nBanned Until: {unbanDate}\\nBanned On: {banDate}\\nTime Remaining: {timeRemaining}"' }
                     );
                     form5.submitButton("Ban");
                     return await forceShow(form5, sourceEntity as Player)
@@ -151,7 +151,7 @@ export async function managePlayers_managePlayer_manageBans(
                     form6.textField(
                         "Reason",
                         "JavaScript Object ex. `Date:\n ${new\n Date(Date.now()).to\nLoca\nleString()}`",
-                        '"§cYOU HAVE BEEN BANNED BY THE BAN HAMMER\\nBanned By: {bannedByName}\\nBanned Until: {unbanDate}\\nBanned On: {banDate}\\nTime Remaining: {timeRemaining}"'
+                        { defaultValue: '"§cYOU HAVE BEEN BANNED BY THE BAN HAMMER\\nBanned By: {bannedByName}\\nBanned Until: {unbanDate}\\nBanned On: {banDate}\\nTime Remaining: {timeRemaining}"' }
                     );
                     form6.submitButton("Ban");
                     return await forceShow(form6, sourceEntity as Player)

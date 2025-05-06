@@ -83,7 +83,7 @@ export interface playerShopConfig {
      * The name of the player who owns this player shop.
      */
     playerName?: string;
-};
+}
 
 /**
  *
@@ -622,13 +622,10 @@ ${
             }
             const form = new ModalFormData();
             form.title(customFormUICodes.modal.titles.formStyles.medium + "Buy " + item.title);
-            form.slider(
-                `§a${item.title}\n§r§gPrice: ${item.price}\n\n§fHow many would you like to buy?`,
-                0,
-                item.remainingStock ?? 64,
-                item.step ?? 1,
-                item.step ?? 1
-            );
+            form.slider(`§a${item.title}\n§r§gPrice: ${item.price}\n\n§fHow many would you like to buy?`, 0, item.remainingStock ?? 64, {
+                valueStep: item.step ?? 1,
+                defaultValue: item.step ?? 1,
+            });
             const r = await form.forceShow(player);
             if (r.canceled == true || (r.formValues?.[0] as number) == 0) {
                 return 1;
@@ -952,8 +949,7 @@ ${
                 }\n§fHow many would you like to sell?`,
                 0,
                 Math.min(item.amountWanted ?? 64, 64 * (item.step ?? 1)),
-                Math.min(item.step ?? 1, item.amountWanted),
-                Math.min(item.step ?? 1, item.amountWanted)
+                { valueStep: Math.min(item.step ?? 1, item.amountWanted), defaultValue: Math.min(item.step ?? 1, item.amountWanted) }
             );
             const r = await form.forceShow(player);
             if (r.canceled == true || (r.formValues?.[0] as number) == 0) {
@@ -1242,32 +1238,32 @@ ${
             } catch {}
         }
     }
-/**
- * Opens the public shops selector interface for the player.
- *
- * @see {@link ServerShop.openPublicShopsSelector}
- * 
- * @param {loosePlayerType} sourceEntity - The player viewing the menu, can be an `Entity`, `executeCommandPlayerW`, or `Player`.
- * @param {boolean} [showBackButton=false] - Optional boolean to indicate if a back button should be displayed.
- * @returns {Promise<0 | 1>} A promise that resolves to `0` or `1` depending on the user's interaction:
- * - `0`: Indicates that the previous menu should be closed.
- * - `1`: Indicates that the previous menu should be re-opened.
- *
- * @remarks 
- * The function performs the following actions:
- * 1. Retrieves the player entity from the source entity.
- * 2. Asserts that the source entity is defined.
- * 3. Creates and configures an `ActionFormData` form with options for public player shops.
- * 4. Displays the form to the player and handles their selection:
- *    - `manageMyShops`: Opens the manage player shops interface.
- *    - `manageAllShops`: Opens the manage all shops interface (admin only).
- *    - `playerShopSystemSettings`: Opens the player shop system settings interface (admin only).
- *    - `back`: Returns `1`.
- *    - `close`: Returns `0`.
- *    - `refresh`: Refreshes the public shops selector interface.
- *    - `shop`: Opens the selected shop interface.
- * 5. Handles errors by logging and showing a message to the player.
- */
+    /**
+     * Opens the public shops selector interface for the player.
+     *
+     * @see {@link ServerShop.openPublicShopsSelector}
+     *
+     * @param {loosePlayerType} sourceEntity - The player viewing the menu, can be an `Entity`, `executeCommandPlayerW`, or `Player`.
+     * @param {boolean} [showBackButton=false] - Optional boolean to indicate if a back button should be displayed.
+     * @returns {Promise<0 | 1>} A promise that resolves to `0` or `1` depending on the user's interaction:
+     * - `0`: Indicates that the previous menu should be closed.
+     * - `1`: Indicates that the previous menu should be re-opened.
+     *
+     * @remarks
+     * The function performs the following actions:
+     * 1. Retrieves the player entity from the source entity.
+     * 2. Asserts that the source entity is defined.
+     * 3. Creates and configures an `ActionFormData` form with options for public player shops.
+     * 4. Displays the form to the player and handles their selection:
+     *    - `manageMyShops`: Opens the manage player shops interface.
+     *    - `manageAllShops`: Opens the manage all shops interface (admin only).
+     *    - `playerShopSystemSettings`: Opens the player shop system settings interface (admin only).
+     *    - `back`: Returns `1`.
+     *    - `close`: Returns `0`.
+     *    - `refresh`: Refreshes the public shops selector interface.
+     *    - `shop`: Opens the selected shop interface.
+     * 5. Handles errors by logging and showing a message to the player.
+     */
 
     static async openPublicShopsSelector(sourceEntity: loosePlayerType, showBackButton: boolean = false): Promise<0 | 1> {
         const player = extractPlayerFromLooseEntityType(sourceEntity);
@@ -1297,7 +1293,8 @@ ${
             form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Manage All Shops\n§cAdmins Only", "textures/ui/pencil_edit_icon");
             form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Player Shop System Settings\n§cAdmins Only", "textures/ui/icon_setting");
         }
-        return await form.forceShow(player)
+        return await form
+            .forceShow(player)
             .then(async (r) => {
                 if (r.canceled) return 1;
 
@@ -1346,14 +1343,17 @@ ${
             })
             .catch(async (e) => {
                 console.error(e, e.stack);
-                return (
-                    (await showMessage(player, "An Error occurred", `An error occurred: ${e}${e?.stack}`, "Back", "Close")).selection !== 1
-                ).toNumber();
+                return ((await showMessage(player, "An Error occurred", `An error occurred: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();
             });
     }
 }
 export class PlayerShopManager {
-    static playerShopItemTextureHints = ["textures/items/stick", "textures/blocks/gravel", "textures/items/diamond_pickaxe", "textures/blocks/reactor_core_stage_0"];
+    static playerShopItemTextureHints = [
+        "textures/items/stick",
+        "textures/blocks/gravel",
+        "textures/items/diamond_pickaxe",
+        "textures/blocks/reactor_core_stage_0",
+    ];
     static playerShopPageTextureHints = ["textures/ui/arrowRight"];
     static get playerShopItemTextureHint() {
         return this.playerShopItemTextureHints[Math.floor(Math.random() * this.playerShopItemTextureHints.length)];
@@ -1398,7 +1398,8 @@ export class PlayerShopManager {
         );
         form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
         form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
-        return await form.forceShow(sourceEntity as Player)
+        return await form
+            .forceShow(sourceEntity as Player)
             .then(async (r) => {
                 if (r.canceled) return 1;
 
@@ -1469,26 +1470,26 @@ export class PlayerShopManager {
         }
         let form = new ModalFormData();
         form.title(`Player Shop System Settings`);
-        form.toggle(`§l§fEnabled§r§f\nWhether or not the player shop system is enabled, default is false`, config.shopSystem.player.enabled);
+        form.toggle(`§l§fEnabled§r§f\nWhether or not the player shop system is enabled, default is false`, { defaultValue: config.shopSystem.player.enabled });
         form.toggle(
             `§l§fAllow Selling Slot Locked Items§r§f\nWhether or not players can sell items that are locked to a specific slot in their inventory, default is false`,
-            config.shopSystem.player.allowSellingLockInSlotItems
+            { defaultValue: config.shopSystem.player.allowSellingLockInSlotItems }
         );
-        form.toggle(
-            `§l§fAllow Selling Inventory Locked Items§r§f\nWhether or not players can sell items that are locked to inventory, default is false`,
-            config.shopSystem.player.allowSellingLockInInventoryItems
-        );
+        form.toggle(`§l§fAllow Selling Inventory Locked Items§r§f\nWhether or not players can sell items that are locked to inventory, default is false`, {
+            defaultValue: config.shopSystem.player.allowSellingLockInInventoryItems,
+        });
         form.toggle(
             `§l§fAllow Selling Keep On Death Items§r§f\nWhether or not players can sell items that have the keep on death property set to true, default is true`,
-            config.shopSystem.player.allowSellingKeepOnDeathItems
+            { defaultValue: config.shopSystem.player.allowSellingKeepOnDeathItems }
         );
         form.textField(
             `§l§fMax Shops Per Player§r§f\nThe maximum number of shops each player can have, setting it to -1 will result in there being no maximum, default is 5`,
             "5",
-            config.shopSystem.player.maxShopsPerPlayer.toString()
+            { defaultValue: config.shopSystem.player.maxShopsPerPlayer.toString() }
         );
         form.submitButton("Save");
-        return (await form.forceShow(sourceEntity as Player)
+        return (await form
+            .forceShow(sourceEntity as Player)
             .then((t) => {
                 if (t.canceled) {
                     return 1;
@@ -1534,7 +1535,8 @@ export class PlayerShopManager {
         form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
         form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
         form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Refresh", "textures/ui/refresh");
-        return await form.forceShow(sourceEntity as Player)
+        return await form
+            .forceShow(sourceEntity as Player)
             .then(async (r) => {
                 if (r.canceled) return 1;
 
@@ -1662,27 +1664,26 @@ export class PlayerShopManager {
         assertIsDefined(sourceEntity);
         let form = new ModalFormData();
         form.title(`New Shop`);
-        form.textField(`§l§fShop ID§r§c*§f\nThe ID of the shop`, "myShop", "myShop");
-        form.textField(
-            `§l§fButton Title§r§f\nThe title of the button for this shop.`,
-            `${(sourceEntity as Player).name ?? sourceEntity.nameTag}'s Shop`,
-            `${(sourceEntity as Player).name ?? sourceEntity.nameTag}'s Shop`
-        );
+        form.textField(`§l§fShop ID§r§c*§f\nThe ID of the shop`, "myShop", { defaultValue: "myShop" });
+        form.textField(`§l§fButton Title§r§f\nThe title of the button for this shop.`, `${(sourceEntity as Player).name ?? sourceEntity.nameTag}'s Shop`, {
+            defaultValue: `${(sourceEntity as Player).name ?? sourceEntity.nameTag}'s Shop`,
+        });
         form.textField(
             `§l§fPage Title§r§f\nThe title that shows at the top of the main page for this shop`,
             `${(sourceEntity as Player).name ?? sourceEntity.nameTag}'s Shop`,
-            `${(sourceEntity as Player).name ?? sourceEntity.nameTag}'s Shop`
+            { defaultValue: `${(sourceEntity as Player).name ?? sourceEntity.nameTag}'s Shop` }
         );
         form.textField(
             `§l§fPage Body Text§r§f\nThe message that shows at right above the list of buttons at the top of the main page for this shop`,
             `This is ${(sourceEntity as Player).name ?? sourceEntity.nameTag}'s shop.`,
-            `This is ${(sourceEntity as Player).name ?? sourceEntity.nameTag}'s shop.`
+            { defaultValue: `This is ${(sourceEntity as Player).name ?? sourceEntity.nameTag}'s shop.` }
         );
-        form.toggle(`§l§fIs Buy Shop§r§f\nWhether or not players can buy items in this shop, default is true`, true);
-        form.toggle(`§l§fIs Sell Shop§r§f\nWhether or not players can sell items in this shop, default is true`, true); /*
+        form.toggle(`§l§fIs Buy Shop§r§f\nWhether or not players can buy items in this shop, default is true`, { defaultValue: true });
+        form.toggle(`§l§fIs Sell Shop§r§f\nWhether or not players can sell items in this shop, default is true`, { defaultValue: true }); /*
         form2.toggle(`§l§fPublic Shop§r§f\nWhether or not this shop can be accessed by any player through the use of the \\viewplayershops command, default is true`, true)*/
         form.submitButton("Save");
-        return (await form.forceShow(sourceEntity as Player)
+        return (await form
+            .forceShow(sourceEntity as Player)
             .then(async (t) => {
                 if (t.canceled) {
                     return 1;
@@ -1725,23 +1726,22 @@ export class PlayerShopManager {
         assertIsDefined(sourceEntity);
         let form = new ModalFormData();
         form.title(`New Shop As Player`);
-        form.textField(`§l§fShop ID§r§c*§f\nThe ID of the shop`, "myShop", "myShop");
-        form.textField(
-            `§l§fButton Title§r§f\nThe title of the button for this shop\n§o§7Currently only shows up in the menu to edit the shops.`,
-            "My Shop",
-            "My Shop"
-        );
-        form.textField(`§l§fPage Title§r§f\nThe title that shows at the top of the main page for this shop`, "My Shop", "My Shop");
+        form.textField(`§l§fShop ID§r§c*§f\nThe ID of the shop`, "myShop", { defaultValue: "myShop" });
+        form.textField(`§l§fButton Title§r§f\nThe title of the button for this shop\n§o§7Currently only shows up in the menu to edit the shops.`, "My Shop", {
+            defaultValue: "My Shop",
+        });
+        form.textField(`§l§fPage Title§r§f\nThe title that shows at the top of the main page for this shop`, "My Shop", { defaultValue: "My Shop" });
         form.textField(
             `§l§fPage Body Text§r§f\nThe message that shows at right above the list of buttons at the top of the main page for this shop`,
             "This is my shop.",
-            "This is my shop."
+            { defaultValue: "This is my shop." }
         );
-        form.toggle(`§l§fIs Buy Shop§r§f\nWhether or not players can buy items in this shop, default is true`, true);
-        form.toggle(`§l§fIs Sell Shop§r§f\nWhether or not players can sell items in this shop, default is true`, true); /*
+        form.toggle(`§l§fIs Buy Shop§r§f\nWhether or not players can buy items in this shop, default is true`, { defaultValue: true });
+        form.toggle(`§l§fIs Sell Shop§r§f\nWhether or not players can sell items in this shop, default is true`, { defaultValue: true }); /*
         form2.toggle(`§l§fPublic Shop§r§f\nWhether or not this shop can be accessed by any player through the use of the \\viewplayershops command, default is true`, true)*/
         form.submitButton("Save");
-        return (await form.forceShow(sourceEntity as Player)
+        return (await form
+            .forceShow(sourceEntity as Player)
             .then(async (t) => {
                 if (t.canceled) {
                     return 1;
@@ -1827,7 +1827,8 @@ Is Buy Shop: ${shop.buyShop ? "§aTrue" : "§cFalse"}
         }
         form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
         form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
-        return (await form.forceShow(sourceEntity as Player)
+        return (await form
+            .forceShow(sourceEntity as Player)
             .then(async (r) => {
                 // This will stop the code when the player closes the form
                 if (r.canceled) return 1;
@@ -2019,7 +2020,7 @@ Is Buy Shop: ${shop.buyShop ? "§aTrue" : "§cFalse"}
                     case sourceEntity.hasTag("admin") && config.system.debugMode ? 6 : -6:
                         const formb = new ModalFormData().title("Edit Raw Shop Data");
                         let data = Object.entries(JSON.parse(JSON.stringify(shop)));
-                        data.forEach((v) => formb.textField(v[0], typeof v[1], JSON.stringify(v[1])));
+                        data.forEach((v) => formb.textField(v[0], typeof v[1], { defaultValue: JSON.stringify(v[1]) }));
                         const rd = await formb.forceShow(sourceEntity as Player);
                         if (rd.canceled) {
                             return await PlayerShopManager.managePlayerShop(sourceEntity, shop);
@@ -2040,7 +2041,7 @@ Is Buy Shop: ${shop.buyShop ? "§aTrue" : "§cFalse"}
                         return await PlayerShopManager.managePlayerShop(sourceEntity, shop);
                     case sourceEntity.hasTag("admin") && config.system.debugMode ? 7 : -7:
                         const formc = new ModalFormData().title("Edit JSON Shop Data");
-                        formc.textField("JSON", "JSON", JSON.stringify(shop));
+                        formc.textField("JSON", "JSON", { defaultValue: JSON.stringify(shop) });
                         const re = await formc.forceShow(sourceEntity as Player);
                         if (re.canceled) {
                             return await PlayerShopManager.managePlayerShop(sourceEntity, shop);
@@ -2079,7 +2080,7 @@ Is Buy Shop: ${shop.buyShop ? "§aTrue" : "§cFalse"}
                         return await PlayerShopManager.managePlayerShop(sourceEntity, shop);
                     case sourceEntity.hasTag("admin") && config.system.debugMode ? 9 : -9:
                         const formd = new ModalFormData().title("Edit JSON Buy Shop Data");
-                        formd.textField("JSON", "JSON", JSON.stringify(shop.buyData));
+                        formd.textField("JSON", "JSON", { defaultValue: JSON.stringify(shop.buyData) });
                         const rf = await formd.forceShow(sourceEntity as Player);
                         if (rf.canceled) {
                             return await PlayerShopManager.managePlayerShop(sourceEntity, shop);
@@ -2107,7 +2108,7 @@ Is Buy Shop: ${shop.buyShop ? "§aTrue" : "§cFalse"}
                         return await PlayerShopManager.managePlayerShop(sourceEntity, shop);
                     case sourceEntity.hasTag("admin") && config.system.debugMode ? 11 : -11:
                         const forme = new ModalFormData().title("Edit JSON Sell Shop Data");
-                        forme.textField("JSON", "JSON", JSON.stringify(shop.sellData));
+                        forme.textField("JSON", "JSON", { defaultValue: JSON.stringify(shop.sellData) });
                         const rg = await forme.forceShow(sourceEntity as Player);
                         if (rg.canceled) {
                             return await PlayerShopManager.managePlayerShop(sourceEntity, shop);
@@ -2134,40 +2135,41 @@ Is Buy Shop: ${shop.buyShop ? "§aTrue" : "§cFalse"}
         assertIsDefined(sourceEntity);
         let form = new ModalFormData();
         form.title(`${shop.title} Settings`);
-        form.textField(
-            `§l§fButton Title§r§f\nThe title of the button for this shop`,
-            "My Shop",
-            JSON.stringify(shop.name ?? "")
+        form.textField(`§l§fButton Title§r§f\nThe title of the button for this shop`, "My Shop", {
+            defaultValue: JSON.stringify(shop.name ?? "")
                 .slice(1, -1)
-                .replaceAll('\\"', '"')
-        );
-        form.textField(
-            `§l§fPage Title§r§f\nThe title that shows at the top of the main page for this shop`,
-            "My Shop",
-            JSON.stringify(shop.title ?? "")
+                .replaceAll('\\"', '"'),
+        });
+        form.textField(`§l§fPage Title§r§f\nThe title that shows at the top of the main page for this shop`, "My Shop", {
+            defaultValue: JSON.stringify(shop.title ?? "")
                 .slice(1, -1)
-                .replaceAll('\\"', '"')
-        );
+                .replaceAll('\\"', '"'),
+        });
         form.textField(
             `§l§fPage Body Text§r§f\nThe message that shows at right above the list of buttons at the top of the main page for this shop`,
             "My Shop",
-            JSON.stringify(shop.mainPageBodyText ?? "")
-                .slice(1, -1)
-                .replaceAll('\\"', '"')
+            {
+                defaultValue: JSON.stringify(shop.mainPageBodyText ?? "")
+                    .slice(1, -1)
+                    .replaceAll('\\"', '"'),
+            }
         );
-        form.toggle(`§l§fIs Buy Shop§r§f\nWhether or not players can buy items in this shop, default is true`, shop.buyShop ?? true);
-        form.toggle(`§l§fIs Sell Shop§r§f\nWhether or not players can sell items in this shop, default is true`, shop.sellShop ?? true); /*
+        form.toggle(`§l§fIs Buy Shop§r§f\nWhether or not players can buy items in this shop, default is true`, { defaultValue: shop.buyShop ?? true });
+        form.toggle(`§l§fIs Sell Shop§r§f\nWhether or not players can sell items in this shop, default is true`, { defaultValue: shop.sellShop ?? true }); /*
         form2.toggle(`§l§fPublic Shop§r§f\nWhether or not this shop can be accessed by any player through the use of the \\viewplayershops command, default is true`, shop.publicShop??true)*/
         if (config.system.debugMode) {
-            form.textField(`§l§fOwner ID\n§c(Only Editable By Admins) §8(Only Editable While Debug Mode Is Enabled)`, shop.playerID, shop.playerID);
+            form.textField(`§l§fOwner ID\n§c(Only Editable By Admins) §8(Only Editable While Debug Mode Is Enabled)`, shop.playerID, {
+                defaultValue: shop.playerID,
+            });
             form.textField(
                 `§l§fOwner Name\n§c(Only Editable By Admins) §8(Only Editable While Debug Mode Is Enabled)`,
                 JSON.stringify(shop.playerName).slice(1, -1).replaceAll('\\"', '"'),
-                JSON.stringify(shop.playerName).slice(1, -1).replaceAll('\\"', '"')
+                { defaultValue: JSON.stringify(shop.playerName).slice(1, -1).replaceAll('\\"', '"') }
             );
         }
         form.submitButton("Save");
-        return (await form.forceShow(sourceEntity as Player)
+        return (await form
+            .forceShow(sourceEntity as Player)
             .then(async (t) => {
                 if (t.canceled) {
                     return 1;
@@ -2225,7 +2227,8 @@ Is Buy Shop: ${shop.buyShop ? "§aTrue" : "§cFalse"}
         form.button(customFormUICodes.action.buttons.positions.left_side_only + "Add Page", "textures/ui/book_addtextpage_default");
         form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
         form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
-        return (await form.forceShow(sourceEntity as Player)
+        return (await form
+            .forceShow(sourceEntity as Player)
             .then(async (r) => {
                 if (r.canceled) return 1;
 
@@ -2311,13 +2314,11 @@ Is Buy Shop: ${shop.buyShop ? "§aTrue" : "§cFalse"}
                             const form = new ModalFormData();
                             form.textField("§7Buyable Item Type: player_shop_saved\n§fButton Title§c*", "Stick");
                             form.textField("Button Icon Texture\n§7Leave blank to use the placeholder loading icon.", "textures/items/stick");
-                            form.textField(
-                                "Button Index§c*",
-                                String(mode == "buy" ? shop.buyData.length : shop.sellData.length),
-                                String(mode == "buy" ? shop.buyData.length : shop.sellData.length)
-                            );
-                            form.textField("Price§c*", "10", "10");
-                            form.textField("Purchase Amount Step\n§oDefault is 1", "1", "1");
+                            form.textField("Button Index§c*", String(mode == "buy" ? shop.buyData.length : shop.sellData.length), {
+                                defaultValue: String(mode == "buy" ? shop.buyData.length : shop.sellData.length),
+                            });
+                            form.textField("Price§c*", "10", { defaultValue: "10" });
+                            form.textField("Purchase Amount Step\n§oDefault is 1", "1", { defaultValue: "1" });
                             const r = await form.forceShow(sourceEntity as Player);
                             let [title, texture, itemIndex, price, step] = r.formValues as [
                                 title: string,
@@ -2484,7 +2485,7 @@ ${mode == "buy" ? "Price" : "Value"}: ${mode == "buy" ? (item as PlayerSavedShop
             ) {
                 case "move": {
                     const form = new ModalFormData();
-                    form.textField("New Position\nThe position is zero-indexed.", "index", String(itemIndex));
+                    form.textField("New Position\nThe position is zero-indexed.", "index", { defaultValue: String(itemIndex) });
                     const r = await form.forceShow(sourceEntity as Player);
                     if (r.canceled) return 1;
                     assertIsDefined(r.formValues);
@@ -2862,7 +2863,7 @@ ${mode == "buy" ? "Price" : "Value"}: ${mode == "buy" ? (item as PlayerSavedShop
                 case "editRaw":
                     const formb = new ModalFormData().title("Edit Raw Item Data");
                     let data = Object.entries(item);
-                    data.forEach((v) => formb.textField(v[0], typeof v[1], JSON.stringify(v[1])));
+                    data.forEach((v) => formb.textField(v[0], typeof v[1], { defaultValue: JSON.stringify(v[1]) }));
                     const rd = await formb.forceShow(sourceEntity as Player);
                     if (rd.canceled) {
                         return await PlayerShopManager.managePlayerShop_manageItem(sourceEntity, shop, item, itemIndex, mode);
@@ -2881,7 +2882,7 @@ ${mode == "buy" ? "Price" : "Value"}: ${mode == "buy" ? (item as PlayerSavedShop
                 case "editJSON":
                     const formc = new ModalFormData().title("Edit JSON Item Data");
                     let datab = Object.entries(item);
-                    formc.textField("JSON", "JSON", JSON.stringify(datab));
+                    formc.textField("JSON", "JSON", { defaultValue: JSON.stringify(datab) });
                     const re = await formc.forceShow(sourceEntity as Player);
                     if (re.canceled) {
                         return await PlayerShopManager.managePlayerShop_manageItem(sourceEntity, shop, item, itemIndex, mode);
@@ -2948,35 +2949,27 @@ ${mode == "buy" ? "Price" : "Value"}: ${mode == "buy" ? (item as PlayerSavedShop
         const form = new ModalFormData();
         form.title("Edit " + item.title);
         if (item.itemType == "player_shop_saved") {
-            form.textField(
-                "§7Buyable Item Type: player_shop_saved\n§fButton Title§c*",
-                "Stick",
-                JSON.stringify(item.title).slice(1, -1).replaceAll('\\"', '"')
-            );
-            form.textField(
-                "Button Icon Texture\n§7Leave blank to use the placeholder loading icon.",
-                this.playerShopItemTextureHint,
-                JSON.stringify(item.texture).slice(1, -1).replaceAll('\\"', '"')
-            );
-            form.textField("Price§c*", "10", String(item.price));
-            form.textField(`Purchase Amount Step\n§oDefault is 1\nMax is ${item.maxStackSize}`, "1", String(item.step ?? 1)); /*
+            form.textField("§7Buyable Item Type: player_shop_saved\n§fButton Title§c*", "Stick", {
+                defaultValue: JSON.stringify(item.title).slice(1, -1).replaceAll('\\"', '"'),
+            });
+            form.textField("Button Icon Texture\n§7Leave blank to use the placeholder loading icon.", this.playerShopItemTextureHint, {
+                defaultValue: JSON.stringify(item.texture).slice(1, -1).replaceAll('\\"', '"'),
+            });
+            form.textField("Price§c*", "10", { defaultValue: String(item.price) });
+            form.textField(`Purchase Amount Step\n§oDefault is 1\nMax is ${item.maxStackSize}`, "1", { defaultValue: String(item.step ?? 1) }); /*
             form.textField("Structure ID§c*§f\nThe ID of the 1x1x1 structure that contains the andexdb:saved_shop_item entity that has the saved item in its inventory slot.", "andexdbSavedShopItem:0", JSON.stringify(item.structureID).slice(1, -1).replaceAll("\\\"", "\""))
             form.textField("Entity ID§c*§f\nThe value of the andexdb:saved_player_shop_item_save_id dynamic property of the andexdb:saved_shop_item that has the saved item in its inventory slot.", "0", JSON.stringify(item.entityID).slice(1, -1).replaceAll("\\\"", "\""))*/
         } else if (item.itemType == "player_shop_sellable") {
-            form.textField(
-                "§7Sellable Item Type: player_shop_sellable\n§fButton Title§c*",
-                "Stick",
-                JSON.stringify(item.title).slice(1, -1).replaceAll('\\"', '"')
-            );
-            form.textField(
-                "Button Icon Texture\n§7Leave blank to use the placeholder loading icon.",
-                this.playerShopItemTextureHint,
-                JSON.stringify(item.texture).slice(1, -1).replaceAll('\\"', '"')
-            );
-            form.textField("Value§c*", "10", String(item.value));
-            form.textField('Sell Amount Step\n§oDefault is 1\nCannot be higher than the "Amount Wanted" value', "1", String(item.step ?? 1));
-            form.textField("Amount Wanted\n§oDefault is 64", "64", String(item.amountWanted ?? 64));
-            form.textField("Item Type§c*", "minecraft:stick", JSON.stringify(item.itemID).slice(1, -1).replaceAll('\\"', '"'));
+            form.textField("§7Sellable Item Type: player_shop_sellable\n§fButton Title§c*", "Stick", {
+                defaultValue: JSON.stringify(item.title).slice(1, -1).replaceAll('\\"', '"'),
+            });
+            form.textField("Button Icon Texture\n§7Leave blank to use the placeholder loading icon.", this.playerShopItemTextureHint, {
+                defaultValue: JSON.stringify(item.texture).slice(1, -1).replaceAll('\\"', '"'),
+            });
+            form.textField("Value§c*", "10", { defaultValue: String(item.value) });
+            form.textField('Sell Amount Step\n§oDefault is 1\nCannot be higher than the "Amount Wanted" value', "1", { defaultValue: String(item.step ?? 1) });
+            form.textField("Amount Wanted\n§oDefault is 64", "64", { defaultValue: String(item.amountWanted ?? 64) });
+            form.textField("Item Type§c*", "minecraft:stick", { defaultValue: JSON.stringify(item.itemID).slice(1, -1).replaceAll('\\"', '"') });
             // form.textField("Data Value§c*", "0", String(item))
         }
         return await form.forceShow(sourceEntity as Player).then(async (r) => {
@@ -3040,63 +3033,47 @@ ${mode == "buy" ? "Price" : "Value"}: ${mode == "buy" ? (item as PlayerSavedShop
         const form = new ModalFormData();
         form.title("Edit " + item.title);
         if (item.itemType == "player_shop_sellable_advanced") {
-            form.textField(
-                "§7Sellable Item Type: player_shop_sellable_advanced\n§fButton Title§c*",
-                "Stick",
-                JSON.stringify(item.title).slice(1, -1).replaceAll('\\"', '"')
-            );
-            form.textField(
-                "Button Icon Texture\n§7Leave blank to use the placeholder loading icon.",
-                this.playerShopItemTextureHint,
-                JSON.stringify(item.texture).slice(1, -1).replaceAll('\\"', '"')
-            );
-            form.textField("Value§c*", "10", String(item.value));
-            form.textField('Sell Amount Step\n§oDefault is 1\nCannot be higher than the "Amount Wanted" value', "1", String(item.step ?? 1));
-            form.textField("Amount Wanted\n§oDefault is 64", "64", String(item.amountWanted ?? 64));
-            form.textField("Item Type§c*", "minecraft:stick", JSON.stringify(item.itemID).slice(1, -1).replaceAll('\\"', '"'));
+            form.textField("§7Sellable Item Type: player_shop_sellable_advanced\n§fButton Title§c*", "Stick", {
+                defaultValue: JSON.stringify(item.title).slice(1, -1).replaceAll('\\"', '"'),
+            });
+            form.textField("Button Icon Texture\n§7Leave blank to use the placeholder loading icon.", this.playerShopItemTextureHint, {
+                defaultValue: JSON.stringify(item.texture).slice(1, -1).replaceAll('\\"', '"'),
+            });
+            form.textField("Value§c*", "10", { defaultValue: String(item.value) });
+            form.textField('Sell Amount Step\n§oDefault is 1\nCannot be higher than the "Amount Wanted" value', "1", { defaultValue: String(item.step ?? 1) });
+            form.textField("Amount Wanted\n§oDefault is 64", "64", { defaultValue: String(item.amountWanted ?? 64) });
+            form.textField("Item Type§c*", "minecraft:stick", { defaultValue: JSON.stringify(item.itemID).slice(1, -1).replaceAll('\\"', '"') });
             // form.textField("Data Value§c*", "0", String(item))
-            form.toggle("Ignore Name Tag", !!!item.extraRestrictions.nameTag);
-            form.textField(
-                "Name Tag\nType: string",
-                "No name tag",
-                JSON.stringify(item.extraRestrictions.nameTag ?? "")
+            form.toggle("Ignore Name Tag", { defaultValue: !!!item.extraRestrictions.nameTag });
+            form.textField("Name Tag\nType: string", "No name tag", {
+                defaultValue: JSON.stringify(item.extraRestrictions.nameTag ?? "")
                     .slice(1, -1)
-                    .replaceAll('\\"', '"')
-            );
-            form.toggle("Ignore Lore", !!!item.extraRestrictions.lore);
-            form.textField("Lore\nType: JSONArray", "No lore", !!item.extraRestrictions.lore ? JSON.stringify(item.extraRestrictions.lore) : "");
-            form.toggle("Ignore Can Place On", !!!item.extraRestrictions.canPlaceOn);
-            form.textField(
-                "Can Place On\nType: JSONArray",
-                "No can place on",
-                !!item.extraRestrictions.canPlaceOn ? JSON.stringify(item.extraRestrictions.canPlaceOn) : ""
-            );
-            form.toggle("Ignore Can Destroy", !!!item.extraRestrictions.canDestroy);
-            form.textField(
-                "Can Destroy\nType: JSONArray",
-                "No can destroy",
-                !!item.extraRestrictions.canDestroy ? JSON.stringify(item.extraRestrictions.canDestroy) : ""
-            );
-            form.dropdown(
-                "Keep On Death",
-                ["Ignore keep on death", "Require keep on death", "Require not keep on death"],
-                !!item.extraRestrictions.keepOnDeath ? +item.extraRestrictions.keepOnDeath : 0
-            );
-            form.dropdown(
-                "Lock Mode",
-                ["Ignore lock mode", "Require inventory lock", "Require slot lock", "Require no lock"],
-                !!item.extraRestrictions.lockMode ? [undefined, "inventory", "slot", "none"].indexOf(item.extraRestrictions.lockMode) : 0
-            );
-            form.textField(
-                "Minimum Durability\nLeave blank to ignore minimum durability\nType: int",
-                "Ignore minimum durability",
-                String(item.extraRestrictions.minimumDurability ?? "")
-            );
-            form.textField(
-                "Maximum Durability\nLeave blank to ignore maximum durability\nType: int",
-                "Ignore maximum durability",
-                String(item.extraRestrictions.maximumDurability ?? "")
-            );
+                    .replaceAll('\\"', '"'),
+            });
+            form.toggle("Ignore Lore", { defaultValue: !!!item.extraRestrictions.lore });
+            form.textField("Lore\nType: JSONArray", "No lore", {
+                defaultValue: !!item.extraRestrictions.lore ? JSON.stringify(item.extraRestrictions.lore) : "",
+            });
+            form.toggle("Ignore Can Place On", { defaultValue: !!!item.extraRestrictions.canPlaceOn });
+            form.textField("Can Place On\nType: JSONArray", "No can place on", {
+                defaultValue: !!item.extraRestrictions.canPlaceOn ? JSON.stringify(item.extraRestrictions.canPlaceOn) : "",
+            });
+            form.toggle("Ignore Can Destroy", { defaultValue: !!!item.extraRestrictions.canDestroy });
+            form.textField("Can Destroy\nType: JSONArray", "No can destroy", {
+                defaultValue: !!item.extraRestrictions.canDestroy ? JSON.stringify(item.extraRestrictions.canDestroy) : "",
+            });
+            form.dropdown("Keep On Death", ["Ignore keep on death", "Require keep on death", "Require not keep on death"], {
+                defaultValueIndex: !!item.extraRestrictions.keepOnDeath ? +item.extraRestrictions.keepOnDeath : 0,
+            });
+            form.dropdown("Lock Mode", ["Ignore lock mode", "Require inventory lock", "Require slot lock", "Require no lock"], {
+                defaultValueIndex: !!item.extraRestrictions.lockMode ? [undefined, "inventory", "slot", "none"].indexOf(item.extraRestrictions.lockMode) : 0,
+            });
+            form.textField("Minimum Durability\nLeave blank to ignore minimum durability\nType: int", "Ignore minimum durability", {
+                defaultValue: String(item.extraRestrictions.minimumDurability ?? ""),
+            });
+            form.textField("Maximum Durability\nLeave blank to ignore maximum durability\nType: int", "Ignore maximum durability", {
+                defaultValue: String(item.extraRestrictions.maximumDurability ?? ""),
+            });
         }
         return await form.forceShow(sourceEntity as Player).then(async (r) => {
             // This will stop the code when the player closes the form
@@ -3179,14 +3156,12 @@ ${mode == "buy" ? "Price" : "Value"}: ${mode == "buy" ? (item as PlayerSavedShop
         if (type == "player_shop_sellable") {
             form.textField("§7Sellable Item Type: player_shop_sellable\n§fButton Title§c*", "Stick");
             form.textField("Button Icon Texture\n§7Leave blank to use the placeholder loading icon.", this.playerShopItemTextureHint);
-            form.textField(
-                "Button Index§c*",
-                String(mode == "buy" ? shop.buyData.length : shop.sellData.length),
-                String(mode == "buy" ? shop.buyData.length : shop.sellData.length)
-            );
-            form.textField("Value§c*", "10", "10");
-            form.textField('Sell Amount Step\n§oDefault is 1\nCannot be higher than the "Amount Wanted" value', "1", "1");
-            form.textField("Amount Wanted\n§oDefault is 64", "64", "64");
+            form.textField("Button Index§c*", String(mode == "buy" ? shop.buyData.length : shop.sellData.length), {
+                defaultValue: String(mode == "buy" ? shop.buyData.length : shop.sellData.length),
+            });
+            form.textField("Value§c*", "10", { defaultValue: "10" });
+            form.textField('Sell Amount Step\n§oDefault is 1\nCannot be higher than the "Amount Wanted" value', "1", { defaultValue: "1" });
+            form.textField("Amount Wanted\n§oDefault is 64", "64", { defaultValue: "64" });
             form.textField("Item Type§c*", "minecraft:stick");
             // form.textField("Data Value§c*", "0", String(item))
         }
@@ -3295,7 +3270,7 @@ Texture: ${page.texture}`
                     }
                 case "move": {
                     const form = new ModalFormData();
-                    form.textField("New Position\nThe position is zero-indexed.", "index", String(pageIndex));
+                    form.textField("New Position\nThe position is zero-indexed.", "index", { defaultValue: String(pageIndex) });
                     const r = await form.forceShow(sourceEntity as Player);
                     if (r.canceled) return 1;
                     assertIsDefined(r.formValues);
@@ -3377,7 +3352,7 @@ Texture: ${page.texture}`
                 case "editRaw":
                     const formb = new ModalFormData().title("Edit Raw Page Data");
                     let data = Object.entries(page);
-                    data.forEach((v) => formb.textField(v[0], typeof v[1], JSON.stringify(v[1])));
+                    data.forEach((v) => formb.textField(v[0], typeof v[1], { defaultValue: JSON.stringify(v[1]) }));
                     const rd = await formb.forceShow(sourceEntity as Player);
                     if (rd.canceled) {
                         return await PlayerShopManager.managePlayerShop_managePage(sourceEntity, shop, page, pageIndex, mode);
@@ -3396,7 +3371,7 @@ Texture: ${page.texture}`
                 case "editJSON":
                     const formc = new ModalFormData().title("Edit JSON Page Data");
                     let datab = Object.entries(page);
-                    formc.textField("JSON", "JSON", JSON.stringify(datab));
+                    formc.textField("JSON", "JSON", { defaultValue: JSON.stringify(datab) });
                     const re = await formc.forceShow(sourceEntity as Player);
                     if (re.canceled) {
                         return await PlayerShopManager.managePlayerShop_managePage(sourceEntity, shop, page, pageIndex, mode);
@@ -3432,14 +3407,12 @@ Texture: ${page.texture}`
         assertIsDefined(sourceEntity);
         const form = new ModalFormData();
         form.title("Edit Page");
-        form.textField("§fPage Title§c*", "Category: Items", JSON.stringify(page.pageTitle).slice(1, -1).replaceAll('\\"', '"'));
-        form.textField("§fPage Body§c*", "The items category.", JSON.stringify(page.pageBody).slice(1, -1).replaceAll('\\"', '"'));
-        form.textField("§fButton Title§c*", "Items", JSON.stringify(page.title).slice(1, -1).replaceAll('\\"', '"'));
-        form.textField(
-            "Button Icon Texture\n§7Leave blank to use the placeholder loading icon.",
-            "textures/ui/arrowRight",
-            JSON.stringify(page.texture).slice(1, -1).replaceAll('\\"', '"')
-        );
+        form.textField("§fPage Title§c*", "Category: Items", { defaultValue: JSON.stringify(page.pageTitle).slice(1, -1).replaceAll('\\"', '"') });
+        form.textField("§fPage Body§c*", "The items category.", { defaultValue: JSON.stringify(page.pageBody).slice(1, -1).replaceAll('\\"', '"') });
+        form.textField("§fButton Title§c*", "Items", { defaultValue: JSON.stringify(page.title).slice(1, -1).replaceAll('\\"', '"') });
+        form.textField("Button Icon Texture\n§7Leave blank to use the placeholder loading icon.", "textures/ui/arrowRight", {
+            defaultValue: JSON.stringify(page.texture).slice(1, -1).replaceAll('\\"', '"'),
+        });
         return (await form.forceShow(sourceEntity as Player).then(async (r) => {
             // This will stop the code when the player closes the form
             if (r.canceled) return 1;
@@ -3475,11 +3448,9 @@ Texture: ${page.texture}`
         form.textField("§fPage Body§c*", "The items category.");
         form.textField("§fButton Title§c*", "Items");
         form.textField("Button Icon Texture\n§7Leave blank to use the placeholder loading icon.", "textures/ui/arrowRight");
-        form.textField(
-            "Button Index§c*",
-            String(mode == "buy" ? shop.buyData.length : shop.sellData.length),
-            String(mode == "buy" ? shop.buyData.length : shop.sellData.length)
-        );
+        form.textField("Button Index§c*", String(mode == "buy" ? shop.buyData.length : shop.sellData.length), {
+            defaultValue: String(mode == "buy" ? shop.buyData.length : shop.sellData.length),
+        });
         return (await form.forceShow(sourceEntity as Player).then(async (r) => {
             // This will stop the code when the player closes the form
             if (r.canceled) return 1;
@@ -3631,13 +3602,11 @@ Texture: ${page.texture}`
                     const form = new ModalFormData();
                     form.textField("§7Buyable Item Type: player_shop_saved\n§fButton Title§c*", "Stick");
                     form.textField("Button Icon Texture\n§7Leave blank to use the placeholder loading icon.", "textures/items/stick");
-                    form.textField(
-                        "Button Index§c*",
-                        String(mode == "buy" ? shop.buyData.length : shop.sellData.length),
-                        String(mode == "buy" ? shop.buyData.length : shop.sellData.length)
-                    );
-                    form.textField("Price§c*", "10", "10");
-                    form.textField("Purchase Amount Step\n§oDefault is 1", "1", "1");
+                    form.textField("Button Index§c*", String(mode == "buy" ? shop.buyData.length : shop.sellData.length), {
+                        defaultValue: String(mode == "buy" ? shop.buyData.length : shop.sellData.length),
+                    });
+                    form.textField("Price§c*", "10", { defaultValue: "10" });
+                    form.textField("Purchase Amount Step\n§oDefault is 1", "1", { defaultValue: "1" });
                     const r = await form.forceShow(sourceEntity as Player);
                     let [title, texture, itemIndex, price, step] = r.formValues as [
                         title: string,
@@ -3802,7 +3771,7 @@ Texture: ${page.texture}`
             ) {
                 case "move": {
                     const form = new ModalFormData();
-                    form.textField("New Position\nThe position is zero-indexed.", "index", String(itemIndex));
+                    form.textField("New Position\nThe position is zero-indexed.", "index", { defaultValue: String(itemIndex) });
                     const r = await form.forceShow(sourceEntity as Player);
                     if (r.canceled) return 1;
                     assertIsDefined(r.formValues);
@@ -4185,7 +4154,7 @@ Texture: ${page.texture}`
                 case "editRaw":
                     const formb = new ModalFormData().title("Edit Raw Item Data");
                     let data = Object.entries(item);
-                    data.forEach((v) => formb.textField(v[0], typeof v[1], JSON.stringify(v[1])));
+                    data.forEach((v) => formb.textField(v[0], typeof v[1], { defaultValue: JSON.stringify(v[1]) }));
                     const rd = await formb.forceShow(sourceEntity as Player);
                     if (rd.canceled) {
                         return await PlayerShopManager.managePlayerShopPage_manageItem(sourceEntity, shop, path, item, itemIndex);
@@ -4206,7 +4175,7 @@ Texture: ${page.texture}`
                 case "editJSON":
                     const formc = new ModalFormData().title("Edit JSON Item Data");
                     let datab = Object.entries(item);
-                    formc.textField("JSON", "JSON", JSON.stringify(datab));
+                    formc.textField("JSON", "JSON", { defaultValue: JSON.stringify(datab) });
                     const re = await formc.forceShow(sourceEntity as Player);
                     if (re.canceled) {
                         return await PlayerShopManager.managePlayerShopPage_manageItem(sourceEntity, shop, path, item, itemIndex);
@@ -4266,35 +4235,27 @@ Texture: ${page.texture}`
         const form = new ModalFormData();
         form.title("Edit " + item.title);
         if (item.itemType == "player_shop_saved") {
-            form.textField(
-                "§7Buyable Item Type: player_shop_saved\n§fButton Title§c*",
-                "Stick",
-                JSON.stringify(item.title).slice(1, -1).replaceAll('\\"', '"')
-            );
-            form.textField(
-                "Button Icon Texture\n§7Leave blank to use the placeholder loading icon.",
-                this.playerShopItemTextureHint,
-                JSON.stringify(item.texture).slice(1, -1).replaceAll('\\"', '"')
-            );
-            form.textField("Price§c*", "10", String(item.price));
-            form.textField(`Purchase Amount Step\n§oDefault is 1\nMax is ${item.maxStackSize}`, "1", String(item.step ?? 1)); /*
+            form.textField("§7Buyable Item Type: player_shop_saved\n§fButton Title§c*", "Stick", {
+                defaultValue: JSON.stringify(item.title).slice(1, -1).replaceAll('\\"', '"'),
+            });
+            form.textField("Button Icon Texture\n§7Leave blank to use the placeholder loading icon.", this.playerShopItemTextureHint, {
+                defaultValue: JSON.stringify(item.texture).slice(1, -1).replaceAll('\\"', '"'),
+            });
+            form.textField("Price§c*", "10", { defaultValue: String(item.price) });
+            form.textField(`Purchase Amount Step\n§oDefault is 1\nMax is ${item.maxStackSize}`, "1", { defaultValue: String(item.step ?? 1) }); /*
             form.textField("Structure ID§c*§f\nThe ID of the 1x1x1 structure that contains the andexdb:saved_shop_item entity that has the saved item in its inventory slot.", "andexdbSavedShopItem:0", JSON.stringify(item.structureID).slice(1, -1).replaceAll("\\\"", "\""))
             form.textField("Entity ID§c*§f\nThe value of the andexdb:saved_player_shop_item_save_id dynamic property of the andexdb:saved_shop_item that has the saved item in its inventory slot.", "0", JSON.stringify(item.entityID).slice(1, -1).replaceAll("\\\"", "\""))*/
         } else if (item.itemType == "player_shop_sellable") {
-            form.textField(
-                "§7Sellable Item Type: player_shop_sellable\n§fButton Title§c*",
-                "Stick",
-                JSON.stringify(item.title).slice(1, -1).replaceAll('\\"', '"')
-            );
-            form.textField(
-                "Button Icon Texture\n§7Leave blank to use the placeholder loading icon.",
-                this.playerShopItemTextureHint,
-                JSON.stringify(item.texture).slice(1, -1).replaceAll('\\"', '"')
-            );
-            form.textField("Value§c*", "10", String(item.value));
-            form.textField('Sell Amount Step\n§oDefault is 1\nCannot be higher than the "Amount Wanted" value', "1", String(item.step ?? 1));
-            form.textField("Amount Wanted\n§oDefault is 64", "64", String(item.amountWanted ?? 64));
-            form.textField("Item Type§c*", "minecraft:stick", JSON.stringify(item.itemID).slice(1, -1).replaceAll('\\"', '"'));
+            form.textField("§7Sellable Item Type: player_shop_sellable\n§fButton Title§c*", "Stick", {
+                defaultValue: JSON.stringify(item.title).slice(1, -1).replaceAll('\\"', '"'),
+            });
+            form.textField("Button Icon Texture\n§7Leave blank to use the placeholder loading icon.", this.playerShopItemTextureHint, {
+                defaultValue: JSON.stringify(item.texture).slice(1, -1).replaceAll('\\"', '"'),
+            });
+            form.textField("Value§c*", "10", { defaultValue: String(item.value) });
+            form.textField('Sell Amount Step\n§oDefault is 1\nCannot be higher than the "Amount Wanted" value', "1", { defaultValue: String(item.step ?? 1) });
+            form.textField("Amount Wanted\n§oDefault is 64", "64", { defaultValue: String(item.amountWanted ?? 64) });
+            form.textField("Item Type§c*", "minecraft:stick", { defaultValue: JSON.stringify(item.itemID).slice(1, -1).replaceAll('\\"', '"') });
             // form.textField("Data Value§c*", "0", String(item))
         }
         return (await form.forceShow(sourceEntity as Player).then(async (r) => {
@@ -4353,14 +4314,12 @@ Texture: ${page.texture}`
         if (type == "player_shop_sellable") {
             form.textField("§7Sellable Item Type: player_shop_sellable\n§fButton Title§c*", "Stick");
             form.textField("Button Icon Texture\n§7Leave blank to use the placeholder loading icon.", this.playerShopItemTextureHint);
-            form.textField(
-                "Button Index§c*",
-                String(mode == "buy" ? shop.buyData.length : shop.sellData.length),
-                String(mode == "buy" ? shop.buyData.length : shop.sellData.length)
-            );
-            form.textField("Value§c*", "10", "10");
-            form.textField('Sell Amount Step\n§oDefault is 1\nCannot be higher than the "Amount Wanted" value', "1", "1");
-            form.textField("Amount Wanted\n§oDefault is 64", "64", "64");
+            form.textField("Button Index§c*", String(mode == "buy" ? shop.buyData.length : shop.sellData.length), {
+                defaultValue: String(mode == "buy" ? shop.buyData.length : shop.sellData.length),
+            });
+            form.textField("Value§c*", "10", { defaultValue: "10" });
+            form.textField('Sell Amount Step\n§oDefault is 1\nCannot be higher than the "Amount Wanted" value', "1", { defaultValue: "1" });
+            form.textField("Amount Wanted\n§oDefault is 64", "64", { defaultValue: "64" });
             form.textField("Item Type§c*", "minecraft:stick");
             // form.textField("Data Value§c*", "0", String(item))
         }
@@ -4472,7 +4431,7 @@ Texture: ${page.texture}`
                     }
                 case "move": {
                     const form = new ModalFormData();
-                    form.textField("New Position\nThe position is zero-indexed.", "index", String(pageIndex));
+                    form.textField("New Position\nThe position is zero-indexed.", "index", { defaultValue: String(pageIndex) });
                     const r = await form.forceShow(sourceEntity as Player);
                     if (r.canceled) return 1;
                     assertIsDefined(r.formValues);
@@ -4557,7 +4516,7 @@ Texture: ${page.texture}`
                 case "editRaw":
                     const formb = new ModalFormData().title("Edit Raw Item Data");
                     let data = Object.entries(page);
-                    data.forEach((v) => formb.textField(v[0], typeof v[1], JSON.stringify(v[1])));
+                    data.forEach((v) => formb.textField(v[0], typeof v[1], { defaultValue: JSON.stringify(v[1]) }));
                     const rd = await formb.forceShow(sourceEntity as Player);
                     if (rd.canceled) {
                         return await PlayerShopManager.managePlayerShopPage_managePage(sourceEntity, shop, path, page, pageIndex);
@@ -4578,7 +4537,7 @@ Texture: ${page.texture}`
                 case "editJSON":
                     const formc = new ModalFormData().title("Edit JSON Item Data");
                     let datab = Object.entries(page);
-                    formc.textField("JSON", "JSON", JSON.stringify(datab));
+                    formc.textField("JSON", "JSON", { defaultValue: JSON.stringify(datab) });
                     const re = await formc.forceShow(sourceEntity as Player);
                     if (re.canceled) {
                         return await PlayerShopManager.managePlayerShopPage_managePage(sourceEntity, shop, path, page, pageIndex);
@@ -4617,14 +4576,12 @@ Texture: ${page.texture}`
         const mode = path[0];
         const form = new ModalFormData();
         form.title("Edit Page");
-        form.textField("§fPage Title§c*", "Category: Items", JSON.stringify(page.pageTitle).slice(1, -1).replaceAll('\\"', '"'));
-        form.textField("§fPage Body§c*", "The items category.", JSON.stringify(page.pageBody).slice(1, -1).replaceAll('\\"', '"'));
-        form.textField("§fButton Title§c*", "Items", JSON.stringify(page.title).slice(1, -1).replaceAll('\\"', '"'));
-        form.textField(
-            "Button Icon Texture\n§7Leave blank to use the placeholder loading icon.",
-            "textures/ui/arrowRight",
-            JSON.stringify(page.texture).slice(1, -1).replaceAll('\\"', '"')
-        );
+        form.textField("§fPage Title§c*", "Category: Items", { defaultValue: JSON.stringify(page.pageTitle).slice(1, -1).replaceAll('\\"', '"') });
+        form.textField("§fPage Body§c*", "The items category.", { defaultValue: JSON.stringify(page.pageBody).slice(1, -1).replaceAll('\\"', '"') });
+        form.textField("§fButton Title§c*", "Items", { defaultValue: JSON.stringify(page.title).slice(1, -1).replaceAll('\\"', '"') });
+        form.textField("Button Icon Texture\n§7Leave blank to use the placeholder loading icon.", "textures/ui/arrowRight", {
+            defaultValue: JSON.stringify(page.texture).slice(1, -1).replaceAll('\\"', '"'),
+        });
         return (await form.forceShow(sourceEntity as Player).then(async (r) => {
             // This will stop the code when the player closes the form
             if (r.canceled) return 1;
@@ -4663,11 +4620,9 @@ Texture: ${page.texture}`
         form.textField("§fPage Body§c*", "The items category.");
         form.textField("§fButton Title§c*", "Items");
         form.textField("Button Icon Texture\n§7Leave blank to use the placeholder loading icon.", "textures/ui/arrowRight");
-        form.textField(
-            "Button Index§c*",
-            String(getPathInObject(mode == "buy" ? shop.buyData : shop.sellData, path).data.length),
-            String(getPathInObject(mode == "buy" ? shop.buyData : shop.sellData, path).data.length)
-        );
+        form.textField("Button Index§c*", String(getPathInObject(mode == "buy" ? shop.buyData : shop.sellData, path).data.length), {
+            defaultValue: String(getPathInObject(mode == "buy" ? shop.buyData : shop.sellData, path).data.length),
+        });
         return (await form.forceShow(sourceEntity as Player).then(async (r) => {
             // This will stop the code when the player closes the form
             if (r.canceled) return 1;

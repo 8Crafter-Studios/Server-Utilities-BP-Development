@@ -36,12 +36,12 @@ export async function homeSystemSettings(
     form2.title(customFormUICodes.modal.titles.formStyles.medium + "Home System Settings [§cExperimental§r]");
     form2.toggle(
         "§l§fHome System Enabled§r§f",
-        config.homeSystem.homeSystemEnabled
+        { defaultValue: config.homeSystem.homeSystemEnabled }
     );
     form2.textField(
         "§l§fMaximum Homes Per Player§r§f",
         "Int|Infinity",
-        String(config.homeSystem.maxHomesPerPlayer)
+        { defaultValue: String(config.homeSystem.maxHomesPerPlayer) }
     );
     form2.submitButton("Save");
     return await forceShow(form2, sourceEntity as Player)

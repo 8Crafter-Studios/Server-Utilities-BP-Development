@@ -119,12 +119,16 @@ if (args.some((arg) => arg.startsWith("--version="))) {
 }
 
 if (newVersion === originalVersion && newMCVersion === originalMCVersion) {
-    console.error("\u001B[38;2;255;0;0mBoth the new version number and the new supported Minecraft version number are the same as the original version numbers. Exiting...\u001B[0m");
+    console.error(
+        "\u001B[38;2;255;0;0mBoth the new version number and the new supported Minecraft version number are the same as the original version numbers. Exiting...\u001B[0m"
+    );
     process.exit(1);
 }
 
 if (newVersion === originalVersion && newMCVersion === "") {
-    console.error("\u001B[38;2;255;0;0mNew version number is the same as the original version number and new supported Minecraft version number is not provided. Exiting...\u001B[0m");
+    console.error(
+        "\u001B[38;2;255;0;0mNew version number is the same as the original version number and new supported Minecraft version number is not provided. Exiting...\u001B[0m"
+    );
     process.exit(1);
 }
 
@@ -136,7 +140,9 @@ if (newVersion === "" && newMCVersion === originalMCVersion) {
 }
 
 if (newVersion === originalVersion) {
-    console.warn("\u001B[38;2;255;255;0mWARNING: New version number is the same as the original version number. This version number will not be changed.\u001B[0m");
+    console.warn(
+        "\u001B[38;2;255;255;0mWARNING: New version number is the same as the original version number. This version number will not be changed.\u001B[0m"
+    );
 }
 
 if (newMCVersion === originalMCVersion) {
@@ -162,69 +168,72 @@ let rawInitializeMainGlobalVariablesFileTS = readFileSync("./src/initializeMainG
 let rawInitializeMainGlobalVariablesFileJS = readFileSync("./scripts/initializeMainGlobalVariables.js", "utf-8");
 let rawInitializeMainGlobalVariablesFileDTS = readFileSync("./scripts/initializeMainGlobalVariables.d.ts", "utf-8");
 
-if (!packageJSONRaw.includes('"version": "' + originalVersion + '"')) {
-    console.warn(
-        `\u001B[38;2;255;255;0mWARNING: ./package.json does not contain the original version number: \u001B[38;2;0;255;128mv${originalVersion}\u001B[38;2;255;255;0m. Detected Version: \u001B[38;2;0;255;128mv${
-            packageJSONRaw.match(/(?<="version": ")[0-9]+\.[0-9]+\.[0-9]+(-[^+]*?)?(\+.*?)?(?=")/)?.[0] ?? "\u001B[38;2;255;0;0mNot Found"
-        }\u001B[38;2;255;255;0m.`
-    );
-}
-if (!packageLockJSONRaw.includes('"version": "' + originalVersion + '"')) {
-    console.warn(
-        `\u001B[38;2;255;255;0mWARNING: ./package-lock.json does not contain the original version number: \u001B[38;2;0;255;128mv${originalVersion}\u001B[38;2;255;255;0m. Detected Version: \u001B[38;2;0;255;128mv${
-            packageLockJSONRaw.match(/(?<="version": ")[0-9]+\.[0-9]+\.[0-9]+(-[^+]*?)?(\+.*?)?(?=")/)?.[0] ?? "\u001B[38;2;255;0;0mNot Found"
-        }\u001B[38;2;255;255;0m.`
-    );
-}
-if (!packageLockJSONNodeModulesRaw.includes('"version": "' + originalVersion + '"')) {
-    console.warn(
-        `\u001B[38;2;255;255;0mWARNING: ./node_modules/.package-lock.json does not contain the original version number: \u001B[38;2;0;255;128mv${originalVersion}\u001B[38;2;255;255;0m. Detected Version: \u001B[38;2;0;255;128mv${
-            packageLockJSONNodeModulesRaw.match(/(?<="version": ")[0-9]+\.[0-9]+\.[0-9]+(-[^+]*?)?(\+.*?)?(?=")/)?.[0] ?? "\u001B[38;2;255;0;0mNot Found"
-        }\u001B[38;2;255;255;0m.\u001B[0m`
-    );
-}
-if (!rawInitializeMainGlobalVariablesFileTS.includes('export const current_format_version = "' + originalVersion + '";')) {
-    console.warn(
-        `\u001B[38;2;255;255;0mWARNING: ./src/initializeMainGlobalVariables.ts does not contain the original version number: \u001B[38;2;0;255;128mv${originalVersion}\u001B[38;2;255;255;0m. Detected Version: \u001B[38;2;0;255;128mv${
-            rawInitializeMainGlobalVariablesFileTS.match(/(?<=export const current_format_version = ")[0-9]+\.[0-9]+\.[0-9]+(-[^+]*?)?(\+.*?)?(?=";)/)?.[0] ??
-            "\u001B[38;2;255;0;0mNot Found"
-        }\u001B[38;2;255;255;0m.\u001B[0m`
-    );
-}
-if (!rawInitializeMainGlobalVariablesFileJS.includes('mainGlobalVariables.current_format_version = "' + originalVersion + '";')) {
-    console.warn(
-        `\u001B[38;2;255;255;0mWARNING: ./scripts/initializeMainGlobalVariables.js does not contain the original version number: \u001B[38;2;0;255;128mv${originalVersion}\u001B[38;2;255;255;0m. Detected Version: \u001B[38;2;0;255;128mv${
-            rawInitializeMainGlobalVariablesFileJS.match(
-                /(?<=mainGlobalVariables.current_format_version = ")[0-9]+\.[0-9]+\.[0-9]+(-[^+]*?)?(\+.*?)?(?=";)/
-            )?.[0] ?? "\u001B[38;2;255;0;0mNot Found"
-        }\u001B[38;2;255;255;0m.\u001B[0m`
-    );
-}
-if (!rawInitializeMainGlobalVariablesFileDTS.includes('const current_format_version = "' + originalVersion + '";')) {
-    console.warn(
-        `\u001B[38;2;255;255;0mWARNING: ./scripts/initializeMainGlobalVariables.d.ts does not contain the original version number: \u001B[38;2;0;255;128mv${originalVersion}\u001B[38;2;255;255;0m. Detected Version: \u001B[38;2;0;255;128mv${
-            rawInitializeMainGlobalVariablesFileDTS.match(/(?<=const current_format_version = ")[0-9]+\.[0-9]+\.[0-9]+(-[^+]*?)?(\+.*?)?(?=";)/)?.[0] ??
-            "\u001B[38;2;255;0;0mNot Found"
-        }\u001B[38;2;255;255;0m.\u001B[0m`
-    );
-}
+if (newVersion !== "") {
+    if (!packageJSONRaw.includes('"version": "' + originalVersion + '"')) {
+        console.warn(
+            `\u001B[38;2;255;255;0mWARNING: ./package.json does not contain the original version number: \u001B[38;2;0;255;128mv${originalVersion}\u001B[38;2;255;255;0m. Detected Version: \u001B[38;2;0;255;128mv${
+                packageJSONRaw.match(/(?<="version": ")[0-9]+\.[0-9]+\.[0-9]+(-[^+]*?)?(\+.*?)?(?=")/)?.[0] ?? "\u001B[38;2;255;0;0mNot Found"
+            }\u001B[38;2;255;255;0m.`
+        );
+    }
+    if (!packageLockJSONRaw.includes('"version": "' + originalVersion + '"')) {
+        console.warn(
+            `\u001B[38;2;255;255;0mWARNING: ./package-lock.json does not contain the original version number: \u001B[38;2;0;255;128mv${originalVersion}\u001B[38;2;255;255;0m. Detected Version: \u001B[38;2;0;255;128mv${
+                packageLockJSONRaw.match(/(?<="version": ")[0-9]+\.[0-9]+\.[0-9]+(-[^+]*?)?(\+.*?)?(?=")/)?.[0] ?? "\u001B[38;2;255;0;0mNot Found"
+            }\u001B[38;2;255;255;0m.`
+        );
+    }
+    if (!packageLockJSONNodeModulesRaw.includes('"version": "' + originalVersion + '"')) {
+        console.warn(
+            `\u001B[38;2;255;255;0mWARNING: ./node_modules/.package-lock.json does not contain the original version number: \u001B[38;2;0;255;128mv${originalVersion}\u001B[38;2;255;255;0m. Detected Version: \u001B[38;2;0;255;128mv${
+                packageLockJSONNodeModulesRaw.match(/(?<="version": ")[0-9]+\.[0-9]+\.[0-9]+(-[^+]*?)?(\+.*?)?(?=")/)?.[0] ?? "\u001B[38;2;255;0;0mNot Found"
+            }\u001B[38;2;255;255;0m.\u001B[0m`
+        );
+    }
+    if (!rawInitializeMainGlobalVariablesFileTS.includes('export const current_format_version = "' + originalVersion + '";')) {
+        console.warn(
+            `\u001B[38;2;255;255;0mWARNING: ./src/initializeMainGlobalVariables.ts does not contain the original version number: \u001B[38;2;0;255;128mv${originalVersion}\u001B[38;2;255;255;0m. Detected Version: \u001B[38;2;0;255;128mv${
+                rawInitializeMainGlobalVariablesFileTS.match(
+                    /(?<=export const current_format_version = ")[0-9]+\.[0-9]+\.[0-9]+(-[^+]*?)?(\+.*?)?(?=";)/
+                )?.[0] ?? "\u001B[38;2;255;0;0mNot Found"
+            }\u001B[38;2;255;255;0m.\u001B[0m`
+        );
+    }
+    if (!rawInitializeMainGlobalVariablesFileJS.includes('mainGlobalVariables.current_format_version = "' + originalVersion + '";')) {
+        console.warn(
+            `\u001B[38;2;255;255;0mWARNING: ./scripts/initializeMainGlobalVariables.js does not contain the original version number: \u001B[38;2;0;255;128mv${originalVersion}\u001B[38;2;255;255;0m. Detected Version: \u001B[38;2;0;255;128mv${
+                rawInitializeMainGlobalVariablesFileJS.match(
+                    /(?<=mainGlobalVariables.current_format_version = ")[0-9]+\.[0-9]+\.[0-9]+(-[^+]*?)?(\+.*?)?(?=";)/
+                )?.[0] ?? "\u001B[38;2;255;0;0mNot Found"
+            }\u001B[38;2;255;255;0m.\u001B[0m`
+        );
+    }
+    if (!rawInitializeMainGlobalVariablesFileDTS.includes('const current_format_version = "' + originalVersion + '";')) {
+        console.warn(
+            `\u001B[38;2;255;255;0mWARNING: ./scripts/initializeMainGlobalVariables.d.ts does not contain the original version number: \u001B[38;2;0;255;128mv${originalVersion}\u001B[38;2;255;255;0m. Detected Version: \u001B[38;2;0;255;128mv${
+                rawInitializeMainGlobalVariablesFileDTS.match(/(?<=const current_format_version = ")[0-9]+\.[0-9]+\.[0-9]+(-[^+]*?)?(\+.*?)?(?=";)/)?.[0] ??
+                "\u001B[38;2;255;0;0mNot Found"
+            }\u001B[38;2;255;255;0m.\u001B[0m`
+        );
+    }
 
-manifestRaw = manifestRaw.replaceAll(originalVersion, newVersion);
-packageJSONRaw = packageJSONRaw.replace('"version": "' + originalVersion + '"', '"version": "' + newVersion + '"');
-packageLockJSONRaw = packageLockJSONRaw.replace('"version": "' + originalVersion + '"', '"version": "' + newVersion + '"');
-packageLockJSONNodeModulesRaw = packageLockJSONNodeModulesRaw.replace('"version": "' + originalVersion + '"', '"version": "' + newVersion + '"');
-rawInitializeMainGlobalVariablesFileTS = rawInitializeMainGlobalVariablesFileTS.replace(
-    'export const current_format_version = "' + originalVersion + '";',
-    'export const current_format_version = "' + newVersion + '";'
-);
-rawInitializeMainGlobalVariablesFileJS = rawInitializeMainGlobalVariablesFileJS.replace(
-    'mainGlobalVariables.current_format_version = "' + originalVersion + '";',
-    'mainGlobalVariables.current_format_version = "' + newVersion + '";'
-);
-rawInitializeMainGlobalVariablesFileDTS = rawInitializeMainGlobalVariablesFileDTS.replace(
-    'const current_format_version = "' + originalVersion + '";',
-    'const current_format_version = "' + newVersion + '";'
-);
+    manifestRaw = manifestRaw.replaceAll(originalVersion, newVersion);
+    packageJSONRaw = packageJSONRaw.replace('"version": "' + originalVersion + '"', '"version": "' + newVersion + '"');
+    packageLockJSONRaw = packageLockJSONRaw.replace('"version": "' + originalVersion + '"', '"version": "' + newVersion + '"');
+    packageLockJSONNodeModulesRaw = packageLockJSONNodeModulesRaw.replace('"version": "' + originalVersion + '"', '"version": "' + newVersion + '"');
+    rawInitializeMainGlobalVariablesFileTS = rawInitializeMainGlobalVariablesFileTS.replace(
+        'export const current_format_version = "' + originalVersion + '";',
+        'export const current_format_version = "' + newVersion + '";'
+    );
+    rawInitializeMainGlobalVariablesFileJS = rawInitializeMainGlobalVariablesFileJS.replace(
+        'mainGlobalVariables.current_format_version = "' + originalVersion + '";',
+        'mainGlobalVariables.current_format_version = "' + newVersion + '";'
+    );
+    rawInitializeMainGlobalVariablesFileDTS = rawInitializeMainGlobalVariablesFileDTS.replace(
+        'const current_format_version = "' + originalVersion + '";',
+        'const current_format_version = "' + newVersion + '";'
+    );
+}
 
 if (newMCVersion !== "") {
     if (!rawInitializeMainGlobalVariablesFileTS.includes('export const current_supported_minecraft_version = "' + originalMCVersion + '";')) {

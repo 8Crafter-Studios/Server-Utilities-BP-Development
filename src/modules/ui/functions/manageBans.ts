@@ -45,11 +45,17 @@ export async function manageBans(
     while (true) {
         const { player, pagen, maxentriesperpage, search, cachedEntries } = currentParameters;
         if (securityVariables.ultraSecurityModeEnabled) {
-            if(securityVariables.testPlayerForPermission(player, "andexdb.accessManageBansUI") == false){
-                const r = await showMessage(player, "Access Denied (403)", "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.accessManageBansUI", "Okay", "Cancel");
-                if(r.canceled || r.selection == 0){
+            if (securityVariables.testPlayerForPermission(player, "andexdb.accessManageBansUI") == false) {
+                const r = await showMessage(
+                    player,
+                    "Access Denied (403)",
+                    "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.accessManageBansUI",
+                    "Okay",
+                    "Cancel"
+                );
+                if (r.canceled || r.selection == 0) {
                     return 1;
-                }else{
+                } else {
                     return 0;
                 }
             }
@@ -165,10 +171,10 @@ export async function manageBans(
                             async () =>
                                 await new ModalFormData()
                                     .title("Search")
-                                    .textField("", "Search", search?.value ?? "")
-                                    .toggle("Case Sensitive", search?.caseSensitive ?? false)
-                                    .toggle("Search Player Names", search?.searchNames ?? true)
-                                    .toggle("Search Player IDs", search?.searchIds ?? true)
+                                    .textField("", "Search", { defaultValue: search?.value ?? "" })
+                                    .toggle("Case Sensitive", { defaultValue: search?.caseSensitive ?? false })
+                                    .toggle("Search Player Names", { defaultValue: search?.searchNames ?? true })
+                                    .toggle("Search Player IDs", { defaultValue: search?.searchIds ?? true })
                                     .submitButton("Search")
                                     .forceShow(player)
                         );
@@ -286,11 +292,17 @@ export async function manageBansOnPlayer(
     while (true) {
         const { player, pagen, maxentriesperpage, search, cachedEntries } = currentParameters;
         if (securityVariables.ultraSecurityModeEnabled) {
-            if(securityVariables.testPlayerForPermission(player, "andexdb.accessManageBansUI") == false){
-                const r = await showMessage(player, "Access Denied (403)", "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.accessManageBansUI", "Okay", "Cancel");
-                if(r.canceled || r.selection == 0){
+            if (securityVariables.testPlayerForPermission(player, "andexdb.accessManageBansUI") == false) {
+                const r = await showMessage(
+                    player,
+                    "Access Denied (403)",
+                    "You do not have permission to access this menu. You need the following permission to access this menu: andexdb.accessManageBansUI",
+                    "Okay",
+                    "Cancel"
+                );
+                if (r.canceled || r.selection == 0) {
                     return 1;
-                }else{
+                } else {
                     return 0;
                 }
             }
@@ -412,10 +424,10 @@ export async function manageBansOnPlayer(
                             async () =>
                                 await new ModalFormData()
                                     .title("Search")
-                                    .textField("", "Search", search?.value ?? "")
-                                    .toggle("Case Sensitive", search?.caseSensitive ?? false)
-                                    .toggle("Search Player Names", search?.searchNames ?? true)
-                                    .toggle("Search Player IDs", search?.searchIds ?? true)
+                                    .textField("", "Search", { defaultValue: search?.value ?? "" })
+                                    .toggle("Case Sensitive", { defaultValue: search?.caseSensitive ?? false })
+                                    .toggle("Search Player Names", { defaultValue: search?.searchNames ?? true })
+                                    .toggle("Search Player IDs", { defaultValue: search?.searchIds ?? true })
                                     .submitButton("Search")
                                     .forceShow(player)
                         );
@@ -521,12 +533,14 @@ export async function manageBan(sourceEntity: loosePlayerType, ban: ban): Promis
                 `§bFormat Version: §e${ban.format_version}\n§r§bBan Format Version: §e${ban.ban_format_version}\n§r§bBan Id: §6${ban.banId}\n§r§bType: §a${
                     ban.type
                 }\n§r§bBan Duration: §q${
-                    isPermanent ? "Permanent" : ban.banDate > ban.unbanDate ? "-" + moment(ban.banDate).preciseDiff(moment(ban.unbanDate)) : moment(ban.banDate).preciseDiff(moment(ban.unbanDate))/* `${duration.days}d, ${duration.hours}h ${duration.minutes}m ${duration.seconds}s ${duration.milliseconds}ms` */
-                }${
                     isPermanent
-                        ? ""
-                        : `\n§r§bTime Remaining: §q${timeRemaining}`
-                }\n§r§bBan Date: §q${
+                        ? "Permanent"
+                        : ban.banDate > ban.unbanDate
+                        ? "-" + moment(ban.banDate).preciseDiff(moment(ban.unbanDate))
+                        : moment(ban.banDate).preciseDiff(
+                              moment(ban.unbanDate)
+                          ) /* `${duration.days}d, ${duration.hours}h ${duration.minutes}m ${duration.seconds}s ${duration.milliseconds}ms` */
+                }${isPermanent ? "" : `\n§r§bTime Remaining: §q${timeRemaining}`}\n§r§bBan Date: §q${
                     formatDateTime(new Date(ban.banDate), timeZone) + " UTC" + (timeZone > 0 || Object.is(timeZone, 0) ? "+" : "") + timeZone
                 }${
                     isPermanent
@@ -549,7 +563,7 @@ export async function manageBan(sourceEntity: loosePlayerType, ban: ban): Promis
             if (r.canceled) return 1 as const;
             switch ((["unban", "back", "close"] as const)[r.selection]) {
                 case "unban":
-                    switch(await unbanPlayer(player, ban)) {
+                    switch (await unbanPlayer(player, ban)) {
                         case 0:
                             return 0;
                         case 1:
@@ -626,7 +640,7 @@ export async function unbanPlayer(sourceEntity: loosePlayerType, selectedBan: ba
             }
             case "unban": {
                 selectedBan.remove();
-                return (
+                return ((
                     (
                         await showMessage(
                             player,
@@ -638,7 +652,7 @@ export async function unbanPlayer(sourceEntity: loosePlayerType, selectedBan: ba
                             "Close"
                         )
                     ).selection !== 1
-                ).toNumber() * 2 as 0 | 2;
+                ).toNumber() * 2) as 0 | 2;
             }
         }
     } catch (e) {
@@ -673,9 +687,11 @@ export async function addIDBan(sourceEntity: loosePlayerType): Promise<0 | 1> {
             }
             let form = new ModalFormData();
             form.title(`${customFormUICodes.modal.titles.formStyles.medium}Add ID Ban`);
-            form.textField("Player UUID\nThis is the uuid of the player. ", "Integer", defaultPlayerUUID);
-            form.textField("Ban Time (Time String, ex. 5y 7mo 6d 5h 3m 1s 17ms)\nLeave blank to make the ban duration permanent.", "permanent", defaultBanTime);
-            form.textField("Reason", "§cYOU HAVE BEEN BANNED BY THE BAN HAMMER", defaultReason);
+            form.textField("Player UUID\nThis is the uuid of the player. ", "Integer", { defaultValue: defaultPlayerUUID });
+            form.textField("Ban Time (Time String, ex. 5y 7mo 6d 5h 3m 1s 17ms)\nLeave blank to make the ban duration permanent.", "permanent", {
+                defaultValue: defaultBanTime,
+            });
+            form.textField("Reason", "§cYOU HAVE BEEN BANNED BY THE BAN HAMMER", { defaultValue: defaultReason });
             form.submitButton("Ban");
             const r = await forceShow(form, player);
             if (r.canceled) {
@@ -686,10 +702,20 @@ export async function addIDBan(sourceEntity: loosePlayerType): Promise<0 | 1> {
             defaultReason = r.formValues[2] as string;
             const banDate = Date.now();
             const unbanDate = (r.formValues[1] as string).trim() === "" ? Infinity : parseDurationRelative(r.formValues[1] as string, banDate) + Date.now();
-            if(Number.isNaN(unbanDate)){
-                if((await showMessage(player, "Invalid Ban Time", "The ban time you entered is invalid. Please try again.\nHere is an example: 5y 7mo 6d 5h 3m 1s 17ms.", "Back", "Cancel")).selection !== 1){
+            if (Number.isNaN(unbanDate)) {
+                if (
+                    (
+                        await showMessage(
+                            player,
+                            "Invalid Ban Time",
+                            "The ban time you entered is invalid. Please try again.\nHere is an example: 5y 7mo 6d 5h 3m 1s 17ms.",
+                            "Back",
+                            "Cancel"
+                        )
+                    ).selection !== 1
+                ) {
                     continue;
-                }else{
+                } else {
                     return 1;
                 }
             }
@@ -711,10 +737,10 @@ export async function addIDBan(sourceEntity: loosePlayerType): Promise<0 | 1> {
             ban.refreshBans();
             return 1;
         } catch (e) {
-            if(e instanceof SyntaxError && e.message.startsWith("Unknown time unit: ")){
-                if((await showMessage(player, "Syntax Error", `${e}${e?.stack}`, "Back", "Cancel")).selection !== 1){
+            if (e instanceof SyntaxError && e.message.startsWith("Unknown time unit: ")) {
+                if ((await showMessage(player, "Syntax Error", `${e}${e?.stack}`, "Back", "Cancel")).selection !== 1) {
                     continue;
-                }else{
+                } else {
                     return 1;
                 }
             }
@@ -750,9 +776,11 @@ export async function addNameBan(sourceEntity: loosePlayerType): Promise<0 | 1> 
             }
             let form = new ModalFormData();
             form.title(`${customFormUICodes.modal.titles.formStyles.medium}Add Name Ban`);
-            form.textField("Player Name\nThis is the name of the player. ", "string", defaultPlayerName);
-            form.textField("Ban Time (Time String, ex. 5y 7mo 6d 5h 3m 1s 17ms)\nLeave blank to make the ban duration permanent.", "permanent", defaultBanTime);
-            form.textField("Reason", "§cYOU HAVE BEEN BANNED BY THE BAN HAMMER", defaultReason);
+            form.textField("Player Name\nThis is the name of the player. ", "string", { defaultValue: defaultPlayerName });
+            form.textField("Ban Time (Time String, ex. 5y 7mo 6d 5h 3m 1s 17ms)\nLeave blank to make the ban duration permanent.", "permanent", {
+                defaultValue: defaultBanTime,
+            });
+            form.textField("Reason", "§cYOU HAVE BEEN BANNED BY THE BAN HAMMER", { defaultValue: defaultReason });
             form.submitButton("Ban");
             const r = await forceShow(form, player);
             if (r.canceled) {
@@ -763,10 +791,20 @@ export async function addNameBan(sourceEntity: loosePlayerType): Promise<0 | 1> 
             defaultReason = r.formValues[2] as string;
             const banDate = Date.now();
             const unbanDate = (r.formValues[1] as string).trim() === "" ? Infinity : parseDurationRelative(r.formValues[1] as string, banDate) + Date.now();
-            if(Number.isNaN(unbanDate)){
-                if((await showMessage(player, "Invalid Ban Time", "The ban time you entered is invalid. Please try again.\nHere is an example: 5y 7mo 6d 5h 3m 1s 17ms.", "Back", "Cancel")).selection !== 1){
+            if (Number.isNaN(unbanDate)) {
+                if (
+                    (
+                        await showMessage(
+                            player,
+                            "Invalid Ban Time",
+                            "The ban time you entered is invalid. Please try again.\nHere is an example: 5y 7mo 6d 5h 3m 1s 17ms.",
+                            "Back",
+                            "Cancel"
+                        )
+                    ).selection !== 1
+                ) {
                     continue;
-                }else{
+                } else {
                     return 1;
                 }
             }
@@ -788,10 +826,10 @@ export async function addNameBan(sourceEntity: loosePlayerType): Promise<0 | 1> 
             ban.refreshBans();
             return 1;
         } catch (e) {
-            if(e instanceof SyntaxError && e.message.startsWith("Unknown time unit: ")){
-                if((await showMessage(player, "Syntax Error", `${e}${e?.stack}`, "Back", "Cancel")).selection !== 1){
+            if (e instanceof SyntaxError && e.message.startsWith("Unknown time unit: ")) {
+                if ((await showMessage(player, "Syntax Error", `${e}${e?.stack}`, "Back", "Cancel")).selection !== 1) {
                     continue;
-                }else{
+                } else {
                     return 1;
                 }
             }
@@ -802,7 +840,7 @@ export async function addNameBan(sourceEntity: loosePlayerType): Promise<0 | 1> 
     }
 }
 
-export async function addIDBanOnPlayer(sourceEntity: loosePlayerType, targetDetails: {id: string, name?: string}): Promise<0 | 1> {
+export async function addIDBanOnPlayer(sourceEntity: loosePlayerType, targetDetails: { id: string; name?: string }): Promise<0 | 1> {
     const player = extractPlayerFromLooseEntityType(sourceEntity);
     let defaultBanTime = "";
     let defaultReason = "";
@@ -826,8 +864,10 @@ export async function addIDBanOnPlayer(sourceEntity: loosePlayerType, targetDeta
             }
             let form = new ModalFormData();
             form.title(`${customFormUICodes.modal.titles.formStyles.medium}Add ID Ban on ${targetDetails.name ?? targetDetails.id}`);
-            form.textField("Ban Time (Time String, ex. 5y 7mo 6d 5h 3m 1s 17ms)\nLeave blank to make the ban duration permanent.", "permanent", defaultBanTime);
-            form.textField("Reason", "§cYOU HAVE BEEN BANNED BY THE BAN HAMMER", defaultReason);
+            form.textField("Ban Time (Time String, ex. 5y 7mo 6d 5h 3m 1s 17ms)\nLeave blank to make the ban duration permanent.", "permanent", {
+                defaultValue: defaultBanTime,
+            });
+            form.textField("Reason", "§cYOU HAVE BEEN BANNED BY THE BAN HAMMER", { defaultValue: defaultReason });
             form.submitButton("Ban");
             const r = await forceShow(form, player);
             if (r.canceled) {
@@ -837,10 +877,20 @@ export async function addIDBanOnPlayer(sourceEntity: loosePlayerType, targetDeta
             defaultReason = r.formValues[1] as string;
             const banDate = Date.now();
             const unbanDate = (r.formValues[0] as string).trim() === "" ? Infinity : parseDurationRelative(r.formValues[0] as string, banDate) + Date.now();
-            if(Number.isNaN(unbanDate)){
-                if((await showMessage(player, "Invalid Ban Time", "The ban time you entered is invalid. Please try again.\nHere is an example: 5y 7mo 6d 5h 3m 1s 17ms.", "Back", "Cancel")).selection !== 1){
+            if (Number.isNaN(unbanDate)) {
+                if (
+                    (
+                        await showMessage(
+                            player,
+                            "Invalid Ban Time",
+                            "The ban time you entered is invalid. Please try again.\nHere is an example: 5y 7mo 6d 5h 3m 1s 17ms.",
+                            "Back",
+                            "Cancel"
+                        )
+                    ).selection !== 1
+                ) {
                     continue;
-                }else{
+                } else {
                     return 1;
                 }
             }
@@ -862,10 +912,10 @@ export async function addIDBanOnPlayer(sourceEntity: loosePlayerType, targetDeta
             ban.refreshBans();
             return 1;
         } catch (e) {
-            if(e instanceof SyntaxError && e.message.startsWith("Unknown time unit: ")){
-                if((await showMessage(player, "Syntax Error", `${e}${e?.stack}`, "Back", "Cancel")).selection !== 1){
+            if (e instanceof SyntaxError && e.message.startsWith("Unknown time unit: ")) {
+                if ((await showMessage(player, "Syntax Error", `${e}${e?.stack}`, "Back", "Cancel")).selection !== 1) {
                     continue;
-                }else{
+                } else {
                     return 1;
                 }
             }
@@ -876,7 +926,7 @@ export async function addIDBanOnPlayer(sourceEntity: loosePlayerType, targetDeta
     }
 }
 
-export async function addNameBanOnPlayer(sourceEntity: loosePlayerType, targetDetails: {id?: string, name: string}): Promise<0 | 1> {
+export async function addNameBanOnPlayer(sourceEntity: loosePlayerType, targetDetails: { id?: string; name: string }): Promise<0 | 1> {
     const player = extractPlayerFromLooseEntityType(sourceEntity);
     let defaultBanTime = "";
     let defaultReason = "";
@@ -900,8 +950,10 @@ export async function addNameBanOnPlayer(sourceEntity: loosePlayerType, targetDe
             }
             let form = new ModalFormData();
             form.title(`${customFormUICodes.modal.titles.formStyles.medium}Add Name Ban on ${targetDetails.name ?? targetDetails.id}`);
-            form.textField("Ban Time (Time String, ex. 5y 7mo 6d 5h 3m 1s 17ms)\nLeave blank to make the ban duration permanent.", "permanent", defaultBanTime);
-            form.textField("Reason", "§cYOU HAVE BEEN BANNED BY THE BAN HAMMER", defaultReason);
+            form.textField("Ban Time (Time String, ex. 5y 7mo 6d 5h 3m 1s 17ms)\nLeave blank to make the ban duration permanent.", "permanent", {
+                defaultValue: defaultBanTime,
+            });
+            form.textField("Reason", "§cYOU HAVE BEEN BANNED BY THE BAN HAMMER", { defaultValue: defaultReason });
             form.submitButton("Ban");
             const r = await forceShow(form, player);
             if (r.canceled) {
@@ -911,10 +963,20 @@ export async function addNameBanOnPlayer(sourceEntity: loosePlayerType, targetDe
             defaultReason = r.formValues[1] as string;
             const banDate = Date.now();
             const unbanDate = (r.formValues[0] as string).trim() === "" ? Infinity : parseDurationRelative(r.formValues[0] as string, banDate) + Date.now();
-            if(Number.isNaN(unbanDate)){
-                if((await showMessage(player, "Invalid Ban Time", "The ban time you entered is invalid. Please try again.\nHere is an example: 5y 7mo 6d 5h 3m 1s 17ms.", "Back", "Cancel")).selection !== 1){
+            if (Number.isNaN(unbanDate)) {
+                if (
+                    (
+                        await showMessage(
+                            player,
+                            "Invalid Ban Time",
+                            "The ban time you entered is invalid. Please try again.\nHere is an example: 5y 7mo 6d 5h 3m 1s 17ms.",
+                            "Back",
+                            "Cancel"
+                        )
+                    ).selection !== 1
+                ) {
                     continue;
-                }else{
+                } else {
                     return 1;
                 }
             }
@@ -936,10 +998,10 @@ export async function addNameBanOnPlayer(sourceEntity: loosePlayerType, targetDe
             ban.refreshBans();
             return 1;
         } catch (e) {
-            if(e instanceof SyntaxError && e.message.startsWith("Unknown time unit: ")){
-                if((await showMessage(player, "Syntax Error", `${e}${e?.stack}`, "Back", "Cancel")).selection !== 1){
+            if (e instanceof SyntaxError && e.message.startsWith("Unknown time unit: ")) {
+                if ((await showMessage(player, "Syntax Error", `${e}${e?.stack}`, "Back", "Cancel")).selection !== 1) {
                     continue;
-                }else{
+                } else {
                     return 1;
                 }
             }

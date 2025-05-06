@@ -32,6 +32,7 @@ import {
     type TeleportOptions,
     InputInfo,
     type EntityComponentReturnType,
+    GraphicsMode,
 } from "@minecraft/server";
 import { MoneySystem } from "ExtraFeatures/money";
 import { PlayerNotifications } from "init/classes/PlayerNotifications";
@@ -47,7 +48,7 @@ import { deleteStringFromEntityDynamicProperties } from "modules/utilities/funct
 import { getStringFromEntityDynamicProperties } from "modules/utilities/functions/getStringFromEntityDynamicProperties";
 import { saveStringToEntityDynamicProperties } from "modules/utilities/functions/saveStringToEntityDynamicProperties";
 
-export class executeCommandPlayerW {
+export class executeCommandPlayerW implements Omit<Player, "name" | "id"> {
     player?: Player;
     sendErrorsTo?: Player | Console | Player[] | (() => Player | Player[] | Console) | null | undefined;
     modifiedlocation?: Vector3;
@@ -407,11 +408,27 @@ export class executeCommandPlayerW {
     get inputInfo() {
         return this.player?.inputInfo;
     }
-    get graphicsMode() {
+    /**
+     * @beta
+     * @remarks
+     * Gets the current graphics mode of the player's client. This
+     * can be changed in the Video section of the settings menu
+     * based on what hardware is available.
+     *
+     * This property can return undefined if the {@link executeCommandPlayerW} instance does not have a linked player.
+     *
+     * @throws This property can throw when used.
+     *
+     * {@link InvalidEntityError}
+     */
+    get graphicsMode(): GraphicsMode | undefined {
         return this.player?.graphicsMode;
     }
     get isValid() {
         return this.player?.isValid;
+    }
+    get localizationKey() {
+        return this.player?.localizationKey;
     }
     addEffect(effectType: string | EffectType, duration: number, options?: EntityEffectOptions) {
         return this.player?.addEffect(effectType, duration, options);

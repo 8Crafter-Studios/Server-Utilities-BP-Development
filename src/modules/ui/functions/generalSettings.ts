@@ -75,77 +75,80 @@ export async function generalSettings(sourceEntity: loosePlayerType): Promise<0 
         form.title(customFormUICodes.modal.titles.formStyles.medium + "General Settings");
         const formOptionsMap = {
             chatCommandPrefix: () =>
-                form.textField(
-                    "§l§fchatCommandPrefix§r§f\nThis is what you type before a chat command, the default is \\. ",
-                    "string",
-                    config.chatCommandPrefix
-                ),
+                form.textField("§l§fchatCommandPrefix§r§f\nThis is what you type before a chat command, the default is \\. ", "string", {
+                    defaultValue: config.chatCommandPrefix,
+                }),
             validChatCommandPrefixes: () =>
                 form.textField(
                     "§l§fvalidChatCommandPrefixes§r§f\nList of valid prefixes for chat commands, use this if you have other add-ons with chat commands in them active, messages that start with any of these will not be sent and will not be modified by this add-on so it will work for you other packs, default is blank",
                     "Comma-Separated List of Strings",
-                    config.validChatCommandPrefixes
+                    { defaultValue: config.validChatCommandPrefixes }
                 ),
-            chatRankPrefix: () => form.textField("§l§fchatRankPrefix§r§f\nPrefix for chat ranks, default is rank:", "string", config.chatRanks.chatRankPrefix),
+            chatRankPrefix: () =>
+                form.textField("§l§fchatRankPrefix§r§f\nPrefix for chat ranks, default is rank:", "string", { defaultValue: config.chatRanks.chatRankPrefix }),
             chatSudoPrefix: () =>
-                form.textField("§l§fchatSudoPrefix§r§f\nPrefix for custom chat names, default is sudo:", "string", config.chatRanks.chatSudoPrefix),
+                form.textField("§l§fchatSudoPrefix§r§f\nPrefix for custom chat names, default is sudo:", "string", {
+                    defaultValue: config.chatRanks.chatSudoPrefix,
+                }),
             gametestStructureDefaultSpawnLocation: () =>
                 form.textField(
                     "§l§fgametestStructureDefaultSpawnLocation§r§f\nThe default spawn location for the gametest structures, this is used when spawning in no AI entities and simulated players",
                     "x y z",
-                    vTStr(config.gametestStructureDefaultSpawnLocation)
+                    { defaultValue: vTStr(config.gametestStructureDefaultSpawnLocation) }
                 ),
             spawnCommandLocation: () =>
                 form.textField(
                     "§l§fspawnCommandLocation§r§f\nThe location to teleport players when they use the \\spawn command, it is a list of coordinates separated by spaces, leaving it blank will disable the spawn command",
                     "x y z",
-                    cullEmpty([config.spawnCommandLocation.x, config.spawnCommandLocation.y, config.spawnCommandLocation.z]).join(" ")
+                    { defaultValue: cullEmpty([config.spawnCommandLocation.x, config.spawnCommandLocation.y, config.spawnCommandLocation.z]).join(" ") }
                 ),
             spawnCommandDimension: () =>
                 form.dropdown(
                     "§l§fspawnCommandDimension§r§f\nThe dimension to teleport players when they use the \\spawn command, it is a list of coordinates separated by spaces, the default is overworld",
                     ["§aOverworld", "§cNether", "§dThe End"],
-                    dimensionsd.indexOf(config.spawnCommandLocation.dimension.id as (typeof dimensionsd)[number])
+                    { defaultValueIndex: dimensionsd.indexOf(config.spawnCommandLocation.dimension.id as (typeof dimensionsd)[number]) }
                 ),
             invalidChatCommandAction: () =>
                 form.dropdown(
                     "§l§finvalidChatCommandAction§r§f\nWhat to do when a chat command is typed that does not exist, or that the player does not have permission to use. ",
                     ["Do Nothing", "Send Message", "Cancel Message", "Warn Player"],
-                    config.invalidChatCommandAction
+                    { defaultValueIndex: config.invalidChatCommandAction }
                 ),
             chatCommandsEnabled: () =>
-                form.toggle("§l§fchatCommandsEnabled§r§f\nSets whether or not to enable the chat commands, default is true", config.chatCommandsEnabled),
+                form.toggle("§l§fchatCommandsEnabled§r§f\nSets whether or not to enable the chat commands, default is true", {
+                    defaultValue: config.chatCommandsEnabled,
+                }),
             autoSavePlayerData: () =>
                 form.toggle(
                     "§l§fautoSavePlayerData§r§f\nSets whether or not to automatically save player data, if playerInventoryDataSaveSystemEnabled is disabled then disabling this will have little to no performance improvement, so it is recommended to leave this enabled, if you need better performance just disable the playerInventoryDataSaveSystemEnabled option, default is true",
-                    config.system.autoSavePlayerData
+                    { defaultValue: config.system.autoSavePlayerData }
                 ),
             playerInventoryDataSaveSystemEnabled: () =>
                 form.toggle(
                     "§l§fplayerInventoryDataSaveSystemEnabled§r\nWhether or not to save the player's inventory data when saving player data, disabling this will improve performance but will result in being unable to check the inventories of offline players, this only applies when §bautoSavePlayerData§r is enabled, the default is true",
-                    config.system.playerInventoryDataSaveSystemEnabled
+                    { defaultValue: config.system.playerInventoryDataSaveSystemEnabled }
                 ),
             useLegacyPlayerInventoryDataSaveSystem: () =>
                 form.toggle(
                     "§l§cuseLegacyPlayerInventoryDataSaveSystem§r§c (Only visible in debug mode)\nWhether or not to use the pre-1.26 player inventory data save system, enabling this will result in only being able to see general details about the items that were in an offline player's inventory, as well as increasing lag, this only applies when §bautoSavePlayerData§r and §bplayerInventoryDataSaveSystemEnabled§r are enabled, the default is false",
-                    config.system.useLegacyPlayerInventoryDataSaveSystem
+                    { defaultValue: config.system.useLegacyPlayerInventoryDataSaveSystem }
                 ),
         } as { [key in keyof optionsList]: () => any };
         includedOptions.forEach((o) => formOptionsMap[o]());
         // ("andexdbSettings:autoEscapeChatMessages");
         // ("andexdbSettings:autoURIEscapeChatMessages");
         // ("andexdbSettings:allowChatEscapeCodes");
-        /* form2.textField("§l§frankDisplayPrefix§r§f\nPrefix that appears before chat ranks in chat messages, default is \"[\"", "string", String(world.getDynamicProperty("andexdbSettings:rankDisplayPrefix") ?? "["));
-        form2.textField("§l§frankDisplaySuffix§r§f\nSuffix that appears after chat ranks in chat messages, default is \"\uF019r]\"", "string", String(world.getDynamicProperty("andexdbSettings:rankDisplaySuffix") ?? "§r§f]"));
-        form2.textField("§l§frankDisplaySeparator§r§f\nSeparator that appears between ranks, default is \" \"", "string", String(world.getDynamicProperty("andexdbSettings:rankDisplaySeparator") ?? " "));
-        form2.textField("§l§fnameDisplayPrefix§r§f\nPrefix that appears before player's names in chat messages, default is \"<\"", "string", String(world.getDynamicProperty("andexdbSettings:nameDisplayPrefix") ?? "<"));
-        form2.textField("§l§fnameDisplaySuffix§r§f\nSuffix that appears after player's names in chat messages, default is \"\uF019r>\"", "string", String(world.getDynamicProperty("andexdbSettings:nameDisplaySuffix") ?? "§r§f>"));
-        form2.textField("§l§fchatNameAndMessageSeparator§r§f\nSeparator that appears between player's names and player's chat messages, default is \" \"", "string", String(world.getDynamicProperty("andexdbSettings:chatNameAndMessageSeparator") ?? " "));*/
+        /* form2.textField("§l§frankDisplayPrefix§r§f\nPrefix that appears before chat ranks in chat messages, default is \"[\"", "string", {defaultValue: String(world.getDynamicProperty("andexdbSettings:rankDisplayPrefix") ?? "[")});
+        form2.textField("§l§frankDisplaySuffix§r§f\nSuffix that appears after chat ranks in chat messages, default is \"\uF019r]\"", "string", {defaultValue: String(world.getDynamicProperty("andexdbSettings:rankDisplaySuffix") ?? "§r§f]")});
+        form2.textField("§l§frankDisplaySeparator§r§f\nSeparator that appears between ranks, default is \" \"", "string", {defaultValue: String(world.getDynamicProperty("andexdbSettings:rankDisplaySeparator") ?? " ")});
+        form2.textField("§l§fnameDisplayPrefix§r§f\nPrefix that appears before player's names in chat messages, default is \"<\"", "string", {defaultValue: String(world.getDynamicProperty("andexdbSettings:nameDisplayPrefix") ?? "<")});
+        form2.textField("§l§fnameDisplaySuffix§r§f\nSuffix that appears after player's names in chat messages, default is \"\uF019r>\"", "string", {defaultValue: String(world.getDynamicProperty("andexdbSettings:nameDisplaySuffix") ?? "§r§f>")});
+        form2.textField("§l§fchatNameAndMessageSeparator§r§f\nSeparator that appears between player's names and player's chat messages, default is \" \"", "string", {defaultValue: String(world.getDynamicProperty("andexdbSettings:chatNameAndMessageSeparator") ?? " ")});*/
         /*
-        form2.toggle("§l§fautoEscapeChatMessages§r§f\nEvaluates escape codes in the chat automatically, default is false", Boolean(world.getDynamicProperty("andexdbSettings:autoEscapeChatMessages") ?? false));
-        form2.toggle("§l§fautoURIEscapeChatMessages§r§f\nSets whether or not to automatically escape URI % escape codes, default is false", Boolean(world.getDynamicProperty("andexdbSettings:autoURIEscapeChatMessages") ?? false));
-        form2.toggle("§l§fallowChatEscapeCodes§r§f\nSets whether or not to allow for escape codes in chat, default is true", Boolean(world.getDynamicProperty("andexdbSettings:allowChatEscapeCodes") ?? true));
-        form2.toggle("§l§fchatDisplayTimeStamp§r§f\nSets whether or not to put a timestamp before every chat message, default is false", config.chatRanks.chatDisplayTimeStamp);*/
+        form2.toggle("§l§fautoEscapeChatMessages§r§f\nEvaluates escape codes in the chat automatically, default is false", {defaultValue: Boolean(world.getDynamicProperty("andexdbSettings:autoEscapeChatMessages") ?? false)});
+        form2.toggle("§l§fautoURIEscapeChatMessages§r§f\nSets whether or not to automatically escape URI % escape codes, default is false", {defaultValue: Boolean(world.getDynamicProperty("andexdbSettings:autoURIEscapeChatMessages") ?? false)});
+        form2.toggle("§l§fallowChatEscapeCodes§r§f\nSets whether or not to allow for escape codes in chat, default is true", {defaultValue: Boolean(world.getDynamicProperty("andexdbSettings:allowChatEscapeCodes") ?? true)});
+        form2.toggle("§l§fchatDisplayTimeStamp§r§f\nSets whether or not to put a timestamp before every chat message, default is false", {defaultValue: config.chatRanks.chatDisplayTimeStamp});*/
 
         form.submitButton("Save");
         const r = await form.forceShow(player);
@@ -157,7 +160,7 @@ export async function generalSettings(sourceEntity: loosePlayerType): Promise<0 
         includedOptions.forEach((v: keyof optionsList) => {
             switch (v) {
                 case "autoSavePlayerData":
-                    if(options[v] !== config.system.autoSavePlayerData){
+                    if (options[v] !== config.system.autoSavePlayerData) {
                         config.system.autoSavePlayerData = options[v];
                         optionsRequiringRestartToApplyProperly.push("autoSavePlayerData");
                     }
@@ -186,7 +189,7 @@ export async function generalSettings(sourceEntity: loosePlayerType): Promise<0 
                     config.invalidChatCommandAction = options[v];
                     break;
                 case "playerInventoryDataSaveSystemEnabled":
-                    if(options[v] !== config.system.playerInventoryDataSaveSystemEnabled){
+                    if (options[v] !== config.system.playerInventoryDataSaveSystemEnabled) {
                         config.system.playerInventoryDataSaveSystemEnabled = options[v];
                         optionsRequiringRestartToApplyProperly.push("playerInventoryDataSaveSystemEnabled");
                     }
@@ -203,12 +206,12 @@ export async function generalSettings(sourceEntity: loosePlayerType): Promise<0 
                     };
                     break;
                 case "useLegacyPlayerInventoryDataSaveSystem":
-                    if(debugModeEnabled) {
-                        if(options[v] !== config.system.useLegacyPlayerInventoryDataSaveSystem){
+                    if (debugModeEnabled) {
+                        if (options[v] !== config.system.useLegacyPlayerInventoryDataSaveSystem) {
                             config.system.useLegacyPlayerInventoryDataSaveSystem = options[v];
                             optionsRequiringRestartToApplyProperly.push("useLegacyPlayerInventoryDataSaveSystem");
                         }
-                    }else{
+                    } else {
                         throw new Error(`The useLegacyPlayerInventoryDataSaveSystem setting can is only supposed to be changed in debug mode.`);
                     }
                     break;
@@ -220,8 +223,16 @@ export async function generalSettings(sourceEntity: loosePlayerType): Promise<0 
             }
         });
         if (optionsRequiringRestartToApplyProperly.length > 0) {
-            const r = await showMessage(player, "Restart Required", `The following settings require a restart of this world/server/realm to apply properly: ${optionsRequiringRestartToApplyProperly.join(", ")}.\nIf you are on a realm or do not have access to the /reload command, please click the restart button below. Otherwise, run the /reload command.`, "Cancel", "Restart");
-            if(r.selection === 1) {
+            const r = await showMessage(
+                player,
+                "Restart Required",
+                `The following settings require a restart of this world/server/realm to apply properly: ${optionsRequiringRestartToApplyProperly.join(
+                    ", "
+                )}.\nIf you are on a realm or do not have access to the /reload command, please click the restart button below. Otherwise, run the /reload command.`,
+                "Cancel",
+                "Restart"
+            );
+            if (r.selection === 1) {
                 let buffer = new ArrayBuffer(250000000); // Uses all of the currently available scripting memory, forcefully shutting down the world/realm/server.
             }
         }

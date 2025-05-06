@@ -25,7 +25,7 @@ export async function terminal(
     form.title(customFormUICodes.modal.titles.formStyles.fullscreen + "Command Runner / Terminal");
     form.textField("Run Command", "Run Command");
     form.textField("Run Delay", "Run Delay");
-    // form.toggle("Debug", false);
+    // form.toggle("Debug", {defaultValue: false});
     form.submitButton("Run");
     return await forceShow(form, sourceEntity)
         .then((ra) => {

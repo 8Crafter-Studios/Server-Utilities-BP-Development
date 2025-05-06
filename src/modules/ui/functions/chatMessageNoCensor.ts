@@ -4,13 +4,8 @@ import { forceShow } from "modules/ui/functions/forceShow";
 import { chatMessage } from "modules/chat/functions/chatMessage";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 
-export function chatMessageNoCensor(
-    sourceEntitya: Entity | executeCommandPlayerW | Player,
-    bypassChatInputRequests = false
-) {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW
-        ? sourceEntitya.player
-        : sourceEntitya;
+export function chatMessageNoCensor(sourceEntitya: Entity | executeCommandPlayerW | Player, bypassChatInputRequests = false) {
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
     system.run(() => {
         let form = new ModalFormData();
         let playerList = world.getAllPlayers();
@@ -19,7 +14,9 @@ export function chatMessageNoCensor(
         form.dropdown(
             "As Player",
             playerList.map((p) => p.name),
-            playerList.indexOf(sourceEntity as Player)
+            {
+                defaultValueIndex: playerList.indexOf(sourceEntity as Player),
+            }
         );
         form.submitButton("Send");
         forceShow(form, sourceEntity as any)
@@ -35,8 +32,7 @@ export function chatMessageNoCensor(
                     {
                         cancel: false,
                         message: message as string,
-                        sender: playerList[asPlayer as number] ??
-                            (sourceEntity as Player),
+                        sender: playerList[asPlayer as number] ?? (sourceEntity as Player),
                     },
                     bypassChatInputRequests
                 );
@@ -51,9 +47,4 @@ export function chatMessageNoCensor(
 catch(e) {
     console.error(e, e.stack);
 };*/
-
-
-
-
-
 }

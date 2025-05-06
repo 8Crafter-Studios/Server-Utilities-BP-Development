@@ -61,24 +61,25 @@ export async function uiSettings_menuConfigurations_mainMenu_mainSettings(source
         form.title(customFormUICodes.modal.titles.formStyles.medium + "Main Menu Settings");
         const formOptionsMap = {
             showDeprecatedButtons: () =>
-                form.toggle("§l§fShow Deprecated Buttons§r§f\nWhether or to show deprecated buttons. Defaults to true.", menuConfig.showDeprecatedButtons),
+                form.toggle("§l§fShow Deprecated Buttons§r§f\nWhether or to show deprecated buttons. Defaults to true.", {
+                    defaultValue: menuConfig.showDeprecatedButtons,
+                }),
             showExperimentalButtons: () =>
-                form.toggle(
-                    "§l§fShow Experimental Buttons§r§f\nWhether or to show experimental buttons. Defaults to true.",
-                    menuConfig.showExperimentalButtons
-                ),
+                form.toggle("§l§fShow Experimental Buttons§r§f\nWhether or to show experimental buttons. Defaults to true.", {
+                    defaultValue: menuConfig.showExperimentalButtons,
+                }),
             showNonFunctionalButtons: () =>
-                form.toggle(
-                    "§l§fShow Non-Functional Buttons§r§f\nWhether or to show non-functional buttons. Defaults to true.",
-                    menuConfig.showNonFunctionalButtons
-                ),
+                form.toggle("§l§fShow Non-Functional Buttons§r§f\nWhether or to show non-functional buttons. Defaults to true.", {
+                    defaultValue: menuConfig.showNonFunctionalButtons,
+                }),
             showUnusedButtons: () =>
-                form.toggle("§l§fShow Unused Buttons§r§f\nWhether or to show unused buttons. Defaults to true.", menuConfig.showUnusedButtons),
+                form.toggle("§l§fShow Unused Buttons§r§f\nWhether or to show unused buttons. Defaults to true.", {
+                    defaultValue: menuConfig.showUnusedButtons,
+                }),
             showUpcomingButtons: () =>
-                form.toggle(
-                    "§l§fShow Upcoming Buttons§r§f\nWhether or to show buttons that are placeholders for upcoming features. Defaults to true.",
-                    menuConfig.showUpcomingButtons
-                ),
+                form.toggle("§l§fShow Upcoming Buttons§r§f\nWhether or to show buttons that are placeholders for upcoming features. Defaults to true.", {
+                    defaultValue: menuConfig.showUpcomingButtons,
+                }),
         } as { [key in keyof optionsList]: () => any };
         includedOptions.forEach((o) => formOptionsMap[o]());
         form.submitButton("Save");
