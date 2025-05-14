@@ -52,8 +52,8 @@ export async function uiSettings_menuConfigurations_playerMenu_editButtons_addRe
             if (r.selection === buttons.length + 1) {
                 return 0;
             }
-            const buttonID = buttons[r.selection][0];
-            const button = buttons[r.selection][1];
+            const buttonID = buttons[r.selection!][0];
+            const button = buttons[r.selection!][1];
             let buttonHiddenReasonMessage = "";
             if (button.deprecated && !menuConfig.showDeprecatedButtons) {
                 buttonHiddenReasonMessage =

@@ -4,7 +4,6 @@ import {
     advancedCategoryPropertyDisplayNames,
     AdvancedProtectedAreaCategoryPropertyAllEnabledDefaults,
     AdvancedProtectedAreaCategoryPropertyAllEnabledDefaults_JSON,
-    convertAdvancedPropertedAreaCategoryToJSON,
     ProtectedAreas,
     type AdvancedProtectedAreaCategory,
 } from "init/variables/protectedAreaVariables";
@@ -167,7 +166,7 @@ Icon Path: ${category.icon_path ?? "None"}`
                     "playerInteractWithBlock",
                     "playerInteractWithEntity",
                     "itemUse",
-                    "itemUseOn",
+                    // "itemUseOn",
                     "explosion",
                     "effectAdd",
                     "chatSend",
@@ -482,7 +481,7 @@ export async function duplicateCustomAreaCategory(
             if (r.canceled) {
                 return 1;
             }
-            const newName = r.formValues[0] as string;
+            const newName = r.formValues![0] as string;
             if (newName === "") {
                 if ((await showMessage(player, "Invalid Name", "You must enter a name for the category.", "Back", "Close")).selection !== 1) {
                     continue;
@@ -566,11 +565,11 @@ export async function editCustomAreaCategorySettings(
         form.submitButton("Save");
         const r = await form.forceShow(player);
         if (r.canceled) return 1;
-        category.enabled = r.formValues[0] as boolean;
-        category.icon_path = r.formValues[1] as string;
+        category.enabled = r.formValues![0] as boolean;
+        category.icon_path = r.formValues![1] as string;
         const out: AdvancedProtectedAreaCategory<true> = JSON.parse(world.getDynamicProperty("advancedProtectedAreaCategory:" + categoryID) as string);
-        out.enabled = r.formValues[0] as boolean;
-        out.icon_path = r.formValues[1] as string;
+        out.enabled = r.formValues![0] as boolean;
+        out.icon_path = r.formValues![1] as string;
         world.setDynamicProperty("advancedProtectedAreaCategory:" + categoryID, JSON.stringify(out));
         return 1;
     } catch (e) {
@@ -1117,7 +1116,7 @@ export async function editCustomAreaCategorySetting(
             form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
             const r = await form.forceShow(player);
             if (r.canceled) return 1;
-            switch ((["toggle"] as const)[r.selection] ?? optionsList[r.selection - 1] ?? (["back", "close"] as const)[r.selection - optionsList.length - 1]) {
+            switch ((["toggle"] as const)[r.selection!] ?? optionsList[r.selection - 1] ?? (["back", "close"] as const)[r.selection - optionsList.length - 1]) {
                 case "toggle": {
                     if (!!category[setting]) {
                         if (category[setting].enabled === false) {

@@ -116,7 +116,7 @@ export declare class PlayerShop {
     set buyData(data: PlayerBuyableShopElement[]);
     get sellData(): PlayerSellableShopElement[];
     set sellData(data: PlayerSellableShopElement[]);
-    static get(shopID: string): PlayerShop;
+    static get(shopID: string): PlayerShop | undefined;
     static getAll(): PlayerShop[];
     static getIds(): string[];
     static getIdsForPlayer(playerID: `${number}`): string[];

@@ -219,7 +219,7 @@ export class ServerShop {
                 if (r.selection == data.length + +showBackButton) {
                     return 0;
                 }
-                const item = data[r.selection];
+                const item = data[r.selection!];
                 if (item.type == "item") {
                     return await this.sellItem(player, item).then(async (v) => {
                         if (v == 1) {
@@ -263,7 +263,7 @@ export class ServerShop {
                 if (r.selection == data.length + +showBackButton) {
                     return 0;
                 }
-                const item = data[r.selection];
+                const item = data[r.selection!];
                 if (item.type == "item") {
                     return await this.buyItem(player, item).then(async (v) => {
                         if (v == 1) {
@@ -359,7 +359,7 @@ export class ServerShop {
                 if (r.selection == newData.length + 1) {
                     return 0;
                 }
-                const item = newData[r.selection];
+                const item = newData[r.selection!];
                 if (item.type == "item") {
                     return await this.sellItem(player, item).then(async (v) => {
                         if (v == 1) {
@@ -423,7 +423,7 @@ export class ServerShop {
                 if (r.selection == newData.length + 1) {
                     return 0;
                 }
-                const item = newData[r.selection];
+                const item = newData[r.selection!];
                 if (item.type == "item") {
                     return await this.buyItem(player, item).then(async (v) => {
                         if (v == 1) {
@@ -631,12 +631,12 @@ export class ServerShop {
                 defaultValue: item.step ?? 1,
             });
             const r = await form.forceShow(player);
-            if (r.canceled == true || (r.formValues[0] as number) == 0) {
+            if (r.canceled == true || (r.formValues![0] as number) == 0) {
                 return 1;
             }
-            if (MoneySystem.get(player.id).money >= item.price * (r.formValues[0] as number)) {
+            if (MoneySystem.get(player.id).money >= item.price * (r.formValues![0] as number)) {
                 if (item.itemType == "newItemStack") {
-                    let newItem = new ItemStack(item.itemID, r.formValues[0] as number);
+                    let newItem = new ItemStack(item.itemID, r.formValues![0] as number);
                     newItem.nameTag = item.itemName;
                     newItem.keepOnDeath = item.keepOnDeath;
                     newItem.lockMode = item.lockMode;
@@ -650,12 +650,12 @@ export class ServerShop {
                         newItem.setCanPlaceOn(item.canPlaceOn);
                     }
                     player.getComponent("inventory").container.addItem(newItem);
-                    MoneySystem.get(player.id).removeMoney(item.price * (r.formValues[0] as number));
+                    MoneySystem.get(player.id).removeMoney(item.price * (r.formValues![0] as number));
                     return 1;
                     // this.openShop(player, "sell")
                 } else if (item.itemType == "giveCommand") {
-                    player.runCommand(`/give @s ${item.itemID} ${r.formValues[0]} ${item.itemData}`);
-                    MoneySystem.get(player.id).removeMoney(item.price * (r.formValues[0] as number));
+                    player.runCommand(`/give @s ${item.itemID} ${r.formValues![0]} ${item.itemData}`);
+                    MoneySystem.get(player.id).removeMoney(item.price * (r.formValues![0] as number));
                     return 1;
                     // this.openShop(player, "sell")
                 } else if (item.itemType == "pre-made") {
@@ -671,13 +671,13 @@ export class ServerShop {
                     const itemStack = entity.getComponent("inventory").container.getItem(0);
                     entity.remove();
 
-                    for (let i = 0; i < (r.formValues[0] as number); i++) {
+                    for (let i = 0; i < (r.formValues![0] as number); i++) {
                         let b = player.getComponent("inventory").container.addItem(itemStack);
                         if (!!b) {
                             catchtry(() => player.dimension.spawnItem(b, player.location));
                         }
                     }
-                    MoneySystem.get(player.id).removeMoney(item.price * (r.formValues[0] as number));
+                    MoneySystem.get(player.id).removeMoney(item.price * (r.formValues![0] as number));
                     return 1;
                 }
             } else {
@@ -686,9 +686,9 @@ export class ServerShop {
                 form.body(
                     `You do not have enough money to buy this item.\nYou currently have $${MoneySystem.get(player.id).money}.\nOne of this item costs $${
                         item.price
-                    }.\nYou wanted to buy ${r.formValues[0]} of this item.\nThe total price is $${
-                        item.price * (r.formValues[0] as number)
-                    }.\nYou need another $${(item.price * (r.formValues[0] as number)).toBigInt() - MoneySystem.get(player.id).money} to buy this item.`
+                    }.\nYou wanted to buy ${r.formValues![0]} of this item.\nThe total price is $${
+                        item.price * (r.formValues![0] as number)
+                    }.\nYou need another $${(item.price * (r.formValues![0] as number)).toBigInt() - MoneySystem.get(player.id).money} to buy this item.`
                 );
                 form.button1("Go Back");
                 form.button2("Close Shop");
@@ -740,7 +740,7 @@ export class ServerShop {
                 defaultValue: item.step ?? 1,
             });
             const r = await form.forceShow(player);
-            if (r.canceled == true || (r.formValues[0] as number) == 0) {
+            if (r.canceled == true || (r.formValues![0] as number) == 0) {
                 return 1;
             }
             const items = containerToContainerSlotArray(player.getComponent("inventory").container)
@@ -755,9 +755,9 @@ export class ServerShop {
                 );
             let itemCount = 0;
             items.forEach((v) => (itemCount += v.amount));
-            if (itemCount >= (r.formValues[0] as number)) {
+            if (itemCount >= (r.formValues![0] as number)) {
                 if (item.itemType == "sellable") {
-                    let amountToRemove = r.formValues[0] as number;
+                    let amountToRemove = r.formValues![0] as number;
                     const playerMoneySystem = MoneySystem.get(player.id);
                     for (let i = 0; amountToRemove > 0; i++) {
                         const iamount = items[i].amount;
@@ -777,9 +777,9 @@ export class ServerShop {
                 const form = new MessageFormData();
                 form.title("Not Enough Items");
                 form.body(
-                    `You do not have ${r.formValues[0]} of this item.\nYou currently have ${itemCount} of this item.\nYou wanted to sell ${
-                        r.formValues[0]
-                    } of this item.\nYou need another ${(r.formValues[0] as number) - itemCount} of this item.`
+                    `You do not have ${r.formValues![0]} of this item.\nYou currently have ${itemCount} of this item.\nYou wanted to sell ${
+                        r.formValues![0]
+                    } of this item.\nYou need another ${(r.formValues![0] as number) - itemCount} of this item.`
                 );
                 form.button1("Go Back");
                 form.button2("Close Shop");
@@ -833,7 +833,7 @@ export class ServerShop {
                 if (r.canceled) return 1;
 
                 switch (
-                    (!!shopsList[r.selection] ? "shop" : undefined) ??
+                    (!!shopsList[r.selection!] ? "shop" : undefined) ??
                     cullUndefined([
                         showBackButton ? "back" : undefined,
                         "close",
@@ -860,7 +860,7 @@ export class ServerShop {
                     case "refresh":
                         return await ServerShop.openPublicShopsSelector(sourceEntity, showBackButton);
                     case "shop":
-                        if ((await shopsList[r.selection].openShop(sourceEntity as Player)) === 1) {
+                        if ((await shopsList[r.selection!].openShop(sourceEntity as Player)) === 1) {
                             return await ServerShop.openPublicShopsSelector(sourceEntity, showBackButton);
                         } else {
                             return 0;
@@ -1017,7 +1017,7 @@ export class ServerShopManager {
             .then(async (r) => {
                 if (r.canceled) return 1;
 
-                switch ((["manageShops", "mainSettings", "shopItemSettings", "back", "close"] as const)[r.selection]) {
+                switch ((["manageShops", "mainSettings", "shopItemSettings", "back", "close"] as const)[r.selection!]) {
                     case "manageShops":
                         if (((await ServerShopManager.manageServerShops(sourceEntity)) as any) !== 0) {
                             return await ServerShopManager.serverShopSystemSettings(sourceEntity);
@@ -1110,7 +1110,7 @@ export class ServerShopManager {
             .then(async (r) => {
                 if (r.canceled) return 1;
 
-                switch ((!!shopsList[r.selection] ? "shop" : undefined) ?? (["newShop", "back", "close", "refresh"] as const)[r.selection]) {
+                switch ((!!shopsList[r.selection!] ? "shop" : undefined) ?? (["newShop", "back", "close", "refresh"] as const)[r.selection!]) {
                     case "newShop":
                         if ((await ServerShopManager.addServerShop(sourceEntity)) === 1) {
                             return await ServerShopManager.manageServerShops(sourceEntity);
@@ -1124,7 +1124,7 @@ export class ServerShopManager {
                     case "refresh":
                         return await ServerShopManager.manageServerShops(sourceEntity); // Refresh
                     case "shop":
-                        if ((await ServerShopManager.manageServerShop(sourceEntity, shopsList[r.selection])) === 1) {
+                        if ((await ServerShopManager.manageServerShop(sourceEntity, shopsList[r.selection!])) === 1) {
                             return await ServerShopManager.manageServerShops(sourceEntity);
                         } else {
                             return 0;
@@ -1837,24 +1837,24 @@ ${mode == "buy" ? "Price" : "Value"}: ${mode == "buy" ? (item as ShopItem).price
         return await form.forceShow(sourceEntity as Player).then(async (r) => {
             if (r.canceled) return 1;
 
-            switch (cullUndefined(["move", "edit", "delete", "applyTexturePreset", "back", "close"] as const)[r.selection]) {
+            switch (cullUndefined(["move", "edit", "delete", "applyTexturePreset", "back", "close"] as const)[r.selection!]) {
                 case "move": {
                     const form = new ModalFormData();
                     form.textField("New Position\nThe position is zero-indexed.", "index", { defaultValue: String(itemIndex) });
                     const r = await form.forceShow(sourceEntity as Player);
-                    if (!Number.isNaN(Number(r.formValues[0]))) {
+                    if (!Number.isNaN(Number(r.formValues![0]))) {
                         if (mode == "buy") {
                             let newData = shop.buyData;
                             newData.splice(itemIndex, 1);
-                            newData.splice(Number(r.formValues[0]), 0, item as ShopItem);
+                            newData.splice(Number(r.formValues![0]), 0, item as ShopItem);
                             shop.buyData = newData;
                         } else if (mode == "sell") {
                             let newData = shop.sellData;
                             newData.splice(itemIndex, 1);
-                            newData.splice(Number(r.formValues[0]), 0, item as SellableShopItem);
+                            newData.splice(Number(r.formValues![0]), 0, item as SellableShopItem);
                             shop.sellData = newData;
                         }
-                        return await ServerShopManager.manageServerShop_manageItem(sourceEntity, shop, item, Number(r.formValues[0]), mode);
+                        return await ServerShopManager.manageServerShop_manageItem(sourceEntity, shop, item, Number(r.formValues![0]), mode);
                     }
                     return await ServerShopManager.manageServerShop_manageItem(sourceEntity, shop, item, itemIndex, mode);
                 }
@@ -2213,7 +2213,7 @@ ${mode == "buy" ? "Price" : "Value"}: ${mode == "buy" ? (item as ShopItem).price
             // This will stop the code when the player closes the form
             if (r.canceled) return 1;
             let item: ShopItem | SellableShopItem = undefined;
-            let itemIndex = Number.isNaN(Number(r.formValues[2])) ? 10 : Number(r.formValues[2]);
+            let itemIndex = Number.isNaN(Number(r.formValues![2])) ? 10 : Number(r.formValues![2]);
 
             if (type == "newItemStack") {
                 let [title, texture, itemIndex, price, step, max, itemID, itemName, itemLore, canDestroy, canPlaceOn, lockMode, keepOnDeath] = r.formValues as [
@@ -2398,7 +2398,7 @@ Texture: ${page.texture}`
             // This will stop the code when the player closes the form
             if (r.canceled) return 1;
 
-            switch (cullUndefined(["contents", "move", "edit", "delete", "applyTexturePreset", "back", "close"] as const)[r.selection]) {
+            switch (cullUndefined(["contents", "move", "edit", "delete", "applyTexturePreset", "back", "close"] as const)[r.selection!]) {
                 case "contents":
                     if ((await ServerShopManager.manageServerShopPage_contents(sourceEntity, shop, [mode, String(pageIndex)])) == 1) {
                         return await ServerShopManager.manageServerShop_managePage(sourceEntity, shop, page, pageIndex, mode);
@@ -2408,19 +2408,19 @@ Texture: ${page.texture}`
                     const form = new ModalFormData();
                     form.textField("New Position\nThe position is zero-indexed.", "index", { defaultValue: String(pageIndex) });
                     const r = await form.forceShow(sourceEntity as Player);
-                    if (!Number.isNaN(Number(r.formValues[0]))) {
+                    if (!Number.isNaN(Number(r.formValues![0]))) {
                         if (mode == "buy") {
                             let newData = shop.buyData;
                             newData.splice(pageIndex, 1);
-                            newData.splice(Number(r.formValues[0]), 0, page as ShopPage);
+                            newData.splice(Number(r.formValues![0]), 0, page as ShopPage);
                             shop.buyData = newData;
                         } else if (mode == "sell") {
                             let newData = shop.sellData;
                             newData.splice(pageIndex, 1);
-                            newData.splice(Number(r.formValues[0]), 0, page as ShopPage);
+                            newData.splice(Number(r.formValues![0]), 0, page as ShopPage);
                             shop.sellData = newData;
                         }
-                        return await ServerShopManager.manageServerShop_managePage(sourceEntity, shop, page, Number(r.formValues[0]), mode);
+                        return await ServerShopManager.manageServerShop_managePage(sourceEntity, shop, page, Number(r.formValues![0]), mode);
                     }
                     return await ServerShopManager.manageServerShop_managePage(sourceEntity, shop, page, pageIndex, mode);
                 }
@@ -2551,7 +2551,7 @@ Texture: ${page.texture}`
             // This will stop the code when the player closes the form
             if (r.canceled) return 1;
             let page: ShopPage = undefined;
-            let pageIndex = Number.isNaN(Number(r.formValues[2])) ? 10 : Number(r.formValues[2]);
+            let pageIndex = Number.isNaN(Number(r.formValues![2])) ? 10 : Number(r.formValues![2]);
 
             let [pageTitle, pageBody, title, texture] = r.formValues as [pageTitle: string, pageBody: string, title: string, texture: string];
             page = {
@@ -2815,26 +2815,26 @@ ${mode == "buy" ? "Price" : "Value"}: ${mode == "buy" ? (item as ShopItem).price
             // This will stop the code when the player closes the form
             if (r.canceled) return 1;
 
-            switch (cullUndefined(["move", "edit", "delete", "applyTexturePreset", "back", "close"] as const)[r.selection]) {
+            switch (cullUndefined(["move", "edit", "delete", "applyTexturePreset", "back", "close"] as const)[r.selection!]) {
                 case "move": {
                     const form = new ModalFormData();
                     form.textField("New Position\nThe position is zero-indexed.", "index", { defaultValue: String(itemIndex) });
                     const r = await form.forceShow(sourceEntity as Player);
-                    if (!Number.isNaN(Number(r.formValues[0]))) {
+                    if (!Number.isNaN(Number(r.formValues![0]))) {
                         if (mode == "buy") {
                             let data = shop.buyData;
                             let newData = getPathInObject(data, path).data as BuyableShopElement[];
                             newData.splice(itemIndex, 1);
-                            newData.splice(Number(r.formValues[0]), 0, item as ShopItem);
+                            newData.splice(Number(r.formValues![0]), 0, item as ShopItem);
                             shop.buyData = data;
                         } else if (mode == "sell") {
                             let data = shop.sellData;
                             let newData = getPathInObject(data, path).data as SellableShopElement[];
                             newData.splice(itemIndex, 1);
-                            newData.splice(Number(r.formValues[0]), 0, item as SellableShopItem);
+                            newData.splice(Number(r.formValues![0]), 0, item as SellableShopItem);
                             shop.sellData = data;
                         }
-                        return await ServerShopManager.manageServerShopPage_manageItem(sourceEntity, shop, path, item, Number(r.formValues[0]));
+                        return await ServerShopManager.manageServerShopPage_manageItem(sourceEntity, shop, path, item, Number(r.formValues![0]));
                     }
                     return await ServerShopManager.manageServerShopPage_manageItem(sourceEntity, shop, path, item, itemIndex);
                 }
@@ -3200,7 +3200,7 @@ ${mode == "buy" ? "Price" : "Value"}: ${mode == "buy" ? (item as ShopItem).price
             // This will stop the code when the player closes the form
             if (r.canceled) return 1;
             let item: ShopItem | SellableShopItem = undefined;
-            let itemIndex = Number.isNaN(Number(r.formValues[2])) ? 10 : Number(r.formValues[2]);
+            let itemIndex = Number.isNaN(Number(r.formValues![2])) ? 10 : Number(r.formValues![2]);
 
             if (type == "newItemStack") {
                 let [title, texture, itemIndex, price, step, max, itemID, itemName, itemLore, canDestroy, canPlaceOn, lockMode, keepOnDeath] = r.formValues as [
@@ -3389,7 +3389,7 @@ Texture: ${page.texture}`
             if (r.canceled) return 1;
 
             let response = r.selection;
-            switch (cullUndefined(["contents", "move", "edit", "delete", "applyTexturePreset", "back", "close"] as const)[r.selection]) {
+            switch (cullUndefined(["contents", "move", "edit", "delete", "applyTexturePreset", "back", "close"] as const)[r.selection!]) {
                 case "contents":
                     if ((await ServerShopManager.manageServerShopPage_contents(sourceEntity, shop, path)) == 1) {
                         return await ServerShopManager.manageServerShopPage_managePage(sourceEntity, shop, path, page, pageIndex);
@@ -3399,19 +3399,19 @@ Texture: ${page.texture}`
                     const form = new ModalFormData();
                     form.textField("New Position\nThe position is zero-indexed.", "index", { defaultValue: String(pageIndex) });
                     const r = await form.forceShow(sourceEntity as Player);
-                    if (!Number.isNaN(Number(r.formValues[0]))) {
+                    if (!Number.isNaN(Number(r.formValues![0]))) {
                         if (mode == "buy") {
                             let newData = shop.buyData;
                             newData.splice(pageIndex, 1);
-                            newData.splice(Number(r.formValues[0]), 0, page as ShopPage);
+                            newData.splice(Number(r.formValues![0]), 0, page as ShopPage);
                             shop.buyData = newData;
                         } else if (mode == "sell") {
                             let newData = shop.sellData;
                             newData.splice(pageIndex, 1);
-                            newData.splice(Number(r.formValues[0]), 0, page as ShopPage);
+                            newData.splice(Number(r.formValues![0]), 0, page as ShopPage);
                             shop.sellData = newData;
                         }
-                        return await ServerShopManager.manageServerShopPage_managePage(sourceEntity, shop, path, page, Number(r.formValues[0]));
+                        return await ServerShopManager.manageServerShopPage_managePage(sourceEntity, shop, path, page, Number(r.formValues![0]));
                     }
                     return await ServerShopManager.manageServerShopPage_managePage(sourceEntity, shop, path, page, pageIndex);
                 }
@@ -3546,7 +3546,7 @@ Texture: ${page.texture}`
             // This will stop the code when the player closes the form
             if (r.canceled) return 1;
             let page: ShopPage = undefined;
-            let pageIndex = Number.isNaN(Number(r.formValues[2])) ? 10 : Number(r.formValues[2]);
+            let pageIndex = Number.isNaN(Number(r.formValues![2])) ? 10 : Number(r.formValues![2]);
 
             let [pageTitle, pageBody, title, texture] = r.formValues as [pageTitle: string, pageBody: string, title: string, texture: string];
             page = {

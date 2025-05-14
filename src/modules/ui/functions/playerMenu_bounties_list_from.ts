@@ -114,7 +114,7 @@ export async function playerMenu_bounties_list_from(
             if (r.canceled) return 1;
 
             switch (
-                (["search", "previous", "go", "next", "", ""] as const)[r.selection] ??
+                (["search", "previous", "go", "next", "", ""] as const)[r.selection!] ??
                 (!!displayBountiesB[r.selection - 6] ? "bounty" : undefined) ??
                 (["back", "close", "refresh"] as const)[r.selection - displayBountiesB.length - 6]
             ) {

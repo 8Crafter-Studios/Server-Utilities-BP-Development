@@ -22,7 +22,7 @@
     "sourceMap": true,
     "noFallthroughCasesInSwitch": true,
     "strictBindCallApply": true,
-    // "strictNullChecks": true,
+    "strictNullChecks": true,
     // "strictPropertyInitialization": true,
     "noImplicitAny": true,
     "emitDecoratorMetadata": true,

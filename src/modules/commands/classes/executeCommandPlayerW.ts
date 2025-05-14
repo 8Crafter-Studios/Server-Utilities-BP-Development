@@ -230,49 +230,85 @@ export class executeCommandPlayerW implements Omit<Player, "name" | "id"> {
             }
         }
     }
-    get inventory(): EntityInventoryComponent | undefined {
-        return this.getComponent("inventory");
+    get inventory(): EntityInventoryComponent {
+        return this.getComponent("inventory")!;
     }
-    get equippable(): EntityEquippableComponent | undefined {
-        return this.getComponent("equippable");
+    get equippable(): EntityEquippableComponent {
+        return this.getComponent("equippable")!;
     }
-    get cursorInventory(): PlayerCursorInventoryComponent | undefined {
-        return this.getComponent("cursor_inventory");
+    get cursorInventory(): PlayerCursorInventoryComponent {
+        return this.getComponent("cursor_inventory")!;
     }
     get heldItem(): ItemStack | undefined {
-        if (!!!this.getComponent("equippable")) {
-            return undefined;
-        } else {
-            return this.getComponent("equippable").getEquipment(EquipmentSlot.Mainhand);
-        }
+        return this.getComponent("equippable")?.getEquipment(EquipmentSlot.Mainhand);
     }
-    get activeSlot(): ContainerSlot | undefined {
-        if (!!!this.getComponent("equippable")) {
-            return undefined;
-        } else {
-            return this.getComponent("equippable").getEquipmentSlot(EquipmentSlot.Mainhand);
-        }
+    get activeSlot(): ContainerSlot {
+        return this.getComponent("equippable")?.getEquipmentSlot(EquipmentSlot.Mainhand)!;
     }
+    /**
+     * Returns an instance of the {@link MoneySystem} class that is associated with this entity.
+     *
+     * @author 8Crafter
+     *
+     * @throws {ReferenceError} If the executeCommandPlayerW instance does not have a linked player.
+     */
     get moneySystem(): MoneySystem {
+        if (!this.player)
+            throw new ReferenceError(
+                "[[executeCommandPlayerW.prototype.moneySystem::get]] This getter cannot be used when the executeCommandPlayerW instance does not have a linked player."
+        )
         return MoneySystem.get(this.player.id);
     }
+    /**
+     * Returns an instance of the {@link PlayerNotifications} class that is associated with this entity.
+     *
+     * @author 8Crafter
+     *
+     * @throws {ReferenceError} If the executeCommandPlayerW instance does not have a linked player.
+     */
     get playerNotifications(): PlayerNotifications {
+        if (!this.player)
+            throw new ReferenceError(
+                "[[executeCommandPlayerW.prototype.playerNotifications::get]] This getter cannot be used when the executeCommandPlayerW instance does not have a linked player."
+            );
         return new PlayerNotifications(this.player);
     }
+    /**
+     * Returns an instance of the {@link PlayerPermissions} class that is associated with this entity.
+     *
+     * @author 8Crafter
+     *
+     * @throws {ReferenceError} If the executeCommandPlayerW instance does not have a linked player.
+     */
     get playerPermissions(): PlayerPermissions {
+        if (!this.player)
+            throw new ReferenceError(
+                "[[executeCommandPlayerW.prototype.playerPermissions::get]] This getter cannot be used when the executeCommandPlayerW instance does not have a linked player."
+            );
         return new PlayerPermissions(this.player);
     }
+    /**
+     * Returns an instance of the {@link WorldEditSelection} class that is associated with this entity.
+     *
+     * @author 8Crafter
+     *
+     * @throws {ReferenceError} If the executeCommandPlayerW instance does not have a linked player.
+     */
     get worldEditSelection(): WorldEditSelection {
+        if (!this.player)
+            throw new ReferenceError(
+                "[[executeCommandPlayerW.prototype.worldEditSelection::get]] This getter cannot be used when the executeCommandPlayerW instance does not have a linked player."
+            );
         return new WorldEditSelection(this.player);
     }
     get dimensionLocation() {
         return Object.assign(this.location, { dimension: this.dimension });
     }
     get dimension() {
-        return this.modifieddimension ?? this.player?.dimension;
+        return this.modifieddimension ?? this.player?.dimension!;
     }
     get location() {
-        return this.modifiedlocation ?? this.player?.location;
+        return this.modifiedlocation ?? this.player?.location!;
     }
     get locationstring(): `${number} ${number} ${number}` {
         return (this.x + " " + this.y + " " + this.z) as `${number} ${number} ${number}`;
@@ -305,61 +341,61 @@ export class executeCommandPlayerW implements Omit<Player, "name" | "id"> {
         return getChunkIndexD(this.xz);
     }
     get x() {
-        return this.modifiedlocation?.x ?? this.player?.location?.x;
+        return this.modifiedlocation?.x ?? this.player?.location?.x!;
     }
     get y() {
-        return this.modifiedlocation?.y ?? this.player?.location?.y;
+        return this.modifiedlocation?.y ?? this.player?.location?.y!;
     }
     get z() {
-        return this.modifiedlocation?.z ?? this.player?.location?.z;
+        return this.modifiedlocation?.z ?? this.player?.location?.z!;
     }
     get rotx() {
-        return this.rotation?.x ?? this.player?.getRotation?.()?.x;
+        return this.rotation?.x ?? this.player?.getRotation?.()?.x!;
     }
     get roty() {
-        return this.rotation?.y ?? this.player?.getRotation?.()?.y;
+        return this.rotation?.y ?? this.player?.getRotation?.()?.y!;
     }
     get timeZone(): number {
-        return (this.getDynamicProperty("andexdbPersonalSettings:timeZone") ?? config.system.timeZone).toString().toNumber();
+        return this.getDynamicProperty("andexdbPersonalSettings:timeZone")?.toString().toNumber() ?? config.system.timeZone;
     }
     set timeZone(timezone: number | string | boolean | null | undefined) {
         this.setDynamicProperty("andexdbPersonalSettings:timeZone", !!timezone ? timezone.toString() : undefined);
     }
     get camera() {
-        return this.player?.camera;
+        return this.player?.camera!;
     }
     get isEmoting() {
-        return this.player?.isEmoting;
+        return this.player?.isEmoting!;
     }
     get isFlying() {
-        return this.player?.isFlying;
+        return this.player?.isFlying!;
     }
     get isGliding() {
-        return this.player?.isGliding;
+        return this.player?.isGliding!;
     }
     get isJumping() {
-        return this.player?.isJumping;
+        return this.player?.isJumping!;
     }
     get isClimbing() {
-        return this.player?.isClimbing;
+        return this.player?.isClimbing!;
     }
     get isFalling() {
-        return this.player?.isFalling;
+        return this.player?.isFalling!;
     }
     get isInWater() {
-        return this.player?.isInWater;
+        return this.player?.isInWater!;
     }
     get isOnGround() {
-        return this.player?.isOnGround;
+        return this.player?.isOnGround!;
     }
     get isSleeping() {
-        return this.player?.isSleeping;
+        return this.player?.isSleeping!;
     }
     get isSprinting() {
-        return this.player?.isSprinting;
+        return this.player?.isSprinting!;
     }
     get isSwimming() {
-        return this.player?.isSwimming;
+        return this.player?.isSwimming!;
     }
     //get fallDistance(){return this.player?.fallDistance} Removed in 1.21.20 sadly. >:(
     get scoreboardIdentity() {
@@ -367,46 +403,73 @@ export class executeCommandPlayerW implements Omit<Player, "name" | "id"> {
     }
     //get lifetimeState(){return this.player?.lifetimeState} Removed in 1.21.20 sadly. >:(
     get level() {
-        return this.player?.level;
+        return this.player?.level!;
     }
     get onScreenDisplay() {
-        return this.player?.onScreenDisplay;
+        return this.player?.onScreenDisplay!;
     }
+    /**
+     * @remarks
+     * This property can't be edited in read-only mode.
+     *
+     * @throws {ReferenceError} If the executeCommandPlayerW instance does not have a linked player when using the setter.
+     */
     get selectedSlotIndex() {
-        return this.player?.selectedSlotIndex;
+        return this.player?.selectedSlotIndex!;
     }
     set selectedSlotIndex(slotNumber: number) {
+        if (!this.player)
+            throw new ReferenceError(
+                "[[executeCommandPlayerW.prototype.selectedSlotIndex::set]] This setter cannot be used when the executeCommandPlayerW instance does not have a linked player."
+            );
         this.player.selectedSlotIndex = slotNumber;
     }
     get totalXpNeededForNextLevel() {
-        return this.player?.totalXpNeededForNextLevel;
+        return this.player?.totalXpNeededForNextLevel!;
     }
     get xpEarnedAtCurrentLevel() {
-        return this.player?.xpEarnedAtCurrentLevel;
+        return this.player?.xpEarnedAtCurrentLevel!;
     }
+    /**
+     * @remarks
+     * Whether the entity is sneaking - that is, moving more slowly
+     * and more quietly.
+     *
+     * This property can't be edited in read-only mode.
+     *
+     * @throws {ReferenceError} If the executeCommandPlayerW instance does not have a linked player when using the setter.
+     */
     get isSneaking() {
-        return this.player?.isSneaking;
+        return this.player?.isSneaking!;
     }
     set isSneaking(isSneaking: boolean) {
+        if (!this.player)
+            throw new ReferenceError(
+                "[[executeCommandPlayerW.prototype.isSneaking::set]] This setter cannot be used when the executeCommandPlayerW instance does not have a linked player."
+            );
         this.player.isSneaking = isSneaking;
     }
     get typeId() {
-        return this.player?.typeId;
+        return this.player?.typeId!;
     }
     get nameTag() {
-        return this.player?.nameTag;
+        return this.player?.nameTag!;
     }
-    set nameTag(nameTag: string | undefined | null) {
+    set nameTag(nameTag: string) {
+        if (!this.player)
+            throw new ReferenceError(
+                "[[executeCommandPlayerW.prototype.nameTag::set]] This setter cannot be used when the executeCommandPlayerW instance does not have a linked player."
+            );
         this.player.nameTag = nameTag;
     }
     get inputPermissions() {
-        return this.player?.inputPermissions;
+        return this.player?.inputPermissions!;
     }
     get clientSystemInfo() {
-        return this.player?.clientSystemInfo;
+        return this.player?.clientSystemInfo!;
     }
     get inputInfo() {
-        return this.player?.inputInfo;
+        return this.player?.inputInfo!;
     }
     /**
      * @beta
@@ -421,47 +484,47 @@ export class executeCommandPlayerW implements Omit<Player, "name" | "id"> {
      *
      * {@link InvalidEntityError}
      */
-    get graphicsMode(): GraphicsMode | undefined {
-        return this.player?.graphicsMode;
+    get graphicsMode(): GraphicsMode {
+        return this.player?.graphicsMode!;
     }
     get isValid() {
-        return this.player?.isValid;
+        return this.player?.isValid!;
     }
     get localizationKey() {
-        return this.player?.localizationKey;
+        return this.player?.localizationKey!;
     }
     addEffect(effectType: string | EffectType, duration: number, options?: EntityEffectOptions) {
         return this.player?.addEffect(effectType, duration, options);
     }
     addExperience(amount: number) {
-        return this.player?.addExperience(amount);
+        return this.player?.addExperience(amount)!;
     }
     getRotation() {
-        return this.rotation ?? this.player?.getRotation();
+        return this.rotation ?? this.player?.getRotation()!;
     }
     getViewDirection() {
-        return !!this.rotation ? anglesToDirectionVectorDeg(this.rotation.x, this.rotation.y) : this.player?.getViewDirection();
+        return !!this.rotation ? anglesToDirectionVectorDeg(this.rotation.x, this.rotation.y) : this.player?.getViewDirection()!;
     }
     addLevels(amount: number) {
-        return this.player?.addLevels(amount);
+        return this.player?.addLevels(amount)!;
     }
     eatItem(itemStack: ItemStack) {
         return this.player?.eatItem(itemStack);
     }
     getGameMode() {
-        return this.player?.getGameMode();
+        return this.player?.getGameMode()!;
     }
     getItemCooldown(itemCategory: string) {
-        return this.player?.getItemCooldown(itemCategory);
+        return this.player?.getItemCooldown(itemCategory)!;
     }
     getSpawnPoint() {
-        return this.player?.getSpawnPoint();
+        return this.player?.getSpawnPoint()!;
     }
     getTotalXp() {
-        return this.player?.getTotalXp();
+        return this.player?.getTotalXp()!;
     }
     isOp() {
-        return this.player?.isOp();
+        return this.player?.isOp()!;
     }
     lookAt(targetLocation: Vector3) {
         return this.player?.lookAt(targetLocation);
@@ -479,7 +542,7 @@ export class executeCommandPlayerW implements Omit<Player, "name" | "id"> {
         return this.player?.queueMusic(trackId, musicOptions);
     }
     resetLevel() {
-        return this.player?.resetLevel();
+        return this.player?.resetLevel()!;
     }
     sendMessage(message: string | RawMessage | (string | RawMessage)[]) {
         return this.player?.sendMessage(message);
@@ -500,31 +563,31 @@ export class executeCommandPlayerW implements Omit<Player, "name" | "id"> {
         return this.player?.startItemCooldown(itemCategory, tickDuration);
     }
     stopMusic() {
-        return this.player?.stopMusic();
+        return this.player?.stopMusic()!;
     }
     addTag(tag: string) {
-        return this.player?.addTag(tag);
+        return this.player?.addTag(tag)!;
     }
     applyDamage(amount: number, options?: EntityApplyDamageByProjectileOptions | EntityApplyDamageOptions) {
-        return this.player?.applyDamage(amount, options);
+        return this.player?.applyDamage(amount, options)!;
     }
-    applyImpulse(vector: Vector3) {
+    applyImpulse(vector: Vector3): void {
         return this.player?.applyImpulse(vector);
     }
     applyKnockback(horizontalForce: VectorXZ, verticalStrength: number) {
         return this.player?.applyKnockback(horizontalForce, verticalStrength);
     }
     clearDynamicProperties() {
-        return this.player?.clearDynamicProperties();
+        return this.player?.clearDynamicProperties()!;
     }
     clearVelocity() {
-        return this.player?.clearVelocity();
+        return this.player?.clearVelocity()!;
     }
     extinguishFire(useEffects?: boolean) {
-        return this.player?.extinguishFire(useEffects);
+        return this.player?.extinguishFire(useEffects)!;
     }
     getAimAssist() {
-        return this.player?.getAimAssist();
+        return this.player?.getAimAssist()!;
     }
     getBlockFromViewDirection(options?: BlockRaycastOptions) {
         return this.player?.getBlockFromViewDirection(options);
@@ -547,67 +610,67 @@ export class executeCommandPlayerW implements Omit<Player, "name" | "id"> {
             : undefined;
     }
     getComponents() {
-        return this.player?.getComponents();
+        return this.player?.getComponents()!;
     }
     getDynamicProperty(identifier: string) {
         return this.player?.getDynamicProperty(identifier);
     }
     getDynamicPropertyIds() {
-        return this.player?.getDynamicPropertyIds();
+        return this.player?.getDynamicPropertyIds()!;
     }
     getDynamicPropertyTotalByteCount() {
-        return this.player?.getDynamicPropertyTotalByteCount();
+        return this.player?.getDynamicPropertyTotalByteCount()!;
     }
     getEffect(effectType: string | EffectType) {
         return this.player?.getEffect(effectType);
     }
     getEffects() {
-        return this.player?.getEffects();
+        return this.player?.getEffects()!;
     }
     getEntitiesFromViewDirection(options?: EntityRaycastOptions) {
-        return this.player?.getEntitiesFromViewDirection(options);
+        return this.player?.getEntitiesFromViewDirection(options)!;
     }
     getHeadLocation() {
-        return this.player?.getHeadLocation();
+        return this.player?.getHeadLocation()!;
     }
     getProperty(identifier: string) {
         return this.player?.getProperty(identifier);
     }
     getTags() {
-        return this.player?.getTags();
+        return this.player?.getTags()!;
     }
     getVelocity() {
-        return this.player?.getVelocity();
+        return this.player?.getVelocity()!;
     }
     hasComponent(componentId: string) {
-        return this.player?.hasComponent(componentId);
+        return this.player?.hasComponent(componentId)!;
     }
     hasTag(tag: string) {
-        return this.player?.hasTag(tag);
+        return this.player?.hasTag(tag)!;
     }
     kill() {
-        return this.player?.kill();
+        return this.player?.kill()!;
     }
     matches(options: EntityQueryOptions) {
-        return this.player?.matches(options);
+        return this.player?.matches(options)!;
     }
     playAnimation(animationName: string, options?: PlayAnimationOptions) {
         return this.player?.playAnimation(animationName, options);
     }
     remove() {
-        return this.player?.remove();
+        return this.player?.remove()!;
     }
     removeEffect(effectType: string | EffectType) {
-        return this.player?.removeEffect(effectType);
+        return this.player?.removeEffect(effectType)!;
     }
     removeTag(tag: string) {
-        return this.player?.removeTag(tag);
+        return this.player?.removeTag(tag)!;
     }
     resetProperty(identifier: string) {
-        return this.player?.resetProperty(identifier);
+        return this.player?.resetProperty(identifier)!;
     }
     runCommand(commandString: string) {
-        return this.player?.runCommand(commandString);
+        return this.player?.runCommand(commandString)!;
     }
     setDynamicProperty(identifier: string, value?: string | number | boolean | Vector3) {
         return this.player?.setDynamicProperty(identifier, value);
@@ -616,7 +679,7 @@ export class executeCommandPlayerW implements Omit<Player, "name" | "id"> {
         return this.player?.setDynamicProperties(values);
     }
     setOnFire(seconds: number, useEffects?: boolean) {
-        return this.player?.setOnFire(seconds, useEffects);
+        return this.player?.setOnFire(seconds, useEffects)!;
     }
     setProperty(identifier: string, value: string | number | boolean) {
         return this.player?.setProperty(identifier, value);
@@ -631,15 +694,15 @@ export class executeCommandPlayerW implements Omit<Player, "name" | "id"> {
         return this.player?.triggerEvent(eventName);
     }
     tryTeleport(location: Vector3, teleportOptions?: TeleportOptions) {
-        return this.player?.tryTeleport(location, teleportOptions);
+        return this.player?.tryTeleport(location, teleportOptions)!;
     }
-    setPropertyOverrideForEntity(targetEntity: Entity, identifier: string, value: boolean | number | string){
+    setPropertyOverrideForEntity(targetEntity: Entity, identifier: string, value: boolean | number | string) {
         return this.player?.setPropertyOverrideForEntity(targetEntity, identifier, value);
     }
-    removePropertyOverrideForEntity(targetEntity: Entity, identifier: string){
+    removePropertyOverrideForEntity(targetEntity: Entity, identifier: string) {
         return this.player?.removePropertyOverrideForEntity(targetEntity, identifier);
     }
-    clearPropertyOverridesForEntity(targetEntity: Entity){
+    clearPropertyOverridesForEntity(targetEntity: Entity) {
         return this.player?.clearPropertyOverridesForEntity(targetEntity);
     }
     saveStringToDynamicProperties(string: string, propertyName: string, clearOldProperties: boolean = true, chunkSize: number | bigint = 32760): void {

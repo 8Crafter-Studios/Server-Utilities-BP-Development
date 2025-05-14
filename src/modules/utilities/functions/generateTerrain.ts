@@ -715,7 +715,7 @@ export async function generateTerrainV2(
             lSystem = applyRules(lSystem, rules);
         }
 
-        function applyRules(lSystem: string | any[], rules: { [x: string]: string; X?: string; F?: string }) {
+        function applyRules(lSystem: string | any[], rules: { [x: string]: string; } & { X?: string; F?: string }) {
             let result = "";
             for (let i = 0; i < lSystem.length; i++) {
                 const char = lSystem[i];
@@ -778,12 +778,12 @@ export async function generateTerrainV2(
                     case "]":
                         // pop state from stack
                         const state = fractal.pop();
-                        x = state.x;
-                        y = state.y;
-                        z = state.z;
-                        dx = state.dx;
-                        dy = state.dy;
-                        dz = state.dz;
+                        x = state!?.x;
+                        y = state!?.y;
+                        z = state!?.z;
+                        dx = state!?.dx!;
+                        dy = state!?.dy!;
+                        dz = state!?.dz!;
                         break;
                 }
             }
@@ -1875,7 +1875,7 @@ export async function placeOres(options: OreGenerationOptions): Promise<{
     const genMode = options.oreGenerationMode ?? "v2";
     const opts = {
         minMSBetweenTickWaits: options?.minMSBetweenTickWaits ?? config.system.defaultMinMSBetweenTickWaits,
-    } as Partial<OreGenerationOptions>;
+    } as Partial<OreGenerationOptions> & { minMSBetweenTickWaits: number };
 
     const noise = options.noise ?? getNoise(options.seed);
 
@@ -1913,7 +1913,7 @@ export async function placeOres(options: OreGenerationOptions): Promise<{
                 let remainingBlocks = spawnSizeToMaxBlocksMap[blockTypeData.spawnSize];
                 // const radius = Math.ceil(blockTypeData.spawnSize + 0.1);
                 const radius = Math.ceil(Math.sqrt(blockTypeData.spawnSize) * 1.5 + 0.1);
-                if (!(blockTypeData.canReplace ? blockTypeData.canReplace.includes(options.dimension.getBlock(blobLocation).typeId as any) : true)) {
+                if (!(blockTypeData.canReplace ? blockTypeData.canReplace.includes(options.dimension.getBlock(blobLocation)?.typeId as any) : true)) {
                     continue;
                 }
                 if (blockTypeData.oreFeatureCategory === "blob") {
@@ -1947,7 +1947,7 @@ export async function placeOres(options: OreGenerationOptions): Promise<{
                                 : 1
                             : 0;
                     if ("deepslateVariant" in blockTypeData && deepslateNoiseValue > 0) {
-                        options.dimension.setBlockType(blobLocation, blockTypeData.deepslateVariant);
+                        options.dimension.setBlockType(blobLocation, blockTypeData.deepslateVariant!);
                     } else {
                         options.dimension.setBlockType(blobLocation, blockType);
                     }
@@ -1975,7 +1975,7 @@ export async function placeOres(options: OreGenerationOptions): Promise<{
                                                     if (
                                                         blockTypeData.canReplace
                                                             ? blockTypeData.canReplace.includes(
-                                                                  options.dimension.getBlock({ x: blockX, y: blockY, z: blockZ }).typeId as any
+                                                                  options.dimension.getBlock({ x: blockX, y: blockY, z: blockZ })?.typeId as any
                                                               )
                                                             : true
                                                     ) {
@@ -2007,7 +2007,7 @@ export async function placeOres(options: OreGenerationOptions): Promise<{
                                                             if ("deepslateVariant" in blockTypeData && deepslateNoiseValue > 0) {
                                                                 options.dimension.setBlockType(
                                                                     { x: blockX, y: blockY, z: blockZ },
-                                                                    blockTypeData.deepslateVariant
+                                                                    blockTypeData.deepslateVariant!
                                                                 );
                                                             } else {
                                                                 options.dimension.setBlockType({ x: blockX, y: blockY, z: blockZ }, blockType);
@@ -2069,7 +2069,7 @@ export async function placeOres(options: OreGenerationOptions): Promise<{
                                         if (Math.abs(noiseValue) < 0.25) {
                                             if (
                                                 blockTypeData.canReplace
-                                                    ? blockTypeData.canReplace.includes(options.dimension.getBlock({ x, y, z }).typeId as any)
+                                                    ? blockTypeData.canReplace.includes(options.dimension.getBlock({ x, y, z })?.typeId as any)
                                                     : true
                                             ) {
                                                 oresAttemptedToBePlaced++;
@@ -2086,7 +2086,7 @@ export async function placeOres(options: OreGenerationOptions): Promise<{
                                                                 : 1
                                                             : 0;
                                                     if ("deepslateVariant" in blockTypeData && deepslateNoiseValue > 0) {
-                                                        options.dimension.setBlockType({ x, y, z }, blockTypeData.deepslateVariant);
+                                                        options.dimension.setBlockType({ x, y, z }, blockTypeData.deepslateVariant!);
                                                     } else {
                                                         options.dimension.setBlockType({ x, y, z }, blockType);
                                                     }

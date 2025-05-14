@@ -1,7 +1,7 @@
 import { Vector3Utils } from "@minecraft/math.js";
 import { system, world, ItemStack, EntityInventoryComponent, EnchantmentTypes, ItemEnchantableComponent, Player, Entity, EquipmentSlot, EntityEquippableComponent, ItemDurabilityComponent, ItemLockMode, BlockInventoryComponent, BlockPermutation, SignSide, DyeColor, BlockTypes, Block, WeatherType, EntityMarkVariantComponent, EntityPushThroughComponent, EntityScaleComponent, EntitySkinIdComponent, EntityTameableComponent, EntityBreathableComponent, EntityColorComponent, EntityFlyingSpeedComponent, EntityFrictionModifierComponent, 
 // EntityGroundOffsetComponent,
-EntityHealthComponent, ScriptEventSource, MolangVariableMap, Effect, } from "@minecraft/server";
+EntityHealthComponent, ScriptEventSource, MolangVariableMap, Effect, ContainerSlot, } from "@minecraft/server";
 import { ModalFormData, ActionFormData, ModalFormResponse } from "@minecraft/server-ui";
 import { chatMessage } from "modules/chat/functions/chatMessage";
 import { chatSend } from "modules/chat/functions/chatSend";
@@ -616,7 +616,7 @@ subscribedEvents.afterScriptEventReceive = system.afterEvents.scriptEventReceive
                     return;
                 let [playerViewer, selectionType, entityUUID, blockLocationIndex, blockLocationCoordinates] = t.formValues;
                 let playerViewerB = Number(playerViewer);
-                let playerTargetB;
+                let playerTargetB = undefined;
                 let blockLocation = String(blockLocationCoordinates).split(", ");
                 if (selectionType == 0) {
                     playerTargetB = players[playerViewerB].getEntitiesFromViewDirection()[0].entity;
@@ -974,7 +974,7 @@ break;*/ /*
                             if (r.canceled)
                                 return;
                             // This will assign every input their own variable
-                            let [commandId, commandDelay, debug] = r.formValues; /*
+                            let [commandId, commandDelay, debug] = r.formValues!; /*
                             console.warn(r.formValues);*/ /*
 system.runTimeout(() => {console.warn(
 (sourceEntity).runCommand(String(commandId)).successCount);}, Number(commandDelay))
@@ -1038,6 +1038,7 @@ default:
 }).catch(e => {
 console.error(e, e.stack);
 });*/
+        assertIsDefined(sourceEntity);
         mainMenu(sourceEntity);
     }
     if (id == "andexdb:itemLoreInventoryModifier" || id == "andexdb:inventoryController" || id == "andexdb:itemModifier") {
@@ -1062,8 +1063,7 @@ console.error(e, e.stack);
             let [slotNumber, slotType, playerTarget, playerViewer, debug2] = t.formValues;
             let playerTargetB = Number(playerTarget);
             let playerViewerB = Number(playerViewer);
-            let inventory;
-            inventory = players[playerTargetB].getComponent("inventory"); /*
+            let inventory = players[playerTargetB].getComponent("inventory"); /*
 try{inventory = players[playerTargetB].getComponent("equipment_inventory") as EntityEquipmentInventoryComponent;} catch(e){if (Boolean(debug2) == true) { console.error(e, e.stack); }};*/
             let item = inventory.container.getItem(Number(slotNumber));
             let equipmentPlayerSlotsList = [
@@ -1467,7 +1467,8 @@ try{ durability2.damage = Number(10); } catch(e){if (Boolean(debug2) == true) { 
                         console.error(e, e.stack);
                     }
                 }
-                if (event.sourceEntity.hasTag("scriptDebugger")) {
+                assertIsDefined(sourceEntity);
+                if (sourceEntity.hasTag("scriptDebugger")) {
                     console.warn(item.typeId);
                 }
                 if (Number(slotType) == 1) {
@@ -1860,7 +1861,7 @@ try {console.warn(item.getCanPlaceOn());} catch(e){
                                                 y: Number(String(fromPresetValues).split(", ")[2]),
                                                 z: Number(String(fromPresetValues).split(", ")[3]),
                                             })
-                                                .getComponent("inventory");
+                                                ?.getComponent("inventory");
                                         }
                                         catch (e) {
                                             console.error(e, e.stack);
@@ -1882,7 +1883,7 @@ try {console.warn(item.getCanPlaceOn());} catch(e){
                                                 y: Number(String(toPresetValues).split(", ")[2]),
                                                 z: Number(String(toPresetValues).split(", ")[3]),
                                             })
-                                                .getComponent("inventory");
+                                                ?.getComponent("inventory");
                                         }
                                         catch (e) {
                                             console.error(e, e.stack);
@@ -1892,7 +1893,7 @@ try {console.warn(item.getCanPlaceOn());} catch(e){
                                         case 0:
                                             for (let index = 0; index < 27; index++) {
                                                 try {
-                                                    fromBlockPositionC.container.swapItems(Number(index), Number(index), toBlockPositionC.container);
+                                                    fromBlockPositionC.container?.swapItems(Number(index), Number(index), toBlockPositionC.container);
                                                 }
                                                 catch (e) {
                                                     console.error(e, e.stack);
@@ -1903,7 +1904,7 @@ try {console.warn(item.getCanPlaceOn());} catch(e){
                                         case 1:
                                             for (let index = 0; index < 27; index++) {
                                                 try {
-                                                    fromBlockPositionC.container.transferItem(Number(index), toBlockPositionC.container);
+                                                    fromBlockPositionC.container?.transferItem(Number(index), toBlockPositionC.container);
                                                 }
                                                 catch (e) {
                                                     console.error(e, e.stack);
@@ -1914,7 +1915,7 @@ try {console.warn(item.getCanPlaceOn());} catch(e){
                                         case 2:
                                             for (let index = 0; index < 27; index++) {
                                                 try {
-                                                    fromBlockPositionC.container.moveItem(Number(index), Number(index), toBlockPositionC.container);
+                                                    fromBlockPositionC.container?.moveItem(Number(index), Number(index), toBlockPositionC.container);
                                                 }
                                                 catch (e) {
                                                     console.error(e, e.stack);
@@ -2092,7 +2093,7 @@ try {console.warn(item.getCanPlaceOn());} catch(e){
                                                 y: Number(String(presetValues).split(", ")[2]),
                                                 z: Number(String(presetValues).split(", ")[3]),
                                             })
-                                                .getComponent("inventory");
+                                                ?.getComponent("inventory");
                                         }
                                         catch (e) {
                                             console.error(e, e.stack);
@@ -2102,7 +2103,7 @@ try {console.warn(item.getCanPlaceOn());} catch(e){
                                         case 0:
                                             for (let index = 0; index < 27; index++) {
                                                 try {
-                                                    blockPositionC.container.swapItems(Number(index), Number(index + 9), toInventory.container);
+                                                    blockPositionC.container?.swapItems(Number(index), Number(index + 9), toInventory.container);
                                                 }
                                                 catch (e) {
                                                     console.error(e, e.stack);
@@ -2124,7 +2125,7 @@ try {console.warn(item.getCanPlaceOn());} catch(e){
                                         case 2:
                                             for (let index = 0; index < 27; index++) {
                                                 try {
-                                                    blockPositionC.container.transferItem(Number(index), toInventory.container);
+                                                    blockPositionC.container?.transferItem(Number(index), toInventory.container);
                                                 }
                                                 catch (e) {
                                                     console.error(e, e.stack);
@@ -2146,7 +2147,7 @@ try {console.warn(item.getCanPlaceOn());} catch(e){
                                         case 4:
                                             for (let index = 0; index < 27; index++) {
                                                 try {
-                                                    blockPositionC.container.moveItem(Number(index), Number(index + 9), toInventory.container);
+                                                    blockPositionC.container?.moveItem(Number(index), Number(index + 9), toInventory.container);
                                                 }
                                                 catch (e) {
                                                     console.error(e, e.stack);
@@ -2235,6 +2236,7 @@ try {console.warn(item.getCanPlaceOn());} catch(e){
                                             break;
                                         case 2:
                                             try {
+                                                assertIsDefined(sourceEntity);
                                                 sourceEntity.runCommand(String("/scriptevent andexdb:debugScreen saqw"));
                                             }
                                             catch (e) {
@@ -2434,7 +2436,7 @@ try {console.warn(item.getCanPlaceOn());} catch(e){
                                                 y: Number(String(fromPresetValues).split(", ")[2]),
                                                 z: Number(String(fromPresetValues).split(", ")[3]),
                                             })
-                                                .getComponent("inventory");
+                                                ?.getComponent("inventory");
                                         }
                                         catch (e) {
                                             console.error(e, e.stack);
@@ -2456,7 +2458,7 @@ try {console.warn(item.getCanPlaceOn());} catch(e){
                                                 y: Number(String(toPresetValues).split(", ")[2]),
                                                 z: Number(String(toPresetValues).split(", ")[3]),
                                             })
-                                                .getComponent("inventory");
+                                                ?.getComponent("inventory");
                                         }
                                         catch (e) {
                                             console.error(e, e.stack);
@@ -2466,7 +2468,7 @@ try {console.warn(item.getCanPlaceOn());} catch(e){
                                         case 0:
                                             for (let index = 0; index < 9; index++) {
                                                 try {
-                                                    fromBlockPositionC.container.swapItems(Number(index + Number(inventoryRow) * 9), Number(index + Number(inventoryRow) * 9), toBlockPositionC.container);
+                                                    fromBlockPositionC.container?.swapItems(Number(index + Number(inventoryRow) * 9), Number(index + Number(inventoryRow) * 9), toBlockPositionC.container);
                                                 }
                                                 catch (e) {
                                                     console.error(e, e.stack);
@@ -2477,7 +2479,7 @@ try {console.warn(item.getCanPlaceOn());} catch(e){
                                         case 1:
                                             for (let index = 0; index < 9; index++) {
                                                 try {
-                                                    fromBlockPositionC.container.transferItem(Number(index + Number(inventoryRow) * 9), toBlockPositionC.container);
+                                                    fromBlockPositionC.container?.transferItem(Number(index + Number(inventoryRow) * 9), toBlockPositionC.container);
                                                 }
                                                 catch (e) {
                                                     console.error(e, e.stack);
@@ -2488,7 +2490,7 @@ try {console.warn(item.getCanPlaceOn());} catch(e){
                                         case 2:
                                             for (let index = 0; index < 9; index++) {
                                                 try {
-                                                    fromBlockPositionC.container.moveItem(Number(index + Number(inventoryRow) * 9), Number(index + Number(inventoryRow) * 9), toBlockPositionC.container);
+                                                    fromBlockPositionC.container?.moveItem(Number(index + Number(inventoryRow) * 9), Number(index + Number(inventoryRow) * 9), toBlockPositionC.container);
                                                 }
                                                 catch (e) {
                                                     console.error(e, e.stack);
@@ -3213,25 +3215,25 @@ try {console.warn(item.getCanPlaceOn());} catch(e){
         function playerControllerFormPopup(playerTargetB, playerViewerB) {
             let form = new ModalFormData();
             try {
-                dimension = String(playerList[playerTargetB].getSpawnPoint().dimension.id);
+                dimension = String(playerList[playerTargetB].getSpawnPoint()?.dimension.id);
             }
             catch (e) {
                 dimension = "";
             }
             try {
-                spawnXPosition = String(playerList[playerTargetB].getSpawnPoint().x);
+                spawnXPosition = String(playerList[playerTargetB].getSpawnPoint()?.x);
             }
             catch (e) {
                 spawnXPosition = "";
             }
             try {
-                spawnYPosition = String(playerList[playerTargetB].getSpawnPoint().y);
+                spawnYPosition = String(playerList[playerTargetB].getSpawnPoint()?.y);
             }
             catch (e) {
                 spawnYPosition = "";
             }
             try {
-                spawnZPosition = String(playerList[playerTargetB].getSpawnPoint().z);
+                spawnZPosition = String(playerList[playerTargetB].getSpawnPoint()?.z);
             }
             catch (e) {
                 spawnZPosition = "";
@@ -3639,25 +3641,25 @@ try {console.warn(item.getCanPlaceOn());} catch(e){
         function playerControllerFormPopup(playerTargetB, playerViewerB) {
             let form = new ModalFormData();
             try {
-                dimension = String(playerList[playerTargetB].getSpawnPoint().dimension);
+                dimension = String(playerList[playerTargetB].getSpawnPoint()?.dimension);
             }
             catch (e) {
                 dimension = "";
             }
             try {
-                spawnXPosition = String(playerList[playerTargetB].getSpawnPoint().x);
+                spawnXPosition = String(playerList[playerTargetB].getSpawnPoint()?.x);
             }
             catch (e) {
                 spawnXPosition = "";
             }
             try {
-                spawnYPosition = String(playerList[playerTargetB].getSpawnPoint().y);
+                spawnYPosition = String(playerList[playerTargetB].getSpawnPoint()?.y);
             }
             catch (e) {
                 spawnYPosition = "";
             }
             try {
-                spawnZPosition = String(playerList[playerTargetB].getSpawnPoint().z);
+                spawnZPosition = String(playerList[playerTargetB].getSpawnPoint()?.z);
             }
             catch (e) {
                 spawnZPosition = "";
@@ -4077,7 +4079,7 @@ try {console.warn(item.getCanPlaceOn());} catch(e){
                 defaultValue: String(targetSelectorB(String(ts), "", Number(world.getAllPlayers()[0].id) ??
                     Number(world.getDimension("overworld").getEntities()[0].id) ??
                     Number(world.getDimension("nether").getEntities()[0].id) ??
-                    Number(world.getDimension("the_end").getEntities()[0].id)).getDynamicProperty(String(dpi))),
+                    Number(world.getDimension("the_end").getEntities()[0].id))?.getDynamicProperty(String(dpi))),
             });
             forceShow(form2, sourceEntity)
                 .then((ro2) => {
@@ -4088,7 +4090,7 @@ try {console.warn(item.getCanPlaceOn());} catch(e){
                 String(targetSelectorB(String(ts), "", Number(world.getAllPlayers()[0].id) ??
                     Number(world.getDimension("overworld").getEntities()[0].id) ??
                     Number(world.getDimension("nether").getEntities()[0].id) ??
-                    Number(world.getDimension("the_end").getEntities()[0].id)).setDynamicProperty(String(dpi), String(newValue)));
+                    Number(world.getDimension("the_end").getEntities()[0].id))?.setDynamicProperty(String(dpi), String(newValue)));
             })
                 .catch((e) => {
                 console.error(e, e.stack);
@@ -4130,18 +4132,23 @@ try {console.warn(item.getCanPlaceOn());} catch(e){
         });
     }
     if (id == "andexdb:debugStick" || id == "andexdb:editorStick") {
+        assertIsDefined(sourceEntity);
         editorStick(sourceEntity, message);
     }
     if (id == "andexdb:evalAutoScriptSettings") {
+        assertIsDefined(sourceEntity);
         evalAutoScriptSettings(sourceEntity);
     }
     if (id == "andexdb:settings") {
+        assertIsDefined(sourceEntity);
         settings(sourceEntity);
     }
     if (id == "andexdb:generalSettings") {
+        assertIsDefined(sourceEntity);
         generalSettings(sourceEntity);
     }
     if (id == "andexdb:personalSettings") {
+        assertIsDefined(sourceEntity);
         personalSettings(sourceEntity);
     }
     if (id == "andexdb:customFormUIEditor") {
@@ -4201,12 +4208,13 @@ try {console.warn(item.getCanPlaceOn());} catch(e){
     form.show(sourceEntity as Player).then(r => {
         if (r.canceled) return;
     
-        let [ blockDimension, blockX, blockY, blockZ ] = r.formValues;
+        let [ blockDimension, blockX, blockY, blockZ ] = r.formValues!;
         let blockPropertyValue2: any
         event.sourceEntity.runCommand("/scriptevent andexdb:debugStickB coordinates:"*/ /*"aslk"*/ /* + blockDimension + "|" + blockX + "|" + blockY + "|" + blockZ)
           }).catch(e => {
               console.error(e, e.stack);
           });*/
+        assertIsDefined(sourceEntity);
         editorStickMenuB(sourceEntity);
     }
     if (id == "andexdb:debugStickMenuC" || id == "andexdb:editorStickMenuC") {
@@ -4222,6 +4230,7 @@ try {console.warn(item.getCanPlaceOn());} catch(e){
             let [includeLiquidBlocks, includePassableBlocks, maxDistance] = r.formValues;
             let blockPropertyValue2;
             console.warn(maxDistance);
+            assertIsDefined(sourceEntity);
             if (maxDistance !== "") {
                 console.warn("/scriptevent andexdb:debugStickC options:" /*"aslk"*/ +
                     String(includeLiquidBlocks) +
@@ -4229,7 +4238,7 @@ try {console.warn(item.getCanPlaceOn());} catch(e){
                     String(includePassableBlocks) +
                     "|" +
                     String(maxDistance));
-                event.sourceEntity.runCommand("/scriptevent andexdb:debugStickC options:" /*"aslk"*/ +
+                sourceEntity.runCommand("/scriptevent andexdb:debugStickC options:" /*"aslk"*/ +
                     String(includeLiquidBlocks) +
                     "|" +
                     String(includePassableBlocks) +
@@ -4237,7 +4246,7 @@ try {console.warn(item.getCanPlaceOn());} catch(e){
                     String(maxDistance));
             }
             else {
-                event.sourceEntity.runCommand("/scriptevent andexdb:debugStickC options:" /*"aslk"*/ + String(includeLiquidBlocks) + "|" + String(includePassableBlocks));
+                sourceEntity.runCommand("/scriptevent andexdb:debugStickC options:" /*"aslk"*/ + String(includeLiquidBlocks) + "|" + String(includePassableBlocks));
             }
         })
             .catch((e) => {
@@ -4303,7 +4312,7 @@ if (Number(index) != 0) {*/ /*
     form.show(playerList[playerList.findIndex((x) => x == sourceEntity)]).then(r => {
         if (r.canceled) return;
     
-        let [ setType, setTypeEnabled, blockPropertyIdentifier, blockPropertyValue, setPropertyEnabled*/ /*, selectedSlotIndex*/ /*, isWaterlogged/*, clearVelocity*/ //, debug, waterContainerEnabled, waterContainer, snowContainerEnabled, snowContainer, lavaContainerEnabled, lavaContainer, potionContainerEnabled, potionContainer, signFrontRawTextEnabled, signFrontRawText, signBackRawTextEnabled, signBackRawText, signFrontTextEnabled, signFrontText, signBackTextEnabled, signBackText, signFrontTextColorEnabled, signFrontTextColor, signBackTextColorEnabled, signBackTextColor, setSignIsWaxed ] = r.formValues;
+        let [ setType, setTypeEnabled, blockPropertyIdentifier, blockPropertyValue, setPropertyEnabled*/ /*, selectedSlotIndex*/ /*, isWaterlogged/*, clearVelocity*/ //, debug, waterContainerEnabled, waterContainer, snowContainerEnabled, snowContainer, lavaContainerEnabled, lavaContainer, potionContainerEnabled, potionContainer, signFrontRawTextEnabled, signFrontRawText, signBackRawTextEnabled, signBackRawText, signFrontTextEnabled, signFrontText, signBackTextEnabled, signBackText, signFrontTextColorEnabled, signFrontTextColor, signBackTextColorEnabled, signBackTextColor, setSignIsWaxed ] = r.formValues!;
         /*let blockPropertyValue2: any
         blockPropertyValue2 = ""
         let blockPropertyValueArray: Array<any>
@@ -4386,6 +4395,7 @@ if (Number(index) != 0) {*/ /*
   });*/
         let block2; /* = block.block*/
         let allCoordinates = [];
+        assertIsDefined(sourceEntity);
         if (message.startsWith("coordinates:") && message.includes("|") && message.slice(12).split("|").length == 4) {
             allCoordinates = message.slice(12).split("|");
             block2 = world.getDimension(String(allCoordinates[0])).getBlock({
@@ -4429,6 +4439,7 @@ if (Number(index) != 0) {*/ /*
         } /*
         console.warn(maxDistance)*/
         let playerList = world.getPlayers();
+        assertIsDefined(sourceEntity);
         let block = sourceEntity.getBlockFromViewDirection({
             includeLiquidBlocks: includeLiquidBlocks,
             includePassableBlocks: includePassableBlocks,
@@ -4901,6 +4912,7 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
     if (id == "andexdb:debugScreen") {
         let form = new ModalFormData();
         let players = world.getPlayers();
+        assertIsDefined(sourceEntity);
         let block = sourceEntity.getBlockFromViewDirection();
         let entity = sourceEntity.getEntitiesFromViewDirection();
         form.title("Debug Screen");
@@ -5375,7 +5387,7 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
     form.show(players[players.findIndex((x) => x == sourceEntity)] as any).then(r => {
         if (r.canceled) return;
     
-        let [ nameTag, triggerEvent, selectedSlotIndex, scaleValue, isSneaking, clearVelocity, extinguishFire, kill, remove, setOnFire, setOnFireSeconds, setOnFireRemoveEffects, removeEffect, effectToRemove, removeTag, tagToRemove, setRot, rotX, rotY, teleport, teleportX, teleportY, teleportZ, tryTeleport, tryTeleportX, tryTeleportY, tryTeleportZ, openTheItemModificationFormAfterwards, debug ] = r.formValues;
+        let [ nameTag, triggerEvent, selectedSlotIndex, scaleValue, isSneaking, clearVelocity, extinguishFire, kill, remove, setOnFire, setOnFireSeconds, setOnFireRemoveEffects, removeEffect, effectToRemove, removeTag, tagToRemove, setRot, rotX, rotY, teleport, teleportX, teleportY, teleportZ, tryTeleport, tryTeleportX, tryTeleportY, tryTeleportZ, openTheItemModificationFormAfterwards, debug ] = r.formValues!;
     
         let scale = sourceEntity.getComponent("scale") as EntityScaleComponent;*/ /*
         scale.value = Number(scaleValue);*/ /*
@@ -6705,8 +6717,8 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
     }
     if (id == "andexdb:getRedstone") {
         let dynamicProperty = message.split("|");
-        let block;
-        block = undefined;
+        let block = undefined;
+        assertIsDefined(sourceEntity);
         try {
             block = sourceEntity.getBlockFromViewDirection({
                 includePassableBlocks: true,
@@ -6714,14 +6726,14 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
         }
         catch (e) { }
         try {
-            event.sourceEntity.onScreenDisplay.setActionBar("§cRedstone Power: §a" + block.block.getRedstonePower());
+            event.sourceEntity.onScreenDisplay.setActionBar("§cRedstone Power: §a" + block?.block.getRedstonePower());
         }
         catch (e) { }
     }
     if (id == "andexdb:getRedstoneAndLiquid") {
         let dynamicProperty = message.split("|");
-        let block;
-        block = undefined;
+        let block = undefined;
+        assertIsDefined(sourceEntity);
         try {
             block = sourceEntity.getBlockFromViewDirection({
                 includePassableBlocks: true,
@@ -6730,14 +6742,14 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
         }
         catch (e) { }
         try {
-            event.sourceEntity.onScreenDisplay.setActionBar("§cRedstone Power: §a" + block.block.getRedstonePower());
+            event.sourceEntity.onScreenDisplay.setActionBar("§cRedstone Power: §a" + block?.block.getRedstonePower());
         }
         catch (e) { }
     }
     if (id == "andexdb:getBlockStates") {
         let dynamicProperty = message.split("|");
-        let block;
-        block = undefined;
+        let block = undefined;
+        assertIsDefined(sourceEntity);
         let blockStatesFullList; /*
         try {blockStatesFullList = String([String(blockStatesFullList), block.block.permutation.getAllStates()]); } catch(e){console.error(e, e.stack);}
         try {blockStatesFullList = String([String(blockStatesFullList), block.block.permutation.getAllStates()]).split(","); } catch(e){console.error(e, e.stack);}*/
@@ -6749,7 +6761,7 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
         }
         catch (e) { }
         try {
-            BlockPermutation.resolve("minecraft:bedrock", block.block.permutation.getAllStates());
+            BlockPermutation.resolve("minecraft:bedrock", block?.block.permutation.getAllStates());
         }
         catch (e) {
             if (String(e).includes('Error: Failed to resolve block "minecraft:bedrock" with properties')) {
@@ -6768,14 +6780,14 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
             }
         }
         try {
-            event.sourceEntity.onScreenDisplay.setActionBar("§eBlock States For §c" + block.block.typeId + "§e: §a\n" + blockStatesFullList);
+            event.sourceEntity.onScreenDisplay.setActionBar("§eBlock States For §c" + block?.block.typeId + "§e: §a\n" + blockStatesFullList);
         }
         catch (e) { }
     }
     if (id == "andexdb:getBlockStatesNoLiquid") {
         let dynamicProperty = message.split("|");
-        let block;
-        block = undefined;
+        let block = undefined;
+        assertIsDefined(sourceEntity);
         let blockStatesFullList; /*
         try {blockStatesFullList = String([String(blockStatesFullList), block.block.permutation.getAllStates()]); } catch(e){console.error(e, e.stack);}
         try {blockStatesFullList = String([String(blockStatesFullList), block.block.permutation.getAllStates()]).split(","); } catch(e){console.error(e, e.stack);}*/
@@ -6786,7 +6798,7 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
         }
         catch (e) { }
         try {
-            BlockPermutation.resolve("minecraft:bedrock", block.block.permutation.getAllStates());
+            BlockPermutation.resolve("minecraft:bedrock", block?.block.permutation.getAllStates());
         }
         catch (e) {
             if (String(e).includes('Error: Failed to resolve block "minecraft:bedrock" with properties')) {

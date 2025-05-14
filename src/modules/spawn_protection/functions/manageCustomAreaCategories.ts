@@ -60,7 +60,7 @@ export async function manageCustomAreaCategories(sourceEntitya: executeCommandPl
     const r = await forceShow(form, sourceEntity as Player)
     if (r.canceled) return 1;
     switch (
-        (customAreaCategories[r.selection] !== undefined ? "edit" : undefined) ??
+        (customAreaCategories[r.selection!] !== undefined ? "edit" : undefined) ??
         (
             [
                 "new",
@@ -71,7 +71,7 @@ export async function manageCustomAreaCategories(sourceEntitya: executeCommandPl
         )[r.selection - customAreaCategories.length]
     ) {
         case "edit":
-            if ((await editCustomAreaCategory(sourceEntity as Player, customAreaCategories[r.selection].id)) === 1) {
+            if ((await editCustomAreaCategory(sourceEntity as Player, customAreaCategories[r.selection!].id)) === 1) {
                 return await manageCustomAreaCategories(sourceEntity);
             } else {
                 return 0;

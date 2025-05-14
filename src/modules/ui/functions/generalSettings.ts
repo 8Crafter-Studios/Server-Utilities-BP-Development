@@ -156,7 +156,7 @@ export async function generalSettings(sourceEntity: loosePlayerType): Promise<0 
             return 1 as const;
         }
         const optionsRequiringRestartToApplyProperly: string[] = [];
-        const options = Object.fromEntries(includedOptions.map((o, i) => [o, r.formValues[i] as optionsList[typeof o]])) as Partial<optionsList>;
+        const options = Object.fromEntries(includedOptions.map((o, i) => [o, r.formValues![i] as optionsList[typeof o]])) as Partial<optionsList>;
         includedOptions.forEach((v: keyof optionsList) => {
             switch (v) {
                 case "autoSavePlayerData":

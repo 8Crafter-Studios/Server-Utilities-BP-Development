@@ -247,7 +247,7 @@ export async function nameTagsSettings_generalNameTagsSettings(sourceEntity: loo
         if (r.canceled) {
             return 1 as const;
         }
-        const options = Object.fromEntries(includedOptions.map((o, i) => [o, r.formValues[i] as optionsList[typeof o]])) as Partial<optionsList>;
+        const options = Object.fromEntries(includedOptions.map((o, i) => [o, r.formValues![i] as optionsList[typeof o]])) as Partial<optionsList>;
         includedOptions.forEach((v: keyof optionsList) => {
             switch (v) {
                 case "allowChatEscapeCodes":

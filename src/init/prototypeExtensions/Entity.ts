@@ -49,7 +49,7 @@ Object.defineProperties(Entity.prototype, {
             if (!!!(this as Entity).getComponent("equippable")) {
                 return undefined;
             } else {
-                return (this as Entity).getComponent("equippable").getEquipment(EquipmentSlot.Mainhand);
+                return (this as Entity).getComponent("equippable")?.getEquipment(EquipmentSlot.Mainhand);
             }
         },
         configurable: true,
@@ -60,7 +60,7 @@ Object.defineProperties(Entity.prototype, {
             if (!!!(this as Entity).getComponent("equippable")) {
                 return undefined;
             } else {
-                return (this as Entity).getComponent("equippable").getEquipmentSlot(EquipmentSlot.Mainhand);
+                return (this as Entity).getComponent("equippable")?.getEquipmentSlot(EquipmentSlot.Mainhand);
             }
         },
         configurable: true,
@@ -412,7 +412,7 @@ declare module "@minecraft/server" {
         /**
          * Returns the x rotation of the entity.
          *
-         * It is the same as {@link Entity.prototype.getRotation()}{@link Vector2.x|.x}.
+         * It is the same as {@link Entity.prototype.getRotation|Entity.prototype.getRotation()}{@link Vector2.x|.x}.
          *
          * @author 8Crafter
          */
@@ -420,7 +420,7 @@ declare module "@minecraft/server" {
         /**
          * Returns the y rotation of the entity.
          *
-         * It is the same as {@link Entity.prototype.getRotation()}{@link Vector2.y|.y}.
+         * It is the same as {@link Entity.prototype.getRotation|Entity.prototype.getRotation()}{@link Vector2.y|.y}.
          *
          * @author 8Crafter
          */

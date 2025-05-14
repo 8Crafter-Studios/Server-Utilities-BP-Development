@@ -902,19 +902,19 @@ export const AdvancedProtectedAreaCategoryPropertyAllEnabledDefaults_JSON = make
 export function convertAdvancedPropertedAreaCategoryToJSON(category: AdvancedProtectedAreaCategory<false>): AdvancedProtectedAreaCategory<true> {
     const out = JSON.parse(JSON.stringify(category)) as AdvancedProtectedAreaCategory<true>;
     if (!!out.playerBreakBlock) {
-        out.playerBreakBlock.mask = out.playerBreakBlock.rawmask;
+        out.playerBreakBlock.mask = out.playerBreakBlock.rawmask!;
         delete out.playerBreakBlock.rawmask;
     }
     if (!!out.playerPlaceBlock) {
-        out.playerPlaceBlock.mask = out.playerPlaceBlock.rawmask;
+        out.playerPlaceBlock.mask = out.playerPlaceBlock.rawmask!;
         delete out.playerPlaceBlock.rawmask;
     }
     if (!!out.playerInteractWithBlock) {
-        out.playerInteractWithBlock.mask = out.playerInteractWithBlock.rawmask;
+        out.playerInteractWithBlock.mask = out.playerInteractWithBlock.rawmask!;
         delete out.playerInteractWithBlock.rawmask;
     }
     if (!!out.explosion) {
-        out.explosion.mask = out.explosion.rawmask;
+        out.explosion.mask = out.explosion.rawmask!;
         delete out.explosion.rawmask;
     }
     return out;
@@ -1192,7 +1192,7 @@ export class ProtectedAreas {
         let a = world.getDynamicPropertyIds().filter((dpi) => dpi.startsWith("advancedProtectedArea:" + advancedCategoryID + ":"));
         let d = a.map((v) =>
             tryget(() => ({
-                id: v.slice(advancedCategoryID.length + 24),
+                id: v.slice(advancedCategoryID.length + 23),
                 ...JSON.parse(String(world.getDynamicProperty(v))),
             }))
         ) as { id: string; dimension: number; from: Vector3; to: Vector3; mode: 0 | 1; icon_path?: string }[];
@@ -1224,8 +1224,8 @@ export class ProtectedAreas {
         Object.getOwnPropertyNames(data).forEach((key: keyof AdvancedProtectedAreaCategory<true>) => {
             if (key === "id" || key === "icon_path") return;
             const d = data[key];
-            if (typeof outputData[key] === "boolean" || typeof d === "boolean" || d === undefined || !("mask" in d) || !("mask" in outputData[key])) return;
-            (outputData[key] as Exclude<AdvancedProtectedAreaCategory<false>["playerPlaceBlock"], false>).rawmask = d.mask;
+            if (typeof outputData[key] === "boolean" || typeof d === "boolean" || d === undefined || !("mask" in d) || !("mask" in outputData[key]!)) return;
+            (outputData[key] as Exclude<AdvancedProtectedAreaCategory<false>["playerPlaceBlock"], false>)!.rawmask = d.mask;
             outputData[key].mask = BlockMask.extract(d.mask, true, d.mode ?? "exclude");
             /**
              * Returns an array of strings representing the IDs of all advanced protected area categories.
@@ -1419,8 +1419,8 @@ export class ProtectedAreaTester<
                     ? ProtectedAreas.areas.advancedAreaCategories
                           .filter(
                               (c) =>
-                                  !!c[categories.advancedCategoryProperty] &&
-                                  ((c[categories.advancedCategoryProperty] as Exclude<(typeof c)[typeof categories.advancedCategoryProperty], boolean>)
+                                  !!c[categories.advancedCategoryProperty!] &&
+                                  ((c[categories.advancedCategoryProperty!] as Exclude<(typeof c)[NonNullable<typeof categories.advancedCategoryProperty>], boolean | undefined>)
                                       .enabled ??
                                       true)
                           )
@@ -1432,17 +1432,17 @@ export class ProtectedAreaTester<
                                           category.playerPlaceBlock as Exclude<(typeof category)[typeof categories.advancedCategoryProperty], false>;
                                       const data = event as preventableEventTypeMap[typeof categories.advancedCategoryProperty];
                                       success =
-                                          !prop.allowedBypassTags.some((tag) => data.player.hasTag(tag)) &&
-                                          (prop.heldItemFilters !== false
-                                              ? prop.heldItemFilters.mode === "include"
-                                                  ? prop.heldItemFilters.items.some(
+                                          !prop!.allowedBypassTags.some((tag) => data.player.hasTag(tag)) &&
+                                          (prop!.heldItemFilters !== false
+                                              ? prop!.heldItemFilters.mode === "include"
+                                                  ? prop!.heldItemFilters.items.some(
                                                         (item) => data.player.heldItem?.typeId === (ItemTypes.get(item)?.id ?? item)
                                                     )
-                                                  : !prop.heldItemFilters.items.some(
+                                                  : !prop!.heldItemFilters.items.some(
                                                         (item) => data.player.heldItem?.typeId === (ItemTypes.get(item)?.id ?? item)
                                                     )
                                               : true) &&
-                                          prop.mask.testIfMatches(data.permutationBeingPlaced, prop.mode);
+                                          prop!.mask.testIfMatches(data.permutationBeingPlaced, prop!.mode);
                                       break;
                                   }
                                   case "playerBreakBlock": {
@@ -1450,13 +1450,13 @@ export class ProtectedAreaTester<
                                           category.playerBreakBlock as Exclude<(typeof category)[typeof categories.advancedCategoryProperty], false>;
                                       const data = event as preventableEventTypeMap[typeof categories.advancedCategoryProperty];
                                       success =
-                                          !prop.allowedBypassTags.some((tag) => data.player.hasTag(tag)) &&
-                                          (prop.heldItemFilters !== false
-                                              ? prop.heldItemFilters.mode === "include"
-                                                  ? prop.heldItemFilters.items.some((item) => data.itemStack?.typeId === (ItemTypes.get(item)?.id ?? item))
-                                                  : !prop.heldItemFilters.items.some((item) => data.itemStack?.typeId === (ItemTypes.get(item)?.id ?? item))
+                                          !prop!.allowedBypassTags.some((tag) => data.player.hasTag(tag)) &&
+                                          (prop!.heldItemFilters !== false
+                                              ? prop!.heldItemFilters.mode === "include"
+                                                  ? prop!.heldItemFilters.items.some((item) => data.itemStack?.typeId === (ItemTypes.get(item)?.id ?? item))
+                                                  : !prop!.heldItemFilters.items.some((item) => data.itemStack?.typeId === (ItemTypes.get(item)?.id ?? item))
                                               : true) &&
-                                          prop.mask.testIfMatches(data.block, prop.mode);
+                                          prop!.mask.testIfMatches(data.block, prop!.mode);
                                       break;
                                   }
                                   case "playerInteractWithBlock": {
@@ -1464,13 +1464,13 @@ export class ProtectedAreaTester<
                                           category.playerInteractWithBlock as Exclude<(typeof category)[typeof categories.advancedCategoryProperty], false>;
                                       const data = event as preventableEventTypeMap[typeof categories.advancedCategoryProperty];
                                       success =
-                                          !prop.allowedBypassTags.some((tag) => data.player.hasTag(tag)) &&
-                                          (prop.heldItemFilters !== false
-                                              ? prop.heldItemFilters.mode === "include"
-                                                  ? prop.heldItemFilters.items.some((item) => data.itemStack?.typeId === (ItemTypes.get(item)?.id ?? item))
-                                                  : !prop.heldItemFilters.items.some((item) => data.itemStack?.typeId === (ItemTypes.get(item)?.id ?? item))
+                                          !prop!.allowedBypassTags.some((tag) => data.player.hasTag(tag)) &&
+                                          (prop!.heldItemFilters !== false
+                                              ? prop!.heldItemFilters.mode === "include"
+                                                  ? prop!.heldItemFilters.items.some((item) => data.itemStack?.typeId === (ItemTypes.get(item)?.id ?? item))
+                                                  : !prop!.heldItemFilters.items.some((item) => data.itemStack?.typeId === (ItemTypes.get(item)?.id ?? item))
                                               : true) &&
-                                          prop.mask.testIfMatches(data.block, prop.mode);
+                                          prop!.mask.testIfMatches(data.block, prop!.mode);
                                       break;
                                   }
                                   case "playerInteractWithEntity": {
@@ -1478,20 +1478,20 @@ export class ProtectedAreaTester<
                                           category.playerInteractWithEntity as Exclude<(typeof category)[typeof categories.advancedCategoryProperty], false>;
                                       const data = event as preventableEventTypeMap[typeof categories.advancedCategoryProperty];
                                       success =
-                                          !prop.allowedBypassTags.some((tag) => data.player.hasTag(tag)) &&
-                                          (prop.heldItemFilters !== false
-                                              ? prop.heldItemFilters.mode === "include"
-                                                  ? prop.heldItemFilters.items.some((item) => data.itemStack?.typeId === (ItemTypes.get(item)?.id ?? item))
-                                                  : !prop.heldItemFilters.items.some((item) => data.itemStack?.typeId === (ItemTypes.get(item)?.id ?? item))
+                                          !prop!.allowedBypassTags.some((tag) => data.player.hasTag(tag)) &&
+                                          (prop!.heldItemFilters !== false
+                                              ? prop!.heldItemFilters.mode === "include"
+                                                  ? prop!.heldItemFilters.items.some((item) => data.itemStack?.typeId === (ItemTypes.get(item)?.id ?? item))
+                                                  : !prop!.heldItemFilters.items.some((item) => data.itemStack?.typeId === (ItemTypes.get(item)?.id ?? item))
                                               : true) &&
-                                          ((prop.targetEntityFilter?.excludeTags ?? []).length === 0
-                                              ? prop.targetEntityFilter?.includeTags?.some((tag) => data.target.hasTag(tag)) ?? true
-                                              : !prop.targetEntityFilter.excludeTags.some((tag) => data.target.hasTag(tag))) &&
-                                          ((prop.targetEntityFilter?.excludeTypes ?? []).length === 0
-                                              ? prop.targetEntityFilter?.includeTypes?.some(
+                                          ((prop!.targetEntityFilter?.excludeTags ?? []).length === 0
+                                              ? prop!.targetEntityFilter?.includeTags?.some((tag) => data.target.hasTag(tag)) ?? true
+                                              : !prop!.targetEntityFilter.excludeTags!.some((tag) => data.target.hasTag(tag))) &&
+                                          ((prop!.targetEntityFilter?.excludeTypes ?? []).length === 0
+                                              ? prop!.targetEntityFilter?.includeTypes?.some(
                                                     (type) => data.target.typeId === (EntityTypes.get(type as any)?.id ?? type)
                                                 ) ?? true
-                                              : !prop.targetEntityFilter.excludeTypes.some(
+                                              : !prop!.targetEntityFilter.excludeTypes!.some(
                                                     (type) => data.target.typeId === (EntityTypes.get(type as any)?.id ?? type)
                                                 ));
                                       break;
@@ -1503,11 +1503,11 @@ export class ProtectedAreaTester<
                                       >;
                                       const data = event as preventableEventTypeMap[typeof categories.advancedCategoryProperty];
                                       success =
-                                          !prop.allowedBypassTags.some((tag) => data.source.hasTag(tag)) &&
-                                          (prop.heldItemFilters !== false
-                                              ? prop.heldItemFilters.mode === "include"
-                                                  ? prop.heldItemFilters.items.some((item) => data.itemStack?.typeId === (ItemTypes.get(item)?.id ?? item))
-                                                  : !prop.heldItemFilters.items.some((item) => data.itemStack?.typeId === (ItemTypes.get(item)?.id ?? item))
+                                          !prop!.allowedBypassTags.some((tag) => data.source!.hasTag(tag)) &&
+                                          (prop!.heldItemFilters !== false
+                                              ? prop!.heldItemFilters.mode === "include"
+                                                  ? prop!.heldItemFilters.items.some((item) => data.itemStack?.typeId === (ItemTypes.get(item)?.id ?? item))
+                                                  : !prop!.heldItemFilters.items.some((item) => data.itemStack?.typeId === (ItemTypes.get(item)?.id ?? item))
                                               : true);
                                       break;
                                   }
@@ -1519,33 +1519,33 @@ export class ProtectedAreaTester<
                                       const data = event as preventableEventTypeMap[typeof categories.advancedCategoryProperty];
                                       success =
                                           (data.source !== undefined
-                                              ? !prop.allowedBypassTags.some((tag) => data.source.hasTag(tag)) &&
+                                              ? !prop!.allowedBypassTags.some((tag) => data.source!.hasTag(tag)) &&
                                                 tryget(() =>
-                                                    prop.heldItemFilters !== false
-                                                        ? prop.heldItemFilters.mode === "include"
-                                                            ? prop.heldItemFilters.items.some(
-                                                                  (item) => data.source.heldItem?.typeId === (ItemTypes.get(item)?.id ?? item)
+                                                    prop!.heldItemFilters !== false
+                                                        ? prop!.heldItemFilters.mode === "include"
+                                                            ? prop!.heldItemFilters.items.some(
+                                                                  (item) => data.source!.heldItem?.typeId === (ItemTypes.get(item)?.id ?? item)
                                                               )
-                                                            : !prop.heldItemFilters.items.some(
-                                                                  (item) => data.source.heldItem?.typeId === (ItemTypes.get(item)?.id ?? item)
+                                                            : !prop!.heldItemFilters.items.some(
+                                                                  (item) => data.source!.heldItem?.typeId === (ItemTypes.get(item)?.id ?? item)
                                                               )
                                                         : true
                                                 ) &&
-                                                ((prop.sourceEntityFilter?.excludeTags ?? []).length === 0
-                                                    ? prop.sourceEntityFilter?.includeTags?.length === 0
+                                                ((prop!.sourceEntityFilter?.excludeTags ?? []).length === 0
+                                                    ? prop!.sourceEntityFilter?.includeTags?.length === 0
                                                         ? true
-                                                        : prop.sourceEntityFilter?.includeTags?.some((tag) => data.source.hasTag(tag)) ?? true
-                                                    : !prop.sourceEntityFilter.excludeTags.some((tag) => data.source.hasTag(tag))) &&
-                                                ((prop.sourceEntityFilter?.excludeTypes ?? []).length === 0
-                                                    ? prop.sourceEntityFilter?.includeTypes?.length === 0
+                                                        : prop!.sourceEntityFilter?.includeTags?.some((tag) => data.source!.hasTag(tag)) ?? true
+                                                    : !prop!.sourceEntityFilter.excludeTags!.some((tag) => data.source!.hasTag(tag))) &&
+                                                ((prop!.sourceEntityFilter?.excludeTypes ?? []).length === 0
+                                                    ? prop!.sourceEntityFilter?.includeTypes?.length === 0
                                                         ? true
-                                                        : prop.sourceEntityFilter?.includeTypes?.some(
-                                                              (type) => data.source.typeId === (EntityTypes.get(type as any)?.id ?? type)
+                                                        : prop!.sourceEntityFilter?.includeTypes?.some(
+                                                              (type) => data.source!.typeId === (EntityTypes.get(type as any)?.id ?? type)
                                                           ) ?? true
-                                                    : !prop.sourceEntityFilter.excludeTypes.some(
-                                                          (type) => data.source.typeId === (EntityTypes.get(type as any)?.id ?? type)
+                                                    : !prop!.sourceEntityFilter.excludeTypes!.some(
+                                                          (type) => data.source!.typeId === (EntityTypes.get(type as any)?.id ?? type)
                                                       ))
-                                              : true) && (extraData?.block !== undefined ? prop.mask.testIfMatches(extraData.block, prop.mode) : true);
+                                              : true) && (extraData?.block !== undefined ? prop!.mask.testIfMatches(extraData.block, prop!.mode) : true);
                                       break;
                                   }
                                   case "chatSend": {
@@ -1555,13 +1555,13 @@ export class ProtectedAreaTester<
                                       >;
                                       const data = event as preventableEventTypeMap[typeof categories.advancedCategoryProperty];
                                       success =
-                                          !prop.allowedBypassTags.some((tag) => data.sender.hasTag(tag)) &&
-                                          (prop.heldItemFilters !== false
-                                              ? prop.heldItemFilters.mode === "include"
-                                                  ? prop.heldItemFilters.items.some(
+                                          !prop!.allowedBypassTags.some((tag) => data.sender.hasTag(tag)) &&
+                                          (prop!.heldItemFilters !== false
+                                              ? prop!.heldItemFilters.mode === "include"
+                                                  ? prop!.heldItemFilters.items.some(
                                                         (item) => data.sender.heldItem?.typeId === (ItemTypes.get(item)?.id ?? item)
                                                     )
-                                                  : !prop.heldItemFilters.items.some(
+                                                  : !prop!.heldItemFilters.items.some(
                                                         (item) => data.sender.heldItem?.typeId === (ItemTypes.get(item)?.id ?? item)
                                                     )
                                               : true);
@@ -1574,32 +1574,32 @@ export class ProtectedAreaTester<
                                       >;
                                       const data = event as preventableEventTypeMap[typeof categories.advancedCategoryProperty];
                                       success =
-                                          ((prop.sourceEntityFilter?.excludeTags ?? []).length === 0
-                                              ? prop.sourceEntityFilter?.includeTags?.length === 0
+                                          ((prop!.sourceEntityFilter?.excludeTags ?? []).length === 0
+                                              ? prop!.sourceEntityFilter?.includeTags?.length === 0
                                                   ? true
-                                                  : prop.sourceEntityFilter?.includeTags?.some((tag) => data.entity.hasTag(tag)) ?? true
-                                              : !prop.sourceEntityFilter.excludeTags.some((tag) => data.entity.hasTag(tag))) &&
-                                          ((prop.sourceEntityFilter?.excludeTypes ?? []).length === 0
-                                              ? prop.sourceEntityFilter?.includeTypes?.length === 0
+                                                  : prop!.sourceEntityFilter?.includeTags?.some((tag) => data.entity.hasTag(tag)) ?? true
+                                              : !prop!.sourceEntityFilter.excludeTags!.some((tag) => data.entity.hasTag(tag))) &&
+                                          ((prop!.sourceEntityFilter?.excludeTypes ?? []).length === 0
+                                              ? prop!.sourceEntityFilter?.includeTypes?.length === 0
                                                   ? true
-                                                  : prop.sourceEntityFilter?.includeTypes?.some(
+                                                  : prop!.sourceEntityFilter?.includeTypes?.some(
                                                         (type) => data.entity.typeId === (EntityTypes.get(type as any)?.id ?? type)
                                                     ) ?? true
-                                              : !prop.sourceEntityFilter.excludeTypes.some(
+                                              : !prop!.sourceEntityFilter.excludeTypes!.some(
                                                     (type) => data.entity.typeId === (EntityTypes.get(type as any)?.id ?? type)
                                                 )) &&
-                                          ((prop.effectFilter?.excludeTypes ?? []).length === 0
-                                              ? prop.effectFilter?.includeTypes?.length === 0
+                                          ((prop!.effectFilter?.excludeTypes ?? []).length === 0
+                                              ? prop!.effectFilter?.includeTypes?.length === 0
                                                   ? true
-                                                  : prop.effectFilter?.includeTypes?.some((type) => data.effectType.toLowerCase() === type.toLowerCase()) ??
+                                                  : prop!.effectFilter?.includeTypes?.some((type) => data.effectType.toLowerCase() === type.toLowerCase()) ??
                                                     true
-                                              : !prop.effectFilter.excludeTypes.some((type) => data.effectType.toLowerCase() === type.toLowerCase())) &&
-                                          (!Number.isNaN(Number(prop.effectFilter?.minDuration)) || !Number.isNaN(Number(prop.effectFilter?.maxDuration))
-                                              ? (!Number.isNaN(Number(prop.effectFilter?.minDuration))
-                                                    ? prop.effectFilter.minDuration / 20 <= data.duration
+                                              : !prop!.effectFilter!.excludeTypes!.some((type) => data.effectType.toLowerCase() === type.toLowerCase())) &&
+                                          (!Number.isNaN(Number(prop!.effectFilter?.minDuration)) || !Number.isNaN(Number(prop!.effectFilter?.maxDuration))
+                                              ? (!Number.isNaN(Number(prop!.effectFilter?.minDuration))
+                                                    ? prop!.effectFilter!.minDuration! / 20 <= data.duration
                                                     : true) ||
-                                                (!Number.isNaN(Number(prop.effectFilter?.maxDuration))
-                                                    ? prop.effectFilter.maxDuration / 20 >= data.duration
+                                                (!Number.isNaN(Number(prop!.effectFilter?.maxDuration))
+                                                    ? prop!.effectFilter!.maxDuration! / 20 >= data.duration
                                                     : true)
                                               : true);
                                       break;
@@ -1609,24 +1609,24 @@ export class ProtectedAreaTester<
                                           category.playerGameModeChange as Exclude<(typeof category)[typeof categories.advancedCategoryProperty], false>;
                                       const data = event as preventableEventTypeMap[typeof categories.advancedCategoryProperty];
                                       success =
-                                          !prop.allowedBypassTags.some((tag) => data.player.hasTag(tag)) &&
-                                          (prop.heldItemFilters !== false
-                                              ? prop.heldItemFilters.mode === "include"
-                                                  ? prop.heldItemFilters.items.some(
+                                          !prop!.allowedBypassTags.some((tag) => data.player.hasTag(tag)) &&
+                                          (prop!.heldItemFilters !== false
+                                              ? prop!.heldItemFilters.mode === "include"
+                                                  ? prop!.heldItemFilters.items.some(
                                                         (item) => data.player.heldItem?.typeId === (ItemTypes.get(item)?.id ?? item)
                                                     )
-                                                  : !prop.heldItemFilters.items.some(
+                                                  : !prop!.heldItemFilters.items.some(
                                                         (item) => data.player.heldItem?.typeId === (ItemTypes.get(item)?.id ?? item)
                                                     )
                                               : true) &&
-                                          (((prop.fromGameModes ?? []).length !== 0 ? prop.fromGameModes?.some((mode) => data.fromGameMode === mode) : false) ||
-                                          ((prop.toGameModes ?? []).length !== 0 ? prop.toGameModes?.some((mode) => data.toGameMode === mode) : false) ||
-                                          ((prop.fromGameModesToGameModes ?? []).length !== 0
-                                              ? prop.fromGameModesToGameModes?.some((mode) => data.fromGameMode === mode[0] && data.toGameMode === mode[1])
+                                          (((prop!.fromGameModes ?? []).length !== 0 ? prop!.fromGameModes?.some((mode) => data.fromGameMode === mode) : false) ||
+                                          ((prop!.toGameModes ?? []).length !== 0 ? prop!.toGameModes?.some((mode) => data.toGameMode === mode) : false) ||
+                                          ((prop!.fromGameModesToGameModes ?? []).length !== 0
+                                              ? prop!.fromGameModesToGameModes?.some((mode) => data.fromGameMode === mode[0] && data.toGameMode === mode[1])
                                               : false) ||
-                                          ((prop.fromGameModes ?? []).length === 0 &&
-                                              (prop.toGameModes ?? []).length === 0 &&
-                                              (prop.fromGameModesToGameModes ?? []).length === 0)
+                                          ((prop!.fromGameModes ?? []).length === 0 &&
+                                              (prop!.toGameModes ?? []).length === 0 &&
+                                              (prop!.fromGameModesToGameModes ?? []).length === 0)
                                               ? true
                                               : false);
                                       break;
@@ -1708,7 +1708,7 @@ export class ProtectedAreaCategory {
         if (this.category !== "advancedArea") {
             return ProtectedAreas.areas[this.category];
         } else {
-            return ProtectedAreas.areas.advancedArea[this.advancedCategoryID];
+            return ProtectedAreas.areas.advancedArea[this.advancedCategoryID!];
         }
     }
     /**
@@ -1728,7 +1728,7 @@ export class ProtectedAreaCategory {
             );
         } else {
             return (
-                ProtectedAreas.areas.advancedArea[this.advancedCategoryID]?.[
+                ProtectedAreas.areas.advancedArea[this.advancedCategoryID!]?.[
                     typeof dimension === "string" ? dimension : (dimension.id.replace("minecraft:", "") as "overworld" | "nether" | "the_end")
                 ] ?? []
             );
@@ -1744,7 +1744,7 @@ export class ProtectedAreaCategory {
         if (this.category !== "advancedArea") {
             ProtectedAreas.loadAreasForBuiltInCategory(this.category);
         } else {
-            ProtectedAreas.loadAreasForAdvancedCategory(this.advancedCategoryID);
+            ProtectedAreas.loadAreasForAdvancedCategory(this.advancedCategoryID!);
         }
     }
     /**

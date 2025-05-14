@@ -58,7 +58,7 @@ export declare class LandClaim {
             };
         };
     });
-    get owner(): Player;
+    get owner(): Player | undefined;
     get isOwnerOnline(): boolean;
     get isSaved(): boolean;
     toJSON(): {
@@ -69,7 +69,7 @@ export declare class LandClaim {
         dimension: string;
         name: string;
         ownerId: string;
-        ownerName: string;
+        ownerName: string | undefined;
         defaultPermissions: {
             breakBlocks: boolean;
             placeBlocks: boolean;
@@ -97,6 +97,6 @@ export declare class LandClaim {
     }, playerOrPlayerId: Player | string, playerName?: string): void;
     save(otherDataToChange: any, keepOldFormatVersion?: boolean): void;
     remove(): void;
-    static get(claimId: string): LandClaim;
+    static get(claimId: string): LandClaim | undefined;
     static delete(claimId: string): void;
 }

@@ -127,7 +127,7 @@ export async function manageMutes(
             if (r.canceled) return 1;
 
             switch (
-                (["search", "previous", "go", "next", "", ""] as const)[r.selection] ??
+                (["search", "previous", "go", "next", "", ""] as const)[r.selection!] ??
                 (!!displayEntriesB[r.selection - 6] ? "entry" : undefined) ??
                 (["mutePlayer", "back", "close", "refresh"] as const)[r.selection - displayEntriesB.length - 6]
             ) {
@@ -150,8 +150,8 @@ export async function manageMutes(
                             pagen: undefined,
                             maxentriesperpage,
                             search: {
-                                value: r.formValues[0] as string,
-                                caseSensitive: r.formValues[1] as boolean,
+                                value: r.formValues![0] as string,
+                                caseSensitive: r.formValues![1] as boolean,
                             },
                             cachedEntries: undefined,
                         };
@@ -262,7 +262,7 @@ export async function manageMute(sourceEntity: loosePlayerType, mute: [playerNam
             form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
             const r = await form.forceShow(player);
             if (r.canceled) return 1 as const;
-            switch ((["unmute", "back", "close"] as const)[r.selection]) {
+            switch ((["unmute", "back", "close"] as const)[r.selection!]) {
                 case "unmute":
                     switch (await unmutePlayer(player, mute[0])) {
                         case 0:
@@ -315,7 +315,7 @@ export async function unmutePlayer(sourceEntity: loosePlayerType, playerName: st
         }
         const r = await showMessage(player, "Are you sure?", `Are you sure you want to unmute ${playerName}?`, "Cancel", "Unmute");
         if (r.canceled) return 1 as const;
-        switch ((["cancel", "unmute"] as const)[r.selection]) {
+        switch ((["cancel", "unmute"] as const)[r.selection!]) {
             case "cancel": {
                 return (
                     (await showMessage(player, "Unmute Canceled", `The unmute of ${playerName} has been sucessfully canceled.`, "Back", "Close")).selection !==
@@ -371,11 +371,11 @@ export async function addMute(sourceEntity: loosePlayerType): Promise<0 | 1> {
             if (r.canceled) {
                 return 1 as const;
             }
-            defaultPlayerName = r.formValues[0] as string;
-            defaultMuteDuration = r.formValues[1] as string;
-            defaultReason = r.formValues[2] as string;
+            defaultPlayerName = r.formValues![0] as string;
+            defaultMuteDuration = r.formValues![1] as string;
+            defaultReason = r.formValues![2] as string;
             const muteDate = Date.now();
-            const unmuteDate = (r.formValues[1] as string).trim() === "" ? null : parseDurationRelative(r.formValues[1] as string, muteDate) + Date.now();
+            const unmuteDate = (r.formValues![1] as string).trim() === "" ? null : parseDurationRelative(r.formValues![1] as string, muteDate) + Date.now();
             if (Number.isNaN(unmuteDate)) {
                 if (
                     (
@@ -393,12 +393,12 @@ export async function addMute(sourceEntity: loosePlayerType): Promise<0 | 1> {
                     return 1;
                 }
             }
-            ModerationActions.mutePlayer(r.formValues[0] as string, {
+            ModerationActions.mutePlayer(r.formValues![0] as string, {
                 muteDate,
                 mutedById: player.id,
                 mutedByName: player.name ?? player.nameTag,
                 unmuteDate,
-                reason: r.formValues[2] === "" ? null : (r.formValues[2] as string),
+                reason: r.formValues![2] === "" ? null : (r.formValues![2] as string),
             });
             return 1;
         } catch (e) {
@@ -449,10 +449,10 @@ export async function addMuteOnPlayer(sourceEntity: loosePlayerType, targetName:
             if (r.canceled) {
                 return 1 as const;
             }
-            defaultMuteDuration = r.formValues[0] as string;
-            defaultReason = r.formValues[1] as string;
+            defaultMuteDuration = r.formValues![0] as string;
+            defaultReason = r.formValues![1] as string;
             const muteDate = Date.now();
-            const unmuteDate = (r.formValues[0] as string).trim() === "" ? Infinity : parseDurationRelative(r.formValues[0] as string, muteDate) + Date.now();
+            const unmuteDate = (r.formValues![0] as string).trim() === "" ? Infinity : parseDurationRelative(r.formValues![0] as string, muteDate) + Date.now();
             if (Number.isNaN(unmuteDate)) {
                 if (
                     (
@@ -475,7 +475,7 @@ export async function addMuteOnPlayer(sourceEntity: loosePlayerType, targetName:
                 mutedById: player.id,
                 mutedByName: player.name ?? player.nameTag,
                 unmuteDate,
-                reason: r.formValues[1] === "" ? null : (r.formValues[1] as string),
+                reason: r.formValues![1] === "" ? null : (r.formValues![1] as string),
             });
             return 1;
         } catch (e) {

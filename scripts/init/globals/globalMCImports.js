@@ -1,4 +1,5 @@
 import { system, world } from "@minecraft/server";
+import * as mcServer from "@minecraft/server";
 Object.defineProperties(globalThis, {
     world: {
         value: world,
@@ -11,6 +12,6 @@ Object.defineProperties(globalThis, {
         configurable: true,
         enumerable: true,
         writable: false,
-    }
+    },
 });
 //# sourceMappingURL=globalMCImports.js.map

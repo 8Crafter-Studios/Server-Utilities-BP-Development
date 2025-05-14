@@ -125,7 +125,7 @@ export async function managePlayers_managePlayer(sourceEntity: loosePlayerType, 
                     "back",
                     "close",
                     "clearData",
-                ] as const)[r.selection]
+                ] as const)[r.selection!]
             ) {
                 case "clearData": {
                     if (securityVariables.ultraSecurityModeEnabled) {
@@ -352,8 +352,8 @@ export async function managePlayers_managePlayer(sourceEntity: loosePlayerType, 
                             .forceShow(player);
 
                         if (r.canceled) continue;
-                        if (!!r.formValues[0].toBigInt()) {
-                            MoneySystem.get(targetPlayer.id).setMoney(r.formValues[0].toBigInt());
+                        if (!!r.formValues![0].toBigInt()) {
+                            MoneySystem.get(targetPlayer.id).setMoney(r.formValues![0].toBigInt());
                         } else {
                             if (
                                 (await showMessage(player, "Invalid Input", "The value you have inputted is not a valid amount of money.", "Back", "Close"))
@@ -593,14 +593,14 @@ export async function managePlayers_managePlayer_managePermissions(sourceEntity:
             return 1;
         }
         if (targetPlayer.isOnline) {
-            targetPlayer.playerPermissions.canUseChatCommands = r.formValues[0] as boolean;
-            targetPlayer.playerPermissions.canUseDangerousCommands = r.formValues[1] as boolean;
-            targetPlayer.playerPermissions.canUseScriptEval = r.formValues[2] as boolean;
-            targetPlayer.playerPermissions.canUseCommands = r.formValues[3] as boolean;
-            targetPlayer.playerPermissions.canBypassProtectedAreas = r.formValues[4] as boolean;
-            targetPlayer.playerPermissions.getAllChatCommands = r.formValues[5] as boolean;
-            targetPlayer.playerPermissions.admin = r.formValues[6] as boolean;
-            targetPlayer.playerPermissions.permissionLevel = r.formValues[7] as number;
+            targetPlayer.playerPermissions.canUseChatCommands = r.formValues![0] as boolean;
+            targetPlayer.playerPermissions.canUseDangerousCommands = r.formValues![1] as boolean;
+            targetPlayer.playerPermissions.canUseScriptEval = r.formValues![2] as boolean;
+            targetPlayer.playerPermissions.canUseCommands = r.formValues![3] as boolean;
+            targetPlayer.playerPermissions.canBypassProtectedAreas = r.formValues![4] as boolean;
+            targetPlayer.playerPermissions.getAllChatCommands = r.formValues![5] as boolean;
+            targetPlayer.playerPermissions.admin = r.formValues![6] as boolean;
+            targetPlayer.playerPermissions.permissionLevel = r.formValues![7] as number;
         } else {
             if (
                 (
@@ -619,14 +619,14 @@ export async function managePlayers_managePlayer_managePermissions(sourceEntity:
                         targetPlayer.onJoinActions.splice(i, 1);
                     }
                 });
-                targetPlayer.onJoinActions.push({ type: "set_permission", permission: "canUseChatCommands", value: r.formValues[0] as boolean });
-                targetPlayer.onJoinActions.push({ type: "set_permission", permission: "canUseDangerousCommands", value: r.formValues[1] as boolean });
-                targetPlayer.onJoinActions.push({ type: "set_permission", permission: "canUseScriptEval", value: r.formValues[2] as boolean });
-                targetPlayer.onJoinActions.push({ type: "set_permission", permission: "canUseCommands", value: r.formValues[3] as boolean });
-                targetPlayer.onJoinActions.push({ type: "set_permission", permission: "canBypassProtectedAreas", value: r.formValues[4] as boolean });
-                targetPlayer.onJoinActions.push({ type: "set_permission", permission: "getAllChatCommands", value: r.formValues[5] as boolean });
-                targetPlayer.onJoinActions.push({ type: "set_permission", permission: "admin", value: r.formValues[6] as boolean });
-                targetPlayer.onJoinActions.push({ type: "set_permission", permission: "permissionLevel", value: r.formValues[7] as number });
+                targetPlayer.onJoinActions.push({ type: "set_permission", permission: "canUseChatCommands", value: r.formValues![0] as boolean });
+                targetPlayer.onJoinActions.push({ type: "set_permission", permission: "canUseDangerousCommands", value: r.formValues![1] as boolean });
+                targetPlayer.onJoinActions.push({ type: "set_permission", permission: "canUseScriptEval", value: r.formValues![2] as boolean });
+                targetPlayer.onJoinActions.push({ type: "set_permission", permission: "canUseCommands", value: r.formValues![3] as boolean });
+                targetPlayer.onJoinActions.push({ type: "set_permission", permission: "canBypassProtectedAreas", value: r.formValues![4] as boolean });
+                targetPlayer.onJoinActions.push({ type: "set_permission", permission: "getAllChatCommands", value: r.formValues![5] as boolean });
+                targetPlayer.onJoinActions.push({ type: "set_permission", permission: "admin", value: r.formValues![6] as boolean });
+                targetPlayer.onJoinActions.push({ type: "set_permission", permission: "permissionLevel", value: r.formValues![7] as number });
                 targetPlayer.save();
             }
             return 1;

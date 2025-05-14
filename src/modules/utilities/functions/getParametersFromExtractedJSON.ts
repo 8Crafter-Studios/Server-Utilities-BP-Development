@@ -40,10 +40,10 @@ export function getParametersFromExtractedJSON(rawdata: RegExpMatchArray[]) {
         t: "json" | "non-json";
         v: any;
     }[] = [];
-    c.push(...getStringsFromString(b.substring(0, (a[0] as any)?.indices[0][0])));
+    c.push(...getStringsFromString(b!.substring(0, (a[0] as any)?.indices[0][0])));
     a.forEach((v, i) => {
         c.push({ t: "json", v: v[0] as any });
-        c.push(...getStringsFromString(b.substring((v as any)?.indices[0][1], (a[i + 1] as any)?.indices[0][0] ?? b.length)));
+        c.push(...getStringsFromString(b!.substring((v as any)?.indices[0][1], (a[i + 1] as any)?.indices[0][0] ?? b!.length)));
     });
     c;
     let e: { i: number; v: any; }[] = [];

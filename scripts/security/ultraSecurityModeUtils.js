@@ -1312,14 +1312,25 @@ export async function editPermissionForPlayerUI(player, targetPlayerId, mode = "
         }
     }
     let form = new ActionFormData();
-    form.title(customFormUICodes.action.titles.formStyles.medium + customFormUICodes.action.titles.formStyles.medium + (mode === "default" ? "Edit Default Permissions" : "Edit Permissions for " + (mode === "preset" ? "Preset" : "Player")));
+    form.title(customFormUICodes.action.titles.formStyles.medium +
+        customFormUICodes.action.titles.formStyles.medium +
+        (mode === "default" ? "Edit Default Permissions" : "Edit Permissions for " + (mode === "preset" ? "Preset" : "Player")));
     const perms = Object.entries(permissionType);
     perms.forEach((permissionType) => {
-        form.button(customFormUICodes.action.buttons.positions.main_only + (playerPermissions[targetPlayerId]?.includes(permissionType[0]) ? "§a" : securityVariables.testOfflinePlayerForPermission(targetPlayerId, permissionType[1], mode !== "player") ? "§e" : "§c") + permissionType[0]);
+        form.button(customFormUICodes.action.buttons.positions.main_only +
+            (playerPermissions[targetPlayerId]?.includes(permissionType[0])
+                ? "§a"
+                : securityVariables.testOfflinePlayerForPermission(targetPlayerId, permissionType[1], mode !== "player")
+                    ? "§e"
+                    : "§c") +
+            permissionType[0]);
     });
     form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
     form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
-    form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Reset " + (mode === "default" ? "Default" : mode === "preset" ? "Preset" : "Player") + " Permissions", "textures/ui/reset_red");
+    form.button(customFormUICodes.action.buttons.positions.title_bar_only +
+        "Reset " +
+        (mode === "default" ? "Default" : mode === "preset" ? "Preset" : "Player") +
+        " Permissions", "textures/ui/reset_red");
     const r = await form.forceShow(player);
     if (r.canceled) {
         return 1;
@@ -1361,9 +1372,11 @@ async function editPermissionForPlayerUI_permission(player, targetPlayerId, perm
     form.title(`${customFormUICodes.action.titles.formStyles.medium}Edit ${mode === "default" ? "Default " : ""}Permission${mode === "default" ? "" : mode === "preset" ? " for Preset" : " for Player"}`);
     form.body(`Permission: ${perm.id}\nCurrent Status: ${playerPermissions[targetPlayerId]?.includes(perm.id)}\nDefault: ${playerPermissionsDefault[targetPlayerId]?.includes(perm.id) ?? perm.default}${perm.includedInPermissions.find((p) => playerPermissions[targetPlayerId]?.includes(p))
         ? `\n§eThis ${mode !== "player" ? "preset" : "player"} already has this permission because of the following permissions ${JSON.stringify(perm.includedInPermissions.filter((p) => playerPermissions[targetPlayerId]?.includes(p)))}. If you want to remove this permission from this ${mode !== "player" ? "preset" : "player"}, you must remove the permissions listed above.`
-        : ""}${mode !== "player" ? "" : playerPermissions.everyone.includes(perm.id)
-        ? "\n§eThis player already has this permission because this permission has been enabled for everyone. To make it not enabled for everyone, go to Main Menu > Security > Default Permissions."
-        : ""}§r\n` + perm.description);
+        : ""}${mode !== "player"
+        ? ""
+        : playerPermissions.everyone.includes(perm.id)
+            ? "\n§eThis player already has this permission because this permission has been enabled for everyone. To make it not enabled for everyone, go to Main Menu > Security > Default Permissions."
+            : ""}§r\n` + perm.description);
     form.button(`${customFormUICodes.action.buttons.positions.main_only}${playerPermissions[targetPlayerId]?.includes(perm.id) ? "Remove" : "Add"} Permission${!!perm.includedInPermissions.find((p) => playerPermissions[targetPlayerId]?.includes(p)) ? "\n§cNo Effect" : ""}`);
     form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
     form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
@@ -1410,6 +1423,8 @@ async function editPermissionForPlayerUI_permission(player, targetPlayerId, perm
             return 1;
         case 2:
             return 0;
+        default:
+            throw new Error("Invalid selection: " + r.selection);
     }
 }
 export async function selectSecurityMode(player) {
@@ -1461,6 +1476,8 @@ export async function selectSecurityMode(player) {
             return 1;
         case 3:
             return 0;
+        default:
+            throw new Error("Invalid selection: " + r.selection);
     }
 }
 export async function commandsUltraSecurityModeSecurityLevelOverridesEditor(player) {
@@ -1829,9 +1846,11 @@ form.button("Debug Screen", "textures/ui/ui_debug_glyph_color");*/
     switch (r.selection) {
         case 0:
             ownerUsingDiablePermissionsDebug = true;
-            return;
+            return 1;
         case 1:
             return 1;
+        default:
+            throw new Error("Invalid selection: " + r.selection);
     }
 }
 export async function resetPlayerPermissionsUI(player) {
@@ -1906,7 +1925,7 @@ export async function managePermissionsPresets(player) {
     }
     let form = new ActionFormData();
     form.title(customFormUICodes.action.titles.formStyles.medium + "Manage Permissions Presets");
-    Object.values(permissionPresetMap).forEach(p => form.button(customFormUICodes.action.buttons.positions.main_only + p));
+    Object.values(permissionPresetMap).forEach((p) => form.button(customFormUICodes.action.buttons.positions.main_only + p));
     form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
     form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
     const r = await form.forceShow(player);

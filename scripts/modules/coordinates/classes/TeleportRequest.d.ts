@@ -37,7 +37,7 @@ export declare class TeleportRequest {
     cancelSequence(): void;
     timeOutSequence(): void;
     denySequence(): void;
-    teleportSequence(): Promise<number>;
+    teleportSequence(): Promise<0 | undefined>;
     static send(fromPlayer: Player, toPlayer: Player, sendTime?: number): void;
     static getRequestsFromPlayer(fromPlayer: Player): TeleportRequest[];
     static getRequestsToPlayer(toPlayer: Player): TeleportRequest[];

@@ -51,9 +51,9 @@ export async function playerMenu_homes(sourceEntitya: Entity | executeCommandPla
             let r = ra as ActionFormResponse;
             if (r.canceled) return 1;
 
-            switch ((!!homes[r.selection] ? "home" : undefined) ?? (["newHome", "back", "close"] as const)[r.selection - homes.length]) {
+            switch ((!!homes[r.selection!] ? "home" : undefined) ?? (["newHome", "back", "close"] as const)[r.selection! - homes.length]) {
                 case "home":
-                    const home = homes[r.selection];
+                    const home = homes[r.selection!];
                     switch (
                         (["teleport", "delete", "back", "close"] as const)[
                             (
@@ -68,7 +68,7 @@ export async function playerMenu_homes(sourceEntitya: Entity | executeCommandPla
                                     [customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left"],
                                     [customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout"]
                                 )
-                            ).selection
+                            ).selection!
                         ]
                     ) {
                         case "teleport":

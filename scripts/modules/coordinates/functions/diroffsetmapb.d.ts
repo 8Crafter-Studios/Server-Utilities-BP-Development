@@ -1,1 +1,1 @@
-export declare function diroffsetmapb(direction: string): import("@minecraft/server").Vector3;
+export declare function diroffsetmapb(direction: string): import("@minecraft/server").Vector3 | undefined;

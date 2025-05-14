@@ -39,7 +39,7 @@ export async function moderationMenu_quickActions(sourceEntity: loosePlayerType)
             form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
             const r = await form.forceShow(player);
             if (r.canceled) return 1 as const;
-            switch (cullUndefined(["ban", "mute", "kick", transferPlayerButtonVisible ? "transfer" : undefined, "back", "close"] as const)[r.selection]) {
+            switch (cullUndefined(["ban", "mute", "kick", transferPlayerButtonVisible ? "transfer" : undefined, "back", "close"] as const)[r.selection!]) {
                 case "ban":
                     if ((await moderationMenu_quickBan(player)) == 1) {
                         continue;

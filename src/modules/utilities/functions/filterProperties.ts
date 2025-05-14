@@ -115,7 +115,7 @@ export function filterProperties<
     if (Array.isArray(obj)) {
         return obj.map((item) => filterProperties(item as T, keyToRemove, options)) as any;
     } else if ((options?.force ?? false) || (obj !== null && typeof obj === "object") || typeof obj === "function") {
-        return Object[options?.useKeysInsteadOfGetOwnPropertyNames ?? false ? "keys" : "getOwnPropertyNames"](obj).reduce((acc, key) => {
+        return Object[options?.useKeysInsteadOfGetOwnPropertyNames ?? false ? "keys" : "getOwnPropertyNames"](obj!).reduce((acc, key) => {
             if (!keyToRemove.includes(key as K[number])) {
                 let value = undefined;
                 if (options?.onlyEnumerable ?? false) {
@@ -149,7 +149,7 @@ export function filterPropertiesB<T, K extends LooseAutocompleteB<string | numbe
     if (Array.isArray(obj)) {
         return obj.map((item) => filterPropertiesB(item, keyToRemove)) as any;
     } else if ((options?.force ?? false) || (obj !== null && typeof obj === "object") || typeof obj === "function") {
-        return Object[options?.useKeysInsteadOfGetOwnPropertyNames ?? false ? "keys" : "getOwnPropertyNames"](obj).reduce((acc, key) => {
+        return Object[options?.useKeysInsteadOfGetOwnPropertyNames ?? false ? "keys" : "getOwnPropertyNames"](obj!).reduce((acc, key) => {
             if (key !== keyToRemove) {
                 let value = undefined;
                 if (options?.onlyEnumerable ?? false) {

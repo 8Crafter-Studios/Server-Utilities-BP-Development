@@ -154,7 +154,7 @@ export interface SubscribedEventSavedData<EventTypeID extends SubscribedEventTyp
         /**
          * Additional metadata for the event subscription.
          */
-        [key: string]: string | number | boolean;
+        [key: string]: string | number | boolean | undefined;
     }
 }
 
@@ -5877,7 +5877,7 @@ namespace exports {
             }
             this.#initializedCallback = callback;
             try {
-                this.#eventTypeSignalReference.subscribe(this.#initializedCallback);
+                this.#eventTypeSignalReference.subscribe(this.#initializedCallback!);
             } catch (e) {
                 this.#initializedCallback = undefined;
                 throw e;

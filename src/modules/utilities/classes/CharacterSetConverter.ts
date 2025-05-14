@@ -13,7 +13,7 @@ export class CharacterSetConverter {
         let encoded = '';
 
         for (const char of input) {
-            let codePoint = char.codePointAt(0);
+            let codePoint = char.codePointAt(0)!;
             let encodedChar = '';
 
             while (codePoint > 0) {

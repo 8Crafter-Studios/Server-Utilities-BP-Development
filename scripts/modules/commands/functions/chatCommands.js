@@ -153,22 +153,22 @@ export function chatCommands(params) {
     let playerab = params.player ?? params.eventData?.sender ?? params.event?.sender;
     let playera = playerab instanceof executeCommandPlayerW
         ? playerab
-        : new executeCommandPlayerW(playerab);
+        : playerab ? new executeCommandPlayerW(playerab) : undefined;
     Object.defineProperties(playera, {
         id: {
-            value: playera.player.id,
+            value: playera?.player?.id,
             writable: false,
             enumerable: true,
             configurable: true,
         },
         typeId: {
-            value: playera.player.typeId,
+            value: playera?.player?.typeId,
             writable: false,
             enumerable: true,
             configurable: true,
         },
         name: {
-            value: playera.player.name,
+            value: playera?.player?.name,
             writable: false,
             enumerable: true,
             configurable: true,
@@ -176,7 +176,7 @@ export function chatCommands(params) {
     });
     let player = playera;
     //let player = Object.assign(((playera instanceof executeCommandPlayer)?playera:(playera instanceof executeCommandPlayerW)?playera:new executeCommandPlayer(playera)).player, (playera instanceof executeCommandPlayer)?Object.setPrototypeOf(playera, executeCommandPlayerW.prototype) as executeCommandPlayerW:(playera instanceof executeCommandPlayerW)?playera:new executeCommandPlayerW(playera));
-    let eventData = !!params.eventData
+    let eventData = params.eventData
         ? {
             get sender() {
                 return player;
@@ -194,7 +194,7 @@ export function chatCommands(params) {
                 return params.eventData.message;
             },
         }
-        : {
+        : params.event ? {
             get sender() {
                 return player;
             },
@@ -210,42 +210,12 @@ export function chatCommands(params) {
             get message() {
                 return params.event.message;
             },
-        };
-    let event = !!params.event
-        ? {
-            get sender() {
-                return player;
-            },
-            get cancel() {
-                return params.event.cancel;
-            },
-            set cancel(cancel) {
-                params.event.cancel = cancel;
-            },
-            get targets() {
-                return params.event.targets;
-            },
-            get message() {
-                return params.event.message;
-            },
-        }
-        : {
-            get sender() {
-                return player;
-            },
-            get cancel() {
-                return params.eventData.cancel;
-            },
-            set cancel(cancel) {
-                params.eventData.cancel = cancel;
-            },
-            get targets() {
-                return params.eventData.targets;
-            },
-            get message() {
-                return params.eventData.message;
-            },
-        };
+        } : undefined;
+    if (eventData === undefined) {
+        throw new TypeError("Nether the eventData nor event properties were provided.");
+    }
+    assertIsDefined(eventData);
+    let event = eventData;
     let newMessage = params.newMessage ?? params.eventData?.message ?? params.event?.message;
     if (params.silentCMD != true) {
         try {
@@ -300,15 +270,15 @@ export function chatCommands(params) {
                 .replaceAll(",", "")
                 .split(" ")[3]),
         })
-            .getComponent("inventory");
+            ?.getComponent("inventory");
         system.run(() => {
             try {
                 for (let i = 0; i < 9; i++) {
-                    inventorye.container.swapItems(i, i + (row - 1) * 9, inventoryblock.container);
+                    inventorye?.container.swapItems(i, i + (row - 1) * 9, inventoryblock?.container);
                 } /*; eventData.sender.sendMessage(String("l" + slotsArray))*/
             }
             catch (e) {
-                eventData.sender.sendMessage("§c" + e + " " + e.stack);
+                player.sendError("§c" + e + " " + e.stack);
             }
         });
     }
@@ -430,7 +400,7 @@ export function chatCommands(params) {
                             if (inventoryb.container.getItem(Number(i)) !==
                                 undefined) {
                                 slotsArray = slotsArray.concat(String(inventoryb.container.getItem(Number(i))
-                                    .typeId));
+                                    ?.typeId));
                             }
                             else {
                                 slotsArray = slotsArray.concat("undefined");
@@ -523,7 +493,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                 let slotsArray = [];
                                 for (let i = 0; i < inventoryb.inventorySize; i++) {
                                     if (inventoryb.container.getItem(Number(i)) !== undefined) {
-                                        slotsArray = slotsArray.concat(String(inventoryb.container.getItem(Number(i)).typeId));
+                                        slotsArray = slotsArray.concat(String(inventoryb.container.getItem(Number(i))?.typeId));
                                     }
                                     else {
                                         slotsArray =
@@ -674,8 +644,8 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventorye.container.swapItems(i,
                                         .split(" ")[3]
                                         .toNumber(),
                                 })
-                                    .getComponent("inventory")
-                                    .container));
+                                    ?.getComponent("inventory")
+                                    ?.container));
                                 if (!!!contents) {
                                     throw new Error(`Hotbar Preset ${args[1]} is unloaded.`);
                                 }
@@ -729,8 +699,8 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventorye.container.swapItems(i,
                                         .split(" ")[3]
                                         .toNumber(),
                                 })
-                                    .getComponent("inventory")
-                                    .container));
+                                    ?.getComponent("inventory")
+                                    ?.container));
                                 if (!!!contents) {
                                     return `Preset ${v.slice(12)}: Unloaded`;
                                 }
@@ -812,7 +782,7 @@ break; */
                     ]).args;
                     srun(() => {
                         let structure = "andexdb:-2-294_steb";
-                        if (!!args[1]) {
+                        if (args[1]) {
                             const object = modules.assets.constants.structuremappings.steb.find((o) => args[1] >= o.range[0] &&
                                 args[1] <= o.range[1]);
                             if (!!object) {
@@ -831,13 +801,14 @@ break; */
             case !!switchTest.match(/^invsee$/):
                 eventData.cancel = true;
                 system.run(() => {
-                    const playerB = world
-                        .getPlayers()
-                        .find((playerFinders) => playerFinders ==
-                        targetSelectorB(switchTestB.slice(7), "", Number(eventData.sender.id)));
-                    const inventoryd2 = playerB.getComponent("inventory");
-                    const equipmentd2 = playerB.getComponent("equippable");
-                    const cursord2 = playerB.getComponent("cursor_inventory");
+                    const playerB = targetSelectorB(switchTestB.split(" ").slice(1).join(" "), "", Number(eventData.sender.id));
+                    if (!playerB) {
+                        player.sendError(`§cUnable to find a player with the specified name.`);
+                        return;
+                    }
+                    const inventoryd2 = playerB.inventory;
+                    const equipmentd2 = playerB.equippable;
+                    const cursord2 = playerB.cursorInventory;
                     try {
                         let slotsArray = [];
                         for (let i = 0; i < inventoryd2.inventorySize; i++) {
@@ -846,15 +817,15 @@ break; */
                                 slotsArray = slotsArray.concat(String("slot: " +
                                     i +
                                     "§r§f, item: " +
-                                    inventoryd2.container.getItem(Number(i)).typeId +
+                                    inventoryd2.container.getItem(Number(i))?.typeId +
                                     "§r§f, amount: " +
-                                    inventoryd2.container.getItem(Number(i)).amount +
+                                    inventoryd2.container.getItem(Number(i))?.amount +
                                     "§r§f, nameTag: " +
-                                    inventoryd2.container.getItem(Number(i)).nameTag +
+                                    inventoryd2.container.getItem(Number(i))?.nameTag +
                                     "§r§f, lore: " +
                                     (JSONStringify(inventoryd2.container
                                         .getItem(Number(i))
-                                        .getLore() ?? [], true) ?? "[]") +
+                                        ?.getLore() ?? [], true) ?? "[]") +
                                     ", enchantments: " +
                                     (!!inventoryd2.container
                                         .getItem(Number(i))
@@ -948,7 +919,7 @@ break; */
                         player.sendMessageB(String(world
                             .getPlayers()
                             .find((playerFinders) => playerFinders ==
-                            targetSelectorB(switchTestB.slice(7), "", Number(eventData.sender.id))).name +
+                            targetSelectorB(switchTestB.slice(7), "", Number(eventData.sender.id)))?.name +
                             "'s Items: \n" +
                             slotsArray.join("§r§f\n")));
                     }
@@ -960,10 +931,11 @@ break; */
             case !!switchTest.match(/^invseep$/):
                 eventData.cancel = true;
                 system.run(() => {
-                    const playerB = world
-                        .getPlayers()
-                        .find((playerFinders) => playerFinders ==
-                        targetSelectorB(switchTestB.slice(7), "", Number(eventData.sender.id)));
+                    const playerB = targetSelectorB(switchTestB.split(" ").slice(1).join(" "), "", Number(eventData.sender.id));
+                    if (!playerB) {
+                        player.sendError(`§cUnable to find a player with the specified name.`);
+                        return;
+                    }
                     const inventoryd2 = playerB.getComponent("inventory");
                     const equipmentd2 = playerB.getComponent("equippable");
                     const cursord2 = playerB.getComponent("cursor_inventory");
@@ -975,15 +947,15 @@ break; */
                                 slotsArray = slotsArray.concat(String("slot: " +
                                     i +
                                     "§r§f, item: " +
-                                    inventoryd2.container.getItem(Number(i)).typeId +
+                                    inventoryd2.container.getItem(Number(i))?.typeId +
                                     "§r§f, amount: " +
-                                    inventoryd2.container.getItem(Number(i)).amount +
+                                    inventoryd2.container.getItem(Number(i))?.amount +
                                     "§r§f, nameTag: " +
-                                    inventoryd2.container.getItem(Number(i)).nameTag +
+                                    inventoryd2.container.getItem(Number(i))?.nameTag +
                                     "§r§f, lore: " +
                                     JSONStringify(inventoryd2.container
                                         .getItem(Number(i))
-                                        .getLore() ?? [], true) +
+                                        ?.getLore() ?? [], true) +
                                     ", enchantments: " +
                                     (!!inventoryd2.container
                                         .getItem(Number(i))
@@ -998,9 +970,9 @@ break; */
                                     JSONStringify(((i) => {
                                         if ((inventoryd2.container
                                             .getItem(Number(i))
-                                            .getDynamicPropertyIds() ??
+                                            ?.getDynamicPropertyIds() ??
                                             []).length == 0) {
-                                            return inventoryd2.container.getItem(Number(i)).isStackable
+                                            return inventoryd2.container.getItem(Number(i))?.isStackable
                                                 ? null
                                                 : {};
                                         }
@@ -1008,7 +980,7 @@ break; */
                                             let properties = {};
                                             inventoryd2.container
                                                 .getItem(Number(i))
-                                                .getDynamicPropertyIds()
+                                                ?.getDynamicPropertyIds()
                                                 .forEach((v) => (properties[v] =
                                                 inventoryd2.container
                                                     .getItem(Number(i))
@@ -1016,7 +988,7 @@ break; */
                                             return properties;
                                         }
                                     })(i) ??
-                                        (inventoryd2.container.getItem(Number(i)).isStackable
+                                        (inventoryd2.container.getItem(Number(i))?.isStackable
                                             ? null
                                             : {}), true)));
                             }
@@ -1135,7 +1107,7 @@ break; */
                         player.sendMessageB(String(world
                             .getPlayers()
                             .find((playerFinders) => playerFinders ==
-                            targetSelectorB(switchTestB.slice(8), "", Number(eventData.sender.id))).name +
+                            targetSelectorB(switchTestB.slice(8), "", Number(eventData.sender.id)))?.name +
                             "'s Items: \n" +
                             slotsArray.join("§r§f\n")));
                     }
@@ -1480,7 +1452,7 @@ break; */
                                                 "§r§f, enchantments: " +
                                                 JSONStringify(tryget(() => item[1]
                                                     .getComponent("enchantable")
-                                                    .getEnchantments()) ?? "N/A", true)));
+                                                    ?.getEnchantments()) ?? "N/A", true)));
                                         }
                                         else {
                                             slotsArray = slotsArray.concat("slot: " +
@@ -1490,8 +1462,8 @@ break; */
                                     });
                                 }
                                 else {
-                                    let items = playerb.items.inventory.concat(playerb.items.equipment);
-                                    items.forEach((item) => {
+                                    let items = playerb.items?.inventory?.concat(playerb.items.equipment);
+                                    items?.forEach((item) => {
                                         if (item.count != 0) {
                                             slotsArray = slotsArray.concat(String("slot: " +
                                                 item.slot +
@@ -1573,7 +1545,7 @@ break; */
                                             "§r§f, enchantments: " +
                                             JSONStringify(tryget(() => item[1]
                                                 .getComponent("enchantable")
-                                                .getEnchantments()) ?? "N/A", true)));
+                                                ?.getEnchantments()) ?? "N/A", true)));
                                     }
                                     else {
                                         slotsArray = slotsArray.concat("slot: " +
@@ -1583,7 +1555,7 @@ break; */
                                 });
                             }
                             else {
-                                let items = playerb.items.inventory.concat(playerb.items.equipment);
+                                let items = playerb.items?.inventory?.concat(playerb.items.equipment) ?? [];
                                 items.forEach((item) => {
                                     if (item.count != 0) {
                                         slotsArray = slotsArray.concat(String("slot: " +
@@ -1664,21 +1636,21 @@ break; */
                     const inventoryd2 = block.getComponent("inventory");
                     try {
                         let slotsArray = [];
-                        for (let i = 0; i < inventoryd2.container.size; i++) {
-                            if (inventoryd2.container.getItem(Number(i)) !==
+                        for (let i = 0; i < inventoryd2.container?.size; i++) {
+                            if (inventoryd2.container?.getItem(Number(i)) !==
                                 undefined) {
                                 slotsArray = slotsArray.concat(String("slot: " +
                                     i +
                                     ", item: " +
-                                    inventoryd2.container.getItem(Number(i)).typeId +
+                                    inventoryd2.container.getItem(Number(i))?.typeId +
                                     ", amount: " +
-                                    inventoryd2.container.getItem(Number(i)).amount +
+                                    inventoryd2.container.getItem(Number(i))?.amount +
                                     ", nameTag: " +
-                                    inventoryd2.container.getItem(Number(i)).nameTag +
+                                    inventoryd2.container.getItem(Number(i))?.nameTag +
                                     "§r§f, lore: " +
                                     JSONStringify(inventoryd2.container
                                         .getItem(Number(i))
-                                        .getLore() ?? [], true) +
+                                        ?.getLore() ?? [], true) +
                                     "§r§f, enchantments: " +
                                     (!!inventoryd2.container
                                         .getItem(Number(i))
@@ -1719,7 +1691,7 @@ break; */
                         .concat(world.getDimension("the_end").getEntities())
                         .find((playerFinders) => playerFinders ==
                         targetSelectorB(switchTestB.slice(9), "", Number(eventData.sender.id)))
-                        .getComponent("inventory");
+                        ?.getComponent("inventory");
                     try {
                         let slotsArray = [];
                         for (let i = 0; i < inventoryd2.inventorySize; i++) {
@@ -1728,15 +1700,15 @@ break; */
                                 slotsArray = slotsArray.concat(String("slot: " +
                                     i +
                                     ", item: " +
-                                    inventoryd2.container.getItem(Number(i)).typeId +
+                                    inventoryd2.container.getItem(Number(i))?.typeId +
                                     ", amount: " +
-                                    inventoryd2.container.getItem(Number(i)).amount +
+                                    inventoryd2.container.getItem(Number(i))?.amount +
                                     ", nameTag: " +
-                                    inventoryd2.container.getItem(Number(i)).nameTag +
+                                    inventoryd2.container.getItem(Number(i))?.nameTag +
                                     "§r§f, lore: " +
                                     JSONStringify(inventoryd2.container
                                         .getItem(Number(i))
-                                        .getLore() ?? [], true) +
+                                        ?.getLore() ?? [], true) +
                                     "§r§f, enchantments: " +
                                     (!!inventoryd2.container
                                         .getItem(Number(i))
@@ -1762,7 +1734,7 @@ break; */
                             .getDimension("the_end")
                             .getEntities())
                             .find((playerFinders) => playerFinders ==
-                            targetSelectorB(switchTestB.slice(9), "", Number(eventData.sender.id))).nameTag +
+                            targetSelectorB(switchTestB.slice(9), "", Number(eventData.sender.id)))?.nameTag +
                             "'s Items: \n" +
                             slotsArray.join("§r§f\n")));
                     }
@@ -1781,7 +1753,7 @@ break; */
                         .concat(world.getDimension("the_end").getEntities())
                         .find((playerFinders) => playerFinders ==
                         targetSelectorB(switchTestB.slice(7), "", Number(eventData.sender.id)))
-                        .getComponent("inventory");
+                        ?.getComponent("inventory");
                     const equipmentd2 = world
                         .getDimension("overworld")
                         .getEntities()
@@ -1789,7 +1761,7 @@ break; */
                         .concat(world.getDimension("the_end").getEntities())
                         .find((playerFinders) => playerFinders ==
                         targetSelectorB(switchTestB.slice(7), "", Number(eventData.sender.id)))
-                        .getComponent("equippable");
+                        ?.getComponent("equippable");
                     try {
                         let slotsArray = [];
                         if (!!inventoryd2) {
@@ -1799,15 +1771,15 @@ break; */
                                         slotsArray = slotsArray.concat(String("slot: " +
                                             i +
                                             ", item: " +
-                                            inventoryd2.container.getItem(Number(i)).typeId +
+                                            inventoryd2.container.getItem(Number(i))?.typeId +
                                             ", amount: " +
-                                            inventoryd2.container.getItem(Number(i)).amount +
+                                            inventoryd2.container.getItem(Number(i))?.amount +
                                             ", nameTag: " +
-                                            inventoryd2.container.getItem(Number(i)).nameTag +
+                                            inventoryd2.container.getItem(Number(i))?.nameTag +
                                             "§r§f, lore: " +
                                             JSONStringify(inventoryd2.container
                                                 .getItem(Number(i))
-                                                .getLore() ?? [], true) +
+                                                ?.getLore() ?? [], true) +
                                             "§r§f, enchantments: " +
                                             (!!inventoryd2.container
                                                 .getItem(Number(i))
@@ -1891,7 +1863,7 @@ break; */
                             .getDimension("the_end")
                             .getEntities())
                             .find((playerFinders) => playerFinders ==
-                            targetSelectorB(switchTestB.slice(7), "", Number(eventData.sender.id))).nameTag +
+                            targetSelectorB(switchTestB.slice(7), "", Number(eventData.sender.id)))?.nameTag +
                             "'s Items: \n" +
                             slotsArray.join("§r§f\n")));
                     }
@@ -1909,7 +1881,7 @@ break; */
                     .concat(world.getDimension("the_end").getEntities())
                     .find((playerFinders) => playerFinders.id ==
                     switchTestB.slice(7).split(" ")[0])
-                    .getComponent("inventory");
+                    ?.getComponent("inventory");
                 const equipmentd2 = world
                     .getDimension("overworld")
                     .getEntities()
@@ -1917,7 +1889,7 @@ break; */
                     .concat(world.getDimension("the_end").getEntities())
                     .find((playerFinders) => playerFinders.id ==
                     switchTestB.slice(7).split(" ")[0])
-                    .getComponent("equippable");
+                    ?.getComponent("equippable");
                 system.run(() => {
                     try {
                         let slotsArray = [];
@@ -1928,15 +1900,15 @@ break; */
                                         slotsArray = slotsArray.concat(String("slot: " +
                                             i +
                                             ", item: " +
-                                            inventoryd.container.getItem(Number(i)).typeId +
+                                            inventoryd.container.getItem(Number(i))?.typeId +
                                             ", amount: " +
-                                            inventoryd.container.getItem(Number(i)).amount +
+                                            inventoryd.container.getItem(Number(i))?.amount +
                                             ", nameTag: " +
-                                            inventoryd.container.getItem(Number(i)).nameTag +
+                                            inventoryd.container.getItem(Number(i))?.nameTag +
                                             "§r§f, lore: " +
                                             JSONStringify(inventoryd.container
                                                 .getItem(Number(i))
-                                                .getLore() ?? [], true) +
+                                                ?.getLore() ?? [], true) +
                                             "§r§f, enchantments: " +
                                             (!!inventoryd.container
                                                 .getItem(Number(i))
@@ -2020,7 +1992,7 @@ break; */
                             .getDimension("the_end")
                             .getEntities())
                             .find((playerFinders) => playerFinders.id ==
-                            switchTestB.slice(7).split(" ")[0]).nameTag +
+                            switchTestB.slice(7).split(" ")[0])?.nameTag +
                             "'s Items: \n" +
                             slotsArray.join("§r§f\n")));
                     }
@@ -2034,7 +2006,7 @@ break; */
                 switch (true) {
                     case newMessage.split(" ").length >= 5:
                         {
-                            let playerTotalVictimsList;
+                            let playerTotalVictimsList = [];
                             targetSelectorAllListB(newMessage.split(" ").slice(4).join(" "), "", Number(player.id)).forEach((player2) => {
                                 playerTotalVictimsList.push(player2.name);
                                 const inventoryc = player2.getComponent("inventory");
@@ -2226,7 +2198,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                             switch (true) {
                                 case argsa.extra.trim() != "":
                                     {
-                                        let playerTotalVictimsList;
+                                        let playerTotalVictimsList = [];
                                         targetSelectorAllListB(argsa.extra, "", Number(player.id)).forEach((player2) => {
                                             playerTotalVictimsList.push(player2.name);
                                             const inventoryc = player2.getComponent("inventory");
@@ -2248,9 +2220,9 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                                             " of " +
                                                             player2.name +
                                                             "'s inventory to " +
-                                                            item.typeId +
+                                                            item?.typeId +
                                                             " * " +
-                                                            item.amount));
+                                                            item?.amount));
                                                 }
                                                 catch (e) {
                                                     player.sendError("§c" + e + e.stack, true);
@@ -2266,9 +2238,9 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                                     "§r§f of §n[§f" +
                                                     playerTotalVictimsList +
                                                     "§r§u]§f inventories to §u" +
-                                                    item.typeId +
+                                                    item?.typeId +
                                                     "§r§f * §c" +
-                                                    item.amount));
+                                                    item?.amount));
                                             });
                                         });
                                     }
@@ -2288,9 +2260,9 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                                     " of " +
                                                     player.name +
                                                     "'s inventory to " +
-                                                    item.typeId +
+                                                    item?.typeId +
                                                     " * " +
-                                                    item.amount));
+                                                    item?.amount));
                                                 world
                                                     .getAllPlayers()
                                                     .filter((v) => v.hasTag("canSeeCustomChatCommandFeedbackFromMods"))
@@ -2302,9 +2274,9 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                                         " of " +
                                                         player.name +
                                                         "'s inventory to " +
-                                                        item.typeId +
+                                                        item?.typeId +
                                                         " * " +
-                                                        item.amount));
+                                                        item?.amount));
                                                 });
                                             }
                                             catch (e) {
@@ -2653,7 +2625,7 @@ potionModifierType: ${d.potionModifierType.id}`)(item.getComponent("potion"))
                                                     .slice(3)
                                                     .join(" "), ["json"]).args[0].forEach((v) => player
                                                     .getComponent("inventory")
-                                                    .container.getSlot(player.selectedSlotIndex)
+                                                    ?.container.getSlot(player.selectedSlotIndex)
                                                     .setDynamicProperty(v));
                                                 break;
                                             case "setlist":
@@ -2662,7 +2634,7 @@ potionModifierType: ${d.potionModifierType.id}`)(item.getComponent("potion"))
                                                     .slice(3)
                                                     .join(" "), ["json"]).args[0]).forEach((v) => player
                                                     .getComponent("inventory")
-                                                    .container.getSlot(player.selectedSlotIndex)
+                                                    ?.container.getSlot(player.selectedSlotIndex)
                                                     .setDynamicProperty(v[0], v[1]));
                                                 break;
                                             case "remove":
@@ -2737,8 +2709,8 @@ potionModifierType: ${d.potionModifierType.id}`)(item.getComponent("potion"))
                                             case "list":
                                                 eventData.sender.sendMessage(player
                                                     .getComponent("inventory")
-                                                    .container.getSlot(player.selectedSlotIndex)
-                                                    .getDynamicPropertyIds()
+                                                    ?.container.getSlot(player.selectedSlotIndex)
+                                                    ?.getDynamicPropertyIds()
                                                     .join("§r§f\n"));
                                                 break;
                                             case "listdetails":
@@ -2756,7 +2728,7 @@ potionModifierType: ${d.potionModifierType.id}`)(item.getComponent("potion"))
                                                         ": " +
                                                         JSON.stringify(player
                                                             .getComponent("inventory")
-                                                            .container.getSlot(player.selectedSlotIndex)
+                                                            ?.container.getSlot(player.selectedSlotIndex)
                                                             .getDynamicProperty(v)))
                                                         .join("§r§f\n"));
                                                 break;
@@ -2804,12 +2776,12 @@ potionModifierType: ${d.potionModifierType.id}`)(item.getComponent("potion"))
                                                 let itemd = player
                                                     .getComponent("inventory")
                                                     .container.getItem(player.selectedSlotIndex)
-                                                    .clone();
+                                                    ?.clone();
                                                 system.run(() => {
                                                     try {
                                                         itemd
                                                             .getComponent("enchantable")
-                                                            .addEnchantment({
+                                                            ?.addEnchantment({
                                                             level: enchantment.level,
                                                             type: EnchantmentTypes.get(enchantment.type),
                                                         });
@@ -2831,12 +2803,12 @@ potionModifierType: ${d.potionModifierType.id}`)(item.getComponent("potion"))
                                                 let itema = player
                                                     .getComponent("inventory")
                                                     .container.getItem(player.selectedSlotIndex)
-                                                    .clone();
+                                                    ?.clone();
                                                 system.run(() => {
                                                     try {
                                                         itema
                                                             .getComponent("enchantable")
-                                                            .addEnchantments(enchantmentlist.map((v) => ({
+                                                            ?.addEnchantments(enchantmentlist.map((v) => ({
                                                             level: v.level,
                                                             type: EnchantmentTypes.get(v.type),
                                                         })));
@@ -2854,12 +2826,12 @@ potionModifierType: ${d.potionModifierType.id}`)(item.getComponent("potion"))
                                                 let itemb = player
                                                     .getComponent("inventory")
                                                     .container.getItem(player.selectedSlotIndex)
-                                                    .clone();
+                                                    ?.clone();
                                                 system.run(() => {
                                                     try {
                                                         itemb
                                                             .getComponent("enchantable")
-                                                            .removeEnchantment(command.split(" ")[3]);
+                                                            ?.removeEnchantment(command.split(" ")[3]);
                                                         player
                                                             .getComponent("inventory")
                                                             .container.setItem(player.selectedSlotIndex, itemb);
@@ -2877,26 +2849,26 @@ potionModifierType: ${d.potionModifierType.id}`)(item.getComponent("potion"))
                                                 eventData.sender.sendMessage(JSON.stringify(player
                                                     .getComponent("inventory")
                                                     .container.getItem(player.selectedSlotIndex)
-                                                    .getComponent("enchantable")
-                                                    .getEnchantments()));
+                                                    ?.getComponent("enchantable")
+                                                    ?.getEnchantments()));
                                                 break;
                                             case "get":
                                                 eventData.sender.sendMessage(JSON.stringify(player
                                                     .getComponent("inventory")
                                                     .container.getItem(player.selectedSlotIndex)
-                                                    .getComponent("enchantable")
-                                                    .getEnchantment(command.split(" ")[3])));
+                                                    ?.getComponent("enchantable")
+                                                    ?.getEnchantment(command.split(" ")[3])));
                                                 break;
                                             case "clear":
                                                 const itemc = player
                                                     .getComponent("inventory")
                                                     .container.getItem(player.selectedSlotIndex)
-                                                    .clone();
+                                                    ?.clone();
                                                 system.run(() => {
                                                     try {
                                                         itemc
-                                                            .getComponent("enchantable")
-                                                            .removeAllEnchantments();
+                                                            ?.getComponent("enchantable")
+                                                            ?.removeAllEnchantments();
                                                         player
                                                             .getComponent("inventory")
                                                             .container.setItem(player.selectedSlotIndex, itemc);
@@ -2911,8 +2883,8 @@ potionModifierType: ${d.potionModifierType.id}`)(item.getComponent("potion"))
                                                 eventData.sender.sendMessage(JSON.stringify(player
                                                     .getComponent("inventory")
                                                     .container.getItem(player.selectedSlotIndex)
-                                                    .getComponent("enchantable")
-                                                    .hasEnchantment(command.split(" ")[3])));
+                                                    ?.getComponent("enchantable")
+                                                    ?.hasEnchantment(command.split(" ")[3])));
                                                 break;
                                             default:
                                                 eventData.sender.sendMessage('§cSyntax error: Unexpected "' +
@@ -2978,14 +2950,14 @@ potionModifierType: ${d.potionModifierType.id}`)(item.getComponent("potion"))
                                                 }
                                                 srun(() => {
                                                     try {
-                                                        slot.setLore(lore);
+                                                        slot?.setLore(lore);
                                                     }
                                                     catch (e) {
                                                         console.error(e, e.stack);
                                                         player.sendMessageB("§c" + e + e.stack);
                                                     }
                                                 });
-                                                //system.run(()=>{try{player.getComponent("inventory").container.getSlot(Number(command.split(" ")[2])).setLore(lore)}catch(e){console.error(e, e.stack); player.sendMessageB("§c" + e + e.stack)}})
+                                                //system.run(()=>{try{player.getComponent("inventory")!.container.getSlot(Number(command.split(" ")[2])).setLore(lore)}catch(e){console.error(e, e.stack); player.sendMessageB("§c" + e + e.stack)}})
                                                 break;
                                             case "lorene":
                                                 if (slota instanceof
@@ -2999,7 +2971,7 @@ potionModifierType: ${d.potionModifierType.id}`)(item.getComponent("potion"))
                                                     .join(" "));
                                                 system.run(() => {
                                                     try {
-                                                        slot.setLore(lorene);
+                                                        slot?.setLore(lorene);
                                                     }
                                                     catch (e) {
                                                         console.error(e, e.stack);
@@ -3019,7 +2991,7 @@ potionModifierType: ${d.potionModifierType.id}`)(item.getComponent("potion"))
                                                     .join(" "));
                                                 system.run(() => {
                                                     try {
-                                                        slot.setCanPlaceOn(canpalceon);
+                                                        slot?.setCanPlaceOn(canpalceon);
                                                     }
                                                     catch (e) {
                                                         console.error(e, e.stack);
@@ -3039,7 +3011,7 @@ potionModifierType: ${d.potionModifierType.id}`)(item.getComponent("potion"))
                                                     .join(" "));
                                                 system.run(() => {
                                                     try {
-                                                        slot.setCanDestroy(candestroy);
+                                                        slot?.setCanDestroy(candestroy);
                                                     }
                                                     catch (e) {
                                                         console.error(e, e.stack);
@@ -3211,14 +3183,14 @@ potionModifierType: ${d.potionModifierType.id}`)(item.getComponent("potion"))
                                             case "listtags":
                                                 player.sendMessageB('"' +
                                                     slot
-                                                        .getTags()
+                                                        ?.getTags()
                                                         .join("§r,") +
                                                     '"');
                                                 break;
                                             case "gettags":
                                                 player.sendMessageB('"' +
                                                     slot
-                                                        .getTags()
+                                                        ?.getTags()
                                                         .join("§r,") +
                                                     '"');
                                                 break;
@@ -3227,7 +3199,7 @@ potionModifierType: ${d.potionModifierType.id}`)(item.getComponent("potion"))
                                                     const item = slot instanceof
                                                         ItemStack
                                                         ? slot
-                                                        : slot.getItem();
+                                                        : slot?.getItem();
                                                     srun(() => player.sendMessageB(`§rtypeId: ${item.typeId}
 §ramount: ${item.amount}
 §risStackable: ${item.isStackable.toFormattedString()}
@@ -3289,12 +3261,12 @@ potionModifierType: ${d.potionModifierType.id}`)(item.getComponent("potion"))
                                                             .join(" "));
                                                         let itemd = slot
                                                             .getItem()
-                                                            .clone();
+                                                            ?.clone();
                                                         system.run(() => {
                                                             try {
                                                                 itemd
                                                                     .getComponent("enchantable")
-                                                                    .addEnchantment({
+                                                                    ?.addEnchantment({
                                                                     level: enchantment.level,
                                                                     type: EnchantmentTypes.get(enchantment.type),
                                                                 });
@@ -3321,12 +3293,12 @@ potionModifierType: ${d.potionModifierType.id}`)(item.getComponent("potion"))
                                                             .join(" "));
                                                         let itema = slot
                                                             .getItem()
-                                                            .clone();
+                                                            ?.clone();
                                                         system.run(() => {
                                                             try {
                                                                 itema
                                                                     .getComponent("enchantable")
-                                                                    .addEnchantments(enchantmentlist.map((v) => ({
+                                                                    ?.addEnchantments(enchantmentlist.map((v) => ({
                                                                     level: v.level,
                                                                     type: EnchantmentTypes.get(v.type),
                                                                 })));
@@ -3349,12 +3321,12 @@ potionModifierType: ${d.potionModifierType.id}`)(item.getComponent("potion"))
                                                         }
                                                         let itemb = slot
                                                             .getItem()
-                                                            .clone();
+                                                            ?.clone();
                                                         system.run(() => {
                                                             try {
                                                                 itemb
                                                                     .getComponent("enchantable")
-                                                                    .removeEnchantment(command.split(" ")[5]);
+                                                                    ?.removeEnchantment(command.split(" ")[5]);
                                                                 slot.setItem(itemb);
                                                             }
                                                             catch (e) {
@@ -3379,16 +3351,16 @@ potionModifierType: ${d.potionModifierType.id}`)(item.getComponent("potion"))
                                                             ItemStack
                                                             ? slot
                                                             : slot.getItem())
-                                                            .getComponent("enchantable")
-                                                            .getEnchantments()));
+                                                            ?.getComponent("enchantable")
+                                                            ?.getEnchantments()));
                                                         break;
                                                     case "get":
                                                         eventData.sender.sendMessage(JSON.stringify((slot instanceof
                                                             ItemStack
                                                             ? slot
                                                             : slot.getItem())
-                                                            .getComponent("enchantable")
-                                                            .getEnchantment(command.split(" ")[5])));
+                                                            ?.getComponent("enchantable")
+                                                            ?.getEnchantment(command.split(" ")[5])));
                                                         break;
                                                     case "clear":
                                                         if (slota instanceof
@@ -3399,12 +3371,12 @@ potionModifierType: ${d.potionModifierType.id}`)(item.getComponent("potion"))
                                                         }
                                                         const itemc = slot
                                                             .getItem()
-                                                            .clone();
+                                                            ?.clone();
                                                         system.run(() => {
                                                             try {
                                                                 itemc
                                                                     .getComponent("enchantable")
-                                                                    .removeAllEnchantments();
+                                                                    ?.removeAllEnchantments();
                                                                 slot.setItem(itemc);
                                                             }
                                                             catch (e) {
@@ -3479,13 +3451,13 @@ potionModifierType: ${d.potionModifierType.id}`)(item.getComponent("potion"))
                                                             .split(" ")
                                                             .slice(5)
                                                             .join(" "))
-                                                            .args[0].forEach((v) => slot.setDynamicProperty(v));
+                                                            .args[0].forEach((v) => slot?.setDynamicProperty(v));
                                                         break;
                                                     case "setlist":
                                                         Object.entries(evaluateParametersOld(["json"], command
                                                             .split(" ")
                                                             .slice(5)
-                                                            .join(" ")).args[0]).forEach((v) => slot.setDynamicProperty(v[0], v[1]));
+                                                            .join(" ")).args[0]).forEach((v) => slot?.setDynamicProperty(v[0], v[1]));
                                                         break;
                                                     case "remove":
                                                         slot.setDynamicProperty(evaluateParametersOld(["string"], command
@@ -3770,15 +3742,15 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                         "presetText",
                                                         "presetText",
                                                     ]);
-                                                    switch (argsc.args[0].toLowerCase()) {
+                                                    switch (argsc.args[0]?.toLowerCase()) {
                                                         case "rgba":
                                                             {
-                                                                switch (argsc.args[1].toLowerCase()) {
+                                                                switch (argsc.args[1]?.toLowerCase()) {
                                                                     case "x":
                                                                     case "hex":
                                                                     case "hexadecimal":
                                                                         {
-                                                                            const currentColor = block?.block.getComponent("fluid_container").fluidColor;
+                                                                            const currentColor = block?.block.getComponent("fluid_container")?.fluidColor;
                                                                             player.sendMessageB(`#${(currentColor.red *
                                                                                 255)
                                                                                 .toString(16)
@@ -3800,7 +3772,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                                     case "frac":
                                                                     case "fractional":
                                                                         {
-                                                                            const currentColor = block?.block.getComponent("fluid_container").fluidColor;
+                                                                            const currentColor = block?.block.getComponent("fluid_container")?.fluidColor;
                                                                             player.sendMessageB(`Red: ${currentColor.red}, Green: ${currentColor.green}, Blue: ${currentColor.blue}, Alpha: ${currentColor.alpha}`);
                                                                         }
                                                                         break;
@@ -3811,7 +3783,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                                     case "dec":
                                                                     case "decimal":
                                                                         {
-                                                                            const currentColor = block?.block.getComponent("fluid_container").fluidColor;
+                                                                            const currentColor = block?.block.getComponent("fluid_container")?.fluidColor;
                                                                             player.sendMessageB(`Red: ${(currentColor.red *
                                                                                 255).round()}, Green: ${(currentColor.green *
                                                                                 255).round()}, Blue: ${(currentColor.blue *
@@ -3826,7 +3798,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                                     case "decr":
                                                                     case "decimalr":
                                                                         {
-                                                                            const currentColor = block?.block.getComponent("fluid_container").fluidColor;
+                                                                            const currentColor = block?.block.getComponent("fluid_container")?.fluidColor;
                                                                             player.sendMessageB(`Red: ${currentColor.red *
                                                                                 255}, Green: ${currentColor.green *
                                                                                 255}, Blue: ${currentColor.blue *
@@ -3868,7 +3840,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                                     case "hex":
                                                                     case "hexadecimal":
                                                                         {
-                                                                            const currentColor = block?.block.getComponent("fluid_container").fluidColor;
+                                                                            const currentColor = block?.block.getComponent("fluid_container")?.fluidColor;
                                                                             player.sendMessageB(`#${(currentColor.red *
                                                                                 255)
                                                                                 .toString(16)
@@ -3887,7 +3859,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                                     case "frac":
                                                                     case "fractional":
                                                                         {
-                                                                            const currentColor = block?.block.getComponent("fluid_container").fluidColor;
+                                                                            const currentColor = block?.block.getComponent("fluid_container")?.fluidColor;
                                                                             player.sendMessageB(`Red: ${currentColor.red}, Green: ${currentColor.green}, Blue: ${currentColor.blue}`);
                                                                         }
                                                                         break;
@@ -3898,7 +3870,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                                     case "dec":
                                                                     case "decimal":
                                                                         {
-                                                                            const currentColor = block?.block.getComponent("fluid_container").fluidColor;
+                                                                            const currentColor = block?.block.getComponent("fluid_container")?.fluidColor;
                                                                             player.sendMessageB(`Red: ${(currentColor.red *
                                                                                 255).round()}, Green: ${(currentColor.green *
                                                                                 255).round()}, Blue: ${(currentColor.blue *
@@ -3912,7 +3884,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                                     case "decr":
                                                                     case "decimalr":
                                                                         {
-                                                                            const currentColor = block?.block.getComponent("fluid_container").fluidColor;
+                                                                            const currentColor = block?.block.getComponent("fluid_container")?.fluidColor;
                                                                             player.sendMessageB(`Red: ${currentColor.red *
                                                                                 255}, Green: ${currentColor.green *
                                                                                 255}, Blue: ${currentColor.blue *
@@ -3949,7 +3921,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                         case "hsl":
                                                             {
                                                                 const currentColor = rgbToHsl(mcRGBAToColorCoreRGB(block?.block.getComponent("fluid_container")
-                                                                    .fluidColor));
+                                                                    ?.fluidColor));
                                                                 player.sendMessageB(`Hue: ${currentColor.h
                                                                     .toPrecision(10)
                                                                     .toNumber()}, Saturation: ${currentColor.s
@@ -3962,7 +3934,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                         case "hsluv":
                                                             {
                                                                 const currentColor = rgbToHSLuv(mcRGBAToColorCoreRGB(block?.block.getComponent("fluid_container")
-                                                                    .fluidColor));
+                                                                    ?.fluidColor));
                                                                 player.sendMessageB(`Hue: ${currentColor.h
                                                                     .toPrecision(10)
                                                                     .toNumber()}, Saturation: ${currentColor.s
@@ -3975,7 +3947,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                         case "hsv":
                                                             {
                                                                 const currentColor = rgbToHsv(mcRGBAToColorCoreRGB(block?.block.getComponent("fluid_container")
-                                                                    .fluidColor));
+                                                                    ?.fluidColor));
                                                                 player.sendMessageB(`Hue: ${currentColor.h
                                                                     .toPrecision(10)
                                                                     .toNumber()}, Saturation: ${currentColor.s
@@ -3988,7 +3960,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                         case "hsb":
                                                             {
                                                                 const currentColor = rgbToHsv(mcRGBAToColorCoreRGB(block?.block.getComponent("fluid_container")
-                                                                    .fluidColor));
+                                                                    ?.fluidColor));
                                                                 player.sendMessageB(`Hue: ${currentColor.h
                                                                     .toPrecision(10)
                                                                     .toNumber()}, Saturation: ${currentColor.s
@@ -4001,7 +3973,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                         case "hsi":
                                                             {
                                                                 const currentColor = rgbToHsi(mcRGBAToColorCoreRGB(block?.block.getComponent("fluid_container")
-                                                                    .fluidColor));
+                                                                    ?.fluidColor));
                                                                 player.sendMessageB(`Hue: ${currentColor.h
                                                                     .toPrecision(10)
                                                                     .toNumber()}, Saturation: ${currentColor.s
@@ -4014,7 +3986,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                         case "hpluv":
                                                             {
                                                                 const currentColor = rgbToHPLuv(mcRGBAToColorCoreRGB(block?.block.getComponent("fluid_container")
-                                                                    .fluidColor));
+                                                                    ?.fluidColor));
                                                                 player.sendMessageB(`Hue: ${currentColor.h
                                                                     .toPrecision(10)
                                                                     .toNumber()}, Perceived Saturation: ${currentColor.p
@@ -4027,28 +3999,28 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                         case "adobergb":
                                                             {
                                                                 const currentColor = new Color(mcRGBAToColorCoreRGB(block?.block.getComponent("fluid_container")
-                                                                    .fluidColor)).toAdobeRGB();
+                                                                    ?.fluidColor)).toAdobeRGB();
                                                                 player.sendMessageB(`Red: ${currentColor.ar}, Green: ${currentColor.ag}, Blue: ${currentColor.ab}`);
                                                             }
                                                             break;
                                                         case "cieluv":
                                                             {
                                                                 const currentColor = new Color(mcRGBAToColorCoreRGB(block?.block.getComponent("fluid_container")
-                                                                    .fluidColor)).toCIELuv();
+                                                                    ?.fluidColor)).toCIELuv();
                                                                 player.sendMessageB(`Lightness: ${currentColor.L}, Chromaticity u: ${currentColor.u}, Chromaticity v: ${currentColor.v}`);
                                                             }
                                                             break;
                                                         case "ciexyy":
                                                             {
                                                                 const currentColor = new Color(mcRGBAToColorCoreRGB(block?.block.getComponent("fluid_container")
-                                                                    .fluidColor)).toCIExyY();
+                                                                    ?.fluidColor)).toCIExyY();
                                                                 player.sendMessageB(`Chromaticity x: ${currentColor.x}, Chromaticity y: ${currentColor.y}, Luminance: ${currentColor.Y}`);
                                                             }
                                                             break;
                                                         case "rawcolorcorergb":
                                                             {
                                                                 const currentColor = mcRGBAToColorCoreRGB(block?.block.getComponent("fluid_container")
-                                                                    .fluidColor);
+                                                                    ?.fluidColor);
                                                                 player.sendMessageB(JSONB.stringify(currentColor));
                                                             }
                                                             break;
@@ -4078,7 +4050,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                 }
                                                 break;
                                             case "filllevel":
-                                                player.sendMessageB(`Fill Level: ${block?.block.getComponent("fluid_container").fillLevel}`);
+                                                player.sendMessageB(`Fill Level: ${block?.block.getComponent("fluid_container")?.fillLevel}`);
                                                 break;
                                             case "liquidtype":
                                                 /**
@@ -4168,7 +4140,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                                                 4
                                                                                 ? 1
                                                                                 : 2;
-                                                                            const currentColor = block?.block.getComponent("fluid_container").fluidColor;
+                                                                            const currentColor = block?.block.getComponent("fluid_container")?.fluidColor;
                                                                             const red = rgba
                                                                                 .slice(0 *
                                                                                 rangeScale, 1 *
@@ -4261,7 +4233,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                                 true
                                                             )
                                                         }*/
-                                                                            const currentColor = block?.block.getComponent("fluid_container").fluidColor;
+                                                                            const currentColor = block?.block.getComponent("fluid_container")?.fluidColor;
                                                                             const red = (rgba[0].trim() ==
                                                                                 "~"
                                                                                 ? currentColor.red
@@ -4331,7 +4303,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                                 true
                                                             )
                                                         }*/
-                                                                            const currentColor = block?.block.getComponent("fluid_container").fluidColor;
+                                                                            const currentColor = block?.block.getComponent("fluid_container")?.fluidColor;
                                                                             const red = rgba[0].trim() ==
                                                                                 "~"
                                                                                 ? currentColor.red
@@ -4413,7 +4385,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                                 true
                                                             )
                                                         }*/
-                                                                            const currentColor = block?.block.getComponent("fluid_container").fluidColor;
+                                                                            const currentColor = block?.block.getComponent("fluid_container")?.fluidColor;
                                                                             const red = rgba[0].trim() ==
                                                                                 "~"
                                                                                 ? currentColor.red
@@ -4449,7 +4421,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                             break;
                                                         case "rgb":
                                                             {
-                                                                switch (argsc.args[1].toLowerCase()) {
+                                                                switch (argsc.args[1]?.toLowerCase()) {
                                                                     case "x":
                                                                     case "hex":
                                                                     case "hexadecimal":
@@ -4501,34 +4473,34 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                                                 3
                                                                                 ? 1
                                                                                 : 2;
-                                                                            const currentColor = block?.block.getComponent("fluid_container").fluidColor;
+                                                                            const currentColor = block?.block.getComponent("fluid_container")?.fluidColor;
                                                                             const red = rgb
-                                                                                .slice(0 *
+                                                                                ?.slice(0 *
                                                                                 rangeScale, 1 *
                                                                                 rangeScale)
                                                                                 .includes("~")
                                                                                 ? currentColor.red
-                                                                                : parseInt(rgb.slice(0 *
+                                                                                : parseInt(rgb?.slice(0 *
                                                                                     rangeScale, 1 *
                                                                                     rangeScale), 16) /
                                                                                     denominator;
                                                                             const green = rgb
-                                                                                .slice(1 *
+                                                                                ?.slice(1 *
                                                                                 rangeScale, 2 *
                                                                                 rangeScale)
                                                                                 .includes("~")
                                                                                 ? currentColor.green
-                                                                                : parseInt(rgb.slice(1 *
+                                                                                : parseInt(rgb?.slice(1 *
                                                                                     rangeScale, 2 *
                                                                                     rangeScale), 16) /
                                                                                     denominator;
                                                                             const blue = rgb
-                                                                                .slice(2 *
+                                                                                ?.slice(2 *
                                                                                 rangeScale, 3 *
                                                                                 rangeScale)
                                                                                 .includes("~")
                                                                                 ? currentColor.blue
-                                                                                : parseInt(rgb.slice(2 *
+                                                                                : parseInt(rgb?.slice(2 *
                                                                                     rangeScale, 3 *
                                                                                     rangeScale), 16) /
                                                                                     denominator;
@@ -4582,16 +4554,16 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                                 true
                                                             )
                                                         }*/
-                                                                            const currentColor = block?.block.getComponent("fluid_container").fluidColor;
-                                                                            const red = (rgba[0].trim() ==
+                                                                            const currentColor = block?.block.getComponent("fluid_container")?.fluidColor;
+                                                                            const red = (rgba[0]?.trim() ==
                                                                                 "~"
                                                                                 ? currentColor.red
                                                                                 : rgba[0]).toNumber();
-                                                                            const green = (rgba[1].trim() ==
+                                                                            const green = (rgba[1]?.trim() ==
                                                                                 "~"
                                                                                 ? currentColor.green
                                                                                 : rgba[1]).toNumber();
-                                                                            const blue = (rgba[2].trim() ==
+                                                                            const blue = (rgba[2]?.trim() ==
                                                                                 "~"
                                                                                 ? currentColor.blue
                                                                                 : rgba[2]).toNumber();
@@ -4646,22 +4618,22 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                                 true
                                                             )
                                                         }*/
-                                                                            const currentColor = block?.block.getComponent("fluid_container").fluidColor;
-                                                                            const red = rgba[0].trim() ==
+                                                                            const currentColor = block?.block.getComponent("fluid_container")?.fluidColor;
+                                                                            const red = rgba[0]?.trim() ==
                                                                                 "~"
                                                                                 ? currentColor.red
                                                                                 : rgba[0]
                                                                                     .toNumber()
                                                                                     .round() /
                                                                                     255;
-                                                                            const green = rgba[1].trim() ==
+                                                                            const green = rgba[1]?.trim() ==
                                                                                 "~"
                                                                                 ? currentColor.green
                                                                                 : rgba[1]
                                                                                     .toNumber()
                                                                                     .round() /
                                                                                     255;
-                                                                            const blue = rgba[2].trim() ==
+                                                                            const blue = rgba[2]?.trim() ==
                                                                                 "~"
                                                                                 ? currentColor.blue
                                                                                 : rgba[2]
@@ -4716,7 +4688,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                                     player.sendError(`§cSyntax error: Unexpected "": at "${switchTestB.slice(-10)}>><<"`, true);
                                                                     return;
                                                                 }
-                                                                const currentColor = block?.block.getComponent("fluid_container").fluidColor;
+                                                                const currentColor = block?.block.getComponent("fluid_container")?.fluidColor;
                                                                 const hslB = HSLToRGB(...hsl);
                                                                 const [red, green, blue,] = hslB;
                                                                 block.block.getComponent("fluid_container").fluidColor = {
@@ -5118,10 +5090,10 @@ break; */
                                 .getDimension(dimension.typeId)
                                 .getEntities()
                                 .find((entity) => entity.id ==
-                                newMessage.split(" ")[1])).typeId)
+                                newMessage.split(" ")[1]))?.typeId)
                                 .getEntities()
                                 .find((entity) => entity.id == newMessage.split(" ")[1])
-                                .setDynamicProperty(newMessage.split(" ")[1], newMessage.slice(newMessage.split(" ")[1].length + 30));
+                                ?.setDynamicProperty(newMessage.split(" ")[1], newMessage.slice(newMessage.split(" ")[1].length + 30));
                         }
                         catch (e) {
                             player.sendError("§c" + e + e.stack, true);
@@ -5264,7 +5236,7 @@ break; */
                             ,
                             "§cError: The specified javascript function/constant/variable/class does not exist, check your spelling and capitallization. ",
                         ])[1]
-                            .toString()
+                            ?.toString()
                             .replaceAll("\\n", "\n")}`);
                         break;
                     case "help js":
@@ -5289,7 +5261,7 @@ break; */
                             ,
                             "§cError: The specified javascript function/constant/variable/class does not exist, check your spelling and capitallization. ",
                         ])[1]
-                            .toString()
+                            ?.toString()
                             .replaceAll("\\n", "\n")}`);
                         break;
                     case "help itemjsonformat":
@@ -6266,7 +6238,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                     .join(" ")
                                     .escapeCharacters(true) /*.replaceAll(/(?<!\\p)\\n/g, "\n").replaceAll(/(?<!\\p)\\s/g, "\s").replaceAll(/(?<!\\p)\\0/g, "\0").replaceAll(/(?<!\\p)\\r/g, "\r").replaceAll(/(?<!\\p)\\t/g, "\t").replaceAll(/(?<!\\p)\\v/g, "\v").replaceAll(/(?<!\\p)\\f/g, "\f").replaceAll(/(?<!\\p)\\k/g, "\k").replaceAll(/(?<!\\p)\\p/g, "")*/
                                     .replaceAll("|", "\\u007c"))
-                                .split(", ");
+                                ?.split(", ");
                         }
                         catch (e) {
                             player.sendMessageB("§c" + e + e.stack);
@@ -6584,7 +6556,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                     .join(" ")
                                     .escapeCharacters(true)
                                     .replaceAll("|", "\\u007c"))
-                                .split(", ");
+                                ?.split(", ");
                         }
                         catch (e) {
                             player.sendError("§c" + e + e.stack, true);
@@ -6983,8 +6955,8 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                             l.y >= player.dimension.heightRange.min - 2; i++) {
                             l = caretNotationC(l, VECTOR3_FORWARD, rot);
                         }
-                        tryget(() => player.dimension.getBlock(l).isAir &&
-                            player.dimension.getBlock(l).below().isAir) ?? l.y <= player.dimension.heightRange.min + 2
+                        (tryget(() => player.dimension.getBlock(l).isAir &&
+                            player.dimension.getBlock(l).below().isAir) ?? l.y <= player.dimension.heightRange.min + 2)
                             ? tryrun(() => {
                                 try {
                                     srun(() => {
@@ -7003,8 +6975,8 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                     player.sendError("§c" + e + e.stack, true);
                                 }
                             })
-                            : tryget(() => player.dimension.getBlock(l).isAir &&
-                                player.dimension.getBlock(l).above().isAir) ?? l.y <= player.dimension.heightRange.min + 2
+                            : (tryget(() => player.dimension.getBlock(l).isAir &&
+                                player.dimension.getBlock(l).above().isAir) ?? l.y <= player.dimension.heightRange.min + 2)
                                 ? tryrun(() => {
                                     try {
                                         srun(() => {
@@ -7099,8 +7071,8 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                             : StructureSaveMode.Memory);
                                         psend(player, `§aSuccessfully created an empty structure of size ${args
                                             .slice(3, 6)
-                                            .map((v) => v.toString())
-                                            .join("x")} with the name "§r${args[2]}§a" and saved it to ${args[6].toLowerCase() == "disk"
+                                            .map((v) => v?.toString())
+                                            .join("x")} with the name "§r${args[2]}§a" and saved it to ${args[6]?.toLowerCase() == "disk"
                                             ? "the disk"
                                             : "memory"}.`);
                                     }
@@ -7121,13 +7093,13 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                             x: args[3],
                                             y: args[4],
                                             z: args[5],
-                                        }, args[6].toLowerCase() == "disk"
+                                        }, args[6]?.toLowerCase() == "disk"
                                             ? StructureSaveMode.World
                                             : StructureSaveMode.Memory);
                                         psend(player, `§aSuccessfully created an empty structure of size ${args
                                             .slice(3, 6)
-                                            .map((v) => v.toString())
-                                            .join("x")} with the name "§r${args[2]}§a" and saved it to ${args[6].toLowerCase() == "disk"
+                                            .map((v) => v?.toString())
+                                            .join("x")} with the name "§r${args[2]}§a" and saved it to ${args[6]?.toLowerCase() == "disk"
                                             ? "the disk"
                                             : "memory"}.`);
                                     }
@@ -7216,7 +7188,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                         if (!!world.structureManager.get(args[2])) {
                                             world.structureManager
                                                 .get(args[2])
-                                                .saveAs(args[3]);
+                                                ?.saveAs(args[3]);
                                             psend(player, `§aSuccessfully copied the structure "§r${args[2]}§a" to "§r${args[3]}§a".`);
                                         }
                                         else {
@@ -7235,7 +7207,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                         if (!!world.structureManager.get(args[2])) {
                                             world.structureManager
                                                 .get(args[2])
-                                                .saveAs(args[3], StructureSaveMode.World);
+                                                ?.saveAs(args[3], StructureSaveMode.World);
                                             psend(player, `§aSuccessfully copied the structure "§r${args[2]}§a" to "§r${args[3]}§a" on the disk.`);
                                         }
                                         else {
@@ -7254,7 +7226,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                         if (!!world.structureManager.get(args[2])) {
                                             world.structureManager
                                                 .get(args[2])
-                                                .saveAs(args[3], StructureSaveMode.Memory);
+                                                ?.saveAs(args[3], StructureSaveMode.Memory);
                                             psend(player, `§aSuccessfully copied the structure "§r${args[2]}§a" to "§r${args[3]}§a" in memory.`);
                                         }
                                         else {
@@ -7271,7 +7243,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                         if (!!world.structureManager.get(args[2])) {
                                             const a = world.structureManager
                                                 .get(args[2])
-                                                .saveAs("andexdb:structuresavingtodiskplaceholderreserved5164896135268634876548961853426912579081261744790127659073267276846741241230675914307695134567412541637516742890576243098", StructureSaveMode.World);
+                                                ?.saveAs("andexdb:structuresavingtodiskplaceholderreserved5164896135268634876548961853426912579081261744790127659073267276846741241230675914307695134567412541637516742890576243098", StructureSaveMode.World);
                                             world.structureManager.delete(args[2]);
                                             a.saveAs(args[2], StructureSaveMode.World);
                                             world.structureManager.delete(a);
@@ -7291,7 +7263,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                         if (!!world.structureManager.get(args[2])) {
                                             let s = world.structureManager
                                                 .get(args[2])
-                                                .saveAs("andexdb:structuremovingtomemoryplaceholderreserved5164896135268634876548961853426912579081261744790127659073267276846741241230675914307695134567412541637516742890576243098");
+                                                ?.saveAs("andexdb:structuremovingtomemoryplaceholderreserved5164896135268634876548961853426912579081261744790127659073267276846741241230675914307695134567412541637516742890576243098");
                                             world.structureManager.delete(args[2]);
                                             s.saveAs(args[2], StructureSaveMode.Memory);
                                             world.structureManager.delete(s);
@@ -7794,7 +7766,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                 if(config.tpaSystem.tpaSystemEnabled){
                     srun(()=>{
                     let args = evaluateParameters(switchTestB, ["presetText", "targetSelector", "string"]).args
-                    let target = targetSelectorAllListC(args[1], "", vTStr(player.location), player).filter(v=>v.typeId=="minecraft:player")[0] as Player
+                    let target = targetSelectorAllListC(args[1]!, "", vTStr(player.location), player).filter(v=>v.typeId=="minecraft:player")[0] as Player
                     if(!!target){
                         requestConditionalChatInput(target, (player, message)=>(message.trim()=="y"||message.trim()=="n"), {requestMessage: `§a${player.name} sent you a teleport request, type "y" to accept or "n" to deny, this request will expire in 1 minute.`}).then(t=>{
                             if(t.trim()=="y"){
@@ -7857,10 +7829,10 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                             "presetText",
                             "targetSelector",
                         ]).args;
-                        if (switchTestB.split(/\s+/g)[1]?.trim() == "~") {
+                        if (args[1]?.trim() == "~") {
                             args[1] = player.name;
                         }
-                        if ((switchTestB.split(/\s+/g)[1] ?? "").trim() == "") {
+                        if ((args[1] ?? "").trim() == "") {
                             args[1] = player.name;
                         }
                         let targets = targetSelectorAllListC(args[1], "", vTStr(player.location), player);
@@ -7909,10 +7881,10 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                             "targetSelector",
                             "string",
                         ]).args;
-                        if (switchTestB.split(/\s+/g)[1]?.trim() == "~") {
+                        if (args[1]?.trim() == "~") {
                             args[1] = player.name;
                         }
-                        if ((switchTestB.split(/\s+/g)[1] ?? "").trim() == "") {
+                        if ((args[1] ?? "").trim() == "") {
                             args[1] = player.name;
                         }
                         let targets = targetSelectorAllListC(args[1], "", vTStr(player.location), player);
@@ -7956,10 +7928,10 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                             "presetText",
                             "targetSelector",
                         ]).args;
-                        if (switchTestB.split(/\s+/g)[1]?.trim() == "~") {
+                        if (args[1]?.trim() == "~") {
                             args[1] = player.name;
                         }
-                        if ((switchTestB.split(/\s+/g)[1] ?? "").trim() == "") {
+                        if ((args[1] ?? "").trim() == "") {
                             args[1] = player.name;
                         }
                         let targets = targetSelectorAllListC(args[1], "", vTStr(player.location), player);
@@ -8005,10 +7977,10 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                             "presetText",
                             "targetSelector",
                         ]).args;
-                        if (switchTestB.split(/\s+/g)[1]?.trim() == "~") {
+                        if (args[1]?.trim() == "~") {
                             args[1] = player.name;
                         }
-                        if ((switchTestB.split(/\s+/g)[1] ?? "").trim() == "") {
+                        if ((args[1] ?? "").trim() == "") {
                             args[1] = player.name;
                         }
                         let targets = targetSelectorAllListC(args[1], "", vTStr(player.location), player);
@@ -8058,10 +8030,10 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                             "presetText",
                             "targetSelector" /*, "number"*/,
                         ]).args;
-                        if (switchTestB.split(/\s+/g)[1]?.trim() == "~") {
+                        if (args[1]?.trim() == "~") {
                             args[1] = player.name;
                         }
-                        if ((switchTestB.split(/\s+/g)[1] ?? "").trim() == "") {
+                        if ((args[1] ?? "").trim() == "") {
                             args[1] = player.name;
                         }
                         let targets = targetSelectorAllListC(args[1], "", vTStr(player.location), player);
@@ -8108,10 +8080,10 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                             "presetText",
                             "targetSelector",
                         ]).args;
-                        if (switchTestB.split(/\s+/g)[2]?.trim() == "~") {
+                        if (args[2]?.trim() == "~") {
                             args[2] = player.name;
                         }
-                        if ((switchTestB.split(/\s+/g)[2] ?? "").trim() == "") {
+                        if ((args[2] ?? "").trim() == "") {
                             args[2] = player.name;
                         }
                         let targets = targetSelectorAllListC(args[2], "", vTStr(player.location), player);
@@ -8269,10 +8241,10 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                             "targetSelector",
                             "string",
                         ]).args;
-                        if (switchTestB.split(/\s+/g)[1]?.trim() == "~") {
+                        if (args[1]?.trim() == "~") {
                             args[1] = player.name;
                         }
-                        if ((switchTestB.split(/\s+/g)[1] ?? "").trim() == "") {
+                        if ((args[1] ?? "").trim() == "") {
                             args[1] = player.name;
                         }
                         let targets = targetSelectorAllListC(args[1], "", vTStr(player.location), player);
@@ -8304,10 +8276,10 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                             "targetSelector",
                             "string",
                         ]).args;
-                        if (switchTestB.split(/\s+/g)[1]?.trim() == "~") {
+                        if (args[1]?.trim() == "~") {
                             args[1] = player.name;
                         }
-                        if ((switchTestB.split(/\s+/g)[1] ?? "").trim() == "") {
+                        if ((args[1] ?? "").trim() == "") {
                             args[1] = player.name;
                         }
                         let targets = targetSelectorAllListC(args[1], "", vTStr(player.location), player).filter((v) => v.typeId == "minecraft:player");
@@ -8338,10 +8310,10 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                             "presetText",
                             "targetSelector",
                         ]).args;
-                        if (switchTestB.split(/\s+/g)[1]?.trim() == "~") {
+                        if (args[1]?.trim() == "~") {
                             args[1] = player.name;
                         }
-                        if ((switchTestB.split(/\s+/g)[1] ?? "").trim() == "") {
+                        if ((args[1] ?? "").trim() == "") {
                             args[1] = player.name;
                         }
                         let targets = targetSelectorAllListC(args[1], "", vTStr(player.location), player).filter((v) => v.typeId == "minecraft:player");
@@ -8581,7 +8553,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                 !!switchTest.match(/^cmdrunner$/):
                 eventData.cancel = true;
                 try {
-                    terminal(player);
+                    srun(() => terminal(player));
                 }
                 catch (e) {
                     player.sendError("§c" + e + e.stack, true);
@@ -8591,7 +8563,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                 !!switchTest.match(/^msgui$/):
                 eventData.cancel = true;
                 try {
-                    chatMessageNoCensor(player);
+                    srun(() => chatMessageNoCensor(player));
                 }
                 catch (e) {
                     player.sendError("§c" + e + e.stack, true);
@@ -8603,7 +8575,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                 !!switchTest.match(/^sendui$/):
                 eventData.cancel = true;
                 try {
-                    chatSendNoCensor(player);
+                    srun(() => chatSendNoCensor(player));
                 }
                 catch (e) {
                     player.sendError("§c" + e + e.stack, true);
@@ -8615,7 +8587,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                 !!switchTest.match(/^commandui$/):
                 eventData.cancel = true;
                 try {
-                    chatCommandRunner(player);
+                    srun(() => chatCommandRunner(player));
                 }
                 catch (e) {
                     player.sendError("§c" + e + e.stack, true);
@@ -9063,7 +9035,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                         : lastblockname == "keep"
                             ? BlockPermutation.resolve("air")
                             : BlockPermutation.resolve(lastblockname, lastblockstates); /*
-console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
+console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
                     try {
                         srun(() => {
                             let a = player.dimension.fillBlocks(new BlockVolume(coordinatesa, coordinatesb), BlockPermutation.resolve(firstblockname, firstblockstates), {
@@ -9426,7 +9398,7 @@ ${command.dp}ifill <center: x y z> <radius: x y z> <offset: x y z> <length: floa
                             : lastblockname == "keep" || mode == "keep"
                                 ? ["air"]
                                 : [
-                                    BlockTypes.get(lastblockname).id,
+                                    BlockTypes.get(lastblockname)?.id,
                                     lastblockstates,
                                 ]);
                         let cmatchingblock = ((clastblockname ?? "") == ""
@@ -9464,7 +9436,7 @@ ${command.dp}ifill <center: x y z> <radius: x y z> <offset: x y z> <length: floa
                             : sglastblockname == "keep"
                                 ? ["air"]
                                 : [sglastblockname, sglastblockstates]); /*
-            console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
+            console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
                         switch (fillmodetypeenum[(skygridmode
                             ? sgmode
                             : hovoidmode
@@ -10624,7 +10596,7 @@ ${command.dp}itfill <center: x y z> <radius: x y z> <offset: x y z> <length: flo
                             : (lastblockname == "keep" || mode == "keep")
                                 ? ["air"]
                                 : [
-                                    BlockTypes.get(lastblockname).id,
+                                    BlockTypes.get(lastblockname)?.id,
                                     lastblockstates,
                                 ]);
                         let cmatchingblock = (((clastblockname ?? "") == "" || circlemode)
@@ -10662,7 +10634,7 @@ ${command.dp}itfill <center: x y z> <radius: x y z> <offset: x y z> <length: flo
                             : sglastblockname == "keep"
                                 ? ["air"]
                                 : [sglastblockname, sglastblockstates]); /*
-            console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
+            console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
                         switch (fillmodetypeenum[(skygridmode
                             ? sgmode
                             : hovoidmode
@@ -12437,7 +12409,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                             : lastblockname == "keep" || mode == "keep"
                                 ? ["air"]
                                 : [
-                                    BlockTypes.get(lastblockname).id,
+                                    BlockTypes.get(lastblockname)?.id,
                                     lastblockstates,
                                 ]);
                         let cmatchingblock = ((clastblockname ?? "") == ""
@@ -12476,7 +12448,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 ? ["air"]
                                 : [sglastblockname, sglastblockstates]);
                         const blocktypes = BlockTypes.getAll(); /*
-            console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
+            console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
                         switch (fillmodetypeenum[(skygridmode
                             ? sgmode
                             : hovoidmode
@@ -14251,10 +14223,10 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         : lastblockname == "keep"
                             ? ["air"]
                             : [
-                                BlockTypes.get(lastblockname).id,
+                                BlockTypes.get(lastblockname)?.id,
                                 lastblockstates,
                             ]; /*
-console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
+console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
                     srun(() => {
                         try {
                             let startTime = Date.now();
@@ -14458,10 +14430,10 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                         : lastblockname == "keep"
                             ? ["air"]
                             : [
-                                BlockTypes.get(lastblockname).id,
+                                BlockTypes.get(lastblockname)?.id,
                                 lastblockstates,
                             ]; /*
-console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
+console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
                     srun(() => {
                         try {
                             let startTime = Date.now();
@@ -14665,10 +14637,10 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                         : lastblockname == "keep"
                             ? ["air"]
                             : [
-                                BlockTypes.get(lastblockname).id,
+                                BlockTypes.get(lastblockname)?.id,
                                 lastblockstates,
                             ]; /*
-console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
+console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
                     system.run(() => {
                         let ta;
                         try {
@@ -14893,10 +14865,10 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                         : lastblockname == "keep"
                             ? ["air"]
                             : [
-                                BlockTypes.get(lastblockname).id,
+                                BlockTypes.get(lastblockname)?.id,
                                 lastblockstates,
                             ]; /*
-console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
+console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
                     system.run(() => {
                         try {
                             let startTime = Date.now();
@@ -15003,7 +14975,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                         : lastblockname == "keep"
                             ? ["air"]
                             : [
-                                BlockTypes.get(lastblockname).id,
+                                BlockTypes.get(lastblockname)?.id,
                                 lastblockstates,
                             ];
                     console.warn(JSONStringify({
@@ -15242,10 +15214,10 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                         : lastblockname == "keep"
                             ? ["air"]
                             : [
-                                BlockTypes.get(lastblockname).id,
+                                BlockTypes.get(lastblockname)?.id,
                                 lastblockstates,
                             ]; /*
-console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
+console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
                     system.run(() => {
                         try {
                             let startTime = Date.now();
@@ -15352,21 +15324,23 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                         : lastblockname == "keep"
                             ? ["air"]
                             : [
-                                BlockTypes.get(lastblockname).id,
+                                BlockTypes.get(lastblockname)?.id,
                                 lastblockstates,
                             ];
-                    console.warn(JSONStringify({
-                        coordinatesa,
-                        coordinatesb,
-                        firstblockname,
-                        argsaextra,
-                        args /*, firstblocknameindex, reststringaftercoordinates*/,
-                        firstblockstates,
-                        lastblockname,
-                        somethingtest,
-                        lastblockstates,
-                        matchingblock,
-                    }));
+                    // console.warn(
+                    //     JSONStringify({
+                    //         coordinatesa,
+                    //         coordinatesb,
+                    //         firstblockname,
+                    //         argsaextra,
+                    //         args /*, firstblocknameindex, reststringaftercoordinates*/,
+                    //         firstblockstates,
+                    //         lastblockname,
+                    //         somethingtest,
+                    //         lastblockstates,
+                    //         matchingblock,
+                    //     })
+                    // );
                     system.run(() => {
                         let ta;
                         try {
@@ -15591,10 +15565,10 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                         : lastblockname == "keep"
                             ? ["air"]
                             : [
-                                BlockTypes.get(lastblockname).id,
+                                BlockTypes.get(lastblockname)?.id,
                                 lastblockstates,
                             ]; /*
-console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
+console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
                     system.run(() => {
                         try {
                             let startTime = Date.now();
@@ -15701,7 +15675,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                         : lastblockname == "keep"
                             ? ["air"]
                             : [
-                                BlockTypes.get(lastblockname).id,
+                                BlockTypes.get(lastblockname)?.id,
                                 lastblockstates,
                             ];
                     console.warn(JSONStringify({
@@ -15940,10 +15914,10 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                         : lastblockname == "keep"
                             ? ["air"]
                             : [
-                                BlockTypes.get(lastblockname).id,
+                                BlockTypes.get(lastblockname)?.id,
                                 lastblockstates,
                             ]; /*
-console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
+console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
                     system.run(() => {
                         try {
                             let startTime = Date.now();
@@ -16050,7 +16024,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                         : lastblockname == "keep"
                             ? ["air"]
                             : [
-                                BlockTypes.get(lastblockname).id,
+                                BlockTypes.get(lastblockname)?.id,
                                 lastblockstates,
                             ];
                     console.warn(JSONStringify({
@@ -16289,10 +16263,10 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                         : lastblockname == "keep"
                             ? ["air"]
                             : [
-                                BlockTypes.get(lastblockname).id,
+                                BlockTypes.get(lastblockname)?.id,
                                 lastblockstates,
                             ]; /*
-console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
+console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
                     try {
                         system.run(() => {
                             player.sendMessageB("IFill Command Started, to cancel type in " +
@@ -16495,10 +16469,10 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                         : lastblockname == "keep"
                             ? ["air"]
                             : [
-                                BlockTypes.get(lastblockname).id,
+                                BlockTypes.get(lastblockname)?.id,
                                 lastblockstates,
                             ]; /*
-console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
+console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
                     try {
                         system.run(() => {
                             player.sendMessageB("IOFill Generator/Job Started, to cancel type in " +
@@ -16714,10 +16688,10 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                         : lastblockname == "keep"
                             ? ["air"]
                             : [
-                                BlockTypes.get(lastblockname).id,
+                                BlockTypes.get(lastblockname)?.id,
                                 lastblockstates,
                             ]; /*
-console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
+console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
                     try {
                         system.run(() => {
                             let a = system.runJob(fillBlocksCG(coordinatesa, coordinatesb, player.dimension, firstblockname, firstblockstates, matchingblock?.[0], matchingblock?.[1], true, (a) => {
@@ -16917,10 +16891,10 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                         : lastblockname == "keep"
                             ? ["air"]
                             : [
-                                BlockTypes.get(lastblockname).id,
+                                BlockTypes.get(lastblockname)?.id,
                                 lastblockstates,
                             ]; /*
-console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
+console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
                     try {
                         system.run(() => {
                             let a = fillBlocksC(coordinatesa, coordinatesb, player.dimension, firstblockname, firstblockstates, matchingblock?.[0], matchingblock?.[1], true);
@@ -17119,7 +17093,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                         : lastblockname == "keep"
                             ? BlockPermutation.resolve("air")
                             : BlockPermutation.resolve(lastblockname, lastblockstates); /*
-console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
+console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
                     try {
                         system.run(() => {
                             let a = fillBlocksB(coordinatesa, coordinatesb, player.dimension, BlockPermutation.resolve(firstblockname, firstblockstates), {
@@ -17144,10 +17118,10 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                             "presetText",
                             "targetSelector",
                         ]).args;
-                        if (switchTestB.split(/\s+/g)[1]?.trim() == "~") {
+                        if (args[1]?.trim() == "~") {
                             args[1] = player.name;
                         }
-                        if ((switchTestB.split(/\s+/g)[1] ?? "").trim() == "") {
+                        if ((args[1] ?? "").trim() == "") {
                             args[1] = player.name;
                         }
                         let target = targetSelectorAllListC(args[1], "", vTStr(player.location), player).find((v) => v.typeId == "minecraft:player");
@@ -17168,7 +17142,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
             case !!switchTest.match(/^copyitemfrom$/):
                 {
                     //world.scoreboard.getObjective("MinsDisplay").getParticipants().filter(p=>!!!tryget(()=>p.getEntity())).forEach(p=>world.scoreboard.getObjective("balance").removeParticipant(p))
-                    //if((world.scoreboard.getObjective("balance").getScore(player)??0)>JSON.parse(world.getDynamicProperty("shop:costs"))[r.selection]){world.scoreboard.getObjective("balance").addScore(player, -(JSON.parse(world.getDynamicProperty("shop:costs"))[r.selection])); player.getComponent("inventory").container.addItem(cmds.overworld.getBlock({x: 823, y: 84, z: 1037}).getComponent("inventory").container.getItem(r.selection))}
+                    //if((world.scoreboard.getObjective("balance").getScore(player)??0)>JSON.parse(world.getDynamicProperty("shop:costs"))[r.selection!]){world.scoreboard.getObjective("balance").addScore(player, -(JSON.parse(world.getDynamicProperty("shop:costs"))[r.selection!])); player.getComponent("inventory")!.container.addItem(cmds.overworld.getBlock({x: 823, y: 84, z: 1037}).getComponent("inventory")!.container.getItem(r.selection))}
                     //${se}swdp("shop:costs", "[20, 50, 70, 80]")
                     eventData.cancel = true;
                     let args = evaluateParameters(switchTestB, [
@@ -17178,19 +17152,19 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                         "string",
                         "string",
                     ]).args;
-                    if (switchTestB.split(/\s+/g)[2].trim() == "~") {
+                    if (args[2]?.trim() == "~") {
                         args[3] = player.name;
                     }
-                    if ((switchTestB.split(/\s+/g)[2].trim() ?? "") == "") {
+                    if ((args[2]?.trim() ?? "") == "") {
                         args[3] = player.name;
                     }
                     let from = world
                         .getAllPlayers()
                         .find((_) => _.name == args[3]);
-                    if (switchTestB.split(/\s+/g)[2].trim() == "~") {
+                    if (args[2]?.trim() == "~") {
                         args[4] = player.name;
                     }
-                    if ((switchTestB.split(/\s+/g)[2].trim() ?? "") == "") {
+                    if ((args[2]?.trim() ?? "") == "") {
                         args[4] = player.name;
                     }
                     let to = world
@@ -17230,12 +17204,12 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
             case !!switchTest.match(/^copyitem$/):
                 {
                     //world.scoreboard.getObjective("MinsDisplay").getParticipants().filter(p=>!!!tryget(()=>p.getEntity())).forEach(p=>world.scoreboard.getObjective("balance").removeParticipant(p))
-                    //if((world.scoreboard.getObjective("balance").getScore(player)??0)>JSON.parse(world.getDynamicProperty("shop:costs"))[r.selection]){world.scoreboard.getObjective("balance").addScore(player, -(JSON.parse(world.getDynamicProperty("shop:costs"))[r.selection])); player.getComponent("inventory").container.addItem(cmds.overworld.getBlock({x: 823, y: 84, z: 1037}).getComponent("inventory").container.getItem(r.selection))}
+                    //if((world.scoreboard.getObjective("balance").getScore(player)??0)>JSON.parse(world.getDynamicProperty("shop:costs"))[r.selection!]){world.scoreboard.getObjective("balance").addScore(player, -(JSON.parse(world.getDynamicProperty("shop:costs"))[r.selection!])); player.getComponent("inventory")!.container.addItem(cmds.overworld.getBlock({x: 823, y: 84, z: 1037}).getComponent("inventory")!.container.getItem(r.selection))}
                     //${se}swdp("shop:costs", "[20, 50, 70, 80]")
                     eventData.cancel = true;
                     system.run(() => {
                         let args = evaluateParameters(switchTestB, ["presetText", "presetText", "targetSelector"]).args;
-                        if (!args[2]?.trim() || args[2].trim() === "~") {
+                        if (!args[2]?.trim() || args[2]?.trim() === "~") {
                             args[2] = player.name;
                         }
                         let targets = targetSelectorAllListC(args[2], "", vTStr(player.location), player).filter((v) => v.typeId == "minecraft:player");
@@ -17303,7 +17277,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                         }
                         player.sendMessageB(`Successfully duped item in slot ${String(args[1])}. `);
                     }); /*
-            system.run(()=>{let slot = [EquipmentSlot.Head, EquipmentSlot.Chest,  EquipmentSlot.Legs, EquipmentSlot.Feet, EquipmentSlot.Mainhand, EquipmentSlot.Offhand][["head", "chest", "legs", "feet", "mainhand", "offhand", "helmet", "chestplate", "leggings", "boots", "hand", "otherhand", "cap", "tunic", "pants", "shoes", "righthand", "lefthand"].findIndex(v=>v==switchTestB.split(" ")[1]?.trim()?.toLowerCase())%6]??Number((!!!switchTestB.split(" ")[1]?.trim()?"~":switchTestB.split(" ")[1].trim()).replaceAll("~", String(player.selectedSlotIndex))); let fromSlot = typeof slot == "string"?player.getComponent("equippable").getEquipmentSlot(slot):player.getComponent("inventory").container.getSlot(slot); player.getComponent("inventory").container.addItem(player.getComponent("inventory").container.getItem(event.sender.selectedSlotIndex).clone())})*/
+            system.run(()=>{let slot = [EquipmentSlot.Head, EquipmentSlot.Chest,  EquipmentSlot.Legs, EquipmentSlot.Feet, EquipmentSlot.Mainhand, EquipmentSlot.Offhand][["head", "chest", "legs", "feet", "mainhand", "offhand", "helmet", "chestplate", "leggings", "boots", "hand", "otherhand", "cap", "tunic", "pants", "shoes", "righthand", "lefthand"].findIndex(v=>v==switchTestB.split(" ")[1]?.trim()?.toLowerCase())%6]??Number((!!!switchTestB.split(" ")[1]?.trim()?"~":switchTestB.split(" ")[1].trim()).replaceAll("~", String(player.selectedSlotIndex))); let fromSlot = typeof slot == "string"?player.getComponent("equippable")!.getEquipmentSlot(slot):player.getComponent("inventory")!.container.getSlot(slot); player.getComponent("inventory")!.container.addItem(player.getComponent("inventory")!.container.getItem(event.sender.selectedSlotIndex).clone())})*/
                 }
                 break;
             case !!switchTest.match(/^transferitem$/):
@@ -17314,10 +17288,10 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                             "presetText",
                             "targetSelector",
                         ]).args;
-                        if (switchTestB.split(/\s+/g)[1]?.trim() == "~") {
+                        if (args[1]?.trim() == "~") {
                             args[1] = player.name;
                         }
-                        if ((switchTestB.split(/\s+/g)[1] ?? "").trim() == "") {
+                        if ((args[1] ?? "").trim() == "") {
                             args[1] = player.name;
                         }
                         let target = targetSelectorAllListC(args[1], "", vTStr(player.location), player).find((v) => v.typeId == "minecraft:player");
@@ -17341,7 +17315,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                             "presetText",
                             "targetSelector",
                         ]).args;
-                        if (switchTestB.split(/\s+/g)[1]?.trim() == "~") {
+                        if (args[1]?.trim() == "~") {
                             args[1] = player.name;
                         }
                         let targets = targetSelectorAllListC(args[1], "", vTStr(player.location), player).filter((v) => v.typeId == "minecraft:player");
@@ -17389,10 +17363,10 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                             "targetSelector",
                             "targetSelector",
                         ]).args;
-                        if (!args[4]?.trim() || args[3].trim() === "~") {
+                        if (!args[4]?.trim() || args[3]?.trim() === "~") {
                             args[4] = player.name;
                         }
-                        if (!args[3]?.trim() || args[3].trim() === "~") {
+                        if (!args[3]?.trim() || args[3]?.trim() === "~") {
                             args[3] = player.name;
                         }
                         let target = targetSelectorAllListC(args[3], "", vTStr(player.location), player).find((v) => v.typeId == "minecraft:player");
@@ -17454,7 +17428,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                         player.sendError(`§cError: Unable to find player with the name ${args[2]}. `, true);
                     }
                     else {
-                        let itemType = new ItemStack(args[2].trim(), 1).typeId;
+                        let itemType = new ItemStack(args[2]?.trim(), 1).typeId;
                         if ((args[2] ?? "") == "") {
                             system.run(() => {
                                 containerToContainerSlotArray(target.getComponent("inventory").container).forEach((v) => v.setItem());
@@ -17475,7 +17449,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                     eventData.cancel = true;
                     system.run(() => {
                         let args = evaluateParameters(switchTestB, ["presetText", "f-t", "presetText", "targetSelector"]).args;
-                        if (!args[3]?.trim() || args[3].trim() === "~") {
+                        if (!args[3]?.trim() || args[3]?.trim() === "~") {
                             args[3] = player.name;
                         }
                         let target = targetSelectorAllListC(args[3], "", vTStr(player.location), player).find((v) => v.typeId == "minecraft:player");
@@ -17493,10 +17467,10 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                 selectedSlotIndex: target.selectedSlotIndex,
                                 cursor: target.getComponent("cursor_inventory"),
                             });
-                            if (args[1]?.t && /^\d+$/.test(String(args[2].trim() === "~" || !args[2] ? target.selectedSlotIndex : args[2]))) {
+                            if (args[1]?.t && /^\d+$/.test(String(args[2]?.trim() === "~" || !args[2] ? target.selectedSlotIndex : args[2]))) {
                                 target
                                     .getComponent("inventory")
-                                    .container.transferItem(Number(args[2].trim() === "~" || !args[2] ? target.selectedSlotIndex : args[2]), player.getComponent("inventory")
+                                    .container.transferItem(Number(args[2]?.trim() === "~" || !args[2] ? target.selectedSlotIndex : args[2]), player.getComponent("inventory")
                                     .container);
                             }
                             else {
@@ -17523,16 +17497,16 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                 {
                     eventData.cancel = true;
                     let args = evaluateParametersOld(["presetText", "string", "string"], switchTestB).args;
-                    if (switchTestB.split(/\s+/g)[1]?.trim() == "~") {
+                    if (args[1]?.trim() == "~") {
                         args[1] = player.name;
                     }
-                    if ((switchTestB.split(/\s+/g)[1] ?? "").trim() == "") {
+                    if ((args[1] ?? "").trim() == "") {
                         args[1] = player.name;
                     }
-                    if (switchTestB.split(/\s+/g)[2]?.trim() == "~") {
+                    if (args[2]?.trim() == "~") {
                         args[2] = player.name;
                     }
-                    if ((switchTestB.split(/\s+/g)[2] ?? "").trim() == "") {
+                    if ((args[2] ?? "").trim() == "") {
                         args[2] = player.name;
                     }
                     let target = world
@@ -17642,10 +17616,10 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                 {
                     eventData.cancel = true;
                     let args = evaluateParametersOld(["presetText", "presetText", "string"], switchTestB).args;
-                    if (switchTestB.split(/\s+/g)[2]?.trim() == "~") {
+                    if (args[2]?.trim() == "~") {
                         args[2] = player.name;
                     }
-                    if ((switchTestB.split(/\s+/g)[2] ?? "").trim() == "") {
+                    if ((args[2] ?? "").trim() == "") {
                         args[2] = player.name;
                     }
                     let target = world
@@ -17758,10 +17732,10 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                 {
                     eventData.cancel = true;
                     let args = evaluateParametersOld(["presetText", "presetText", "string"], switchTestB).args;
-                    if (switchTestB.split(/\s+/g)[2]?.trim() == "~") {
+                    if (args[2]?.trim() == "~") {
                         args[2] = player.name;
                     }
-                    if ((switchTestB.split(/\s+/g)[2] ?? "").trim() == "") {
+                    if ((args[2] ?? "").trim() == "") {
                         args[2] = player.name;
                     }
                     let target = world
@@ -17898,7 +17872,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                 block.setType("air");
                                 return component;
                             })()) {
-                                player.sendError(`§cError: Block of type ${BlockTypes.get(args[1]).id} is not a container block. `, true);
+                                player.sendError(`§cError: Block of type ${BlockTypes.get(args[1])?.id} is not a container block. `, true);
                             }
                             else {
                                 if ((args[2] ?? "").trim() == "" ||
@@ -18102,7 +18076,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                 return component;
                             })()) {
                                 player.sendError(`§cError: Block of type ${BlockTypes.get(JSONParse(switchTestB.split(" ")[1])
-                                    ?.id).id} is not a container block. `, true);
+                                    ?.id)?.id} is not a container block. `, true);
                             }
                             else {
                                 if ((args[0] ?? "").trim() == "" ||
@@ -18279,10 +18253,10 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                             "presetText",
                             "targetSelector",
                         ]).args;
-                        if (switchTestB.split(/\s+/g)[1]?.trim() == "~") {
+                        if (args[1]?.trim() == "~") {
                             args[1] = player.name;
                         }
-                        if ((switchTestB.split(/\s+/g)[1] ?? "").trim() == "") {
+                        if ((args[1] ?? "").trim() == "") {
                             args[1] = player.name;
                         }
                         let targets = targetSelectorAllListC(args[1], "", vTStr(player.location), player).filter((v) => v.typeId == "minecraft:player");
@@ -18309,10 +18283,10 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                         "presetText",
                         "string",
                     ]).args;
-                    if (switchTestB.split(/\s+/g)[1]?.trim() == "~") {
+                    if (args[1]?.trim() == "~") {
                         args[1] = player.name;
                     }
-                    if ((switchTestB.split(/\s+/g)[1] ?? "").trim() == "") {
+                    if ((args[1] ?? "").trim() == "") {
                         args[1] = player.name;
                     }
                     let target = world
@@ -18337,10 +18311,10 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                 {
                     eventData.cancel = true;
                     let args = evaluateParametersOld(["presetText", "number", "string"], switchTestB).args;
-                    if (switchTestB.split(/\s+/g)[2]?.trim() == "~") {
+                    if (args[2]?.trim() == "~") {
                         args[2] = player.name;
                     }
-                    if ((switchTestB.split(/\s+/g)[2] ?? "").trim() == "") {
+                    if ((args[2] ?? "").trim() == "") {
                         args[2] = player.name;
                     }
                     let target = world
@@ -18365,7 +18339,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                 {
                     eventData.cancel = true;
                     let args = evaluateParametersOld(["presetText", "string"], switchTestB).args;
-                    if (switchTestB.split(/\s+/g)[1]?.trim() == "~") {
+                    if (args[1]?.trim() == "~") {
                         args[1] = player.name;
                     }
                     let target = world
@@ -18416,7 +18390,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                     let t = shuffle(JunkItemTypes)[0];
                                     target
                                         .getComponent("inventory")
-                                        .container.addItem(new ItemStack(t, args[2].trim().toLowerCase() ==
+                                        .container.addItem(new ItemStack(t, args[2]?.trim().toLowerCase() ==
                                         ""
                                         ? 255
                                         : args[2]
@@ -18440,7 +18414,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                     let t = shuffle(JunkItemTypes)[0];
                                     target
                                         .getComponent("inventory")
-                                        .container.setItem(i, new ItemStack(t, args[2].trim().toLowerCase() ==
+                                        .container.setItem(i, new ItemStack(t, args[2]?.trim().toLowerCase() ==
                                         "max"
                                         ? new ItemStack(t).maxAmount
                                         : Number(args[2]
@@ -18458,7 +18432,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                     let t = shuffle(JunkItemTypes)[0];
                                     target
                                         .getComponent("inventory")
-                                        .container.addItem(new ItemStack(t, args[2].trim().toLowerCase() ==
+                                        .container.addItem(new ItemStack(t, args[2]?.trim().toLowerCase() ==
                                         "max"
                                         ? new ItemStack(t).maxAmount
                                         : Number(args[2]
@@ -18497,7 +18471,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                     let t = shuffle(ItemTypes.getAll())[0];
                                     target
                                         .getComponent("inventory")
-                                        .container.addItem(new ItemStack(t, args[2].trim().toLowerCase() ==
+                                        .container.addItem(new ItemStack(t, args[2]?.trim().toLowerCase() ==
                                         ""
                                         ? 255
                                         : args[2]
@@ -18521,7 +18495,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                     let t = shuffle(ItemTypes.getAll())[0];
                                     target
                                         .getComponent("inventory")
-                                        .container.setItem(i, new ItemStack(t, args[2].trim().toLowerCase() ==
+                                        .container.setItem(i, new ItemStack(t, args[2]?.trim().toLowerCase() ==
                                         "max"
                                         ? new ItemStack(t).maxAmount
                                         : Number(args[2]
@@ -18539,7 +18513,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                     let t = shuffle(ItemTypes.getAll())[0];
                                     target
                                         .getComponent("inventory")
-                                        .container.addItem(new ItemStack(t, args[2].trim().toLowerCase() ==
+                                        .container.addItem(new ItemStack(t, args[2]?.trim().toLowerCase() ==
                                         "max"
                                         ? new ItemStack(t).maxAmount
                                         : Number(args[2]
@@ -18578,7 +18552,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                     let t = shuffle(OpItemTypes)[0];
                                     target
                                         .getComponent("inventory")
-                                        .container.addItem(new ItemStack(t, args[2].trim().toLowerCase() ==
+                                        .container.addItem(new ItemStack(t, args[2]?.trim().toLowerCase() ==
                                         ""
                                         ? 255
                                         : args[2]
@@ -18602,7 +18576,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                     let t = shuffle(OpItemTypes)[0];
                                     target
                                         .getComponent("inventory")
-                                        .container.setItem(i, new ItemStack(t, args[2].trim().toLowerCase() ==
+                                        .container.setItem(i, new ItemStack(t, args[2]?.trim().toLowerCase() ==
                                         "max"
                                         ? new ItemStack(t).maxAmount
                                         : Number(args[2]
@@ -18620,7 +18594,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                     let t = shuffle(OpItemTypes)[0];
                                     target
                                         .getComponent("inventory")
-                                        .container.addItem(new ItemStack(t, args[2].trim().toLowerCase() ==
+                                        .container.addItem(new ItemStack(t, args[2]?.trim().toLowerCase() ==
                                         "max"
                                         ? new ItemStack(t).maxAmount
                                         : Number(args[2]
@@ -18659,7 +18633,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                     let t = shuffle(IllegalItemTypes)[0];
                                     target
                                         .getComponent("inventory")
-                                        .container.addItem(new ItemStack(t, args[2].trim().toLowerCase() ==
+                                        .container.addItem(new ItemStack(t, args[2]?.trim().toLowerCase() ==
                                         ""
                                         ? 255
                                         : args[2]
@@ -18683,7 +18657,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                     let t = shuffle(IllegalItemTypes)[0];
                                     target
                                         .getComponent("inventory")
-                                        .container.setItem(i, new ItemStack(t, args[2].trim().toLowerCase() ==
+                                        .container.setItem(i, new ItemStack(t, args[2]?.trim().toLowerCase() ==
                                         "max"
                                         ? new ItemStack(t).maxAmount
                                         : Number(args[2]
@@ -18701,7 +18675,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                                     let t = shuffle(IllegalItemTypes)[0];
                                     target
                                         .getComponent("inventory")
-                                        .container.addItem(new ItemStack(t, args[2].trim().toLowerCase() ==
+                                        .container.addItem(new ItemStack(t, args[2]?.trim().toLowerCase() ==
                                         "max"
                                         ? new ItemStack(t).maxAmount
                                         : Number(args[2]
@@ -18819,12 +18793,12 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblo
                         player.sendError(`§cError: Unable to find player with the name ${args[3]}. `, true);
                     }
                     else {
-                        if (switchTestB.split(/\s+/g)[1]?.trim() == "~" ||
-                            (switchTestB.split(/\s+/g)[1] ?? "").trim() == "") {
+                        if (args[1]?.trim() == "~" ||
+                            (args[1] ?? "").trim() == "") {
                             args[1] = target.selectedSlotIndex;
                         }
-                        if (switchTestB.split(/\s+/g)[2]?.trim() == "~" ||
-                            (switchTestB.split(/\s+/g)[2] ?? "").trim() == "") {
+                        if (args[2]?.trim() == "~" ||
+                            (args[2] ?? "").trim() == "") {
                             args[2] = 1;
                         }
                         let slot = Number(args[1]);
@@ -19615,14 +19589,14 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                     const coordinatesa = player.getDynamicProperty("pos1");
                     const coordinatesb = player.getDynamicProperty("pos2");
                     const ca = {
-                        x: Math.min(coordinatesa.x, coordinatesb.x),
-                        y: Math.min(coordinatesa.y, coordinatesb.y),
-                        z: Math.min(coordinatesa.z, coordinatesb.z),
+                        x: Math.min(coordinatesa?.x, coordinatesb?.x),
+                        y: Math.min(coordinatesa?.y, coordinatesb?.y),
+                        z: Math.min(coordinatesa?.z, coordinatesb?.z),
                     };
                     const cb = {
-                        x: Math.max(coordinatesa.x, coordinatesb.x),
-                        y: Math.max(coordinatesa.y, coordinatesb.y),
-                        z: Math.max(coordinatesa.z, coordinatesb.z),
+                        x: Math.max(coordinatesa?.x, coordinatesb?.x),
+                        y: Math.max(coordinatesa?.y, coordinatesb?.y),
+                        z: Math.max(coordinatesa?.z, coordinatesb?.z),
                     };
                     const dimensiona = world.getDimension((player.getDynamicProperty("posD") ??
                         player.dimension.id));
@@ -19688,14 +19662,14 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                     const coordinatesa = player.getDynamicProperty("pos1");
                     const coordinatesb = player.getDynamicProperty("pos2");
                     const ca = {
-                        x: Math.min(coordinatesa.x, coordinatesb.x),
-                        y: Math.min(coordinatesa.y, coordinatesb.y),
-                        z: Math.min(coordinatesa.z, coordinatesb.z),
+                        x: Math.min(coordinatesa?.x, coordinatesb?.x),
+                        y: Math.min(coordinatesa?.y, coordinatesb?.y),
+                        z: Math.min(coordinatesa?.z, coordinatesb?.z),
                     };
                     const cb = {
-                        x: Math.max(coordinatesa.x, coordinatesb.x),
-                        y: Math.max(coordinatesa.y, coordinatesb.y),
-                        z: Math.max(coordinatesa.z, coordinatesb.z),
+                        x: Math.max(coordinatesa?.x, coordinatesb?.x),
+                        y: Math.max(coordinatesa?.y, coordinatesb?.y),
+                        z: Math.max(coordinatesa?.z, coordinatesb?.z),
                     };
                     const dimensiona = world.getDimension((player.getDynamicProperty("posD") ??
                         player.dimension.id));
@@ -19788,14 +19762,14 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                     const coordinatesa = player.getDynamicProperty("pos1");
                     const coordinatesb = player.getDynamicProperty("pos2");
                     const ca = {
-                        x: Math.min(coordinatesa.x, coordinatesb.x),
-                        y: Math.max(coordinatesa.y, coordinatesb.y),
-                        z: Math.min(coordinatesa.z, coordinatesb.z),
+                        x: Math.min(coordinatesa?.x, coordinatesb?.x),
+                        y: Math.max(coordinatesa?.y, coordinatesb?.y),
+                        z: Math.min(coordinatesa?.z, coordinatesb?.z),
                     };
                     const cb = {
-                        x: Math.max(coordinatesa.x, coordinatesb.x),
-                        y: Math.max(coordinatesa.y, coordinatesb.y),
-                        z: Math.max(coordinatesa.z, coordinatesb.z),
+                        x: Math.max(coordinatesa?.x, coordinatesb?.x),
+                        y: Math.max(coordinatesa?.y, coordinatesb?.y),
+                        z: Math.max(coordinatesa?.z, coordinatesb?.z),
                     };
                     const dimensiona = world.getDimension((player.getDynamicProperty("posD") ??
                         player.dimension.id));
@@ -19888,14 +19862,14 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                     const coordinatesa = player.getDynamicProperty("pos1");
                     const coordinatesb = player.getDynamicProperty("pos2");
                     const ca = {
-                        x: Math.min(coordinatesa.x, coordinatesb.x),
-                        y: Math.min(coordinatesa.y, coordinatesb.y),
-                        z: Math.min(coordinatesa.z, coordinatesb.z),
+                        x: Math.min(coordinatesa?.x, coordinatesb?.x),
+                        y: Math.min(coordinatesa?.y, coordinatesb?.y),
+                        z: Math.min(coordinatesa?.z, coordinatesb?.z),
                     };
                     const cb = {
-                        x: Math.max(coordinatesa.x, coordinatesb.x),
-                        y: Math.min(coordinatesa.y, coordinatesb.y),
-                        z: Math.max(coordinatesa.z, coordinatesb.z),
+                        x: Math.max(coordinatesa?.x, coordinatesb?.x),
+                        y: Math.min(coordinatesa?.y, coordinatesb?.y),
+                        z: Math.max(coordinatesa?.z, coordinatesb?.z),
                     };
                     const dimensiona = world.getDimension((player.getDynamicProperty("posD") ??
                         player.dimension.id));
@@ -19988,14 +19962,14 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                     const coordinatesa = player.getDynamicProperty("pos1");
                     const coordinatesb = player.getDynamicProperty("pos2");
                     const ca = {
-                        x: Math.min(coordinatesa.x, coordinatesb.x),
-                        y: Math.min(coordinatesa.y, coordinatesb.y),
-                        z: Math.min(coordinatesa.z, coordinatesb.z),
+                        x: Math.min(coordinatesa?.x, coordinatesb?.x),
+                        y: Math.min(coordinatesa?.y, coordinatesb?.y),
+                        z: Math.min(coordinatesa?.z, coordinatesb?.z),
                     };
                     const cb = {
-                        x: Math.max(coordinatesa.x, coordinatesb.x),
-                        y: Math.max(coordinatesa.y, coordinatesb.y),
-                        z: Math.max(coordinatesa.z, coordinatesb.z),
+                        x: Math.max(coordinatesa?.x, coordinatesb?.x),
+                        y: Math.max(coordinatesa?.y, coordinatesb?.y),
+                        z: Math.max(coordinatesa?.z, coordinatesb?.z),
                     };
                     const dimensiona = world.getDimension((player.getDynamicProperty("posD") ??
                         player.dimension.id));
@@ -20088,14 +20062,14 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                     const coordinatesa = player.getDynamicProperty("pos1");
                     const coordinatesb = player.getDynamicProperty("pos2");
                     const ca = {
-                        x: Math.min(coordinatesa.x, coordinatesb.x),
-                        y: Math.min(coordinatesa.y, coordinatesb.y),
-                        z: Math.min(coordinatesa.z, coordinatesb.z),
+                        x: Math.min(coordinatesa?.x, coordinatesb?.x),
+                        y: Math.min(coordinatesa?.y, coordinatesb?.y),
+                        z: Math.min(coordinatesa?.z, coordinatesb?.z),
                     };
                     const cb = {
-                        x: Math.max(coordinatesa.x, coordinatesb.x),
-                        y: Math.max(coordinatesa.y, coordinatesb.y),
-                        z: Math.max(coordinatesa.z, coordinatesb.z),
+                        x: Math.max(coordinatesa?.x, coordinatesb?.x),
+                        y: Math.max(coordinatesa?.y, coordinatesb?.y),
+                        z: Math.max(coordinatesa?.z, coordinatesb?.z),
                     };
                     const dimensiona = world.getDimension((player.getDynamicProperty("posD") ??
                         player.dimension.id));
@@ -20188,11 +20162,11 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                     const coordinatesa = player.getDynamicProperty("pos1");
                     const coordinatesb = player.getDynamicProperty("pos2");
                     const center = {
-                        x: (coordinatesa.x + coordinatesb.x) / 2,
-                        y: (coordinatesa.y + coordinatesb.y) / 2,
-                        z: (coordinatesa.z + coordinatesb.z) / 2,
+                        x: (coordinatesa?.x + coordinatesb?.x) / 2,
+                        y: (coordinatesa?.y + coordinatesb?.y) / 2,
+                        z: (coordinatesa?.z + coordinatesb?.z) / 2,
                     };
-                    const radius = Math.min(Math.abs(coordinatesb.x - center.x), Math.abs(coordinatesb.y - center.y), Math.abs(coordinatesb.z - center.z));
+                    const radius = Math.min(Math.abs(coordinatesb?.x - center.x), Math.abs(coordinatesb?.y - center.y), Math.abs(coordinatesb?.z - center.z));
                     const ca = {
                         x: center.x - radius,
                         y: center.y - radius,
@@ -20304,14 +20278,14 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                     const coordinatesa = player.getDynamicProperty("pos1");
                     const coordinatesb = player.getDynamicProperty("pos2");
                     const ca = {
-                        x: Math.min(coordinatesa.x, coordinatesb.x),
-                        y: Math.min(coordinatesa.y, coordinatesb.y),
-                        z: Math.min(coordinatesa.z, coordinatesb.z),
+                        x: Math.min(coordinatesa?.x, coordinatesb?.x),
+                        y: Math.min(coordinatesa?.y, coordinatesb?.y),
+                        z: Math.min(coordinatesa?.z, coordinatesb?.z),
                     };
                     const cb = {
-                        x: Math.max(coordinatesa.x, coordinatesb.x),
-                        y: Math.max(coordinatesa.y, coordinatesb.y),
-                        z: Math.max(coordinatesa.z, coordinatesb.z),
+                        x: Math.max(coordinatesa?.x, coordinatesb?.x),
+                        y: Math.max(coordinatesa?.y, coordinatesb?.y),
+                        z: Math.max(coordinatesa?.z, coordinatesb?.z),
                     };
                     const center = {
                         x: (ca.x + cb.x) / 2,
@@ -20430,14 +20404,14 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                     const coordinatesa = player.getDynamicProperty("pos1");
                     const coordinatesb = player.getDynamicProperty("pos2");
                     const ca = {
-                        x: Math.min(coordinatesa.x, coordinatesb.x),
-                        y: Math.min(coordinatesa.y, coordinatesb.y),
-                        z: Math.min(coordinatesa.z, coordinatesb.z),
+                        x: Math.min(coordinatesa?.x, coordinatesb?.x),
+                        y: Math.min(coordinatesa?.y, coordinatesb?.y),
+                        z: Math.min(coordinatesa?.z, coordinatesb?.z),
                     };
                     const cb = {
-                        x: Math.max(coordinatesa.x, coordinatesb.x),
-                        y: Math.max(coordinatesa.y, coordinatesb.y),
-                        z: Math.max(coordinatesa.z, coordinatesb.z),
+                        x: Math.max(coordinatesa?.x, coordinatesb?.x),
+                        y: Math.max(coordinatesa?.y, coordinatesb?.y),
+                        z: Math.max(coordinatesa?.z, coordinatesb?.z),
                     };
                     const center = {
                         x: (ca.x + cb.x) / 2,
@@ -20542,14 +20516,14 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                     const coordinatesa = player.getDynamicProperty("pos1");
                     const coordinatesb = player.getDynamicProperty("pos2");
                     const ca = {
-                        x: Math.min(coordinatesa.x, coordinatesb.x),
-                        y: Math.min(coordinatesa.y, coordinatesb.y),
-                        z: Math.min(coordinatesa.z, coordinatesb.z),
+                        x: Math.min(coordinatesa?.x, coordinatesb?.x),
+                        y: Math.min(coordinatesa?.y, coordinatesb?.y),
+                        z: Math.min(coordinatesa?.z, coordinatesb?.z),
                     };
                     const cb = {
-                        x: Math.max(coordinatesa.x, coordinatesb.x),
-                        y: Math.max(coordinatesa.y, coordinatesb.y),
-                        z: Math.max(coordinatesa.z, coordinatesb.z),
+                        x: Math.max(coordinatesa?.x, coordinatesb?.x),
+                        y: Math.max(coordinatesa?.y, coordinatesb?.y),
+                        z: Math.max(coordinatesa?.z, coordinatesb?.z),
                     };
                     const dimensiona = world.getDimension((player.getDynamicProperty("posD") ??
                         player.dimension.id));
@@ -20606,14 +20580,14 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                     const coordinatesa = player.getDynamicProperty("pos1");
                     const coordinatesb = player.getDynamicProperty("pos2");
                     const ca = {
-                        x: Math.min(coordinatesa.x, coordinatesb.x),
-                        y: Math.min(coordinatesa.y, coordinatesb.y),
-                        z: Math.min(coordinatesa.z, coordinatesb.z),
+                        x: Math.min(coordinatesa?.x, coordinatesb?.x),
+                        y: Math.min(coordinatesa?.y, coordinatesb?.y),
+                        z: Math.min(coordinatesa?.z, coordinatesb?.z),
                     };
                     const cb = {
-                        x: Math.max(coordinatesa.x, coordinatesb.x),
-                        y: Math.max(coordinatesa.y, coordinatesb.y),
-                        z: Math.max(coordinatesa.z, coordinatesb.z),
+                        x: Math.max(coordinatesa?.x, coordinatesb?.x),
+                        y: Math.max(coordinatesa?.y, coordinatesb?.y),
+                        z: Math.max(coordinatesa?.z, coordinatesb?.z),
                     };
                     const dimensiona = world.getDimension((player.getDynamicProperty("posD") ??
                         player.dimension.id));
@@ -20707,14 +20681,14 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                     const coordinatesa = player.getDynamicProperty("pos1");
                     const coordinatesb = player.getDynamicProperty("pos2");
                     const ca = {
-                        x: Math.min(coordinatesa.x, coordinatesb.x),
-                        y: Math.min(coordinatesa.y, coordinatesb.y),
-                        z: Math.min(coordinatesa.z, coordinatesb.z),
+                        x: Math.min(coordinatesa?.x, coordinatesb?.x),
+                        y: Math.min(coordinatesa?.y, coordinatesb?.y),
+                        z: Math.min(coordinatesa?.z, coordinatesb?.z),
                     };
                     const cb = {
-                        x: Math.max(coordinatesa.x, coordinatesb.x),
-                        y: Math.max(coordinatesa.y, coordinatesb.y),
-                        z: Math.max(coordinatesa.z, coordinatesb.z),
+                        x: Math.max(coordinatesa?.x, coordinatesb?.x),
+                        y: Math.max(coordinatesa?.y, coordinatesb?.y),
+                        z: Math.max(coordinatesa?.z, coordinatesb?.z),
                     };
                     const dimensiona = world.getDimension((player.getDynamicProperty("posD") ??
                         player.dimension.id));
@@ -20805,14 +20779,14 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                     const coordinatesa = player.getDynamicProperty("pos1");
                     const coordinatesb = player.getDynamicProperty("pos2");
                     const ca = {
-                        x: Math.min(coordinatesa.x, coordinatesb.x),
-                        y: Math.min(coordinatesa.y, coordinatesb.y),
-                        z: Math.min(coordinatesa.z, coordinatesb.z),
+                        x: Math.min(coordinatesa?.x, coordinatesb?.x),
+                        y: Math.min(coordinatesa?.y, coordinatesb?.y),
+                        z: Math.min(coordinatesa?.z, coordinatesb?.z),
                     };
                     const cb = {
-                        x: Math.max(coordinatesa.x, coordinatesb.x),
-                        y: Math.max(coordinatesa.y, coordinatesb.y),
-                        z: Math.max(coordinatesa.z, coordinatesb.z),
+                        x: Math.max(coordinatesa?.x, coordinatesb?.x),
+                        y: Math.max(coordinatesa?.y, coordinatesb?.y),
+                        z: Math.max(coordinatesa?.z, coordinatesb?.z),
                     };
                     const dimensiona = world.getDimension((player.getDynamicProperty("posD") ??
                         player.dimension.id));
@@ -20895,14 +20869,14 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                     const coordinatesa = player.getDynamicProperty("pos1");
                     const coordinatesb = player.getDynamicProperty("pos2");
                     const ca = {
-                        x: Math.min(coordinatesa.x, coordinatesb.x),
-                        y: Math.min(coordinatesa.y, coordinatesb.y),
-                        z: Math.min(coordinatesa.z, coordinatesb.z),
+                        x: Math.min(coordinatesa?.x, coordinatesb?.x),
+                        y: Math.min(coordinatesa?.y, coordinatesb?.y),
+                        z: Math.min(coordinatesa?.z, coordinatesb?.z),
                     };
                     const cb = {
-                        x: Math.max(coordinatesa.x, coordinatesb.x),
-                        y: Math.max(coordinatesa.y, coordinatesb.y),
-                        z: Math.max(coordinatesa.z, coordinatesb.z),
+                        x: Math.max(coordinatesa?.x, coordinatesb?.x),
+                        y: Math.max(coordinatesa?.y, coordinatesb?.y),
+                        z: Math.max(coordinatesa?.z, coordinatesb?.z),
                     };
                     const dimensiona = world.getDimension((player.getDynamicProperty("posD") ??
                         player.dimension.id));
@@ -20989,20 +20963,20 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                         : lastblockname == "keep"
                             ? ["air"]
                             : [
-                                BlockTypes.get(lastblockname).id,
+                                BlockTypes.get(lastblockname)?.id,
                                 lastblockstates,
                             ]);
                     const coordinatesa = player.getDynamicProperty("pos1");
                     const coordinatesb = player.getDynamicProperty("pos2");
                     const ca = {
-                        x: Math.min(coordinatesa.x, coordinatesb.x),
-                        y: Math.min(coordinatesa.y, coordinatesb.y),
-                        z: Math.min(coordinatesa.z, coordinatesb.z),
+                        x: Math.min(coordinatesa?.x, coordinatesb?.x),
+                        y: Math.min(coordinatesa?.y, coordinatesb?.y),
+                        z: Math.min(coordinatesa?.z, coordinatesb?.z),
                     };
                     const cb = {
-                        x: Math.max(coordinatesa.x, coordinatesb.x),
-                        y: Math.max(coordinatesa.y, coordinatesb.y),
-                        z: Math.max(coordinatesa.z, coordinatesb.z),
+                        x: Math.max(coordinatesa?.x, coordinatesb?.x),
+                        y: Math.max(coordinatesa?.y, coordinatesb?.y),
+                        z: Math.max(coordinatesa?.z, coordinatesb?.z),
                     };
                     const dimensiona = world.getDimension((player.getDynamicProperty("posD") ??
                         player.dimension.id));
@@ -21114,14 +21088,14 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                         }
                         else {
                             const ca = {
-                                x: Math.min(coordinatesa.x, coordinatesb.x),
-                                y: Math.min(coordinatesa.y, coordinatesb.y),
-                                z: Math.min(coordinatesa.z, coordinatesb.z),
+                                x: Math.min(coordinatesa?.x, coordinatesb?.x),
+                                y: Math.min(coordinatesa?.y, coordinatesb?.y),
+                                z: Math.min(coordinatesa?.z, coordinatesb?.z),
                             };
                             const cb = {
-                                x: Math.max(coordinatesa.x, coordinatesb.x),
-                                y: Math.max(coordinatesa.y, coordinatesb.y),
-                                z: Math.max(coordinatesa.z, coordinatesb.z),
+                                x: Math.max(coordinatesa?.x, coordinatesb?.x),
+                                y: Math.max(coordinatesa?.y, coordinatesb?.y),
+                                z: Math.max(coordinatesa?.z, coordinatesb?.z),
                             };
                             const dimensiona = world.getDimension((player.getDynamicProperty("posD") ??
                                 player.dimension.id));
@@ -21822,16 +21796,16 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                         const coordinatesa = player.getDynamicProperty("pos1");
                         const coordinatesb = player.getDynamicProperty("pos2");
                         const ca = {
-                            x: Math.min(coordinatesa.x, coordinatesb.x),
-                            y: Math.min(coordinatesa.y, coordinatesb.y),
-                            z: Math.min(coordinatesa.z, coordinatesb.z),
+                            x: Math.min(coordinatesa?.x, coordinatesb?.x),
+                            y: Math.min(coordinatesa?.y, coordinatesb?.y),
+                            z: Math.min(coordinatesa?.z, coordinatesb?.z),
                         };
                         const cb = {
-                            x: Math.max(coordinatesa.x, coordinatesb.x),
-                            y: Math.max(coordinatesa.y, coordinatesb.y),
-                            z: Math.max(coordinatesa.z, coordinatesb.z),
+                            x: Math.max(coordinatesa?.x, coordinatesb?.x),
+                            y: Math.max(coordinatesa?.y, coordinatesb?.y),
+                            z: Math.max(coordinatesa?.z, coordinatesb?.z),
                         };
-                        const height = Math.abs(coordinatesa.y - coordinatesb.y) + 1;
+                        const height = Math.abs(coordinatesa?.y - coordinatesb?.y) + 1;
                         //console.warn(vTStr(ca), vTStr(cb))
                         const dimensiona = world.getDimension((player.getDynamicProperty("posD") ??
                             player.dimension.id));
@@ -21916,14 +21890,14 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                         const coordinatesa = player.getDynamicProperty("pos1");
                         const coordinatesb = player.getDynamicProperty("pos2");
                         const ca = {
-                            x: Math.min(coordinatesa.x, coordinatesb.x),
-                            y: Math.min(coordinatesa.y, coordinatesb.y),
-                            z: Math.min(coordinatesa.z, coordinatesb.z),
+                            x: Math.min(coordinatesa?.x, coordinatesb?.x),
+                            y: Math.min(coordinatesa?.y, coordinatesb?.y),
+                            z: Math.min(coordinatesa?.z, coordinatesb?.z),
                         };
                         const cb = {
-                            x: Math.max(coordinatesa.x, coordinatesb.x),
-                            y: Math.max(coordinatesa.y, coordinatesb.y),
-                            z: Math.max(coordinatesa.z, coordinatesb.z),
+                            x: Math.max(coordinatesa?.x, coordinatesb?.x),
+                            y: Math.max(coordinatesa?.y, coordinatesb?.y),
+                            z: Math.max(coordinatesa?.z, coordinatesb?.z),
                         };
                         const dimensiona = world.getDimension((player.getDynamicProperty("posD") ??
                             player.dimension.id));
@@ -22013,14 +21987,14 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                         const coordinatesa = player.getDynamicProperty("pos1");
                         const coordinatesb = player.getDynamicProperty("pos2");
                         const ca = {
-                            x: Math.min(coordinatesa.x, coordinatesb.x),
-                            y: Math.min(coordinatesa.y, coordinatesb.y),
-                            z: Math.min(coordinatesa.z, coordinatesb.z),
+                            x: Math.min(coordinatesa?.x, coordinatesb?.x),
+                            y: Math.min(coordinatesa?.y, coordinatesb?.y),
+                            z: Math.min(coordinatesa?.z, coordinatesb?.z),
                         };
                         const cb = {
-                            x: Math.max(coordinatesa.x, coordinatesb.x),
-                            y: Math.max(coordinatesa.y, coordinatesb.y),
-                            z: Math.max(coordinatesa.z, coordinatesb.z),
+                            x: Math.max(coordinatesa?.x, coordinatesb?.x),
+                            y: Math.max(coordinatesa?.y, coordinatesb?.y),
+                            z: Math.max(coordinatesa?.z, coordinatesb?.z),
                         };
                         const dimensiona = world.getDimension((player.getDynamicProperty("posD") ??
                             player.dimension.id));
@@ -22090,9 +22064,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     ? player.location
                                     : player.getDynamicProperty("pos2");
                                 const ca = {
-                                    x: Math.min(coordinatesa.x, coordinatesb.x),
-                                    y: Math.min(coordinatesa.y, coordinatesb.y),
-                                    z: Math.min(coordinatesa.z, coordinatesb.z),
+                                    x: Math.min(coordinatesa?.x, coordinatesb?.x),
+                                    y: Math.min(coordinatesa?.y, coordinatesb?.y),
+                                    z: Math.min(coordinatesa?.z, coordinatesb?.z),
                                 };
                                 //const cb = {x: Math.max(coordinatesa.x, coordinatesb.x), y: Math.max(coordinatesa.y, coordinatesb.y), z: Math.max(coordinatesa.z, coordinatesb.z)}
                                 const dimensiona = world.getDimension((player.getDynamicProperty("posD") ??
@@ -22272,14 +22246,14 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                 const coordinatesa = player.getDynamicProperty("pos1");
                                 const coordinatesb = player.getDynamicProperty("pos2");
                                 const ca = {
-                                    x: Math.min(coordinatesa.x, coordinatesb.x),
-                                    y: Math.min(coordinatesa.y, coordinatesb.y),
-                                    z: Math.min(coordinatesa.z, coordinatesb.z),
+                                    x: Math.min(coordinatesa?.x, coordinatesb?.x),
+                                    y: Math.min(coordinatesa?.y, coordinatesb?.y),
+                                    z: Math.min(coordinatesa?.z, coordinatesb?.z),
                                 };
                                 const cb = {
-                                    x: Math.max(coordinatesa.x, coordinatesb.x),
-                                    y: Math.max(coordinatesa.y, coordinatesb.y),
-                                    z: Math.max(coordinatesa.z, coordinatesb.z),
+                                    x: Math.max(coordinatesa?.x, coordinatesb?.x),
+                                    y: Math.max(coordinatesa?.y, coordinatesb?.y),
+                                    z: Math.max(coordinatesa?.z, coordinatesb?.z),
                                 };
                                 const dimensiona = world.getDimension((player.getDynamicProperty("posD") ??
                                     player.dimension.id));
@@ -22340,14 +22314,14 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                 const coordinatesa = player.getDynamicProperty("pos1");
                                 const coordinatesb = player.getDynamicProperty("pos2");
                                 const ca = {
-                                    x: Math.min(coordinatesa.x, coordinatesb.x),
-                                    y: Math.min(coordinatesa.y, coordinatesb.y),
-                                    z: Math.min(coordinatesa.z, coordinatesb.z),
+                                    x: Math.min(coordinatesa?.x, coordinatesb?.x),
+                                    y: Math.min(coordinatesa?.y, coordinatesb?.y),
+                                    z: Math.min(coordinatesa?.z, coordinatesb?.z),
                                 };
                                 const cb = {
-                                    x: Math.max(coordinatesa.x, coordinatesb.x),
-                                    y: Math.max(coordinatesa.y, coordinatesb.y),
-                                    z: Math.max(coordinatesa.z, coordinatesb.z),
+                                    x: Math.max(coordinatesa?.x, coordinatesb?.x),
+                                    y: Math.max(coordinatesa?.y, coordinatesb?.y),
+                                    z: Math.max(coordinatesa?.z, coordinatesb?.z),
                                 };
                                 const dimensiona = world.getDimension((player.getDynamicProperty("posD") ??
                                     player.dimension.id));
@@ -22536,7 +22510,7 @@ ${command.dp}\\itfill <offsetx: float> <offsety: float> <offsetz: float> <thickn
                         let argslextra = argsl.extra;
                         let argsnextra = argsn.extra;
                         //console.warn(JSONStringify(args), JSONStringify(argsaextra))
-                        let center = player.getDynamicProperty("pos1"); //evaluateCoordinates(argsc[1], argsc[2], argsc[3], roundVector3ToMiddleOfBlock(player.location), player.getRotation());
+                        let center = player.getDynamicProperty("pos1"); //evaluateCoordinates(argsc[1]!, argsc[2]!, argsc[3]!, roundVector3ToMiddleOfBlock(player.location), player.getRotation());
                         let radius = Vector.distance(player.getDynamicProperty("pos1"), player.getDynamicProperty("pos2"));
                         let axis = argsc[1];
                         let cfirstblockname = argsc[2];
@@ -22634,14 +22608,14 @@ ${command.dp}\\itfill <offsetx: float> <offsety: float> <offsetz: float> <thickn
                             !ccirclemode &&
                             !hspheremode &&
                             !tunnelmode) {
-                            coordinatesa = player.getDynamicProperty("pos1"); /*evaluateCoordinates(args[1], args[2], args[3], roundVector3ToMiddleOfBlock(player.location), player.getRotation()); */
+                            coordinatesa = player.getDynamicProperty("pos1"); /*evaluateCoordinates(args[1]!, args[2]!, args[3]!, roundVector3ToMiddleOfBlock(player.location), player.getRotation()); */
                         }
                         let coordinatesb;
                         if (!circlemode &&
                             !ccirclemode &&
                             !hspheremode &&
                             !tunnelmode) {
-                            coordinatesb = player.getDynamicProperty("pos2"); /*evaluateCoordinates(args[4], args[5], args[6], roundVector3ToMiddleOfBlock(player.location), player.getRotation()); */
+                            coordinatesb = player.getDynamicProperty("pos2"); /*evaluateCoordinates(args[4]!, args[5]!, args[6]!, roundVector3ToMiddleOfBlock(player.location), player.getRotation()); */
                         }
                         let horadi;
                         let hooffset;
@@ -22689,7 +22663,7 @@ ${command.dp}\\itfill <offsetx: float> <offsety: float> <offsetz: float> <thickn
                             : lastblockname == "keep" || mode == "keep"
                                 ? ["air"]
                                 : [
-                                    BlockTypes.get(lastblockname).id,
+                                    BlockTypes.get(lastblockname)?.id,
                                     lastblockstates,
                                 ];
                         let cmatchingblock = (clastblockname ?? "") == ""
@@ -22727,7 +22701,7 @@ ${command.dp}\\itfill <offsetx: float> <offsety: float> <offsetz: float> <thickn
                             : sglastblockname == "keep"
                                 ? ["air"]
                                 : [sglastblockname, sglastblockstates]; /*
-console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
+console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
                         switch (fillmodetypeenum[(skygridmode
                             ? sgmode
                             : hovoidmode
@@ -24313,7 +24287,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                         let argslextra = argsl.extra;
                         let argsnextra = argsn.extra;
                         //console.warn(JSONStringify(args), JSONStringify(argsaextra))
-                        let center = player.getDynamicProperty("pos1"); //evaluateCoordinates(argsc[1], argsc[2], argsc[3], roundVector3ToMiddleOfBlock(player.location), player.getRotation());
+                        let center = player.getDynamicProperty("pos1"); //evaluateCoordinates(argsc[1]!, argsc[2]!, argsc[3]!, roundVector3ToMiddleOfBlock(player.location), player.getRotation());
                         let radius = Vector.distance(player.getDynamicProperty("pos1"), player.getDynamicProperty("pos2"));
                         let cintegrity = argsc[1];
                         let axis = argsc[2];
@@ -24413,14 +24387,14 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                             !ccirclemode &&
                             !hspheremode &&
                             !tunnelmode) {
-                            coordinatesa = player.getDynamicProperty("pos1"); /*evaluateCoordinates(args[1], args[2], args[3], roundVector3ToMiddleOfBlock(player.location), player.getRotation()); */
+                            coordinatesa = player.getDynamicProperty("pos1"); /*evaluateCoordinates(args[1]!, args[2]!, args[3]!, roundVector3ToMiddleOfBlock(player.location), player.getRotation()); */
                         }
                         let coordinatesb;
                         if (!circlemode &&
                             !ccirclemode &&
                             !hspheremode &&
                             !tunnelmode) {
-                            coordinatesb = player.getDynamicProperty("pos2"); /*evaluateCoordinates(args[4], args[5], args[6], roundVector3ToMiddleOfBlock(player.location), player.getRotation()); */
+                            coordinatesb = player.getDynamicProperty("pos2"); /*evaluateCoordinates(args[4]!, args[5]!, args[6]!, roundVector3ToMiddleOfBlock(player.location), player.getRotation()); */
                         }
                         let horadi;
                         let hooffset;
@@ -24471,7 +24445,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                             : lastblockname == "keep" || mode == "keep"
                                 ? ["air"]
                                 : [
-                                    BlockTypes.get(lastblockname).id,
+                                    BlockTypes.get(lastblockname)?.id,
                                     lastblockstates,
                                 ];
                         let cmatchingblock = (clastblockname ?? "") == ""
@@ -24510,7 +24484,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                 ? ["air"]
                                 : [sglastblockname, sglastblockstates];
                         const blocktypes = BlockTypes.getAll(); /*
-            console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
+            console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
                         switch (fillmodetypeenum[(skygridmode
                             ? sgmode
                             : hovoidmode
@@ -27331,7 +27305,7 @@ ${command.dp}snapshot list`);
                 !!switchTest.match(/^seli$/):
                 {
                     eventData.cancel = true;
-                    player.sendMessageB(`Currently Selected Area Info: \npos1 x: ${player.worldEditSelection.pos1.x}\npos1 y: ${player.worldEditSelection.pos1.y}\npos1 z: ${player.worldEditSelection.pos1.z}\npos2 x: ${player.worldEditSelection.pos2.x}\npos2 y: ${player.worldEditSelection.pos2.y}\npos2 z: ${player.worldEditSelection.pos2.z}\nNext Selection Mode: ${player.getDynamicProperty("posM") ?? false
+                    player.sendMessageB(`Currently Selected Area Info: \npos1 x: ${player.worldEditSelection.pos1?.x}\npos1 y: ${player.worldEditSelection.pos1?.y}\npos1 z: ${player.worldEditSelection.pos1?.z}\npos2 x: ${player.worldEditSelection.pos2?.x}\npos2 y: ${player.worldEditSelection.pos2?.y}\npos2 z: ${player.worldEditSelection.pos2?.z}\nNext Selection Mode: ${player.getDynamicProperty("posM") ?? false
                         ? "pos2"
                         : "pos1"}`);
                 }
@@ -27348,14 +27322,14 @@ ${command.dp}snapshot list`);
                     srun(async () => {
                         var msSinceLastTickWait = Date.now();
                         const begin = {
-                            x: Math.min(player.worldEditSelection.pos1.x, player.worldEditSelection.pos2.x),
-                            y: Math.min(player.worldEditSelection.pos1.y, player.worldEditSelection.pos2.y),
-                            z: Math.min(player.worldEditSelection.pos1.z, player.worldEditSelection.pos2.z),
+                            x: Math.min(player.worldEditSelection.pos1?.x, player.worldEditSelection.pos2?.x),
+                            y: Math.min(player.worldEditSelection.pos1?.y, player.worldEditSelection.pos2?.y),
+                            z: Math.min(player.worldEditSelection.pos1?.z, player.worldEditSelection.pos2?.z),
                         };
                         const end = {
-                            x: Math.max(player.worldEditSelection.pos1.x, player.worldEditSelection.pos2.x),
-                            y: Math.max(player.worldEditSelection.pos1.y, player.worldEditSelection.pos2.y),
-                            z: Math.max(player.worldEditSelection.pos1.z, player.worldEditSelection.pos2.z),
+                            x: Math.max(player.worldEditSelection.pos1?.x, player.worldEditSelection.pos2?.x),
+                            y: Math.max(player.worldEditSelection.pos1?.y, player.worldEditSelection.pos2?.y),
+                            z: Math.max(player.worldEditSelection.pos1?.z, player.worldEditSelection.pos2?.z),
                         };
                         const molangVariables = new MolangVariableMap();
                         molangVariables.setFloat("variable.max_lifetime", args[1] ?? 10);
@@ -27615,7 +27589,7 @@ ${command.dp}snapshot list`);
                         : lastblockname == "keep"
                             ? ["air"]
                             : [
-                                BlockTypes.get(lastblockname).id,
+                                BlockTypes.get(lastblockname)?.id,
                                 lastblockstates,
                             ];
                     const coordinatesa = Vector3Utils.add(player.location, {
@@ -27690,18 +27664,23 @@ ${command.dp}snapshot list`);
                         includeLiquidBlocks: false,
                         includePassableBlocks: false,
                     });
-                    let dir = blockHit.face == "Down"
-                        ? VECTOR3_DOWN
-                        : blockHit.face == "Up"
-                            ? VECTOR3_UP
-                            : blockHit.face == "North"
-                                ? VECTOR3_SOUTH
-                                : blockHit.face == "South"
-                                    ? VECTOR3_NORTH
-                                    : blockHit.face == "East"
-                                        ? VECTOR3_EAST
-                                        : VECTOR3_WEST;
-                    srun(() => player.teleport(roundVector3ToMiddleOfBlockFloorY(Vector3Utils.add(blockHit.block.location, dir))));
+                    if (!blockHit) {
+                        player.sendError("§cNo block detected to jump to.", true);
+                    }
+                    else {
+                        let dir = blockHit.face == "Down"
+                            ? VECTOR3_DOWN
+                            : blockHit.face == "Up"
+                                ? VECTOR3_UP
+                                : blockHit.face == "North"
+                                    ? VECTOR3_SOUTH
+                                    : blockHit.face == "South"
+                                        ? VECTOR3_NORTH
+                                        : blockHit.face == "East"
+                                            ? VECTOR3_EAST
+                                            : VECTOR3_WEST;
+                        srun(() => player.teleport(roundVector3ToMiddleOfBlockFloorY(Vector3Utils.add(blockHit.block.location, dir))));
+                    }
                 }
                 break;
             case !!switchTest.match(/^align$/):
@@ -28817,7 +28796,7 @@ ${command.dp}snapshot list`);
                                                             .args[0], argsb
                                                             .args[1], argsb
                                                             .args[2], wl.location, wl.rotation))
-                                                            .typeId ==
+                                                            ?.typeId ==
                                                             argsb
                                                                 .args[3]
                                                                 .id));
@@ -28927,10 +28906,10 @@ ${command.dp}snapshot list`);
         if (commanda?.type == "custom") {
             eventData.cancel = true;
             if (commanda.customCommandType == "commands") {
-                system.run(() => commanda.run(newMessage.slice(commanda.customCommandPrefix.length), player, player, event));
+                system.run(() => commanda.run(newMessage.slice(commanda.customCommandPrefix?.length ?? config.chatCommandPrefix.length), player, player, event));
             }
             else {
-                commanda.run(newMessage.slice(commanda.customCommandPrefix.length), player, player, event);
+                commanda.run(newMessage.slice(commanda.customCommandPrefix?.length ?? config.chatCommandPrefix.length), player, player, event);
             }
         }
         else {

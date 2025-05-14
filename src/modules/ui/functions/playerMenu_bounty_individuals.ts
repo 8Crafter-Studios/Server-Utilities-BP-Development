@@ -124,7 +124,7 @@ export async function playerMenu_bounty_individuals(
             if (r.canceled) return 1;
 
             switch (
-                (["search", "previous", "go", "next", "", ""] as const)[r.selection] ??
+                (["search", "previous", "go", "next", "", ""] as const)[r.selection!] ??
                 (!!displayEntriesB[r.selection - 6] ? "entry" : undefined) ??
                 (["back", "close", "refresh"] as const)[r.selection - displayEntriesB.length - 6]
             ) {
@@ -147,8 +147,8 @@ export async function playerMenu_bounty_individuals(
                             pagen: undefined,
                             maxentriesperpage,
                             search: {
-                                value: r.formValues[0] as string,
-                                caseSensitive: r.formValues[1] as boolean,
+                                value: r.formValues![0] as string,
+                                caseSensitive: r.formValues![1] as boolean,
                             },
                             cachedEntries: undefined,
                         };

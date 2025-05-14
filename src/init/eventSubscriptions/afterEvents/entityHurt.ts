@@ -64,25 +64,25 @@ subscribedEvents.afterEntityHurt = world.afterEvents.entityHurt.subscribe(
                                         " at " +
                                         vTStr(
                                             event.damageSource.damagingEntity
-                                                .location
+                                                ?.location!
                                         )
                                 )}`
                         : ""}${!!event.damageSource?.damagingProjectile
                         ? `, the projectile that damaged the entity was ${`a projectile of type ${event.damageSource?.damagingProjectile?.typeId} with the ID ${event.damageSource?.damagingProjectile?.id}${tryget(() => event.damageSource.damagingProjectile
-                            .nameTag != ""
+                            ?.nameTag != ""
                             ? ' and the name tag "' +
                             event.damageSource.damagingProjectile
-                                .nameTag +
+                                ?.nameTag! +
                             '"'
                             : ""
                         )}`}${tryget(
                             () => " in " +
                                 dimensionTypeDisplayFormatting[event.damageSource.damagingProjectile
-                                    .dimension.id as keyof typeof dimensionTypeDisplayFormatting] +
+                                    ?.dimension.id as keyof typeof dimensionTypeDisplayFormatting] +
                                 " at " +
                                 vTStr(
                                     event.damageSource.damagingProjectile
-                                        .location
+                                        ?.location!
                                 )
                         )}`
                         : ""}. The current velocity of the damaged entity is: ${tryget(() => JSON.stringify(event.hurtEntity.getVelocity())

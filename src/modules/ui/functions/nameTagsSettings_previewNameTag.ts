@@ -123,7 +123,7 @@ export async function nameTagsSettings_previewNameTag(sourceEntity: loosePlayerT
         if (r.canceled) {
             return 1 as const;
         }
-        switch ((["back", "close"] as const)[r.selection]) {
+        switch ((["back", "close"] as const)[r.selection!]) {
             case "back":
                 return 1;
             case "close":

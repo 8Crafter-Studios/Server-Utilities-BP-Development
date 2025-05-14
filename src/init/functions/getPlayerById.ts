@@ -1,14 +1,25 @@
-import { world } from "@minecraft/server";
+import { type Player, world } from "@minecraft/server";
 
-export function getPlayerById(playerId: string | number) {
-    return world.getAllPlayers().find((v) => v.id == String(playerId));
+namespace exports {
+    /**
+     * Gets a player by their {@link Player.prototype.id|UUID}.
+     *
+     * @param {string | number} playerId The player's UUID.
+     * @returns {Player | undefined} The player if found, otherwise undefined.
+     */
+    export function getPlayerById(playerId: string | number): Player | undefined {
+        return world.getAllPlayers().find((p) => p.id == String(playerId));
+    }
 }
-Object.defineProperty(globalThis, 'getPlayerById', {
+
+export import getPlayerById = exports.getPlayerById;
+
+Object.defineProperty(globalThis, "getPlayerById", {
     value: getPlayerById,
-    configurable: true,
+    configurable: false,
     enumerable: true,
     writable: false,
-})
+});
 declare global {
-    const getPlayerById: typeof import('./getPlayerById').getPlayerById;
+    export import getPlayerById = exports.getPlayerById;
 }

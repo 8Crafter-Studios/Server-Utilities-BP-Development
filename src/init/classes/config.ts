@@ -28,13 +28,13 @@ namespace exports {
          * Dynamic Property ID: `andexdbSettings:chatCommandsEnabled`
          *
          * @default true
-         * 
+         *
          * @danger Disabling this setting is highly discouraged.
          */
-        static get chatCommandsEnabled(): boolean {
+        public static get chatCommandsEnabled(): boolean {
             return Boolean(world.getDynamicProperty("andexdbSettings:chatCommandsEnabled") ?? true);
         }
-        static set chatCommandsEnabled(enabled: boolean | undefined) {
+        public static set chatCommandsEnabled(enabled: boolean | undefined) {
             world.setDynamicProperty("andexdbSettings:chatCommandsEnabled", enabled ?? true);
         }
         /**
@@ -44,10 +44,10 @@ namespace exports {
          *
          * @default "\\"
          */
-        static get chatCommandPrefix(): string {
+        public static get chatCommandPrefix(): string {
             return String(world.getDynamicProperty("andexdbSettings:chatCommandPrefix") ?? "\\");
         }
-        static set chatCommandPrefix(prefix: string | undefined) {
+        public static set chatCommandPrefix(prefix: string | undefined) {
             world.setDynamicProperty("andexdbSettings:chatCommandPrefix", prefix ?? "\\");
         }
         /**
@@ -57,10 +57,10 @@ namespace exports {
          *
          * @default ""
          */
-        static get validChatCommandPrefixes(): string {
+        public static get validChatCommandPrefixes(): string {
             return String(world.getDynamicProperty("andexdbSettings:validChatCommandPrefixes") ?? "");
         }
-        static set validChatCommandPrefixes(prefixes: string | undefined) {
+        public static set validChatCommandPrefixes(prefixes: string | undefined) {
             world.setDynamicProperty("andexdbSettings:validChatCommandPrefixes", prefixes ?? "");
         }
         /**
@@ -75,12 +75,12 @@ namespace exports {
          *
          * @default 3
          */
-        static get invalidChatCommandAction(): number {
+        public static get invalidChatCommandAction(): number {
             return isNaN(Number(world.getDynamicProperty("andexdbSettings:invalidChatCommandAction")))
                 ? 3
                 : Number(world.getDynamicProperty("andexdbSettings:invalidChatCommandAction") ?? 3);
         }
-        static set invalidChatCommandAction(invalidChatCommandAction: number | undefined) {
+        public static set invalidChatCommandAction(invalidChatCommandAction: number | undefined) {
             world.setDynamicProperty("andexdbSettings:invalidChatCommandAction", invalidChatCommandAction ?? 3);
         }
         /**
@@ -90,10 +90,10 @@ namespace exports {
          *
          * @default "Memory"
          */
-        static get undoClipboardMode(): StructureSaveMode {
+        public static get undoClipboardMode(): StructureSaveMode {
             return String(world.getDynamicProperty("andexdbSettings:undoClipboardMode") ?? StructureSaveMode.Memory) as StructureSaveMode;
         }
-        static set undoClipboardMode(undoClipboardMode: StructureSaveMode | undefined) {
+        public static set undoClipboardMode(undoClipboardMode: StructureSaveMode | undefined) {
             world.setDynamicProperty("andexdbSettings:undoClipboardMode", undoClipboardMode ?? StructureSaveMode.Memory);
         }
         /**
@@ -101,9 +101,12 @@ namespace exports {
          *
          * Dynamic Property ID: `andexdbSettings:gametestStructureDefaultSpawnLocation`
          *
-         * @default { x: 1000000000, y: 100, z: 1000000000 }
+         * @default
+         * ```typescript
+         * { x: 1000000000, y: 100, z: 1000000000 }
+         * ```
          */
-        static get gametestStructureDefaultSpawnLocation(): Vector3 {
+        public static get gametestStructureDefaultSpawnLocation(): Vector3 {
             const v: Vector3 = (world.getDynamicProperty("andexdbSettings:gametestStructureDefaultSpawnLocation") ?? {
                 x: 1000000000,
                 y: 100,
@@ -117,7 +120,7 @@ namespace exports {
                 })) ?? ({ x: 1000000000, y: 100, z: 1000000000 } as Vector3)
             );
         }
-        static set gametestStructureDefaultSpawnLocation(gametestStructureDefaultSpawnLocation: Partial<Vector3> | undefined) {
+        public static set gametestStructureDefaultSpawnLocation(gametestStructureDefaultSpawnLocation: Partial<Vector3> | undefined) {
             world.setDynamicProperty("andexdbSettings:gametestStructureDefaultSpawnLocation", {
                 x: gametestStructureDefaultSpawnLocation?.x ?? 1000000000,
                 y: gametestStructureDefaultSpawnLocation?.y ?? 100,
@@ -129,22 +132,25 @@ namespace exports {
          *
          * Dynamic Property ID: `andexdbSettings:spawnCommandLocation`
          *
-         * @default { x: null, y: null, z: null, dimension: overworld }
+         * @default
+         * ```typescript
+         * { x: null, y: null, z: null, dimension: overworld }
+         * ```
          */
-        static get spawnCommandLocation(): DimensionLocation | { x: null; y: null; z: null; dimension: Dimension } {
+        public static get spawnCommandLocation(): DimensionLocation | { x: null; y: null; z: null; dimension: Dimension } {
             const v: (Vector3 & { dimension: string }) | { x: null; y: null; z: null; dimension: string } = tryget(() =>
                 JSON.parse(String(world.getDynamicProperty("andexdbSettings:spawnCommandLocation") ?? '{x: null, y: null, z: null, dimension: "overworld"}'))
             ) ?? { x: null, y: null, z: null, dimension: "overworld" };
             return (
                 tryget(() => ({
-                    x: v.x,
-                    y: v.y,
-                    z: v.z,
+                    x: v.x!,
+                    y: v.y!,
+                    z: v.z!,
                     dimension: (dimensionsf as { [id: string]: Dimension })[String(v.dimension)] ?? overworld,
                 })) ?? ({ x: null, y: null, z: null, dimension: overworld } as DimensionLocation | { x: null; y: null; z: null; dimension: Dimension })
             );
         }
-        static set spawnCommandLocation(spawnCommandLocation: DimensionLocation | { x: null; y: null; z: null; dimension: Dimension } | undefined) {
+        public static set spawnCommandLocation(spawnCommandLocation: DimensionLocation | { x: null; y: null; z: null; dimension: Dimension } | undefined) {
             world.setDynamicProperty(
                 "andexdbSettings:spawnCommandLocation",
                 JSON.stringify({
@@ -162,17 +168,17 @@ namespace exports {
          *
          * @default true
          */
-        static get spawnCommandAllowCrossDimensionalTeleport(): boolean {
+        public static get spawnCommandAllowCrossDimensionalTeleport(): boolean {
             return Boolean(world.getDynamicProperty("andexdbSettings:spawnCommandAllowCrossDimensionalTeleport") ?? true);
         }
-        static set spawnCommandAllowCrossDimensionalTeleport(enabled: boolean | undefined) {
+        public static set spawnCommandAllowCrossDimensionalTeleport(enabled: boolean | undefined) {
             world.setDynamicProperty("andexdbSettings:spawnCommandAllowCrossDimensionalTeleport", enabled ?? true);
         }
         /**
          * The world border settings.
          * @group Subclasses
          */
-        static get worldBorder() {
+        public static get worldBorder() {
             /**
              * The world border settings.
              * @hideconstructor
@@ -185,7 +191,7 @@ namespace exports {
                  * The world border settings for the overworld.
                  * @group Subclasses
                  */
-                static get overworld() {
+                public static get overworld() {
                     /**
                      * The world border settings for the overworld.
                      * @hideconstructor
@@ -194,56 +200,126 @@ namespace exports {
                      * @group Subclasses
                      */
                     class config_worldBorder_overworld {
-                        static get enabled(): boolean {
+                        /**
+                         * Whether or not the world border is enabled for the overworld.
+                         *
+                         * Dynamic Property ID: `andexdbWorldBorderSettings:overworld.enabled`
+                         *
+                         * @default false
+                         */
+                        public static get enabled(): boolean {
                             return Boolean(world.getDynamicProperty("andexdbWorldBorderSettings:overworld.enabled") ?? false);
                         }
-                        static set enabled(enabled: boolean | undefined) {
+                        public static set enabled(enabled: boolean | undefined) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:overworld.enabled", enabled ?? false);
                         }
-                        static get from(): { x: number; z: number } | { x: null; z: null } {
-                            return (
-                                tryget(() =>
-                                    JSON.parse(String(world.getDynamicProperty("andexdbWorldBorderSettings:overworld.from") ?? "{x: -29999984, z: -29999984}"))
-                                ) ?? { x: -29999984, z: -29999984 }
-                            );
+                        /**
+                         * The minimum x and z coordinates of the world border for the overworld.
+                         *
+                         * Dynamic Property ID: `andexdbWorldBorderSettings:overworld.from`
+                         *
+                         * @default
+                         * ```typescript
+                         * { x: -29999984, z: -29999984 }
+                         * ```
+                         */
+                        public static get from(): { x: number; z: number } {
+                            const pos: { x: number; z: number } = tryget(() =>
+                                JSON.parse(String(world.getDynamicProperty("andexdbWorldBorderSettings:overworld.from") ?? "{x: -29999984, z: -29999984}"))
+                            ) ?? { x: -29999984, z: -29999984 };
+                            return {
+                                x: typeof pos.x === "number" && pos.x.isFinite() ? pos.x : -29999984,
+                                z: typeof pos.z === "number" && pos.z.isFinite() ? pos.z : -29999984,
+                            };
                         }
-                        static set from(from: { x: number; z: number } | { x: null; z: null } | undefined) {
-                            world.setDynamicProperty("andexdbWorldBorderSettings:overworld.from", JSON.stringify(from ?? { x: -29999984, z: -29999984 }));
+                        public static set from(from: { x: number; z: number } | { x: null; z: null } | undefined) {
+                            world.setDynamicProperty("andexdbWorldBorderSettings:overworld.from", JSON.stringify({ x: -29999984, z: -29999984, ...from }));
                         }
-                        static get to(): { x: number; z: number } | { x: null; z: null } {
-                            return (
-                                tryget(() =>
-                                    JSON.parse(String(world.getDynamicProperty("andexdbWorldBorderSettings:overworld.to") ?? "{x: 29999984, z: 29999984}"))
-                                ) ?? { x: 29999984, z: 29999984 }
-                            );
+                        /**
+                         * The maximum x and z coordinates of the world border for the overworld.
+                         *
+                         * Dynamic Property ID: `andexdbWorldBorderSettings:overworld.to`
+                         *
+                         * @default
+                         * ```typescript
+                         * { x: 29999984, z: 29999984 }
+                         * ```
+                         */
+                        public static get to(): { x: number; z: number } {
+                            const pos: { x: number; z: number } = tryget(() =>
+                                JSON.parse(String(world.getDynamicProperty("andexdbWorldBorderSettings:overworld.to") ?? "{x: 29999984, z: 29999984}"))
+                            ) ?? { x: 29999984, z: 29999984 };
+                            return {
+                                x: typeof pos.x === "number" && pos.x.isFinite() ? pos.x : 29999984,
+                                z: typeof pos.z === "number" && pos.z.isFinite() ? pos.z : 29999984,
+                            };
                         }
-                        static set to(to: { x: number; z: number } | { x: null; z: null } | undefined) {
-                            world.setDynamicProperty("andexdbWorldBorderSettings:overworld.to", JSON.stringify(to ?? { x: 29999984, z: 29999984 }));
+                        public static set to(to: { x: number; z: number } | { x: null; z: null } | undefined) {
+                            world.setDynamicProperty("andexdbWorldBorderSettings:overworld.to", JSON.stringify({ x: 29999984, z: 29999984, ...to }));
                         }
+                        /**
+                         * The mode of the world border for the overworld.
+                         *
+                         * `0` - Teleport Players\
+                         * `1` - Yeet Players\
+                         * `2` - Damage Players
+                         *
+                         * Dynamic Property ID: `andexdbWorldBorderSettings:overworld.mode`
+                         *
+                         * @default 1
+                         */
                         static get mode(): number {
                             return Number(world.getDynamicProperty("andexdbWorldBorderSettings:overworld.mode") ?? 1);
                         }
                         static set mode(mode: number | undefined) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:overworld.mode", mode ?? 1);
                         }
+                        /**
+                         * The amount of damage the overworld world border does to players when the {@link mode} is set to `2` (Damage Players).
+                         *
+                         * Dynamic Property ID: `andexdbWorldBorderSettings:overworld.damageMode.damage`
+                         *
+                         * @default 1
+                         */
                         static get damage(): number {
                             return Number(world.getDynamicProperty("andexdbWorldBorderSettings:overworld.damageMode.damage") ?? 1);
                         }
                         static set damage(damage: number | undefined) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:overworld.damageMode.damage", damage ?? 1);
                         }
+                        /**
+                         * The amount of horizontal knockback the overworld world border does to players when the {@link mode} is set to `1` (Yeet Players).
+                         *
+                         * Dynamic Property ID: `andexdbWorldBorderSettings:overworld.knockbackMode.knockbackH`
+                         *
+                         * @default 2.5
+                         */
                         static get knockbackH(): number {
                             return Number(world.getDynamicProperty("andexdbWorldBorderSettings:overworld.knockbackMode.knockbackH") ?? 2.5);
                         }
                         static set knockbackH(horizontalKnockback: number | undefined) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:overworld.knockbackMode.knockbackH", horizontalKnockback ?? 2.5);
                         }
+                        /**
+                         * The amount of vertical knockback the overworld world border does to players when the {@link mode} is set to `1` (Yeet Players).
+                         *
+                         * Dynamic Property ID: `andexdbWorldBorderSettings:overworld.knockbackMode.knockbackV`
+                         *
+                         * @default 1.25
+                         */
                         static get knockbackV(): number {
                             return Number(world.getDynamicProperty("andexdbWorldBorderSettings:overworld.knockbackMode.knockbackV") ?? 1.25);
                         }
                         static set knockbackV(verticalKnockback: number | undefined) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:overworld.knockbackMode.knockbackV", verticalKnockback ?? 1.25);
                         }
+                        /**
+                         * Whether or not to prevent players from interacting with the world outside of the world border for the overworld.
+                         *
+                         * Dynamic Property ID: `andexdbWorldBorderSettings:overworld.preventWorldInteractionOutsideBorder`
+                         *
+                         * @default false
+                         */
                         static get preventWorldInteractionOutsideBorder(): boolean {
                             return Boolean(world.getDynamicProperty("andexdbWorldBorderSettings:overworld.preventWorldInteractionOutsideBorder") ?? false);
                         }
@@ -253,6 +329,17 @@ namespace exports {
                                 preventWorldInteractionOutsideBorder ?? false
                             );
                         }
+                        /**
+                         * The tint intensity of the world border for the overworld.
+                         *
+                         * This is how many tint particles will be spawned in front of the player when they are outside of the world border.
+                         *
+                         * Should be an integer of at least `0`.
+                         *
+                         * Dynamic Property ID: `andexdbWorldBorderSettings:overworld.tintIntensity`
+                         *
+                         * @default 1
+                         */
                         static get tintIntensity(): number {
                             return Number(world.getDynamicProperty("andexdbWorldBorderSettings:overworld.tintIntensity") ?? 1);
                         }
@@ -290,6 +377,13 @@ namespace exports {
                                 showActionbarWarningWhenOutsideBorder ?? false
                             );
                         }
+                        /**
+                         * Whether or not to show tint particles when the player is outside of the world border for the overworld.
+                         *
+                         * Dynamic Property ID: `andexdbWorldBorderSettings:overworld.showRedScreenOutlineWhenOutsideBorder`
+                         *
+                         * @default true
+                         */
                         static get showRedScreenOutlineWhenOutsideBorder(): boolean {
                             return Boolean(world.getDynamicProperty("andexdbWorldBorderSettings:overworld.showRedScreenOutlineWhenOutsideBorder") ?? true);
                         }
@@ -299,6 +393,13 @@ namespace exports {
                                 showRedScreenOutlineWhenOutsideBorder ?? true
                             );
                         }
+                        /**
+                         * Whether or not to show border particles at the edges of the world border for the overworld.
+                         *
+                         * Dynamic Property ID: `andexdbWorldBorderSettings:overworld.showBorderParticles`
+                         *
+                         * @default true
+                         */
                         static get showBorderParticles(): boolean {
                             return Boolean(world.getDynamicProperty("andexdbWorldBorderSettings:overworld.showBorderParticles") ?? true);
                         }
@@ -320,6 +421,13 @@ namespace exports {
                                 useShadersCompatibleBorderParticles ?? false
                             );
                         }
+                        /**
+                         * The minimum distance outside of the overworld world border that the player has to be before they start taking damage when the {@link mode} is set to `2` (Damage Players).
+                         *
+                         * Dynamic Property ID: `andexdbWorldBorderSettings:overworld.buffer`
+                         *
+                         * @default 5
+                         */
                         static get buffer(): number {
                             return Number(world.getDynamicProperty("andexdbWorldBorderSettings:overworld.buffer") ?? 5);
                         }
@@ -767,7 +875,7 @@ namespace exports {
                          * Whether or not the sign shop system is enabled.
                          *
                          * Dynamic Property ID: `andexdbShopSystemSettings:sign.enabled`
-                         * 
+                         *
                          * @alpha
                          * @unused
                          *
@@ -1039,18 +1147,52 @@ namespace exports {
                 }
                 /**
                  * The maximum number of decimal places to display on the health display on player name tags.
-                 * 
+                 *
                  * Must be between 0 and 20 (inclusive).
-                 * 
+                 *
                  * Dynamic Property ID: `andexdbSettings:playerNameTagHealthPrecision`
-                 * 
+                 *
                  * @default 1
                  */
                 static get playerNameTagHealthPrecision(): 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 {
-                    return Math.min(Math.max(0, String(world.getDynamicProperty("andexdbSettings:playerNameTagHealthPrecision") ?? 1).toNumber()), 20) as 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20;
+                    return Math.min(Math.max(0, String(world.getDynamicProperty("andexdbSettings:playerNameTagHealthPrecision") ?? 1).toNumber() ?? 1), 20) as
+                        | 0
+                        | 1
+                        | 2
+                        | 3
+                        | 4
+                        | 5
+                        | 6
+                        | 7
+                        | 8
+                        | 9
+                        | 10
+                        | 11
+                        | 12
+                        | 13
+                        | 14
+                        | 15
+                        | 16
+                        | 17
+                        | 18
+                        | 19
+                        | 20;
                 }
                 static set playerNameTagHealthPrecision(playerNameTagHealthPrecision: number | undefined) {
-                    world.setDynamicProperty("andexdbSettings:playerNameTagHealthPrecision", Math.min(Math.max(0, typeof playerNameTagHealthPrecision === "number" ? playerNameTagHealthPrecision.isFinite() ? playerNameTagHealthPrecision : 1 : 1), 20));
+                    world.setDynamicProperty(
+                        "andexdbSettings:playerNameTagHealthPrecision",
+                        Math.min(
+                            Math.max(
+                                0,
+                                typeof playerNameTagHealthPrecision === "number"
+                                    ? playerNameTagHealthPrecision.isFinite()
+                                        ? playerNameTagHealthPrecision
+                                        : 1
+                                    : 1
+                            ),
+                            20
+                        )
+                    );
                 }
                 static get rankMode(): keyof typeof rankModes {
                     return String(world.getDynamicProperty("andexdbSettings:rankMode") ?? "custom_simple") as keyof typeof rankModes;
@@ -1892,7 +2034,7 @@ namespace exports {
                                                  * Whether or not the built-in `money` leaderboard statictic is enabled.
                                                  *
                                                  * Dynamic Property ID: `andexdbSettings:ui.menus.playerMenu_leaderboards.builtInStats.money.enabled`
-                                                 * 
+                                                 *
                                                  * @default true
                                                  */
                                                 static get enabled(): boolean {
@@ -1923,9 +2065,9 @@ namespace exports {
                                                     class config_ui_menus_playerMenu_leaderboards_builtInStats_money_displayOptions {
                                                         /**
                                                          * A currency symbol to prefix the displayed value with.
-                                                         * 
+                                                         *
                                                          * For example, if this is set to "$", then 1327401 would become $1327401 and -1234781 would become -$1234781. (Can be combined with "Add Comma Separators" to make it display like -$1,234,781.).
-                                                         * 
+                                                         *
                                                          * Dynamic Property ID: `andexdbSettings:ui.menus.playerMenu_leaderboards.builtInStats.money.displayOptions.currencyPrefix`
                                                          *
                                                          * @default "$"
@@ -1949,7 +2091,7 @@ namespace exports {
                                                          * For example, if this is set to true, then 1327401 would become 1,327,401 and -1234781 would become -1,234,781.
                                                          *
                                                          * Dynamic Property ID: `andexdbSettings:ui.menus.playerMenu_leaderboards.builtInStats.money.displayOptions.addCommaSeparators`
-                                                         * 
+                                                         *
                                                          * @default true
                                                          */
                                                         static get addCommaSeparators(): boolean {
@@ -2001,7 +2143,7 @@ namespace exports {
                                                             ? eval?.(s.displayOptions.valueDisplayTransformer_button)
                                                             : undefined,
                                                     valueDisplayTransformer_statsList:
-                                                        s.displayOptions?.valueDisplayTransformer_button !== undefined
+                                                        s.displayOptions?.valueDisplayTransformer_statsList !== undefined
                                                             ? eval?.(s.displayOptions.valueDisplayTransformer_statsList)
                                                             : undefined,
                                                 },
@@ -2028,11 +2170,11 @@ namespace exports {
                                                                 ? eval?.(s.displayOptions.valueDisplayTransformer_button)
                                                                 : undefined,
                                                         valueDisplayTransformer_statsList:
-                                                            s.displayOptions?.valueDisplayTransformer_button !== undefined
+                                                            s.displayOptions?.valueDisplayTransformer_statsList !== undefined
                                                                 ? eval?.(s.displayOptions.valueDisplayTransformer_statsList)
                                                                 : undefined,
                                                     },
-                                                    getterFunction: eval?.(s.getterFunction),
+                                                    getterFunction: s.getterFunction !== undefined ? eval?.(s.getterFunction) : undefined,
                                                     id: s.id,
                                                     menuTitle: s.menuTitle,
                                                     sorter: eval?.(s.sorter as string),
@@ -2055,11 +2197,11 @@ namespace exports {
                                                                 ? eval?.(s.displayOptions.valueDisplayTransformer_button)
                                                                 : undefined,
                                                         valueDisplayTransformer_statsList:
-                                                            s.displayOptions?.valueDisplayTransformer_button !== undefined
+                                                            s.displayOptions?.valueDisplayTransformer_statsList !== undefined
                                                                 ? eval?.(s.displayOptions.valueDisplayTransformer_statsList)
                                                                 : undefined,
                                                     },
-                                                    getterFunction: eval?.(s.getterFunction),
+                                                    getterFunction: s.getterFunction !== undefined ? eval?.(s.getterFunction) : undefined,
                                                     id: s.id,
                                                     menuTitle: s.menuTitle,
                                                     sorter: s.sorter,
@@ -2069,6 +2211,8 @@ namespace exports {
                                                     valueType: s.valueType,
                                                 } as playerMenuLeaderboardStatistic<"customAdvanced", "order">;
                                             }
+                                        } else {
+                                            return s;
                                         }
                                     });
                                 }
@@ -2091,7 +2235,7 @@ namespace exports {
                                                                     ? s.displayOptions.valueDisplayTransformer_button.toString()
                                                                     : undefined,
                                                             valueDisplayTransformer_statsList:
-                                                                s.displayOptions?.valueDisplayTransformer_button !== undefined
+                                                                s.displayOptions?.valueDisplayTransformer_statsList !== undefined
                                                                     ? s.displayOptions.valueDisplayTransformer_statsList.toString()
                                                                     : undefined,
                                                         },
@@ -2118,11 +2262,11 @@ namespace exports {
                                                                         ? s.displayOptions.valueDisplayTransformer_button.toString()
                                                                         : undefined,
                                                                 valueDisplayTransformer_statsList:
-                                                                    s.displayOptions?.valueDisplayTransformer_button !== undefined
+                                                                    s.displayOptions?.valueDisplayTransformer_statsList !== undefined
                                                                         ? s.displayOptions.valueDisplayTransformer_statsList.toString()
                                                                         : undefined,
                                                             },
-                                                            getterFunction: s.getterFunction.toString(),
+                                                            getterFunction: s.getterFunction?.toString(),
                                                             id: s.id,
                                                             menuTitle: s.menuTitle,
                                                             sorter: s.sorter.toString(),
@@ -2145,11 +2289,11 @@ namespace exports {
                                                                         ? s.displayOptions.valueDisplayTransformer_button.toString()
                                                                         : undefined,
                                                                 valueDisplayTransformer_statsList:
-                                                                    s.displayOptions?.valueDisplayTransformer_button !== undefined
+                                                                    s.displayOptions?.valueDisplayTransformer_statsList !== undefined
                                                                         ? s.displayOptions.valueDisplayTransformer_statsList.toString()
                                                                         : undefined,
                                                             },
-                                                            getterFunction: s.getterFunction.toString(),
+                                                            getterFunction: s.getterFunction?.toString(),
                                                             id: s.id,
                                                             menuTitle: s.menuTitle,
                                                             sorter: s.sorter,
@@ -2361,11 +2505,11 @@ namespace exports {
                 }
                 /**
                  * The default minimum time between tick waits, in milliseconds.
-                 * 
+                 *
                  * This will be the minimum amount of milliseconds that many generation functions will spend each tick, set this to a really low value to reduce lag while using them, but setting it really low will also cause the generation functions to take a really long time.
-                 * 
+                 *
                  * Setting it close to or above 10000 may cause the generation functions to be interrupted with script hang errors.
-                 * 
+                 *
                  * @default 2500
                  */
                 static get defaultMinMSBetweenTickWaits(): number {
@@ -2687,17 +2831,19 @@ namespace exports {
         static toJSON(): FilterKey<typeof config, ["prototype", "reset", "applySettings", "toJSON"]> {
             // modules.utils.filterProperties(modules.utils.filterProperties(config, ["addCommaSeparators", "spawnCommandAllowCrossDimensionalTeleport", "allowWatchdogTerminationCrash", "spawnCommandLocation", "allowChatEscapeCodes"], {}), ["toJSON"], {}).antiSpamSystem.antispamEnabled;
             return Object.fromEntries(
-                cullUndefined(Object.getOwnPropertyNames(this).map((key) => {
-                    const descriptor = Object.getOwnPropertyDescriptor(this, key);
-                    if (descriptor?.get && descriptor.set) {
-                        return [key, descriptor.get()];
-                    } else if (descriptor?.get && typeof descriptor.get() === "function" && descriptor.get()?.name?.startsWith("config")) {
-                        return [key, config.toJSON.call(descriptor.get())];
-                    }
-                    // return [key, this[key as keyof typeof config]];
-                    return undefined;
-                })),
-            ) as ReturnType<typeof modules.utils.filterProperties<typeof config, ["prototype", "reset", "applySettings", "toJSON"]>>;/* 
+                cullUndefined(
+                    Object.getOwnPropertyNames(this).map((key) => {
+                        const descriptor = Object.getOwnPropertyDescriptor(this, key);
+                        if (descriptor?.get && descriptor.set) {
+                            return [key, descriptor.get()];
+                        } else if (descriptor?.get && typeof descriptor.get() === "function" && descriptor.get()?.name?.startsWith("config")) {
+                            return [key, config.toJSON.call(descriptor.get())];
+                        }
+                        // return [key, this[key as keyof typeof config]];
+                        return undefined;
+                    })
+                )
+            ) as ReturnType<typeof modules.utils.filterProperties<typeof config, ["prototype", "reset", "applySettings", "toJSON"]>>; /* 
                 Object.getOwnPropertyNames(config)
                     .filter(
                         (n) =>

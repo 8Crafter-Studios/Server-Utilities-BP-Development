@@ -191,7 +191,7 @@ declare module "@minecraft/server" {
         /**
          * Returns the x rotation of the entity.
          *
-         * It is the same as {@link Entity.prototype.getRotation()}{@link Vector2.x|.x}.
+         * It is the same as {@link Entity.prototype.getRotation|Entity.prototype.getRotation()}{@link Vector2.x|.x}.
          *
          * @author 8Crafter
          */
@@ -199,7 +199,7 @@ declare module "@minecraft/server" {
         /**
          * Returns the y rotation of the entity.
          *
-         * It is the same as {@link Entity.prototype.getRotation()}{@link Vector2.y|.y}.
+         * It is the same as {@link Entity.prototype.getRotation|Entity.prototype.getRotation()}{@link Vector2.y|.y}.
          *
          * @author 8Crafter
          */

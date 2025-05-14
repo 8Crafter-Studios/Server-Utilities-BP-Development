@@ -53,7 +53,7 @@ export declare class chunkLandClaim {
             };
         };
     });
-    get owner(): Player;
+    get owner(): Player | undefined;
     get isOwnerOnline(): boolean;
     get isSaved(): boolean;
     get areas(): {
@@ -73,7 +73,7 @@ export declare class chunkLandClaim {
         dimension: string;
         name: string;
         ownerId: string;
-        ownerName: string;
+        ownerName: string | undefined;
         defaultPermissions: {
             breakBlocks: boolean;
             placeBlocks: boolean;
@@ -101,6 +101,6 @@ export declare class chunkLandClaim {
     }, playerOrPlayerId: Player | string, playerName?: string): void;
     save(otherDataToChange: any, keepOldFormatVersion?: boolean): void;
     remove(): void;
-    static get(claimId: string): LandClaim;
+    static get(claimId: string): LandClaim | undefined;
     static delete(claimId: string): void;
 }

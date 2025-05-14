@@ -42,4 +42,4 @@ export declare class SemVerString {
     static fromString(string: string): SemVerString;
 }
 export declare function SemVerValidator(string: string): boolean;
-export declare function SemVerMatcher(string: string): RegExpMatchArray;
+export declare function SemVerMatcher(string: string): RegExpMatchArray | null;

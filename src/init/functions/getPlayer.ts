@@ -1,15 +1,25 @@
-import { world } from "@minecraft/server";
+import { type Player, world } from "@minecraft/server";
 
-
-export function getPlayer(playerName: string) {
-    return world.getAllPlayers().find((p) => p.name == playerName);
+namespace exports {
+    /**
+     * Gets a player by their {@link Player.prototype.name|name}.
+     *
+     * @param {string | number} playerName The player's name.
+     * @returns {Player | undefined} The player if found, otherwise undefined.
+     */
+    export function getPlayer(playerName: string): Player | undefined {
+        return world.getAllPlayers().find((p) => p.name == playerName);
+    }
 }
-Object.defineProperty(globalThis, 'getPlayer', {
+
+export import getPlayer = exports.getPlayer;
+
+Object.defineProperty(globalThis, "getPlayer", {
     value: getPlayer,
-    configurable: true,
+    configurable: false,
     enumerable: true,
     writable: false,
-})
+});
 declare global {
-    const getPlayer: typeof import('./getPlayer').getPlayer;
+    export import getPlayer = exports.getPlayer;
 }

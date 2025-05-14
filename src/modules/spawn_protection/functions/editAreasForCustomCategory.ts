@@ -43,7 +43,7 @@ export async function editAreasForCustomCategory(
             form.title(customFormUICodes.action.titles.formStyles.medium + prefix);
             const r = await form.forceShow(player);
             if (r.canceled) return 1;
-            switch ((!!areas[r.selection] ? "area" : undefined) ?? (["new", "back", "close", "refresh"] as const)[r.selection - areas.length]) {
+            switch ((!!areas[r.selection!] ? "area" : undefined) ?? (["new", "back", "close", "refresh"] as const)[r.selection! - areas.length]) {
                 case "new": {
                     const form = new ModalFormData();
                     form.title(customFormUICodes.modal.titles.formStyles.medium + "New Protected Area");
@@ -80,7 +80,7 @@ export async function editAreasForCustomCategory(
                         mode: mode,
                         icon_path: (icon_path ?? "") == "" ? undefined : (icon_path as string),
                     };
-                    world.setDynamicProperty("v2:" + prefix + id, JSON.stringify(newValue));
+                    world.setDynamicProperty("advancedProtectedArea:" + prefix + ":" + id, JSON.stringify(newValue));
                     ProtectedAreas.areas.advancedArea[prefix][dimensionse[dimension]].push({ id, ...newValue });
                     continue;
                 }
@@ -92,7 +92,7 @@ export async function editAreasForCustomCategory(
                     ProtectedAreas.loadAreasForAdvancedCategory(prefix);
                     continue;
                 case "area":
-                    if ((await manageAreaForCustomCategory(player, areas[r.selection].id, prefix)) === 1) {
+                    if ((await manageAreaForCustomCategory(player, areas[r.selection!].id, prefix)) === 1) {
                         continue;
                     } else {
                         return 0;
@@ -124,7 +124,7 @@ export async function manageAreaForCustomCategory(sourceEntity: loosePlayerType,
                 ...ProtectedAreas.areas.advancedArea[prefix].overworld,
                 ...ProtectedAreas.areas.advancedArea[prefix].nether,
                 ...ProtectedAreas.areas.advancedArea[prefix].the_end,
-            ].find((a) => a.id === areaID);
+            ].find((a) => a.id === areaID)!;
             const form = new ActionFormData();
             form.title(customFormUICodes.action.titles.formStyles.medium + area.id);
             form.body(area.id);
@@ -139,7 +139,7 @@ export async function manageAreaForCustomCategory(sourceEntity: loosePlayerType,
             const r = await form.forceShow(player);
             if (r.canceled) continue;
 
-            switch ((["edit", "applyIconTexturePreset", "delete", "back", "close"] as const)[r.selection]) {
+            switch ((["edit", "applyIconTexturePreset", "delete", "back", "close"] as const)[r.selection!]) {
                 case "edit":
                     return editAreaForCustomCategory(player, areaID, prefix);
                 case "applyIconTexturePreset": {
@@ -203,7 +203,7 @@ export async function editAreaForCustomCategory(sourceEntity: loosePlayerType, a
             ...ProtectedAreas.areas.advancedArea[prefix].overworld,
             ...ProtectedAreas.areas.advancedArea[prefix].nether,
             ...ProtectedAreas.areas.advancedArea[prefix].the_end,
-        ].find((a) => a.id === areaID);
+        ].find((a) => a.id === areaID)!;
         const form = new ModalFormData();
         form.title(customFormUICodes.modal.titles.formStyles.medium + "Edit Protected Area");
         form.textField("From", "x1, y1, z1", { defaultValue: `${area.from.x}, ${area.from.y}, ${area.from.z}` });
@@ -215,7 +215,7 @@ export async function editAreaForCustomCategory(sourceEntity: loosePlayerType, a
 
         const r = await form.forceShow(player);
         if (r.canceled) return 1 as const;
-        const [from, to, dimension, mode, icon_path] = r.formValues;
+        const [from, to, dimension, mode, icon_path] = r.formValues!;
         const newValue = {
             from: {
                 x: Number(String(from).split(",")[0]),

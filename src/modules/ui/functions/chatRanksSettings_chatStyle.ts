@@ -59,10 +59,10 @@ The default is Custom(Simple).`
         if (r.canceled) {
             return 1 as const;
         }
-        switch ((!!rankModesArray[r.selection] ? "style" : undefined) ?? (["back", "close"] as const)[r.selection]) {
+        switch ((!!rankModesArray[r.selection!] ? "style" : undefined) ?? (["back", "close"] as const)[r.selection!]) {
             case "style":
                 config.chatRanks.rankMode = (Object.entries(rankModes) as [keyof typeof rankModes, (typeof rankModes)[keyof typeof rankModes]][]).find(
-                    (m) => m[1] === rankModesArray[r.selection]
+                    (m) => m[1] === rankModesArray[r.selection!]
                 )[0];
                 return 1;
             case "back":

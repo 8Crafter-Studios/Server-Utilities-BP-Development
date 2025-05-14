@@ -94,7 +94,10 @@ var exports;
          *
          * Dynamic Property ID: `andexdbSettings:gametestStructureDefaultSpawnLocation`
          *
-         * @default { x: 1000000000, y: 100, z: 1000000000 }
+         * @default
+         * ```typescript
+         * { x: 1000000000, y: 100, z: 1000000000 }
+         * ```
          */
         static get gametestStructureDefaultSpawnLocation() {
             const v = (world.getDynamicProperty("andexdbSettings:gametestStructureDefaultSpawnLocation") ?? {
@@ -120,7 +123,10 @@ var exports;
          *
          * Dynamic Property ID: `andexdbSettings:spawnCommandLocation`
          *
-         * @default { x: null, y: null, z: null, dimension: overworld }
+         * @default
+         * ```typescript
+         * { x: null, y: null, z: null, dimension: overworld }
+         * ```
          */
         static get spawnCommandLocation() {
             const v = tryget(() => JSON.parse(String(world.getDynamicProperty("andexdbSettings:spawnCommandLocation") ?? '{x: null, y: null, z: null, dimension: "overworld"}'))) ?? { x: null, y: null, z: null, dimension: "overworld" };
@@ -178,54 +184,139 @@ var exports;
                      * @group Subclasses
                      */
                     class config_worldBorder_overworld {
+                        /**
+                         * Whether or not the world border is enabled for the overworld.
+                         *
+                         * Dynamic Property ID: `andexdbWorldBorderSettings:overworld.enabled`
+                         *
+                         * @default false
+                         */
                         static get enabled() {
                             return Boolean(world.getDynamicProperty("andexdbWorldBorderSettings:overworld.enabled") ?? false);
                         }
                         static set enabled(enabled) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:overworld.enabled", enabled ?? false);
                         }
+                        /**
+                         * The minimum x and z coordinates of the world border for the overworld.
+                         *
+                         * Dynamic Property ID: `andexdbWorldBorderSettings:overworld.from`
+                         *
+                         * @default
+                         * ```typescript
+                         * { x: -29999984, z: -29999984 }
+                         * ```
+                         */
                         static get from() {
-                            return (tryget(() => JSON.parse(String(world.getDynamicProperty("andexdbWorldBorderSettings:overworld.from") ?? "{x: -29999984, z: -29999984}"))) ?? { x: -29999984, z: -29999984 });
+                            const pos = tryget(() => JSON.parse(String(world.getDynamicProperty("andexdbWorldBorderSettings:overworld.from") ?? "{x: -29999984, z: -29999984}"))) ?? { x: -29999984, z: -29999984 };
+                            return {
+                                x: typeof pos.x === "number" && pos.x.isFinite() ? pos.x : -29999984,
+                                z: typeof pos.z === "number" && pos.z.isFinite() ? pos.z : -29999984,
+                            };
                         }
                         static set from(from) {
-                            world.setDynamicProperty("andexdbWorldBorderSettings:overworld.from", JSON.stringify(from ?? { x: -29999984, z: -29999984 }));
+                            world.setDynamicProperty("andexdbWorldBorderSettings:overworld.from", JSON.stringify({ x: -29999984, z: -29999984, ...from }));
                         }
+                        /**
+                         * The maximum x and z coordinates of the world border for the overworld.
+                         *
+                         * Dynamic Property ID: `andexdbWorldBorderSettings:overworld.to`
+                         *
+                         * @default
+                         * ```typescript
+                         * { x: 29999984, z: 29999984 }
+                         * ```
+                         */
                         static get to() {
-                            return (tryget(() => JSON.parse(String(world.getDynamicProperty("andexdbWorldBorderSettings:overworld.to") ?? "{x: 29999984, z: 29999984}"))) ?? { x: 29999984, z: 29999984 });
+                            const pos = tryget(() => JSON.parse(String(world.getDynamicProperty("andexdbWorldBorderSettings:overworld.to") ?? "{x: 29999984, z: 29999984}"))) ?? { x: 29999984, z: 29999984 };
+                            return {
+                                x: typeof pos.x === "number" && pos.x.isFinite() ? pos.x : 29999984,
+                                z: typeof pos.z === "number" && pos.z.isFinite() ? pos.z : 29999984,
+                            };
                         }
                         static set to(to) {
-                            world.setDynamicProperty("andexdbWorldBorderSettings:overworld.to", JSON.stringify(to ?? { x: 29999984, z: 29999984 }));
+                            world.setDynamicProperty("andexdbWorldBorderSettings:overworld.to", JSON.stringify({ x: 29999984, z: 29999984, ...to }));
                         }
+                        /**
+                         * The mode of the world border for the overworld.
+                         *
+                         * `0` - Teleport Players\
+                         * `1` - Yeet Players\
+                         * `2` - Damage Players
+                         *
+                         * Dynamic Property ID: `andexdbWorldBorderSettings:overworld.mode`
+                         *
+                         * @default 1
+                         */
                         static get mode() {
                             return Number(world.getDynamicProperty("andexdbWorldBorderSettings:overworld.mode") ?? 1);
                         }
                         static set mode(mode) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:overworld.mode", mode ?? 1);
                         }
+                        /**
+                         * The amount of damage the overworld world border does to players when the {@link mode} is set to `2` (Damage Players).
+                         *
+                         * Dynamic Property ID: `andexdbWorldBorderSettings:overworld.damageMode.damage`
+                         *
+                         * @default 1
+                         */
                         static get damage() {
                             return Number(world.getDynamicProperty("andexdbWorldBorderSettings:overworld.damageMode.damage") ?? 1);
                         }
                         static set damage(damage) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:overworld.damageMode.damage", damage ?? 1);
                         }
+                        /**
+                         * The amount of horizontal knockback the overworld world border does to players when the {@link mode} is set to `1` (Yeet Players).
+                         *
+                         * Dynamic Property ID: `andexdbWorldBorderSettings:overworld.knockbackMode.knockbackH`
+                         *
+                         * @default 2.5
+                         */
                         static get knockbackH() {
                             return Number(world.getDynamicProperty("andexdbWorldBorderSettings:overworld.knockbackMode.knockbackH") ?? 2.5);
                         }
                         static set knockbackH(horizontalKnockback) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:overworld.knockbackMode.knockbackH", horizontalKnockback ?? 2.5);
                         }
+                        /**
+                         * The amount of vertical knockback the overworld world border does to players when the {@link mode} is set to `1` (Yeet Players).
+                         *
+                         * Dynamic Property ID: `andexdbWorldBorderSettings:overworld.knockbackMode.knockbackV`
+                         *
+                         * @default 1.25
+                         */
                         static get knockbackV() {
                             return Number(world.getDynamicProperty("andexdbWorldBorderSettings:overworld.knockbackMode.knockbackV") ?? 1.25);
                         }
                         static set knockbackV(verticalKnockback) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:overworld.knockbackMode.knockbackV", verticalKnockback ?? 1.25);
                         }
+                        /**
+                         * Whether or not to prevent players from interacting with the world outside of the world border for the overworld.
+                         *
+                         * Dynamic Property ID: `andexdbWorldBorderSettings:overworld.preventWorldInteractionOutsideBorder`
+                         *
+                         * @default false
+                         */
                         static get preventWorldInteractionOutsideBorder() {
                             return Boolean(world.getDynamicProperty("andexdbWorldBorderSettings:overworld.preventWorldInteractionOutsideBorder") ?? false);
                         }
                         static set preventWorldInteractionOutsideBorder(preventWorldInteractionOutsideBorder) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:overworld.preventWorldInteractionOutsideBorder", preventWorldInteractionOutsideBorder ?? false);
                         }
+                        /**
+                         * The tint intensity of the world border for the overworld.
+                         *
+                         * This is how many tint particles will be spawned in front of the player when they are outside of the world border.
+                         *
+                         * Should be an integer of at least `0`.
+                         *
+                         * Dynamic Property ID: `andexdbWorldBorderSettings:overworld.tintIntensity`
+                         *
+                         * @default 1
+                         */
                         static get tintIntensity() {
                             return Number(world.getDynamicProperty("andexdbWorldBorderSettings:overworld.tintIntensity") ?? 1);
                         }
@@ -260,12 +351,26 @@ var exports;
                         static set showActionbarWarningWhenOutsideBorder(showActionbarWarningWhenOutsideBorder) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:overworld.showActionbarWarningWhenOutsideBorder", showActionbarWarningWhenOutsideBorder ?? false);
                         }
+                        /**
+                         * Whether or not to show tint particles when the player is outside of the world border for the overworld.
+                         *
+                         * Dynamic Property ID: `andexdbWorldBorderSettings:overworld.showRedScreenOutlineWhenOutsideBorder`
+                         *
+                         * @default true
+                         */
                         static get showRedScreenOutlineWhenOutsideBorder() {
                             return Boolean(world.getDynamicProperty("andexdbWorldBorderSettings:overworld.showRedScreenOutlineWhenOutsideBorder") ?? true);
                         }
                         static set showRedScreenOutlineWhenOutsideBorder(showRedScreenOutlineWhenOutsideBorder) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:overworld.showRedScreenOutlineWhenOutsideBorder", showRedScreenOutlineWhenOutsideBorder ?? true);
                         }
+                        /**
+                         * Whether or not to show border particles at the edges of the world border for the overworld.
+                         *
+                         * Dynamic Property ID: `andexdbWorldBorderSettings:overworld.showBorderParticles`
+                         *
+                         * @default true
+                         */
                         static get showBorderParticles() {
                             return Boolean(world.getDynamicProperty("andexdbWorldBorderSettings:overworld.showBorderParticles") ?? true);
                         }
@@ -284,6 +389,13 @@ var exports;
                         static set useShadersCompatibleBorderParticles(useShadersCompatibleBorderParticles) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:overworld.useShadersCompatibleBorderParticles", useShadersCompatibleBorderParticles ?? false);
                         }
+                        /**
+                         * The minimum distance outside of the overworld world border that the player has to be before they start taking damage when the {@link mode} is set to `2` (Damage Players).
+                         *
+                         * Dynamic Property ID: `andexdbWorldBorderSettings:overworld.buffer`
+                         *
+                         * @default 5
+                         */
                         static get buffer() {
                             return Number(world.getDynamicProperty("andexdbWorldBorderSettings:overworld.buffer") ?? 5);
                         }
@@ -966,10 +1078,14 @@ var exports;
                  * @default 1
                  */
                 static get playerNameTagHealthPrecision() {
-                    return Math.min(Math.max(0, String(world.getDynamicProperty("andexdbSettings:playerNameTagHealthPrecision") ?? 1).toNumber()), 20);
+                    return Math.min(Math.max(0, String(world.getDynamicProperty("andexdbSettings:playerNameTagHealthPrecision") ?? 1).toNumber() ?? 1), 20);
                 }
                 static set playerNameTagHealthPrecision(playerNameTagHealthPrecision) {
-                    world.setDynamicProperty("andexdbSettings:playerNameTagHealthPrecision", Math.min(Math.max(0, typeof playerNameTagHealthPrecision === "number" ? playerNameTagHealthPrecision.isFinite() ? playerNameTagHealthPrecision : 1 : 1), 20));
+                    world.setDynamicProperty("andexdbSettings:playerNameTagHealthPrecision", Math.min(Math.max(0, typeof playerNameTagHealthPrecision === "number"
+                        ? playerNameTagHealthPrecision.isFinite()
+                            ? playerNameTagHealthPrecision
+                            : 1
+                        : 1), 20));
                 }
                 static get rankMode() {
                     return String(world.getDynamicProperty("andexdbSettings:rankMode") ?? "custom_simple");
@@ -1859,7 +1975,7 @@ var exports;
                                                     valueDisplayTransformer_button: s.displayOptions?.valueDisplayTransformer_button !== undefined
                                                         ? eval?.(s.displayOptions.valueDisplayTransformer_button)
                                                         : undefined,
-                                                    valueDisplayTransformer_statsList: s.displayOptions?.valueDisplayTransformer_button !== undefined
+                                                    valueDisplayTransformer_statsList: s.displayOptions?.valueDisplayTransformer_statsList !== undefined
                                                         ? eval?.(s.displayOptions.valueDisplayTransformer_statsList)
                                                         : undefined,
                                                 },
@@ -1885,11 +2001,11 @@ var exports;
                                                         valueDisplayTransformer_button: s.displayOptions?.valueDisplayTransformer_button !== undefined
                                                             ? eval?.(s.displayOptions.valueDisplayTransformer_button)
                                                             : undefined,
-                                                        valueDisplayTransformer_statsList: s.displayOptions?.valueDisplayTransformer_button !== undefined
+                                                        valueDisplayTransformer_statsList: s.displayOptions?.valueDisplayTransformer_statsList !== undefined
                                                             ? eval?.(s.displayOptions.valueDisplayTransformer_statsList)
                                                             : undefined,
                                                     },
-                                                    getterFunction: eval?.(s.getterFunction),
+                                                    getterFunction: s.getterFunction !== undefined ? eval?.(s.getterFunction) : undefined,
                                                     id: s.id,
                                                     menuTitle: s.menuTitle,
                                                     sorter: eval?.(s.sorter),
@@ -1911,11 +2027,11 @@ var exports;
                                                         valueDisplayTransformer_button: s.displayOptions?.valueDisplayTransformer_button !== undefined
                                                             ? eval?.(s.displayOptions.valueDisplayTransformer_button)
                                                             : undefined,
-                                                        valueDisplayTransformer_statsList: s.displayOptions?.valueDisplayTransformer_button !== undefined
+                                                        valueDisplayTransformer_statsList: s.displayOptions?.valueDisplayTransformer_statsList !== undefined
                                                             ? eval?.(s.displayOptions.valueDisplayTransformer_statsList)
                                                             : undefined,
                                                     },
-                                                    getterFunction: eval?.(s.getterFunction),
+                                                    getterFunction: s.getterFunction !== undefined ? eval?.(s.getterFunction) : undefined,
                                                     id: s.id,
                                                     menuTitle: s.menuTitle,
                                                     sorter: s.sorter,
@@ -1925,6 +2041,9 @@ var exports;
                                                     valueType: s.valueType,
                                                 };
                                             }
+                                        }
+                                        else {
+                                            return s;
                                         }
                                     });
                                 }
@@ -1942,7 +2061,7 @@ var exports;
                                                     valueDisplayTransformer_button: s.displayOptions?.valueDisplayTransformer_button !== undefined
                                                         ? s.displayOptions.valueDisplayTransformer_button.toString()
                                                         : undefined,
-                                                    valueDisplayTransformer_statsList: s.displayOptions?.valueDisplayTransformer_button !== undefined
+                                                    valueDisplayTransformer_statsList: s.displayOptions?.valueDisplayTransformer_statsList !== undefined
                                                         ? s.displayOptions.valueDisplayTransformer_statsList.toString()
                                                         : undefined,
                                                 },
@@ -1968,11 +2087,11 @@ var exports;
                                                         valueDisplayTransformer_button: s.displayOptions?.valueDisplayTransformer_button !== undefined
                                                             ? s.displayOptions.valueDisplayTransformer_button.toString()
                                                             : undefined,
-                                                        valueDisplayTransformer_statsList: s.displayOptions?.valueDisplayTransformer_button !== undefined
+                                                        valueDisplayTransformer_statsList: s.displayOptions?.valueDisplayTransformer_statsList !== undefined
                                                             ? s.displayOptions.valueDisplayTransformer_statsList.toString()
                                                             : undefined,
                                                     },
-                                                    getterFunction: s.getterFunction.toString(),
+                                                    getterFunction: s.getterFunction?.toString(),
                                                     id: s.id,
                                                     menuTitle: s.menuTitle,
                                                     sorter: s.sorter.toString(),
@@ -1994,11 +2113,11 @@ var exports;
                                                         valueDisplayTransformer_button: s.displayOptions?.valueDisplayTransformer_button !== undefined
                                                             ? s.displayOptions.valueDisplayTransformer_button.toString()
                                                             : undefined,
-                                                        valueDisplayTransformer_statsList: s.displayOptions?.valueDisplayTransformer_button !== undefined
+                                                        valueDisplayTransformer_statsList: s.displayOptions?.valueDisplayTransformer_statsList !== undefined
                                                             ? s.displayOptions.valueDisplayTransformer_statsList.toString()
                                                             : undefined,
                                                     },
-                                                    getterFunction: s.getterFunction.toString(),
+                                                    getterFunction: s.getterFunction?.toString(),
                                                     id: s.id,
                                                     menuTitle: s.menuTitle,
                                                     sorter: s.sorter,

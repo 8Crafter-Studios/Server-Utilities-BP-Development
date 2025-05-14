@@ -131,7 +131,7 @@ export async function chatRanksSettings_previewChatMessage(sourceEntity: loosePl
         if (r.canceled) {
             return 1 as const;
         }
-        switch ((["back", "close"] as const)[r.selection]) {
+        switch ((["back", "close"] as const)[r.selection!]) {
             case "back":
                 return 1;
             case "close":

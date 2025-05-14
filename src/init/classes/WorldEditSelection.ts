@@ -1,190 +1,290 @@
 import { Dimension, Entity, type Vector3 } from "@minecraft/server";
 
-export class WorldEditSelection {
-    readonly player: Entity;
-    constructor(player: Entity) {
-        this.player = player;
-    }
+/**
+ * An interface that represents a saved WorldEdit selection.
+ */
+export interface SavedWorldEditSelection {
+    /**
+     * The first corner of the saved selection.
+     *
+     * @type {Vector3}
+     */
+    pos1: Vector3;
+    /**
+     * The second corner of the saved selection.
+     *
+     * @type {Vector3}
+     */
+    pos2: Vector3;
+    /**
+     * The dimension of the saved selection.
+     *
+     * @type {(typeof dimensionsd)[number]}
+     */
+    dimension: (typeof dimensionsd)[number];
+}
+
+/**
+ * An interface that represents the JSON data of a WorldEdit selection.
+ */
+export interface WorldEditSelectionJSONData {
     /**
      * The first corner of the current selection.
-     * 
-     * It is stored in the player's `pos1` dynamic property.
+     *
+     * @type {Vector3}
      */
-    get pos1(): Vector3 | undefined {
-        return this.player.getDynamicProperty("pos1") as Vector3 | undefined;
-    }
-    set pos1(value: Vector3) {
-        this.player.setDynamicProperty("pos1", value);
-    }
+    pos1: Vector3;
     /**
      * The second corner of the current selection.
-     * 
-     * It is stored in the player's `pos2` dynamic property.
+     *
+     * @type {Vector3}
      */
-    get pos2(): Vector3 | undefined {
-        return this.player.getDynamicProperty("pos2") as Vector3 | undefined;
-    }
-    set pos2(value: Vector3) {
-        this.player.setDynamicProperty("pos2", value);
-    }
+    pos2: Vector3;
     /**
-     * The currently selected dimension.
-     * 
-     * It is stored in the player's `posD` dynamic property.
+     * The smallest corner of the current selection.
+     *
+     * @type {Vector3}
      */
-    get dimension(): Dimension | undefined {
-        let value = this.player.getDynamicProperty("posD") as
-            | (typeof dimensionsd)[number]
-            | undefined;
-        if (!!!value) {
-            return undefined;
+    minPos: Vector3;
+    /**
+     * The largest corner of the current selection.
+     *
+     * @type {Vector3}
+     */
+    maxPos: Vector3;
+    /**
+     * The dimension of the current selection.
+     *
+     * @type {(typeof dimensionsd)[number]}
+     */
+    dimension: (typeof dimensionsd)[number];
+    /**
+     * The saved selections for the current player.
+     *
+     * @type {{[selectionID: string]: SavedWorldEditSelection}}
+     */
+    savedSelections: { [selectionID: string]: SavedWorldEditSelection };
+}
+
+namespace exports {
+    /**
+     * A class that represents a WorldEdit selection for a player.
+     */
+    export class WorldEditSelection {
+        /**
+         * The player that this selection is for.
+         *
+         * @type {Entity}
+         */
+        public readonly player: Entity;
+        /**
+         * Gets the WorldEdit selection for the given player.
+         *
+         * @param {Entity} player The player that this selection is for.
+         */
+        public constructor(player: Entity) {
+            this.player = player;
         }
-        return tryget(()=>world.getDimension(value)) ?? undefined;
-    }
-    set dimension(value: string | Dimension) {
-        let outValue: (typeof dimensionsd)[number] | undefined = undefined;
-        if (!!value) {
-            if (value instanceof Dimension) {
-                outValue = value.id as (typeof dimensionsd)[number];
-            } else if (dimensionsd.includes(value as any)) {
-                outValue = value as (typeof dimensionsd)[number];
-            } else if (dimensionse.includes(value as any)) {
-                outValue = ("minecraft:" +
-                    value) as (typeof dimensionsd)[number];
-            } else {
-                throw new TypeError("Invalid dimension: " + value);
-            }
+        /**
+         * The first corner of the current selection.
+         *
+         * It is stored in the player's `pos1` dynamic property.
+         *
+         * @type {Vector3 | undefined}
+         */
+        public get pos1(): Vector3 | undefined {
+            return this.player.getDynamicProperty("pos1") as Vector3 | undefined;
         }
-        this.player.setDynamicProperty("posD", outValue);
-    }
-    /**
-     * The smallest corner of the selection.
-     * 
-     * It gets the minimum values of each of the vectors of the `pos1` and `pos2` properties.
-     */
-    get minPos(): Vector3 | undefined {
-        const p1 = this.pos1;
-        const p2 = this.pos2;
-        if(p1 === undefined || p2 === undefined) return undefined;
-        return {
-            x: Math.min(p1.x, p2.x),
-            y: Math.min(p1.y, p2.y),
-            z: Math.min(p1.z, p2.z),
-        } as Vector3;
-    }
-    /**
-     * The largest corner of the selection.
-     * 
-     * It gets the maximum values of each of the vectors of the `pos1` and `pos2` properties.
-     */
-    get maxPos(): Vector3 | undefined {
-        const p1 = this.pos1;
-        const p2 = this.pos2;
-        if(p1 === undefined || p2 === undefined) return undefined;
-        return {
-            x: Math.max(p1.x, p2.x),
-            y: Math.max(p1.y, p2.y),
-            z: Math.max(p1.z, p2.z),
-        } as Vector3;
-    }
-    getSavedSelectionIds() {
-        return this.player
-            .getDynamicPropertyIds()
-            .filter((v) => v.startsWith("savedSelection:"))
-            .map((v) => v.slice(15));
-    }
-    getSavedSelections(): {[selectionID: string]: { pos1: Vector3; pos2: Vector3; dimension: (typeof dimensionsd)[number]; }} {
-        return Object.fromEntries(cullUndefined(this.getSavedSelectionIds().map(selectionID=>{
-            if (
-                !!!this.player.getDynamicProperty("savedSelection:" + selectionID)
-            ) {
+        public set pos1(value: Vector3 | undefined) {
+            this.player.setDynamicProperty("pos1", value);
+        }
+        /**
+         * The second corner of the current selection.
+         *
+         * It is stored in the player's `pos2` dynamic property.
+         *
+         * @type {Vector3 | undefined}
+         */
+        public get pos2(): Vector3 | undefined {
+            return this.player.getDynamicProperty("pos2") as Vector3 | undefined;
+        }
+        public set pos2(value: Vector3 | undefined) {
+            this.player.setDynamicProperty("pos2", value);
+        }
+        /**
+         * The currently selected dimension.
+         *
+         * It is stored in the player's `posD` dynamic property.
+         *
+         * @type {Dimension | undefined}
+         */
+        public get dimension(): Dimension | undefined {
+            let value = this.player.getDynamicProperty("posD") as (typeof dimensionsd)[number] | undefined;
+            if (!!!value) {
                 return undefined;
             }
-            return [selectionID, JSON.parse(
-                String(
-                    this.player.getDynamicProperty("savedSelection:" + selectionID)
+            return tryget(() => world.getDimension(value)) ?? undefined;
+        }
+        public set dimension(value: string | Dimension | undefined) {
+            let outValue: (typeof dimensionsd)[number] | undefined = undefined;
+            if (!!value) {
+                if (value instanceof Dimension) {
+                    outValue = value.id as (typeof dimensionsd)[number];
+                } else if (dimensionsd.includes(value as any)) {
+                    outValue = value as (typeof dimensionsd)[number];
+                } else if (dimensionse.includes(value as any)) {
+                    outValue = ("minecraft:" + value) as (typeof dimensionsd)[number];
+                } else {
+                    throw new TypeError("Invalid dimension: " + value);
+                }
+            }
+            this.player.setDynamicProperty("posD", outValue);
+        }
+        /**
+         * The smallest corner of the selection.
+         *
+         * It gets the minimum values of each of the vectors of the `pos1` and `pos2` properties.
+         *
+         * @type {Vector3 | undefined}
+         */
+        public get minPos(): Vector3 | undefined {
+            const p1 = this.pos1;
+            const p2 = this.pos2;
+            if (p1 === undefined || p2 === undefined) return undefined;
+            return {
+                x: Math.min(p1.x, p2.x),
+                y: Math.min(p1.y, p2.y),
+                z: Math.min(p1.z, p2.z),
+            } as Vector3;
+        }
+        /**
+         * The largest corner of the selection.
+         *
+         * It gets the maximum values of each of the vectors of the `pos1` and `pos2` properties.
+         *
+         * @type {Vector3 | undefined}
+         */
+        public get maxPos(): Vector3 | undefined {
+            const p1 = this.pos1;
+            const p2 = this.pos2;
+            if (p1 === undefined || p2 === undefined) return undefined;
+            return {
+                x: Math.max(p1.x, p2.x),
+                y: Math.max(p1.y, p2.y),
+                z: Math.max(p1.z, p2.z),
+            } as Vector3;
+        }
+        /**
+         * Gets the IDs of all saved selections for this player.
+         *
+         * @returns {string[]} The IDs of all saved selections.
+         */
+        public getSavedSelectionIds(): string[] {
+            return this.player
+                .getDynamicPropertyIds()
+                .filter((v) => v.startsWith("savedSelection:"))
+                .map((v) => v.slice(15));
+        }
+        /**
+         * Gets all saved selections for this player.
+         *
+         * @returns {{[selectionID: string]: SavedWorldEditSelection}} The saved selections.
+         * @throws {SyntaxError} If any of the saved selections are not valid JSON.
+         */
+        public getSavedSelections(): { [selectionID: string]: SavedWorldEditSelection } {
+            return Object.fromEntries(
+                cullUndefined(
+                    this.getSavedSelectionIds().map((selectionID) => {
+                        if (!!!this.player.getDynamicProperty("savedSelection:" + selectionID)) {
+                            return undefined;
+                        }
+                        return [selectionID, JSON.parse(String(this.player.getDynamicProperty("savedSelection:" + selectionID))) as SavedWorldEditSelection];
+                    })
                 )
-            ) as {
-                pos1: Vector3;
-                pos2: Vector3;
-                dimension: (typeof dimensionsd)[number];
-            }];
-        })));
-    }
-    getSavedSelection(selectionID: string) {
-        if (
-            !!!this.player.getDynamicProperty("savedSelection:" + selectionID)
-        ) {
-            return undefined;
-        }
-        return JSON.parse(
-            String(
-                this.player.getDynamicProperty("savedSelection:" + selectionID)
-            )
-        ) as {
-            pos1: Vector3;
-            pos2: Vector3;
-            dimension: (typeof dimensionsd)[number];
-        };
-    }
-    removeSavedSelection(selectionID: string) {
-        if (
-            !!!this.player.getDynamicProperty("savedSelection:" + selectionID)
-        ) {
-            return false;
-        }
-        this.player.setDynamicProperty("savedSelection:" + selectionID);
-        return true;
-    }
-    saveSelection(
-        selectionID: string,
-        value: {
-            pos1: Vector3;
-            pos2: Vector3;
-            dimension: (typeof dimensionsd)[number];
-        } = {
-            pos1: this.pos1,
-            pos2: this.pos2,
-            dimension: this.dimension.id as (typeof dimensionsd)[number],
-        }
-    ) {
-        if (
-            !testForObjectTypeExtension(value, {
-                pos1: {
-                    x: "number",
-                    y: "number",
-                    z: "number",
-                },
-                pos2: {
-                    x: "number",
-                    y: "number",
-                    z: "number",
-                },
-                dimension: "string",
-            })
-        ) {
-            throw new TypeError(
-                `Invalid value type, expected {pos1: Vector3, pos2: Vector3, dimension: ${dimensionsd
-                    .map((s) => JSON.stringify(s))
-                    .join(" | ")}}`
             );
         }
-        this.player.setDynamicProperty(
-            "savedSelection:" + selectionID,
-            JSON.stringify(value)
-        );
-    }
-    toJSON() {
-        return {
-            pos1: this.pos1,
-            pos2: this.pos2,
-            minPos: this.minPos,
-            maxPos: this.maxPos,
-            dimension: this.dimension.id,
-            savedSelections: this.getSavedSelections(),
-        };
+        /**
+         * Gets a saved selection from the player's saved selection list.
+         *
+         * @param {string} selectionID The ID of the selection to get.
+         * @returns {SavedWorldEditSelection | undefined} The saved selection, or undefined if it doesn't exist.
+         * @throws {SyntaxError} If the saved selection is not valid JSON.
+         */
+        public getSavedSelection(selectionID: string): SavedWorldEditSelection | undefined {
+            if (!!!this.player.getDynamicProperty("savedSelection:" + selectionID)) {
+                return undefined;
+            }
+            return JSON.parse(String(this.player.getDynamicProperty("savedSelection:" + selectionID))) as SavedWorldEditSelection;
+        }
+        /**
+         * Removes a saved selection from the player's saved selection list.
+         *
+         * @param {string} selectionID The ID of the selection to remove.
+         * @returns {boolean} True if the selection was removed, false if it didn't exist.
+         * @throws {TypeError} If the {@link selectionID} is not a string.
+         */
+        public removeSavedSelection(selectionID: string): boolean {
+            if (!!!this.player.getDynamicProperty("savedSelection:" + selectionID)) {
+                return false;
+            }
+            this.player.setDynamicProperty("savedSelection:" + selectionID);
+            return true;
+        }
+        /**
+         * Saves the current selection to the player's saved selection list.
+         *
+         * @param {string} selectionID The ID to save the selection under.
+         * @param {SavedWorldEditSelection} value The selection to save.
+         * @throws {TypeError} If the value is not a valid selection.
+         */
+        public saveSelection(
+            selectionID: string,
+            value: SavedWorldEditSelection = {
+                pos1: this.pos1 ? this.pos1 : (()=>{throw new TypeError("[WorldEditSelection.prototype::saveSelection] this.pos1 must be defined to save a selection.")})(),
+                pos2: this.pos2 ? this.pos2 : (()=>{throw new TypeError("[WorldEditSelection.prototype::saveSelection] this.pos2 must be defined to save a selection.")})(),
+                dimension: this.dimension ? this.dimension.id as (typeof dimensionsd)[number] : (()=>{throw new TypeError("[WorldEditSelection.prototype::saveSelection] this.dimension must be defined to save a selection.")})(),
+            }
+        ): void {
+            if (
+                !testForObjectTypeExtension(value, {
+                    pos1: {
+                        x: "number",
+                        y: "number",
+                        z: "number",
+                    },
+                    pos2: {
+                        x: "number",
+                        y: "number",
+                        z: "number",
+                    },
+                    dimension: "string",
+                })
+            ) {
+                throw new TypeError(
+                    `Invalid value type, expected {pos1: Vector3, pos2: Vector3, dimension: ${dimensionsd.map((s) => JSON.stringify(s)).join(" | ")}}`
+                );
+            }
+            this.player.setDynamicProperty("savedSelection:" + selectionID, JSON.stringify(value));
+        }
+        /**
+         * Gets the JSON data of the linked player's world edit selection.
+         *
+         * @returns {WorldEditSelectionJSONData} The JSON data of the world edit selection.
+         */
+        public toJSON(): WorldEditSelectionJSONData {
+            return {
+                pos1: this.pos1!,
+                pos2: this.pos2!,
+                minPos: this.minPos!,
+                maxPos: this.maxPos!,
+                dimension: this.dimension!.id as (typeof dimensionsd)[number],
+                savedSelections: this.getSavedSelections(),
+            };
+        }
     }
 }
+
+export import WorldEditSelection = exports.WorldEditSelection;
 
 Object.defineProperties(Entity.prototype, {
     worldEditSelection: {
@@ -230,6 +330,6 @@ Object.defineProperty(globalThis, "PlayerPermissions", {
 
 declare global {
     namespace globalThis {
-        const WorldEditSelection: typeof import("./WorldEditSelection").WorldEditSelection;
+        export import WorldEditSelection = exports.WorldEditSelection;
     }
 }

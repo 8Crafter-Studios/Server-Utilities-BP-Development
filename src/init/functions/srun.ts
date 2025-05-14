@@ -32,7 +32,7 @@ const srununbound = system.run;
  *         console.warn('Error: ' + e);
  *     }
  *
- *     system.run(printEveryMinute);
+ *     srun(printEveryMinute);
  * }
  *
  * printEveryMinute();

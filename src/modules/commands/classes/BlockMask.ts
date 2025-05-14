@@ -300,7 +300,7 @@ export class BlockMask {
             get rawsb() {
                 return `${(this as BlockMask["blocks"][number]).type}${
                     !!(this as BlockMask["blocks"][number]).states
-                        ? `[${Object.entries((this as BlockMask["blocks"][number]).states)
+                        ? `[${Object.entries((this as BlockMask["blocks"][number]).states ?? {})
                               .map(([k, v]) => JSON.stringify(k) + "=" + JSON.stringify(v))
                               .join(",")}]`
                         : ""
@@ -358,11 +358,11 @@ export class BlockMask {
         this.#blocksList = cullEmpty(
             this.#blocksList.map((v) =>
                 v.type == "none"
-                    ? undefined
+                    ? undefined!
                     : v.type == "any"
-                    ? undefined
+                    ? undefined!
                     : {
-                          type: v.type == "keep" ? "minecraft:air" : tryget(() => BlockTypes.get(v.type).id) ?? v.type,
+                          type: v.type == "keep" ? "minecraft:air" : tryget(() => BlockTypes.get(v.type)?.id) ?? v.type,
                           states: v.states,
                           get raw() {
                               return `${(this as BlockMask["blocks"][number]).type}${
@@ -372,7 +372,7 @@ export class BlockMask {
                           get rawsb() {
                               return `${(this as BlockMask["blocks"][number]).type}${
                                   !!(this as BlockMask["blocks"][number]).states
-                                      ? `[${Object.entries((this as BlockMask["blocks"][number]).states)
+                                      ? `[${Object.entries((this as BlockMask["blocks"][number]).states ?? {})
                                             .map(([k, v]) => JSON.stringify(k) + "=" + JSON.stringify(v))
                                             .join(",")}]`
                                       : ""
@@ -407,7 +407,7 @@ export class BlockMask {
             get rawsb() {
                 return `${(this as BlockMask["blocks"][number]).type}${
                     !!(this as BlockMask["blocks"][number]).states
-                        ? `[${Object.entries((this as BlockMask["blocks"][number]).states)
+                        ? `[${Object.entries((this as BlockMask["blocks"][number]).states ?? {})
                               .map(([k, v]) => JSON.stringify(k) + "=" + JSON.stringify(v))
                               .join(",")}]`
                         : ""
@@ -443,7 +443,7 @@ export class BlockMask {
                 get rawsb() {
                     return `${(this as BlockMask["blocks"][number]).type}${
                         !!(this as BlockMask["blocks"][number]).states
-                            ? `[${Object.entries((this as BlockMask["blocks"][number]).states)
+                            ? `[${Object.entries((this as BlockMask["blocks"][number]).states ?? {})
                                   .map(([k, v]) => JSON.stringify(k) + "=" + JSON.stringify(v))
                                   .join(",")}]`
                             : ""
@@ -570,7 +570,7 @@ export class BlockMask {
                             case "false":
                                 return false;
                             default:
-                                if (block.typeId == (tryget(() => BlockTypes.get(b.type).id) ?? "invalid")) {
+                                if (block.typeId == (tryget(() => BlockTypes.get(b.type)?.id) ?? "invalid")) {
                                     if (b.states != undefined) {
                                         return BlockMask.testForStatesMatch(block.permutation.getAllStates(), b.states);
                                     } else {
@@ -668,7 +668,7 @@ export class BlockMask {
                             default:
                                 if (b.type.startsWith("tag:")) {
                                     return block.hasTag(b.type.slice(4));
-                                } else if (block.type.id == (tryget(() => BlockTypes.get(b.type).id) ?? "invalid")) {
+                                } else if (block.type.id == (tryget(() => BlockTypes.get(b.type)?.id) ?? "invalid")) {
                                     if (b.states != undefined) {
                                         return BlockMask.testForStatesMatch(block.getAllStates(), b.states);
                                     } else {
@@ -746,7 +746,7 @@ export class BlockMask {
                             default:
                                 if (b.type.startsWith("tag:")) {
                                     return BlockPermutation.resolve(block.id).hasTag(b.type.slice(4));
-                                } else if (block.id == (tryget(() => BlockTypes.get(b.type).id) ?? "invalid")) {
+                                } else if (block.id == (tryget(() => BlockTypes.get(b.type)?.id) ?? "invalid")) {
                                     return true;
                                 } else {
                                     return false;
@@ -795,7 +795,7 @@ export class BlockMask {
                             case "isWaterloggable":
                             case "waterloggable":
                                 if (
-                                    tryget(() => BlockPermutation.resolve(BlockTypes.get(block).id).canContainLiquid(modules.mcServer.LiquidType.Water)) ??
+                                    tryget(() => BlockPermutation.resolve(BlockTypes.get(block)?.id!).canContainLiquid(modules.mcServer.LiquidType.Water)) ??
                                     false
                                 ) {
                                     return true;
@@ -824,7 +824,7 @@ export class BlockMask {
                             default:
                                 if (b.type.startsWith("tag:")) {
                                     return BlockPermutation.resolve(block).hasTag(b.type.slice(4));
-                                } else if (block == (tryget(() => BlockTypes.get(b.type).id) ?? "invalid")) {
+                                } else if (block == (tryget(() => BlockTypes.get(b.type)?.id) ?? "invalid")) {
                                     return true;
                                 } else {
                                     return false;
@@ -887,7 +887,7 @@ export class BlockMask {
                                     tryget(() =>
                                         block.type instanceof BlockType
                                             ? BlockPermutation.resolve(block.type.id).canContainLiquid(modules.mcServer.LiquidType.Water)
-                                            : BlockPermutation.resolve(BlockTypes.get(block.type).id).canContainLiquid(modules.mcServer.LiquidType.Water)
+                                            : BlockPermutation.resolve(BlockTypes.get(block.type)?.id!).canContainLiquid(modules.mcServer.LiquidType.Water)
                                     ) ??
                                     false
                                 ) {
@@ -930,7 +930,7 @@ export class BlockMask {
                                 if (b.type.startsWith("tag:")) {
                                     return BlockPermutation.resolve(block.type instanceof BlockType ? block.type.id : block.type).hasTag(b.type.slice(4));
                                 } else if (
-                                    (block.type instanceof BlockType ? block.type.id : block.type) == (tryget(() => BlockTypes.get(b.type).id) ?? "invalid")
+                                    (block.type instanceof BlockType ? block.type.id : block.type) == (tryget(() => BlockTypes.get(b.type)?.id) ?? "invalid")
                                 ) {
                                     if (b.states != undefined && block.states != undefined) {
                                         return BlockMask.testForStatesMatch(block.states, b.states);
@@ -944,6 +944,7 @@ export class BlockMask {
                     }) != undefined;
             return mode == "exclude" ? !resultFound : resultFound;
         }
+        return undefined!;
     }
     /**
      * Tests if the states in the first parameter extend the states in the second parameter.
@@ -1015,7 +1016,7 @@ export class BlockMask {
      * @param {string} str The string to extract the raw block mask from.
      * @returns {string | null} The raw block mask, or null if no raw block mask was found.
      */
-    static extractRaw(str: string): string | null {
+    static extractRaw(str: string): string | undefined {
         return str.match(
             /(?<=\s|^)([ie]:)?((?:[\"\'])?(?:[a-zA-Z0-9_\-\.]+:(?:[a-zA-Z0-9_\-\.]+:)?)?[a-zA-Z0-9_\-\.]+(?:[\"\'])?(?:[\[\{](?:[^\]\}]*)[\]\}])?(?=[,\s]|$))(,(?:[\"\'])?(?:[a-zA-Z0-9_\-\.]+:(?:[a-zA-Z0-9_\-\.]+:)?)?[a-zA-Z0-9_\-\.]+(?:[\"\'])?(?:[\[\{](?:[^\]\}]*)[\]\}])?)*/
         )?.[0];
@@ -1034,9 +1035,9 @@ export class BlockMask {
             const out = cullEmpty(
                 result.map((v) =>
                     v.type == "none"
-                        ? undefined
+                        ? undefined!
                         : v.type == "any"
-                        ? undefined
+                        ? undefined!
                         : {
                               type: v.type == "keep" ? "air" : v.type,
                               states: v.states,
@@ -1068,9 +1069,9 @@ export class BlockMask {
             result = cullEmpty(
                 r.map((v) =>
                     v.type == "none"
-                        ? undefined
+                        ? undefined!
                         : v.type == "any"
-                        ? undefined
+                        ? undefined!
                         : {
                               type: v.type == "keep" ? "air" : v.type,
                               states: v.states,
@@ -1086,7 +1087,7 @@ export class BlockMask {
         return {
             raw: str.match(
                 /(?<=\s|^)([ie]:)?((?:[\"\'])?(?:[a-zA-Z0-9_\-\.]+:(?:[a-zA-Z0-9_\-\.]+:)?)?[a-zA-Z0-9_\-\.]+(?:[\"\'])?(?:[\[\{](?:[^\]\}]*)[\]\}])?(?=[,\s]|$))(,(?:[\"\'])?(?:[a-zA-Z0-9_\-\.]+:(?:[a-zA-Z0-9_\-\.]+:)?)?[a-zA-Z0-9_\-\.]+(?:[\"\'])?(?:[\[\{](?:[^\]\}]*)[\]\}])?)*/
-            )[0],
+            )![0],
             parsed: extraIdParsingEnabled ? new BlockMask(result, modeOverride ?? mode) : new BlockMask(result, modeOverride ?? mode),
         };
     }
@@ -1117,9 +1118,9 @@ export class BlockMask {
                         ? cullEmpty(
                               v.map((v) =>
                                   v.type == "none"
-                                      ? undefined
+                                      ? undefined!
                                       : v.type == "any"
-                                      ? undefined
+                                      ? undefined!
                                       : {
                                             type: v.type == "keep" ? "air" : v.type,
                                             states: v.states,
@@ -1151,9 +1152,9 @@ export class BlockMask {
                             ? cullEmpty(
                                   v.map((v) =>
                                       v.type == "none"
-                                          ? undefined
+                                          ? undefined!
                                           : v.type == "any"
-                                          ? undefined
+                                          ? undefined!
                                           : {
                                                 type: v.type == "keep" ? "air" : v.type,
                                                 states: v.states,
@@ -1169,14 +1170,14 @@ export class BlockMask {
 }
 
 function extractCustomMaskType(str: string): Omit<BlockMaskFilter, "raw" | "rawsb" | "rawns">[] & { mode: "include" | "exclude"; rawMatch: string; } {
-    const maskTypes = [] as {
+    const maskTypes = [] as unknown as {
         type: string;
         states?: Record<string, string | number | boolean>;
     }[] & { mode: "include" | "exclude"; rawMatch: string };
     const regex =
         /(?<=\s|^)([ie]:)?((?:[\"\'])?(?:[a-zA-Z0-9_\-\.]+:(?:[a-zA-Z0-9_\-\.]+:)?)?[a-zA-Z0-9_\-\.]+(?:[\"\'])?(?:[\[\{](?:[^\]\}]*)[\]\}])?(?=[,\s]|$))(,(?:[\"\'])?(?:[a-zA-Z0-9_\-\.]+:(?:[a-zA-Z0-9_\-\.]+:)?)?[a-zA-Z0-9_\-\.]+(?:[\"\'])?(?:[\[\{](?:[^\]\}]*)[\]\}])?)*/;
     const regexb = /([ie]:)?(?:[\"\'])?(?:[a-zA-Z0-9_\-\.]+:(?:[a-zA-Z0-9_\-\.]+:)?)?[a-zA-Z0-9_\-\.]+(?:[\"\'])?(?:[\[\{](?:[^\]\}]*)[\]\}])?(?=[,\s]|$)/g;
-    const rawMatch = str.match(regex)[0];
+    const rawMatch = str.match(regex)![0];
     const matches = rawMatch.match(regexb);
     let mode: "include" | "exclude" = "include";
     if (matches) {
@@ -1188,7 +1189,7 @@ function extractCustomMaskType(str: string): Omit<BlockMaskFilter, "raw" | "raws
                 mode = "exclude";
             }
             let type = match.trim();
-            let states: Record<string, string | number | boolean> = null;
+            let states: Record<string, string | number | boolean> | undefined = undefined;
 
             // Extract states if present
             const statesMatch = type.match(/[\[\{]([^\]\}]*)[\]\}]/);
@@ -1212,7 +1213,7 @@ function extractCustomMaskType(str: string): Omit<BlockMaskFilter, "raw" | "raws
                         } else if (value.toLowerCase() === "false") {
                             value = false;
                         }
-                        states[key] = value;
+                        states![key] = value;
                     });
                 }
                 // Remove states from the type
@@ -1226,7 +1227,7 @@ function extractCustomMaskType(str: string): Omit<BlockMaskFilter, "raw" | "raws
             }
 
             maskTypes.push({
-                type: tryget(() => BlockTypes.get(type).id) ?? type,
+                type: tryget(() => BlockTypes.get(type)?.id) ?? type,
                 states,
             });
         });
@@ -1246,7 +1247,7 @@ function extractCustomMaskTypes(str: string): (Omit<BlockMaskFilter, "raw" | "ra
         /(?<=\s|^)([ie]:)?((?:[\"\'])?(?:[a-zA-Z0-9_\-\.]+:(?:[a-zA-Z0-9_\-\.]+:)?)?[a-zA-Z0-9_\-\.]+(?:[\"\'])?(?:[\[\{](?:[^\]\}]*)[\]\}])?(?=[,\s]|$))(,(?:[\"\'])?(?:[a-zA-Z0-9_\-\.]+:(?:[a-zA-Z0-9_\-\.]+:)?)?[a-zA-Z0-9_\-\.]+(?:[\"\'])?(?:[\[\{](?:[^\]\}]*)[\]\}])?)*/g;
     const regexb = /([ie]:)?(?:[\"\'])?(?:[a-zA-Z0-9_\-\.]+:(?:[a-zA-Z0-9_\-\.]+:)?)?[a-zA-Z0-9_\-\.]+(?:[\"\'])?(?:[\[\{](?:[^\]\}]*)[\]\}])?(?=[,\s]|$)/g;
     const matchesa = str.match(regex);
-    matchesa.forEach((m) => {
+    matchesa!.forEach((m) => {
         const matches = m.match(regexb);
         if (matches) {
             let mode: "include" | "exclude" = "include";
@@ -1262,7 +1263,7 @@ function extractCustomMaskTypes(str: string): (Omit<BlockMaskFilter, "raw" | "ra
                     mode = "exclude";
                 }
                 let type = match.trim();
-                let states: Record<string, string | number | boolean> = null;
+                let states: Record<string, string | number | boolean> | undefined = undefined;
 
                 // Extract states if present
                 const statesMatch = type.match(/[\[\{]([^\]\}]*)[\]\}]/);
@@ -1286,7 +1287,7 @@ function extractCustomMaskTypes(str: string): (Omit<BlockMaskFilter, "raw" | "ra
                             } else if (value.toLowerCase() === "false") {
                                 value = false;
                             }
-                            states[key] = value;
+                            states![key] = value;
                         });
                     }
                     // Remove states from the type
@@ -1300,7 +1301,7 @@ function extractCustomMaskTypes(str: string): (Omit<BlockMaskFilter, "raw" | "ra
                 }
 
                 maskTypes.push({
-                    type: tryget(() => BlockTypes.get(type).id) ?? type,
+                    type: tryget(() => BlockTypes.get(type)?.id) ?? type,
                     states,
                 });
             });

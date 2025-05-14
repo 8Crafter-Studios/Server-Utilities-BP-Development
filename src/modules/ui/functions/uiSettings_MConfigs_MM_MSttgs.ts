@@ -87,7 +87,7 @@ export async function uiSettings_menuConfigurations_mainMenu_mainSettings(source
         if (r.canceled) {
             return 1 as const;
         }
-        const options = Object.fromEntries(includedOptions.map((o, i) => [o, r.formValues[i] as optionsList[typeof o]])) as Partial<optionsList>;
+        const options = Object.fromEntries(includedOptions.map((o, i) => [o, r.formValues![i] as optionsList[typeof o]])) as Partial<optionsList>;
         includedOptions.forEach((v: keyof optionsList) => {
             switch (v) {
                 case "showDeprecatedButtons":

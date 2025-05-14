@@ -100,7 +100,7 @@ export async function playerMenu_moneyTransfer(
             if (r.canceled) return 1;
 
             switch (
-                (["search", "previous", "go", "next", "", ""] as const)[r.selection] ??
+                (["search", "previous", "go", "next", "", ""] as const)[r.selection!] ??
                 (!!displayPlayersB[r.selection - 6] ? "player" : undefined) ??
                 (["back", "close"] as const)[r.selection - displayPlayersB.length - 6]
             ) {

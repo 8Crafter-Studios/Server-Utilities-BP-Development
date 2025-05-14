@@ -8,13 +8,14 @@ export function toBase(
     // only i64 numbers
     /*  var keys = ['0', '1', 2, 3, 4, 5, 6, 7, 8, 9, "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];*/
     var keys = keysa.split("");
-    if (radix == 1) return keys[0].repeat(num.toNumber());
+    if (radix == 1) return keys[0].repeat(num.toNumber()!);
     if (!(radix >= 2 && radix <= keys.length))
         throw new RangeError(
             "toBase() radix argument must be between 2 and " + keys.length
         );
+    let isNegative: boolean = false;
 
-    if (num.toNumber() < 0) var isNegative = true;
+    if (num.toNumber()! < 0) isNegative = true;
     if (isNaN((num = Math.abs(+num)))) return NaN;
 
     let output = [];
@@ -23,6 +24,6 @@ export function toBase(
         output.unshift(keys[index]);
         num = Math.trunc(num / radix);
     } while (num != 0);
-    if (isNegative ?? false) output.unshift("-");
+    if (isNegative) output.unshift("-");
     return output.join("");
 }

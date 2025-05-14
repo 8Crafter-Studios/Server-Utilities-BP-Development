@@ -92,7 +92,7 @@ declare global {
          * @template {any[]} T The type of the array to remove null values from.
          * @returns {T[number][]} The array without null values.
          */
-        function cullNull<T extends any[]>(array: T): T[number][];
+        function cullNull<T extends any[]>(array: T): Exclude<T[number], null>[];
         /**
          * Removes all values from an array that are `undefined`.
          *
@@ -100,7 +100,7 @@ declare global {
          * @template {any[]} T The type of the array to remove undefined values from.
          * @returns {T[number][]} The array without undefined values.
          */
-        function cullUndefined<T extends any[]>(array: T): T[number][];
+        function cullUndefined<T extends any[]>(array: T): Exclude<T[number], undefined>[];
         /**
          * Removes all values from an array that are `null` or `undefined`.
          *
@@ -108,7 +108,7 @@ declare global {
          * @template {any[]} T The type of the array to remove empty values from.
          * @returns {T[number][]} The array without empty values.
          */
-        function cullEmpty<T extends any[]>(array: T): T[number][];
+        function cullEmpty<T extends any[]>(array: T): NonNullable<T[number]>[];
         /**
          * Tries to get the value of a callback function.
          *
@@ -144,7 +144,7 @@ declare global {
          * @template {unknown} FT The type of the value returned by the `finallycallbackfn` function.
          * @returns {TT | CT | FT | undefined} The result of the `finallycallbackfn` function, unless it does not return a value, in which case it will return the result of the `catchcallbackfn` function, or if there was no error, the result of the `trycallbackfn` function.
          */
-        function catchtry<TT extends unknown, CT extends unknown, FT extends unknown>(trycallbackfn: () => TT, catchcallbackfn?: (e: Error) => CT, finallycallbackfn?: (v: TT | ReturnType<typeof catchcallbackfn> | undefined) => FT): TT | CT | FT | undefined;
+        function catchtry<TT extends unknown, CT extends unknown, FT extends unknown>(trycallbackfn: () => TT, catchcallbackfn?: (e: Error) => CT, finallycallbackfn?: (v: TT | ReturnType<Exclude<typeof catchcallbackfn, undefined>> | undefined) => FT): TT | CT | FT | undefined;
         function send(message: (RawMessage | string)[] | RawMessage | string): void;
         function asend(value: any): void;
         function bsend(value: any, space?: string | number): void;
@@ -616,7 +616,7 @@ declare global {
          *         console.warn('Error: ' + e);
          *     }
          *
-         *     system.run(printEveryMinute);
+         *     srun(printEveryMinute);
          * }
          *
          * printEveryMinute();

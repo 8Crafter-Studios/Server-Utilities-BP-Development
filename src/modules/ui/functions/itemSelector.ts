@@ -84,7 +84,7 @@ export async function itemSelector<
                 ) as any;
                 break;
             default:
-                return slotsList[r.selection];
+                return slotsList[r.selection!];
         }
     } catch (e) {
         let formError = new MessageFormData();

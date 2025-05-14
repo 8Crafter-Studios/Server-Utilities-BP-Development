@@ -161,7 +161,7 @@ export async function manageBans(
             if (r.canceled) return 1;
 
             switch (
-                (["search", "previous", "go", "next", "", ""] as const)[r.selection] ??
+                (["search", "previous", "go", "next", "", ""] as const)[r.selection!] ??
                 (!!displayEntriesB[r.selection - 6] ? "entry" : undefined) ??
                 (["addIDBan", "addNameBan", "back", "close", "refresh"] as const)[r.selection - displayEntriesB.length - 6]
             ) {
@@ -186,10 +186,10 @@ export async function manageBans(
                             pagen: undefined,
                             maxentriesperpage,
                             search: {
-                                value: r.formValues[0] as string,
-                                caseSensitive: r.formValues[1] as boolean,
-                                searchNames: r.formValues[2] as boolean,
-                                searchIds: r.formValues[3] as boolean,
+                                value: r.formValues![0] as string,
+                                caseSensitive: r.formValues![1] as boolean,
+                                searchNames: r.formValues![2] as boolean,
+                                searchIds: r.formValues![3] as boolean,
                             },
                             cachedEntries: undefined,
                         };
@@ -414,7 +414,7 @@ export async function manageBansOnPlayer(
             if (r.canceled) return 1;
 
             switch (
-                (["search", "previous", "go", "next", "", ""] as const)[r.selection] ??
+                (["search", "previous", "go", "next", "", ""] as const)[r.selection!] ??
                 (!!displayEntriesB[r.selection - 6] ? "entry" : undefined) ??
                 (["addIDBan", "addNameBan", "back", "close", "refresh"] as const)[r.selection - displayEntriesB.length - 6]
             ) {
@@ -439,10 +439,10 @@ export async function manageBansOnPlayer(
                             pagen: undefined,
                             maxentriesperpage,
                             search: {
-                                value: r.formValues[0] as string,
-                                caseSensitive: r.formValues[1] as boolean,
-                                searchNames: r.formValues[2] as boolean,
-                                searchIds: r.formValues[3] as boolean,
+                                value: r.formValues![0] as string,
+                                caseSensitive: r.formValues![1] as boolean,
+                                searchNames: r.formValues![2] as boolean,
+                                searchIds: r.formValues![3] as boolean,
                             },
                             cachedEntries: undefined,
                         };
@@ -561,7 +561,7 @@ export async function manageBan(sourceEntity: loosePlayerType, ban: ban): Promis
             form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
             const r = await form.forceShow(player);
             if (r.canceled) return 1 as const;
-            switch ((["unban", "back", "close"] as const)[r.selection]) {
+            switch ((["unban", "back", "close"] as const)[r.selection!]) {
                 case "unban":
                     switch (await unbanPlayer(player, ban)) {
                         case 0:
@@ -622,7 +622,7 @@ export async function unbanPlayer(sourceEntity: loosePlayerType, selectedBan: ba
             "Unban"
         );
         if (r.canceled) return 1 as const;
-        switch ((["cancel", "unban"] as const)[r.selection]) {
+        switch ((["cancel", "unban"] as const)[r.selection!]) {
             case "cancel": {
                 return (
                     (
@@ -697,11 +697,11 @@ export async function addIDBan(sourceEntity: loosePlayerType): Promise<0 | 1> {
             if (r.canceled) {
                 return 1 as const;
             }
-            defaultPlayerUUID = r.formValues[0] as string;
-            defaultBanTime = r.formValues[1] as string;
-            defaultReason = r.formValues[2] as string;
+            defaultPlayerUUID = r.formValues![0] as string;
+            defaultBanTime = r.formValues![1] as string;
+            defaultReason = r.formValues![2] as string;
             const banDate = Date.now();
-            const unbanDate = (r.formValues[1] as string).trim() === "" ? Infinity : parseDurationRelative(r.formValues[1] as string, banDate) + Date.now();
+            const unbanDate = (r.formValues![1] as string).trim() === "" ? Infinity : parseDurationRelative(r.formValues![1] as string, banDate) + Date.now();
             if (Number.isNaN(unbanDate)) {
                 if (
                     (
@@ -723,15 +723,15 @@ export async function addIDBan(sourceEntity: loosePlayerType): Promise<0 | 1> {
                 removeAfterBanExpires: false,
                 ban_format_version: ban_format_version,
                 banDate,
-                playerId: r.formValues[0] as string,
+                playerId: r.formValues![0] as string,
                 originalPlayerName: undefined,
                 type: "id",
                 bannedById: player.id,
                 bannedByName: player.name ?? player.nameTag,
-                banId: "banId:" + Date.now() + ":" + (r.formValues[0] as string),
+                banId: "banId:" + Date.now() + ":" + (r.formValues![0] as string),
                 unbanDate,
                 format_version: format_version,
-                reason: r.formValues[2] === "" ? "§cYOU HAVE BEEN BANNED BY THE BAN HAMMER" : (r.formValues[2] as string),
+                reason: r.formValues![2] === "" ? "§cYOU HAVE BEEN BANNED BY THE BAN HAMMER" : (r.formValues![2] as string),
                 hasAdvancedReason: false,
             });
             ban.refreshBans();
@@ -786,11 +786,11 @@ export async function addNameBan(sourceEntity: loosePlayerType): Promise<0 | 1> 
             if (r.canceled) {
                 return 1 as const;
             }
-            defaultPlayerName = r.formValues[0] as string;
-            defaultBanTime = r.formValues[1] as string;
-            defaultReason = r.formValues[2] as string;
+            defaultPlayerName = r.formValues![0] as string;
+            defaultBanTime = r.formValues![1] as string;
+            defaultReason = r.formValues![2] as string;
             const banDate = Date.now();
-            const unbanDate = (r.formValues[1] as string).trim() === "" ? Infinity : parseDurationRelative(r.formValues[1] as string, banDate) + Date.now();
+            const unbanDate = (r.formValues![1] as string).trim() === "" ? Infinity : parseDurationRelative(r.formValues![1] as string, banDate) + Date.now();
             if (Number.isNaN(unbanDate)) {
                 if (
                     (
@@ -813,14 +813,14 @@ export async function addNameBan(sourceEntity: loosePlayerType): Promise<0 | 1> 
                 ban_format_version: ban_format_version,
                 banDate,
                 originalPlayerId: undefined,
-                playerName: r.formValues[0] as string,
+                playerName: r.formValues![0] as string,
                 type: "name",
                 bannedById: player.id,
                 bannedByName: player.name ?? player.nameTag,
-                banId: "ban:" + Date.now() + ":" + (r.formValues[0] as string),
+                banId: "ban:" + Date.now() + ":" + (r.formValues![0] as string),
                 unbanDate,
                 format_version: format_version,
-                reason: r.formValues[2] === "" ? "§cYOU HAVE BEEN BANNED BY THE BAN HAMMER" : (r.formValues[2] as string),
+                reason: r.formValues![2] === "" ? "§cYOU HAVE BEEN BANNED BY THE BAN HAMMER" : (r.formValues![2] as string),
                 hasAdvancedReason: false,
             });
             ban.refreshBans();
@@ -873,10 +873,10 @@ export async function addIDBanOnPlayer(sourceEntity: loosePlayerType, targetDeta
             if (r.canceled) {
                 return 1 as const;
             }
-            defaultBanTime = r.formValues[0] as string;
-            defaultReason = r.formValues[1] as string;
+            defaultBanTime = r.formValues![0] as string;
+            defaultReason = r.formValues![1] as string;
             const banDate = Date.now();
-            const unbanDate = (r.formValues[0] as string).trim() === "" ? Infinity : parseDurationRelative(r.formValues[0] as string, banDate) + Date.now();
+            const unbanDate = (r.formValues![0] as string).trim() === "" ? Infinity : parseDurationRelative(r.formValues![0] as string, banDate) + Date.now();
             if (Number.isNaN(unbanDate)) {
                 if (
                     (
@@ -906,7 +906,7 @@ export async function addIDBanOnPlayer(sourceEntity: loosePlayerType, targetDeta
                 banId: "banId:" + Date.now() + ":" + targetDetails.id,
                 unbanDate,
                 format_version: format_version,
-                reason: r.formValues[1] === "" ? "§cYOU HAVE BEEN BANNED BY THE BAN HAMMER" : (r.formValues[1] as string),
+                reason: r.formValues![1] === "" ? "§cYOU HAVE BEEN BANNED BY THE BAN HAMMER" : (r.formValues![1] as string),
                 hasAdvancedReason: false,
             });
             ban.refreshBans();
@@ -959,10 +959,10 @@ export async function addNameBanOnPlayer(sourceEntity: loosePlayerType, targetDe
             if (r.canceled) {
                 return 1 as const;
             }
-            defaultBanTime = r.formValues[0] as string;
-            defaultReason = r.formValues[1] as string;
+            defaultBanTime = r.formValues![0] as string;
+            defaultReason = r.formValues![1] as string;
             const banDate = Date.now();
-            const unbanDate = (r.formValues[0] as string).trim() === "" ? Infinity : parseDurationRelative(r.formValues[0] as string, banDate) + Date.now();
+            const unbanDate = (r.formValues![0] as string).trim() === "" ? Infinity : parseDurationRelative(r.formValues![0] as string, banDate) + Date.now();
             if (Number.isNaN(unbanDate)) {
                 if (
                     (
@@ -992,7 +992,7 @@ export async function addNameBanOnPlayer(sourceEntity: loosePlayerType, targetDe
                 banId: "ban:" + Date.now() + ":" + targetDetails.name,
                 unbanDate,
                 format_version: format_version,
-                reason: r.formValues[1] === "" ? "§cYOU HAVE BEEN BANNED BY THE BAN HAMMER" : (r.formValues[1] as string),
+                reason: r.formValues![1] === "" ? "§cYOU HAVE BEEN BANNED BY THE BAN HAMMER" : (r.formValues![1] as string),
                 hasAdvancedReason: false,
             });
             ban.refreshBans();

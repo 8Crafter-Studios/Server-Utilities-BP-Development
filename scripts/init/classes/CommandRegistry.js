@@ -121,10 +121,10 @@ class RegisteredCommand {
                     return false;
                 }
             }
-            if (Number(playerToTest.getDynamicProperty("permissionLevel") ?? 0) < Number(this.settings.requiredPermissionLevel ?? 0) &&
-                this.settings.requiredPermissionLevel != 0) {
+            if ((this.settings.requiredPermissionLevel ?? 0) != 0 && Number(playerToTest.getDynamicProperty("permissionLevel") ?? 0) < Number(this.settings.requiredPermissionLevel ?? 0)) {
                 return false;
             }
+            return true;
         }
     }
 }

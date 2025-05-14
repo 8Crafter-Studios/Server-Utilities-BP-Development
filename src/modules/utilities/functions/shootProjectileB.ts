@@ -21,7 +21,7 @@ export function shootProjectileB(
 ) {
     let entityProjectileComponent = location.dimension
         .spawnEntity(String(entityType), location)
-        .getComponent("projectile");
+        .getComponent("projectile")!;
     try {
         setProjectileComponentPropertiesCallbackFn(entityProjectileComponent);
     } catch (e) {

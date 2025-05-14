@@ -113,7 +113,7 @@ export async function playerMenu_bounty_new(
             if (r.canceled) return 1;
 
             switch (
-                (["search", "previous", "go", "next", "", ""] as const)[r.selection] ??
+                (["search", "previous", "go", "next", "", ""] as const)[r.selection!] ??
                 (!!displayPlayersB[r.selection - 6] ? "player" : undefined) ??
                 (["back", "close", "refresh"] as const)[r.selection - displayPlayersB.length - 6]
             ) {

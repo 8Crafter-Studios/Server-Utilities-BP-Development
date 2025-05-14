@@ -64,9 +64,9 @@ export async function manageRedeemableCodes(sourceEntitya: Entity | executeComma
             // This will stop the code when the player closes the form
             if (r.canceled) return 1;
 
-            switch ((!!codes[r.selection] ? "code" : undefined) ?? (["newCode", "back", "close"] as const)[r.selection - codes.length]) {
+            switch ((!!codes[r.selection!] ? "code" : undefined) ?? (["newCode", "back", "close"] as const)[r.selection - codes.length]) {
                 case "code":
-                    const code = codes[r.selection];
+                    const code = codes[r.selection!];
                     const codesb = codes.filter((c) => c !== code);
                     const item = code.getItem(sourceEntity.dimensionLocation);
                     switch (

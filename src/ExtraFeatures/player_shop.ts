@@ -234,7 +234,7 @@ Shop Owner: ${this.playerName}${!!this?.mainPageBodyText ? "\n§r" + this.mainPa
                     return 0;
                 }
                 assertIsDefined(r.selection);
-                const item = data[r.selection];
+                const item = data[r.selection!];
                 if (item.type == "player_shop_item") {
                     if (
                         (await this.sellItem(player, item, [mode], r.selection)) /*.then(v=>{
@@ -283,7 +283,7 @@ Shop Owner: ${this.playerName}${!!this?.mainPageBodyText ? "\n§r" + this.mainPa
                     return 0;
                 }
                 assertIsDefined(r.selection);
-                const item = data[r.selection];
+                const item = data[r.selection!];
                 if (item.type == "player_shop_item") {
                     if (
                         (await this.buyItem(player, item, [mode], r.selection)) /*.then(v=>{
@@ -372,7 +372,7 @@ Shop Owner: ${this.playerName}${!!this?.mainPageBodyText ? "\n§r" + this.mainPa
                     return 0 as const;
                 }
                 assertIsDefined(r.selection);
-                const item = newData[r.selection];
+                const item = newData[r.selection!];
                 if (item.type == "player_shop_item") {
                     if (
                         (await this.sellItem(player, item, path, r.selection)) /*.then(v=>{
@@ -441,7 +441,7 @@ Shop Owner: ${this.playerName}${!!this?.mainPageBodyText ? "\n§r" + this.mainPa
                     return 0 as const;
                 }
                 assertIsDefined(r.selection);
-                const item = newData[r.selection];
+                const item = newData[r.selection!];
                 if (item.type == "player_shop_item") {
                     if (
                         (await this.buyItem(player, item, path, r.selection)) /*.then(v=>{
@@ -631,7 +631,7 @@ ${
                 return 1;
             }
             assertIsDefined(r.formValues);
-            if (MoneySystem.get(player.id).money >= item.price * (r.formValues[0] as number)) {
+            if (MoneySystem.get(player.id).money >= item.price * (r.formValues![0] as number)) {
                 if (item.itemType == "player_shop_saved") {
                     world.structureManager.place(item.structureID, player.dimension, Vector.add(player.location, { x: 0, y: 10, z: 0 }), {
                         includeBlocks: false,
@@ -649,13 +649,13 @@ ${
                     if (!!!itemStack) {
                         throw new TypeError("The item stack was missing from the storage entity.");
                     }
-                    if (itemStack.amount == (r.formValues[0] as number)) {
+                    if (itemStack.amount == (r.formValues![0] as number)) {
                         (entity.getComponent("inventory")?.container as Container).setItem(0);
-                    } else if (itemStack.amount < (r.formValues[0] as number)) {
+                    } else if (itemStack.amount < (r.formValues![0] as number)) {
                         const form = new MessageFormData();
                         form.title("Not Enough Stock");
                         form.body(
-                            `You cannot buy ${r.formValues[0]} of this item because there ${itemStack.amount == 1 ? "is" : "are"} only ${
+                            `You cannot buy ${r.formValues![0]} of this item because there ${itemStack.amount == 1 ? "is" : "are"} only ${
                                 itemStack.amount
                             } of it left in stock.`
                         );
@@ -668,7 +668,7 @@ ${
                         return 1;
                         // this.openShop(player, "buy")
                     } else {
-                        (entity.getComponent("inventory")?.container as Container).getSlot(0).amount -= r.formValues[0] as number;
+                        (entity.getComponent("inventory")?.container as Container).getSlot(0).amount -= r.formValues![0] as number;
                     }
                     try {
                         world.structureManager.delete(item.structureID);
@@ -702,15 +702,15 @@ ${
                                 saveMode: StructureSaveMode.World,
                             }
                         );
-                        item.remainingStock -= r.formValues[0] as number;
-                        itemStack.amount = r.formValues[0] as number;
+                        item.remainingStock -= r.formValues![0] as number;
+                        itemStack.amount = r.formValues![0] as number;
 
                         let b = (player.getComponent("inventory")?.container as Container).addItem(itemStack);
                         if (!!b) {
                             catchtry(() => player.dimension.spawnItem(b, player.location));
                         }
-                        MoneySystem.get(player.id).removeMoney(item.price * (r.formValues[0] as number));
-                        MoneySystem.get(item.playerID).addMoney(item.price * (r.formValues[0] as number));
+                        MoneySystem.get(player.id).removeMoney(item.price * (r.formValues![0] as number));
+                        MoneySystem.get(item.playerID).addMoney(item.price * (r.formValues![0] as number));
                     } catch (e) {
                         return (
                             (
@@ -767,9 +767,9 @@ ${
                 form.body(
                     `You do not have enough money to buy this item.\nYou currently have $${MoneySystem.get(player.id).money}.\nOne of this item costs $${
                         item.price
-                    }.\nYou wanted to buy ${r.formValues[0]} of this item.\nThe total price is $${
-                        item.price * (r.formValues[0] as number)
-                    }.\nYou need another $${(item.price * (r.formValues[0] as number)).toBigInt() - MoneySystem.get(player.id).money} to buy this item.`
+                    }.\nYou wanted to buy ${r.formValues![0]} of this item.\nThe total price is $${
+                        item.price * (r.formValues![0] as number)
+                    }.\nYou need another $${(item.price * (r.formValues![0] as number)).toBigInt() - MoneySystem.get(player.id).money} to buy this item.`
                 );
                 form.button1("Go Back");
                 form.button2("Close Shop");
@@ -968,17 +968,17 @@ ${
                 );
             let itemCount = 0;
             items.forEach((v) => (itemCount += v.amount));
-            if (itemCount >= (r.formValues[0] as number)) {
-                if (MoneySystem.get(item.playerID).money < item.value.toBigInt() * (r.formValues[0] as number).toBigInt()) {
+            if (itemCount >= (r.formValues![0] as number)) {
+                if (MoneySystem.get(item.playerID).money < item.value.toBigInt() * (r.formValues![0] as number).toBigInt()) {
                     const form = new MessageFormData();
                     form.title("Owner Has Insufficient Funds");
                     form.body(
                         `The owner of this shop does not have enough money to pay you for this item.\nThey currently have $${
                             MoneySystem.get(item.playerID).money
-                        }.\nOne of this item is worth $${item.value}.\nYou wanted to sell ${r.formValues[0]} of this item.\nThe total value is $${
-                            item.value * (r.formValues[0] as number)
+                        }.\nOne of this item is worth $${item.value}.\nYou wanted to sell ${r.formValues![0]} of this item.\nThe total value is $${
+                            item.value * (r.formValues![0] as number)
                         }.\nThey need another $${
-                            (item.value * (r.formValues[0] as number)).toBigInt() - MoneySystem.get(item.playerID).money
+                            (item.value * (r.formValues![0] as number)).toBigInt() - MoneySystem.get(item.playerID).money
                         } to pay you for this item.\nThe number of this item that they can currently pay you for is ${
                             MoneySystem.get(item.playerID).money / item.value.toBigInt()
                         }.`
@@ -1017,7 +1017,7 @@ ${
                         )*/
                         this.createStorageEntity(player);
                     }
-                    let amountToRemove = r.formValues[0] as number;
+                    let amountToRemove = r.formValues![0] as number;
                     world.structureManager.place(
                         "andexdbPlayerShopRecievedShopItemsStorage:" + item.playerID,
                         player.dimension,
@@ -1031,7 +1031,7 @@ ${
                         throw new ReferenceError(`Unable to get the storage entity.`);
                     }
                     const testItemStack = new ItemStack(item.itemID);
-                    if ((entity.getComponent("inventory")?.container?.emptySlotsCount as number) <= (r.formValues[0] as number) / testItemStack.maxAmount) {
+                    if ((entity.getComponent("inventory")?.container?.emptySlotsCount as number) <= (r.formValues![0] as number) / testItemStack.maxAmount) {
                         let availableSpace = (entity.getComponent("inventory")?.container?.emptySlotsCount as number) * testItemStack.maxAmount;
                         containerToItemStackArray(entity.getComponent("inventory")?.container as Container).forEach((v) => {
                             try {
@@ -1050,7 +1050,7 @@ ${
                                 }
                             }
                         });
-                        if ((r.formValues[0] as number) > availableSpace) {
+                        if ((r.formValues![0] as number) > availableSpace) {
                             entity.remove();
                             throw new StorageFullError(
                                 "The shop owner does not have enough storage left for the items that you are selling, the shop owner must collect their items before and more items can be sold to them."
@@ -1073,8 +1073,8 @@ ${
                                 amountToRemove -= amount;
                                 item.amountWanted -= amount;
                                 item.currentAmount += amount;
-                                MoneySystem.get(player.id).addMoney(item.value * (r.formValues[0] as number));
-                                MoneySystem.get(item.playerID ?? this.playerID).removeMoney(item.value * (r.formValues[0] as number));
+                                MoneySystem.get(player.id).addMoney(item.value * (r.formValues![0] as number));
+                                MoneySystem.get(item.playerID ?? this.playerID).removeMoney(item.value * (r.formValues![0] as number));
                             } catch (e) {
                                 try {
                                     player.sendMessage(e + " " + e?.stack);
@@ -1165,9 +1165,9 @@ ${
                 const form = new MessageFormData();
                 form.title("Not Enough Items");
                 form.body(
-                    `You do not have ${r.formValues[0]} of this item.\nYou currently have ${itemCount} of this item.\nYou wanted to sell ${
-                        r.formValues[0]
-                    } of this item.\nYou need another ${(r.formValues[0] as number) - itemCount} of this item.`
+                    `You do not have ${r.formValues![0]} of this item.\nYou currently have ${itemCount} of this item.\nYou wanted to sell ${
+                        r.formValues![0]
+                    } of this item.\nYou need another ${(r.formValues![0] as number) - itemCount} of this item.`
                 );
                 form.button1("Go Back");
                 form.button2("Close Shop");
@@ -1301,7 +1301,7 @@ ${
                 assertIsDefined(r.selection);
                 let response = r.selection;
                 switch (
-                    (!!shopsList[r.selection] ? "shop" : undefined) ??
+                    (!!shopsList[r.selection!] ? "shop" : undefined) ??
                     cullUndefined([
                         "manageMyShops",
                         showBackButton ? "back" : undefined,
@@ -1403,7 +1403,7 @@ export class PlayerShopManager {
             .then(async (r) => {
                 if (r.canceled) return 1;
 
-                switch ((["manageShops", "manageAllShops", "mainSettings", "shopItemSettings", "back", "close"] as const)[r.selection]) {
+                switch ((["manageShops", "manageAllShops", "mainSettings", "shopItemSettings", "back", "close"] as const)[r.selection!]) {
                     case "manageShops":
                         if ((await PlayerShopManager.managePlayerShops(sourceEntity, false)) !== 0) {
                             return (await PlayerShopManager.playerShopSystemSettings(sourceEntity)) as 0 | 1;
@@ -1542,7 +1542,7 @@ export class PlayerShopManager {
 
                 assertIsDefined(r.selection);
                 switch (
-                    (!!shopsList[r.selection] ? "shop" : undefined) ??
+                    (!!shopsList[r.selection!] ? "shop" : undefined) ??
                     cullUndefined([
                         "newShop",
                         config.system.debugMode && sourceEntity.hasTag("admin") ? "newShopAsPlayer" : undefined,
@@ -1644,7 +1644,7 @@ export class PlayerShopManager {
                     case "refresh":
                         return await PlayerShopManager.managePlayerShops(sourceEntity, all);
                     default:
-                        if (((await PlayerShopManager.managePlayerShop(sourceEntity, shopsList[r.selection])) as 0 | 1) !== 0) {
+                        if (((await PlayerShopManager.managePlayerShop(sourceEntity, shopsList[r.selection!])) as 0 | 1) !== 0) {
                             return await PlayerShopManager.managePlayerShops(sourceEntity, all);
                         } else {
                             return 0;
@@ -2481,7 +2481,7 @@ ${mode == "buy" ? "Price" : "Value"}: ${mode == "buy" ? (item as PlayerSavedShop
                     ...(debugMode ? (["rawData", "editRaw", "editJSON", mode == "buy" ? "loadStructure" : undefined] as const) : ([] as const)),
                     "back",
                     "close",
-                ] as const)[r.selection]
+                ] as const)[r.selection!]
             ) {
                 case "move": {
                     const form = new ModalFormData();
@@ -2489,19 +2489,19 @@ ${mode == "buy" ? "Price" : "Value"}: ${mode == "buy" ? (item as PlayerSavedShop
                     const r = await form.forceShow(sourceEntity as Player);
                     if (r.canceled) return 1;
                     assertIsDefined(r.formValues);
-                    if (!Number.isNaN(Number(r.formValues[0]))) {
+                    if (!Number.isNaN(Number(r.formValues![0]))) {
                         if (mode == "buy") {
                             let newData = shop.buyData;
                             newData.splice(itemIndex, 1);
-                            newData.splice(Number(r.formValues[0]), 0, item as PlayerSavedShopItem);
+                            newData.splice(Number(r.formValues![0]), 0, item as PlayerSavedShopItem);
                             shop.buyData = newData;
                         } else if (mode == "sell") {
                             let newData = shop.sellData;
                             newData.splice(itemIndex, 1);
-                            newData.splice(Number(r.formValues[0]), 0, item as PlayerSellableShopItem);
+                            newData.splice(Number(r.formValues![0]), 0, item as PlayerSellableShopItem);
                             shop.sellData = newData;
                         }
-                        return await PlayerShopManager.managePlayerShop_manageItem(sourceEntity, shop, item, Number(r.formValues[0]), mode);
+                        return await PlayerShopManager.managePlayerShop_manageItem(sourceEntity, shop, item, Number(r.formValues![0]), mode);
                     }
                     return await PlayerShopManager.managePlayerShop_manageItem(sourceEntity, shop, item, itemIndex, mode);
                 }
@@ -3170,7 +3170,7 @@ ${mode == "buy" ? "Price" : "Value"}: ${mode == "buy" ? (item as PlayerSavedShop
             if (r.canceled) return r;
             assertIsDefined(r.formValues);
             let item: PlayerSavedShopItem | PlayerSellableShopItem = undefined as any;
-            let itemIndex = Number.isNaN(Number(r.formValues[2])) ? 10 : Number(r.formValues[2]);
+            let itemIndex = Number.isNaN(Number(r.formValues![2])) ? 10 : Number(r.formValues![2]);
 
             if (type == "player_shop_sellable") {
                 let [title, texture, itemIndex, value, step, max, itemID] = r.formValues as [
@@ -3260,7 +3260,7 @@ Texture: ${page.texture}`
                     ...(debugMode ? (["rawData", "editRaw", "editJSON"] as const) : ([] as const)),
                     "back",
                     "close",
-                ] as const)[r.selection]
+                ] as const)[r.selection!]
             ) {
                 case "contents":
                     if ((await PlayerShopManager.managePlayerShopPage_contents(sourceEntity, shop, [mode, String(pageIndex)])) === 1) {
@@ -3274,19 +3274,19 @@ Texture: ${page.texture}`
                     const r = await form.forceShow(sourceEntity as Player);
                     if (r.canceled) return 1;
                     assertIsDefined(r.formValues);
-                    if (!Number.isNaN(Number(r.formValues[0]))) {
+                    if (!Number.isNaN(Number(r.formValues![0]))) {
                         if (mode == "buy") {
                             let newData = shop.buyData;
                             newData.splice(pageIndex, 1);
-                            newData.splice(Number(r.formValues[0]), 0, page as PlayerShopPage);
+                            newData.splice(Number(r.formValues![0]), 0, page as PlayerShopPage);
                             shop.buyData = newData;
                         } else if (mode == "sell") {
                             let newData = shop.sellData;
                             newData.splice(pageIndex, 1);
-                            newData.splice(Number(r.formValues[0]), 0, page as PlayerShopPage);
+                            newData.splice(Number(r.formValues![0]), 0, page as PlayerShopPage);
                             shop.sellData = newData;
                         }
-                        return await PlayerShopManager.managePlayerShop_managePage(sourceEntity, shop, page, Number(r.formValues[0]), mode);
+                        return await PlayerShopManager.managePlayerShop_managePage(sourceEntity, shop, page, Number(r.formValues![0]), mode);
                     }
                     return await PlayerShopManager.managePlayerShop_managePage(sourceEntity, shop, page, pageIndex, mode);
                 }
@@ -3456,7 +3456,7 @@ Texture: ${page.texture}`
             if (r.canceled) return 1;
             assertIsDefined(r.formValues);
             let page: PlayerShopPage = undefined as any;
-            let pageIndex = Number.isNaN(Number(r.formValues[2])) ? 10 : Number(r.formValues[2]);
+            let pageIndex = Number.isNaN(Number(r.formValues![2])) ? 10 : Number(r.formValues![2]);
 
             let [pageTitle, pageBody, title, texture] = r.formValues as [pageTitle: string, pageBody: string, title: string, texture: string];
             page = {
@@ -3767,7 +3767,7 @@ Texture: ${page.texture}`
                     ...(debugMode ? (["rawData", "editRaw", "editJSON", mode == "buy" ? "loadStructure" : undefined] as const) : ([] as const)),
                     "back",
                     "close",
-                ] as const)[r.selection]
+                ] as const)[r.selection!]
             ) {
                 case "move": {
                     const form = new ModalFormData();
@@ -3775,21 +3775,21 @@ Texture: ${page.texture}`
                     const r = await form.forceShow(sourceEntity as Player);
                     if (r.canceled) return 1;
                     assertIsDefined(r.formValues);
-                    if (!Number.isNaN(Number(r.formValues[0]))) {
+                    if (!Number.isNaN(Number(r.formValues![0]))) {
                         if (mode == "buy") {
                             let data = shop.buyData;
                             let newData = getPathInObject(data, path).data as PlayerBuyableShopElement[];
                             newData.splice(itemIndex, 1);
-                            newData.splice(Number(r.formValues[0]), 0, item as PlayerSavedShopItem);
+                            newData.splice(Number(r.formValues![0]), 0, item as PlayerSavedShopItem);
                             shop.buyData = data;
                         } else if (mode == "sell") {
                             let data = shop.sellData;
                             let newData = getPathInObject(data, path).data as PlayerSellableShopElement[];
                             newData.splice(itemIndex, 1);
-                            newData.splice(Number(r.formValues[0]), 0, item as PlayerSellableShopItem);
+                            newData.splice(Number(r.formValues![0]), 0, item as PlayerSellableShopItem);
                             shop.sellData = data;
                         }
-                        return await PlayerShopManager.managePlayerShopPage_manageItem(sourceEntity, shop, path, item, Number(r.formValues[0]));
+                        return await PlayerShopManager.managePlayerShopPage_manageItem(sourceEntity, shop, path, item, Number(r.formValues![0]));
                     }
                     return await PlayerShopManager.managePlayerShopPage_manageItem(sourceEntity, shop, path, item, itemIndex);
                 }
@@ -4328,7 +4328,7 @@ Texture: ${page.texture}`
             if (r.canceled) return 1;
             assertIsDefined(r.formValues);
             let item: PlayerSavedShopItem | PlayerSellableShopItem = undefined as any;
-            let itemIndex = Number.isNaN(Number(r.formValues[2])) ? 10 : Number(r.formValues[2]);
+            let itemIndex = Number.isNaN(Number(r.formValues![2])) ? 10 : Number(r.formValues![2]);
 
             if (type == "player_shop_sellable") {
                 let [title, texture, itemIndex, value, step, max, itemID] = r.formValues as [
@@ -4421,7 +4421,7 @@ Texture: ${page.texture}`
                     ...(debugMode ? (["rawData", "editRaw", "editJSON"] as const) : ([] as const)),
                     "back",
                     "close",
-                ] as const)[r.selection]
+                ] as const)[r.selection!]
             ) {
                 case "contents":
                     if ((await PlayerShopManager.managePlayerShopPage_contents(sourceEntity, shop, path)) === 1) {
@@ -4435,19 +4435,19 @@ Texture: ${page.texture}`
                     const r = await form.forceShow(sourceEntity as Player);
                     if (r.canceled) return 1;
                     assertIsDefined(r.formValues);
-                    if (!Number.isNaN(Number(r.formValues[0]))) {
+                    if (!Number.isNaN(Number(r.formValues![0]))) {
                         if (mode == "buy") {
                             let newData = shop.buyData;
                             newData.splice(pageIndex, 1);
-                            newData.splice(Number(r.formValues[0]), 0, page as PlayerShopPage);
+                            newData.splice(Number(r.formValues![0]), 0, page as PlayerShopPage);
                             shop.buyData = newData;
                         } else if (mode == "sell") {
                             let newData = shop.sellData;
                             newData.splice(pageIndex, 1);
-                            newData.splice(Number(r.formValues[0]), 0, page as PlayerShopPage);
+                            newData.splice(Number(r.formValues![0]), 0, page as PlayerShopPage);
                             shop.sellData = newData;
                         }
-                        return await PlayerShopManager.managePlayerShopPage_managePage(sourceEntity, shop, path, page, Number(r.formValues[0]));
+                        return await PlayerShopManager.managePlayerShopPage_managePage(sourceEntity, shop, path, page, Number(r.formValues![0]));
                     }
                     return await PlayerShopManager.managePlayerShopPage_managePage(sourceEntity, shop, path, page, pageIndex);
                 }
@@ -4628,7 +4628,7 @@ Texture: ${page.texture}`
             if (r.canceled) return 1;
             assertIsDefined(r.formValues);
             let page: PlayerShopPage = undefined as any;
-            let pageIndex = Number.isNaN(Number(r.formValues[2])) ? 10 : Number(r.formValues[2]);
+            let pageIndex = Number.isNaN(Number(r.formValues![2])) ? 10 : Number(r.formValues![2]);
 
             let [pageTitle, pageBody, title, texture] = r.formValues as [pageTitle: string, pageBody: string, title: string, texture: string];
             page = {

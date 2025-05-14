@@ -1,4 +1,7 @@
-const numberFormatter_compact_map = [
+/**
+ * An array of objects representing number suffixes and their corresponding thresholds.
+ */
+export const numberFormatter_compact_map = Object.freeze([
     { suffix: "Mn", threshold: 10n ** 3003n }, // Millinillion
     { suffix: "Ce", threshold: 10n ** 303n }, // Centillion
     { suffix: "NOg", threshold: 10n ** 300n }, // Novenonagintillion
@@ -103,59 +106,28 @@ const numberFormatter_compact_map = [
     { suffix: "M", threshold: 10n ** 6n },
     { suffix: "K", threshold: 10n ** 3n },
     { suffix: "", threshold: 1n },
-] as const;
+] as const);
 
+/**
+ * Formats a number into a compact string representation.
+ *
+ * @param {string | number | bigint | boolean} number The number to format.
+ * @param {boolean | string} isMoneyOrCurrecyPrefix If true, adds a dollar sign prefix. If a string, uses it as the prefix.
+ * @param {object} compressedDigitsNumDecimalsOptions Options for decimal places.
+ * @param {number} [decimalPlaces=0] The number of decimal places to use when there is no suffix.
+ * @param {number} [precision=100] The precision to use for the {@link Decimal} instance. Defaults to 100.
+ * @returns {string} The formatted number.
+ *
+ * @example
+ * ```typescript
+ * numberFormatter_compact(123456789, true); // "$123M"
+ * numberFormatter_compact(123456789, "€"); // "€123M"
+ * numberFormatter_compact(12345678); // "12.3M"
+ * numberFormatter_compact(123456789, false, { 3: 5 }); // "123.45678M"
+ * numberFormatter_compact(12345678, false, { 3: 5 }); // "12.3M"
+ * numberFormatter_compact(12345678, false, { 2: 3 }); // "12.345M"
+ */
 export function numberFormatter_compact(
-    number: string | number | bigint | boolean,
-    isMoneyOrCurrecyPrefix: boolean|string,
-    compressedDigitsNumDecimalsOptions: {
-        /**
-         * How many decimals there should be when there are 3 digits.
-         * 
-         * @default 0
-         */
-        3?: number;
-        /**
-         * How many decimals there should be when there are 2 digits.
-         * 
-         * @default 1
-         */
-        2?: number;
-        /**
-         * How many decimals there should be when there is 1 digit.
-         * 
-         * @default 2
-         */
-        1?: number;
-    } = { 3: 0, 2: 1, 1: 2 },
-    decimalPlaces: number = 0,
-    precision: number = 100
-) {
-    // Convert the number to a Decimal instance with the specified precision and a rounding mode of always rounding down.
-    let dec = new (Decimal.clone({ precision: precision, rounding: Decimal.ROUND_DOWN }))(String(number));
-    const negative = dec.lessThan(0);
-    dec = dec.abs();
-
-    const found = numberFormatter_compact_map.find((x) => dec.greaterThanOrEqualTo(x.threshold.toString()));
-    if (found) {
-        const dec2 = dec.div(found.threshold.toString());
-        const formatted =
-            dec2.toFixed(
-                found.threshold === 1n
-                    ? decimalPlaces
-                    : dec2.greaterThanOrEqualTo(100)
-                    ? compressedDigitsNumDecimalsOptions[3] ?? 0
-                    : dec2.greaterThanOrEqualTo(10)
-                    ? compressedDigitsNumDecimalsOptions[2] ?? 1
-                    : compressedDigitsNumDecimalsOptions[1] ?? 2
-            ) + found.suffix;
-        return (negative ? "-" : "") + (typeof isMoneyOrCurrecyPrefix === "string" ? isMoneyOrCurrecyPrefix : isMoneyOrCurrecyPrefix ? "$" : "") + formatted;
-    }
-
-    return (negative ? "-" : "") + (typeof isMoneyOrCurrecyPrefix === "string" ? isMoneyOrCurrecyPrefix : isMoneyOrCurrecyPrefix ? "$" : "") + dec.toFixed(decimalPlaces);
-}
-
-export function numberFormatter_compact_lite(
     number: string | number | bigint | boolean,
     isMoneyOrCurrecyPrefix: boolean | string,
     compressedDigitsNumDecimalsOptions: {
@@ -178,8 +150,88 @@ export function numberFormatter_compact_lite(
          */
         1?: number;
     } = { 3: 0, 2: 1, 1: 2 },
+    decimalPlaces: number = 0,
+    precision: number = 100
+): string {
+    // Convert the number to a Decimal instance with the specified precision and a rounding mode of always rounding down.
+    let dec = new (Decimal.clone({ precision: precision, rounding: Decimal.ROUND_DOWN }))(String(number));
+    const negative = dec.lessThan(0);
+    dec = dec.abs();
+
+    const found = numberFormatter_compact_map.find((x) => dec.greaterThanOrEqualTo(x.threshold.toString()));
+    if (found) {
+        const dec2 = dec.div(found.threshold.toString());
+        const formatted =
+            dec2.toFixed(
+                found.threshold === 1n
+                    ? decimalPlaces
+                    : dec2.greaterThanOrEqualTo(100)
+                    ? compressedDigitsNumDecimalsOptions[3] ?? 0
+                    : dec2.greaterThanOrEqualTo(10)
+                    ? compressedDigitsNumDecimalsOptions[2] ?? 1
+                    : compressedDigitsNumDecimalsOptions[1] ?? 2
+            ) + found.suffix;
+        return (negative ? "-" : "") + (typeof isMoneyOrCurrecyPrefix === "string" ? isMoneyOrCurrecyPrefix : isMoneyOrCurrecyPrefix ? "$" : "") + formatted;
+    }
+
+    return (
+        (negative ? "-" : "") +
+        (typeof isMoneyOrCurrecyPrefix === "string" ? isMoneyOrCurrecyPrefix : isMoneyOrCurrecyPrefix ? "$" : "") +
+        dec.toFixed(decimalPlaces)
+    );
+}
+
+/**
+ * Options for `compressedDigitsNumDecimalsOptions` parameter of the {@link numberFormatter_compact} and {@link numberFormatter_compact_lite} functions.
+ */
+export interface NumberFormatterCompactCompressedDigitsNumDecimalsOptions {
+    /**
+     * How many decimals there should be when there are 3 digits.
+     *
+     * @default 0
+     */
+    3?: number;
+    /**
+     * How many decimals there should be when there are 2 digits.
+     *
+     * @default 1
+     */
+    2?: number;
+    /**
+     * How many decimals there should be when there is 1 digit.
+     *
+     * @default 2
+     */
+    1?: number;
+}
+
+/**
+ * Formats a number into a compact string representation.
+ *
+ * This is a lightweight version of the {@link numberFormatter_compact} function, which does not use a {@link Decimal} instance.
+ *
+ * @param {string | number | bigint | boolean} number The number to format.
+ * @param {boolean | string} isMoneyOrCurrecyPrefix If true, adds a dollar sign prefix. If a string, uses it as the prefix.
+ * @param {NumberFormatterCompactCompressedDigitsNumDecimalsOptions} compressedDigitsNumDecimalsOptions Options for decimal places.
+ * @param {number} [decimalPlaces=0] The number of decimal places to use when there is no suffix.
+ * @returns {string} The formatted number.
+ *
+ * @example
+ * ```typescript
+ * numberFormatter_compact_lite(123456789, true); // "$123M"
+ * numberFormatter_compact_lite(123456789, "€"); // "€123M"
+ * numberFormatter_compact_lite(12345678); // "12.3M"
+ * numberFormatter_compact_lite(123456789, false, { 3: 5 }); // "123.45678M"
+ * numberFormatter_compact_lite(12345678, false, { 3: 5 }); // "12.3M"
+ * numberFormatter_compact_lite(12345678, false, { 2: 3 }); // "12.345M"
+ * ```
+ */
+export function numberFormatter_compact_lite(
+    number: string | number | bigint | boolean,
+    isMoneyOrCurrecyPrefix: boolean | string,
+    compressedDigitsNumDecimalsOptions: NumberFormatterCompactCompressedDigitsNumDecimalsOptions = { 3: 0, 2: 1, 1: 2 },
     decimalPlaces: number = 0
-) {
+): string {
     let baseNum =
         decimalPlaces !== 0
             ? typeof number === "string"
@@ -194,25 +246,23 @@ export function numberFormatter_compact_lite(
             : BigInt(typeof number === "string" ? number.match(/^\d+$/)?.[0] ?? 0 : Math.floor(Number(number)));
     const negative = baseNum < 0;
     const num = typeof baseNum === "bigint" ? (negative ? -baseNum : baseNum) : Math.abs(baseNum);
-    
 
     const found = numberFormatter_compact_map.find((x) => num >= x.threshold);
     if (found) {
         if (typeof num === "bigint") {
             const num2 = num / found.threshold;
-            const divisor =
-                10n **
-                BigInt(
-                    found.threshold === 1n
-                        ? decimalPlaces
-                        : num2 >= 100
-                        ? compressedDigitsNumDecimalsOptions[3] ?? 0
-                        : num2 >= 10
-                        ? compressedDigitsNumDecimalsOptions[2] ?? 1
-                        : compressedDigitsNumDecimalsOptions[1] ?? 2
-                );
-            const num3 = num / (found.threshold / divisor);
-            const formatted = num2.toString() + "." + (num3 % divisor).toString() + found.suffix;
+            const decimalPlaceCount = BigInt(
+                found.threshold === 1n
+                    ? decimalPlaces
+                    : num2 >= 100
+                    ? compressedDigitsNumDecimalsOptions[3] ?? 0
+                    : num2 >= 10
+                    ? compressedDigitsNumDecimalsOptions[2] ?? 1
+                    : compressedDigitsNumDecimalsOptions[1] ?? 2
+            );
+            const divisor = 10n ** decimalPlaceCount;
+            const num3: bigint = decimalPlaceCount === 0n ? 0n : num / (found.threshold / divisor);
+            const formatted = num2.toString() + (decimalPlaceCount === 0n ? "" : "." + (num3 % divisor).toString()) + found.suffix;
             return (
                 (negative ? "-" : "") + (typeof isMoneyOrCurrecyPrefix === "string" ? isMoneyOrCurrecyPrefix : isMoneyOrCurrecyPrefix ? "$" : "") + formatted
             );
@@ -241,12 +291,48 @@ export function numberFormatter_compact_lite(
     );
 }
 
+/**
+ * Options for the {@link numberFormatter} function.
+ */
+export interface NumberFormatterOptions {
+    /**
+     * Optional currency prefix to add to the formatted number.
+     * If not provided, no prefix will be added.
+     *
+     * @default void
+     */
+    currencyPrefix?: string;
+    /**
+     * Whether to add comma separators to the formatted number.
+     *
+     * @default true
+     */
+    addCommaSeparators?: boolean;
+}
+
+/**
+ * Formats a number into a string representation with optional currency prefix and comma separators.
+ *
+ * @param {string | number | bigint | boolean} number The number to format.
+ * @param {NumberFormatterOptions} [options] Options for formatting.
+ * @param {number} [decimalPlaces=0] The number of decimal places to use. Defaults to `0`.
+ * @param {number} [precision=100] The precision to use for the {@link Decimal} instance. Defaults to `100`.
+ * @returns {string} The formatted number.
+ *
+ * @example
+ * ```typescript
+ * numberFormatter(123456789); // "123,456,789"
+ * numberFormatter(123456789, { currencyPrefix: "$" }); // "$123,456,789"
+ * numberFormatter(123456789, { addCommaSeparators: false }); // "123456789"
+ * numberFormatter(123456789, { currencyPrefix: "$", addCommaSeparators: false }); // "$123456789"
+ * ```
+ */
 export function numberFormatter(
     number: string | number | bigint | boolean,
-    options: { currencyPrefix?: string; addCommaSeparators: boolean } = { addCommaSeparators: true },
+    options: NumberFormatterOptions = { addCommaSeparators: true },
     decimalPlaces: number = 0,
     precision: number = 100
-) {
+): string {
     // Convert the number to a Decimal instance with the specified precision and a rounding mode of always rounding down.
     let str = new (Decimal.clone({ precision: precision, rounding: Decimal.ROUND_DOWN }))(String(number)).toFixed(decimalPlaces);
     if (options.currencyPrefix !== undefined) {

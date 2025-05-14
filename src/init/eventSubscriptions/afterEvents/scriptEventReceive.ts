@@ -36,6 +36,7 @@ import {
     ScriptEventSource,
     MolangVariableMap,
     Effect,
+    ContainerSlot,
 } from "@minecraft/server";
 import { ModalFormData, ActionFormData, ModalFormResponse } from "@minecraft/server-ui";
 import { chatMessage } from "modules/chat/functions/chatMessage";
@@ -128,11 +129,11 @@ subscribedEvents.afterScriptEventReceive = system.afterEvents.scriptEventReceive
         const inventory = players[0].getComponent("inventory") as EntityInventoryComponent;
         inventory.container.setItem(0, diamondAwesomeSword);
 
-        let item = inventory.container.getItem(0);
+        let item = inventory.container.getItem(0)!;
 
-        let enchants = item.getComponent("enchantable");
+        let enchants = item.getComponent("enchantable")!;
         let knockbackEnchant = {
-            type: EnchantmentTypes.get("knockback"),
+            type: EnchantmentTypes.get("knockback")!,
             level: 2,
         };
         enchants.addEnchantment(knockbackEnchant);
@@ -141,9 +142,9 @@ subscribedEvents.afterScriptEventReceive = system.afterEvents.scriptEventReceive
           let players = world.getAllPlayers();*/
 
         let fireAspectEnchant = { type: "fire_aspect", level: 1 };
-        let enchants2 = ironFireSword.getComponent("enchantable");
+        let enchants2 = ironFireSword.getComponent("enchantable")!;
         let addedFire = enchants2.addEnchantment({
-            type: EnchantmentTypes.get("fire_aspect"),
+            type: EnchantmentTypes.get("fire_aspect")!,
             level: 0,
         });
         console.warn(ironFireSword);
@@ -159,17 +160,17 @@ subscribedEvents.afterScriptEventReceive = system.afterEvents.scriptEventReceive
 
         const inventory2 = players[0].getComponent("inventory") as EntityInventoryComponent;
         let itemb = inventory.container.getItem(0);
-        console.warn(String(Array(item.getComponent("enchantable").getEnchantments()[0])));
-        console.warn(item.getComponent("enchantable").isValid);
-        console.warn(item.getComponent("enchantable").getEnchantments()[0]);
+        console.warn(String(Array(item.getComponent("enchantable")!.getEnchantments()[0])));
+        console.warn(item.getComponent("enchantable")!.isValid);
+        console.warn(item.getComponent("enchantable")!.getEnchantments()[0]);
         item.setLore(["§c§lDiamond Sword of Awesome§r", "+10 coolness", "§p+4 shiny§r"]);
         console.warn(item.getComponent("enchantable") as ItemEnchantableComponent);
         console.warn(item);
         inventory.container.setItem(0, item);
-        let itema = inventory2.container.getItem(0);
-        let enchants3 = itema.getComponent("enchantable");
+        let itema = inventory2.container.getItem(0)!;
+        let enchants3 = itema.getComponent("enchantable")!;
         let knockbackEnchant2 = {
-            type: EnchantmentTypes.get("knockback"),
+            type: EnchantmentTypes.get("knockback")!,
             level: 1,
         };
         enchants3.addEnchantment(knockbackEnchant2); /*
@@ -456,7 +457,7 @@ subscribedEvents.afterScriptEventReceive = system.afterEvents.scriptEventReceive
                 .show(players[players.findIndex((x) => x == sourceEntity)] as any)
                 .then((t) => {
                     if (t.canceled) return;
-                    let [playerTarget, playerViewer] = t.formValues;
+                    let [playerTarget, playerViewer] = t.formValues!;
                     let playerTargetB = Number(playerTarget);
                     let playerViewerB = Number(playerViewer);
                     let blockProperties: any;
@@ -486,7 +487,7 @@ subscribedEvents.afterScriptEventReceive = system.afterEvents.scriptEventReceive
                         effectsList = "§4None§a";
                     }
                     try {
-                        blockProperties = [players[playerTargetB].getBlockFromViewDirection().block.permutation.getAllStates()[0]];
+                        blockProperties = [players[playerTargetB].getBlockFromViewDirection()!.block.permutation.getAllStates()[0]];
                     } catch (e) {
                         blockProperties = "§4None§a";
                     } /*
@@ -509,26 +510,26 @@ subscribedEvents.afterScriptEventReceive = system.afterEvents.scriptEventReceive
                         entityViewedEntityDistance = "§4None§a";
                     }
                     try {
-                        scoreboardIdentity = String(players[playerTargetB].scoreboardIdentity.id);
+                        scoreboardIdentity = String(players[playerTargetB].scoreboardIdentity!.id);
                     } catch (e) {
                         scoreboardIdentity = "§4None§a";
                     }
                     try {
-                        scoreboardIdentityDisplayName = players[playerTargetB].scoreboardIdentity.displayName;
+                        scoreboardIdentityDisplayName = players[playerTargetB].scoreboardIdentity!.displayName;
                     } catch (e) {
                         scoreboardIdentityDisplayName = "§4None§a";
                     }
                     try {
-                        scoreboardIdentityType = players[playerTargetB].scoreboardIdentity.type;
+                        scoreboardIdentityType = players[playerTargetB].scoreboardIdentity!.type;
                     } catch (e) {
                         scoreboardIdentityType = "§4None§a";
                     }
                     try {
                         blockViewedBlockType =
                             "§9{ §btypeId§a: §u" +
-                            players[playerTargetB].getBlockFromViewDirection().block.typeId +
+                            players[playerTargetB].getBlockFromViewDirection()!.block.typeId +
                             "§a, §bcanBeWaterlogged§a: §u" +
-                            players[playerTargetB].getBlockFromViewDirection().block.canContainLiquid(modules.mcServer.LiquidType.Water) +
+                            players[playerTargetB].getBlockFromViewDirection()!.block.canContainLiquid(modules.mcServer.LiquidType.Water) +
                             "§9 }§a";
                     } catch (e) {
                         blockViewedBlockType = "§4None§a";
@@ -536,13 +537,13 @@ subscribedEvents.afterScriptEventReceive = system.afterEvents.scriptEventReceive
                     try {
                         spawnPointAllCoordinates =
                             "§a, §bgetSpawnPoint§a: §9{ §sdimension§a: §u" +
-                            players[playerTargetB].getSpawnPoint().dimension +
+                            players[playerTargetB].getSpawnPoint()!.dimension +
                             "§a, §sx§a: §c" +
-                            players[playerTargetB].getSpawnPoint().x +
+                            players[playerTargetB].getSpawnPoint()!.x +
                             "§a, §sy§a: §c" +
-                            players[playerTargetB].getSpawnPoint().y +
+                            players[playerTargetB].getSpawnPoint()!.y +
                             "§a, §sz§a: §c" +
-                            players[playerTargetB].getSpawnPoint().z +
+                            players[playerTargetB].getSpawnPoint()!.z +
                             "§9 }§a";
                     } catch (e) {
                         spawnPointAllCoordinates = "§4None§a";
@@ -698,9 +699,9 @@ subscribedEvents.afterScriptEventReceive = system.afterEvents.scriptEventReceive
                 .show(players[players.findIndex((x) => x == sourceEntity)] as any)
                 .then((t) => {
                     if (t.canceled) return;
-                    let [playerViewer, selectionType, entityUUID, blockLocationIndex, blockLocationCoordinates] = t.formValues;
+                    let [playerViewer, selectionType, entityUUID, blockLocationIndex, blockLocationCoordinates] = t.formValues!;
                     let playerViewerB = Number(playerViewer);
-                    let playerTargetB: Entity;
+                    let playerTargetB: Entity = undefined!;
                     let blockLocation = String(blockLocationCoordinates).split(", ");
                     if (selectionType == 0) {
                         playerTargetB = players[playerViewerB].getEntitiesFromViewDirection()[0].entity;
@@ -710,7 +711,7 @@ subscribedEvents.afterScriptEventReceive = system.afterEvents.scriptEventReceive
                             .getDimension("overworld")
                             .getEntities()
                             .concat(world.getDimension("nether").getEntities().concat(world.getDimension("the_end").getEntities()))
-                            .find((entityValue) => entityValue.id == entityUUID);
+                            .find((entityValue) => entityValue.id == entityUUID)!;
                     }
                     if (selectionType == 4) {
                         playerTargetB = world.getDimension(blockLocation[0]).getEntitiesAtBlockLocation({
@@ -761,33 +762,33 @@ subscribedEvents.afterScriptEventReceive = system.afterEvents.scriptEventReceive
                     }
                     let blockProperties = [];
                     try {
-                        blockProperties = [playerTargetB.getBlockFromViewDirection().block.permutation.getAllStates()[0]];
+                        blockProperties = [playerTargetB.getBlockFromViewDirection()!.block.permutation.getAllStates()[0]];
                     } catch (e) {
                         console.error(e, e.stack);
                     } /*
             let effectsList = [players[playerTargetB].getComponents[0]]*/
 
                     try {
-                        scoreboardIdentity = playerTargetB.scoreboardIdentity.id;
+                        scoreboardIdentity = playerTargetB.scoreboardIdentity!.id;
                     } catch (e) {
                         scoreboardIdentity = "§4None§a";
                     }
                     try {
-                        scoreboardIdentityDisplayName = playerTargetB.scoreboardIdentity.displayName;
+                        scoreboardIdentityDisplayName = playerTargetB.scoreboardIdentity!.displayName;
                     } catch (e) {
                         scoreboardIdentityDisplayName = "§4None§a";
                     }
                     try {
-                        scoreboardIdentityType = playerTargetB.scoreboardIdentity.type;
+                        scoreboardIdentityType = playerTargetB.scoreboardIdentity!.type;
                     } catch (e) {
                         scoreboardIdentityType = "§4None§a";
                     }
                     try {
                         blockViewedBlockType =
                             "§9{ §btypeId§a: §u" +
-                            playerTargetB.getBlockFromViewDirection().block.typeId +
+                            playerTargetB.getBlockFromViewDirection()!.block.typeId +
                             "§a, §bcanBeWaterlogged§a: §u" +
-                            playerTargetB.getBlockFromViewDirection().block.canContainLiquid(modules.mcServer.LiquidType.Water) +
+                            playerTargetB.getBlockFromViewDirection()!.block.canContainLiquid(modules.mcServer.LiquidType.Water) +
                             "§9 }§a";
                     } catch (e) {
                         blockViewedBlockType = "§4None§a";
@@ -1051,7 +1052,7 @@ break;*/ /*
                     if (r.canceled)
                         return;
                     // This will assign every input their own variable
-                    let [commandId, commandDelay, debug] = r.formValues; /*
+                    let [commandId, commandDelay, debug] = r.formValues!; /*
                     console.warn(r.formValues);*/ /*
     system.runTimeout(() => {console.warn(
     (sourceEntity).runCommand(String(commandId)).successCount);}, Number(commandDelay))
@@ -1115,6 +1116,7 @@ break;*/ /*
     }).catch(e => {
         console.error(e, e.stack);
     });*/
+        assertIsDefined(sourceEntity);
         mainMenu(sourceEntity);
     }
     if (id == "andexdb:itemLoreInventoryModifier" || id == "andexdb:inventoryController" || id == "andexdb:itemModifier") {
@@ -1135,14 +1137,13 @@ break;*/ /*
             .show(event.sourceEntity as any)
             .then((t) => {
                 if (t.canceled) return;
-                let [slotNumber, slotType, playerTarget, playerViewer, debug2] = t.formValues;
+                let [slotNumber, slotType, playerTarget, playerViewer, debug2] = t.formValues!;
                 let playerTargetB = Number(playerTarget);
                 let playerViewerB = Number(playerViewer);
-                let inventory: any;
-                inventory = players[playerTargetB].getComponent("inventory") as EntityInventoryComponent; /*
+                let inventory: EntityInventoryComponent = players[playerTargetB].getComponent("inventory") as EntityInventoryComponent; /*
     try{inventory = players[playerTargetB].getComponent("equipment_inventory") as EntityEquipmentInventoryComponent;} catch(e){if (Boolean(debug2) == true) { console.error(e, e.stack); }};*/
 
-                let item = inventory.container.getItem(Number(slotNumber));
+                let item: any = inventory.container.getItem(Number(slotNumber))!;
                 let equipmentPlayerSlotsList = [
                     EquipmentSlot.Head,
                     EquipmentSlot.Chest,
@@ -1154,7 +1155,7 @@ break;*/ /*
                 if (Number(slotType) == 1) {
                     try {
                         let a = players[playerTargetB].getComponent("equippable") as EntityEquippableComponent;
-                        item = a.getEquipmentSlot(equipmentPlayerSlotsList[Number(slotNumber)]);
+                        item = a.getEquipmentSlot(equipmentPlayerSlotsList[Number(slotNumber)])!;
                     } catch (e) {
                         if (Boolean(debug2) == true) {
                             console.error(e, e.stack);
@@ -1181,7 +1182,7 @@ break;*/ /*
                         return undefined;
                     }
                 }
-                const durability = getDurability();
+                const durability = getDurability()!;
                 function itemNameTextCalculator() {
                     try {
                         if (item.nameTag == undefined) {
@@ -1457,7 +1458,7 @@ break;*/ /*
                             transferToContainer,
                             transferToContainerBlock,
                             debug,
-                        ] = r.formValues; /*
+                        ] = r.formValues!; /*
     console.warn(r.formValues);*/
 
                         /*let item = inventory.container.getItem(Number(slotNumber));
@@ -1466,32 +1467,32 @@ break;*/ /*
                             x: Number(String(transferFromContainerBlock).split(", ")[1]),
                             y: Number(String(transferFromContainerBlock).split(", ")[2]),
                             z: Number(String(transferFromContainerBlock).split(", ")[3]),
-                        });
+                        })!;
                         let transferToContainerBlockB = world.getDimension(String(transferToContainerBlock).split(", ")[0]).getBlock({
                             x: Number(String(transferToContainerBlock).split(", ")[1]),
                             y: Number(String(transferToContainerBlock).split(", ")[2]),
                             z: Number(String(transferToContainerBlock).split(", ")[3]),
-                        });
+                        })!;
                         let moveFromContainerBlockB = world.getDimension(String(moveFromContainerBlock).split(", ")[0]).getBlock({
                             x: Number(String(moveFromContainerBlock).split(", ")[1]),
                             y: Number(String(moveFromContainerBlock).split(", ")[2]),
                             z: Number(String(moveFromContainerBlock).split(", ")[3]),
-                        });
+                        })!;
                         let moveToContainerBlockB = world.getDimension(String(moveToContainerBlock).split(", ")[0]).getBlock({
                             x: Number(String(moveToContainerBlock).split(", ")[1]),
                             y: Number(String(moveToContainerBlock).split(", ")[2]),
                             z: Number(String(moveToContainerBlock).split(", ")[3]),
-                        });
+                        })!;
                         let swapContainerBlockB = world.getDimension(String(swapContainerBlock).split(", ")[0]).getBlock({
                             x: Number(String(swapContainerBlock).split(", ")[1]),
                             y: Number(String(swapContainerBlock).split(", ")[2]),
                             z: Number(String(swapContainerBlock).split(", ")[3]),
-                        });
+                        })!;
                         let swapOtherContainerBlockB = world.getDimension(String(swapOtherContainerBlock).split(", ")[0]).getBlock({
                             x: Number(String(swapOtherContainerBlock).split(", ")[1]),
                             y: Number(String(swapOtherContainerBlock).split(", ")[2]),
                             z: Number(String(swapOtherContainerBlock).split(", ")[3]),
-                        });
+                        })!;
                         let durability2 = getDurability();
                         let enchantments2 = getEnchantments(); /*
     for (const index in inventory.) {
@@ -1580,7 +1581,8 @@ break;*/ /*
                                 console.error(e, e.stack);
                             }
                         }
-                        if (event.sourceEntity.hasTag("scriptDebugger")) {
+                        assertIsDefined(sourceEntity);
+                        if (sourceEntity.hasTag("scriptDebugger")) {
                             console.warn(item.typeId);
                         }
                         if (Number(slotType) == 1) {
@@ -1929,17 +1931,17 @@ break;*/ /*
                                             .then((t) => {
                                                 if (t.canceled) return;
                                                 let [transferType, fromBlockSelectionMode, fromBlockPosition, toBlockSelectionMode, toBlockPosition, debug2] =
-                                                    t.formValues;
+                                                    t.formValues!;
                                                 let fromBlockPositionB = world.getDimension(String(fromBlockPosition).split(", ")[0]).getBlock({
                                                     x: Number(String(fromBlockPosition).split(", ")[1]),
                                                     y: Number(String(fromBlockPosition).split(", ")[2]),
                                                     z: Number(String(fromBlockPosition).split(", ")[3]),
-                                                });
+                                                })!;
                                                 let toBlockPositionB = world.getDimension(String(toBlockPosition).split(", ")[0]).getBlock({
                                                     x: Number(String(toBlockPosition).split(", ")[1]),
                                                     y: Number(String(toBlockPosition).split(", ")[2]),
                                                     z: Number(String(toBlockPosition).split(", ")[3]),
-                                                });
+                                                })!;
                                                 let fromBlockPositionC = fromBlockPositionB.getComponent("inventory") as BlockInventoryComponent;
                                                 let toBlockPositionC = toBlockPositionB.getComponent("inventory") as BlockInventoryComponent;
                                                 if (Number(fromBlockSelectionMode) > 0) {
@@ -1959,7 +1961,7 @@ break;*/ /*
                                                                 y: Number(String(fromPresetValues).split(", ")[2]),
                                                                 z: Number(String(fromPresetValues).split(", ")[3]),
                                                             })
-                                                            .getComponent("inventory") as BlockInventoryComponent;
+                                                            ?.getComponent("inventory") as BlockInventoryComponent;
                                                     } catch (e) {
                                                         console.error(e, e.stack);
                                                     }
@@ -1981,7 +1983,7 @@ break;*/ /*
                                                                 y: Number(String(toPresetValues).split(", ")[2]),
                                                                 z: Number(String(toPresetValues).split(", ")[3]),
                                                             })
-                                                            .getComponent("inventory") as BlockInventoryComponent;
+                                                            ?.getComponent("inventory") as BlockInventoryComponent;
                                                     } catch (e) {
                                                         console.error(e, e.stack);
                                                     }
@@ -1990,10 +1992,10 @@ break;*/ /*
                                                     case 0:
                                                         for (let index = 0; index < 27; index++) {
                                                             try {
-                                                                fromBlockPositionC.container.swapItems(
+                                                                fromBlockPositionC.container?.swapItems(
                                                                     Number(index),
                                                                     Number(index),
-                                                                    toBlockPositionC.container
+                                                                    toBlockPositionC.container!
                                                                 );
                                                             } catch (e) {
                                                                 console.error(e, e.stack);
@@ -2005,7 +2007,7 @@ break;*/ /*
                                                     case 1:
                                                         for (let index = 0; index < 27; index++) {
                                                             try {
-                                                                fromBlockPositionC.container.transferItem(Number(index), toBlockPositionC.container);
+                                                                fromBlockPositionC.container?.transferItem(Number(index), toBlockPositionC.container!);
                                                             } catch (e) {
                                                                 console.error(e, e.stack);
                                                             }
@@ -2016,7 +2018,11 @@ break;*/ /*
                                                     case 2:
                                                         for (let index = 0; index < 27; index++) {
                                                             try {
-                                                                fromBlockPositionC.container.moveItem(Number(index), Number(index), toBlockPositionC.container);
+                                                                fromBlockPositionC.container?.moveItem(
+                                                                    Number(index),
+                                                                    Number(index),
+                                                                    toBlockPositionC.container!
+                                                                );
                                                             } catch (e) {
                                                                 console.error(e, e.stack);
                                                             }
@@ -2053,7 +2059,7 @@ break;*/ /*
                                             .show(event.sourceEntity as any)
                                             .then((t) => {
                                                 if (t.canceled) return;
-                                                let [transferType, playerTarget, playerViewer, debug2] = t.formValues;
+                                                let [transferType, playerTarget, playerViewer, debug2] = t.formValues!;
                                                 let playerTargetB = Number(playerTarget);
                                                 let playerViewerB = Number(playerViewer);
                                                 const fromInventory = players[playerTargetB].getComponent("inventory") as EntityInventoryComponent;
@@ -2174,12 +2180,12 @@ break;*/ /*
                                             .show(event.sourceEntity as any)
                                             .then((t) => {
                                                 if (t.canceled) return;
-                                                let [transferType, blockSelectionMode, fromBlockPosition, playerTarget, debug2] = t.formValues;
+                                                let [transferType, blockSelectionMode, fromBlockPosition, playerTarget, debug2] = t.formValues!;
                                                 let blockPositionB = world.getDimension(String(fromBlockPosition).split(", ")[0]).getBlock({
                                                     x: Number(String(fromBlockPosition).split(", ")[1]),
                                                     y: Number(String(fromBlockPosition).split(", ")[2]),
                                                     z: Number(String(fromBlockPosition).split(", ")[3]),
-                                                });
+                                                })!;
                                                 let blockPositionC = blockPositionB.getComponent("inventory") as BlockInventoryComponent;
                                                 let playerTargetB = Number(playerTarget);
                                                 const toInventory = players[playerTargetB].getComponent("inventory") as EntityInventoryComponent;
@@ -2200,7 +2206,7 @@ break;*/ /*
                                                                 y: Number(String(presetValues).split(", ")[2]),
                                                                 z: Number(String(presetValues).split(", ")[3]),
                                                             })
-                                                            .getComponent("inventory") as BlockInventoryComponent;
+                                                            ?.getComponent("inventory") as BlockInventoryComponent;
                                                     } catch (e) {
                                                         console.error(e, e.stack);
                                                     }
@@ -2209,7 +2215,7 @@ break;*/ /*
                                                     case 0:
                                                         for (let index = 0; index < 27; index++) {
                                                             try {
-                                                                blockPositionC.container.swapItems(Number(index), Number(index + 9), toInventory.container);
+                                                                blockPositionC.container?.swapItems(Number(index), Number(index + 9), toInventory.container);
                                                             } catch (e) {
                                                                 console.error(e, e.stack);
                                                             }
@@ -2220,7 +2226,7 @@ break;*/ /*
                                                     case 1:
                                                         for (let index = 0; index < 27; index++) {
                                                             try {
-                                                                toInventory.container.transferItem(Number(index + 9), blockPositionC.container);
+                                                                toInventory.container.transferItem(Number(index + 9), blockPositionC.container!);
                                                             } catch (e) {
                                                                 console.error(e, e.stack);
                                                             }
@@ -2231,7 +2237,7 @@ break;*/ /*
                                                     case 2:
                                                         for (let index = 0; index < 27; index++) {
                                                             try {
-                                                                blockPositionC.container.transferItem(Number(index), toInventory.container);
+                                                                blockPositionC.container?.transferItem(Number(index), toInventory.container);
                                                             } catch (e) {
                                                                 console.error(e, e.stack);
                                                             }
@@ -2242,7 +2248,7 @@ break;*/ /*
                                                     case 3:
                                                         for (let index = 0; index < 27; index++) {
                                                             try {
-                                                                toInventory.container.moveItem(Number(index + 9), Number(index), blockPositionC.container);
+                                                                toInventory.container.moveItem(Number(index + 9), Number(index), blockPositionC.container!);
                                                             } catch (e) {
                                                                 console.error(e, e.stack);
                                                             }
@@ -2253,7 +2259,7 @@ break;*/ /*
                                                     case 4:
                                                         for (let index = 0; index < 27; index++) {
                                                             try {
-                                                                blockPositionC.container.moveItem(Number(index), Number(index + 9), toInventory.container);
+                                                                blockPositionC.container?.moveItem(Number(index), Number(index + 9), toInventory.container);
                                                             } catch (e) {
                                                                 console.error(e, e.stack);
                                                             }
@@ -2312,7 +2318,7 @@ break;*/ /*
                                             .show(event.sourceEntity as any)
                                             .then((t) => {
                                                 if (t.canceled) return;
-                                                let [transferType, playerTarget, playerViewer, debug2] = t.formValues;
+                                                let [transferType, playerTarget, playerViewer, debug2] = t.formValues!;
                                                 let playerTargetB = Number(playerTarget);
                                                 let playerViewerB = Number(playerViewer);
                                                 const fromInventory = players[playerTargetB].getComponent("inventory") as EntityInventoryComponent;
@@ -2342,6 +2348,7 @@ break;*/ /*
 
                                                     case 2:
                                                         try {
+                                                            assertIsDefined(sourceEntity);
                                                             sourceEntity.runCommand(String("/scriptevent andexdb:debugScreen saqw"));
                                                         } catch (e) {
                                                             // Do something
@@ -2400,7 +2407,7 @@ break;*/ /*
                                             .show(event.sourceEntity as any)
                                             .then((t) => {
                                                 if (t.canceled) return;
-                                                let [transferType, playerTarget, playerViewer, debug2] = t.formValues;
+                                                let [transferType, playerTarget, playerViewer, debug2] = t.formValues!;
                                                 let playerTargetB = Number(playerTarget);
                                                 let playerViewerB = Number(playerViewer);
                                                 const fromInventory = players[playerTargetB].getComponent("inventory") as EntityInventoryComponent;
@@ -2523,17 +2530,17 @@ break;*/ /*
                                                     toBlockSelectionMode,
                                                     toBlockPosition,
                                                     debug2,
-                                                ] = t.formValues;
+                                                ] = t.formValues!;
                                                 let fromBlockPositionB = world.getDimension(String(fromBlockPosition).split(", ")[0]).getBlock({
                                                     x: Number(String(fromBlockPosition).split(", ")[1]),
                                                     y: Number(String(fromBlockPosition).split(", ")[2]),
                                                     z: Number(String(fromBlockPosition).split(", ")[3]),
-                                                });
+                                                })!;
                                                 let toBlockPositionB = world.getDimension(String(toBlockPosition).split(", ")[0]).getBlock({
                                                     x: Number(String(toBlockPosition).split(", ")[1]),
                                                     y: Number(String(toBlockPosition).split(", ")[2]),
                                                     z: Number(String(toBlockPosition).split(", ")[3]),
-                                                });
+                                                })!;
                                                 let fromBlockPositionC = fromBlockPositionB.getComponent("inventory") as BlockInventoryComponent;
                                                 let toBlockPositionC = toBlockPositionB.getComponent("inventory") as BlockInventoryComponent;
                                                 if (Number(fromBlockSelectionMode) > 0) {
@@ -2553,7 +2560,7 @@ break;*/ /*
                                                                 y: Number(String(fromPresetValues).split(", ")[2]),
                                                                 z: Number(String(fromPresetValues).split(", ")[3]),
                                                             })
-                                                            .getComponent("inventory") as BlockInventoryComponent;
+                                                            ?.getComponent("inventory") as BlockInventoryComponent;
                                                     } catch (e) {
                                                         console.error(e, e.stack);
                                                     }
@@ -2575,7 +2582,7 @@ break;*/ /*
                                                                 y: Number(String(toPresetValues).split(", ")[2]),
                                                                 z: Number(String(toPresetValues).split(", ")[3]),
                                                             })
-                                                            .getComponent("inventory") as BlockInventoryComponent;
+                                                            ?.getComponent("inventory") as BlockInventoryComponent;
                                                     } catch (e) {
                                                         console.error(e, e.stack);
                                                     }
@@ -2584,10 +2591,10 @@ break;*/ /*
                                                     case 0:
                                                         for (let index = 0; index < 9; index++) {
                                                             try {
-                                                                fromBlockPositionC.container.swapItems(
+                                                                fromBlockPositionC.container?.swapItems(
                                                                     Number(index + Number(inventoryRow) * 9),
                                                                     Number(index + Number(inventoryRow) * 9),
-                                                                    toBlockPositionC.container
+                                                                    toBlockPositionC.container!
                                                                 );
                                                             } catch (e) {
                                                                 console.error(e, e.stack);
@@ -2599,9 +2606,9 @@ break;*/ /*
                                                     case 1:
                                                         for (let index = 0; index < 9; index++) {
                                                             try {
-                                                                fromBlockPositionC.container.transferItem(
+                                                                fromBlockPositionC.container?.transferItem(
                                                                     Number(index + Number(inventoryRow) * 9),
-                                                                    toBlockPositionC.container
+                                                                    toBlockPositionC.container!
                                                                 );
                                                             } catch (e) {
                                                                 console.error(e, e.stack);
@@ -2613,10 +2620,10 @@ break;*/ /*
                                                     case 2:
                                                         for (let index = 0; index < 9; index++) {
                                                             try {
-                                                                fromBlockPositionC.container.moveItem(
+                                                                fromBlockPositionC.container?.moveItem(
                                                                     Number(index + Number(inventoryRow) * 9),
                                                                     Number(index + Number(inventoryRow) * 9),
-                                                                    toBlockPositionC.container
+                                                                    toBlockPositionC.container!
                                                                 );
                                                             } catch (e) {
                                                                 console.error(e, e.stack);
@@ -2655,7 +2662,7 @@ break;*/ /*
                                             .show(event.sourceEntity as any)
                                             .then((t) => {
                                                 if (t.canceled) return;
-                                                let [transferType, inventoryRow, playerTarget, playerViewer, debug2] = t.formValues;
+                                                let [transferType, inventoryRow, playerTarget, playerViewer, debug2] = t.formValues!;
                                                 let playerTargetB = Number(playerTarget);
                                                 let playerViewerB = Number(playerViewer);
                                                 const fromInventory = players[playerTargetB].getComponent("inventory") as EntityInventoryComponent;
@@ -2749,7 +2756,7 @@ break;*/ /*
                                 // This will stop the code when the player closes the form
                                 if (s.canceled) return;
 
-                                let [presetName, debug2] = s.formValues;
+                                let [presetName, debug2] = s.formValues!;
                                 let form3 = new ModalFormData();
                                 let presetValues = undefined;
                                 try {
@@ -2776,7 +2783,7 @@ break;*/ /*
                                     .show(event.sourceEntity as any)
                                     .then((t) => {
                                         if (t.canceled) return;
-                                        let [newBlockPresetValues, debug2] = t.formValues;
+                                        let [newBlockPresetValues, debug2] = t.formValues!;
                                         callerPlayer.setDynamicProperty("blockTransferPreset" + String(Number(presetName)), String(newBlockPresetValues));
                                     })
                                     .catch((e) => {
@@ -2818,11 +2825,11 @@ break;*/ /*
             .show(event.sourceEntity as any)
             .then((t) => {
                 if (t.canceled) return;
-                let [slotNumber, playerTarget, playerViewer, debug2] = t.formValues;
+                let [slotNumber, playerTarget, playerViewer, debug2] = t.formValues!;
                 let playerTargetB = Number(playerTarget);
                 let playerViewerB = Number(playerViewer);
                 const inventory = players[playerTargetB].getComponent("inventory") as EntityInventoryComponent;
-                let item = inventory.container.getItem(Number(slotNumber));
+                let item = inventory.container.getItem(Number(slotNumber))!;
                 function getDurability() {
                     try {
                         return item.getComponent("minecraft:durability") as ItemDurabilityComponent;
@@ -2833,7 +2840,7 @@ break;*/ /*
                         return undefined;
                     }
                 }
-                const durability = getDurability();
+                const durability = getDurability()!;
                 function itemNameTextCalculator() {
                     try {
                         if (item.nameTag == undefined) {
@@ -3107,41 +3114,41 @@ break;*/ /*
                             transferToContainer,
                             transferToContainerBlock,
                             debug,
-                        ] = r.formValues; /*
+                        ] = r.formValues!; /*
     console.warn(r.formValues);*/
 
-                        let item = inventory.container.getItem(Number(slotNumber));
+                        let item = inventory.container.getItem(Number(slotNumber))!;
                         let transferFromContainerBlockB = world.getDimension(String(transferFromContainerBlock).split(", ")[0]).getBlock({
                             x: Number(String(transferFromContainerBlock).split(", ")[1]),
                             y: Number(String(transferFromContainerBlock).split(", ")[2]),
                             z: Number(String(transferFromContainerBlock).split(", ")[3]),
-                        });
+                        })!;
                         let transferToContainerBlockB = world.getDimension(String(transferToContainerBlock).split(", ")[0]).getBlock({
                             x: Number(String(transferToContainerBlock).split(", ")[1]),
                             y: Number(String(transferToContainerBlock).split(", ")[2]),
                             z: Number(String(transferToContainerBlock).split(", ")[3]),
-                        });
+                        })!;
                         let moveFromContainerBlockB = world.getDimension(String(moveFromContainerBlock).split(", ")[0]).getBlock({
                             x: Number(String(moveFromContainerBlock).split(", ")[1]),
                             y: Number(String(moveFromContainerBlock).split(", ")[2]),
                             z: Number(String(moveFromContainerBlock).split(", ")[3]),
-                        });
+                        })!;
                         let moveToContainerBlockB = world.getDimension(String(moveToContainerBlock).split(", ")[0]).getBlock({
                             x: Number(String(moveToContainerBlock).split(", ")[1]),
                             y: Number(String(moveToContainerBlock).split(", ")[2]),
                             z: Number(String(moveToContainerBlock).split(", ")[3]),
-                        });
+                        })!;
                         let swapContainerBlockB = world.getDimension(String(swapContainerBlock).split(", ")[0]).getBlock({
                             x: Number(String(swapContainerBlock).split(", ")[1]),
                             y: Number(String(swapContainerBlock).split(", ")[2]),
                             z: Number(String(swapContainerBlock).split(", ")[3]),
-                        });
+                        })!;
                         let swapOtherContainerBlockB = world.getDimension(String(swapOtherContainerBlock).split(", ")[0]).getBlock({
                             x: Number(String(swapOtherContainerBlock).split(", ")[1]),
                             y: Number(String(swapOtherContainerBlock).split(", ")[2]),
                             z: Number(String(swapOtherContainerBlock).split(", ")[3]),
-                        });
-                        let durability2 = getDurability(); /*
+                        })!;
+                        let durability2 = getDurability()!; /*
     for (const index in inventory.) {
         if (Number(index) != 0) {
         targetList = String([String(targetList), players[index].nameTag]).split(",");
@@ -3384,22 +3391,22 @@ break;*/ /*
         function playerControllerFormPopup(playerTargetB: number, playerViewerB: number) {
             let form = new ModalFormData();
             try {
-                dimension = String(playerList[playerTargetB].getSpawnPoint().dimension.id);
+                dimension = String(playerList[playerTargetB].getSpawnPoint()?.dimension.id);
             } catch (e) {
                 dimension = "";
             }
             try {
-                spawnXPosition = String(playerList[playerTargetB].getSpawnPoint().x);
+                spawnXPosition = String(playerList[playerTargetB].getSpawnPoint()?.x);
             } catch (e) {
                 spawnXPosition = "";
             }
             try {
-                spawnYPosition = String(playerList[playerTargetB].getSpawnPoint().y);
+                spawnYPosition = String(playerList[playerTargetB].getSpawnPoint()?.y);
             } catch (e) {
                 spawnYPosition = "";
             }
             try {
-                spawnZPosition = String(playerList[playerTargetB].getSpawnPoint().z);
+                spawnZPosition = String(playerList[playerTargetB].getSpawnPoint()?.z);
             } catch (e) {
                 spawnZPosition = "";
             }
@@ -3559,7 +3566,7 @@ break;*/ /*
                         openTheItemModificationFormAfterwards,
                         resetLevel,
                         debug,
-                    ] = r.formValues;
+                    ] = r.formValues!;
                     let newNameTag = String(nameTag);
                     if (Boolean(multilineNameTag) == true) {
                         newNameTag = String(nameTag).split("\\\\newline").join("\n");
@@ -3826,7 +3833,7 @@ break;*/ /*
                 .show(playerList[playerList.findIndex((x) => x == sourceEntity)] as any)
                 .then((t) => {
                     if (t.canceled) return;
-                    let [playerTarget, playerViewer] = t.formValues;
+                    let [playerTarget, playerViewer] = t.formValues!;
                     let playerTargetB = Number(playerTarget);
                     let playerViewerB = Number(playerViewer);
                     playerControllerFormPopup(playerTargetB, playerViewerB);
@@ -3862,22 +3869,22 @@ break;*/ /*
         function playerControllerFormPopup(playerTargetB: number, playerViewerB: number) {
             let form = new ModalFormData();
             try {
-                dimension = String(playerList[playerTargetB].getSpawnPoint().dimension);
+                dimension = String(playerList[playerTargetB].getSpawnPoint()?.dimension);
             } catch (e) {
                 dimension = "";
             }
             try {
-                spawnXPosition = String(playerList[playerTargetB].getSpawnPoint().x);
+                spawnXPosition = String(playerList[playerTargetB].getSpawnPoint()?.x);
             } catch (e) {
                 spawnXPosition = "";
             }
             try {
-                spawnYPosition = String(playerList[playerTargetB].getSpawnPoint().y);
+                spawnYPosition = String(playerList[playerTargetB].getSpawnPoint()?.y);
             } catch (e) {
                 spawnYPosition = "";
             }
             try {
-                spawnZPosition = String(playerList[playerTargetB].getSpawnPoint().z);
+                spawnZPosition = String(playerList[playerTargetB].getSpawnPoint()?.z);
             } catch (e) {
                 spawnZPosition = "";
             }
@@ -4037,7 +4044,7 @@ break;*/ /*
                         openTheItemModificationFormAfterwards,
                         resetLevel,
                         debug,
-                    ] = r.formValues;
+                    ] = r.formValues!;
                     let newNameTag = String(nameTag);
                     if (Boolean(multilineNameTag) == true) {
                         newNameTag = String(nameTag).split("\\\\newline").join("\n");
@@ -4298,7 +4305,7 @@ break;*/ /*
                 .show(playerList[playerList.findIndex((x) => x == sourceEntity)] as any)
                 .then((t) => {
                     if (t.canceled) return;
-                    let [playerTarget, playerViewer] = t.formValues;
+                    let [playerTarget, playerViewer] = t.formValues!;
                     let playerTargetB = Number(playerTarget);
                     let playerViewerB = Number(playerViewer);
                     playerControllerFormPopup(playerTargetB, playerViewerB);
@@ -4327,7 +4334,7 @@ break;*/ /*
                 let r = ro as ModalFormResponse;
                 if (r.canceled) return;
 
-                let runScriptForEval = r.formValues;
+                let runScriptForEval = r.formValues!;
                 eval(String(runScriptForEval.join("\n")));
             })
             .catch((e) => {
@@ -4347,7 +4354,7 @@ break;*/ /*
                 let r = ro as ModalFormResponse;
                 if (r.canceled) return;
 
-                let [ts, dpi] = r.formValues;
+                let [ts, dpi] = r.formValues!;
                 let form2 = new ModalFormData();
                 form2.title("Edit Entity Dynamic Property");
                 form2.textField("New Value", "New Value", {
@@ -4359,7 +4366,7 @@ break;*/ /*
                                 Number(world.getDimension("overworld").getEntities()[0].id) ??
                                 Number(world.getDimension("nether").getEntities()[0].id) ??
                                 Number(world.getDimension("the_end").getEntities()[0].id)
-                        ).getDynamicProperty(String(dpi))
+                        )?.getDynamicProperty(String(dpi))
                     ),
                 });
                 forceShow(form2, sourceEntity as Player)
@@ -4367,7 +4374,7 @@ break;*/ /*
                         let r2 = ro2 as ModalFormResponse;
                         if (r2.canceled) return;
 
-                        let [newValue] = r.formValues;
+                        let [newValue] = r.formValues!;
                         String(
                             targetSelectorB(
                                 String(ts),
@@ -4376,7 +4383,7 @@ break;*/ /*
                                     Number(world.getDimension("overworld").getEntities()[0].id) ??
                                     Number(world.getDimension("nether").getEntities()[0].id) ??
                                     Number(world.getDimension("the_end").getEntities()[0].id)
-                            ).setDynamicProperty(String(dpi), String(newValue))
+                            )?.setDynamicProperty(String(dpi), String(newValue))
                         );
                     })
                     .catch((e) => {
@@ -4399,7 +4406,7 @@ break;*/ /*
                 let r = ro as ModalFormResponse;
                 if (r.canceled) return;
 
-                let [dpi] = r.formValues;
+                let [dpi] = r.formValues!;
                 let form2 = new ModalFormData();
                 form2.title("Edit World Dynamic Property");
                 form2.textField("New Value", "New Value", { defaultValue: String(world.getDynamicProperty(String(dpi))) });
@@ -4408,7 +4415,7 @@ break;*/ /*
                         let r2 = ro2 as ModalFormResponse;
                         if (r2.canceled) return;
 
-                        let [newValue] = r.formValues;
+                        let [newValue] = r.formValues!;
                         world.setDynamicProperty(String(dpi), String(newValue));
                     })
                     .catch((e) => {
@@ -4420,18 +4427,23 @@ break;*/ /*
             });
     }
     if (id == "andexdb:debugStick" || id == "andexdb:editorStick") {
+        assertIsDefined(sourceEntity);
         editorStick(sourceEntity, message);
     }
     if (id == "andexdb:evalAutoScriptSettings") {
+        assertIsDefined(sourceEntity);
         evalAutoScriptSettings(sourceEntity);
     }
     if (id == "andexdb:settings") {
+        assertIsDefined(sourceEntity);
         settings(sourceEntity);
     }
     if (id == "andexdb:generalSettings") {
+        assertIsDefined(sourceEntity);
         generalSettings(sourceEntity);
     }
     if (id == "andexdb:personalSettings") {
+        assertIsDefined(sourceEntity);
         personalSettings(sourceEntity);
     }
     if (id == "andexdb:customFormUIEditor") {
@@ -4449,8 +4461,8 @@ break;*/ /*
             .then((to) => {
                 let t = to as ModalFormResponse;
                 if (t.canceled) return;
-                world.setDynamicProperty(`customUI:${formId}`, `${t.formValues[0]}|${t.formValues[1]}`);
-                let elementValues = t.formValues.slice(2, -2);
+                world.setDynamicProperty(`customUI:${formId}`, `${t.formValues![0]}|${t.formValues![1]}`);
+                let elementValues = t.formValues!.slice(2, -2);
                 console.warn(elementValues);
                 elementValues.forEach((v, i) => {
                     switch (i % 5) {
@@ -4467,9 +4479,9 @@ break;*/ /*
                             break;
                     }
                 });
-                if (t.formValues[t.formValues.length - 2]) {
+                if (t.formValues![t.formValues!.length - 2]) {
                     world.setDynamicProperty(
-                        `customUIElement:${formId}|${Number(t.formValues[t.formValues.length - 1]) ?? (form.indexList[form.indexList.length - 1] ?? -1) + 1}`,
+                        `customUIElement:${formId}|${Number(t.formValues![t.formValues!.length - 1]) ?? (form.indexList[form.indexList.length - 1] ?? -1) + 1}`,
                         ""
                     );
                 }
@@ -4496,12 +4508,13 @@ break;*/ /*
     form.show(sourceEntity as Player).then(r => {
         if (r.canceled) return;
     
-        let [ blockDimension, blockX, blockY, blockZ ] = r.formValues;
+        let [ blockDimension, blockX, blockY, blockZ ] = r.formValues!;
         let blockPropertyValue2: any
         event.sourceEntity.runCommand("/scriptevent andexdb:debugStickB coordinates:"*/ /*"aslk"*/ /* + blockDimension + "|" + blockX + "|" + blockY + "|" + blockZ)
           }).catch(e => {
               console.error(e, e.stack);
           });*/
+        assertIsDefined(sourceEntity);
         editorStickMenuB(sourceEntity);
     }
     if (id == "andexdb:debugStickMenuC" || id == "andexdb:editorStickMenuC") {
@@ -4515,9 +4528,10 @@ break;*/ /*
             .then((r) => {
                 if (r.canceled) return;
 
-                let [includeLiquidBlocks, includePassableBlocks, maxDistance] = r.formValues;
+                let [includeLiquidBlocks, includePassableBlocks, maxDistance] = r.formValues!;
                 let blockPropertyValue2: any;
                 console.warn(maxDistance);
+                assertIsDefined(sourceEntity);
                 if (maxDistance !== "") {
                     console.warn(
                         "/scriptevent andexdb:debugStickC options:" /*"aslk"*/ +
@@ -4527,7 +4541,7 @@ break;*/ /*
                             "|" +
                             String(maxDistance)
                     );
-                    event.sourceEntity.runCommand(
+                    sourceEntity.runCommand(
                         "/scriptevent andexdb:debugStickC options:" /*"aslk"*/ +
                             String(includeLiquidBlocks) +
                             "|" +
@@ -4536,7 +4550,7 @@ break;*/ /*
                             String(maxDistance)
                     );
                 } else {
-                    event.sourceEntity.runCommand(
+                    sourceEntity.runCommand(
                         "/scriptevent andexdb:debugStickC options:" /*"aslk"*/ + String(includeLiquidBlocks) + "|" + String(includePassableBlocks)
                     );
                 }
@@ -4604,7 +4618,7 @@ break;*/ /*
         form.show(playerList[playerList.findIndex((x) => x == sourceEntity)]).then(r => {
             if (r.canceled) return;
         
-            let [ setType, setTypeEnabled, blockPropertyIdentifier, blockPropertyValue, setPropertyEnabled*/ /*, selectedSlotIndex*/ /*, isWaterlogged/*, clearVelocity*/ //, debug, waterContainerEnabled, waterContainer, snowContainerEnabled, snowContainer, lavaContainerEnabled, lavaContainer, potionContainerEnabled, potionContainer, signFrontRawTextEnabled, signFrontRawText, signBackRawTextEnabled, signBackRawText, signFrontTextEnabled, signFrontText, signBackTextEnabled, signBackText, signFrontTextColorEnabled, signFrontTextColor, signBackTextColorEnabled, signBackTextColor, setSignIsWaxed ] = r.formValues;
+            let [ setType, setTypeEnabled, blockPropertyIdentifier, blockPropertyValue, setPropertyEnabled*/ /*, selectedSlotIndex*/ /*, isWaterlogged/*, clearVelocity*/ //, debug, waterContainerEnabled, waterContainer, snowContainerEnabled, snowContainer, lavaContainerEnabled, lavaContainer, potionContainerEnabled, potionContainer, signFrontRawTextEnabled, signFrontRawText, signBackRawTextEnabled, signBackRawText, signFrontTextEnabled, signFrontText, signBackTextEnabled, signBackText, signFrontTextColorEnabled, signFrontTextColor, signBackTextColorEnabled, signBackTextColor, setSignIsWaxed ] = r.formValues!;
         /*let blockPropertyValue2: any
         blockPropertyValue2 = ""
         let blockPropertyValueArray: Array<any>
@@ -4687,24 +4701,25 @@ break;*/ /*
   });*/
         let block2: Block; /* = block.block*/
         let allCoordinates = [];
+        assertIsDefined(sourceEntity);
         if (message.startsWith("coordinates:") && message.includes("|") && message.slice(12).split("|").length == 4) {
             allCoordinates = message.slice(12).split("|");
             block2 = world.getDimension(String(allCoordinates[0])).getBlock({
                 x: Number(allCoordinates[1]),
                 y: Number(allCoordinates[2]),
                 z: Number(allCoordinates[3]),
-            });
+            })!;
         } else {
             try {
                 block2 = sourceEntity.getBlockFromViewDirection({
                     includeLiquidBlocks: true,
                     includePassableBlocks: true,
-                }).block;
+                })!.block;
             } catch (e) {
                 console.error(e, e.stack);
             }
         }
-        editorStickB(sourceEntity, block2);
+        editorStickB(sourceEntity, block2!);
     }
     if (id == "andexdb:debugStickC" || id == "andexdb:editorStickC") {
         let form = new ModalFormData();
@@ -4729,11 +4744,12 @@ break;*/ /*
         console.warn(maxDistance)*/
 
         let playerList = world.getPlayers();
+        assertIsDefined(sourceEntity);
         let block = sourceEntity.getBlockFromViewDirection({
             includeLiquidBlocks: includeLiquidBlocks,
             includePassableBlocks: includePassableBlocks,
             maxDistance: maxDistance,
-        });
+        })!;
         let block2 = block.block;
         form.title("Editor Stick C");
         let blockStatesFullList: any; /*
@@ -4825,24 +4841,24 @@ break;*/ /*
         try {
             if (block2.getComponent("fluid_container") != undefined) {
                 form.textField(
-                    `Cauldron Water RGBA Color/Fill Level\n§cRed: §g${block2.getComponent("fluid_container").fluidColor.red}\n§aGreen: §g${
-                        block2.getComponent("fluid_container").fluidColor.green
-                    }\n§bBlue: §g${block2.getComponent("fluid_container").fluidColor.blue}\n§dAlpha: §g${
-                        block2.getComponent("fluid_container").fluidColor.alpha
+                    `Cauldron Water RGBA Color/Fill Level\n§cRed: §g${block2.getComponent("fluid_container")!.fluidColor.red}\n§aGreen: §g${
+                        block2.getComponent("fluid_container")!.fluidColor.green
+                    }\n§bBlue: §g${block2.getComponent("fluid_container")!.fluidColor.blue}\n§dAlpha: §g${
+                        block2.getComponent("fluid_container")!.fluidColor.alpha
                     }`,
                     `red: 0-1, green: 0-1, blue: 0-1, alpha: 0-1`,
                     {
-                        defaultValue: `${block2.getComponent("fluid_container").fluidColor.red}, ${block2.getComponent("fluid_container").fluidColor.green}, ${
-                            block2.getComponent("fluid_container").fluidColor.blue
-                        }, ${block2.getComponent("fluid_container").fluidColor.alpha}`,
+                        defaultValue: `${block2.getComponent("fluid_container")!.fluidColor.red}, ${block2.getComponent("fluid_container")!.fluidColor.green}, ${
+                            block2.getComponent("fluid_container")!.fluidColor.blue
+                        }, ${block2.getComponent("fluid_container")!.fluidColor.alpha}`,
                     }
                 );
-                form.slider(`Cauldron Fill Level\nFill Level: §g${block2.getComponent("fluid_container").fillLevel}`, 0, 6, {
+                form.slider(`Cauldron Fill Level\nFill Level: §g${block2.getComponent("fluid_container")!.fillLevel}`, 0, 6, {
                     valueStep: 1,
-                    defaultValue: block2.getComponent("fluid_container").fillLevel,
+                    defaultValue: block2.getComponent("fluid_container")!.fillLevel,
                 });
                 form.textField(
-                    `Cauldron Potion Type Contents\nHas Potion: §g${block2.getComponent("fluid_container").getFluidType() == "Potion"}`,
+                    `Cauldron Potion Type Contents\nHas Potion: §g${block2.getComponent("fluid_container")!.getFluidType() == "Potion"}`,
                     `item type`
                 );
             } else {
@@ -4858,9 +4874,9 @@ break;*/ /*
         form.toggle("setSignFrontRawText Enabled", { defaultValue: false });
         if (block2.getComponent("sign") != undefined) {
             form.textField(
-                `Sign Front RawText\nRawText: §g${JSON.stringify(block2.getComponent("sign").getRawText(SignSide.Front))}`,
+                `Sign Front RawText\nRawText: §g${JSON.stringify(block2.getComponent("sign")!.getRawText(SignSide.Front))}`,
                 `{rawtext: [{text|translate|rawtext|score|with: value, ...}]}`,
-                { defaultValue: JSON.stringify(block2.getComponent("sign").getRawText(SignSide.Front)) }
+                { defaultValue: JSON.stringify(block2.getComponent("sign")!.getRawText(SignSide.Front)) }
             );
         } else {
             form.textField(`§4Sign Front RawText`, `§r§4Unavailable`);
@@ -4868,41 +4884,41 @@ break;*/ /*
         form.toggle("setSignBackRawText Enabled", { defaultValue: false });
         if (block2.getComponent("sign") != undefined) {
             form.textField(
-                `Sign Back RawText\nRawText: §g${JSON.stringify(block2.getComponent("sign").getRawText(SignSide.Back))}`,
+                `Sign Back RawText\nRawText: §g${JSON.stringify(block2.getComponent("sign")!.getRawText(SignSide.Back))}`,
                 `{rawtext: [{text|translate|rawtext|score|with: value, ...}]}`,
-                { defaultValue: JSON.stringify(block2.getComponent("sign").getRawText(SignSide.Back)) }
+                { defaultValue: JSON.stringify(block2.getComponent("sign")!.getRawText(SignSide.Back)) }
             );
         } else {
             form.textField(`§4Sign Back RawText`, `§r§4Unavailable`);
         }
         form.toggle("setSignFrontText Enabled", { defaultValue: false });
         if (block2.getComponent("sign") != undefined) {
-            form.textField(`Sign Front Text\nRawText: §g${block2.getComponent("sign").getText(SignSide.Front)}`, `text`, {
-                defaultValue: block2.getComponent("sign").getText(SignSide.Front),
+            form.textField(`Sign Front Text\nRawText: §g${block2.getComponent("sign")!.getText(SignSide.Front)}`, `text`, {
+                defaultValue: block2.getComponent("sign")!.getText(SignSide.Front),
             });
         } else {
             form.textField(`§4Sign Front Text`, `§r§4Unavailable`);
         }
         form.toggle("setSignBackText Enabled", { defaultValue: false });
         if (block2.getComponent("sign") != undefined) {
-            form.textField(`Sign Back Text\Text: §g${block2.getComponent("sign").getText(SignSide.Back)}`, `text`, {
-                defaultValue: block2.getComponent("sign").getText(SignSide.Back),
+            form.textField(`Sign Back Text\Text: §g${block2.getComponent("sign")!.getText(SignSide.Back)}`, `text`, {
+                defaultValue: block2.getComponent("sign")!.getText(SignSide.Back),
             });
         } else {
             form.textField(`§4Sign Back Text`, `§r§4Unavailable`);
         }
         form.toggle("setSignFrontTextColor Enabled", { defaultValue: false });
         if (block2.getComponent("sign") != undefined) {
-            form.textField(`Sign Front Text Color\Text: §g${block2.getComponent("sign").getTextDyeColor(SignSide.Front)}`, `dye color`, {
-                defaultValue: block2.getComponent("sign").getTextDyeColor(SignSide.Front),
+            form.textField(`Sign Front Text Color\Text: §g${block2.getComponent("sign")!.getTextDyeColor(SignSide.Front)}`, `dye color`, {
+                defaultValue: block2.getComponent("sign")!.getTextDyeColor(SignSide.Front),
             });
         } else {
             form.textField(`§4Sign Front Text Color`, `§r§4Unavailable`);
         }
         form.toggle("setSignBackTextColor Enabled", { defaultValue: false });
         if (block2.getComponent("sign") != undefined) {
-            form.textField(`Sign Back Text Color\Text: §g${block2.getComponent("sign").getTextDyeColor(SignSide.Back)}`, `dye color`, {
-                defaultValue: block2.getComponent("sign").getTextDyeColor(SignSide.Back),
+            form.textField(`Sign Back Text Color\Text: §g${block2.getComponent("sign")!.getTextDyeColor(SignSide.Back)}`, `dye color`, {
+                defaultValue: block2.getComponent("sign")!.getTextDyeColor(SignSide.Back),
             });
         } else {
             form.textField(`§4Sign Back Text Color`, `§r§4Unavailable`);
@@ -4975,24 +4991,24 @@ break;*/ /*
                 let blockPropertyValueLength = String(blockPropertyIdentifier).split(", ").length;
                 if (block2.getComponent("fluid_container") != undefined) {
                     if (
-                        ((c) => `${c.red},${c.green},${c.blue},${c.alpha}`)(block2.getComponent("fluid_container").fluidColor) !=
+                        ((c) => `${c.red},${c.green},${c.blue},${c.alpha}`)(block2.getComponent("fluid_container")!.fluidColor) !=
                         fluidContainerColor
                             .split(",")
                             .map((v) => v.trim())
                             .join()
                     ) {
-                        block2.getComponent("fluid_container").fluidColor = {
-                            red: fluidContainerColor.split(",")[0].toNumber(),
-                            green: fluidContainerColor.split(",")[1].toNumber(),
-                            blue: fluidContainerColor.split(",")[2].toNumber(),
-                            alpha: fluidContainerColor.split(",")[3].toNumber(),
+                        block2.getComponent("fluid_container")!.fluidColor = {
+                            red: fluidContainerColor.split(",")[0].toNumber()!,
+                            green: fluidContainerColor.split(",")[1].toNumber()!,
+                            blue: fluidContainerColor.split(",")[2].toNumber()!,
+                            alpha: fluidContainerColor.split(",")[3].toNumber()!,
                         };
                     }
-                    if (fluidContainerFillLevel != block2.getComponent("fluid_container").fillLevel) {
-                        block2.getComponent("fluid_container").fillLevel = fluidContainerFillLevel;
+                    if (fluidContainerFillLevel != block2.getComponent("fluid_container")!.fillLevel) {
+                        block2.getComponent("fluid_container")!.fillLevel = fluidContainerFillLevel;
                     }
                     if (potionType != "") {
-                        block2.getComponent("fluid_container").setPotion(new ItemStack(potionType, 255));
+                        block2.getComponent("fluid_container")!.setPotion(new ItemStack(potionType, 255));
                     }
                 }
                 if (
@@ -5001,7 +5017,7 @@ break;*/ /*
                         undefined /*&&/^{(rawtext|score|text|translate|with):/.test((String(signText)))&&/}$/.test((String(signText)))*/
                 ) {
                     /*{ translate: "accessibility.list.or.two", with: ["Player 1", "Player 2"] }*/ block2
-                        .getComponent("sign")
+                        .getComponent("sign")!
                         .setText(JSON.parse(String(signFrontRawText)), SignSide.Front);
                 }
                 if (
@@ -5010,7 +5026,7 @@ break;*/ /*
                         undefined /*&&/^{(rawtext|score|text|translate|with):/.test((String(signText)))&&/}$/.test((String(signText)))*/
                 ) {
                     /*{ translate: "accessibility.list.or.two", with: ["Player 1", "Player 2"] }*/ block2
-                        .getComponent("sign")
+                        .getComponent("sign")!
                         .setText(JSON.parse(String(signBackRawText)), SignSide.Back);
                 }
                 if (
@@ -5019,7 +5035,7 @@ break;*/ /*
                         undefined /*&&/^{(rawtext|score|text|translate|with):/.test((String(signText)))&&/}$/.test((String(signText)))*/
                 ) {
                     /*{ translate: "accessibility.list.or.two", with: ["Player 1", "Player 2"] }*/ block2
-                        .getComponent("sign")
+                        .getComponent("sign")!
                         .setText(String(signFrontText).replaceAll("\\n", "\n"), SignSide.Front);
                 }
                 if (
@@ -5028,7 +5044,7 @@ break;*/ /*
                         undefined /*&&/^{(rawtext|score|text|translate|with):/.test((String(signText)))&&/}$/.test((String(signText)))*/
                 ) {
                     /*{ translate: "accessibility.list.or.two", with: ["Player 1", "Player 2"] }*/ block2
-                        .getComponent("sign")
+                        .getComponent("sign")!
                         .setText(String(signBackText).replaceAll("\\n", "\n"), SignSide.Back);
                 }
                 if (
@@ -5036,7 +5052,7 @@ break;*/ /*
                     undefined /*&&/^{(rawtext|score|text|translate|with):/.test((String(signText)))&&/}$/.test((String(signText)))*/
                 ) {
                     /*{ translate: "accessibility.list.or.two", with: ["Player 1", "Player 2"] }*/ block2
-                        .getComponent("sign")
+                        .getComponent("sign")!
                         .setWaxed(Boolean(setSignIsWaxed));
                 }
                 DyeColor.Blue; //make it save this DyeColor in the imports from @minecraft/server.
@@ -5046,7 +5062,7 @@ break;*/ /*
                         undefined /*&&/^{(rawtext|score|text|translate|with):/.test((String(signText)))&&/}$/.test((String(signText)))*/
                 ) {
                     /*{ translate: "accessibility.list.or.two", with: ["Player 1", "Player 2"] }*/ block2
-                        .getComponent("sign")
+                        .getComponent("sign")!
                         .setTextDyeColor(eval(`DyeColor.${signFrontTextColor}`), SignSide.Back);
                 }
                 if (
@@ -5055,7 +5071,7 @@ break;*/ /*
                         undefined /*&&/^{(rawtext|score|text|translate|with):/.test((String(signText)))&&/}$/.test((String(signText)))*/
                 ) {
                     /*{ translate: "accessibility.list.or.two", with: ["Player 1", "Player 2"] }*/ block2
-                        .getComponent("sign")
+                        .getComponent("sign")!
                         .setTextDyeColor(eval(`DyeColor.${signBackTextColor}`), SignSide.Front);
                 }
                 for (let index in blockPropertyValueArray) {
@@ -5111,7 +5127,7 @@ break;*/ /*
 
                 if (setTypeEnabled == true) {
                     try {
-                        block2.setType(BlockTypes.get(String(setType)) /*String(setType)*/);
+                        block2.setType(BlockTypes.get(String(setType))! /*String(setType)*/);
                     } catch (e) {
                         console.error(e, e.stack);
                     }
@@ -5304,6 +5320,7 @@ break;*/ /*
     if (id == "andexdb:debugScreen") {
         let form = new ModalFormData();
         let players = world.getPlayers();
+        assertIsDefined(sourceEntity);
         let block = sourceEntity.getBlockFromViewDirection();
         let entity = sourceEntity.getEntitiesFromViewDirection();
         form.title("Debug Screen");
@@ -5320,7 +5337,7 @@ break;*/ /*
             .then((r) => {
                 if (r.canceled) return;
 
-                let [setType, blockPropertyIdentifier, blockPropertyValue, toggle] = r.formValues;
+                let [setType, blockPropertyIdentifier, blockPropertyValue, toggle] = r.formValues!;
 
                 (players[players.findIndex((x) => x == sourceEntity)] as any).onScreenDisplay.setActionBar("");
             })
@@ -5524,7 +5541,7 @@ break;*/ /*
                         messageToSend,
                         openTheItemModificationFormAfterwards,
                         debug,
-                    ] = r.formValues;
+                    ] = r.formValues!;
                     /*
                 let scale = playerList[0].getComponent("scale") as EntityScaleComponent;
                 scale.value = Number(scaleValue);*/
@@ -5757,7 +5774,7 @@ break;*/ /*
                 .show(playerList[playerList.findIndex((x) => x == sourceEntity)] as any)
                 .then((t) => {
                     if (t.canceled) return;
-                    let [playerViewer, selectionType, entityUUID] = t.formValues;
+                    let [playerViewer, selectionType, entityUUID] = t.formValues!;
                     let entity3: Entity;
                     if (Number(selectionType) == 1) {
                         entity3 = playerList[Number(playerViewer)].dimension.getEntities({
@@ -5834,7 +5851,7 @@ break;*/ /*
         form.show(players[players.findIndex((x) => x == sourceEntity)] as any).then(r => {
             if (r.canceled) return;
         
-            let [ nameTag, triggerEvent, selectedSlotIndex, scaleValue, isSneaking, clearVelocity, extinguishFire, kill, remove, setOnFire, setOnFireSeconds, setOnFireRemoveEffects, removeEffect, effectToRemove, removeTag, tagToRemove, setRot, rotX, rotY, teleport, teleportX, teleportY, teleportZ, tryTeleport, tryTeleportX, tryTeleportY, tryTeleportZ, openTheItemModificationFormAfterwards, debug ] = r.formValues;
+            let [ nameTag, triggerEvent, selectedSlotIndex, scaleValue, isSneaking, clearVelocity, extinguishFire, kill, remove, setOnFire, setOnFireSeconds, setOnFireRemoveEffects, removeEffect, effectToRemove, removeTag, tagToRemove, setRot, rotX, rotY, teleport, teleportX, teleportY, teleportZ, tryTeleport, tryTeleportX, tryTeleportY, tryTeleportZ, openTheItemModificationFormAfterwards, debug ] = r.formValues!;
         
             let scale = sourceEntity.getComponent("scale") as EntityScaleComponent;*/ /*
             scale.value = Number(scaleValue);*/ /*
@@ -6002,7 +6019,7 @@ break;*/ /*
                     entityZ,
                     entityDimension,
                     debug,
-                ] = r.formValues;
+                ] = r.formValues!;
                 /*
                 let scale = playerList[0].getComponent("scale") as EntityScaleComponent;
                 scale.value = Number(scaleValue);*/
@@ -7167,21 +7184,21 @@ break;*/ /*
     }
     if (id == "andexdb:getRedstone") {
         let dynamicProperty = message.split("|");
-        let block: BlockRaycastHit;
-        block = undefined;
+        let block: BlockRaycastHit | undefined = undefined;
+        assertIsDefined(sourceEntity);
         try {
             block = sourceEntity.getBlockFromViewDirection({
                 includePassableBlocks: true,
             });
         } catch (e) {}
         try {
-            (event.sourceEntity as any).onScreenDisplay.setActionBar("§cRedstone Power: §a" + block.block.getRedstonePower());
+            (event.sourceEntity as any).onScreenDisplay.setActionBar("§cRedstone Power: §a" + block?.block.getRedstonePower());
         } catch (e) {}
     }
     if (id == "andexdb:getRedstoneAndLiquid") {
         let dynamicProperty = message.split("|");
-        let block: BlockRaycastHit;
-        block = undefined;
+        let block: BlockRaycastHit | undefined = undefined;
+        assertIsDefined(sourceEntity);
         try {
             block = sourceEntity.getBlockFromViewDirection({
                 includePassableBlocks: true,
@@ -7189,13 +7206,13 @@ break;*/ /*
             });
         } catch (e) {}
         try {
-            (event.sourceEntity as any).onScreenDisplay.setActionBar("§cRedstone Power: §a" + block.block.getRedstonePower());
+            (event.sourceEntity as any).onScreenDisplay.setActionBar("§cRedstone Power: §a" + block?.block.getRedstonePower());
         } catch (e) {}
     }
     if (id == "andexdb:getBlockStates") {
         let dynamicProperty = message.split("|");
-        let block: BlockRaycastHit;
-        block = undefined;
+        let block: BlockRaycastHit | undefined = undefined;
+        assertIsDefined(sourceEntity);
         let blockStatesFullList: any; /*
         try {blockStatesFullList = String([String(blockStatesFullList), block.block.permutation.getAllStates()]); } catch(e){console.error(e, e.stack);}
         try {blockStatesFullList = String([String(blockStatesFullList), block.block.permutation.getAllStates()]).split(","); } catch(e){console.error(e, e.stack);}*/
@@ -7207,7 +7224,7 @@ break;*/ /*
             });
         } catch (e) {}
         try {
-            BlockPermutation.resolve("minecraft:bedrock", block.block.permutation.getAllStates());
+            BlockPermutation.resolve("minecraft:bedrock", block?.block.permutation.getAllStates());
         } catch (e) {
             if (String(e).includes('Error: Failed to resolve block "minecraft:bedrock" with properties')) {
                 blockStatesFullList =
@@ -7224,13 +7241,13 @@ break;*/ /*
             }
         }
         try {
-            (event.sourceEntity as any).onScreenDisplay.setActionBar("§eBlock States For §c" + block.block.typeId + "§e: §a\n" + blockStatesFullList);
+            (event.sourceEntity as any).onScreenDisplay.setActionBar("§eBlock States For §c" + block?.block.typeId + "§e: §a\n" + blockStatesFullList);
         } catch (e) {}
     }
     if (id == "andexdb:getBlockStatesNoLiquid") {
         let dynamicProperty = message.split("|");
-        let block: BlockRaycastHit;
-        block = undefined;
+        let block: BlockRaycastHit | undefined = undefined;
+        assertIsDefined(sourceEntity);
         let blockStatesFullList: any; /*
         try {blockStatesFullList = String([String(blockStatesFullList), block.block.permutation.getAllStates()]); } catch(e){console.error(e, e.stack);}
         try {blockStatesFullList = String([String(blockStatesFullList), block.block.permutation.getAllStates()]).split(","); } catch(e){console.error(e, e.stack);}*/
@@ -7241,7 +7258,7 @@ break;*/ /*
             });
         } catch (e) {}
         try {
-            BlockPermutation.resolve("minecraft:bedrock", block.block.permutation.getAllStates());
+            BlockPermutation.resolve("minecraft:bedrock", block?.block.permutation.getAllStates());
         } catch (e) {
             if (String(e).includes('Error: Failed to resolve block "minecraft:bedrock" with properties')) {
                 blockStatesFullList =

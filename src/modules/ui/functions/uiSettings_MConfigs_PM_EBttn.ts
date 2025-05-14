@@ -64,7 +64,7 @@ export async function uiSettings_menuConfigurations_playerMenu_editButtons(sourc
                     : (["addRemovedButtons", "reset", "back", "close"] as const)[r.selection - menuConfig.buttons.length]
             ) {
                 case "button": {
-                    const buttonID = menuConfig.buttons[r.selection];
+                    const buttonID = menuConfig.buttons[r.selection!];
                     const button = menuButtonIds.playerMenu.buttons[buttonID];
                     let buttonHiddenReasonMessage = "";
                     if (button.deprecated && !menuConfig.showDeprecatedButtons) {

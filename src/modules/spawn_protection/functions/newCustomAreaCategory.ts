@@ -80,8 +80,8 @@ export async function newCustomAreaCategory(sourceEntitya: executeCommandPlayerW
     form.submitButton("Create Category");
     const r = await form.forceShow(sourceEntity);
     if (r.canceled) return 1;
-    category_JSON.id = (r.formValues[0] as string).replaceAll(":", "");
-    category_JSON.icon_path = r.formValues[1] as string;
+    category_JSON.id = (r.formValues![0] as string).replaceAll(":", "");
+    category_JSON.icon_path = r.formValues![1] as string;
     const category = {
         enabled: true,
         id: "",
@@ -109,7 +109,11 @@ export async function newCustomAreaCategory(sourceEntitya: executeCommandPlayerW
         }
     }
     ProtectedAreas.areas.advancedAreaCategories.push({ ...category, id: category_JSON.id, icon_path: category_JSON.icon_path }); // Loads the category.
-    ProtectedAreas.areas.advancedArea[category_JSON.id];
+    ProtectedAreas.areas.advancedArea[category_JSON.id] = {
+        overworld: [],
+        nether: [],
+        the_end: [],
+    };
     world.setDynamicProperty("advancedProtectedAreaCategory:" + category_JSON.id, JSON.stringify(category_JSON)); // Saves the category.
     return await editCustomAreaCategory(sourceEntity, category_JSON.id);
 }

@@ -55,7 +55,7 @@ export function parseDuration(durationString: string): number {
 
     const extractionRegex = /([\d,]+\.?[\d,]*)\s?(\w+)(\s*([\d,]+\.?[\d,]*)\s?(\w+))*/;
     const extractedString = durationString.match(extractionRegex)?.[0];
-    if (extractedString === null) {
+    if (extractedString === undefined) {
         throw new SyntaxError("Invalid duration string.");
     }
     const regex = /([\d,]+\.?[\d,]*)\s*(\w+)/g;
@@ -226,7 +226,7 @@ export function parseDurationRelative(durationString: string, relativeTo: number
 
     const extractionRegex = /([\d,]+\.?[\d,]*)\s?(\w+)(\s*([\d,]+\.?[\d,]*)\s?(\w+))*/;
     const extractedString = durationString.match(extractionRegex)?.[0];
-    if (extractedString === null) {
+    if (extractedString === undefined) {
         throw new SyntaxError("Invalid duration string.");
     }
     const regex = /([\d,]+\.?[\d,]*)\s*(\w+)/g;

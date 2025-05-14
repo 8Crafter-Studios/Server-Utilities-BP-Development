@@ -20,12 +20,12 @@ export declare function rankNameTagEvaluator(displayName: ReturnType<typeof rank
 }): string;
 export declare function rankNameTagEvaluator_prePlayers(displayName: ReturnType<typeof rankNameTagEvaluator_getDisplayNameFromPlayer>, options?: Exclude<Parameters<typeof rankNameTagEvaluator>[1], "targetPlayerSettings">): {
     nameFormatting: string;
-    nameGradientMode: string;
+    nameGradientMode: string | undefined;
     showHealth: boolean;
-    currentHealth: number;
-    maxHealth: number;
+    currentHealth: number | undefined;
+    maxHealth: number | undefined;
     rank: string;
-    ranksListWithDefault: string[];
+    ranksListWithDefault: string[] | undefined;
     displayName: {
         value?: string;
         hidden: boolean;

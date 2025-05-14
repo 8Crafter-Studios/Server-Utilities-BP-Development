@@ -40,8 +40,8 @@ export declare class commandSettings<T extends "built-in" | "custom" | "unknown"
     };
     constructor(commandSettingsId: string, command?: command<T>);
     get parsed(): any;
-    get enabled(): any;
-    set enabled(enabled: any);
+    get enabled(): boolean;
+    set enabled(enabled: boolean);
     get requiredTags(): string[];
     set requiredTags(requiredTags: string[]);
     get requiredPermissionLevel(): string | number | undefined;

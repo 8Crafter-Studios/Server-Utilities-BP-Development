@@ -180,7 +180,7 @@ function propToGetter(target: any, key: string, propertyDescriptor?: PropertyDes
     let z: any = undefined;
     Object.defineProperty(target, key, {
         get() {
-            return Object.getOwnPropertyDescriptor(target, key).value;
+            return Object.getOwnPropertyDescriptor(target, key)?.value;
         },
     });
 }
