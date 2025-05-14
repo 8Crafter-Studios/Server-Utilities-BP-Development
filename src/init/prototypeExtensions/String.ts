@@ -177,8 +177,7 @@ Object.defineProperty(String.prototype, "escapeCharactersB", {
         //:Get primitive copy of string:
         var str: string = this.valueOf(); /*
         console.warn(unescape(str))*/
-        var eb: Error[];
-        eb = undefined;
+        var eb: Error[] = [];
 
         //:Append Characters To End:
         if (js == true) {

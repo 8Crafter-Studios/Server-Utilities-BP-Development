@@ -148,8 +148,8 @@ export async function manageEventSubscriptions_event<EventTypeID extends Subscri
 
             switch (
                 (["search", "previous", "go", "next", "newSubscription", ""] as const)[r.selection!] ??
-                (!!displayEntriesB[r.selection - 6] ? "entry" : undefined) ??
-                (["back", "close", "refresh"] as const)[r.selection - displayEntriesB.length - 6]
+                (!!displayEntriesB[r.selection! - 6] ? "entry" : undefined) ??
+                (["back", "close", "refresh"] as const)[r.selection! - displayEntriesB.length - 6]
             ) {
                 case "search":
                     {
@@ -209,7 +209,7 @@ export async function manageEventSubscriptions_event<EventTypeID extends Subscri
                         return 0;
                     }
                 case "entry":
-                    if ((await manageEventSubscriptions_event_subscription(player, displayEntriesB[r.selection - 6])) === 1) {
+                    if ((await manageEventSubscriptions_event_subscription(player, displayEntriesB[r.selection! - 6])) === 1) {
                         currentParameters = { player, pagen: page, maxentriesperpage, search, cachedEntries: displayEntries };
                         continue;
                     } else {
@@ -734,7 +734,7 @@ export async function manageEventSubscriptions(sourceEntity: loosePlayerType): P
             if (r.canceled) return 1 as const;
             switch (
                 (!!eventCategories[r.selection!] ? "category" : undefined) ??
-                (["back", "close", "refresh", "reloadSubscriptions", "reinitializeSubscriptions", "statistics"] as const)[r.selection - eventCategories.length]
+                (["back", "close", "refresh", "reloadSubscriptions", "reinitializeSubscriptions", "statistics"] as const)[r.selection! - eventCategories.length]
             ) {
                 case "category":
                     if ((await manageEventSubscriptions_category_selectBeforeOrAfterEvents(player, eventCategories[r.selection!])) === 1) {
@@ -963,7 +963,7 @@ export async function manageEventSubscriptions_category<
             form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Refresh", "textures/ui/refresh");
             const r = await form.forceShow(player);
             if (r.canceled) return 1 as const;
-            switch ((!!events[r.selection!] ? "event" : undefined) ?? (["back", "close", "refresh"] as const)[r.selection - events.length]) {
+            switch ((!!events[r.selection!] ? "event" : undefined) ?? (["back", "close", "refresh"] as const)[r.selection! - events.length]) {
                 case "event":
                     if ((await manageEventSubscriptions_event(player, `${category}.${beforeOrAfter}.${events[r.selection!]}` as SubscribedEventTypeID)) === 1) {
                         continue;

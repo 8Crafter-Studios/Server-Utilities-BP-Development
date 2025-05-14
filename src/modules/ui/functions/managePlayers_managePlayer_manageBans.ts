@@ -114,10 +114,10 @@ export async function managePlayers_managePlayer_manageBans(
                                 bannedByName: (sourceEntity as Player)?.name ??
                                     sourceEntity?.nameTag,
                                 banId: "banId:" + Date.now() + ":" + player.id,
-                                unbanDate: Number(h.formValues[0]) * 60000 +
+                                unbanDate: Number(h.formValues![0]) * 60000 +
                                     Date.now(),
                                 format_version: format_version,
-                                reason: String(h.formValues[1]),
+                                reason: String(h.formValues![1]),
                             });
                             return 1;
                         })
@@ -171,10 +171,10 @@ export async function managePlayers_managePlayer_manageBans(
                                 bannedByName: (sourceEntity as Player)?.name ??
                                     sourceEntity?.nameTag,
                                 banId: "ban:" + Date.now() + ":" + player.name,
-                                unbanDate: Number(h.formValues[0]) * 60000 +
+                                unbanDate: Number(h.formValues![0]) * 60000 +
                                     Date.now(),
                                 format_version: format_version,
-                                reason: String(h.formValues[1]),
+                                reason: String(h.formValues![1]),
                             });
                             return 1;
                         })

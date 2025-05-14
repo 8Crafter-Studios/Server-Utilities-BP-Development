@@ -5825,10 +5825,12 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
             let entity = undefined; /*
         console.warn(playerName[0])*/
             if (sourceType == "Entity") {
+                assertIsDefined(sourceEntity);
                 position = String(sourceEntity.location.x) + " " + sourceEntity.location.y + " " + sourceEntity.location.z;
                 entity = sourceEntity;
             }
             else {
+                assertIsDefined(sourceBlock);
                 position = String(sourceBlock.location.x) + " " + sourceBlock.location.y + " " + sourceBlock.location.z;
             }
             let targets = targetSelectorAllListC(playerName[0], "", position, entity); /*
@@ -6064,10 +6066,12 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
             let entity = undefined; /*
         console.warn(playerName[0])*/
             if (sourceType == "Entity") {
+                assertIsDefined(sourceEntity);
                 position = String(sourceEntity.location.x) + " " + sourceEntity.location.y + " " + sourceEntity.location.z;
                 entity = sourceEntity;
             }
             else {
+                assertIsDefined(sourceBlock);
                 position = String(sourceBlock.location.x) + " " + sourceBlock.location.y + " " + sourceBlock.location.z;
             }
             let targets = targetSelectorAllListC(playerName[0], "", position, entity); /*
@@ -6340,10 +6344,12 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
             let entity = undefined; /*
         console.warn(playerName[0])*/
             if (sourceType == "Entity") {
+                assertIsDefined(sourceEntity);
                 position = String(sourceEntity.location.x) + " " + sourceEntity.location.y + " " + sourceEntity.location.z;
                 entity = sourceEntity;
             }
             else {
+                assertIsDefined(sourceBlock);
                 position = String(sourceBlock.location.x) + " " + sourceBlock.location.y + " " + sourceBlock.location.z;
             }
             let targets = targetSelectorAllListE(playerName[0], position); /*
@@ -6817,7 +6823,7 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
             }
         }
         try {
-            event.sourceEntity.onScreenDisplay.setActionBar("§eBlock States For §c" + block.block.typeId + "§e: §a\n" + blockStatesFullList);
+            event.sourceEntity.onScreenDisplay.setActionBar("§eBlock States For §c" + block?.block.typeId + "§e: §a\n" + blockStatesFullList);
         }
         catch (e) { }
     }
@@ -7178,7 +7184,7 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
             }
         }
         world.setDynamicProperty("andexdbGametest:scriptEvalInternalCode", parameters[0].replaceAll("\\vl", "|"));
-        console.warn(location2);
+        // console.warn(location2!);
         try {
             world
                 .getDimension(parameters[2] ?? (initiator ?? sourceEntity ?? sourceBlock)?.dimension.id ?? "overworld")
@@ -7192,6 +7198,7 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
         let message2 = message.split("|");
         let message3;
         if (sourceType == "Entity") {
+            assertIsDefined(sourceEntity);
             message3 = coordinates(message2[1].split(";")[0].replaceAll(", ", " "), {
                 x: Number(message2[1]
                     .split(";")
@@ -7217,6 +7224,7 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
             });
         }
         if (sourceType == "NPCDialogue") {
+            assertIsDefined(sourceEntity);
             message3 = coordinates(message2[1].split(";")[0].replaceAll(", ", " "), {
                 x: Number(message2[1]
                     .split(";")
@@ -7267,6 +7275,7 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
             });
         }
         if (sourceType == "Block") {
+            assertIsDefined(sourceBlock);
             message3 = coordinates(message2[1].split(";")[0].replaceAll(", ", " "), {
                 x: Number(message2[1]
                     .split(";")

@@ -55,7 +55,7 @@ repeatingIntervals.worldBorderSystem = system.runInterval(() => {
                                     x: Math.max(Math.min(p.location.x, borderSettings.to.x), borderSettings.from.x),
                                     y: p.location.y,
                                     z: Math.max(Math.min(p.location.z, borderSettings.to.z), borderSettings.from.z),
-                                }, p.dimension).y,
+                                }, p.dimension)?.y,
                                 z: Math.max(Math.min(p.location.z, borderSettings.to.z), borderSettings.from.z),
                             });
                         }
@@ -66,7 +66,7 @@ repeatingIntervals.worldBorderSystem = system.runInterval(() => {
                                     x: Math.max(Math.min(p.location.x, borderSettings.to.x), borderSettings.from.x),
                                     y: p.location.y,
                                     z: Math.max(Math.min(p.location.z, borderSettings.to.z), borderSettings.from.z),
-                                }, p.dimension).y,
+                                }, p.dimension)?.y,
                                 z: Math.max(Math.min(p.location.z, borderSettings.to.z), borderSettings.from.z),
                             });
                         }
@@ -610,7 +610,7 @@ repeatingIntervals.worldBorderSystem = system.runInterval(() => {
                                     x: Math.max(Math.min(p.location.x, borderSettings.to.x), borderSettings.from.x),
                                     y: p.location.y,
                                     z: Math.max(Math.min(p.location.z, borderSettings.to.z), borderSettings.from.z),
-                                }, p.dimension).y,
+                                }, p.dimension)?.y,
                                 z: Math.max(Math.min(p.location.z, borderSettings.to.z), borderSettings.from.z),
                             });
                         }
@@ -621,7 +621,7 @@ repeatingIntervals.worldBorderSystem = system.runInterval(() => {
                                     x: Math.max(Math.min(p.location.x, borderSettings.to.x), borderSettings.from.x),
                                     y: p.location.y,
                                     z: Math.max(Math.min(p.location.z, borderSettings.to.z), borderSettings.from.z),
-                                }, p.dimension).y,
+                                }, p.dimension)?.y,
                                 z: Math.max(Math.min(p.location.z, borderSettings.to.z), borderSettings.from.z),
                             });
                         }
@@ -1165,7 +1165,7 @@ repeatingIntervals.worldBorderSystem = system.runInterval(() => {
                                     x: Math.max(Math.min(p.location.x, borderSettings.to.x), borderSettings.from.x),
                                     y: p.location.y,
                                     z: Math.max(Math.min(p.location.z, borderSettings.to.z), borderSettings.from.z),
-                                }, p.dimension).y,
+                                }, p.dimension)?.y,
                                 z: Math.max(Math.min(p.location.z, borderSettings.to.z), borderSettings.from.z),
                             });
                         }
@@ -1176,7 +1176,7 @@ repeatingIntervals.worldBorderSystem = system.runInterval(() => {
                                     x: Math.max(Math.min(p.location.x, borderSettings.to.x), borderSettings.from.x),
                                     y: p.location.y,
                                     z: Math.max(Math.min(p.location.z, borderSettings.to.z), borderSettings.from.z),
-                                }, p.dimension).y,
+                                }, p.dimension)?.y,
                                 z: Math.max(Math.min(p.location.z, borderSettings.to.z), borderSettings.from.z),
                             });
                         }

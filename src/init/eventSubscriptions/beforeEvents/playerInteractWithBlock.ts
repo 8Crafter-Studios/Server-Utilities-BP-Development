@@ -104,15 +104,15 @@ subscribedEvents.beforePlayerInteractWithBlock = world.beforeEvents.playerIntera
             });
         }
         if (event.isFirstEvent) {
-            interactable_blockb.interactable_block.find((playerId) => playerId.id == event.player.id).delay = initialDelay;
-            interactable_blockb.interactable_block.find((playerId) => playerId.id == event.player.id).holdDuration = holdDuration;
+            interactable_blockb.interactable_block.find((playerId) => playerId.id == event.player.id)!.delay = initialDelay;
+            interactable_blockb.interactable_block.find((playerId) => playerId.id == event.player.id)!.holdDuration = holdDuration;
             debugAction(event.block, event.player, 0, Number(event.player.isSneaking));
         } else if (
-            interactable_blockb.interactable_block.find((playerId) => playerId.id == event.player.id).delay == 0 ||
-            String(Object.values(event.player.getDynamicProperty("debugStickBlockLocation"))) != String(Object.values(event.block.location))
+            interactable_blockb.interactable_block.find((playerId) => playerId.id == event.player.id)!.delay == 0 ||
+            String(Object.values(event.player.getDynamicProperty("debugStickBlockLocation")!)) != String(Object.values(event.block.location))
         ) {
-            interactable_blockb.interactable_block.find((playerId) => playerId.id == event.player.id).delay = delay;
-            interactable_blockb.interactable_block.find((playerId) => playerId.id == event.player.id).holdDuration = holdDuration;
+            interactable_blockb.interactable_block.find((playerId) => playerId.id == event.player.id)!.delay = delay;
+            interactable_blockb.interactable_block.find((playerId) => playerId.id == event.player.id)!.holdDuration = holdDuration;
             debugAction(event.block, event.player, 0, Number(event.player.isSneaking));
         }
     } /*
@@ -240,7 +240,7 @@ subscribedEvents.beforePlayerInteractWithBlock = world.beforeEvents.playerIntera
                 console.error(e, e.stack);
             }
         }
-        if (["andexdb:pick_block_stick", "andexdb:liquid_clipped_pick_block_stick"].includes(event.itemStack?.typeId)) {
+        if (["andexdb:pick_block_stick", "andexdb:liquid_clipped_pick_block_stick"].includes(event.itemStack?.typeId!)) {
             event.cancel = true;
             if (securityVariables.ultraSecurityModeEnabled) {
                 if(securityVariables.testPlayerForPermission(event.player, "andexdb.canUsePickBlockSticks") == false){
@@ -249,13 +249,13 @@ subscribedEvents.beforePlayerInteractWithBlock = world.beforeEvents.playerIntera
                 }
             }
             try {
-                srun(() => event.player.inventory.container.addItem(event.block.getItemStack() ?? tryget(() => new ItemStack(event.block.typeId))));
+                srun(() => event.player.inventory.container.addItem(event.block.getItemStack() ?? tryget(() => new ItemStack(event.block.typeId))!));
                 return;
             } catch (e) {
                 console.error(e, e.stack);
             }
         }
-        if (["andexdb:data_pick_block_stick", "andexdb:liquid_clipped_data_pick_block_stick"].includes(event.itemStack?.typeId)) {
+        if (["andexdb:data_pick_block_stick", "andexdb:liquid_clipped_data_pick_block_stick"].includes(event.itemStack?.typeId!)) {
             event.cancel = true;
             if (securityVariables.ultraSecurityModeEnabled) {
                 if(securityVariables.testPlayerForPermission(event.player, "andexdb.canUsePickBlockSticks") == false){
@@ -265,7 +265,7 @@ subscribedEvents.beforePlayerInteractWithBlock = world.beforeEvents.playerIntera
             }
             try {
                 srun(() =>
-                    event.player.inventory.container.addItem(event.block.getItemStack(undefined, true) ?? tryget(() => new ItemStack(event.block.typeId)))
+                    event.player.inventory.container.addItem(event.block.getItemStack(undefined, true) ?? tryget(() => new ItemStack(event.block.typeId))!)
                 );
                 return;
             } catch (e) {

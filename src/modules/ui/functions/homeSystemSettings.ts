@@ -55,7 +55,7 @@ export async function homeSystemSettings(
 
 
 
-            let [homeSystemEnabled, maxHomesPerPlayer] = t.formValues;
+            let [homeSystemEnabled, maxHomesPerPlayer] = t.formValues!;
             config.homeSystem.homeSystemEnabled = homeSystemEnabled as boolean;
             config.homeSystem.maxHomesPerPlayer =
                 String(maxHomesPerPlayer).toLowerCase() == "infinity"

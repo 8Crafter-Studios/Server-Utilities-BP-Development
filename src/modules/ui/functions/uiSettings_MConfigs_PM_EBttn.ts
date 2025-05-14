@@ -61,7 +61,7 @@ export async function uiSettings_menuConfigurations_playerMenu_editButtons(sourc
             switch (
                 r.selection < menuConfig.buttons.length
                     ? ("button" as const)
-                    : (["addRemovedButtons", "reset", "back", "close"] as const)[r.selection - menuConfig.buttons.length]
+                    : (["addRemovedButtons", "reset", "back", "close"] as const)[r.selection! - menuConfig.buttons.length]
             ) {
                 case "button": {
                     const buttonID = menuConfig.buttons[r.selection!];

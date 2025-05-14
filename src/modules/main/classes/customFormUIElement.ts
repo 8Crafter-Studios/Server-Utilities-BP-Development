@@ -2,9 +2,9 @@ import { customElementTypeIds } from "modules/ui/functions/customElementTypeIds"
 
 export class customFormUIElement {
     index: number;
-    type: String;
+    type: string;
     args: String[];
-    code: String;
+    code: string;
     typeIndex: number;
     constructor(index: number, type: String, args: String[]) {
         this.index = index;

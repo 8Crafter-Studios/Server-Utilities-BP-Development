@@ -16,7 +16,7 @@ export async function createExplosion(
         source?: string;
     }
 ): Promise<0 | 1> {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : sourceEntitya;
     let form = new ModalFormData();
     form.title("Create Explosion");
     form.textField("x", "number", {defaultValue: String(parameterDefaults?.x ?? sourceEntity.location.x)});
@@ -35,7 +35,7 @@ export async function createExplosion(
             if (r.canceled) {
                 return 1;
             }
-            let [x, y, z, dimension, radius, source, allowUnderwater, breaksBlocks, causesFire] = r.formValues;
+            let [x, y, z, dimension, radius, source, allowUnderwater, breaksBlocks, causesFire] = r.formValues!;
             try {
                 world.getDimension(String(dimension)).createExplosion({ x: Number(x), y: Number(y), z: Number(z) }, Number(radius), {
                     allowUnderwater: Boolean(allowUnderwater),

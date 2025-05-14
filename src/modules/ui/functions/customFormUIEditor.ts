@@ -28,7 +28,7 @@ export function customFormUIEditor(
             if (t.canceled) return;
             world.setDynamicProperty(
                 `customUI:${formId}`,
-                `${t.formValues[0]}|${t.formValues[1]}`
+                `${t.formValues![0]}|${t.formValues![1]}`
             );
             let elementValues = t.formValues.slice(2, -2);
             console.warn(elementValues);
@@ -49,9 +49,9 @@ export function customFormUIEditor(
                         break;
                 }
             });
-            if (t.formValues[t.formValues.length - 2]) {
+            if (t.formValues![t.formValues.length - 2]) {
                 world.setDynamicProperty(
-                    `customUIElement:${formId}|${Number(t.formValues[t.formValues.length - 1]) ??
+                    `customUIElement:${formId}|${Number(t.formValues![t.formValues.length - 1]) ??
                     (form.indexList[form.indexList.length - 1] ?? -1) + 1}`,
                     ""
                 );

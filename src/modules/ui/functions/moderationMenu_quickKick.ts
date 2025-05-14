@@ -29,7 +29,7 @@ export async function moderationMenu_quickKick(sourceEntity: loosePlayerType): P
             form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Refresh", "textures/ui/refresh");
             const r = await form.forceShow(player);
             if (r.canceled) return 1 as const;
-            switch ((!!playerslist[r.selection!] ? "player" : undefined) ?? (["back", "close", "refresh"] as const)[r.selection - playerslist.length]) {
+            switch ((!!playerslist[r.selection!] ? "player" : undefined) ?? (["back", "close", "refresh"] as const)[r.selection! - playerslist.length]) {
                 case "player": {
                     const target = playerslist[r.selection!];
                     const form = new ModalFormData();

@@ -8,7 +8,7 @@ import { testIsWithinRanges } from "modules/spawn_protection/functions/testIsWit
 
 subscribedEvents.beforeExplosion = world.beforeEvents.explosion.subscribe(
     (event) => {
-        if (disconnectingPlayers.includes(event.source?.id)) {
+        if (disconnectingPlayers.includes(event.source?.id!)) {
             event.cancel = true;
             return;
         }

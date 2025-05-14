@@ -4,7 +4,7 @@ import { forceShow } from "modules/ui/functions/forceShow";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 
 export async function itemEditor(sourceEntitya: Entity | executeCommandPlayerW | Player, targetPlayer: Entity | Player, item: ContainerSlot) {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : sourceEntitya;
     let form = new ModalFormData();
     form.title("Edit Item");
     form.textField("Item Name (escape characters such as \\n are allowed)", "string", { defaultValue: !!!item.nameTag ? undefined : item.nameTag });
@@ -33,7 +33,7 @@ export async function itemEditor(sourceEntitya: Entity | executeCommandPlayerW |
             if (r.canceled) {
                 return;
             }
-            let [name, lore, count, canDestroy, canPlaceOn, lockMode, keepOnDeath, cooldown, durability] = r.formValues;
+            let [name, lore, count, canDestroy, canPlaceOn, lockMode, keepOnDeath, cooldown, durability] = r.formValues!;
             try {
                 if (String(name) != item.nameTag) {
                     item.nameTag = String(name);

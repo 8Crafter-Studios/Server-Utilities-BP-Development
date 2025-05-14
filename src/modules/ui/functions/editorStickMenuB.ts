@@ -25,7 +25,7 @@ export function editorStickMenuB(
         .then((r) => {
             if (r.canceled) return;
 
-            let [blockDimension, blockX, blockY, blockZ] = r.formValues; /*
+            let [blockDimension, blockX, blockY, blockZ] = r.formValues!; /*
 let blockPropertyValue2: any
 sourceEntity.runCommand("/scriptevent andexdb:debugStickB coordinates:"*/ /*"aslk"*/ /* + blockDimension + "|" + blockX + "|" + blockY + "|" + blockZ)*/
 

@@ -6,7 +6,7 @@ import { chatCommands } from "modules/commands/functions/chatCommands";
 import { customFormUICodes } from "../constants/customFormUICodes";
 
 export function chatCommandRunner(sourceEntitya: Entity | executeCommandPlayerW | Player) {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : sourceEntitya;
     system.run(() => {
         let form = new ModalFormData();
         let playerList = world.getAllPlayers();
@@ -24,7 +24,7 @@ export function chatCommandRunner(sourceEntitya: Entity | executeCommandPlayerW 
                 // This will stop the code when the player closes the form
                 if (r.canceled) return;
                 // This will assign every input their own variable
-                let [message, asPlayer] = r.formValues; /*
+                let [message, asPlayer] = r.formValues!; /*
         console.warn(r.formValues);*/
 
                 chatCommands({

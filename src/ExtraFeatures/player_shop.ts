@@ -706,8 +706,8 @@ ${
                         itemStack.amount = r.formValues![0] as number;
 
                         let b = (player.getComponent("inventory")?.container as Container).addItem(itemStack);
-                        if (!!b) {
-                            catchtry(() => player.dimension.spawnItem(b, player.location));
+                        if (b) {
+                            catchtry(() => player.dimension.spawnItem(b!, player.location));
                         }
                         MoneySystem.get(player.id).removeMoney(item.price * (r.formValues![0] as number));
                         MoneySystem.get(item.playerID).addMoney(item.price * (r.formValues![0] as number));
@@ -1127,7 +1127,7 @@ ${
                         }
                     } finally {
                         try {
-                            otherEntities.forEach((v, i) => tryrun(() => v.teleport(locs[i], { keepVelocity: false })));
+                            otherEntities!?.forEach((v, i) => tryrun(() => v.teleport(locs[i], { keepVelocity: false })));
                         } catch {}
                         try {
                             entity.remove();
@@ -1231,7 +1231,7 @@ ${
             }
         } finally {
             try {
-                otherEntities.forEach((v, i) => tryrun(() => v.teleport(locs[i], { keepVelocity: false })));
+                otherEntities!?.forEach((v, i) => tryrun(() => v.teleport(locs[i], { keepVelocity: false })));
             } catch {}
             try {
                 entity.remove();
@@ -1308,7 +1308,7 @@ ${
                         "close",
                         "refresh",
                         ...(player.hasTag("admin") ? (["manageAllShops", "playerShopSystemSettings"] as const) : ([] as const)),
-                    ] as const)[r.selection - shopsList.length]
+                    ] as const)[r.selection! - shopsList.length]
                 ) {
                     case "manageMyShops":
                         if ((await PlayerShopManager.managePlayerShops(player, false)) !== 0) {
@@ -1450,7 +1450,7 @@ export class PlayerShopManager {
             });
     }
     static async playerShopSystemSettings_main(sourceEntitya: Entity | executeCommandPlayerW | Player): Promise<0 | 1> {
-        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
+        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : sourceEntitya;
         assertIsDefined(sourceEntity);
         if (securityVariables.ultraSecurityModeEnabled) {
             if (securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.accessExtraFeaturesSettings") == false) {
@@ -1549,7 +1549,7 @@ export class PlayerShopManager {
                         "back",
                         "close",
                         "refresh",
-                    ] as const)[r.selection - shopsList.length]
+                    ] as const)[r.selection! - shopsList.length]
                 ) {
                     case "newShop":
                         if (((await PlayerShopManager.addPlayerShop(sourceEntity)) as 0 | 1) != 0) {
@@ -1660,7 +1660,7 @@ export class PlayerShopManager {
     }
 
     static async addPlayerShop(sourceEntitya: Entity | executeCommandPlayerW | Player): Promise<0 | 1> {
-        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
+        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : sourceEntitya;
         assertIsDefined(sourceEntity);
         let form = new ModalFormData();
         form.title(`New Shop`);
@@ -1722,7 +1722,7 @@ export class PlayerShopManager {
         targetPlayerID: `${number}`,
         targetPlayerName: string
     ): Promise<0 | 1> {
-        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
+        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : sourceEntitya;
         assertIsDefined(sourceEntity);
         let form = new ModalFormData();
         form.title(`New Shop As Player`);
@@ -1776,7 +1776,7 @@ export class PlayerShopManager {
     }
 
     static async managePlayerShop(sourceEntitya: Entity | executeCommandPlayerW | Player, shop: PlayerShop): Promise<0 | 1> {
-        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
+        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : sourceEntitya;
         assertIsDefined(sourceEntity);
         let form = new ActionFormData();
         form.title(customFormUICodes.action.titles.formStyles.gridMenu + "Manage " + shop.title);
@@ -2131,7 +2131,7 @@ Is Buy Shop: ${shop.buyShop ? "§aTrue" : "§cFalse"}
             })) as 0 | 1;
     }
     static async managePlayerShop_settings(sourceEntitya: Entity | executeCommandPlayerW | Player, shop: PlayerShop): Promise<0 | 1> {
-        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
+        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : sourceEntitya;
         assertIsDefined(sourceEntity);
         let form = new ModalFormData();
         form.title(`${shop.title} Settings`);
@@ -2208,7 +2208,7 @@ Is Buy Shop: ${shop.buyShop ? "§aTrue" : "§cFalse"}
         shop: PlayerShop,
         mode: "buy" | "sell" = "buy"
     ): Promise<0 | 1> {
-        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
+        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : sourceEntitya;
         assertIsDefined(sourceEntity);
         let form = new ActionFormData();
         form.title(`${customFormUICodes.action.titles.formStyles.gridMenu}Manage ${shop.title ?? ""} Contents`);
@@ -2419,7 +2419,7 @@ Is Buy Shop: ${shop.buyShop ? "§aTrue" : "§cFalse"}
         itemIndex: number,
         mode: mode
     ): Promise<0 | 1> {
-        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
+        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : sourceEntitya;
         assertIsDefined(sourceEntity);
         const form = new ActionFormData();
         form.title(customFormUICodes.action.titles.formStyles.gridMenu + "Manage " + item.title);
@@ -2944,7 +2944,7 @@ ${mode == "buy" ? "Price" : "Value"}: ${mode == "buy" ? (item as PlayerSavedShop
         itemIndex: number,
         mode: mode
     ) {
-        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
+        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : sourceEntitya;
         assertIsDefined(sourceEntity);
         const form = new ModalFormData();
         form.title("Edit " + item.title);
@@ -3028,7 +3028,7 @@ ${mode == "buy" ? "Price" : "Value"}: ${mode == "buy" ? (item as PlayerSavedShop
         itemIndex: number,
         mode: mode
     ) {
-        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
+        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : sourceEntitya;
         assertIsDefined(sourceEntity);
         const form = new ModalFormData();
         form.title("Edit " + item.title);
@@ -3149,7 +3149,7 @@ ${mode == "buy" ? "Price" : "Value"}: ${mode == "buy" ? (item as PlayerSavedShop
         type: "player_shop_sellable",
         mode: mode
     ) {
-        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
+        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : sourceEntitya;
         assertIsDefined(sourceEntity);
         const form = new ModalFormData();
         form.title("Add Item");
@@ -3215,7 +3215,7 @@ ${mode == "buy" ? "Price" : "Value"}: ${mode == "buy" ? (item as PlayerSavedShop
         pageIndex: number,
         mode: mode
     ): Promise<0 | 1> {
-        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
+        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : sourceEntitya;
         assertIsDefined(sourceEntity);
         const form = new ActionFormData();
         form.title(customFormUICodes.action.titles.formStyles.gridMenu + "Manage " + page.pageTitle);
@@ -3403,7 +3403,7 @@ Texture: ${page.texture}`
         pageIndex: number,
         mode: mode
     ): Promise<1> {
-        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
+        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : sourceEntitya;
         assertIsDefined(sourceEntity);
         const form = new ModalFormData();
         form.title("Edit Page");
@@ -3440,7 +3440,7 @@ Texture: ${page.texture}`
         shop: PlayerShop,
         mode: mode
     ): Promise<1> {
-        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
+        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : sourceEntitya;
         assertIsDefined(sourceEntity);
         const form = new ModalFormData();
         form.title("Add Page");
@@ -3485,7 +3485,7 @@ Texture: ${page.texture}`
         shop: PlayerShop,
         path: [mode, ...string[]]
     ): Promise<0 | 1> {
-        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
+        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : sourceEntitya;
         assertIsDefined(sourceEntity);
         const mode = path[0];
         let form = new ActionFormData();
@@ -3704,7 +3704,7 @@ Texture: ${page.texture}`
         item: mode extends "buy" ? PlayerSavedShopItem : PlayerSellableShopItem,
         itemIndex: number
     ): Promise<0 | 1> {
-        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
+        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : sourceEntitya;
         assertIsDefined(sourceEntity);
         const mode = path[0];
         const form = new ActionFormData();
@@ -4229,7 +4229,7 @@ Texture: ${page.texture}`
         item: mode extends "buy" ? PlayerSavedShopItem : PlayerSellableShopItem,
         itemIndex: number
     ): Promise<1> {
-        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
+        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : sourceEntitya;
         assertIsDefined(sourceEntity);
         const mode = path[0];
         const form = new ModalFormData();
@@ -4306,7 +4306,7 @@ Texture: ${page.texture}`
         path: [mode, ...string[]],
         type: "player_shop_sellable"
     ): Promise<1> {
-        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
+        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : sourceEntitya;
         assertIsDefined(sourceEntity);
         const mode = path[0];
         const form = new ModalFormData();
@@ -4375,7 +4375,7 @@ Texture: ${page.texture}`
         page: PlayerShopPage,
         pageIndex: number
     ): Promise<0 | 1> {
-        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
+        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : sourceEntitya;
         assertIsDefined(sourceEntity);
         const mode = path[0];
         const form = new ActionFormData();
@@ -4571,7 +4571,7 @@ Texture: ${page.texture}`
         page: PlayerShopPage,
         pageIndex: number
     ): Promise<1> {
-        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
+        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : sourceEntitya;
         assertIsDefined(sourceEntity);
         const mode = path[0];
         const form = new ModalFormData();
@@ -4611,7 +4611,7 @@ Texture: ${page.texture}`
         shop: PlayerShop,
         path: [mode, ...string[]]
     ): Promise<0 | 1> {
-        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
+        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : sourceEntitya;
         assertIsDefined(sourceEntity);
         const mode = path[0];
         const form = new ModalFormData();

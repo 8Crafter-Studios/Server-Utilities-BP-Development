@@ -78,10 +78,10 @@ export async function fillSphere<LiteModeEnabled extends boolean = false>(
                                 }
                                 if (Math.random() <= integrity / 100) {
                                     try {
-                                        const b = dimension.getBlock({ x, y, z });
+                                        const b = dimension.getBlock({ x, y, z })!;
                                         if (!!b.getComponent("inventory")) {
                                             // Check that the block has an inventory component before clearing it.
-                                            b.getComponent("inventory").container.clearAll(); // Clear the container of the block before placing the new block there.
+                                            b.getComponent("inventory")!.container!.clearAll(); // Clear the container of the block before placing the new block there.
                                         }
                                         b.setPermutation(block({ x, y, z, dimension }, index)); // Place the new block.
                                         counter++; // Increase the counter.
@@ -111,10 +111,10 @@ export async function fillSphere<LiteModeEnabled extends boolean = false>(
                                     continue;
                                 }
                                 try {
-                                    const b = dimension.getBlock({ x, y, z });
+                                    const b = dimension.getBlock({ x, y, z })!;
                                     if (!!b.getComponent("inventory")) {
                                         // Check that the block has an inventory component before clearing it.
-                                        b.getComponent("inventory").container.clearAll(); // Clear the container of the block before placing the new block there.
+                                        b.getComponent("inventory")!.container!.clearAll(); // Clear the container of the block before placing the new block there.
                                     }
                                     b.setPermutation(block({ x, y, z, dimension }, index)); // Place the new block.
                                 } catch (e) {
@@ -146,7 +146,7 @@ export async function fillSphere<LiteModeEnabled extends boolean = false>(
                                 }
                                 if (Math.random() <= integrity / 100) {
                                     try {
-                                        const b = dimension.getBlock({ x, y, z });
+                                        const b = dimension.getBlock({ x, y, z })!;
                                         b.setPermutation(block({ x, y, z, dimension }, index)); // Place the new block.
                                     } catch (e) {
                                         if (e instanceof TypeError || e instanceof UnloadedChunksError) {
@@ -174,7 +174,7 @@ export async function fillSphere<LiteModeEnabled extends boolean = false>(
                                     continue;
                                 }
                                 try {
-                                    const b = dimension.getBlock({ x, y, z });
+                                    const b = dimension.getBlock({ x, y, z })!;
                                     b.setPermutation(block({ x, y, z, dimension }, index)); // Place the new block.
                                 } catch (e) {
                                     if (e instanceof TypeError || e instanceof UnloadedChunksError) {
@@ -205,12 +205,12 @@ export async function fillSphere<LiteModeEnabled extends boolean = false>(
                                     continue;
                                 }
                                 try {
-                                    const b = dimension.getBlock({ x, y, z });
+                                    const b = dimension.getBlock({ x, y, z })!;
                                     if (options.blockMask.testIfMatches(b)) {
                                         if (Math.random() <= integrity / 100) {
                                             if (!!b.getComponent("inventory")) {
                                                 // Check that the block has an inventory component before clearing it.
-                                                b.getComponent("inventory").container.clearAll(); // Clear the container of the block before placing the new block there.
+                                                b.getComponent("inventory")!.container!.clearAll(); // Clear the container of the block before placing the new block there.
                                             }
                                             b.setPermutation(block({ x, y, z, dimension }, index)); // Place the new block.
                                         }
@@ -240,11 +240,11 @@ export async function fillSphere<LiteModeEnabled extends boolean = false>(
                                     continue;
                                 }
                                 try {
-                                    const b = dimension.getBlock({ x, y, z });
+                                    const b = dimension.getBlock({ x, y, z })!;
                                     if (options.blockMask.testIfMatches(b)) {
                                         if (!!b.getComponent("inventory")) {
                                             // Check that the block has an inventory component before clearing it.
-                                            b.getComponent("inventory").container.clearAll(); // Clear the container of the block before placing the new block there.
+                                            b.getComponent("inventory")!.container!.clearAll(); // Clear the container of the block before placing the new block there.
                                         }
                                         b.setPermutation(block({ x, y, z, dimension }, index)); // Place the new block.
                                     }
@@ -275,7 +275,7 @@ export async function fillSphere<LiteModeEnabled extends boolean = false>(
                                     continue;
                                 }
                                 try {
-                                    const b = dimension.getBlock({ x, y, z });
+                                    const b = dimension.getBlock({ x, y, z })!;
                                     if (options.blockMask.testIfMatches(b)) {
                                         if (Math.random() <= integrity / 100) {
                                             b.setPermutation(block({ x, y, z, dimension }, index)); // Place the new block.
@@ -306,7 +306,7 @@ export async function fillSphere<LiteModeEnabled extends boolean = false>(
                                     continue;
                                 }
                                 try {
-                                    const b = dimension.getBlock({ x, y, z });
+                                    const b = dimension.getBlock({ x, y, z })!;
                                     if (options.blockMask.testIfMatches(b)) {
                                         b.setPermutation(block({ x, y, z, dimension }, index)); // Place the new block.
                                     }
@@ -345,13 +345,13 @@ export async function fillSphere<LiteModeEnabled extends boolean = false>(
                                 }
                                 if (Math.random() <= integrity / 100) {
                                     try {
-                                        const b = dimension.getBlock({ x, y, z });
+                                        const b = dimension.getBlock({ x, y, z })!;
                                         const p = block({ x, y, z, dimension }, index);
                                         if (!p.matches(b.typeId, b.permutation.getAllStates())) {
                                             // Make sure the block is diferent than the once that would be placed there before increasing the counter.
                                             if (!!b.getComponent("inventory")) {
                                                 // Check that the block has an inventory component before clearing it.
-                                                b.getComponent("inventory").container.clearAll(); // Clear the container of the block before placing the new block there.
+                                                b.getComponent("inventory")!.container!.clearAll(); // Clear the container of the block before placing the new block there.
                                             }
                                             b.setPermutation(p); // Place the new block.
                                             counter++; // Increase the counter.
@@ -382,13 +382,13 @@ export async function fillSphere<LiteModeEnabled extends boolean = false>(
                                     continue;
                                 }
                                 try {
-                                    const b = dimension.getBlock({ x, y, z });
+                                    const b = dimension.getBlock({ x, y, z })!;
                                     const p = block({ x, y, z, dimension }, index);
                                     if (!p.matches(b.typeId, b.permutation.getAllStates())) {
                                         // Make sure the block is diferent than the once that would be placed there before increasing the counter.
                                         if (!!b.getComponent("inventory")) {
                                             // Check that the block has an inventory component before clearing it.
-                                            b.getComponent("inventory").container.clearAll(); // Clear the container of the block before placing the new block there.
+                                            b.getComponent("inventory")!.container!.clearAll(); // Clear the container of the block before placing the new block there.
                                         }
                                         b.setPermutation(p); // Place the new block.
                                         counter++; // Increase the counter.
@@ -422,7 +422,7 @@ export async function fillSphere<LiteModeEnabled extends boolean = false>(
                                 }
                                 if (Math.random() <= integrity / 100) {
                                     try {
-                                        const b = dimension.getBlock({ x, y, z });
+                                        const b = dimension.getBlock({ x, y, z })!;
                                         const p = block({ x, y, z, dimension }, index);
                                         if (!p.matches(b.typeId, b.permutation.getAllStates())) {
                                             // Make sure the block is diferent than the once that would be placed there before increasing the counter.
@@ -455,7 +455,7 @@ export async function fillSphere<LiteModeEnabled extends boolean = false>(
                                     continue;
                                 }
                                 try {
-                                    const b = dimension.getBlock({ x, y, z });
+                                    const b = dimension.getBlock({ x, y, z })!;
                                     const p = block({ x, y, z, dimension }, index);
                                     if (!p.matches(b.typeId, b.permutation.getAllStates())) {
                                         // Make sure the block is diferent than the once that would be placed there before increasing the counter.
@@ -491,7 +491,7 @@ export async function fillSphere<LiteModeEnabled extends boolean = false>(
                                     continue;
                                 }
                                 try {
-                                    const b = dimension.getBlock({ x, y, z });
+                                    const b = dimension.getBlock({ x, y, z })!;
                                     if (options.blockMask.testIfMatches(b)) {
                                         if (Math.random() <= integrity / 100) {
                                             const p = block({ x, y, z, dimension }, index);
@@ -499,7 +499,7 @@ export async function fillSphere<LiteModeEnabled extends boolean = false>(
                                                 // Make sure the block is diferent than the once that would be placed there before increasing the counter.
                                                 if (!!b.getComponent("inventory")) {
                                                     // Check that the block has an inventory component before clearing it.
-                                                    b.getComponent("inventory").container.clearAll(); // Clear the container of the block before placing the new block there.
+                                                    b.getComponent("inventory")!.container!.clearAll(); // Clear the container of the block before placing the new block there.
                                                 }
                                                 b.setPermutation(p); // Place the new block.
                                                 counter++; // Increase the counter.
@@ -531,14 +531,14 @@ export async function fillSphere<LiteModeEnabled extends boolean = false>(
                                     continue;
                                 }
                                 try {
-                                    const b = dimension.getBlock({ x, y, z });
+                                    const b = dimension.getBlock({ x, y, z })!;
                                     if (options.blockMask.testIfMatches(b)) {
                                         const p = block({ x, y, z, dimension }, index);
                                         if (!p.matches(b.typeId, b.permutation.getAllStates())) {
                                             // Make sure the block is diferent than the once that would be placed there before increasing the counter.
                                             if (!!b.getComponent("inventory")) {
                                                 // Check that the block has an inventory component before clearing it.
-                                                b.getComponent("inventory").container.clearAll(); // Clear the container of the block before placing the new block there.
+                                                b.getComponent("inventory")!.container!.clearAll(); // Clear the container of the block before placing the new block there.
                                             }
                                             b.setPermutation(p); // Place the new block.
                                             counter++; // Increase the counter.
@@ -571,7 +571,7 @@ export async function fillSphere<LiteModeEnabled extends boolean = false>(
                                     continue;
                                 }
                                 try {
-                                    const b = dimension.getBlock({ x, y, z });
+                                    const b = dimension.getBlock({ x, y, z })!;
                                     if (options.blockMask.testIfMatches(b)) {
                                         if (Math.random() <= integrity / 100) {
                                             const p = block({ x, y, z, dimension }, index);
@@ -607,7 +607,7 @@ export async function fillSphere<LiteModeEnabled extends boolean = false>(
                                     continue;
                                 }
                                 try {
-                                    const b = dimension.getBlock({ x, y, z });
+                                    const b = dimension.getBlock({ x, y, z })!;
                                     if (options.blockMask.testIfMatches(b)) {
                                         const p = block({ x, y, z, dimension }, index);
                                         if (!p.matches(b.typeId, b.permutation.getAllStates())) {

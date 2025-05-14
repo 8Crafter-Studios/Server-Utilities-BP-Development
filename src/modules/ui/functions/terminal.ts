@@ -31,7 +31,7 @@ export async function terminal(
         .then((ra) => {
             let r = ra as ModalFormResponse;
             if (r.canceled) return 1 as const;
-            let [commandId, commandDelay/* , debug */] = r.formValues;
+            let [commandId, commandDelay/* , debug */] = r.formValues!;
 
             system.runTimeout(() => {
                 try{

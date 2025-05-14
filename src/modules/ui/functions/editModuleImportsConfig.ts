@@ -77,7 +77,7 @@ export async function editModuleImportsConfig(
                 default:
                     let result = await editModuleImportsConfig_module(
                         sourceEntity,
-                        moduleNamesForModuleImportsConfigList[r.selection - 1]
+                        moduleNamesForModuleImportsConfigList[r.selection! - 1]
                     );
                     if (result == 1) {
                         return await editModuleImportsConfig(sourceEntity);
@@ -189,7 +189,7 @@ export async function editModuleImportsConfig_module(
                     let result = await editModuleImportsConfig_module_folder(
                         sourceEntity,
                         module,
-                        itemsB[r.selection - 1]
+                        itemsB[r.selection! - 1]
                     );
                     if (result == 1) {
                         return await editModuleImportsConfig_module(
@@ -299,7 +299,7 @@ export async function editModuleImportsConfig_module_folder(
                     let result = await editModuleImportsConfig_module_item(
                         sourceEntity,
                         module,
-                        items[r.selection - 1][0]
+                        items[r.selection! - 1][0]
                     );
                     if (result == 1) {
                         return await editModuleImportsConfig_module(

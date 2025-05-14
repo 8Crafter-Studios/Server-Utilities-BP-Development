@@ -204,12 +204,12 @@ export async function managePlayers(
                         undefined,
                         maxplayersperpage,
                         {
-                            value: rb.formValues[0] as string,
-                            caseSensitive: rb.formValues[1] as boolean,
-                            searchNames: rb.formValues[2] as boolean,
-                            searchIds: rb.formValues[3] as boolean,
-                            searchLastOnlineDates: rb.formValues[4] as boolean,
-                            searchLastOnlineTimes: rb.formValues[5] as boolean,
+                            value: rb.formValues![0] as string,
+                            caseSensitive: rb.formValues![1] as boolean,
+                            searchNames: rb.formValues![2] as boolean,
+                            searchIds: rb.formValues![3] as boolean,
+                            searchLastOnlineDates: rb.formValues![4] as boolean,
+                            searchLastOnlineTimes: rb.formValues![5] as boolean,
                         },
                         undefined
                     ); /*
@@ -255,7 +255,7 @@ export async function managePlayers(
                 case numplayersonpage + 9:
                     return await managePlayers(player, page, maxplayersperpage, search, undefined);
                 default:
-                    if ((await managePlayers_managePlayer(player, players[r.selection - 6])) === 1) {
+                    if ((await managePlayers_managePlayer(player, players[r.selection! - 6])) === 1) {
                         return await managePlayers(player, page, maxplayersperpage, search, displayPlayers);
                     } else {
                         return 0;

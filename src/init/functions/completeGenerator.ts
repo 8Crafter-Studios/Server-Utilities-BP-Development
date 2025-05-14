@@ -41,5 +41,5 @@ globalThis.completeGenerator = async function completeGenerator<
             break;
         }
     }
-    return { yield: finalResult, return: returnResult };
+    return { yield: finalResult!, return: returnResult! };
 };

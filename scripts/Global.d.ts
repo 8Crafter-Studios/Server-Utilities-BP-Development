@@ -92,7 +92,7 @@ declare global {
          * @template {any[]} T The type of the array to remove null values from.
          * @returns {T[number][]} The array without null values.
          */
-        function cullNull<T extends any[]>(array: T): Exclude<T[number], null>[];
+        function cullNull<T extends any[] | readonly any[]>(array: T): Exclude<T[number], null>[];
         /**
          * Removes all values from an array that are `undefined`.
          *
@@ -100,7 +100,7 @@ declare global {
          * @template {any[]} T The type of the array to remove undefined values from.
          * @returns {T[number][]} The array without undefined values.
          */
-        function cullUndefined<T extends any[]>(array: T): Exclude<T[number], undefined>[];
+        function cullUndefined<T extends any[] | readonly any[]>(array: T): Exclude<T[number], undefined>[];
         /**
          * Removes all values from an array that are `null` or `undefined`.
          *
@@ -108,7 +108,7 @@ declare global {
          * @template {any[]} T The type of the array to remove empty values from.
          * @returns {T[number][]} The array without empty values.
          */
-        function cullEmpty<T extends any[]>(array: T): NonNullable<T[number]>[];
+        function cullEmpty<T extends any[] | readonly any[]>(array: T): NonNullable<T[number]>[];
         /**
          * Tries to get the value of a callback function.
          *
@@ -120,7 +120,7 @@ declare global {
          * @template {any} T The type of the value returned by the callback function.
          * @returns {T} The value of the callback function, or `undefined` if the callback function threw an error.
          */
-        function tryget<T>(callbackfn: () => T): T;
+        function tryget<T>(callbackfn: () => T): T | undefined;
         /**
          * Runs a callback function and catches any errors that occur.
          *

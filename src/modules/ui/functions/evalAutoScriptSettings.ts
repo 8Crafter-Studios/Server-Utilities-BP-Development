@@ -26,7 +26,7 @@ import { customFormUICodes } from "../constants/customFormUICodes";
  * @throws Will log an error and return `-2` if an exception occurs during form processing.
  */
 export async function evalAutoScriptSettings(sourceEntitya: Entity | executeCommandPlayerW | Player): Promise<1 | 0 | -2> {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : sourceEntitya;
     if (securityVariables.ultraSecurityModeEnabled) {
         if (
             securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.accessAdvancedSettings") == false ||
@@ -119,7 +119,7 @@ export async function evalAutoScriptSettings(sourceEntitya: Entity | executeComm
                 return 1 as const;
             }
 
-            let [becs, beddete, beea, beer, bee, beide, beiu, beiuo, bepa, bepbb, bepiwb, bepiwe, bepl, beppb, aebe, aepl, aeed] = t.formValues;
+            let [becs, beddete, beea, beer, bee, beide, beiu, beiuo, bepa, bepbb, bepiwb, bepiwe, bepl, beppb, aebe, aepl, aeed] = t.formValues!;
             world.setDynamicProperty("evalBeforeEvents:chatSend", becs);
             world.setDynamicProperty("evalBeforeEvents:dataDrivenEntityTrggerEvent", beddete);
             world.setDynamicProperty("evalBeforeEvents:effectAdd", beea);

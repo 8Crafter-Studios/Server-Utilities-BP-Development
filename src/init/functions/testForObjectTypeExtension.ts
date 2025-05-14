@@ -69,7 +69,7 @@ export function testForObjectTypeExtension(
             return false;
         }
 
-        const objectValue = Object.entries(objectToTest).find((c) => c[0] == v[0])[1];
+        const objectValue = Object.entries(objectToTest).find((c) => c[0] == v[0])![1];
 
         if (typeof v[1] == "object") {
             if (typeof objectValue == "object") {

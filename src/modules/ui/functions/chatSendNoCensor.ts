@@ -27,7 +27,7 @@ export function chatSendNoCensor(
                 // This will stop the code when the player closes the form
                 if (r.canceled) return;
                 // This will assign every input their own variable
-                let [message, asPlayer] = r.formValues; /*
+                let [message, asPlayer] = r.formValues!; /*
         console.warn(r.formValues);*/
 
                 chatSend({

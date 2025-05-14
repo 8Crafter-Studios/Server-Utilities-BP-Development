@@ -95,7 +95,7 @@ repeatingIntervals.worldBorderSystem = system.runInterval(() => {
                                             ),
                                         },
                                         p.dimension
-                                    ).y,
+                                    )!?.y,
                                     z: Math.max(
                                         Math.min(
                                             p.location.z,
@@ -132,7 +132,7 @@ repeatingIntervals.worldBorderSystem = system.runInterval(() => {
                                             ),
                                         },
                                         p.dimension
-                                    ).y,
+                                    )!?.y,
                                     z: Math.max(
                                         Math.min(
                                             p.location.z,
@@ -930,7 +930,7 @@ repeatingIntervals.worldBorderSystem = system.runInterval(() => {
                                             ),
                                         },
                                         p.dimension
-                                    ).y,
+                                    )!?.y,
                                     z: Math.max(
                                         Math.min(
                                             p.location.z,
@@ -967,7 +967,7 @@ repeatingIntervals.worldBorderSystem = system.runInterval(() => {
                                             ),
                                         },
                                         p.dimension
-                                    ).y,
+                                    )!?.y,
                                     z: Math.max(
                                         Math.min(
                                             p.location.z,
@@ -1765,7 +1765,7 @@ repeatingIntervals.worldBorderSystem = system.runInterval(() => {
                                             ),
                                         },
                                         p.dimension
-                                    ).y,
+                                    )!?.y,
                                     z: Math.max(
                                         Math.min(
                                             p.location.z,
@@ -1802,7 +1802,7 @@ repeatingIntervals.worldBorderSystem = system.runInterval(() => {
                                             ),
                                         },
                                         p.dimension
-                                    ).y,
+                                    )!?.y,
                                     z: Math.max(
                                         Math.min(
                                             p.location.z,

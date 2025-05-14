@@ -40,7 +40,7 @@ export async function nbtStructureLoader(sourceEntity: loosePlayerType): Promise
         // This will stop the code when the player closes the form
         if (r.canceled) return 1;
         // This will assign every input their own variable
-        let [snbt, x, y, z, dimension] = r.formValues; /*
+        let [snbt, x, y, z, dimension] = r.formValues!; /*
         console.warn(r.formValues);*/
 
         if (String(snbt).includes("#")) {

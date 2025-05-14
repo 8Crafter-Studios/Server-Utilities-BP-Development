@@ -161,8 +161,8 @@ export async function selectTexturePresetInCategory<C extends keyof typeof textu
 
             switch (
                 (["search", "previous", "go", "next", "", ""] as const)[r.selection!] ??
-                (!!texturesB[r.selection - 6] ? "texture" : undefined) ??
-                (["back", "close"] as const)[r.selection - texturesB.length - 6]
+                (!!texturesB[r.selection! - 6] ? "texture" : undefined) ??
+                (["back", "close"] as const)[r.selection! - texturesB.length - 6]
             ) {
                 case "search": {
                     const rb = await tryget(
@@ -182,8 +182,8 @@ export async function selectTexturePresetInCategory<C extends keyof typeof textu
                         category,
                         undefined,
                         {
-                            value: rb.formValues[0] as string,
-                            caseSensitive: rb.formValues[1] as boolean,
+                            value: rb.formValues![0] as string,
+                            caseSensitive: rb.formValues![1] as boolean,
                         },
                         undefined
                     );
@@ -210,7 +210,7 @@ export async function selectTexturePresetInCategory<C extends keyof typeof textu
                 case "next":
                     return await selectTexturePresetInCategory(sourceEntity, category, Math.min(numpages - 1, page + 1), search, textures);
                 case "texture":
-                    return texturesB[r.selection - 6][1];
+                    return texturesB[r.selection! - 6][1];
                 case "back":
                     return 1;
                 case "close":

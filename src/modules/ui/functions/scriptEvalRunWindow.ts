@@ -38,7 +38,7 @@ export async function scriptEvalRunWindow(
             let r = ro as ModalFormResponse;
             if (r.canceled) return 1 as const;
 
-            let runScriptForEval = r.formValues;
+            let runScriptForEval = r.formValues!;
             eval(String(runScriptForEval.join("\n")));
             return 1;
         })

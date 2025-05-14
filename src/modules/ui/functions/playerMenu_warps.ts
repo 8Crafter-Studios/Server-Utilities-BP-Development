@@ -41,7 +41,7 @@ export async function playerMenu_warps(sourceEntity: loosePlayerType): Promise<0
 
             switch (
                 (!!warps[r.selection!] ? "warp" : undefined) ??
-                cullUndefined([canAccessManageWarpsUI ? "manageWarps" : undefined, "back", "close"] as const)[r.selection - warps.length]
+                cullUndefined([canAccessManageWarpsUI ? "manageWarps" : undefined, "back", "close"] as const)[r.selection! - warps.length]
             ) {
                 case "warp":
                     const warp = warps[r.selection!];

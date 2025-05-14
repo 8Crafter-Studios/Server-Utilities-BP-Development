@@ -21,7 +21,7 @@ export function newItemInSlot(
             if (r.canceled) {
                 return;
             }
-            let [type, count] = r.formValues;
+            let [type, count] = r.formValues!;
             try {
                 item.setItem(new ItemStack(String(type), Number(count)));
             } catch (e) {

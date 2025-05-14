@@ -34,7 +34,7 @@ export function* generateSolidOvoidBG(
                                     x: x,
                                     y: y,
                                     z: z,
-                                    dimension: dimension,
+                                    dimension: dimension!,
                                 });
                             }
                         }

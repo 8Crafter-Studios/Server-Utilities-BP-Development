@@ -1116,7 +1116,7 @@ export async function editCustomAreaCategorySetting(
             form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
             const r = await form.forceShow(player);
             if (r.canceled) return 1;
-            switch ((["toggle"] as const)[r.selection!] ?? optionsList[r.selection - 1] ?? (["back", "close"] as const)[r.selection - optionsList.length - 1]) {
+            switch ((["toggle"] as const)[r.selection!] ?? optionsList[r.selection! - 1] ?? (["back", "close"] as const)[r.selection! - optionsList.length - 1]) {
                 case "toggle": {
                     if (!!category[setting]) {
                         if (category[setting].enabled === false) {

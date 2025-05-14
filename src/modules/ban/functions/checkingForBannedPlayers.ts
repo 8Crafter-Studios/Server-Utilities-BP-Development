@@ -49,7 +49,8 @@ export function startCheckingForBannedPlayers(): void {
                 const timeZone = config.system.timeZone;
                 let reason = b?.kickMessage;
                 try {
-                    reason = String(
+                    reason = tryget(()=>
+                        String(
                         eval(
                             b?.kickMessage
                                 ?.replaceAll(
@@ -100,9 +101,9 @@ export function startCheckingForBannedPlayers(): void {
                                 .replaceAll(
                                     "{timeRemainingRaw}",
                                     b.unbanDate === Infinity ? "Infinity" : String(b?.timeRemainingRaw)
-                                )
+                                )!
                         )
-                    );
+                    ));
                 } catch (e) {
                     reason = b?.kickMessage
                         ?.replaceAll(
@@ -157,10 +158,10 @@ export function startCheckingForBannedPlayers(): void {
 
 export function stopCheckingForBannedPlayers(): 1 | 0 {
     try {
-        system.clearRun(bannedPlayersCheckerIntervalID);
+        if(bannedPlayersCheckerIntervalID !== null) system.clearRun(bannedPlayersCheckerIntervalID);
         bannedPlayersCheckerIntervalID = null;
         repeatingIntervals.bannedPlayersChecker =
-            bannedPlayersCheckerIntervalID;
+            bannedPlayersCheckerIntervalID ?? undefined;
         return 1;
     } catch {
         return 0;

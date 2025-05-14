@@ -44,7 +44,7 @@ export async function moderationMenu_quickTransfer(sourceEntity: loosePlayerType
             form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Refresh", "textures/ui/refresh");
             const r = await form.forceShow(player);
             if (r.canceled) return 1 as const;
-            switch ((!!playerslist[r.selection!] ? "player" : undefined) ?? (["back", "close", "refresh"] as const)[r.selection - playerslist.length]) {
+            switch ((!!playerslist[r.selection!] ? "player" : undefined) ?? (["back", "close", "refresh"] as const)[r.selection! - playerslist.length]) {
                 case "player": {
                     const target = playerslist[r.selection!];
                     const form = new ModalFormData();
@@ -53,19 +53,19 @@ export async function moderationMenu_quickTransfer(sourceEntity: loosePlayerType
                     form.textField("Port", "19132");
                     const rb = await form.forceShow(player);
                     if (rb.canceled) continue;
-                    if (rb.formValues[0] === "") {
+                    if (rb.formValues![0] === "") {
                         throw new TypeError("IP Address cannot be empty.");
                     }
-                    if (rb.formValues[1] === "") {
+                    if (rb.formValues![1] === "") {
                         throw new TypeError("Port cannot be empty.");
                     }
-                    if (!/^[0-9]+$/.test(rb.formValues[1] as string)) {
+                    if (!/^[0-9]+$/.test(rb.formValues![1] as string)) {
                         throw new TypeError("Port must be an integer.");
                     }
-                    if (rb.formValues[1].toNumber() < 0 || rb.formValues[1].toNumber() > 65535) {
+                    if (rb.formValues![1].toNumber() < 0 || rb.formValues![1].toNumber() > 65535) {
                         throw new TypeError("Port must be between 0 and 65535 (inclusive).");
                     }
-                    transferPlayer(target, rb.formValues[0] as string, rb.formValues[1].toNumber());
+                    transferPlayer(target, rb.formValues![0] as string, rb.formValues![1].toNumber());
                     return 1;
                 }
                 case "back":

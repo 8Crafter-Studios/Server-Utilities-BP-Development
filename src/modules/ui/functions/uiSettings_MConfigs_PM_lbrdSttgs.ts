@@ -142,7 +142,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
             switch (
                 r.selection < leaderboards.length
                     ? ("button" as const)
-                    : (["addLeaderboard", "back", "close", "reset"] as const)[r.selection - leaderboards.length]
+                    : (["addLeaderboard", "back", "close", "reset"] as const)[r.selection! - leaderboards.length]
             ) {
                 case "button": {
                     const leaderboardID = leaderboards[r.selection!];
@@ -435,7 +435,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
             switch (
                 r.selection < trackedStats.length
                     ? ("button" as const)
-                    : (["addLeaderboard", "back", "close", "reset"] as const)[r.selection - trackedStats.length]
+                    : (["addLeaderboard", "back", "close", "reset"] as const)[r.selection! - trackedStats.length]
             ) {
                 case "button": {
                     const leaderboardID = trackedStats[r.selection!];
@@ -764,7 +764,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
             let r = ra as ActionFormResponse;
             if (r.canceled) return 1;
 
-            switch (r.selection < statistics.length ? ("button" as const) : (["back", "close", "reset"] as const)[r.selection - statistics.length]) {
+            switch (r.selection < statistics.length ? ("button" as const) : (["back", "close", "reset"] as const)[r.selection! - statistics.length]) {
                 case "button": {
                     if (
                         (await uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics_builtIn_statistic(
@@ -1034,7 +1034,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
             let r = ra as ActionFormResponse;
             if (r.canceled) return 1;
 
-            switch (r.selection < statistics.length ? ("button" as const) : (["new", "back", "close", "reset"] as const)[r.selection - statistics.length]) {
+            switch (r.selection < statistics.length ? ("button" as const) : (["new", "back", "close", "reset"] as const)[r.selection! - statistics.length]) {
                 case "button":
                     if (
                         (await uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics_custom_statistic(

@@ -144,4 +144,5 @@ declare global {
             ? [F, ...IncludeFromTuple<R, E>]
             : IncludeFromTuple<R, E>
         : [];
+    type NullableArray<T extends any[] | readonly any[]> = T | [null, ...T] | [...T, null];
 }

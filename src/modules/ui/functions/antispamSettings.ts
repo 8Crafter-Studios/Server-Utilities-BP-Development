@@ -78,7 +78,7 @@ export async function antispamSettings(sourceEntity: loosePlayerType): Promise<0
             waitTimeAfterAntispamActivation,
             maxTimeBewteenMessagesToTriggerAntiSpam,
             antispamTriggerMessageCount,
-        ] = r.formValues;
+        ] = r.formValues!;
         config.antiSpamSystem.antispamEnabled = antispamEnabled as boolean;
         config.antiSpamSystem.restartAntiSpamMuteTimerUponAttemptedMessageSendDuringMute =
             restartAntiSpamMuteTimerUponAttemptedMessageSendDuringMute as boolean;

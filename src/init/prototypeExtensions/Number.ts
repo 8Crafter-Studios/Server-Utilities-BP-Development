@@ -56,14 +56,21 @@ Object.defineProperties(Number.prototype, {
                 if (num === 0n) {
                     return valueFor0;
                 }
+                /**
+                 * The absolute value of the provided number.
+                 *
+                 * @type {bigint}
+                 */
+                const absNum: bigint = num < 0n ? -num : num;
                 for (var i = 0; i < romanMatrix.length; i++) {
-                    if (num >= romanMatrix[i][0]) {
+                    if (absNum >= romanMatrix[i][0]) {
                         return (
                             romanMatrix[i][1] +
                             convertToRoman(num - romanMatrix[i][0])
                         );
                     }
                 }
+                throw new InternalError(`Something went wrong while converting the bigint to a roman numeral, this should not have happened, please notify 8Crafter.`);
             }
             return (
                 ((this as number) < 0 ? "-" : "") +

@@ -176,14 +176,14 @@ export class ban {
             .getDynamicPropertyIds()
             .filter((s) =>
                 banType == "both"
-                    ? (s.startsWith("ban:") ? ban.getBan(s).isValid : false) || (s.startsWith("banId:") ? ban.getBan(s).isValid : false)
+                    ? (s.startsWith("ban:") ? ban.getBan(s)?.isValid : false) || (s.startsWith("banId:") ? ban.getBan(s)?.isValid : false)
                     : banType == "name"
                     ? s.startsWith("ban:")
-                        ? ban.getBan(s).isValid
+                        ? ban.getBan(s)?.isValid
                         : false
                     : banType == "id"
                     ? s.startsWith("banId:")
-                        ? ban.getBan(s).isValid
+                        ? ban.getBan(s)?.isValid
                         : false
                     : undefined
             );
@@ -193,14 +193,14 @@ export class ban {
             .getDynamicPropertyIds()
             .filter((s) =>
                 banType == "both"
-                    ? (s.startsWith("ban:") ? ban.getBan(s).isExpired : false) || (s.startsWith("banId:") ? ban.getBan(s).isExpired : false)
+                    ? (s.startsWith("ban:") ? ban.getBan(s)?.isExpired : false) || (s.startsWith("banId:") ? ban.getBan(s)?.isExpired : false)
                     : banType == "name"
                     ? s.startsWith("ban:")
-                        ? ban.getBan(s).isExpired
+                        ? ban.getBan(s)?.isExpired
                         : false
                     : banType == "id"
                     ? s.startsWith("banId:")
-                        ? ban.getBan(s).isExpired
+                        ? ban.getBan(s)?.isExpired
                         : false
                     : undefined
             );
@@ -241,7 +241,7 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
     } /*
 getBan(banId: string){let banString = String(world.getDynamicProperty(banId)).split("||"); this.removeAfterBanExpires=Boolean(Number(banString[0])); this.unbanDate=new Date(Number(banString[1])); this.banDate=new Date(Number(banString[2])); if(banId.startsWith("ban")){this.originalPlayerId=Number(banString[3]); this.playerName=banId.split(":").slice(1).join(":"); }else{if(banId.startsWith("idBan")){this.originalPlayerName=Number(banString[3]); this.playerName=Number(playerId.split(":")[1]); }else{}}; this.bannedById=Number(banString[4]); this.bannedByName=banString[5].replaceAll("\\|", "|"); this.playerName=banString.slice(6).join("||"); return this as ban}*/
 
-    static getBan(banId: string) {
+    static getBan(banId: string): ban | undefined {
         try {
             let banString = String(world.getDynamicProperty(banId));
             return new ban(JSONB.parse(banString));
@@ -249,12 +249,12 @@ getBan(banId: string){let banString = String(world.getDynamicProperty(banId)).sp
             console.error(e, e.stack);
         }
     }
-    static getBans() {
+    static getBans(): { idBans: ban[]; nameBans: ban[]; allBans: ban[]; } {
         let bans: ban[];
         bans = [];
         ban.getBanIds().forEach((b) => {
             try {
-                bans.push(ban.getBan(b));
+                bans.push(ban.getBan(b)!);
             } catch (e) {
                 console.error(e, e.stack);
             }
@@ -265,12 +265,12 @@ getBan(banId: string){let banString = String(world.getDynamicProperty(banId)).sp
             allBans: bans,
         };
     }
-    static getValidBans() {
+    static getValidBans(): { idBans: ban[]; nameBans: ban[]; allBans: ban[]; } {
         let bans: ban[];
         bans = [];
         ban.getValidBanIds().forEach((b) => {
             try {
-                bans.push(ban.getBan(b));
+                bans.push(ban.getBan(b)!);
             } catch (e) {
                 console.error(e, e.stack);
             }
@@ -281,12 +281,12 @@ getBan(banId: string){let banString = String(world.getDynamicProperty(banId)).sp
             allBans: bans,
         };
     }
-    static getExpiredBans() {
+    static getExpiredBans(): { idBans: ban[]; nameBans: ban[]; allBans: ban[]; } {
         let bans: ban[];
         bans = [];
         ban.getExpiredBanIds().forEach((b) => {
             try {
-                bans.push(ban.getBan(b));
+                bans.push(ban.getBan(b)!);
             } catch (e) {
                 console.error(e, e.stack);
             }
@@ -297,13 +297,13 @@ getBan(banId: string){let banString = String(world.getDynamicProperty(banId)).sp
             allBans: bans,
         };
     }
-    static getBansAutoRefresh() {
+    static getBansAutoRefresh(): { idBans: ban[]; nameBans: ban[]; allBans: ban[]; } {
         if (lastBanRefresh < Date.now() - config.moderation.bans.minimumAutoRefresh) {
             ban.refreshBans();
         }
         return { ...bans };
     }
-    static getValidBansAutoRefresh() {
+    static getValidBansAutoRefresh(): { idBans: ban[]; nameBans: ban[]; allBans: ban[]; } {
         if (lastBanRefresh < Date.now() - config.moderation.bans.minimumAutoRefresh) {
             ban.refreshBans();
         }
@@ -313,7 +313,7 @@ getBan(banId: string){let banString = String(world.getDynamicProperty(banId)).sp
             allBans: bans.allBans.filter((b) => b.isValid),
         };
     }
-    static getExpiredBansAutoRefresh() {
+    static getExpiredBansAutoRefresh(): { idBans: ban[]; nameBans: ban[]; allBans: ban[]; } {
         if (lastBanRefresh < Date.now() - config.moderation.bans.minimumAutoRefresh) {
             ban.refreshBans();
         }
@@ -323,24 +323,24 @@ getBan(banId: string){let banString = String(world.getDynamicProperty(banId)).sp
             allBans: bans.allBans.filter((b) => b.isExpired),
         };
     }
-    static getBansNoRefresh() {
+    static getBansNoRefresh(): { idBans: ban[]; nameBans: ban[]; allBans: ban[]; } {
         return { ...bans };
     }
-    static getValidBansNoRefresh() {
+    static getValidBansNoRefresh(): { idBans: ban[]; nameBans: ban[]; allBans: ban[]; } {
         return {
             idBans: bans.idBans.filter((b) => b.isValid),
             nameBans: bans.nameBans.filter((b) => b.isValid),
             allBans: bans.allBans.filter((b) => b.isValid),
         };
     }
-    static getExpiredBansNoRefresh() {
+    static getExpiredBansNoRefresh(): { idBans: ban[]; nameBans: ban[]; allBans: ban[]; } {
         return {
             idBans: bans.idBans.filter((b) => b.isExpired),
             nameBans: bans.nameBans.filter((b) => b.isExpired),
             allBans: bans.allBans.filter((b) => b.isExpired),
         };
     }
-    static testForBannedPlayer(player: Player | savedPlayer | savedPlayerData) {
+    static testForBannedPlayer(player: Player | savedPlayer | savedPlayerData): boolean {
         if (lastBanRefresh < Date.now() - config.moderation.bans.minimumAutoRefresh) {
             ban.refreshBans();
         }
@@ -350,19 +350,19 @@ getBan(banId: string){let banString = String(world.getDynamicProperty(banId)).sp
             ? true
             : false;
     }
-    static testForNameBannedPlayer(player: Player | savedPlayer | savedPlayerData) {
+    static testForNameBannedPlayer(player: Player | savedPlayer | savedPlayerData): boolean {
         if (lastBanRefresh < Date.now() - config.moderation.bans.minimumAutoRefresh) {
             ban.refreshBans();
         }
         return bans.nameBans.find((b) => b.isValid && b.playerName == player.name) !== undefined ? true : false;
     }
-    static testForIdBannedPlayer(player: Player | savedPlayer | savedPlayerData) {
+    static testForIdBannedPlayer(player: Player | savedPlayer | savedPlayerData): boolean {
         if (lastBanRefresh < Date.now() - config.moderation.bans.minimumAutoRefresh) {
             ban.refreshBans();
         }
         return bans.idBans.find((b) => b.isValid && b.playerId == player.id) !== undefined;
     }
-    static executeOnBannedPlayers(callbackfn: (player: Player, index: number, array: any[]) => unknown) {
+    static executeOnBannedPlayers(callbackfn: (player: Player, index: number, array: any[]) => unknown): any[] {
         let feedback: any[];
         feedback = [];
         world

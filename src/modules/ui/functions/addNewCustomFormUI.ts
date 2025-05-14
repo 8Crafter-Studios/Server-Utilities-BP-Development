@@ -15,7 +15,7 @@ export function addNewCustomFormUI(
         let ta = t as ModalFormResponse;
         try {
             world.setDynamicProperty(
-                `customUI:${String(ta.formValues[0]).replaceAll("|", "\\vls")}`,
+                `customUI:${String(ta.formValues![0]).replaceAll("|", "\\vls")}`,
                 '0|"My Form"'
             );
         } catch (e) {

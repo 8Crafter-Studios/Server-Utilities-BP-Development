@@ -16,7 +16,7 @@ import { forceShow } from "modules/ui/functions/forceShow";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 
 export function inventoryController(sourceEntitya: Entity | executeCommandPlayerW | Player) {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : sourceEntitya;
     let form2 = new ModalFormData();
     let players = world.getAllPlayers();
     let targetList = [players[0].nameTag];
@@ -34,7 +34,7 @@ export function inventoryController(sourceEntitya: Entity | executeCommandPlayer
         .show(sourceEntity as any)
         .then((t) => {
             if (t.canceled) return;
-            let [slotNumber, slotType, playerTarget, playerViewer, debug2] = t.formValues;
+            let [slotNumber, slotType, playerTarget, playerViewer, debug2] = t.formValues!;
             let playerTargetB = Number(playerTarget);
             let playerViewerB = Number(playerViewer);
             let inventory: any;

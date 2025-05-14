@@ -25,7 +25,7 @@ import { customFormUICodes } from "../constants/customFormUICodes";
  * 7. Handles any errors that occur during the form submission and updates.
  */
 export async function manageGameRulesUI(sourceEntitya: Entity | executeCommandPlayerW | Player): Promise<1 | -2 | 0> {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : sourceEntitya;
     if (securityVariables.ultraSecurityModeEnabled) {
         if (securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.accessSettings") == false) {
             const r = await showMessage(

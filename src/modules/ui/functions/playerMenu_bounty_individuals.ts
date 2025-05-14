@@ -125,8 +125,8 @@ export async function playerMenu_bounty_individuals(
 
             switch (
                 (["search", "previous", "go", "next", "", ""] as const)[r.selection!] ??
-                (!!displayEntriesB[r.selection - 6] ? "entry" : undefined) ??
-                (["back", "close", "refresh"] as const)[r.selection - displayEntriesB.length - 6]
+                (!!displayEntriesB[r.selection! - 6] ? "entry" : undefined) ??
+                (["back", "close", "refresh"] as const)[r.selection! - displayEntriesB.length - 6]
             ) {
                 case "search":
                     {

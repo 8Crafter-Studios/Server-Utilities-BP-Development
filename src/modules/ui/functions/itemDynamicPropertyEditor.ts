@@ -45,7 +45,7 @@ export function itemDynamicPropertyEditor(
                             if (r.canceled) {
                                 return;
                             }
-                            let [name, value, type] = r.formValues;
+                            let [name, value, type] = r.formValues!;
                             try {
                                 item.setDynamicProperty(
                                     String(name),

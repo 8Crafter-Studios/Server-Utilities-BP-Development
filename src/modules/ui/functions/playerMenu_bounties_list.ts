@@ -117,8 +117,8 @@ export async function playerMenu_bounties_list(
 
             switch (
                 (["search", "previous", "go", "next", "", ""] as const)[r.selection!] ??
-                (!!displayBountiesB[r.selection - 6] ? "bounty" : undefined) ??
-                (["back", "close", "refresh"] as const)[r.selection - displayBountiesB.length - 6]
+                (!!displayBountiesB[r.selection! - 6] ? "bounty" : undefined) ??
+                (["back", "close", "refresh"] as const)[r.selection! - displayBountiesB.length - 6]
             ) {
                 case "search":
                     {
@@ -135,8 +135,8 @@ export async function playerMenu_bounties_list(
                             return await playerMenu_bounties_list(sourceEntity, page, maxbountiesperpage, search);
                         }
                         return await playerMenu_bounties_list(sourceEntity, undefined, maxbountiesperpage, {
-                            value: rb.formValues[0] as string,
-                            caseSensitive: rb.formValues[1] as boolean,
+                            value: rb.formValues![0] as string,
+                            caseSensitive: rb.formValues![1] as boolean,
                         }); /*
             return await showMessage(sourceEntity as Player, undefined, "§cSorry, the search feature has not been implemented yet.", "Back", "Close").then(async r=>{
                 if(r.selection==0){
@@ -171,7 +171,7 @@ export async function playerMenu_bounties_list(
                     return await playerMenu_bounties_list(sourceEntity, Math.min(numpages - 1, page + 1), maxbountiesperpage, search, displayBounties);
                     break;
                 case "bounty":
-                    if ((await playerMenu_bounty(sourceEntity, displayBountiesB[r.selection - 6][0], displayBountiesB[r.selection - 6][1])) == 1) {
+                    if ((await playerMenu_bounty(sourceEntity, displayBountiesB[r.selection! - 6][0], displayBountiesB[r.selection! - 6][1])) == 1) {
                         return await playerMenu_bounties_list(sourceEntity, page, maxbountiesperpage, search, displayBounties);
                     } else {
                         return 0;

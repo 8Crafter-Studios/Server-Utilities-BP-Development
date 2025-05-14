@@ -40,7 +40,7 @@ export async function mapArtGenerator(sourceEntity: loosePlayerType): Promise<0 
         form.submitButton("Generate Map Art");
         const r = await form.forceShow(player);
         if (r.canceled) return 1;
-        let [snbt, chunkx, chunky, offsetx, offsetz, alignmentmode, dimension] = r.formValues; /*
+        let [snbt, chunkx, chunky, offsetx, offsetz, alignmentmode, dimension] = r.formValues!; /*
 console.warn(r.formValues);*/
 
         if (String(snbt).includes("#")) {

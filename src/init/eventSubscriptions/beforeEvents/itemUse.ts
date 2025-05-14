@@ -103,7 +103,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe((event) =>
         form2.show(event.source as Player).then(t => {
             if (t.canceled)
                 return;
-                let [slotNumber, playerTarget, playerViewer] = t.formValues;
+                let [slotNumber, playerTarget, playerViewer] = t.formValues!;
                 let playerTargetB = Number(playerTarget)
                 let playerViewerB = Number(playerViewer)
         const inventory = players[playerTargetB].getComponent("inventory") as EntityInventoryComponent;
@@ -151,7 +151,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe((event) =>
             if (r.canceled) return;
         
             // This will assign every input their own variable
-            let [ itemName, itemLore, canDestroy, canPlaceOn, triggerEvent, amount, keepOnDeath, lockMode, setLore, clearLore, debug ] = r.formValues;*/ /*
+            let [ itemName, itemLore, canDestroy, canPlaceOn, triggerEvent, amount, keepOnDeath, lockMode, setLore, clearLore, debug ] = r.formValues!;*/ /*
             console.warn(r.formValues);*/ /*
         
             let item = inventory.container.getItem(Number(slotNumber));
@@ -246,7 +246,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe((event) =>
         form2.show(event.source as Player).then(t => {
             if (t.canceled)
                 return;
-                let [slotNumber, playerTarget, playerViewer] = t.formValues;
+                let [slotNumber, playerTarget, playerViewer] = t.formValues!;
                 let playerTargetB = Number(playerTarget)
                 let playerViewerB = Number(playerViewer)
         const inventory = players[playerTargetB].getComponent("inventory") as EntityInventoryComponent;
@@ -294,7 +294,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe((event) =>
             if (r.canceled) return;
         
             // This will assign every input their own variable
-            let [ itemName, itemLore, canDestroy, canPlaceOn, triggerEvent, amount, keepOnDeath, lockMode, setLore, clearLore, debug ] = r.formValues;*/ /*
+            let [ itemName, itemLore, canDestroy, canPlaceOn, triggerEvent, amount, keepOnDeath, lockMode, setLore, clearLore, debug ] = r.formValues!;*/ /*
             console.warn(r.formValues);*/ /*
         
             let item = inventory.container.getItem(Number(slotNumber));
@@ -379,7 +379,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe((event) =>
                     // This will stop the code when the player closes the form
                     if (r.canceled) return;
                     // This will assign every input their own variable
-                    let [commandId, commandDelay, debug] = r.formValues; /*
+                    let [commandId, commandDelay, debug] = r.formValues!; /*
                 console.warn(r.formValues);*/
                     system.runTimeout(() => {
                         console.warn(event.source.runCommand(String(commandId)).successCount);
@@ -641,7 +641,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe((event) =>
                                                     : BlockPermutation.resolve(b.type, b.states);
                                             },
                                             {
-                                                blockMask: mask,
+                                                blockMask: mask!,
                                                 minMSBetweenTickWaits: config.system.defaultMinMSBetweenTickWaits,
                                                 replacemode: true,
                                                 integrity: 100,
@@ -702,7 +702,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe((event) =>
                                                     : BlockPermutation.resolve(b.type, b.states);
                                             },
                                             {
-                                                blockMask: mask,
+                                                blockMask: mask!,
                                                 minMSBetweenTickWaits: config.system.defaultMinMSBetweenTickWaits,
                                                 replacemode: true,
                                                 integrity: 100,
@@ -720,7 +720,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe((event) =>
                                 const loca = event.source.getBlockFromViewDirection({
                                     includeLiquidBlocks: !String(event.itemStack.getDynamicProperty("selectmode")).includes("noliquid"),
                                     includePassableBlocks: !String(event.itemStack.getDynamicProperty("selectmode")).includes("nopassable"),
-                                });
+                                })!;
                                 const locb = dirmap(loca.face);
                                 const loc = loca?.block?.location;
                                 const radius = isNaN(Number(event.itemStack.getDynamicProperty("radius") ?? 3))
@@ -766,7 +766,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe((event) =>
                                                     : BlockPermutation.resolve(b.type, b.states);
                                             },
                                             {
-                                                blockMask: mask,
+                                                blockMask: mask!,
                                                 minMSBetweenTickWaits: config.system.defaultMinMSBetweenTickWaits,
                                                 replacemode: true,
                                                 integrity: 100,
@@ -827,9 +827,9 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe((event) =>
                                             (l, i) => {
                                                 if (
                                                     Math.max(0.0001, Math.random()) < (Vector.distance(pos, l) / radius) * (decay / 10) ||
-                                                    (tryget(() => l.dimension.getBlock(l).isAir) ?? true)
+                                                    (tryget(() => l.dimension.getBlock(l)?.isAir) ?? true)
                                                 ) {
-                                                    return null;
+                                                    return null!;
                                                 }
                                                 const b = blockpattern.generateBlock(i);
                                                 return b.type == "random"
@@ -837,7 +837,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe((event) =>
                                                     : BlockPermutation.resolve(b.type, b.states);
                                             },
                                             {
-                                                blockMask: mask,
+                                                blockMask: mask!,
                                                 minMSBetweenTickWaits: config.system.defaultMinMSBetweenTickWaits,
                                                 replacemode: true,
                                                 integrity: 100,
@@ -906,9 +906,9 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe((event) =>
                                             (l, i) => {
                                                 if (
                                                     Math.max(0.0001, Math.random()) < (Vector.distance(pos, l) / radius) * (decay / 10) ||
-                                                    (tryget(() => l.dimension.getBlock(l).isAir) ?? true)
+                                                    (tryget(() => l.dimension.getBlock(l)?.isAir) ?? true)
                                                 ) {
-                                                    return null;
+                                                    return null!;
                                                 }
                                                 const b = blockpattern.generateBlock(i);
                                                 return b.type == "random"
@@ -916,7 +916,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe((event) =>
                                                     : BlockPermutation.resolve(b.type, b.states);
                                             },
                                             {
-                                                blockMask: mask,
+                                                blockMask: mask!,
                                                 minMSBetweenTickWaits: config.system.defaultMinMSBetweenTickWaits,
                                                 replacemode: true,
                                                 integrity: 100,
@@ -934,7 +934,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe((event) =>
                                 const loca = event.source.getBlockFromViewDirection({
                                     includeLiquidBlocks: !String(event.itemStack.getDynamicProperty("selectmode")).includes("noliquid"),
                                     includePassableBlocks: !String(event.itemStack.getDynamicProperty("selectmode")).includes("nopassable"),
-                                });
+                                })!;
                                 const locb = dirmap(loca.face);
                                 const loc = loca?.block?.location;
                                 const radius = isNaN(Number(event.itemStack.getDynamicProperty("radius") ?? 3))
@@ -979,9 +979,9 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe((event) =>
                                             (l, i) => {
                                                 if (
                                                     Math.max(0.0001, Math.random()) < (Vector.distance(pos, l) / radius) * (decay / 10) ||
-                                                    (tryget(() => l.dimension.getBlock(l).isAir) ?? true)
+                                                    (tryget(() => l.dimension.getBlock(l)?.isAir) ?? true)
                                                 ) {
-                                                    return null;
+                                                    return null!;
                                                 }
                                                 const b = blockpattern.generateBlock(i);
                                                 return b.type == "random"
@@ -989,7 +989,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe((event) =>
                                                     : BlockPermutation.resolve(b.type, b.states);
                                             },
                                             {
-                                                blockMask: mask,
+                                                blockMask: mask!,
                                                 minMSBetweenTickWaits: config.system.defaultMinMSBetweenTickWaits,
                                                 replacemode: true,
                                                 integrity: 100,
@@ -1007,7 +1007,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe((event) =>
                                 const loca = event.source.getBlockFromViewDirection({
                                     includeLiquidBlocks: !String(event.itemStack.getDynamicProperty("selectmode")).includes("noliquid"),
                                     includePassableBlocks: !String(event.itemStack.getDynamicProperty("selectmode")).includes("nopassable"),
-                                });
+                                })!;
                                 const locb = dirmap(loca.face);
                                 const loc = loca?.block?.location;
                                 const radius = isNaN(Number(event.itemStack.getDynamicProperty("radius") ?? 3))
@@ -1052,10 +1052,10 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe((event) =>
                                             (l, i) => {
                                                 if (
                                                     Math.max(0.0001, Math.random()) < (Vector.distance(pos, l) / radius) * (decay / 10) ||
-                                                    (tryget(() => l.dimension.getBlock(l).isAir) ?? true) ||
-                                                    !(tryget(() => l.dimension.getBlock(l)[locb]().isAir) ?? true)
+                                                    (tryget(() => l.dimension.getBlock(l)?.isAir) ?? true) ||
+                                                    !(tryget(() => l.dimension.getBlock(l)?.[locb]()?.isAir) ?? true)
                                                 ) {
-                                                    return null;
+                                                    return null!;
                                                 }
                                                 const b = blockpattern.generateBlock(i);
                                                 return b.type == "random"
@@ -1063,7 +1063,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe((event) =>
                                                     : BlockPermutation.resolve(b.type, b.states);
                                             },
                                             {
-                                                blockMask: mask,
+                                                blockMask: mask!,
                                                 minMSBetweenTickWaits: config.system.defaultMinMSBetweenTickWaits,
                                                 replacemode: true,
                                                 integrity: 100,
@@ -1081,7 +1081,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe((event) =>
                                 const loca = event.source.getBlockFromViewDirection({
                                     includeLiquidBlocks: !String(event.itemStack.getDynamicProperty("selectmode")).includes("noliquid"),
                                     includePassableBlocks: !String(event.itemStack.getDynamicProperty("selectmode")).includes("nopassable"),
-                                });
+                                })!;
                                 const locb = dirmap(loca.face);
                                 const loc = loca?.block?.location;
                                 const radius = isNaN(Number(event.itemStack.getDynamicProperty("radius") ?? 3))
@@ -1135,10 +1135,10 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe((event) =>
                                             (l, i) => {
                                                 if (
                                                     Math.max(0.0001, Math.random()) < (Math.min(radius, Vector.distance(pos, l)) / radius) * (decay / 10) ||
-                                                    (tryget(() => l.dimension.getBlock(l).isAir) ?? true) ||
-                                                    !(tryget(() => l.dimension.getBlock(l)[locb]().isAir) ?? true)
+                                                    (tryget(() => l.dimension.getBlock(l)?.isAir) ?? true) ||
+                                                    !(tryget(() => l.dimension.getBlock(l)?.[locb]()?.isAir) ?? true)
                                                 ) {
-                                                    return null;
+                                                    return null!;
                                                 }
                                                 const b = blockpattern.generateBlock(i);
                                                 return b.type == "random"
@@ -1146,7 +1146,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe((event) =>
                                                     : BlockPermutation.resolve(b.type, b.states);
                                             },
                                             {
-                                                blockMask: mask,
+                                                blockMask: mask!,
                                                 minMSBetweenTickWaits: config.system.defaultMinMSBetweenTickWaits,
                                                 replacemode: true,
                                                 integrity: 100,
@@ -1164,7 +1164,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe((event) =>
                                 const loca = event.source.getBlockFromViewDirection({
                                     includeLiquidBlocks: !String(event.itemStack.getDynamicProperty("selectmode")).includes("noliquid"),
                                     includePassableBlocks: !String(event.itemStack.getDynamicProperty("selectmode")).includes("nopassable"),
-                                });
+                                })!;
                                 const locb = dirmap(loca.face);
                                 const loc = loca?.block?.location;
                                 const radius = isNaN(Number(event.itemStack.getDynamicProperty("radius") ?? 3))
@@ -1210,20 +1210,20 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe((event) =>
                                             (l, i) => {
                                                 if (
                                                     Math.max(0.0001, Math.random()) < (Math.min(radius, Vector.distance(pos, l)) / radius) * (decay / 10) ||
-                                                    (tryget(() => l.dimension.getBlock(l).isAir) ?? true) ||
-                                                    !(tryget(() => l.dimension.getBlock(l)[locb]().isAir) ?? true)
+                                                    (tryget(() => l.dimension.getBlock(l)?.isAir) ?? true) ||
+                                                    !(tryget(() => l.dimension.getBlock(l)?.[locb]()?.isAir) ?? true)
                                                 ) {
-                                                    return null;
+                                                    return null!;
                                                 }
                                                 const b = blockpattern.generateBlock(i);
                                                 return b.type == "null"
-                                                    ? null
+                                                    ? null!
                                                     : b.type == "random"
                                                     ? BlockPermutation.resolve(blocktypes[Math.floor(blocktypes.length * Math.random())].id)
                                                     : BlockPermutation.resolve(b.type, b.states);
                                             },
                                             {
-                                                blockMask: mask,
+                                                blockMask: mask!,
                                                 minMSBetweenTickWaits: config.system.defaultMinMSBetweenTickWaits,
                                                 replacemode: true,
                                                 integrity: 100,

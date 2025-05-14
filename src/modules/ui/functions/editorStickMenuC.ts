@@ -20,7 +20,7 @@ export function editorStickMenuC(
         .then((r) => {
             if (r.canceled) return;
 
-            let [includeLiquidBlocks, includePassableBlocks, maxDistance] = r.formValues;
+            let [includeLiquidBlocks, includePassableBlocks, maxDistance] = r.formValues!;
             editorStickC(
                 sourceEntitya,
                 includeLiquidBlocks as boolean,

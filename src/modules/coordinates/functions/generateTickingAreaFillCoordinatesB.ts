@@ -26,12 +26,12 @@ export function generateTickingAreaFillCoordinatesB(
         for (const c of area.getBlockLocationIterator()) {
             return c;
         }
-    })(); x++) {
+    })()!; x++) {
         let a = (() => {
             for (const c of area.getBlockLocationIterator()) {
                 return c;
             }
-        })();
+        })()!;
         area.pushVolume({
             volume: new BlockVolume(
                 { x: a.x - 64, y: area.getMin().y, z: a.z - 64 },

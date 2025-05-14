@@ -162,8 +162,8 @@ export async function manageBans(
 
             switch (
                 (["search", "previous", "go", "next", "", ""] as const)[r.selection!] ??
-                (!!displayEntriesB[r.selection - 6] ? "entry" : undefined) ??
-                (["addIDBan", "addNameBan", "back", "close", "refresh"] as const)[r.selection - displayEntriesB.length - 6]
+                (!!displayEntriesB[r.selection! - 6] ? "entry" : undefined) ??
+                (["addIDBan", "addNameBan", "back", "close", "refresh"] as const)[r.selection! - displayEntriesB.length - 6]
             ) {
                 case "search":
                     {
@@ -220,7 +220,7 @@ export async function manageBans(
                     currentParameters = { player, pagen: Math.min(numpages - 1, page + 1), maxentriesperpage, search, cachedEntries: displayEntries };
                     continue;
                 case "entry":
-                    if ((await manageBan(player, displayEntriesB[r.selection - 6][0])) === 1) {
+                    if ((await manageBan(player, displayEntriesB[r.selection! - 6][0])) === 1) {
                         currentParameters = { player, pagen: page, maxentriesperpage, search, cachedEntries: undefined };
                         continue;
                     } else {
@@ -415,8 +415,8 @@ export async function manageBansOnPlayer(
 
             switch (
                 (["search", "previous", "go", "next", "", ""] as const)[r.selection!] ??
-                (!!displayEntriesB[r.selection - 6] ? "entry" : undefined) ??
-                (["addIDBan", "addNameBan", "back", "close", "refresh"] as const)[r.selection - displayEntriesB.length - 6]
+                (!!displayEntriesB[r.selection! - 6] ? "entry" : undefined) ??
+                (["addIDBan", "addNameBan", "back", "close", "refresh"] as const)[r.selection! - displayEntriesB.length - 6]
             ) {
                 case "search":
                     {
@@ -473,7 +473,7 @@ export async function manageBansOnPlayer(
                     currentParameters = { player, pagen: Math.min(numpages - 1, page + 1), maxentriesperpage, search, cachedEntries: displayEntries };
                     continue;
                 case "entry":
-                    if ((await manageBan(player, displayEntriesB[r.selection - 6][0])) === 1) {
+                    if ((await manageBan(player, displayEntriesB[r.selection! - 6][0])) === 1) {
                         currentParameters = { player, pagen: page, maxentriesperpage, search, cachedEntries: undefined };
                         continue;
                     } else {

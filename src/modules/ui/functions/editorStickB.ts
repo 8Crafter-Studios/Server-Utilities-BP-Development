@@ -13,7 +13,7 @@ export function editorStickB(
         dimension: sourceEntitya.dimension,
     }
 ) {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : sourceEntitya;
     let form = new ModalFormData();
     let playerList = world.getPlayers(); /*
     let block = sourceEntity.getBlockFromViewDirection({includeLiquidBlocks: true, includePassableBlocks: true})*/

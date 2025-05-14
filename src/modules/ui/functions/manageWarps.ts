@@ -74,7 +74,7 @@ export async function manageWarps(sourceEntity: loosePlayerType): Promise<0 | 1>
             const r = await form.forceShow(player);
             if (r.canceled) return 1;
 
-            switch ((!!warps[r.selection!] ? "warp" : undefined) ?? (["newWarp", "back", "close"] as const)[r.selection - warps.length]) {
+            switch ((!!warps[r.selection!] ? "warp" : undefined) ?? (["newWarp", "back", "close"] as const)[r.selection! - warps.length]) {
                 case "warp": {
                     const warp = warps[r.selection!];
                     const warpsb = warps.filter((w) => w !== warp);

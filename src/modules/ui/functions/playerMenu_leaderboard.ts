@@ -201,8 +201,8 @@ export async function playerMenu_leaderboard(
 
             switch (
                 (["search", "previous", "go", "next", "", ""] as const)[r.selection!] ??
-                (!!displayPlayersB[r.selection - 6] ? "player" : undefined) ??
-                (["back", "close", "refresh"] as const)[r.selection - displayPlayersB.length - 6]
+                (!!displayPlayersB[r.selection! - 6] ? "player" : undefined) ??
+                (["back", "close", "refresh"] as const)[r.selection! - displayPlayersB.length - 6]
             ) {
                 case "search":
                     {
@@ -224,8 +224,8 @@ export async function playerMenu_leaderboard(
                             undefined,
                             maxplayersperpage,
                             {
-                                value: rb.formValues[0] as string,
-                                caseSensitive: rb.formValues[1] as boolean,
+                                value: rb.formValues![0] as string,
+                                caseSensitive: rb.formValues![1] as boolean,
                             },
                             undefined
                         ); /*
@@ -263,7 +263,7 @@ export async function playerMenu_leaderboard(
                     return await playerMenu_leaderboard(sourceEntity, leaderboard, Math.min(numpages - 1, page + 1), maxplayersperpage, search, displayPlayers);
                     break;
                 case "player":
-                    if ((await playerMenu_leaderboard_player(sourceEntity, leaderboard, displayPlayers[r.selection - 6][0])) == 1) {
+                    if ((await playerMenu_leaderboard_player(sourceEntity, leaderboard, displayPlayers[r.selection! - 6][0])) == 1) {
                         return await playerMenu_leaderboard(sourceEntity, leaderboard, page, maxplayersperpage, search, displayPlayers);
                     } else {
                         return 0;

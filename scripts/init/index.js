@@ -219,7 +219,7 @@ try {
         },
         stack: {
             get: function stack() {
-                return new Error().stack.split("\n").slice(1).join("\n");
+                return new Error().stack?.split("\n").slice(1).join("\n");
             },
             configurable: true,
             enumerable: true,

@@ -54,7 +54,7 @@ export async function securitySettings(sourceEntity: loosePlayerType): Promise<-
                     }
                 }
             }
-            let form = new ActionFormData();
+            const form = new ActionFormData();
             form.title(customFormUICodes.action.titles.formStyles.gridMenu + "Security");
             form.button(customFormUICodes.action.buttons.positions.main_only + "View Players With Permissions", "textures/ui/permissions_op_crown");
             form.button(customFormUICodes.action.buttons.positions.main_only + "Manage Default Permissions", "textures/ui/icon_setting");
@@ -65,9 +65,9 @@ export async function securitySettings(sourceEntity: loosePlayerType): Promise<-
             form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
 
             const r = await form.forceShow(player);
-            if (r.canceled) return;
+            if (r.canceled) return 1;
 
-            let response = r.selection;
+            let response = r.selection!;
             switch (
                 (
                     [
@@ -372,7 +372,7 @@ export async function securitySettings_playersWithPermissions(sourceEntity: loos
  */
 export async function securitySettings_playersWithPermissions_permission(
     sourceEntitya: Entity | executeCommandPlayerW | Player,
-    permission: [permissionKey: keyof savedPlayer["playerPermissions"], permissionValue: any],
+    permission: [permissionKey: keyof NonNullable<savedPlayer["playerPermissions"]>, permissionValue: any],
     pagen: number = 0,
     maxplayersperpage: number = config.ui.pages.maxPlayersPerManagePlayersPage ?? 9,
     search?: {
@@ -384,7 +384,7 @@ export async function securitySettings_playersWithPermissions_permission(
         searchIds?: boolean;
     }
 ): Promise<0 | 1> {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : sourceEntitya;
     if (securityVariables.ultraSecurityModeEnabled) {
         const r = await showMessage(sourceEntity as Player, "Disabled (423)", "This menu is disabled when Ultra Security Mode is on.", "Go Back", "Close");
         if (r.canceled || r.selection == 0) {
@@ -545,12 +545,12 @@ export async function securitySettings_playersWithPermissions_permission(
                             return await securitySettings_playersWithPermissions_permission(sourceEntity, permission, page, maxplayersperpage, search);
                         }
                         return await securitySettings_playersWithPermissions_permission(sourceEntity, permission, undefined, maxplayersperpage, {
-                            value: rb.formValues[0] as string,
-                            caseSensitive: rb.formValues[1] as boolean,
-                            searchNames: rb.formValues[2] as boolean,
-                            searchIds: rb.formValues[3] as boolean,
-                            searchLastOnlineDates: rb.formValues[4] as boolean,
-                            searchLastOnlineTimes: rb.formValues[5] as boolean,
+                            value: rb.formValues![0] as string,
+                            caseSensitive: rb.formValues![1] as boolean,
+                            searchNames: rb.formValues![2] as boolean,
+                            searchIds: rb.formValues![3] as boolean,
+                            searchLastOnlineDates: rb.formValues![4] as boolean,
+                            searchLastOnlineTimes: rb.formValues![5] as boolean,
                         }); /*
             return await showMessage(sourceEntity as Player, undefined, "§cSorry, the search feature has not been implemented yet.", "Back", "Close").then(async r=>{
                 if(r.selection==0){
@@ -574,7 +574,7 @@ export async function securitySettings_playersWithPermissions_permission(
                     return 0;
                     break;
                 default:
-                    if ((await managePlayers_managePlayer(sourceEntity, players[r.selection - 3])) == 1) {
+                    if ((await managePlayers_managePlayer(sourceEntity, players[r.selection! - 3])) == 1) {
                         return await securitySettings_playersWithPermissions_permission(sourceEntity, permission, page, maxplayersperpage, search);
                     } else {
                         return 0;
@@ -629,9 +629,9 @@ export async function securitySettings_playersWithPermissions_UltraSecurityMode(
             if (r.canceled) return 1;
 
             switch (
-                (["anyPermissions"] as const)[r.selection!] ??
-                (Object.keys(permissionType)[r.selection - 1] !== undefined ? "permissionType" : undefined) ??
-                (["back", "close"] as const)[r.selection - 1 - Object.keys(permissionType).length]
+                (["anyPermissions", undefined] as const)[r.selection!] ??
+                (Object.keys(permissionType)[r.selection! - 1] !== undefined ? "permissionType" : undefined) ??
+                (["back", "close"] as const)[r.selection! - 1 - Object.keys(permissionType).length]
             ) {
                 case "anyPermissions":
                     if ((await securitySettings_playersWithPermissions_permission_any_UltraSecurityMode(player)) === 1) {
@@ -643,7 +643,7 @@ export async function securitySettings_playersWithPermissions_UltraSecurityMode(
                     if (
                         (await securitySettings_playersWithPermissions_permission_UltraSecurityMode(
                             player,
-                            Object.keys(permissionType).sort()[r.selection - 1] as permissionType
+                            Object.keys(permissionType).sort()[r.selection! - 1] as permissionType
                         )) === 1
                     ) {
                         continue;
@@ -682,7 +682,7 @@ export async function securitySettings_playersWithPermissions_permission_UltraSe
         searchIds?: boolean;
     }
 ): Promise<0 | 1> {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : sourceEntitya;
     if (securityVariables.ultraSecurityModeEnabled) {
         if (securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.accessManagePlayersUI") == false) {
             const r = await showMessage(
@@ -863,12 +863,12 @@ export async function securitySettings_playersWithPermissions_permission_UltraSe
                             undefined,
                             maxplayersperpage,
                             {
-                                value: rb.formValues[0] as string,
-                                caseSensitive: rb.formValues[1] as boolean,
-                                searchNames: rb.formValues[2] as boolean,
-                                searchIds: rb.formValues[3] as boolean,
-                                searchLastOnlineDates: rb.formValues[4] as boolean,
-                                searchLastOnlineTimes: rb.formValues[5] as boolean,
+                                value: rb.formValues![0] as string,
+                                caseSensitive: rb.formValues![1] as boolean,
+                                searchNames: rb.formValues![2] as boolean,
+                                searchIds: rb.formValues![3] as boolean,
+                                searchLastOnlineDates: rb.formValues![4] as boolean,
+                                searchLastOnlineTimes: rb.formValues![5] as boolean,
                             }
                         ); /*
             return await showMessage(sourceEntity as Player, undefined, "§cSorry, the search feature has not been implemented yet.", "Back", "Close").then(async r=>{
@@ -905,7 +905,7 @@ export async function securitySettings_playersWithPermissions_permission_UltraSe
                     return 0;
                     break;
                 default:
-                    if ((await managePlayers_managePlayer(sourceEntity, players[r.selection - 3])) == 1) {
+                    if ((await managePlayers_managePlayer(sourceEntity, players[r.selection! - 3])) == 1) {
                         return await securitySettings_playersWithPermissions_permission_UltraSecurityMode(
                             sourceEntity,
                             permission,
@@ -946,7 +946,7 @@ export async function securitySettings_playersWithPermissions_permission_any_Ult
         searchIds?: boolean;
     }
 ): Promise<0 | 1> {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : sourceEntitya;
     if (securityVariables.ultraSecurityModeEnabled) {
         if (securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.accessManagePlayersUI") == false) {
             const r = await showMessage(
@@ -1120,12 +1120,12 @@ export async function securitySettings_playersWithPermissions_permission_any_Ult
                             );
                         }
                         return await securitySettings_playersWithPermissions_permission_any_UltraSecurityMode(sourceEntity, undefined, maxplayersperpage, {
-                            value: rb.formValues[0] as string,
-                            caseSensitive: rb.formValues[1] as boolean,
-                            searchNames: rb.formValues[2] as boolean,
-                            searchIds: rb.formValues[3] as boolean,
-                            searchLastOnlineDates: rb.formValues[4] as boolean,
-                            searchLastOnlineTimes: rb.formValues[5] as boolean,
+                            value: rb.formValues![0] as string,
+                            caseSensitive: rb.formValues![1] as boolean,
+                            searchNames: rb.formValues![2] as boolean,
+                            searchIds: rb.formValues![3] as boolean,
+                            searchLastOnlineDates: rb.formValues![4] as boolean,
+                            searchLastOnlineTimes: rb.formValues![5] as boolean,
                         }); /*
             return await showMessage(sourceEntity as Player, undefined, "§cSorry, the search feature has not been implemented yet.", "Back", "Close").then(async r=>{
                 if(r.selection==0){
@@ -1149,7 +1149,7 @@ export async function securitySettings_playersWithPermissions_permission_any_Ult
                     return 0;
                     break;
                 default:
-                    if ((await managePlayers_managePlayer(sourceEntity, players[r.selection - 3])) == 1) {
+                    if ((await managePlayers_managePlayer(sourceEntity, players[r.selection! - 3])) == 1) {
                         return await securitySettings_playersWithPermissions_permission_any_UltraSecurityMode(sourceEntity, page, maxplayersperpage, search);
                     } else {
                         return 0;

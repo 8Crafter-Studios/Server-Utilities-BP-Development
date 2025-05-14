@@ -23,7 +23,7 @@ export async function generateTickingAreaFillCoordinatesC(
                     .find(
                         (v) => v.typeId == "andexdb:tickingarea_6" &&
                             v.nameTag == name
-                    )
+                    )!
             );
         } catch (e) {
             console.warn(e, e.stack);

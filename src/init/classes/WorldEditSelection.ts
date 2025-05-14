@@ -309,14 +309,14 @@ export function customFormUIEditor(sourceEntity: Entity|Player){
     forceShow(form.form, (event.sourceEntity as Player)).then(to => {
         let t = (to as ModalFormResponse)
         if (t.canceled) return;
-        world.setDynamicProperty(`customUI:${formId}`, `${t.formValues[0]}|${t.formValues[1]}`)
+        world.setDynamicProperty(`customUI:${formId}`, `${t.formValues![0]}|${t.formValues![1]}`)
         let elementValues = t.formValues.slice(2, -2)
         console.warn(elementValues)
         elementValues.forEach((v, i)=>{switch(i % 5){
             case 0: world.setDynamicProperty(`customUIElement:${formId}|${form.indexList[Math.floor(i / 5)]}`, `${customElementTypeIds[Number(elementValues[i])]}|${elementValues.slice(i+1, i+4).join("|")}`); break;
             case 4: if(Boolean(v)==true){world.setDynamicProperty(`customUIElement:${formId}|${form.indexList[Math.floor(i / 5)]}`)}; break;
         }});
-        if (t.formValues[t.formValues.length-2]){world.setDynamicProperty(`customUIElement:${formId}|${(Number(t.formValues[t.formValues.length-1]) ?? ((form.indexList[form.indexList.length-1] ?? -1)+1))}`, ""); }
+        if (t.formValues![t.formValues.length-2]){world.setDynamicProperty(`customUIElement:${formId}|${(Number(t.formValues![t.formValues.length-1]) ?? ((form.indexList[form.indexList.length-1] ?? -1)+1))}`, ""); }
 }).catch(e => {
     console.error(e, e.stack);
 });}*/

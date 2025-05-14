@@ -22,7 +22,7 @@ import { customFormUICodes } from "../constants/customFormUICodes";
  * 4. Returns the appropriate status code based on the outcome.
  */
 export async function personalSettings(sourceEntitya: Entity | executeCommandPlayerW | Player): Promise<-2 | 0 | 1> {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : sourceEntitya;
     if (securityVariables.ultraSecurityModeEnabled) {
         if (securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.accessPersonalSettings") == false) {
             const r = await showMessage(
@@ -142,7 +142,7 @@ export async function personalSettings(sourceEntitya: Entity | executeCommandPla
                 doNotSetNameTag,
                 debugStickUseCooldown,
                 debugStickHoldDuration,
-            ] = t.formValues;
+            ] = t.formValues!;
             sourceEntity.setDynamicProperty("andexdbPersonalSettings:timeZone", timeZone == "" ? undefined : timeZone);
             sourceEntity.setDynamicProperty("andexdbPersonalSettings:chatRankPrefix", chatRankPrefix == "" ? undefined : chatRankPrefix);
             sourceEntity.setDynamicProperty("andexdbPersonalSettings:chatSudoPrefix", chatSudoPrefix == "" ? undefined : chatSudoPrefix);

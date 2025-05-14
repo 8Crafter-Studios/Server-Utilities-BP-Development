@@ -4,7 +4,7 @@ import { forceShow } from "modules/ui/functions/forceShow";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 
 export function itemCodePropertyEditor(sourceEntitya: Entity | executeCommandPlayerW | Player, item: ContainerSlot) {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : sourceEntitya;
     let form = new ModalFormData();
     form.title("Code Editor");
     form.textField("Item Use Code", "JavaScript", { defaultValue: String(item.getDynamicProperty("code")) });
@@ -18,7 +18,7 @@ export function itemCodePropertyEditor(sourceEntitya: Entity | executeCommandPla
             if (r.canceled) {
                 return;
             }
-            let [code, itemUseOnCode] = r.formValues;
+            let [code, itemUseOnCode] = r.formValues!;
             try {
                 if (String(code) != String(item.getDynamicProperty("code"))) {
                     item.setDynamicProperty("code", String(code));

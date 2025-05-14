@@ -128,8 +128,8 @@ export async function manageMutes(
 
             switch (
                 (["search", "previous", "go", "next", "", ""] as const)[r.selection!] ??
-                (!!displayEntriesB[r.selection - 6] ? "entry" : undefined) ??
-                (["mutePlayer", "back", "close", "refresh"] as const)[r.selection - displayEntriesB.length - 6]
+                (!!displayEntriesB[r.selection! - 6] ? "entry" : undefined) ??
+                (["mutePlayer", "back", "close", "refresh"] as const)[r.selection! - displayEntriesB.length - 6]
             ) {
                 case "search":
                     {
@@ -184,8 +184,8 @@ export async function manageMutes(
                 case "entry":
                     if (
                         (await manageMute(player, [
-                            displayEntriesB[r.selection - 6][0],
-                            ModerationActions.getMuteData(displayEntriesB[r.selection - 6][0]),
+                            displayEntriesB[r.selection! - 6][0],
+                            ModerationActions.getMuteData(displayEntriesB[r.selection! - 6][0]),
                         ])) === 1
                     ) {
                         currentParameters = { player, pagen: page, maxentriesperpage, search, cachedEntries: undefined };

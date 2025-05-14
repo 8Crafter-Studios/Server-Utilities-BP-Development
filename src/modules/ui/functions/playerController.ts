@@ -4,7 +4,7 @@ import { forceShow } from "modules/ui/functions/forceShow";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 
 export function playerController(sourceEntitya: Entity | executeCommandPlayerW | Player, message: string = "") {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : sourceEntitya;
     let form2 = new ModalFormData();
     let playerList = world.getPlayers();
     let targetList = [playerList[0].nameTag];

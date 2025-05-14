@@ -36,7 +36,7 @@ import { customFormUICodes } from "modules/ui/constants/customFormUICodes";
  * If an error occurs during the execution, it logs the error and returns `-2`.
  */
 export async function mainShopSystemSettings(sourceEntitya: Entity | executeCommandPlayerW | Player): Promise<-2 | 0 | 1> {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : sourceEntitya;
     assertIsDefined(sourceEntity);
     if (securityVariables.ultraSecurityModeEnabled) {
         if (securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.accessExtraFeaturesSettings") == false) {

@@ -101,8 +101,8 @@ export async function playerMenu_moneyTransfer(
 
             switch (
                 (["search", "previous", "go", "next", "", ""] as const)[r.selection!] ??
-                (!!displayPlayersB[r.selection - 6] ? "player" : undefined) ??
-                (["back", "close"] as const)[r.selection - displayPlayersB.length - 6]
+                (!!displayPlayersB[r.selection! - 6] ? "player" : undefined) ??
+                (["back", "close"] as const)[r.selection! - displayPlayersB.length - 6]
             ) {
                 case "search":
                     {
@@ -119,8 +119,8 @@ export async function playerMenu_moneyTransfer(
                             return await playerMenu_moneyTransfer(sourceEntity, page, maxplayersperpage, search);
                         }
                         return await playerMenu_moneyTransfer(sourceEntity, undefined, maxplayersperpage, {
-                            value: rb.formValues[0] as string,
-                            caseSensitive: rb.formValues[1] as boolean,
+                            value: rb.formValues![0] as string,
+                            caseSensitive: rb.formValues![1] as boolean,
                         }); /*
             return await showMessage(sourceEntity as Player, undefined, "§cSorry, the search feature has not been implemented yet.", "Back", "Close").then(async r=>{
                 if(r.selection==0){
@@ -154,7 +154,7 @@ export async function playerMenu_moneyTransfer(
                     return await playerMenu_moneyTransfer(sourceEntity, Math.min(numpages - 1, page + 1), maxplayersperpage, search);
                     break;
                 case "player": {
-                    const player = displayPlayersB[r.selection - 6];
+                    const player = displayPlayersB[r.selection! - 6];
                     const ra = await new ModalFormData()
                         .title("Transfer Money")
                         .textField(

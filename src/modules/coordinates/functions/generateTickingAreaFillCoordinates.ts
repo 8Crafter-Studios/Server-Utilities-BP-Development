@@ -3,7 +3,7 @@ import { CompoundBlockVolume, Dimension, type DimensionLocation, BlockVolume } f
 export function generateTickingAreaFillCoordinates(
     area: CompoundBlockVolume,
     dimension: Dimension
-) {
+): DimensionLocation[] {
     const locations = [] as DimensionLocation[];
     //${se}let b = new CompoundBlockVolume(); b.pushVolume({volume: new BlockVolume(Vector.one, Vector.multiply(Vector.one, 20)), action: 0}); bsend(b.getBlockLocationIterator()?.next()?.value);
     for (let x = 0; !!(() => {
@@ -15,7 +15,7 @@ export function generateTickingAreaFillCoordinates(
             for (const c of area.getBlockLocationIterator()) {
                 return c;
             }
-        })();
+        })()!;
         area.pushVolume({
             volume: new BlockVolume(
                 { x: a.x - 64, y: area.getMin().y, z: a.z - 64 },

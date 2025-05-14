@@ -115,8 +115,8 @@ export async function playerMenu_bounties_list_from(
 
             switch (
                 (["search", "previous", "go", "next", "", ""] as const)[r.selection!] ??
-                (!!displayBountiesB[r.selection - 6] ? "bounty" : undefined) ??
-                (["back", "close", "refresh"] as const)[r.selection - displayBountiesB.length - 6]
+                (!!displayBountiesB[r.selection! - 6] ? "bounty" : undefined) ??
+                (["back", "close", "refresh"] as const)[r.selection! - displayBountiesB.length - 6]
             ) {
                 case "search":
                     {
@@ -137,8 +137,8 @@ export async function playerMenu_bounties_list_from(
                             undefined,
                             maxbountiesperpage,
                             {
-                                value: rb.formValues[0] as string,
-                                caseSensitive: rb.formValues[1] as boolean,
+                                value: rb.formValues![0] as string,
+                                caseSensitive: rb.formValues![1] as boolean,
                             },
                             undefined
                         ); /*
@@ -173,7 +173,7 @@ export async function playerMenu_bounties_list_from(
                     return await playerMenu_bounties_list_from(sourceEntity, Math.min(numpages - 1, page + 1), maxbountiesperpage, search, cachedBounties);
                 case "bounty":
                     if (
-                        (await playerMenu_bounty_from_individual(sourceEntity, displayBountiesB[r.selection - 6][0], displayBountiesB[r.selection - 6][1])) == 1
+                        (await playerMenu_bounty_from_individual(sourceEntity, displayBountiesB[r.selection! - 6][0], displayBountiesB[r.selection! - 6][1])) == 1
                     ) {
                         return await playerMenu_bounties_list_from(sourceEntity, page, maxbountiesperpage, search, cachedBounties);
                     } else {

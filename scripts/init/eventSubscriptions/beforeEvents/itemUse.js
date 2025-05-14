@@ -101,7 +101,7 @@ debugAction(event.source.getBlockFromViewDirection().block, event.source, 0)
         form2.show(event.source as Player).then(t => {
             if (t.canceled)
                 return;
-                let [slotNumber, playerTarget, playerViewer] = t.formValues;
+                let [slotNumber, playerTarget, playerViewer] = t.formValues!;
                 let playerTargetB = Number(playerTarget)
                 let playerViewerB = Number(playerViewer)
         const inventory = players[playerTargetB].getComponent("inventory") as EntityInventoryComponent;
@@ -149,7 +149,7 @@ debugAction(event.source.getBlockFromViewDirection().block, event.source, 0)
             if (r.canceled) return;
         
             // This will assign every input their own variable
-            let [ itemName, itemLore, canDestroy, canPlaceOn, triggerEvent, amount, keepOnDeath, lockMode, setLore, clearLore, debug ] = r.formValues;*/ /*
+            let [ itemName, itemLore, canDestroy, canPlaceOn, triggerEvent, amount, keepOnDeath, lockMode, setLore, clearLore, debug ] = r.formValues!;*/ /*
         console.warn(r.formValues);*/ /*
     
         let item = inventory.container.getItem(Number(slotNumber));
@@ -241,7 +241,7 @@ console.error(e, e.stack);
         form2.show(event.source as Player).then(t => {
             if (t.canceled)
                 return;
-                let [slotNumber, playerTarget, playerViewer] = t.formValues;
+                let [slotNumber, playerTarget, playerViewer] = t.formValues!;
                 let playerTargetB = Number(playerTarget)
                 let playerViewerB = Number(playerViewer)
         const inventory = players[playerTargetB].getComponent("inventory") as EntityInventoryComponent;
@@ -289,7 +289,7 @@ console.error(e, e.stack);
             if (r.canceled) return;
         
             // This will assign every input their own variable
-            let [ itemName, itemLore, canDestroy, canPlaceOn, triggerEvent, amount, keepOnDeath, lockMode, setLore, clearLore, debug ] = r.formValues;*/ /*
+            let [ itemName, itemLore, canDestroy, canPlaceOn, triggerEvent, amount, keepOnDeath, lockMode, setLore, clearLore, debug ] = r.formValues!;*/ /*
         console.warn(r.formValues);*/ /*
     
         let item = inventory.container.getItem(Number(slotNumber));
@@ -748,7 +748,7 @@ console.error(e, e.stack);
                                     try {
                                         fillSphere(pos, radius, event.source.dimension, (l, i) => {
                                             if (Math.max(0.0001, Math.random()) < (Vector.distance(pos, l) / radius) * (decay / 10) ||
-                                                (tryget(() => l.dimension.getBlock(l).isAir) ?? true)) {
+                                                (tryget(() => l.dimension.getBlock(l)?.isAir) ?? true)) {
                                                 return null;
                                             }
                                             const b = blockpattern.generateBlock(i);
@@ -804,7 +804,7 @@ console.error(e, e.stack);
                                             z: pos.z + radius,
                                         }, event.source.dimension, (l, i) => {
                                             if (Math.max(0.0001, Math.random()) < (Vector.distance(pos, l) / radius) * (decay / 10) ||
-                                                (tryget(() => l.dimension.getBlock(l).isAir) ?? true)) {
+                                                (tryget(() => l.dimension.getBlock(l)?.isAir) ?? true)) {
                                                 return null;
                                             }
                                             const b = blockpattern.generateBlock(i);
@@ -854,7 +854,7 @@ console.error(e, e.stack);
                                     try {
                                         fillArea(Vector.add(pos, Vector.scale(diroffsetothersmap(loca.face), -radius)), Vector.add(pos, Vector.scale(diroffsetothersmap(loca.face), radius)), event.source.dimension, (l, i) => {
                                             if (Math.max(0.0001, Math.random()) < (Vector.distance(pos, l) / radius) * (decay / 10) ||
-                                                (tryget(() => l.dimension.getBlock(l).isAir) ?? true)) {
+                                                (tryget(() => l.dimension.getBlock(l)?.isAir) ?? true)) {
                                                 return null;
                                             }
                                             const b = blockpattern.generateBlock(i);
@@ -904,8 +904,8 @@ console.error(e, e.stack);
                                     try {
                                         fillSphere(pos, radius, event.source.dimension, (l, i) => {
                                             if (Math.max(0.0001, Math.random()) < (Vector.distance(pos, l) / radius) * (decay / 10) ||
-                                                (tryget(() => l.dimension.getBlock(l).isAir) ?? true) ||
-                                                !(tryget(() => l.dimension.getBlock(l)[locb]().isAir) ?? true)) {
+                                                (tryget(() => l.dimension.getBlock(l)?.isAir) ?? true) ||
+                                                !(tryget(() => l.dimension.getBlock(l)?.[locb]()?.isAir) ?? true)) {
                                                 return null;
                                             }
                                             const b = blockpattern.generateBlock(i);
@@ -964,8 +964,8 @@ console.error(e, e.stack);
                                             z: pos.z + radius,
                                         }, event.source.dimension, (l, i) => {
                                             if (Math.max(0.0001, Math.random()) < (Math.min(radius, Vector.distance(pos, l)) / radius) * (decay / 10) ||
-                                                (tryget(() => l.dimension.getBlock(l).isAir) ?? true) ||
-                                                !(tryget(() => l.dimension.getBlock(l)[locb]().isAir) ?? true)) {
+                                                (tryget(() => l.dimension.getBlock(l)?.isAir) ?? true) ||
+                                                !(tryget(() => l.dimension.getBlock(l)?.[locb]()?.isAir) ?? true)) {
                                                 return null;
                                             }
                                             const b = blockpattern.generateBlock(i);
@@ -1016,8 +1016,8 @@ console.error(e, e.stack);
                                     try {
                                         fillArea(Vector.add(pos, Vector.scale(diroffsetothersmap(loca.face), -radius)), Vector.add(pos, Vector.scale(diroffsetothersmap(loca.face), radius)), event.source.dimension, (l, i) => {
                                             if (Math.max(0.0001, Math.random()) < (Math.min(radius, Vector.distance(pos, l)) / radius) * (decay / 10) ||
-                                                (tryget(() => l.dimension.getBlock(l).isAir) ?? true) ||
-                                                !(tryget(() => l.dimension.getBlock(l)[locb]().isAir) ?? true)) {
+                                                (tryget(() => l.dimension.getBlock(l)?.isAir) ?? true) ||
+                                                !(tryget(() => l.dimension.getBlock(l)?.[locb]()?.isAir) ?? true)) {
                                                 return null;
                                             }
                                             const b = blockpattern.generateBlock(i);

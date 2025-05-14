@@ -28,7 +28,7 @@ import { customFormUICodes } from "../constants/customFormUICodes";
  * - Handles various user interactions with the UI, such as confirming deletions and saving changes.
  */
 export async function manageCommands(sourceEntitya: Entity | executeCommandPlayerW | Player) {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : sourceEntitya;
     if (securityVariables.ultraSecurityModeEnabled) {
         if (securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.accessManageCommandsUI") == false) {
             const r = await showMessage(
@@ -123,7 +123,7 @@ export async function manageCommands(sourceEntitya: Entity | executeCommandPlaye
                                                 manageCommands(sourceEntity);
                                                 return;
                                             }
-                                            if (!!!h.formValues[0]) {
+                                            if (!!!h.formValues![0]) {
                                                 let formErrora = new MessageFormData();
                                                 formErrora.body(`Required parameter 'Command Name' was left blank`);
                                                 formErrora.title("Error");
@@ -135,10 +135,10 @@ export async function manageCommands(sourceEntitya: Entity | executeCommandPlaye
                                                 });
                                                 return;
                                             }
-                                            if (!!command.getCustomCommands().find((v) => v.commandName == String(h.formValues[0]))) {
+                                            if (!!command.getCustomCommands().find((v) => v.commandName == String(h.formValues![0]))) {
                                                 let formError = new MessageFormData();
                                                 formError.body(
-                                                    `There is already a custom command with the name '${String(h.formValues[0]).replaceAll("'", "\\'")}`
+                                                    `There is already a custom command with the name '${String(h.formValues![0]).replaceAll("'", "\\'")}`
                                                 );
                                                 formError.title("Error");
                                                 formError.button1("Done");
@@ -149,17 +149,17 @@ export async function manageCommands(sourceEntitya: Entity | executeCommandPlaye
                                                 return;
                                             }
                                             new command({
-                                                commandName: String(h.formValues[0]),
+                                                commandName: String(h.formValues![0]),
                                                 commands_format_version: commands_format_version,
-                                                command_version: String(h.formValues[2]),
-                                                customCommandType: ["commands", "javascript"][Number(h.formValues[1])] as "commands" | "javascript",
-                                                description: String(h.formValues[4]),
+                                                command_version: String(h.formValues![2]),
+                                                customCommandType: ["commands", "javascript"][Number(h.formValues![1])] as "commands" | "javascript",
+                                                description: String(h.formValues![4]),
                                                 type: "custom",
-                                                formatting_code: String(h.formValues[3]),
-                                                formats: JSONParse(h.formValues[5] == "" ? "undefined" : String(h.formValues[5] ?? "undefined")),
-                                                customCommandPrefix: String(h.formValues[6]),
-                                                customCommandParametersEnabled: Boolean(h.formValues[7]),
-                                                customCommandId: "customCommand:" + String(h.formValues[0]),
+                                                formatting_code: String(h.formValues![3]),
+                                                formats: JSONParse(h.formValues![5] == "" ? "undefined" : String(h.formValues![5] ?? "undefined")),
+                                                customCommandPrefix: String(h.formValues![6]),
+                                                customCommandParametersEnabled: Boolean(h.formValues![7]),
+                                                customCommandId: "customCommand:" + String(h.formValues![0]),
                                                 format_version: format_version,
                                             }).save();
                                             manageCommands(sourceEntity);
@@ -281,7 +281,7 @@ export async function manageCommands(sourceEntitya: Entity | executeCommandPlaye
                                                             if (h.canceled) {
                                                                 return;
                                                             }
-                                                            if (!!!h.formValues[0]) {
+                                                            if (!!!h.formValues![0]) {
                                                                 let formErrora = new MessageFormData();
                                                                 formErrora.body(`Required parameter 'Command Name' was left blank`);
                                                                 formErrora.title("Error");
@@ -293,12 +293,12 @@ export async function manageCommands(sourceEntitya: Entity | executeCommandPlaye
                                                                 return;
                                                             }
                                                             if (
-                                                                !!command.getCustomCommands().find((v) => v.commandName == String(h.formValues[0])) &&
-                                                                String(h.formValues[0]) != commandsItem.commandName
+                                                                !!command.getCustomCommands().find((v) => v.commandName == String(h.formValues![0])) &&
+                                                                String(h.formValues![0]) != commandsItem.commandName
                                                             ) {
                                                                 let formError = new MessageFormData();
                                                                 formError.body(
-                                                                    `There is already a custom command with the name '${String(h.formValues[0]).replaceAll(
+                                                                    `There is already a custom command with the name '${String(h.formValues![0]).replaceAll(
                                                                         "'",
                                                                         "\\'"
                                                                     )}, saving this will overwrite it, are you sure you want to do this?\nThis action cannot be undone.`
@@ -312,36 +312,36 @@ export async function manageCommands(sourceEntitya: Entity | executeCommandPlaye
                                                                         manageCommands(sourceEntity);
                                                                         return;
                                                                     } else {
-                                                                        if (String(h.formValues[0]) != commandsItem.commandName) {
-                                                                            JSONParse(h.formValues[9] == "" ? "[]" : String(h.formValues[9]));
+                                                                        if (String(h.formValues![0]) != commandsItem.commandName) {
+                                                                            JSONParse(h.formValues![9] == "" ? "[]" : String(h.formValues![9]));
                                                                             JSONParse(
-                                                                                h.formValues[6] == "" ? "undefined" : String(h.formValues[6] ?? "undefined")
+                                                                                h.formValues![6] == "" ? "undefined" : String(h.formValues![6] ?? "undefined")
                                                                             );
                                                                             commandsItem.remove();
                                                                             commandsItem.settings.remove();
-                                                                            new commandSettings("customCommandSettings:" + String(h.formValues[0])).save(
+                                                                            new commandSettings("customCommandSettings:" + String(h.formValues![0])).save(
                                                                                 commandsItem.settings.toJSON()
                                                                             );
                                                                             commandsItem = new command({
-                                                                                commandName: String(h.formValues[0]),
+                                                                                commandName: String(h.formValues![0]),
                                                                                 commands_format_version: commands_format_version,
-                                                                                command_version: String(h.formValues[3]),
-                                                                                customCommandType: ["commands", "javascript"][Number(h.formValues[1])] as
+                                                                                command_version: String(h.formValues![3]),
+                                                                                customCommandType: ["commands", "javascript"][Number(h.formValues![1])] as
                                                                                     | "commands"
                                                                                     | "javascript",
-                                                                                customCommandCodeLines: Number(h.formValues[2]),
-                                                                                description: String(h.formValues[5]),
+                                                                                customCommandCodeLines: Number(h.formValues![2]),
+                                                                                description: String(h.formValues![5]),
                                                                                 type: "custom",
-                                                                                formatting_code: String(h.formValues[4]),
+                                                                                formatting_code: String(h.formValues![4]),
                                                                                 formats: JSONParse(
-                                                                                    h.formValues[6] == "" ? "undefined" : String(h.formValues[6] ?? "undefined")
+                                                                                    h.formValues![6] == "" ? "undefined" : String(h.formValues![6] ?? "undefined")
                                                                                 ),
-                                                                                customCommandPrefix: String(h.formValues[7]),
-                                                                                customCommandParametersEnabled: Boolean(h.formValues[8]),
-                                                                                customCommandId: "customCommand:" + String(h.formValues[0]),
-                                                                                commandSettingsId: "customCommandSettings:" + String(h.formValues[0]),
+                                                                                customCommandPrefix: String(h.formValues![7]),
+                                                                                customCommandParametersEnabled: Boolean(h.formValues![8]),
+                                                                                customCommandId: "customCommand:" + String(h.formValues![0]),
+                                                                                commandSettingsId: "customCommandSettings:" + String(h.formValues![0]),
                                                                                 customCommandParametersList: JSONParse(
-                                                                                    h.formValues[9] == "" ? "[]" : String(h.formValues[9])
+                                                                                    h.formValues![9] == "" ? "[]" : String(h.formValues![9])
                                                                                 ),
                                                                                 format_version: format_version,
                                                                             });
@@ -351,61 +351,61 @@ export async function manageCommands(sourceEntitya: Entity | executeCommandPlaye
                                                                 });
                                                                 manageCommands(sourceEntity);
                                                             } else {
-                                                                if (String(h.formValues[0]) != commandsItem.commandName) {
-                                                                    JSONParse(h.formValues[9] == "" ? "[]" : String(h.formValues[9]));
-                                                                    JSONParse(h.formValues[6] == "" ? "undefined" : String(h.formValues[6] ?? "undefined"));
+                                                                if (String(h.formValues![0]) != commandsItem.commandName) {
+                                                                    JSONParse(h.formValues![9] == "" ? "[]" : String(h.formValues![9]));
+                                                                    JSONParse(h.formValues![6] == "" ? "undefined" : String(h.formValues![6] ?? "undefined"));
                                                                     commandsItem.remove();
                                                                     commandsItem.settings.remove();
-                                                                    new commandSettings("customCommandSettings:" + String(h.formValues[0])).save(
+                                                                    new commandSettings("customCommandSettings:" + String(h.formValues![0])).save(
                                                                         commandsItem.settings.toJSON()
                                                                     );
                                                                     commandsItem = new command({
-                                                                        commandName: String(h.formValues[0]),
+                                                                        commandName: String(h.formValues![0]),
                                                                         commands_format_version: commands_format_version,
-                                                                        command_version: String(h.formValues[3]),
-                                                                        customCommandType: ["commands", "javascript"][Number(h.formValues[1])] as
+                                                                        command_version: String(h.formValues![3]),
+                                                                        customCommandType: ["commands", "javascript"][Number(h.formValues![1])] as
                                                                             | "commands"
                                                                             | "javascript",
-                                                                        customCommandCodeLines: Number(h.formValues[2]),
-                                                                        description: String(h.formValues[5]),
+                                                                        customCommandCodeLines: Number(h.formValues![2]),
+                                                                        description: String(h.formValues![5]),
                                                                         type: "custom",
-                                                                        formatting_code: String(h.formValues[4]),
+                                                                        formatting_code: String(h.formValues![4]),
                                                                         formats: JSONParse(
-                                                                            h.formValues[6] == "" ? "undefined" : String(h.formValues[6] ?? "undefined")
+                                                                            h.formValues![6] == "" ? "undefined" : String(h.formValues![6] ?? "undefined")
                                                                         ),
-                                                                        customCommandPrefix: String(h.formValues[7]),
-                                                                        customCommandParametersEnabled: Boolean(h.formValues[8]),
-                                                                        customCommandId: "customCommand:" + String(h.formValues[0]),
-                                                                        commandSettingsId: "customCommandSettings:" + String(h.formValues[0]),
+                                                                        customCommandPrefix: String(h.formValues![7]),
+                                                                        customCommandParametersEnabled: Boolean(h.formValues![8]),
+                                                                        customCommandId: "customCommand:" + String(h.formValues![0]),
+                                                                        commandSettingsId: "customCommandSettings:" + String(h.formValues![0]),
                                                                         customCommandParametersList: JSONParse(
-                                                                            h.formValues[9] == "" ? "[]" : String(h.formValues[9])
+                                                                            h.formValues![9] == "" ? "[]" : String(h.formValues![9])
                                                                         ),
                                                                         format_version: format_version,
                                                                     });
                                                                     commandsItem.save();
                                                                 } else {
-                                                                    JSONParse(h.formValues[9] == "" ? "[]" : String(h.formValues[9]));
-                                                                    JSONParse(h.formValues[6] == "" ? "undefined" : String(h.formValues[6] ?? "undefined"));
+                                                                    JSONParse(h.formValues![9] == "" ? "[]" : String(h.formValues![9]));
+                                                                    JSONParse(h.formValues![6] == "" ? "undefined" : String(h.formValues![6] ?? "undefined"));
                                                                     new command({
-                                                                        commandName: String(h.formValues[0]),
+                                                                        commandName: String(h.formValues![0]),
                                                                         commands_format_version: commands_format_version,
-                                                                        command_version: String(h.formValues[3]),
-                                                                        customCommandType: ["commands", "javascript"][Number(h.formValues[1])] as
+                                                                        command_version: String(h.formValues![3]),
+                                                                        customCommandType: ["commands", "javascript"][Number(h.formValues![1])] as
                                                                             | "commands"
                                                                             | "javascript",
-                                                                        customCommandCodeLines: Number(h.formValues[2]),
-                                                                        description: String(h.formValues[5]),
+                                                                        customCommandCodeLines: Number(h.formValues![2]),
+                                                                        description: String(h.formValues![5]),
                                                                         type: "custom",
-                                                                        formatting_code: String(h.formValues[4]),
+                                                                        formatting_code: String(h.formValues![4]),
                                                                         formats: JSONParse(
-                                                                            h.formValues[6] == "" ? "undefined" : String(h.formValues[6] ?? "undefined")
+                                                                            h.formValues![6] == "" ? "undefined" : String(h.formValues![6] ?? "undefined")
                                                                         ),
-                                                                        customCommandPrefix: String(h.formValues[7]),
-                                                                        customCommandParametersEnabled: Boolean(h.formValues[8]),
-                                                                        customCommandId: "customCommand:" + String(h.formValues[0]),
-                                                                        commandSettingsId: "customCommandSettings:" + String(h.formValues[0]),
+                                                                        customCommandPrefix: String(h.formValues![7]),
+                                                                        customCommandParametersEnabled: Boolean(h.formValues![8]),
+                                                                        customCommandId: "customCommand:" + String(h.formValues![0]),
+                                                                        commandSettingsId: "customCommandSettings:" + String(h.formValues![0]),
                                                                         customCommandParametersList: JSONParse(
-                                                                            h.formValues[9] == "" ? "[]" : String(h.formValues[9])
+                                                                            h.formValues![9] == "" ? "[]" : String(h.formValues![9])
                                                                         ),
                                                                         format_version: format_version,
                                                                     }).save();
@@ -536,14 +536,14 @@ export async function manageCommands(sourceEntitya: Entity | executeCommandPlaye
                                                             }
                                                             commandsItem.settings.save({
                                                                 requiredTags:
-                                                                    h.formValues[0] == ""
+                                                                    h.formValues![0] == ""
                                                                         ? commandsItem.type == "built-in"
                                                                             ? tryget(() => commandsItem.settings.defaultSettings.requiredTags) ?? []
                                                                             : []
-                                                                        : JSONParse(String(h.formValues[0])),
-                                                                requiredPermissionLevel: Number(h.formValues[1]),
-                                                                requiresOp: Boolean(h.formValues[2]),
-                                                                enabled: Boolean(h.formValues[3]),
+                                                                        : JSONParse(String(h.formValues![0])),
+                                                                requiredPermissionLevel: Number(h.formValues![1]),
+                                                                requiresOp: Boolean(h.formValues![2]),
+                                                                enabled: Boolean(h.formValues![3]),
                                                                 settings_version: command_settings_format_version,
                                                                 format_version: format_version,
                                                             });

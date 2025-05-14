@@ -114,8 +114,8 @@ export async function playerMenu_bounty_new(
 
             switch (
                 (["search", "previous", "go", "next", "", ""] as const)[r.selection!] ??
-                (!!displayPlayersB[r.selection - 6] ? "player" : undefined) ??
-                (["back", "close", "refresh"] as const)[r.selection - displayPlayersB.length - 6]
+                (!!displayPlayersB[r.selection! - 6] ? "player" : undefined) ??
+                (["back", "close", "refresh"] as const)[r.selection! - displayPlayersB.length - 6]
             ) {
                 case "search":
                     {
@@ -136,8 +136,8 @@ export async function playerMenu_bounty_new(
                             undefined,
                             maxplayersperpage,
                             {
-                                value: rb.formValues[0] as string,
-                                caseSensitive: rb.formValues[1] as boolean,
+                                value: rb.formValues![0] as string,
+                                caseSensitive: rb.formValues![1] as boolean,
                             },
                             undefined
                         ); /*
@@ -174,7 +174,7 @@ export async function playerMenu_bounty_new(
                     return await playerMenu_bounty_new(sourceEntity, Math.min(numpages - 1, page + 1), maxplayersperpage, search, displayPlayers);
                     break;
                 case "player": {
-                    const player = displayPlayersB[r.selection - 6];
+                    const player = displayPlayersB[r.selection! - 6];
                     if (Bounty.getBountiesFromPlayer(sourceEntity.id).some((b) => b.targetId === player.id)) {
                         if(
                             (
@@ -306,7 +306,7 @@ Please enter the amount of money you would like to place on the bounty below.`,
                             ).selection === 1
                         ).toNumber()
                     ) {
-                        Bounty.placeBountyOnPlayer(BigInt(ra.formValues[0]), sourceEntity.id, player.id, sourceEntity.name, player.name);
+                        Bounty.placeBountyOnPlayer(BigInt(ra.formValues![0]), sourceEntity.id, player.id, sourceEntity.name, player.name);
                         return (
                             (
                                 await showMessage(

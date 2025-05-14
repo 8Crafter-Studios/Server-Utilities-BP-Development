@@ -8,7 +8,7 @@ import { chunkIndexToBoundingBox } from "modules/coordinates/functions/chunkInde
 import { getChunkIndex } from "modules/coordinates/functions/getChunkIndex";
 
 export function mapArtGeneratorB(sourceEntitya: Entity | executeCommandPlayerW | Player) {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : sourceEntitya;
     srun(() => {
         let form = new ModalFormData();
         form.title("Map Art Generator [§cExperimental§r]");
@@ -30,7 +30,7 @@ export function mapArtGeneratorB(sourceEntitya: Entity | executeCommandPlayerW |
                 // This will stop the code when the player closes the form
                 if (r.canceled) return;
                 // This will assign every input their own variable
-                let [snbt, chunkx, chunky, dimension] = r.formValues; /*
+                let [snbt, chunkx, chunky, dimension] = r.formValues!; /*
         console.warn(r.formValues);*/
 
                 if (String(snbt).includes("#")) {

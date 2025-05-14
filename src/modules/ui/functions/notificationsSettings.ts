@@ -40,7 +40,7 @@ import { customFormUICodes } from "../constants/customFormUICodes";
  * Each notification setting includes options for enabling/disabling the notification and configuring the sound (sound ID, volume, and pitch).
  */
 export async function notificationsSettings(sourceEntitya: Entity | executeCommandPlayerW | Player): Promise<-2 | 0 | 1> {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : sourceEntitya;
     if (securityVariables.ultraSecurityModeEnabled) {
         if (securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.accessNotificationsSettings") == false) {
             const r = await showMessage(
@@ -227,7 +227,7 @@ export async function notificationsSettings(sourceEntitya: Entity | executeComma
                 getEntityInteractTriggerExplosionNotificationsSoundID,
                 getEntityInteractTriggerExplosionNotificationsVolume,
                 getEntityInteractTriggerExplosionNotificationsPitch,
-            ] = t.formValues;
+            ] = t.formValues!;
             noti.getAllChatCommands = Boolean(getAllChatCommands);
             noti.getAllChatCommandsNotificationSound = {
                 soundId: String(getAllChatCommandsSoundID == "" ? "none" : getAllChatCommandsSoundID),

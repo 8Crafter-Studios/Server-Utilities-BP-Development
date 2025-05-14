@@ -44,9 +44,9 @@ export function customFormUIEditorCode(
                         break;
                 }
             });
-            if (t.formValues[t.formValues.length - 2]) {
+            if (t.formValues![t.formValues.length - 2]) {
                 world.setDynamicProperty(
-                    `customUICode:${formId}|${Number(t.formValues[t.formValues.length - 1]) ??
+                    `customUICode:${formId}|${Number(t.formValues![t.formValues.length - 1]) ??
                     (form.indexListB[form.indexListB.length - 1] ?? -1) + 1}`,
                     ""
                 );

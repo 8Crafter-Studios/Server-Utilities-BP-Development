@@ -38,7 +38,7 @@ export async function playerMenu_TPA_incoming(sourceEntity: loosePlayerType): Pr
             const r = await form.forceShow(player);
             if (r.canceled) return 1;
 
-            switch ((!!requests[r.selection!] ? "request" : undefined) ?? (["back", "close", "refresh"] as const)[r.selection - requests.length]) {
+            switch ((!!requests[r.selection!] ? "request" : undefined) ?? (["back", "close", "refresh"] as const)[r.selection! - requests.length]) {
                 case "request":
                     const request = requests[r.selection!];
                     switch (

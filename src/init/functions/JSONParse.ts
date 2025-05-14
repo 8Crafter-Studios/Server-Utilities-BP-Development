@@ -62,7 +62,7 @@ globalThis.JSONParse = function JSONParse(
         }
     );
 
-    function recursiveFind(a: string | {[k: string|number|symbol]: any}) {
+    function recursiveFind(a: string | {[k: string|number|symbol]: any} | undefined) {
         if (a instanceof Array) {
             let b = a;
             b.forEach((v, i) => {

@@ -5763,7 +5763,7 @@ break;*/ /*
             }
             let playerTargetB2 = entity2[0];
             let playerViewerB = Number(message2);
-            playerControllerFormPopup(playerTargetB, playerTargetB2, playerViewerB);
+            playerControllerFormPopup(playerTargetB!, playerTargetB2, playerViewerB);
             showMenuForm2 = playerList[playerViewerB];
         } else {
             form2.title("Entity Controller");
@@ -5798,14 +5798,14 @@ break;*/ /*
                     }
                     let playerTargetB: Entity;
                     try {
-                        playerTargetB = entity3;
+                        playerTargetB = entity3!;
                     } catch {}
                     let playerTargetB2: EntityRaycastHit;
                     try {
                         playerTargetB2 = entity2[0];
                     } catch {}
                     let playerViewerB = Number(playerViewer);
-                    playerControllerFormPopup(playerTargetB, playerTargetB2, playerViewerB);
+                    playerControllerFormPopup(playerTargetB!, playerTargetB2!, playerViewerB);
                 })
                 .catch((e) => {
                     console.error(e, e.stack);
@@ -6300,9 +6300,11 @@ break;*/ /*
         console.warn(playerName[0])*/
 
             if (sourceType == "Entity") {
+                assertIsDefined(sourceEntity);
                 position = String(sourceEntity.location.x) + " " + sourceEntity.location.y + " " + sourceEntity.location.z;
                 entity = sourceEntity;
             } else {
+                assertIsDefined(sourceBlock);
                 position = String(sourceBlock.location.x) + " " + sourceBlock.location.y + " " + sourceBlock.location.z;
             }
             let targets = targetSelectorAllListC(playerName[0], "", position, entity); /*
@@ -6554,9 +6556,11 @@ break;*/ /*
         console.warn(playerName[0])*/
 
             if (sourceType == "Entity") {
+                assertIsDefined(sourceEntity);
                 position = String(sourceEntity.location.x) + " " + sourceEntity.location.y + " " + sourceEntity.location.z;
                 entity = sourceEntity;
             } else {
+                assertIsDefined(sourceBlock);
                 position = String(sourceBlock.location.x) + " " + sourceBlock.location.y + " " + sourceBlock.location.z;
             }
             let targets = targetSelectorAllListC(playerName[0], "", position, entity); /*
@@ -6815,9 +6819,11 @@ break;*/ /*
         console.warn(playerName[0])*/
 
             if (sourceType == "Entity") {
+                assertIsDefined(sourceEntity);
                 position = String(sourceEntity.location.x) + " " + sourceEntity.location.y + " " + sourceEntity.location.z;
                 entity = sourceEntity;
             } else {
+                assertIsDefined(sourceBlock);
                 position = String(sourceBlock.location.x) + " " + sourceBlock.location.y + " " + sourceBlock.location.z;
             }
             let targets = targetSelectorAllListE(playerName[0], position); /*
@@ -7275,7 +7281,7 @@ break;*/ /*
             }
         }
         try {
-            (event.sourceEntity as any).onScreenDisplay.setActionBar("§eBlock States For §c" + block.block.typeId + "§e: §a\n" + blockStatesFullList);
+            (event.sourceEntity as any).onScreenDisplay.setActionBar("§eBlock States For §c" + block?.block.typeId + "§e: §a\n" + blockStatesFullList);
         } catch (e) {}
     }
     if (id == "andexdb:spawnWithNoAI") {
@@ -7312,7 +7318,7 @@ break;*/ /*
                 return;
             } */
         let location = (initiator ?? sourceEntity ?? sourceBlock)?.location ?? { x: 0, y: 0, z: 0 };
-        let location2: String;
+        let location2: string;
         try {
             location2 = vTStr(config.gametestStructureDefaultSpawnLocation);
         } catch {}
@@ -7415,7 +7421,7 @@ break;*/ /*
         try {
             world
                 .getDimension(parameters[2] ?? (initiator ?? sourceEntity ?? sourceBlock)?.dimension.id ?? "overworld")
-                .runCommand(`/execute positioned ${location2} run /gametest run andexdbinternaltests:spawn_without_behaviors_internal`);
+                .runCommand(`/execute positioned ${location2!} run /gametest run andexdbinternaltests:spawn_without_behaviors_internal`);
         } catch (e) {
             console.error(e, e.stack);
         }
@@ -7465,7 +7471,7 @@ break;*/ /*
                 return;
             } */
         let location = (initiator ?? sourceEntity ?? sourceBlock)?.location ?? { x: 0, y: 0, z: 0 };
-        let location2: String;
+        let location2: string;
         try {
             location2 = vTStr(config.gametestStructureDefaultSpawnLocation);
         } catch {}
@@ -7568,7 +7574,7 @@ break;*/ /*
         try {
             world
                 .getDimension(parameters[2] ?? (initiator ?? sourceEntity ?? sourceBlock)?.dimension.id ?? "overworld")
-                .runCommand(`/execute positioned ${location2} run /gametest run andexdbinternaltests:spawn_simulated_player_custom_internal`);
+                .runCommand(`/execute positioned ${location2!} run /gametest run andexdbinternaltests:spawn_simulated_player_custom_internal`);
         } catch (e) {
             console.error(e, e.stack);
         }
@@ -7617,7 +7623,7 @@ break;*/ /*
                 }
                 return;
             } */
-        let location2: String;
+        let location2: string;
         try {
             location2 = vTStr(config.gametestStructureDefaultSpawnLocation);
         } catch {}
@@ -7670,11 +7676,11 @@ break;*/ /*
             }
         }
         world.setDynamicProperty("andexdbGametest:scriptEvalInternalCode", parameters[0].replaceAll("\\vl", "|"));
-        console.warn(location2);
+        // console.warn(location2!);
         try {
             world
                 .getDimension(parameters[2] ?? (initiator ?? sourceEntity ?? sourceBlock)?.dimension.id ?? "overworld")
-                .runCommand(`/execute positioned ${location2} run /gametest run andexdbinternaltests:script_eval_internal`);
+                .runCommand(`/execute positioned ${location2!} run /gametest run andexdbinternaltests:script_eval_internal`);
         } catch (e) {
             console.error(e, e.stack);
         }
@@ -7683,6 +7689,7 @@ break;*/ /*
         let message2 = message.split("|");
         let message3: Vector3;
         if (sourceType == "Entity") {
+            assertIsDefined(sourceEntity);
             message3 = coordinates(
                 message2[1].split(";")[0].replaceAll(", ", " "),
                 {
@@ -7722,6 +7729,7 @@ break;*/ /*
             );
         }
         if (sourceType == "NPCDialogue") {
+            assertIsDefined(sourceEntity);
             message3 = coordinates(
                 message2[1].split(";")[0].replaceAll(", ", " "),
                 {
@@ -7800,6 +7808,7 @@ break;*/ /*
             );
         }
         if (sourceType == "Block") {
+            assertIsDefined(sourceBlock);
             message3 = coordinates(
                 message2[1].split(";")[0].replaceAll(", ", " "),
                 {
@@ -7967,7 +7976,7 @@ break;*/ /*
         try {blockStatesFullList = String([String(blockStatesFullList), block.block.permutation.getAllStates()]).split(","); } catch(e){console.error(e, e.stack);}*/
 
         try {
-            world.getDimension(message2[2]).spawnParticle(message2[0], message3, currentMolangVariableMap);
+            world.getDimension(message2[2]).spawnParticle(message2[0], message3!, currentMolangVariableMap);
         } catch (e) {
             console.error(e, e.stack);
         }

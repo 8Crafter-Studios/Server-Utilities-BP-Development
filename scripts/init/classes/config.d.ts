@@ -295,14 +295,28 @@ declare namespace exports {
              */
             readonly nether: {
                 new (): {};
+                /**
+                 * Whether or not the world border is enabled for the nether.
+                 *
+                 * Dynamic Property ID: `andexdbWorldBorderSettings:nether.enabled`
+                 *
+                 * @default false
+                 */
                 get enabled(): boolean;
                 set enabled(enabled: boolean | undefined);
+                /**
+                 * The minimum x and z coordinates of the world border for the nether.
+                 *
+                 * Dynamic Property ID: `andexdbWorldBorderSettings:nether.from`
+                 *
+                 * @default
+                 * ```typescript
+                 * { x: -29999984, z: -29999984 }
+                 * ```
+                 */
                 get from(): {
                     x: number;
                     z: number;
-                } | {
-                    x: null;
-                    z: null;
                 };
                 set from(from: {
                     x: number;
@@ -311,12 +325,19 @@ declare namespace exports {
                     x: null;
                     z: null;
                 } | undefined);
+                /**
+                 * The maximum x and z coordinates of the world border for the nether.
+                 *
+                 * Dynamic Property ID: `andexdbWorldBorderSettings:nether.to`
+                 *
+                 * @default
+                 * ```typescript
+                 * { x: 29999984, z: 29999984 }
+                 * ```
+                 */
                 get to(): {
                     x: number;
                     z: number;
-                } | {
-                    x: null;
-                    z: null;
                 };
                 set to(to: {
                     x: number;
@@ -325,36 +346,104 @@ declare namespace exports {
                     x: null;
                     z: null;
                 } | undefined);
+                /**
+                 * The mode of the world border for the nether.
+                 *
+                 * `0` - Teleport Players\
+                 * `1` - Yeet Players\
+                 * `2` - Damage Players
+                 *
+                 * Dynamic Property ID: `andexdbWorldBorderSettings:nether.mode`
+                 *
+                 * @default 1
+                 */
                 get mode(): number;
                 set mode(mode: number | undefined);
+                /**
+                 * The amount of damage the nether world border does to players when the {@link mode} is set to `2` (Damage Players).
+                 *
+                 * Dynamic Property ID: `andexdbWorldBorderSettings:nether.damageMode.damage`
+                 *
+                 * @default 1
+                 */
                 get damage(): number;
                 set damage(damage: number | undefined);
+                /**
+                 * The amount of horizontal knockback the nether world border does to players when the {@link mode} is set to `1` (Yeet Players).
+                 *
+                 * Dynamic Property ID: `andexdbWorldBorderSettings:nether.knockbackMode.knockbackH`
+                 *
+                 * @default 2.5
+                 */
                 get knockbackH(): number;
                 set knockbackH(horizontalKnockback: number | undefined);
+                /**
+                 * The amount of vertical knockback the nether world border does to players when the {@link mode} is set to `1` (Yeet Players).
+                 *
+                 * Dynamic Property ID: `andexdbWorldBorderSettings:nether.knockbackMode.knockbackV`
+                 *
+                 * @default 1.25
+                 */
                 get knockbackV(): number;
                 set knockbackV(verticalKnockback: number | undefined);
+                /**
+                 * Whether or not to prevent players from interacting with the world outside of the world border for the nether.
+                 *
+                 * Dynamic Property ID: `andexdbWorldBorderSettings:nether.preventWorldInteractionOutsideBorder`
+                 *
+                 * @default false
+                 */
                 get preventWorldInteractionOutsideBorder(): boolean;
                 set preventWorldInteractionOutsideBorder(preventWorldInteractionOutsideBorder: boolean | undefined);
+                /**
+                 * The tint intensity of the world border for the nether.
+                 *
+                 * This is how many tint particles will be spawned in front of the player when they are outside of the world border.
+                 *
+                 * Should be an integer of at least `0`.
+                 *
+                 * Dynamic Property ID: `andexdbWorldBorderSettings:nether.tintIntensity`
+                 *
+                 * @default 1
+                 */
                 get tintIntensity(): number;
                 set tintIntensity(tintIntensity: number | undefined);
                 /**
+                 * d
                  * @todo
                  */
                 get warnPlayersInChat(): boolean;
                 /**
+                 * c
                  * @todo
                  */
                 set warnPlayersInChat(warnPlayersInChat: boolean | undefined);
                 /**
+                 * b
                  * @todo
                  */
                 get showActionbarWarningWhenOutsideBorder(): boolean;
                 /**
+                 * a
                  * @todo
                  */
                 set showActionbarWarningWhenOutsideBorder(showActionbarWarningWhenOutsideBorder: boolean | undefined);
+                /**
+                 * Whether or not to show tint particles when the player is outside of the world border for the nether.
+                 *
+                 * Dynamic Property ID: `andexdbWorldBorderSettings:nether.showRedScreenOutlineWhenOutsideBorder`
+                 *
+                 * @default true
+                 */
                 get showRedScreenOutlineWhenOutsideBorder(): boolean;
                 set showRedScreenOutlineWhenOutsideBorder(showRedScreenOutlineWhenOutsideBorder: boolean | undefined);
+                /**
+                 * Whether or not to show border particles at the edges of the world border for the nether.
+                 *
+                 * Dynamic Property ID: `andexdbWorldBorderSettings:nether.showBorderParticles`
+                 *
+                 * @default true
+                 */
                 get showBorderParticles(): boolean;
                 set showBorderParticles(showBorderParticles: boolean | undefined);
                 /**
@@ -365,6 +454,13 @@ declare namespace exports {
                  * @deprecated
                  */
                 set useShadersCompatibleBorderParticles(useShadersCompatibleBorderParticles: boolean | undefined);
+                /**
+                 * The minimum distance outside of the nether world border that the player has to be before they start taking damage when the {@link mode} is set to `2` (Damage Players).
+                 *
+                 * Dynamic Property ID: `andexdbWorldBorderSettings:nether.buffer`
+                 *
+                 * @default 5
+                 */
                 get buffer(): number;
                 set buffer(buffer: number | undefined);
             };
@@ -374,14 +470,28 @@ declare namespace exports {
              */
             readonly the_end: {
                 new (): {};
+                /**
+                 * Whether or not the world border is enabled for the end.
+                 *
+                 * Dynamic Property ID: `andexdbWorldBorderSettings:the_end.enabled`
+                 *
+                 * @default false
+                 */
                 get enabled(): boolean;
                 set enabled(enabled: boolean | undefined);
+                /**
+                 * The minimum x and z coordinates of the world border for the end.
+                 *
+                 * Dynamic Property ID: `andexdbWorldBorderSettings:the_end.from`
+                 *
+                 * @default
+                 * ```typescript
+                 * { x: -29999984, z: -29999984 }
+                 * ```
+                 */
                 get from(): {
                     x: number;
                     z: number;
-                } | {
-                    x: null;
-                    z: null;
                 };
                 set from(from: {
                     x: number;
@@ -390,12 +500,19 @@ declare namespace exports {
                     x: null;
                     z: null;
                 } | undefined);
+                /**
+                 * The maximum x and z coordinates of the world border for the end.
+                 *
+                 * Dynamic Property ID: `andexdbWorldBorderSettings:the_end.to`
+                 *
+                 * @default
+                 * ```typescript
+                 * { x: 29999984, z: 29999984 }
+                 * ```
+                 */
                 get to(): {
                     x: number;
                     z: number;
-                } | {
-                    x: null;
-                    z: null;
                 };
                 set to(to: {
                     x: number;
@@ -404,36 +521,104 @@ declare namespace exports {
                     x: null;
                     z: null;
                 } | undefined);
+                /**
+                 * The mode of the world border for the end.
+                 *
+                 * `0` - Teleport Players\
+                 * `1` - Yeet Players\
+                 * `2` - Damage Players
+                 *
+                 * Dynamic Property ID: `andexdbWorldBorderSettings:the_end.mode`
+                 *
+                 * @default 1
+                 */
                 get mode(): number;
                 set mode(mode: number | undefined);
+                /**
+                 * The amount of damage the end world border does to players when the {@link mode} is set to `2` (Damage Players).
+                 *
+                 * Dynamic Property ID: `andexdbWorldBorderSettings:the_end.damageMode.damage`
+                 *
+                 * @default 1
+                 */
                 get damage(): number;
                 set damage(damage: number | undefined);
+                /**
+                 * The amount of horizontal knockback the end world border does to players when the {@link mode} is set to `1` (Yeet Players).
+                 *
+                 * Dynamic Property ID: `andexdbWorldBorderSettings:the_end.knockbackMode.knockbackH`
+                 *
+                 * @default 2.5
+                 */
                 get knockbackH(): number;
                 set knockbackH(horizontalKnockback: number | undefined);
+                /**
+                 * The amount of vertical knockback the end world border does to players when the {@link mode} is set to `1` (Yeet Players).
+                 *
+                 * Dynamic Property ID: `andexdbWorldBorderSettings:the_end.knockbackMode.knockbackV`
+                 *
+                 * @default 1.25
+                 */
                 get knockbackV(): number;
                 set knockbackV(verticalKnockback: number | undefined);
+                /**
+                 * Whether or not to prevent players from interacting with the world outside of the world border for the end.
+                 *
+                 * Dynamic Property ID: `andexdbWorldBorderSettings:the_end.preventWorldInteractionOutsideBorder`
+                 *
+                 * @default false
+                 */
                 get preventWorldInteractionOutsideBorder(): boolean;
                 set preventWorldInteractionOutsideBorder(preventWorldInteractionOutsideBorder: boolean | undefined);
+                /**
+                 * The tint intensity of the world border for the end.
+                 *
+                 * This is how many tint particles will be spawned in front of the player when they are outside of the world border.
+                 *
+                 * Should be an integer of at least `0`.
+                 *
+                 * Dynamic Property ID: `andexdbWorldBorderSettings:the_end.tintIntensity`
+                 *
+                 * @default 1
+                 */
                 get tintIntensity(): number;
                 set tintIntensity(tintIntensity: number | undefined);
                 /**
+                 * d
                  * @todo
                  */
                 get warnPlayersInChat(): boolean;
                 /**
+                 * c
                  * @todo
                  */
                 set warnPlayersInChat(warnPlayersInChat: boolean | undefined);
                 /**
+                 * b
                  * @todo
                  */
                 get showActionbarWarningWhenOutsideBorder(): boolean;
                 /**
+                 * a
                  * @todo
                  */
                 set showActionbarWarningWhenOutsideBorder(showActionbarWarningWhenOutsideBorder: boolean | undefined);
+                /**
+                 * Whether or not to show tint particles when the player is outside of the world border for the end.
+                 *
+                 * Dynamic Property ID: `andexdbWorldBorderSettings:the_end.showRedScreenOutlineWhenOutsideBorder`
+                 *
+                 * @default true
+                 */
                 get showRedScreenOutlineWhenOutsideBorder(): boolean;
                 set showRedScreenOutlineWhenOutsideBorder(showRedScreenOutlineWhenOutsideBorder: boolean | undefined);
+                /**
+                 * Whether or not to show border particles at the edges of the world border for the end.
+                 *
+                 * Dynamic Property ID: `andexdbWorldBorderSettings:the_end.showBorderParticles`
+                 *
+                 * @default true
+                 */
                 get showBorderParticles(): boolean;
                 set showBorderParticles(showBorderParticles: boolean | undefined);
                 /**
@@ -444,6 +629,13 @@ declare namespace exports {
                  * @deprecated
                  */
                 set useShadersCompatibleBorderParticles(useShadersCompatibleBorderParticles: boolean | undefined);
+                /**
+                 * The minimum distance outside of the end world border that the player has to be before they start taking damage when the {@link mode} is set to `2` (Damage Players).
+                 *
+                 * Dynamic Property ID: `andexdbWorldBorderSettings:the_end.buffer`
+                 *
+                 * @default 5
+                 */
                 get buffer(): number;
                 set buffer(buffer: number | undefined);
             };
@@ -937,7 +1129,8 @@ declare namespace exports {
                  *
                  * @default 1000
                  */
-                minimumAutoRefresh: number | undefined;
+                get minimumAutoRefresh(): number;
+                set minimumAutoRefresh(minimumAutoRefresh: number | undefined);
             };
         };
         /**

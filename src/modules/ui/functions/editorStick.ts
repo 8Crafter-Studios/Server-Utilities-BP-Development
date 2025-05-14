@@ -5,7 +5,7 @@ import { forceShow } from "modules/ui/functions/forceShow";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 
 export function editorStick(sourceEntitya: Entity | executeCommandPlayerW | Player, message: string = "") {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : sourceEntitya;
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : sourceEntitya;
     let form = new ModalFormData();
     let playerList = world.getPlayers();
     let block = sourceEntity.getBlockFromViewDirection();

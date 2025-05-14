@@ -14,6 +14,7 @@ import {
 } from "@minecraft/server";
 import { BlockMask } from "modules/commands/classes/BlockMask";
 import { testIsWithinRanges } from "modules/spawn_protection/functions/testIsWithinRanges";
+import type { VerifyConstraint } from "modules/utilities/functions/filterProperties";
 
 /**
  * A class that contains variables that are used for the spawn protection system.
@@ -766,7 +767,7 @@ export const AdvancedProtectedAreaCategoryPropertyAllEnabledDefaults = makeMutab
         removeOnExit: false,
         playersOnly: true,
     },
-} as const satisfies AdvancedProtectedAreaCategory<false>);
+} as const satisfies ReadonlyDeep<AdvancedProtectedAreaCategory<false>>);
 
 /**
  * Default values for an enabled area category property, in JSON format.
@@ -887,7 +888,7 @@ export const AdvancedProtectedAreaCategoryPropertyAllEnabledDefaults_JSON = make
         removeOnExit: false,
         playersOnly: true,
     },
-} as const satisfies AdvancedProtectedAreaCategory<true>);
+} as const satisfies ReadonlyDeep<AdvancedProtectedAreaCategory<true>>);
 
 /**
  * Converts an `AdvancedProtectedAreaCategory` object with raw mask properties to a JSON-compatible format.
@@ -1223,10 +1224,10 @@ export class ProtectedAreas {
         const outputData: AdvancedProtectedAreaCategory<false> = data as unknown as AdvancedProtectedAreaCategory<false>;
         Object.getOwnPropertyNames(data).forEach((key: keyof AdvancedProtectedAreaCategory<true>) => {
             if (key === "id" || key === "icon_path") return;
-            const d = data[key];
-            if (typeof outputData[key] === "boolean" || typeof d === "boolean" || d === undefined || !("mask" in d) || !("mask" in outputData[key]!)) return;
+            const d = data[key]!;
+            if (typeof outputData[key] === "boolean" || typeof d === "boolean" || d === undefined || !("mask" in d) || !("mask" in (outputData[key] as VerifyConstraint<typeof outputData[typeof key], object>))) return;
             (outputData[key] as Exclude<AdvancedProtectedAreaCategory<false>["playerPlaceBlock"], false>)!.rawmask = d.mask;
-            outputData[key].mask = BlockMask.extract(d.mask, true, d.mode ?? "exclude");
+            (outputData[key] as Exclude<AdvancedProtectedAreaCategory<false>["playerPlaceBlock"], false>)!.mask = BlockMask.extract(d.mask, true, d.mode ?? "exclude");
             /**
              * Returns an array of strings representing the IDs of all advanced protected area categories.
              * @returns {string[]} An array of strings representing the IDs of all advanced protected area categories.
@@ -1530,7 +1531,7 @@ export class ProtectedAreaTester<
                                                                   (item) => data.source!.heldItem?.typeId === (ItemTypes.get(item)?.id ?? item)
                                                               )
                                                         : true
-                                                ) &&
+                                                )! &&
                                                 ((prop!.sourceEntityFilter?.excludeTags ?? []).length === 0
                                                     ? prop!.sourceEntityFilter?.includeTags?.length === 0
                                                         ? true

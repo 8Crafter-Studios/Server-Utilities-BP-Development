@@ -14,19 +14,19 @@ repeatingIntervals.debugSticksCooldownCounter = system.runInterval(() => {
         } else {
             interactable_blockb.interactable_block.find(
                 (playerId) => playerId.id == player.id
-            ).delay = Math.max(
+            )!.delay = Math.max(
                 0,
                 interactable_blockb.interactable_block.find(
                     (playerId) => playerId.id == player.id
-                ).delay - 1
+                )?.delay! - 1
             );
             interactable_blockb.interactable_block.find(
                 (playerId) => playerId.id == player.id
-            ).holdDuration = Math.max(
+            )!.holdDuration = Math.max(
                 0,
                 interactable_blockb.interactable_block.find(
                     (playerId) => playerId.id == player.id
-                ).holdDuration - 1
+                )?.holdDuration! - 1
             );
         } /*if (player.isSneaking && ((interactable_blockb.interactable_block.find((playerId)=>(playerId.id == player.id)).holdDuration == 0) || (interactable_blockb.interactable_block.find((playerId)=>(playerId.id == player.id)).holdDuration == undefined)) && ((player.getComponent("minecraft:inventory") as EntityInventoryComponent).container.getItem(player.selectedSlotIndex).typeId === "andexdb:debug_stick")){
     player.onScreenDisplay.setActionBar(`§l§eTags: §r§a${player.getBlockFromViewDirection().block.getTags().join(", ")}\n§l§eBlock States: §r§a${Object.entries(player.getBlockFromViewDirection().block.permutation.getAllStates()).join("\n")}`)}; */

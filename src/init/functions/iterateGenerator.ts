@@ -25,7 +25,7 @@ globalThis.iterateGenerator = function iterateGenerator<TY, TR, TN>(
                 break;
             }
         }
-        return finalResult;
+        return finalResult!;
     }
     return iterateGeneratorB(extractorGenerator, lastYieldTime);
 };

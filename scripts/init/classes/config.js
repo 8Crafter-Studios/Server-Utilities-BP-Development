@@ -418,54 +418,139 @@ var exports;
                      * @group Subclasses
                      */
                     class config_worldBorder_nether {
+                        /**
+                         * Whether or not the world border is enabled for the nether.
+                         *
+                         * Dynamic Property ID: `andexdbWorldBorderSettings:nether.enabled`
+                         *
+                         * @default false
+                         */
                         static get enabled() {
                             return Boolean(world.getDynamicProperty("andexdbWorldBorderSettings:nether.enabled") ?? false);
                         }
                         static set enabled(enabled) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:nether.enabled", enabled ?? false);
                         }
+                        /**
+                         * The minimum x and z coordinates of the world border for the nether.
+                         *
+                         * Dynamic Property ID: `andexdbWorldBorderSettings:nether.from`
+                         *
+                         * @default
+                         * ```typescript
+                         * { x: -29999984, z: -29999984 }
+                         * ```
+                         */
                         static get from() {
-                            return (tryget(() => JSON.parse(String(world.getDynamicProperty("andexdbWorldBorderSettings:nether.from") ?? "{x: -29999984, z: -29999984}"))) ?? { x: -29999984, z: -29999984 });
+                            const pos = tryget(() => JSON.parse(String(world.getDynamicProperty("andexdbWorldBorderSettings:nether.from") ?? "{x: -29999984, z: -29999984}"))) ?? { x: -29999984, z: -29999984 };
+                            return {
+                                x: typeof pos.x === "number" && pos.x.isFinite() ? pos.x : -29999984,
+                                z: typeof pos.z === "number" && pos.z.isFinite() ? pos.z : -29999984,
+                            };
                         }
                         static set from(from) {
-                            world.setDynamicProperty("andexdbWorldBorderSettings:nether.from", JSON.stringify(from ?? { x: -29999984, z: -29999984 }));
+                            world.setDynamicProperty("andexdbWorldBorderSettings:nether.from", JSON.stringify({ x: -29999984, z: -29999984, ...from }));
                         }
+                        /**
+                         * The maximum x and z coordinates of the world border for the nether.
+                         *
+                         * Dynamic Property ID: `andexdbWorldBorderSettings:nether.to`
+                         *
+                         * @default
+                         * ```typescript
+                         * { x: 29999984, z: 29999984 }
+                         * ```
+                         */
                         static get to() {
-                            return (tryget(() => JSON.parse(String(world.getDynamicProperty("andexdbWorldBorderSettings:nether.to") ?? "{x: 29999984, z: 29999984}"))) ?? { x: 29999984, z: 29999984 });
+                            const pos = tryget(() => JSON.parse(String(world.getDynamicProperty("andexdbWorldBorderSettings:nether.to") ?? "{x: 29999984, z: 29999984}"))) ?? { x: 29999984, z: 29999984 };
+                            return {
+                                x: typeof pos.x === "number" && pos.x.isFinite() ? pos.x : 29999984,
+                                z: typeof pos.z === "number" && pos.z.isFinite() ? pos.z : 29999984,
+                            };
                         }
                         static set to(to) {
-                            world.setDynamicProperty("andexdbWorldBorderSettings:nether.to", JSON.stringify(to ?? { x: 29999984, z: 29999984 }));
+                            world.setDynamicProperty("andexdbWorldBorderSettings:nether.to", JSON.stringify({ x: 29999984, z: 29999984, ...to }));
                         }
+                        /**
+                         * The mode of the world border for the nether.
+                         *
+                         * `0` - Teleport Players\
+                         * `1` - Yeet Players\
+                         * `2` - Damage Players
+                         *
+                         * Dynamic Property ID: `andexdbWorldBorderSettings:nether.mode`
+                         *
+                         * @default 1
+                         */
                         static get mode() {
                             return Number(world.getDynamicProperty("andexdbWorldBorderSettings:nether.mode") ?? 1);
                         }
                         static set mode(mode) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:nether.mode", mode ?? 1);
                         }
+                        /**
+                         * The amount of damage the nether world border does to players when the {@link mode} is set to `2` (Damage Players).
+                         *
+                         * Dynamic Property ID: `andexdbWorldBorderSettings:nether.damageMode.damage`
+                         *
+                         * @default 1
+                         */
                         static get damage() {
                             return Number(world.getDynamicProperty("andexdbWorldBorderSettings:nether.damageMode.damage") ?? 1);
                         }
                         static set damage(damage) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:nether.damageMode.damage", damage ?? 1);
                         }
+                        /**
+                         * The amount of horizontal knockback the nether world border does to players when the {@link mode} is set to `1` (Yeet Players).
+                         *
+                         * Dynamic Property ID: `andexdbWorldBorderSettings:nether.knockbackMode.knockbackH`
+                         *
+                         * @default 2.5
+                         */
                         static get knockbackH() {
                             return Number(world.getDynamicProperty("andexdbWorldBorderSettings:nether.knockbackMode.knockbackH") ?? 2.5);
                         }
                         static set knockbackH(horizontalKnockback) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:nether.knockbackMode.knockbackH", horizontalKnockback ?? 2.5);
                         }
+                        /**
+                         * The amount of vertical knockback the nether world border does to players when the {@link mode} is set to `1` (Yeet Players).
+                         *
+                         * Dynamic Property ID: `andexdbWorldBorderSettings:nether.knockbackMode.knockbackV`
+                         *
+                         * @default 1.25
+                         */
                         static get knockbackV() {
                             return Number(world.getDynamicProperty("andexdbWorldBorderSettings:nether.knockbackMode.knockbackV") ?? 1.25);
                         }
                         static set knockbackV(verticalKnockback) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:nether.knockbackMode.knockbackV", verticalKnockback ?? 1.25);
                         }
+                        /**
+                         * Whether or not to prevent players from interacting with the world outside of the world border for the nether.
+                         *
+                         * Dynamic Property ID: `andexdbWorldBorderSettings:nether.preventWorldInteractionOutsideBorder`
+                         *
+                         * @default false
+                         */
                         static get preventWorldInteractionOutsideBorder() {
                             return Boolean(world.getDynamicProperty("andexdbWorldBorderSettings:nether.preventWorldInteractionOutsideBorder") ?? false);
                         }
                         static set preventWorldInteractionOutsideBorder(preventWorldInteractionOutsideBorder) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:nether.preventWorldInteractionOutsideBorder", preventWorldInteractionOutsideBorder ?? false);
                         }
+                        /**
+                         * The tint intensity of the world border for the nether.
+                         *
+                         * This is how many tint particles will be spawned in front of the player when they are outside of the world border.
+                         *
+                         * Should be an integer of at least `0`.
+                         *
+                         * Dynamic Property ID: `andexdbWorldBorderSettings:nether.tintIntensity`
+                         *
+                         * @default 1
+                         */
                         static get tintIntensity() {
                             return Number(world.getDynamicProperty("andexdbWorldBorderSettings:nether.tintIntensity") ?? 1);
                         }
@@ -473,35 +558,53 @@ var exports;
                             world.setDynamicProperty("andexdbWorldBorderSettings:nether.tintIntensity", tintIntensity ?? 1);
                         }
                         /**
+                         * d
                          * @todo
                          */
                         static get warnPlayersInChat() {
                             return Boolean(world.getDynamicProperty("andexdbWorldBorderSettings:nether.warnPlayersInChat") ?? false);
                         }
                         /**
+                         * c
                          * @todo
                          */
                         static set warnPlayersInChat(warnPlayersInChat) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:nether.warnPlayersInChat", warnPlayersInChat ?? false);
                         }
                         /**
+                         * b
                          * @todo
                          */
                         static get showActionbarWarningWhenOutsideBorder() {
                             return Boolean(world.getDynamicProperty("andexdbWorldBorderSettings:nether.showActionbarWarningWhenOutsideBorder") ?? false);
                         }
                         /**
+                         * a
                          * @todo
                          */
                         static set showActionbarWarningWhenOutsideBorder(showActionbarWarningWhenOutsideBorder) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:nether.showActionbarWarningWhenOutsideBorder", showActionbarWarningWhenOutsideBorder ?? false);
                         }
+                        /**
+                         * Whether or not to show tint particles when the player is outside of the world border for the nether.
+                         *
+                         * Dynamic Property ID: `andexdbWorldBorderSettings:nether.showRedScreenOutlineWhenOutsideBorder`
+                         *
+                         * @default true
+                         */
                         static get showRedScreenOutlineWhenOutsideBorder() {
                             return Boolean(world.getDynamicProperty("andexdbWorldBorderSettings:nether.showRedScreenOutlineWhenOutsideBorder") ?? true);
                         }
                         static set showRedScreenOutlineWhenOutsideBorder(showRedScreenOutlineWhenOutsideBorder) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:nether.showRedScreenOutlineWhenOutsideBorder", showRedScreenOutlineWhenOutsideBorder ?? true);
                         }
+                        /**
+                         * Whether or not to show border particles at the edges of the world border for the nether.
+                         *
+                         * Dynamic Property ID: `andexdbWorldBorderSettings:nether.showBorderParticles`
+                         *
+                         * @default true
+                         */
                         static get showBorderParticles() {
                             return Boolean(world.getDynamicProperty("andexdbWorldBorderSettings:nether.showBorderParticles") ?? true);
                         }
@@ -520,6 +623,13 @@ var exports;
                         static set useShadersCompatibleBorderParticles(useShadersCompatibleBorderParticles) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:nether.useShadersCompatibleBorderParticles", useShadersCompatibleBorderParticles ?? false);
                         }
+                        /**
+                         * The minimum distance outside of the nether world border that the player has to be before they start taking damage when the {@link mode} is set to `2` (Damage Players).
+                         *
+                         * Dynamic Property ID: `andexdbWorldBorderSettings:nether.buffer`
+                         *
+                         * @default 5
+                         */
                         static get buffer() {
                             return Number(world.getDynamicProperty("andexdbWorldBorderSettings:nether.buffer") ?? 5);
                         }
@@ -542,54 +652,139 @@ var exports;
                      * @group Subclasses
                      */
                     class config_worldBorder_the_end {
+                        /**
+                         * Whether or not the world border is enabled for the end.
+                         *
+                         * Dynamic Property ID: `andexdbWorldBorderSettings:the_end.enabled`
+                         *
+                         * @default false
+                         */
                         static get enabled() {
                             return Boolean(world.getDynamicProperty("andexdbWorldBorderSettings:the_end.enabled") ?? false);
                         }
                         static set enabled(enabled) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:the_end.enabled", enabled ?? false);
                         }
+                        /**
+                         * The minimum x and z coordinates of the world border for the end.
+                         *
+                         * Dynamic Property ID: `andexdbWorldBorderSettings:the_end.from`
+                         *
+                         * @default
+                         * ```typescript
+                         * { x: -29999984, z: -29999984 }
+                         * ```
+                         */
                         static get from() {
-                            return (tryget(() => JSON.parse(String(world.getDynamicProperty("andexdbWorldBorderSettings:the_end.from") ?? "{x: -29999984, z: -29999984}"))) ?? { x: -29999984, z: -29999984 });
+                            const pos = tryget(() => JSON.parse(String(world.getDynamicProperty("andexdbWorldBorderSettings:the_end.from") ?? "{x: -29999984, z: -29999984}"))) ?? { x: -29999984, z: -29999984 };
+                            return {
+                                x: typeof pos.x === "number" && pos.x.isFinite() ? pos.x : -29999984,
+                                z: typeof pos.z === "number" && pos.z.isFinite() ? pos.z : -29999984,
+                            };
                         }
                         static set from(from) {
-                            world.setDynamicProperty("andexdbWorldBorderSettings:the_end.from", JSON.stringify(from ?? { x: -29999984, z: -29999984 }));
+                            world.setDynamicProperty("andexdbWorldBorderSettings:the_end.from", JSON.stringify({ x: -29999984, z: -29999984, ...from }));
                         }
+                        /**
+                         * The maximum x and z coordinates of the world border for the end.
+                         *
+                         * Dynamic Property ID: `andexdbWorldBorderSettings:the_end.to`
+                         *
+                         * @default
+                         * ```typescript
+                         * { x: 29999984, z: 29999984 }
+                         * ```
+                         */
                         static get to() {
-                            return (tryget(() => JSON.parse(String(world.getDynamicProperty("andexdbWorldBorderSettings:the_end.to") ?? "{x: 29999984, z: 29999984}"))) ?? { x: 29999984, z: 29999984 });
+                            const pos = tryget(() => JSON.parse(String(world.getDynamicProperty("andexdbWorldBorderSettings:the_end.to") ?? "{x: 29999984, z: 29999984}"))) ?? { x: 29999984, z: 29999984 };
+                            return {
+                                x: typeof pos.x === "number" && pos.x.isFinite() ? pos.x : 29999984,
+                                z: typeof pos.z === "number" && pos.z.isFinite() ? pos.z : 29999984,
+                            };
                         }
                         static set to(to) {
-                            world.setDynamicProperty("andexdbWorldBorderSettings:the_end.to", JSON.stringify(to ?? { x: 29999984, z: 29999984 }));
+                            world.setDynamicProperty("andexdbWorldBorderSettings:the_end.to", JSON.stringify({ x: 29999984, z: 29999984, ...to }));
                         }
+                        /**
+                         * The mode of the world border for the end.
+                         *
+                         * `0` - Teleport Players\
+                         * `1` - Yeet Players\
+                         * `2` - Damage Players
+                         *
+                         * Dynamic Property ID: `andexdbWorldBorderSettings:the_end.mode`
+                         *
+                         * @default 1
+                         */
                         static get mode() {
                             return Number(world.getDynamicProperty("andexdbWorldBorderSettings:the_end.mode") ?? 1);
                         }
                         static set mode(mode) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:the_end.mode", mode ?? 1);
                         }
+                        /**
+                         * The amount of damage the end world border does to players when the {@link mode} is set to `2` (Damage Players).
+                         *
+                         * Dynamic Property ID: `andexdbWorldBorderSettings:the_end.damageMode.damage`
+                         *
+                         * @default 1
+                         */
                         static get damage() {
                             return Number(world.getDynamicProperty("andexdbWorldBorderSettings:the_end.damageMode.damage") ?? 1);
                         }
                         static set damage(damage) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:the_end.damageMode.damage", damage ?? 1);
                         }
+                        /**
+                         * The amount of horizontal knockback the end world border does to players when the {@link mode} is set to `1` (Yeet Players).
+                         *
+                         * Dynamic Property ID: `andexdbWorldBorderSettings:the_end.knockbackMode.knockbackH`
+                         *
+                         * @default 2.5
+                         */
                         static get knockbackH() {
                             return Number(world.getDynamicProperty("andexdbWorldBorderSettings:the_end.knockbackMode.knockbackH") ?? 2.5);
                         }
                         static set knockbackH(horizontalKnockback) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:the_end.knockbackMode.knockbackH", horizontalKnockback ?? 2.5);
                         }
+                        /**
+                         * The amount of vertical knockback the end world border does to players when the {@link mode} is set to `1` (Yeet Players).
+                         *
+                         * Dynamic Property ID: `andexdbWorldBorderSettings:the_end.knockbackMode.knockbackV`
+                         *
+                         * @default 1.25
+                         */
                         static get knockbackV() {
                             return Number(world.getDynamicProperty("andexdbWorldBorderSettings:the_end.knockbackMode.knockbackV") ?? 1.25);
                         }
                         static set knockbackV(verticalKnockback) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:the_end.knockbackMode.knockbackV", verticalKnockback ?? 1.25);
                         }
+                        /**
+                         * Whether or not to prevent players from interacting with the world outside of the world border for the end.
+                         *
+                         * Dynamic Property ID: `andexdbWorldBorderSettings:the_end.preventWorldInteractionOutsideBorder`
+                         *
+                         * @default false
+                         */
                         static get preventWorldInteractionOutsideBorder() {
                             return Boolean(world.getDynamicProperty("andexdbWorldBorderSettings:the_end.preventWorldInteractionOutsideBorder") ?? false);
                         }
                         static set preventWorldInteractionOutsideBorder(preventWorldInteractionOutsideBorder) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:the_end.preventWorldInteractionOutsideBorder", preventWorldInteractionOutsideBorder ?? false);
                         }
+                        /**
+                         * The tint intensity of the world border for the end.
+                         *
+                         * This is how many tint particles will be spawned in front of the player when they are outside of the world border.
+                         *
+                         * Should be an integer of at least `0`.
+                         *
+                         * Dynamic Property ID: `andexdbWorldBorderSettings:the_end.tintIntensity`
+                         *
+                         * @default 1
+                         */
                         static get tintIntensity() {
                             return Number(world.getDynamicProperty("andexdbWorldBorderSettings:the_end.tintIntensity") ?? 1);
                         }
@@ -597,35 +792,53 @@ var exports;
                             world.setDynamicProperty("andexdbWorldBorderSettings:the_end.tintIntensity", tintIntensity ?? 1);
                         }
                         /**
+                         * d
                          * @todo
                          */
                         static get warnPlayersInChat() {
                             return Boolean(world.getDynamicProperty("andexdbWorldBorderSettings:the_end.warnPlayersInChat") ?? false);
                         }
                         /**
+                         * c
                          * @todo
                          */
                         static set warnPlayersInChat(warnPlayersInChat) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:the_end.warnPlayersInChat", warnPlayersInChat ?? false);
                         }
                         /**
+                         * b
                          * @todo
                          */
                         static get showActionbarWarningWhenOutsideBorder() {
                             return Boolean(world.getDynamicProperty("andexdbWorldBorderSettings:the_end.showActionbarWarningWhenOutsideBorder") ?? false);
                         }
                         /**
+                         * a
                          * @todo
                          */
                         static set showActionbarWarningWhenOutsideBorder(showActionbarWarningWhenOutsideBorder) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:the_end.showActionbarWarningWhenOutsideBorder", showActionbarWarningWhenOutsideBorder ?? false);
                         }
+                        /**
+                         * Whether or not to show tint particles when the player is outside of the world border for the end.
+                         *
+                         * Dynamic Property ID: `andexdbWorldBorderSettings:the_end.showRedScreenOutlineWhenOutsideBorder`
+                         *
+                         * @default true
+                         */
                         static get showRedScreenOutlineWhenOutsideBorder() {
                             return Boolean(world.getDynamicProperty("andexdbWorldBorderSettings:the_end.showRedScreenOutlineWhenOutsideBorder") ?? true);
                         }
                         static set showRedScreenOutlineWhenOutsideBorder(showRedScreenOutlineWhenOutsideBorder) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:the_end.showRedScreenOutlineWhenOutsideBorder", showRedScreenOutlineWhenOutsideBorder ?? true);
                         }
+                        /**
+                         * Whether or not to show border particles at the edges of the world border for the end.
+                         *
+                         * Dynamic Property ID: `andexdbWorldBorderSettings:the_end.showBorderParticles`
+                         *
+                         * @default true
+                         */
                         static get showBorderParticles() {
                             return Boolean(world.getDynamicProperty("andexdbWorldBorderSettings:the_end.showBorderParticles") ?? true);
                         }
@@ -644,6 +857,13 @@ var exports;
                         static set useShadersCompatibleBorderParticles(useShadersCompatibleBorderParticles) {
                             world.setDynamicProperty("andexdbWorldBorderSettings:the_end.useShadersCompatibleBorderParticles", useShadersCompatibleBorderParticles ?? false);
                         }
+                        /**
+                         * The minimum distance outside of the end world border that the player has to be before they start taking damage when the {@link mode} is set to `2` (Damage Players).
+                         *
+                         * Dynamic Property ID: `andexdbWorldBorderSettings:the_end.buffer`
+                         *
+                         * @default 5
+                         */
                         static get buffer() {
                             return Number(world.getDynamicProperty("andexdbWorldBorderSettings:the_end.buffer") ?? 5);
                         }
