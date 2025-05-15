@@ -37,7 +37,7 @@ export const customAreaCategoryIDPlaceholders = (<T>(obj: T): Mutable<T> => obj)
  * 6. Calls `editCustomAreaCategory` to allow further editing of the newly created category.
  */
 export async function newCustomAreaCategory(sourceEntitya: executeCommandPlayerW | Entity | Player) {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : (sourceEntitya as Player);
     if (arguments.length !== 1) {
         throw new TypeError(`Incorrect number of arguments to function. Expected 1, received ${arguments.length}.`);
     }

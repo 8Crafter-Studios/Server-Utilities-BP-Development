@@ -55,6 +55,6 @@ form12.title({rawtext: [{text: "hi"}]})*/
         form: form12345678,
         customUI: customUI,
         optionElements: customUI.optionElements,
-        formResponse: rb,
+        formResponse: rb!,
     };
 }

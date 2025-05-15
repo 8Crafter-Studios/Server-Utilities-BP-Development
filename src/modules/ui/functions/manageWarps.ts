@@ -93,7 +93,7 @@ export async function manageWarps(sourceEntity: loosePlayerType): Promise<0 | 1>
                                     [customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left"],
                                     [customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout"]
                                 )
-                            ).selection
+                            )?.selection ?? 3
                         ]
                     ) {
                         case "move": {
@@ -125,7 +125,7 @@ export async function manageWarps(sourceEntity: loosePlayerType): Promise<0 | 1>
                             if (rb.selection === warpsb.length + 1) {
                                 return 0;
                             }
-                            const destinationIndex = rb.selection + r.selection;
+                            const destinationIndex = rb.selection! + r.selection!;
                             const currentWarps = config.warpsSystem.warps;
                             currentWarps.splice(
                                 currentWarps.findIndex((w) => w.displayName === warp.displayName),

@@ -87,20 +87,20 @@ export async function teleportSystemsSettings(sourceEntity: loosePlayerType): Pr
         if (r.canceled) {
             return 1 as const;
         }
-        const options = Object.fromEntries(includedOptions.map((o, i) => [o, r.formValues![i] as optionsList[typeof o]])) as Partial<optionsList>;
+        const options = Object.fromEntries(includedOptions.map((o, i) => [o, r.formValues![i] as optionsList[typeof o]])) as optionsList;
         includedOptions.forEach((v: keyof optionsList) => {
             switch (v) {
                 case "allowCrossDimensionalTeleport":
                     menuConfig.allowCrossDimensionalTeleport = options[v];
                     break;
                 case "pvpCooldownToTeleport":
-                    menuConfig.pvpCooldownToTeleport = options[v].toNumber();
+                    menuConfig.pvpCooldownToTeleport = options[v]?.toNumber();
                     break;
                 case "standStillTimeToTeleport":
-                    menuConfig.standStillTimeToTeleport = options[v].toNumber();
+                    menuConfig.standStillTimeToTeleport = options[v]?.toNumber();
                     break;
                 case "teleportCooldown":
-                    menuConfig.teleportCooldown = options[v].toNumber();
+                    menuConfig.teleportCooldown = options[v]?.toNumber();
                     break;
                 default:
                     throw new Error(`Save action for setting ${JSON.stringify(v)} was not defined.`);

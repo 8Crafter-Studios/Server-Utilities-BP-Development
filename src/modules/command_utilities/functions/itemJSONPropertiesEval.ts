@@ -49,15 +49,15 @@ export function itemJSONPropertiesEval(
                         : targetSelectorAllListC(
                             ij.source.targetSelector,
                             "",
-                            ij.source.targetSelectorSourceEntity
+                            ij.source.targetSelectorSourceEntity!
                                 .location.x +
                             " " +
-                            ij.source.targetSelectorSourceEntity
+                            ij.source.targetSelectorSourceEntity!
                                 .location.y +
                             " " +
-                            ij.source.targetSelectorSourceEntity
+                            ij.source.targetSelectorSourceEntity!
                                 .location.z,
-                            ij.source.targetSelectorSourceEntity
+                            ij.source.targetSelectorSourceEntity!
                         )[0]
                     )?.getComponent?.("inventory")
                     : !!ij.source.entityId
@@ -75,8 +75,8 @@ export function itemJSONPropertiesEval(
                                     )
                                     .find(
                                         (v) => v.typeId ==
-                                            (ij.source.entityTypeId ??
-                                                ij.source.entityType)
+                                            (ij.source!.entityTypeId ??
+                                                ij.source!.entityType)
                                     )
                                     ?.getComponent?.("inventory")
                                 : !!ij.source.block
@@ -86,13 +86,13 @@ export function itemJSONPropertiesEval(
                                     : sp?.getComponent?.("inventory")
                 )?.container?.getItem(ij.source.slot ?? 0)
                 : new ItemStack(
-                    ij.source.id,
+                    ij.source.id!,
                     ij.source.count ?? ij.source.amount
                 )
             : new ItemStack(
-                ij?.id ?? ij?.type ?? ij?.itemId,
+                ij?.id ?? ij?.type ?? ij?.itemId!,
                 ij?.count ?? ij?.amount
-            )); /*
+            ))!; /*
 if(!!ij.new){item=new ItemStack(ij.new[0], ij.new[1])}*/
 
 
@@ -103,7 +103,7 @@ if(!!ij.new){item=new ItemStack(ij.new[0], ij.new[1])}*/
             ? (item.nameTag = property[1])
             : false,
         lore: (property: [string, string[] | undefined | null]) => property[1] !== item.getLore() || ij.force
-            ? item.setLore(property[1])
+            ? item.setLore(property[1]!)
             : false,
         amount: (property: [string, number]) => property[1] != item.amount || ij.force
             ? (item.amount = property[1])
@@ -115,10 +115,10 @@ if(!!ij.new){item=new ItemStack(ij.new[0], ij.new[1])}*/
             ? (item.lockMode = property[1])
             : false,
         canPlaceOn: (property: [string, string[] | undefined | null]) => property[1] !== item.getCanPlaceOn() || ij.force
-            ? item.setCanPlaceOn(property[1])
+            ? item.setCanPlaceOn(property[1]!)
             : false,
         canDestroy: (property: [string, string[] | undefined | null]) => property[1] !== item.getCanDestroy() || ij.force
-            ? item.setCanDestroy(property[1])
+            ? item.setCanDestroy(property[1]!)
             : false,
         dynamicProperties: (
             property: [
@@ -151,13 +151,13 @@ if(!!ij.new){item=new ItemStack(ij.new[0], ij.new[1])}*/
         enchantable: (property: [string, object]) => Object.entries(property[1]).forEach((vc) => itemEnchantableComponentEnum[enchantableComponentTypeEnum[vc[0] as enchantableComponentTypeEnum]](vc)
         ),
         durability: (property: [string, any]) => typeof property[1] == "number"
-            ? (item.getComponent("durability").damage =
-                item.getComponent("durability").maxDurability -
+            ? (item.getComponent("durability")!.damage =
+                item.getComponent("durability")!.maxDurability -
                 property[1])
             : Object.entries(property[1]).forEach((v: [string, [string, number]]) => itemDurabilityComponentEnum[durabilityComponentTypeEnum[v[0] as durabilityComponentTypeEnum]](v[1])
             ),
         damage: (property: [string, any]) => typeof property[1] == "number"
-            ? (item.getComponent("durability").damage = property[1])
+            ? (item.getComponent("durability")!.damage = property[1])
             : Object.entries(property[1]).forEach((v: [string, number]) => itemDurabilityComponentEnum[durabilityComponentTypeEnum[v[0] as durabilityComponentTypeEnum]](v)
             ),
         food: (property?: [string, any]) => { },
@@ -165,41 +165,41 @@ if(!!ij.new){item=new ItemStack(ij.new[0], ij.new[1])}*/
     };
     const itemEnchantableComponentEnum = {
         addEnchantment: (property: [string, any]) => property[1] instanceof Array
-            ? item.getComponent("enchantable").addEnchantments(
+            ? item.getComponent("enchantable")!.addEnchantments(
                 property[1].map((v) => ({
                     level: v.level,
-                    type: EnchantmentTypes.get(v.type),
+                    type: EnchantmentTypes.get(v.type)!,
                 }))
             )
-            : item.getComponent("enchantable").addEnchantment({
+            : item.getComponent("enchantable")!.addEnchantment({
                 level: property[1].level,
-                type: EnchantmentTypes.get(property[1].type),
+                type: EnchantmentTypes.get(property[1].type)!,
             }),
-        addEnchantments: (property: [string, any]) => item.getComponent("enchantable").addEnchantments(
+        addEnchantments: (property: [string, any]) => item.getComponent("enchantable")!.addEnchantments(
             property[1].map((v: { level: number; type: string; }) => ({
                 level: v.level,
                 type: EnchantmentTypes.get(v.type),
             }))
         ),
         removeEnchantment: (property: [string, any]) => property[1] instanceof Array
-            ? property[1].forEach((v) => item.getComponent("enchantable").removeEnchantment(v)
+            ? property[1].forEach((v) => item.getComponent("enchantable")!.removeEnchantment(v)
             )
             : item
-                .getComponent("enchantable")
+                .getComponent("enchantable")!
                 .removeEnchantment(property[1]),
-        removeAllEnchantments: (property: [string, any]) => item.getComponent("enchantable").removeAllEnchantments(),
+        removeAllEnchantments: (property: [string, any]) => item.getComponent("enchantable")!.removeAllEnchantments(),
     };
     const itemDurabilityComponentEnum = {
-        durability: (property: [string, number]) => (item.getComponent("durability").damage =
-            item.getComponent("durability").maxDurability - property[1]),
-        damage: (property: [string, number]) => (item.getComponent("durability").damage = property[1]),
+        durability: (property: [string, number]) => (item.getComponent("durability")!.damage =
+            item.getComponent("durability")!.maxDurability - property[1]),
+        damage: (property: [string, number]) => (item.getComponent("durability")!.damage = property[1]),
         repair: (property: [string, number]) => typeof property[1] == "number"
-            ? (item.getComponent("durability").damage = Math.max(
+            ? (item.getComponent("durability")!.damage = Math.max(
                 0,
-                item.getComponent("durability").damage - property[1]
+                item.getComponent("durability")!.damage - property[1]
             ))
-            : (item.getComponent("durability").damage = 0),
-        setDurabilityToMax: (property: [string, any]) => (item.getComponent("durability").damage = 0),
+            : (item.getComponent("durability")!.damage = 0),
+        setDurabilityToMax: (property: [string, any]) => (item.getComponent("durability")!.damage = 0),
     };
     Object.entries(ij)
         .filter(

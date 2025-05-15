@@ -379,7 +379,7 @@ namespace exports {
          * The release stage of the command.
          */
         get releaseStage(): string {
-            return tryget(() => SemVerString.fromString(String(this.command_version)).pre_release_stage);
+            return tryget(() => SemVerString.fromString(String(this.command_version)).pre_release_stage)!;
         }
         /**
          * The regular expression to determine if a string is this command.

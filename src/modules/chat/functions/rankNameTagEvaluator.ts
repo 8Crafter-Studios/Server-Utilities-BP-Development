@@ -51,7 +51,7 @@ export function rankNameTagEvaluator_prePlayers(
     let rank: string = "";
     switch (config.chatRanks.rankEvaluatorMode_nameTags) {
         case "default":
-            rank = ranksListWithDefault
+            rank = ranksListWithDefault!
                 .map(
                     (rank) =>
                         (options?.playerPersonalSettings?.rankDisplayPrefix ?? config.chatRanks.rankDisplayPrefix) +
@@ -61,10 +61,10 @@ export function rankNameTagEvaluator_prePlayers(
                 .join(options?.playerPersonalSettings?.rankDisplaySeparator ?? config.chatRanks.rankDisplaySeparator);
             break;
         case "suffix_and_prefix_only_once":
-            ranksListWithDefault.length > 0 &&
+            ranksListWithDefault!.length > 0 &&
                 (rank =
                     (options?.playerPersonalSettings?.rankDisplayPrefix ?? config.chatRanks.rankDisplayPrefix) +
-                    ranksListWithDefault.join(options?.playerPersonalSettings?.rankDisplaySeparator ?? config.chatRanks.rankDisplaySeparator) +
+                    ranksListWithDefault!.join(options?.playerPersonalSettings?.rankDisplaySeparator ?? config.chatRanks.rankDisplaySeparator) +
                     (options?.playerPersonalSettings?.rankDisplaySuffix ?? config.chatRanks.rankDisplaySuffix));
             break;
     }
@@ -99,22 +99,22 @@ export function rankNameTagEvaluator_players(
         options?.player ??
         ({
             activeSlot: undefined,
-            addEffect: () => undefined,
-            addExperience: () => undefined,
-            addLevels: () => undefined,
-            addTag: () => undefined,
-            applyDamage: () => undefined,
-            applyImpulse: () => undefined,
-            applyKnockback: () => undefined,
+            addEffect: () => undefined as any,
+            addExperience: () => undefined as any,
+            addLevels: () => undefined as any,
+            addTag: () => undefined as any,
+            applyDamage: () => undefined as any,
+            applyImpulse: () => undefined as any,
+            applyKnockback: () => undefined as any,
             camera: {
-                clear: () => undefined,
-                fade: () => undefined,
-                setCamera: () => undefined,
+                clear: () => undefined as any,
+                fade: () => undefined as any,
+                setCamera: () => undefined as any,
                 isValid: false,
             },
             chunkIndex: undefined,
-            clearDynamicProperties: () => undefined,
-            clearVelocity: () => undefined,
+            clearDynamicProperties: () => undefined as any,
+            clearVelocity: () => undefined as any,
             clientSystemInfo: {
                 maxRenderDistance: -1,
                 memoryTier: 0,
@@ -122,7 +122,7 @@ export function rankNameTagEvaluator_players(
             },
             cursorInventory: undefined,
             dimension: overworld,
-            deleteStringFromDynamicProperties: () => undefined,
+            deleteStringFromDynamicProperties: () => undefined as any,
             dimensionLocation: {
                 x: 0,
                 y: 0,
@@ -134,29 +134,29 @@ export function rankNameTagEvaluator_players(
                 y: 0,
                 z: 0,
             },
-            eatItem: () => undefined,
+            eatItem: () => undefined as any,
             equippable: {
                 get entity() {
                     return player;
                 },
-                getEquipment: () => undefined,
-                getEquipmentSlot: () => undefined,
+                getEquipment: () => undefined as any,
+                getEquipmentSlot: () => undefined as any,
                 isValid: false,
-                setEquipment: () => undefined,
+                setEquipment: () => undefined as any,
                 typeId: "minecraft:equippable",
             },
-            extinguishFire: () => undefined,
+            extinguishFire: () => undefined as any,
             getAimAssist: () => ({
-                set: () => undefined,
+                set: () => undefined as any,
                 settings: undefined,
             }),
-            getBlockFromViewDirection: () => undefined,
+            getBlockFromViewDirection: () => undefined as any,
             getComponent: () => undefined as undefined,
-            getDynamicProperty: () => undefined,
+            getDynamicProperty: () => undefined as any,
             getComponents: () => [],
             getDynamicPropertyIds: () => [],
             getDynamicPropertyTotalByteCount: () => 0,
-            getEffect: () => undefined,
+            getEffect: () => undefined as any,
             getEffects: () => [],
             getEntitiesFromViewDirection: () => [],
             getGameMode: () => GameMode.survival,
@@ -166,13 +166,13 @@ export function rankNameTagEvaluator_players(
                 z: 0,
             }),
             getItemCooldown: () => 0,
-            getProperty: () => undefined,
+            getProperty: () => undefined as any,
             getRotation: () => ({
                 x: 0,
                 y: 0,
             }),
             getSpawnPoint: undefined,
-            getStringFromDynamicProperties: () => undefined,
+            getStringFromDynamicProperties: () => undefined as any,
             getTags: () => options?.tags ?? [],
             getVelocity: () => ({
                 x: 0,
@@ -202,7 +202,7 @@ export function rankNameTagEvaluator_players(
                 cameraEnabled: true,
                 isPermissionCategoryEnabled: () => true,
                 movementEnabled: true,
-                setPermissionCategory: () => undefined,
+                setPermissionCategory: () => undefined as any,
             },
             inventory: {
                 additionalSlotsPerStrength: 0,
@@ -217,17 +217,17 @@ export function rankNameTagEvaluator_players(
                 restrictToOwner: false,
                 typeId: "minecraft:inventory",
                 container: {
-                    addItem: () => undefined,
-                    clearAll: () => undefined,
+                    addItem: () => undefined as any,
+                    clearAll: () => undefined as any,
                     emptySlotsCount: 0,
-                    getItem: () => undefined,
-                    getSlot: () => undefined,
+                    getItem: () => undefined as any,
+                    getSlot: () => undefined as any,
                     isValid: false,
-                    moveItem: () => undefined,
-                    setItem: () => undefined,
+                    moveItem: () => undefined as any,
+                    setItem: () => undefined as any,
                     size: 0,
-                    swapItems: () => undefined,
-                    transferItem: () => undefined,
+                    swapItems: () => undefined as any,
+                    transferItem: () => undefined as any,
                     contains: () => false,
                     find: () => -1,
                     firstEmptySlot: () => -1,
@@ -264,48 +264,48 @@ export function rankNameTagEvaluator_players(
                 z: 0,
             },
             locationstring: "0 0 0",
-            lookAt: () => undefined,
+            lookAt: () => undefined as any,
             matches: () => false,
             moneySystem: new MoneySystem("0"),
             name: displayName.sourceType === "name" ? displayName.value : "Placeholder Player",
             nameTag: displayName.sourceType === "nameTag" ? displayName.value : "Placeholder Player",
             onScreenDisplay: undefined,
-            playAnimation: () => undefined,
+            playAnimation: () => undefined as any,
             playerNotifications: undefined,
             playerPermissions: undefined,
-            playMusic: () => undefined,
-            playSound: () => undefined,
-            postClientMessage: () => undefined,
-            queueMusic: () => undefined,
-            remove: () => undefined,
+            playMusic: () => undefined as any,
+            playSound: () => undefined as any,
+            postClientMessage: () => undefined as any,
+            queueMusic: () => undefined as any,
+            remove: () => undefined as any,
             removeEffect: () => false,
             removeTag: () => false,
-            resetLevel: () => undefined,
-            resetProperty: () => undefined,
+            resetLevel: () => undefined as any,
+            resetProperty: () => undefined as any,
             rotationstring: "0 0",
             rotx: 0,
             roty: 0,
-            runCommand: () => undefined,
-            saveStringToDynamicProperties: () => undefined,
+            runCommand: () => undefined as any,
+            saveStringToDynamicProperties: () => undefined as any,
             scoreboardIdentity: undefined,
             selectedSlotIndex: 0,
-            sendMessage: () => undefined,
-            setDynamicProperties: () => undefined,
-            setDynamicProperty: () => undefined,
-            setGameMode: () => undefined,
-            setOnFire: () => undefined,
-            setOp: () => undefined,
-            setProperty: () => undefined,
-            setRotation: () => undefined,
-            setSpawnPoint: () => undefined,
-            spawnParticle: () => undefined,
-            startItemCooldown: () => undefined,
-            stopMusic: () => undefined,
+            sendMessage: () => undefined as any,
+            setDynamicProperties: () => undefined as any,
+            setDynamicProperty: () => undefined as any,
+            setGameMode: () => undefined as any,
+            setOnFire: () => undefined as any,
+            setOp: () => undefined as any,
+            setProperty: () => undefined as any,
+            setRotation: () => undefined as any,
+            setSpawnPoint: () => undefined as any,
+            spawnParticle: () => undefined as any,
+            startItemCooldown: () => undefined as any,
+            stopMusic: () => undefined as any,
             target: undefined,
-            teleport: () => undefined,
+            teleport: () => undefined as any,
             timeZone: 0,
             totalXpNeededForNextLevel: 0,
-            triggerEvent: () => undefined,
+            triggerEvent: () => undefined as any,
             tryTeleport: () => false,
             typeId: "minecraft:player",
             worldEditSelection: undefined,
@@ -336,11 +336,11 @@ export function rankNameTagEvaluator_players(
 
 export function rankNameTagEvaluator_getChatMessageFormatFromPlayerTags(player: Player | { hasTag: (tag: string) => boolean; getTags: () => string[] }): {
     nameFormatting: string;
-    nameGradientMode: string;
+    nameGradientMode?: string;
     showHealth: boolean;
 } {
     let nameFormatting: string = "";
-    let nameGradientMode: string = undefined;
+    let nameGradientMode: string | undefined = undefined;
     let showHealth: boolean = false;
     if (player.hasTag("nameFormatting:r")) {
         nameFormatting += "§r";
@@ -614,8 +614,8 @@ export function rankNameTagEvaluator_generatePartialPlayerTypeForRankNameTagEval
 
 export function rankNameTagEvaluator_getPlayerPersonalSettings(
     player: Player
-): Parameters<typeof rankNameTagEvaluator>[1]["playerPersonalSettings"] &
-    Parameters<typeof rankNameTagEvaluator_getDisplayNameFromPlayer>[1]["playerPersonalSettings"] {
+): NonNullable<Parameters<typeof rankNameTagEvaluator>[1]>["playerPersonalSettings"] &
+    NonNullable<Parameters<typeof rankNameTagEvaluator_getDisplayNameFromPlayer>[1]>["playerPersonalSettings"] {
     return {
         chatRankPrefix: player.getDynamicProperty("andexdbPersonalSettings:chatRankPrefix") as string,
         chatSudoPrefix: player.getDynamicProperty("andexdbPersonalSettings:chatSudoPrefix") as string,

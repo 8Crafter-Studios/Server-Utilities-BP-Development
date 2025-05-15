@@ -800,7 +800,7 @@ export class ServerShop {
      * @param sourceEntitya
      */
     static async openPublicShopsSelector(sourceEntitya: Entity | executeCommandPlayerW | Player, showBackButton = false): Promise<0 | 1> {
-        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
+        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : (sourceEntitya as Player);
         assertIsDefined(sourceEntity);
         let form = new ActionFormData();
         form.title(customFormUICodes.action.titles.formStyles.medium + "Public Server Shops");
@@ -983,7 +983,7 @@ export class ServerShopManager {
      * 6. Catches any errors that occur during the process, logs them, and shows an error message to the player.
      */
     static async serverShopSystemSettings(sourceEntitya: Entity | executeCommandPlayerW | Player): Promise<0 | 1> {
-        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
+        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : (sourceEntitya as Player);
         assertIsDefined(sourceEntity);
         if (securityVariables.ultraSecurityModeEnabled) {
             if (securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.accessExtraFeaturesSettings") == false) {
@@ -1063,7 +1063,7 @@ export class ServerShopManager {
      * @param sourceEntitya
      */
     static async serverShopSystemSettings_main(sourceEntitya: Entity | executeCommandPlayerW | Player): Promise<0 | 1> {
-        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
+        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : (sourceEntitya as Player);
         assertIsDefined(sourceEntity);
         let form = new ModalFormData();
         form.title(`Server Shop System Settings`);
@@ -1092,7 +1092,7 @@ export class ServerShopManager {
      * @param sourceEntitya
      */
     static async manageServerShops(sourceEntitya: Entity | executeCommandPlayerW | Player): Promise<0 | 1> {
-        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
+        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : (sourceEntitya as Player);
         assertIsDefined(sourceEntity);
         let form = new ActionFormData();
         form.title(customFormUICodes.action.titles.formStyles.medium + "Manage Server Shops");
@@ -1270,7 +1270,7 @@ Is Buy Shop: ${shop.buyShop ? "§aTrue" : "§cFalse"}
                 // This will stop the code when the player closes the form
                 if (r.canceled) return 1;
 
-                let response = r.selection;
+                let response = r.selection!;
                 switch (response) {
                     case 0:
                         if (shop.buyShop && shop.sellShop) {
@@ -1646,7 +1646,7 @@ Is Buy Shop: ${shop.buyShop ? "§aTrue" : "§cFalse"}
             .then(async (r) => {
                 if (r.canceled) return 1;
 
-                let response = r.selection;
+                let response = r.selection!;
                 switch (response) {
                     case shopData.length:
                         const type: "giveCommand" | "newItemStack" | "pre-made" | "pre-made_manual" | "sellable" =
@@ -2629,7 +2629,7 @@ Texture: ${page.texture}`
         }
         if (r.canceled) return 1;
 
-        let response = r.selection;
+        let response = r.selection!;
         switch (response) {
             case shopData.length:
                 const type: "giveCommand" | "newItemStack" | "pre-made" | "pre-made_manual" | "sellable" =
@@ -3388,7 +3388,7 @@ Texture: ${page.texture}`
             // This will stop the code when the player closes the form
             if (r.canceled) return 1;
 
-            let response = r.selection;
+            let response = r.selection!;
             switch (cullUndefined(["contents", "move", "edit", "delete", "applyTexturePreset", "back", "close"] as const)[r.selection!]) {
                 case "contents":
                     if ((await ServerShopManager.manageServerShopPage_contents(sourceEntity, shop, path)) == 1) {

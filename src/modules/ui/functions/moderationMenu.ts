@@ -54,7 +54,7 @@ export async function moderationMenu(sourceEntity: loosePlayerType): Promise<-2 
             const r = await form.forceShow(player);
             if (r.canceled) return 1 as const;
 
-            let response = r.selection;
+            let response = r.selection!;
             switch ((["quickActions", "manageBans", "manageMutes", "antiSpam", "anticheat", "bannedItems", "back", "close"] as const)[response]) {
                 case "quickActions":
                     if ((await moderationMenu_quickActions(player)) == 1) {

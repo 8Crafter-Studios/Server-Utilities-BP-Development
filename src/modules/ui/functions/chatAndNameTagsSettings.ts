@@ -55,7 +55,7 @@ export async function chatAndNameTagsSettings(sourceEntity: loosePlayerType): Pr
             const r = await form.forceShow(player);
             if (r.canceled) return 1;
 
-            let response = r.selection;
+            let response = r.selection!;
             switch ((["chatSettings", "nameTagsSettings", "back", "close", "reset"] as const)[response]) {
                 case "chatSettings":
                     if ((await chatRanksSettings(player)) == 1) {

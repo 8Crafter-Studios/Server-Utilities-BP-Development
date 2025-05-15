@@ -37,18 +37,18 @@ export function fillBlocksHS(
     if (!!!options?.matchingBlock) {
         if (replacemode) {
             generateMinecraftSphereB(center, radius, dimension, (v) => {
-                if (!!v.dimension.getBlock(v).getComponent("inventory")) {
+                if (!!v.dimension.getBlock(v)?.getComponent("inventory")) {
                     clearContainer(
-                        v.dimension.getBlock(v).getComponent("inventory")
+                        v.dimension.getBlock(v)?.getComponent("inventory")
                             .container
                     );
                 }
-                v.dimension.getBlock(v).setPermutation(blockb);
+                v.dimension.getBlock(v)?.setPermutation(blockb);
                 counter++;
             });
         } else {
             generateMinecraftSphereB(center, radius, dimension, (v) => {
-                v.dimension.getBlock(v).setPermutation(blockb);
+                v.dimension.getBlock(v)?.setPermutation(blockb);
                 counter++;
             });
         }
@@ -61,7 +61,7 @@ export function fillBlocksHS(
             generateMinecraftSphereB(center, radius, dimension, (v) => {
                 if (!!options?.matchingBlockStates
                     ? BlockTypes.get(options?.matchingBlock) ==
-                    v.dimension.getBlock(v).type &&
+                    v.dimension.getBlock(v)?.type &&
                     matchingblockb.getAllStates() ==
                     Object.fromEntries(
                         Object.entries(
@@ -78,22 +78,22 @@ export function fillBlocksHS(
                         )
                     )
                     : BlockTypes.get(options?.matchingBlock) ==
-                    v.dimension.getBlock(v).type) {
-                    v.dimension.getBlock(v).setPermutation(blockb);
+                    v.dimension.getBlock(v)?.type) {
+                    v.dimension.getBlock(v)?.setPermutation(blockb);
                     counter++;
                 }
             });
         } else {
             generateMinecraftSphereB(center, radius, dimension, (v) => {
-                if (!!v.dimension.getBlock(v).getComponent("inventory")) {
+                if (!!v.dimension.getBlock(v)?.getComponent("inventory")) {
                     clearContainer(
-                        v.dimension.getBlock(v).getComponent("inventory")
+                        v.dimension.getBlock(v)?.getComponent("inventory")
                             .container
                     );
                 }
                 if (!!options?.matchingBlockStates
                     ? BlockTypes.get(options?.matchingBlock) ==
-                    v.dimension.getBlock(v).type &&
+                    v.dimension.getBlock(v)?.type &&
                     matchingblockb.getAllStates() ==
                     Object.fromEntries(
                         Object.entries(
@@ -110,8 +110,8 @@ export function fillBlocksHS(
                         )
                     )
                     : BlockTypes.get(options?.matchingBlock) ==
-                    v.dimension.getBlock(v).type) {
-                    v.dimension.getBlock(v).setPermutation(blockb);
+                    v.dimension.getBlock(v)?.type) {
+                    v.dimension.getBlock(v)?.setPermutation(blockb);
                     counter++;
                 }
             });

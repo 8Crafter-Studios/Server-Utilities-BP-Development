@@ -41,7 +41,7 @@ export async function nameTagsSettings(sourceEntity: loosePlayerType): Promise<0
             const r = await form.forceShow(player);
             if (r.canceled) return 1;
 
-            let response = r.selection;
+            let response = r.selection!;
             switch ((["toggle"/* , "nameTagStyle" */, "generalNameTagsSettings", "previewNameTag", "back", "close"] as const)[response]) {
                 case "toggle":
                     config.chatRanks.showRanksOnPlayerNameTags = !config.chatRanks.showRanksOnPlayerNameTags;

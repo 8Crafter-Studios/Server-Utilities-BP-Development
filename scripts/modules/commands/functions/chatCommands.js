@@ -656,13 +656,13 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventorye.container.swapItems(i,
                                             "§r§f\nslot: " +
                                                 i +
                                                 ", item: " +
-                                                contents[i].typeId +
+                                                contents[i]?.typeId +
                                                 ", amount: " +
-                                                contents[i].amount +
+                                                contents[i]?.amount +
                                                 ", nameTag: " +
-                                                contents[i].nameTag +
+                                                contents[i]?.nameTag +
                                                 "§r§f, lore: " +
-                                                JSONStringify(contents[i].getLore() ?? [], true) +
+                                                JSONStringify(contents[i]?.getLore() ?? [], true) +
                                                 "§r§f, enchantments: " +
                                                 (!!contents[i]?.getComponent("enchantable")
                                                     ? JSON.stringify(contents[i]

@@ -54,7 +54,7 @@ export async function uiSettings_menuConfigurations_mainMenu(sourceEntity: loose
             const r = await forceShow(form, player as Player);
             if (r.canceled) return 1;
 
-            let response = r.selection;
+            let response = r.selection!;
             switch ((["mainSettings" /* , "editButtons" */, "back", "close"] as const)[response]) {
                 case "mainSettings":
                     if ((await uiSettings_menuConfigurations_mainMenu_mainSettings(player)) == 1) {

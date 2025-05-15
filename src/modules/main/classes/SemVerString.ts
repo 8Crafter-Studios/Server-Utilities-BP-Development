@@ -6,9 +6,9 @@ export class SemVerString {
     major: number;
     minor: number;
     patch: number;
-    private pre_release_stage_internal: string;
-    private pre_release_version_internal: string;
-    build: string;
+    private pre_release_stage_internal?: string | undefined;
+    private pre_release_version_internal?: string | undefined;
+    build?: string | undefined;
     constructor(
         major: number,
         minor: number,
@@ -50,18 +50,18 @@ export class SemVerString {
         this.pre_release_stage_internal =
             pre_release == ""
                 ? undefined
-                : pre_release.match(SemVerString.pre_release_regex).groups
-                      .pre_release_phase;
+                : pre_release?.match(SemVerString.pre_release_regex)?.groups
+                      ?.pre_release_phase;
         this.pre_release_version_internal =
             pre_release == ""
                 ? undefined
-                : pre_release.match(SemVerString.pre_release_regex).groups
-                      .pre_release_version;
+                : pre_release?.match(SemVerString.pre_release_regex)?.groups
+                      ?.pre_release_version;
         this.build = build == "" ? undefined : build;
     }
     get pre_release() {
         return (
-            this.pre_release_stage_internal + this.pre_release_version_internal
+            (this.pre_release_stage_internal ?? "") + (this.pre_release_version_internal ?? "")
         );
     }
     set pre_release(pre_release: string) {
@@ -84,16 +84,16 @@ export class SemVerString {
         this.pre_release_stage_internal =
             pre_release == ""
                 ? undefined
-                : pre_release.match(SemVerString.pre_release_regex).groups
-                      .pre_release_phase;
+                : pre_release?.match(SemVerString.pre_release_regex)?.groups
+                      ?.pre_release_phase;
         this.pre_release_version_internal =
             pre_release == ""
                 ? undefined
-                : pre_release.match(SemVerString.pre_release_regex).groups
-                      .pre_release_version;
+                : pre_release?.match(SemVerString.pre_release_regex)?.groups
+                      ?.pre_release_version;
     }
     get pre_release_stage() {
-        return this.pre_release_stage_internal;
+        return this.pre_release_stage_internal ?? "";
     }
     set pre_release_stage(pre_release_stage: string) {
         if (!!!pre_release_stage) {
@@ -116,7 +116,7 @@ export class SemVerString {
             pre_release_stage == "" ? undefined : pre_release_stage;
     }
     get pre_release_version() {
-        return this.pre_release_version_internal;
+        return this.pre_release_version_internal ?? "";
     }
     set pre_release_version(pre_release_version: string) {
         if (!!!pre_release_version) {
@@ -193,13 +193,13 @@ export class SemVerString {
         );
     }
     static fromString(string: string) {
-        const json = string.match(SemVerString.semver_regex).groups;
+        const json = string.match(SemVerString.semver_regex)?.groups;
         return new SemVerString(
-            Number(json.major),
-            Number(json.minor),
-            Number(json.patch),
-            json.pre_release_stage + json.pre_release_version,
-            json.build
+            Number(json?.major),
+            Number(json?.minor),
+            Number(json?.patch),
+            (json?.pre_release_stage ?? "") + (json?.pre_release_version ?? "") === "" ? undefined : (json?.pre_release_stage ?? "") + (json?.pre_release_version ?? ""),
+            json?.build
         );
     }
 }

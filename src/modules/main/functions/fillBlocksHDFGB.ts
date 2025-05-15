@@ -39,12 +39,12 @@ export async function fillBlocksHDFGB(
                         "minecraft:flowing_water",
                         "minecraft:lava",
                         "minecraft:flowing_lava",
-                    ].includes(v.dimension.getBlock(v).typeId)) {
-                        v.dimension.getBlock(v).setType("minecraft:air");
+                    ].includes(v.dimension.getBlock(v)?.typeId)) {
+                        v.dimension.getBlock(v)?.setType("minecraft:air");
                         counter++;
-                    } else if (v.dimension.getBlock(v).canContainLiquid(modules.mcServer.LiquidType.Water) == true &&
-                        v.dimension.getBlock(v).isWaterlogged) {
-                        v.dimension.getBlock(v).setWaterlogged(false);
+                    } else if (v.dimension.getBlock(v)?.canContainLiquid(modules.mcServer.LiquidType.Water) == true &&
+                        v.dimension.getBlock(v)?.isWaterlogged) {
+                        v.dimension.getBlock(v)?.setWaterlogged(false);
                         counter++;
                     }
                 } catch (e) {

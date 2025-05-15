@@ -67,7 +67,7 @@ export function generateNBTFile(
                                                 z: b.pos[2],
                                             }
                                         )
-                                    )
+                                    )!
                                     .permutation.getAllStates(),
                                 { [p[0]]: p[1] }
                             )

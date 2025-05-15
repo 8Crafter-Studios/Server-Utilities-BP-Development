@@ -598,7 +598,7 @@ ${item.itemDetails.enchantments instanceof Array
                         item.remainingStock -= r.formValues[0];
                         itemStack.amount = r.formValues[0];
                         let b = (player.getComponent("inventory")?.container).addItem(itemStack);
-                        if (!!b) {
+                        if (b) {
                             catchtry(() => player.dimension.spawnItem(b, player.location));
                         }
                         MoneySystem.get(player.id).removeMoney(item.price * r.formValues[0]);
@@ -944,7 +944,7 @@ ${item.itemDetails.enchantments instanceof Array
                     }
                     finally {
                         try {
-                            otherEntities.forEach((v, i) => tryrun(() => v.teleport(locs[i], { keepVelocity: false })));
+                            otherEntities?.forEach((v, i) => tryrun(() => v.teleport(locs[i], { keepVelocity: false })));
                         }
                         catch { }
                         try {
@@ -1043,7 +1043,7 @@ ${item.itemDetails.enchantments instanceof Array
         }
         finally {
             try {
-                otherEntities.forEach((v, i) => tryrun(() => v.teleport(locs[i], { keepVelocity: false })));
+                otherEntities?.forEach((v, i) => tryrun(() => v.teleport(locs[i], { keepVelocity: false })));
             }
             catch { }
             try {

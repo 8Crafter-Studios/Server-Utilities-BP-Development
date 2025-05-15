@@ -160,17 +160,24 @@ export async function scriptSettings(
 
 
             let [
+                generalHeader,
                 // General
                 defaultMinMSBetweenTickWaits,
                 undoClipboardMode,
+                generalDivider,
+                refreshRatesHeader,
                 // Refresh Rates
                 playerDataRefreshRate,
                 // protectedAreasRefreshRate,
                 bannedPlayersRefreshRate,
+                refreshRatesDivider,
+                protectedAreasZoneActionsHeader,
                 // Protected Areas Zone Actions
                 protectedAreasZoneActionsEnabled,
                 protectedAreasZoneActionsInterval,
                 protectedAreasZoneRefreshInterval,
+                protectedAreasZoneActionsDivider,
+                integrationsWithOtherAddOnsHeader,
                 // Integrations With Other Add-Ons
                 showEntityScaleNotFoundConsoleLog,
                 showEntityScaleFoundConsoleLog,
@@ -180,6 +187,8 @@ export async function scriptSettings(
                 showBlueModsAnticheatFoundConsoleLog,
                 showBlueModsAnticheatNotFoundChatLog,
                 showBlueModsAnticheatFoundChatLog,
+                integrationsWithOtherAddOnsDivider,
+                debuggingHeader,
                 // Debugging
                 debugMode,
                 artificialLagMS,
@@ -187,17 +196,24 @@ export async function scriptSettings(
                 hideWatchdogTerminationCrashEnabledWarningsOnStartup,
                 spreadPlayerInventoryDataSavesOverMultipleTicks,
             ] = t.formValues as [
+                generalHeader: undefined,
                 // General
                 defaultMinMSBetweenTickWaits: string,
                 undoClipboardMode: 0 | 1,
+                generalDivider: undefined,
+                refreshRatesHeader: undefined,
                 // Refresh Rates
                 playerDataRefreshRate: string,
                 // protectedAreasRefreshRate: string,
                 bannedPlayersRefreshRate: string,
+                refreshRatesDivider: undefined,
+                protectedAreasZoneActionsHeader: undefined,
                 // Protected Areas Zone Actions
                 protectedAreasZoneActionsEnabled: boolean,
                 protectedAreasZoneActionsInterval: string,
                 protectedAreasZoneRefreshInterval: string,
+                protectedAreasZoneActionsDivider: undefined,
+                integrationsWithOtherAddOnsHeader: undefined,
                 // Integrations With Other Add-Ons
                 showEntityScaleNotFoundConsoleLog: boolean,
                 showEntityScaleFoundConsoleLog: boolean,
@@ -207,6 +223,8 @@ export async function scriptSettings(
                 showBlueModsAnticheatFoundConsoleLog: boolean,
                 showBlueModsAnticheatNotFoundChatLog: boolean,
                 showBlueModsAnticheatFoundChatLog: boolean,
+                integrationsWithOtherAddOnsDivider: undefined,
+                debuggingHeader: undefined,
                 // Debugging
                 debugMode: boolean,
                 artificialLagMS: string,
@@ -253,7 +271,7 @@ export async function scriptSettings(
             if (config.system.debugMode &&
                 !(config.system.artificialLagMS == artificialLagMS.toNumber())) {
                 config.system.artificialLagMS = Math.min(
-                    artificialLagMS.toNumber(),
+                    artificialLagMS.toNumber() ?? 0,
                     10000
                 );
                 config.system.allowWatchdogTerminationCrash =

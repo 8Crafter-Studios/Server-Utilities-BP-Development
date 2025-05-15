@@ -41,14 +41,14 @@ export async function fillBlocksHHOG(
                         try {
                             if (!!v.dimension
                                 .getBlock(v)
-                                .getComponent("inventory")) {
+                                ?.getComponent("inventory")) {
                                 clearContainer(
                                     v.dimension
                                         .getBlock(v)
-                                        .getComponent("inventory").container
+                                        ?.getComponent("inventory").container
                                 );
                             }
-                            v.dimension.getBlock(v).setPermutation(blockb);
+                            v.dimension.getBlock(v)?.setPermutation(blockb);
                             counter++;
                         } catch (e) {
                             if (e instanceof TypeError ||
@@ -75,7 +75,7 @@ export async function fillBlocksHHOG(
                     dimension,
                     (v) => {
                         try {
-                            v.dimension.getBlock(v).setPermutation(blockb);
+                            v.dimension.getBlock(v)?.setPermutation(blockb);
                             counter++;
                         } catch (e) {
                             if (e instanceof TypeError ||
@@ -109,7 +109,7 @@ export async function fillBlocksHHOG(
                     (v) => {
                         if (!!options?.matchingBlockStates
                             ? BlockTypes.get(options?.matchingBlock) ==
-                            v.dimension.getBlock(v).type &&
+                            v.dimension.getBlock(v)?.type &&
                             matchingblockb.getAllStates() ==
                             Object.fromEntries(
                                 Object.entries(
@@ -126,9 +126,9 @@ export async function fillBlocksHHOG(
                                 )
                             )
                             : BlockTypes.get(options?.matchingBlock) ==
-                            v.dimension.getBlock(v).type) {
+                            v.dimension.getBlock(v)?.type) {
                             try {
-                                v.dimension.getBlock(v).setPermutation(blockb);
+                                v.dimension.getBlock(v)?.setPermutation(blockb);
                                 counter++;
                             } catch (e) {
                                 if (e instanceof TypeError ||
@@ -154,16 +154,16 @@ export async function fillBlocksHHOG(
                     id,
                     dimension,
                     (v) => {
-                        if (!!v.dimension.getBlock(v).getComponent("inventory")) {
+                        if (!!v.dimension.getBlock(v)?.getComponent("inventory")) {
                             clearContainer(
                                 v.dimension
                                     .getBlock(v)
-                                    .getComponent("inventory").container
+                                    ?.getComponent("inventory").container
                             );
                         }
                         if (!!options?.matchingBlockStates
                             ? BlockTypes.get(options?.matchingBlock) ==
-                            v.dimension.getBlock(v).type &&
+                            v.dimension.getBlock(v)?.type &&
                             matchingblockb.getAllStates() ==
                             Object.fromEntries(
                                 Object.entries(
@@ -180,9 +180,9 @@ export async function fillBlocksHHOG(
                                 )
                             )
                             : BlockTypes.get(options?.matchingBlock) ==
-                            v.dimension.getBlock(v).type) {
+                            v.dimension.getBlock(v)?.type) {
                             try {
-                                v.dimension.getBlock(v).setPermutation(blockb);
+                                v.dimension.getBlock(v)?.setPermutation(blockb);
                                 counter++;
                             } catch (e) {
                                 if (e instanceof TypeError ||

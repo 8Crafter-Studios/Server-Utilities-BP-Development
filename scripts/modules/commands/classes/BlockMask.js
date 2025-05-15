@@ -474,7 +474,10 @@ export class BlockMask {
                     case "false":
                         return false;
                     default:
-                        if (block.typeId == (tryget(() => BlockTypes.get(b.type)?.id) ?? "invalid")) {
+                        if (b.type.startsWith("tag:")) {
+                            return block.hasTag(b.type.slice(4));
+                        }
+                        else if (block.typeId == (tryget(() => BlockTypes.get(b.type)?.id) ?? "invalid")) {
                             if (b.states != undefined) {
                                 return BlockMask.testForStatesMatch(block.permutation.getAllStates(), b.states);
                             }

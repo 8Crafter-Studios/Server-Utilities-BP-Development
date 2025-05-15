@@ -14,7 +14,7 @@ export async function playerMenu_bounty(
     totalBounty: TotalBounty,
     targetPlayer?: savedPlayer
 ): Promise<0 | 1> {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : (sourceEntitya as Player);
     if (!(sourceEntity instanceof Player)) {
         throw new TypeError(
             "Invalid Player. Expected an instance of the Player class, or an instance of the executeCommandPlayerW class with a Player linked to it, but instead got " +
@@ -41,6 +41,7 @@ export async function playerMenu_bounty(
         }
     }
     const target = targetPlayer ?? totalBounty.getLinkedTargetSavedPlayer();
+    if (!target) throw new ReferenceError("[playerMenu_bounty] No target player found.");
     const menuConfig = config.ui.menus.playerMenu_leaderboards;
     // menuConfig.buttons.map(k=>[k, menuButtonIds.mainMenu.buttons[k]])
     let form = new ActionFormData();
@@ -77,6 +78,7 @@ export async function playerMenu_bounty(
                 case "close":
                     return 0;
                 default:
+                    throw new Error("Invalid selection: " + r.selection);
             }
         })
         .catch((e) => {

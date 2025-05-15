@@ -54,7 +54,7 @@ export async function uiSettings_menuConfigurations(sourceEntity: loosePlayerTyp
             const r = await form.forceShow(player);
             if (r.canceled) return 1;
 
-            let response = r.selection;
+            let response = r.selection!;
             switch ((["mainMenu", "playerMenu", "back", "close"] as const)[response]) {
                 case "mainMenu":
                     if ((await uiSettings_menuConfigurations_mainMenu(player)) === 1) {

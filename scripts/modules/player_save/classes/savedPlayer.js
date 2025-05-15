@@ -134,16 +134,16 @@ export class savedPlayer {
             this.onJoinActions.forEach((action) => {
                 switch (action.type) {
                     case "add_tag":
-                        getPlayer(this.id).addTag(action.tag);
+                        player.addTag(action.tag);
                         break;
                     case "remove_tag":
-                        getPlayer(this.id).removeTag(action.tag);
+                        player.removeTag(action.tag);
                         break;
                     case "add_tags":
-                        action.tags.forEach((tag) => getPlayer(this.id).addTag(tag));
+                        action.tags.forEach((tag) => player.addTag(tag));
                         break;
                     case "remove_tags":
-                        action.tags.forEach((tag) => getPlayer(this.id).removeTag(tag));
+                        action.tags.forEach((tag) => player.removeTag(tag));
                         break;
                     case "remove_item_in_slot":
                         const slot = getSlotFromParsedSlot(action.slot, {
@@ -152,11 +152,13 @@ export class savedPlayer {
                             cursor: player.cursorInventory,
                             selectedSlotIndex: player.selectedSlotIndex,
                         });
+                        if (!slot)
+                            throw new ReferenceError(`Slot not found when performing on join action "remove_item_in_slot" for player ${player.name}: ${action.slot}`);
                         if ("item" in slot) {
                             slot.clear();
                         }
                         else {
-                            slot.setItem(null);
+                            slot.setItem();
                         }
                         break;
                     case "clear_inventory":
@@ -336,7 +338,7 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
         }
         finally {
             try {
-                otherEntities.forEach((v, i) => tryrun(() => v.teleport(locs[i], { keepVelocity: false })));
+                otherEntities?.forEach((v, i) => tryrun(() => v.teleport(locs[i], { keepVelocity: false })));
             }
             catch { }
             try {
@@ -433,7 +435,7 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
         }
         finally {
             try {
-                otherEntities.forEach((v, i) => tryrun(() => v.teleport(locs[i], { keepVelocity: false })));
+                otherEntities?.forEach((v, i) => tryrun(() => v.teleport(locs[i], { keepVelocity: false })));
             }
             catch { }
             try {
@@ -645,7 +647,7 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
                 // ms for 1000 runs: 0
                 lastOnline: Date.now(),
                 // ms for 1000 runs: 0
-                firstJoined: origData.firstJoined ?? Date.now(),
+                firstJoined: origData?.firstJoined ?? Date.now(),
                 // ms for 1000 runs: 2-3
                 location: player.location,
                 // ms for 1000 runs: 1
@@ -697,7 +699,7 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
                 // ms for 1000 runs: 20
                 playerPermissions: player.playerPermissions.toJSON(),
                 // ms for 1000 runs: 0
-                onJoinActions: origData.onJoinActions ?? [],
+                onJoinActions: origData?.onJoinActions ?? [],
                 // ms for 1000 runs: 0
                 saveMode: "full",
             };
@@ -725,7 +727,7 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
                 // ms for 1000 runs: 0
                 lastOnline: Date.now(),
                 // ms for 1000 runs: 0
-                firstJoined: origData.firstJoined ?? Date.now(),
+                firstJoined: origData?.firstJoined ?? Date.now(),
                 // ms for 1000 runs: 2-3
                 location: player.location,
                 // ms for 1000 runs: 1
@@ -750,7 +752,7 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
                     touchOnlyAffectsHotbar: player.inputInfo.touchOnlyAffectsHotbar,
                 },
                 // ms for 1000 runs: 0
-                onJoinActions: origData.onJoinActions ?? [],
+                onJoinActions: origData?.onJoinActions ?? [],
                 // ms for 1000 runs: 0
                 saveMode: "medium",
             };
@@ -772,7 +774,7 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
                 // ms for 1000 runs: 0
                 lastOnline: Date.now(),
                 // ms for 1000 runs: 0
-                firstJoined: origData.firstJoined ?? Date.now(),
+                firstJoined: origData?.firstJoined ?? Date.now(),
                 // ms for 1000 runs: 2-3
                 location: player.location,
                 // ms for 1000 runs: 1
@@ -797,7 +799,7 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
                     touchOnlyAffectsHotbar: player.inputInfo.touchOnlyAffectsHotbar,
                 },
                 // ms for 1000 runs: 0
-                onJoinActions: origData.onJoinActions ?? [],
+                onJoinActions: origData?.onJoinActions ?? [],
                 // ms for 1000 runs: 0
                 saveMode: "lite",
             };
@@ -814,25 +816,25 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
                 };
                 for (let i = 0; i < player.getComponent("inventory").inventorySize; i++) {
                     if (player.getComponent("inventory").container.getItem(Number(i)) !== undefined) {
-                        savedPlayerData.items.inventory.push({
-                            id: player.getComponent("inventory").container.getItem(Number(i)).typeId,
+                        savedPlayerData.items.inventory?.push({
+                            id: player.getComponent("inventory").container.getItem(Number(i))?.typeId,
                             slot: i,
                             enchants: player.getComponent("inventory").container.getItem(Number(i))?.getComponent("enchantable")?.getEnchantments().length != 0
                                 ? player.getComponent("inventory").container.getItem(Number(i))?.getComponent("enchantable")?.getEnchantments()
                                 : undefined,
                             name: player.getComponent("inventory").container.getItem(Number(i))?.nameTag,
-                            count: player.getComponent("inventory").container.getItem(Number(i)).amount,
+                            count: player.getComponent("inventory").container.getItem(Number(i))?.amount ?? 0,
                         });
                     }
                     else {
-                        savedPlayerData.items.inventory.push({
+                        savedPlayerData.items.inventory?.push({
                             id: "",
                             slot: i,
                             count: 0,
                         });
                     }
                 }
-                savedPlayerData.items.inventory.push({
+                savedPlayerData.items.inventory?.push({
                     id: player.getComponent("equippable").getEquipment(EquipmentSlot.Head)?.typeId ?? "",
                     slot: "Head",
                     enchants: player.getComponent("equippable").getEquipment(EquipmentSlot.Head)?.getComponent("enchantable")?.getEnchantments().length != 0
@@ -841,7 +843,7 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
                     name: player.getComponent("equippable").getEquipment(EquipmentSlot.Head)?.nameTag,
                     count: player.getComponent("equippable").getEquipment(EquipmentSlot.Head)?.amount ?? 0,
                 });
-                savedPlayerData.items.inventory.push({
+                savedPlayerData.items.inventory?.push({
                     id: player.getComponent("equippable").getEquipment(EquipmentSlot.Chest)?.typeId ?? "",
                     slot: "Chest",
                     enchants: player.getComponent("equippable").getEquipment(EquipmentSlot.Chest)?.getComponent("enchantable")?.getEnchantments().length != 0
@@ -850,7 +852,7 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
                     name: player.getComponent("equippable").getEquipment(EquipmentSlot.Chest)?.nameTag,
                     count: player.getComponent("equippable").getEquipment(EquipmentSlot.Chest)?.amount ?? 0,
                 });
-                savedPlayerData.items.inventory.push({
+                savedPlayerData.items.inventory?.push({
                     id: player.getComponent("equippable").getEquipment(EquipmentSlot.Legs)?.typeId ?? "",
                     slot: "Legs",
                     enchants: player.getComponent("equippable").getEquipment(EquipmentSlot.Legs)?.getComponent("enchantable")?.getEnchantments().length != 0
@@ -859,7 +861,7 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
                     name: player.getComponent("equippable").getEquipment(EquipmentSlot.Legs)?.nameTag,
                     count: player.getComponent("equippable").getEquipment(EquipmentSlot.Legs)?.amount ?? 0,
                 });
-                savedPlayerData.items.inventory.push({
+                savedPlayerData.items.inventory?.push({
                     id: player.getComponent("equippable").getEquipment(EquipmentSlot.Feet)?.typeId ?? "",
                     slot: "Feet",
                     enchants: player.getComponent("equippable").getEquipment(EquipmentSlot.Feet)?.getComponent("enchantable")?.getEnchantments().length != 0
@@ -868,7 +870,7 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
                     name: player.getComponent("equippable").getEquipment(EquipmentSlot.Feet)?.nameTag,
                     count: player.getComponent("equippable").getEquipment(EquipmentSlot.Feet)?.amount ?? 0,
                 });
-                savedPlayerData.items.inventory.push({
+                savedPlayerData.items.inventory?.push({
                     id: player.getComponent("equippable").getEquipment(EquipmentSlot.Offhand)?.typeId ?? "",
                     slot: "Offhand",
                     enchants: player.getComponent("equippable").getEquipment(EquipmentSlot.Offhand)?.getComponent("enchantable")?.getEnchantments().length != 0
@@ -1091,25 +1093,25 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
                 };
                 for (let i = 0; i < player.getComponent("inventory").inventorySize; i++) {
                     if (player.getComponent("inventory").container.getItem(Number(i)) !== undefined) {
-                        savedPlayerData.items.inventory.push({
-                            id: player.getComponent("inventory").container.getItem(Number(i)).typeId,
+                        savedPlayerData.items.inventory?.push({
+                            id: player.getComponent("inventory").container.getItem(Number(i))?.typeId,
                             slot: i,
                             enchants: player.getComponent("inventory").container.getItem(Number(i))?.getComponent("enchantable")?.getEnchantments().length != 0
                                 ? player.getComponent("inventory").container.getItem(Number(i))?.getComponent("enchantable")?.getEnchantments()
                                 : undefined,
                             name: player.getComponent("inventory").container.getItem(Number(i))?.nameTag,
-                            count: player.getComponent("inventory").container.getItem(Number(i)).amount,
+                            count: player.getComponent("inventory").container.getItem(Number(i))?.amount ?? 0,
                         });
                     }
                     else {
-                        savedPlayerData.items.inventory.push({
+                        savedPlayerData.items.inventory?.push({
                             id: "",
                             slot: i,
                             count: 0,
                         });
                     }
                 }
-                savedPlayerData.items.inventory.push({
+                savedPlayerData.items.inventory?.push({
                     id: player.getComponent("equippable").getEquipment(EquipmentSlot.Head)?.typeId ?? "",
                     slot: "Head",
                     enchants: player.getComponent("equippable").getEquipment(EquipmentSlot.Head)?.getComponent("enchantable")?.getEnchantments().length != 0
@@ -1118,7 +1120,7 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
                     name: player.getComponent("equippable").getEquipment(EquipmentSlot.Head)?.nameTag,
                     count: player.getComponent("equippable").getEquipment(EquipmentSlot.Head)?.amount ?? 0,
                 });
-                savedPlayerData.items.inventory.push({
+                savedPlayerData.items.inventory?.push({
                     id: player.getComponent("equippable").getEquipment(EquipmentSlot.Chest)?.typeId ?? "",
                     slot: "Chest",
                     enchants: player.getComponent("equippable").getEquipment(EquipmentSlot.Chest)?.getComponent("enchantable")?.getEnchantments().length != 0
@@ -1127,7 +1129,7 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
                     name: player.getComponent("equippable").getEquipment(EquipmentSlot.Chest)?.nameTag,
                     count: player.getComponent("equippable").getEquipment(EquipmentSlot.Chest)?.amount ?? 0,
                 });
-                savedPlayerData.items.inventory.push({
+                savedPlayerData.items.inventory?.push({
                     id: player.getComponent("equippable").getEquipment(EquipmentSlot.Legs)?.typeId ?? "",
                     slot: "Legs",
                     enchants: player.getComponent("equippable").getEquipment(EquipmentSlot.Legs)?.getComponent("enchantable")?.getEnchantments().length != 0
@@ -1136,7 +1138,7 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
                     name: player.getComponent("equippable").getEquipment(EquipmentSlot.Legs)?.nameTag,
                     count: player.getComponent("equippable").getEquipment(EquipmentSlot.Legs)?.amount ?? 0,
                 });
-                savedPlayerData.items.inventory.push({
+                savedPlayerData.items.inventory?.push({
                     id: player.getComponent("equippable").getEquipment(EquipmentSlot.Feet)?.typeId ?? "",
                     slot: "Feet",
                     enchants: player.getComponent("equippable").getEquipment(EquipmentSlot.Feet)?.getComponent("enchantable")?.getEnchantments().length != 0
@@ -1145,7 +1147,7 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
                     name: player.getComponent("equippable").getEquipment(EquipmentSlot.Feet)?.nameTag,
                     count: player.getComponent("equippable").getEquipment(EquipmentSlot.Feet)?.amount ?? 0,
                 });
-                savedPlayerData.items.inventory.push({
+                savedPlayerData.items.inventory?.push({
                     id: player.getComponent("equippable").getEquipment(EquipmentSlot.Offhand)?.typeId ?? "",
                     slot: "Offhand",
                     enchants: player.getComponent("equippable").getEquipment(EquipmentSlot.Offhand)?.getComponent("enchantable")?.getEnchantments().length != 0
@@ -1196,7 +1198,7 @@ getBan(banId: string){let banString = String(world.getDynamicProperty(banId)).sp
     static getSavedPlayersAlphabeticalOrder() {
         let players;
         players = [];
-        savedPlayer.getSavedPlayerIds().forEach((b) => {
+        savedPlayer.getSavedPlayerIds().forEachB((b) => {
             players.push(savedPlayer.getSavedPlayer(b));
         });
         return players.sort((a, b) => 1 - 2 * Number([String(a.name.toLowerCase()), String(b.name.toLowerCase())].sort()[0] == String(a.name.toLowerCase())));

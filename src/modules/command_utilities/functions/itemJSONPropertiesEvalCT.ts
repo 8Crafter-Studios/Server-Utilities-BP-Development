@@ -16,7 +16,7 @@ export function itemJSONPropertiesEvalCT(
     let ij = itemJSON;
     ij.force ??= false;
     let sp = player;
-    let item = containerSlot;
+    let item = containerSlot!;
     if (!!ij.new) {
         item.setItem(new ItemStack(ij.new[0], ij.new[1]));
     }
@@ -28,7 +28,7 @@ export function itemJSONPropertiesEvalCT(
             ? (item.nameTag = property[1])
             : false,
         lore: (property: [string, string[] | undefined | null]) => property[1] !== item.getLore() || ij.force
-            ? item.setLore(property[1])
+            ? item.setLore(property[1]!)
             : false,
         amount: (property: [string, number]) => property[1] != item.amount || ij.force
             ? (item.amount = property[1])
@@ -40,10 +40,10 @@ export function itemJSONPropertiesEvalCT(
             ? (item.lockMode = property[1])
             : false,
         canPlaceOn: (property: [string, string[] | undefined | null]) => property[1] !== item.getCanPlaceOn() || ij.force
-            ? item.setCanPlaceOn(property[1])
+            ? item.setCanPlaceOn(property[1]!)
             : false,
         canDestroy: (property: [string, string[] | undefined | null]) => property[1] !== item.getCanDestroy() || ij.force
-            ? item.setCanDestroy(property[1])
+            ? item.setCanDestroy(property[1]!)
             : false,
         dynamicProperties: (
             property: [
@@ -77,9 +77,9 @@ export function itemJSONPropertiesEvalCT(
         ),
         durability: (property: [string, any]) => typeof property[1] == "number"
             ? (() => {
-                let itemb = item.getItem();
-                itemb.getComponent("durability").damage =
-                    itemb.getComponent("durability").maxDurability -
+                let itemb = item.getItem()!;
+                itemb.getComponent("durability")!.damage =
+                    itemb.getComponent("durability")!.maxDurability -
                     property[1];
                 item.setItem(itemb);
             })()
@@ -87,8 +87,8 @@ export function itemJSONPropertiesEvalCT(
             ),
         damage: (property: [string, any]) => typeof property[1] == "number"
             ? (() => {
-                let itemb = item.getItem();
-                itemb.getComponent("durability").damage = property[1];
+                let itemb = item.getItem()!;
+                itemb.getComponent("durability")!.damage = property[1];
                 item.setItem(itemb);
             })()
             : Object.entries(property[1]).forEach((v: [string, number]) => itemDurabilityComponentEnum[durabilityComponentTypeEnum[v[0] as durabilityComponentTypeEnum]](v)
@@ -99,26 +99,26 @@ export function itemJSONPropertiesEvalCT(
     const itemEnchantableComponentEnum = {
         addEnchantment: (property: [string, any]) => property[1] instanceof Array
             ? (() => {
-                let itemb = item.getItem();
-                itemb.getComponent("enchantable").addEnchantments(
+                let itemb = item.getItem()!;
+                itemb.getComponent("enchantable")!.addEnchantments(
                     property[1].map((v) => ({
                         level: v.level,
-                        type: EnchantmentTypes.get(v.type),
+                        type: EnchantmentTypes.get(v.type)!,
                     }))
                 );
                 item.setItem(itemb);
             })()
             : (() => {
-                let itemb = item.getItem();
-                itemb.getComponent("enchantable").addEnchantment({
+                let itemb = item.getItem()!;
+                itemb.getComponent("enchantable")!.addEnchantment({
                     level: property[1].level,
-                    type: EnchantmentTypes.get(property[1].type),
+                    type: EnchantmentTypes.get(property[1].type)!,
                 });
                 item.setItem(itemb);
             })(),
         addEnchantments: (property: [string, any]) => (() => {
-            let itemb = item.getItem();
-            itemb.getComponent("enchantable").addEnchantments(
+            let itemb = item.getItem()!;
+            itemb.getComponent("enchantable")!.addEnchantments(
                 property[1].map((v: { level: number; type: string; }) => ({
                     level: v.level,
                     type: EnchantmentTypes.get(v.type),
@@ -128,56 +128,56 @@ export function itemJSONPropertiesEvalCT(
         })(),
         removeEnchantment: (property: [string, any]) => property[1] instanceof Array
             ? property[1].forEach((v) => (() => {
-                let itemb = item.getItem();
+                let itemb = item.getItem()!;
                 itemb
-                    .getComponent("enchantable")
+                    .getComponent("enchantable")!
                     .removeEnchantment(v);
                 item.setItem(itemb);
             })()
             )
             : (() => {
-                let itemb = item.getItem();
+                let itemb = item.getItem()!;
                 itemb
-                    .getComponent("enchantable")
+                    .getComponent("enchantable")!
                     .removeEnchantment(property[1]);
                 item.setItem(itemb);
             })(),
         removeAllEnchantments: (property: [string, any]) => (() => {
-            let itemb = item.getItem();
-            itemb.getComponent("enchantable").removeAllEnchantments();
+            let itemb = item.getItem()!;
+            itemb.getComponent("enchantable")!.removeAllEnchantments();
             item.setItem(itemb);
         })(),
     };
     const itemDurabilityComponentEnum = {
         durability: (property: [string, number]) => (() => {
-            let itemb = item.getItem();
-            itemb.getComponent("durability").damage =
-                itemb.getComponent("durability").maxDurability -
+            let itemb = item.getItem()!;
+            itemb.getComponent("durability")!.damage =
+                itemb.getComponent("durability")!.maxDurability -
                 property[1];
             item.setItem(itemb);
         })(),
         damage: (property: [string, number]) => (() => {
-            let itemb = item.getItem();
-            itemb.getComponent("durability").damage = property[1];
+            let itemb = item.getItem()!;
+            itemb.getComponent("durability")!.damage = property[1];
             item.setItem(itemb);
         })(),
         repair: (property: [string, number]) => typeof property[1] == "number"
             ? (() => {
-                let itemb = item.getItem();
-                itemb.getComponent("durability").damage = Math.max(
+                let itemb = item.getItem()!;
+                itemb.getComponent("durability")!.damage = Math.max(
                     0,
-                    itemb.getComponent("durability").damage - property[1]
+                    itemb.getComponent("durability")!.damage - property[1]
                 );
                 item.setItem(itemb);
             })()
             : (() => {
-                let itemb = item.getItem();
-                itemb.getComponent("durability").damage = 0;
+                let itemb = item.getItem()!;
+                itemb.getComponent("durability")!.damage = 0;
                 item.setItem(itemb);
             })(),
         setDurabilityToMax: (property: [string, any]) => (() => {
-            let itemb = item.getItem();
-            itemb.getComponent("durability").damage = 0;
+            let itemb = item.getItem()!;
+            itemb.getComponent("durability")!.damage = 0;
             item.setItem(itemb);
         })(),
     };

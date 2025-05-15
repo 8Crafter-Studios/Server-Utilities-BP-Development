@@ -101,7 +101,7 @@ export function generateNBTFileC(
                                                             .size[2],
                                                     ])
                                                 )
-                                            )
+                                            )!
                                             .permutation.getAllStates(),
                                         { [p[0]]: p[1] }
                                     )

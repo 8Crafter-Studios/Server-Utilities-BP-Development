@@ -92,7 +92,7 @@ export async function manageMutes(sourceEntity, pagen = 0, maxentriesperpage = c
             const r = await forceShow(form, player);
             if (r.canceled)
                 return 1;
-            switch (["search", "previous", "go", "next", "", ""][r.selection] ??
+            switch (["search", "previous", "go", "next", "", "", undefined][r.selection] ??
                 (!!displayEntriesB[r.selection - 6] ? "entry" : undefined) ??
                 ["mutePlayer", "back", "close", "refresh"][r.selection - displayEntriesB.length - 6]) {
                 case "search":

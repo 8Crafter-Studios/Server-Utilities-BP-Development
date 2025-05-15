@@ -17,7 +17,7 @@ export async function playerMenu_moneyTransfer(
         caseSensitive?: boolean;
     }
 ): Promise<0 | 1> {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : (sourceEntitya as Player);
     if (!(sourceEntity instanceof Player)) {
         throw new TypeError(
             "Invalid Player. Expected an instance of the Player class, or an instance of the executeCommandPlayerW class with a Player linked to it, but instead got " +
@@ -100,7 +100,7 @@ export async function playerMenu_moneyTransfer(
             if (r.canceled) return 1;
 
             switch (
-                (["search", "previous", "go", "next", "", ""] as const)[r.selection!] ??
+                (["search", "previous", "go", "next", "", "", undefined] as const)[r.selection!] ??
                 (!!displayPlayersB[r.selection! - 6] ? "player" : undefined) ??
                 (["back", "close"] as const)[r.selection! - displayPlayersB.length - 6]
             ) {
@@ -143,6 +143,7 @@ export async function playerMenu_moneyTransfer(
                                 .submitButton("Go To Page")
                                 .forceShow(sourceEntity as Player)
                     );
+                    if(!rb || rb.canceled) return await playerMenu_moneyTransfer(sourceEntity, page, maxplayersperpage, search);
                     return await playerMenu_moneyTransfer(
                         sourceEntity,
                         Math.max(1, Math.min(numpages, (rb.formValues?.[0] as string)?.toNumber() ?? page + 1)) - 1,
@@ -299,7 +300,7 @@ Please enter the amount of money you would like to transfer to ${player.name}.`,
                         } else {
                             sourceEntity.moneySystem.removeMoney(amount);
                             if (player.isOnline) {
-                                getPlayerById(player.id).sendMessage(
+                                getPlayerById(player.id)?.sendMessage(
                                     `§a${sourceEntity.name} sent you ${numberFormatter(amount, {
                                         addCommaSeparators: true,
                                         currencyPrefix: config.ui.menus.playerMenu_leaderboards.builtInStats.money.displayOptions.currencyPrefix,
@@ -351,6 +352,7 @@ Please enter the amount of money you would like to transfer to ${player.name}.`,
                 case "close":
                     return 0;
                 default:
+                    throw new Error("Invalid selection: " + r.selection);
             }
         })
         .catch((e) => {

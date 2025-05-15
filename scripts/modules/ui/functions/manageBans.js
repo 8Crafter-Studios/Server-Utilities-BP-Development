@@ -23,7 +23,7 @@ export async function manageBans(sourceEntity, pagen = 0, maxentriesperpage = co
     const player = extractPlayerFromLooseEntityType(sourceEntity);
     var currentParameters = {
         player,
-        pagen,
+        pagen: pagen,
         maxentriesperpage,
         search,
         cachedEntries,
@@ -42,7 +42,7 @@ export async function manageBans(sourceEntity, pagen = 0, maxentriesperpage = co
             }
         }
         let form = new ActionFormData();
-        const page = Math.max(0, pagen);
+        const page = Math.max(0, pagen ?? 0);
         let displayEntries = cachedEntries ?? [];
         if (cachedEntries === undefined) {
             displayEntries = [
@@ -113,7 +113,7 @@ export async function manageBans(sourceEntity, pagen = 0, maxentriesperpage = co
             const r = await forceShow(form, player);
             if (r.canceled)
                 return 1;
-            switch (["search", "previous", "go", "next", "", ""][r.selection] ??
+            switch (["search", "previous", "go", "next", "", "", undefined][r.selection] ??
                 (!!displayEntriesB[r.selection - 6] ? "entry" : undefined) ??
                 ["addIDBan", "addNameBan", "back", "close", "refresh"][r.selection - displayEntriesB.length - 6]) {
                 case "search":
@@ -152,6 +152,8 @@ export async function manageBans(sourceEntity, pagen = 0, maxentriesperpage = co
                         .textField(`Current Page: ${page + 1}\nPage # (Between 1 and ${numpages})`, "Page #")
                         .submitButton("Go To Page")
                         .forceShow(player));
+                    if (!r || r.canceled)
+                        continue;
                     currentParameters = {
                         player,
                         pagen: Math.max(1, Math.min(numpages, r.formValues?.[0]?.toNumber() ?? page + 1)) - 1,
@@ -220,7 +222,7 @@ export async function manageBansOnPlayer(sourceEntity, target, pagen = 0, maxent
     const player = extractPlayerFromLooseEntityType(sourceEntity);
     var currentParameters = {
         player,
-        pagen,
+        pagen: pagen,
         maxentriesperpage,
         search,
         cachedEntries,
@@ -239,7 +241,7 @@ export async function manageBansOnPlayer(sourceEntity, target, pagen = 0, maxent
             }
         }
         let form = new ActionFormData();
-        const page = Math.max(0, pagen);
+        const page = Math.max(0, pagen ?? 0);
         let displayEntries = cachedEntries ?? [];
         if (cachedEntries === undefined) {
             displayEntries = [
@@ -310,7 +312,7 @@ export async function manageBansOnPlayer(sourceEntity, target, pagen = 0, maxent
             const r = await forceShow(form, player);
             if (r.canceled)
                 return 1;
-            switch (["search", "previous", "go", "next", "", ""][r.selection] ??
+            switch (["search", "previous", "go", "next", "", "", undefined][r.selection] ??
                 (!!displayEntriesB[r.selection - 6] ? "entry" : undefined) ??
                 ["addIDBan", "addNameBan", "back", "close", "refresh"][r.selection - displayEntriesB.length - 6]) {
                 case "search":
@@ -349,6 +351,8 @@ export async function manageBansOnPlayer(sourceEntity, target, pagen = 0, maxent
                         .textField(`Current Page: ${page + 1}\nPage # (Between 1 and ${numpages})`, "Page #")
                         .submitButton("Go To Page")
                         .forceShow(player));
+                    if (!r || r.canceled)
+                        continue;
                     currentParameters = {
                         player,
                         pagen: Math.max(1, Math.min(numpages, r.formValues?.[0]?.toNumber() ?? page + 1)) - 1,

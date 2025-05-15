@@ -24,7 +24,7 @@ export function generateSkygrid(
                             x: Math.floor(x),
                             y: Math.floor(y),
                             z: Math.floor(z),
-                            dimension: dimension,
+                            dimension: dimension!,
                         });
                     }
                 }
@@ -38,7 +38,7 @@ export function generateSkygrid(
                         x: Math.floor(x),
                         y: Math.floor(y),
                         z: Math.floor(z),
-                        dimension: dimension,
+                        dimension: dimension!,
                     });
                 }
             }

@@ -17,7 +17,7 @@ import { newCustomAreaCategory } from "./newCustomAreaCategory";
  * @returns 
  */
 export async function manageCustomAreaCategories(sourceEntitya: executeCommandPlayerW | Entity | Player): Promise<0 | 1> {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : (sourceEntitya as Player);
     if (arguments.length !== 1) {
         throw new TypeError(
             `Incorrect number of arguments to function. Expected 1, received ${arguments.length}.`

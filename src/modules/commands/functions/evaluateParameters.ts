@@ -499,7 +499,7 @@ export function evaluateParameters<T extends evaluateParametersParameter[] | [ev
                 case !!(p.type as string).match(/^-[a-zA-Z0-9!@#$%^&*<>,.~]+$/):
                     {
                         if (!!paramEval.trimStart().match(new RegExp(`(?<=^\\-)(${(p.type as string).slice(1).split("").join("|")})+(?=$|\\s)`))) {
-                            let value = paramEval.trimStart().match(new RegExp(`(?<=^\\-)(${(p.type as string).slice(1).split("").join("|")})+(?=$|\\s)`))[0];
+                            let value = paramEval.trimStart().match(new RegExp(`(?<=^\\-)(${(p.type as string).slice(1).split("").join("|")})+(?=$|\\s)`))![0];
                             paramEval = paramEval.trimStart().slice(paramEval.trimStart().indexOf(value) + value.length) ?? "";
                             try {
                                 addValueToArgumentsA(p.key, value);
@@ -515,7 +515,7 @@ export function evaluateParameters<T extends evaluateParametersParameter[] | [ev
                 case !!(p.type as string).match(/^f-[a-zA-Z0-9!@#$%^&*<>,.~]+$/):
                     {
                         if (!!paramEval.trimStart().match(new RegExp(`(?<=^\\-)(${(p.type as string).slice(2).split("").join("|")})+(?=$|\\s)`))) {
-                            let value = paramEval.trimStart().match(new RegExp(`(?<=^\\-)(${(p.type as string).slice(2).split("").join("|")})+(?=$|\\s)`))[0];
+                            let value = paramEval.trimStart().match(new RegExp(`(?<=^\\-)(${(p.type as string).slice(2).split("").join("|")})+(?=$|\\s)`))![0];
                             paramEval = paramEval.trimStart().slice(paramEval.trimStart().indexOf(value) + value.length) ?? "";
                             try {
                                 addValueToArgumentsA(
@@ -596,7 +596,7 @@ export function evaluateParameters<T extends evaluateParametersParameter[] | [ev
                 case p.type == "blockPattern":
                     {
                         const ep = BlockPattern.extractWRaw(paramEval.trimStart());
-                        paramEval = paramEval.slice(paramEval.indexOf(ep.raw) + ep.raw.length) ?? "";
+                        paramEval = paramEval.slice(paramEval.indexOf(ep.raw!) + ep.raw!.length) ?? "";
                         try {
                             addValueToArgumentsA(p.key, ep.parsed);
                         } catch (e) {
@@ -648,7 +648,7 @@ export function evaluateParameters<T extends evaluateParametersParameter[] | [ev
                             }
                         } else {
                             if (!!paramEval.trimStart().match(/^@[a-zA-Z]\s*(?![\s\[])/)) {
-                                let value = paramEval.trimStart().match(/^@[seapvrc]/)[0];
+                                let value = paramEval.trimStart().match(/^@[seapvrc]/)![0];
                                 paramEval = paramEval.slice(paramEval.indexOf(value) + value?.length) ?? "";
                                 try {
                                     addValueToArgumentsA(p.key, value);
@@ -673,7 +673,7 @@ export function evaluateParameters<T extends evaluateParametersParameter[] | [ev
                     {
                         let value = paramEval.match(
                             /(?<!(?<!^([^"]*["][^"]*)+)(([^"]*(?<!([^\\])(\\\\)*?\\)"){2})*([^"]*(?<!([^\\])(\\\\)*?\\)")[^"]*)(((?<=[\s\~\!\^\%\&\*\d])|^)[\~\!\^\%\&\*]([\-\+]?\d+(\.\d+)?)?|((?<=\s)|^)[\-\+]?\d+(\.\d+)?)(?!([^"]*(?<!([^\\])(\\\\)*?\\)")[^"]*(([^"]*(?<!([^\\])(\\\\)*?\\)"){2})*(?!([^"]*["][^"]*)+$))/g
-                        )?.[0];
+                        )?.[0]!;
                         paramEval = paramEval.slice(paramEval.indexOf(value) + value?.length) ?? "";
                         if (paramEval.startsWith(" ")) {
                             paramEval = paramEval.slice(1) ?? "";
@@ -694,7 +694,7 @@ export function evaluateParameters<T extends evaluateParametersParameter[] | [ev
                                     p.type as string
                                 ).slice(6)}}(?!([^"]*(?<!([^\\])(\\\\)*?\\)")[^"]*(([^"]*(?<!([^\\])(\\\\)*?\\)"){2})*(?!([^"]*["][^"]*)+$))`
                             )
-                        )?.[0];
+                        )?.[0]!;
                         paramEval = paramEval.slice(paramEval.indexOf(value) + value?.length) ?? "";
                         if (paramEval.startsWith(" ")) {
                             paramEval = paramEval.slice(1) ?? "";
@@ -715,7 +715,7 @@ export function evaluateParameters<T extends evaluateParametersParameter[] | [ev
                                     p.vectorCount ?? 3
                                 }}(?!([^"]*(?<!([^\\])(\\\\)*?\\)")[^"]*(([^"]*(?<!([^\\])(\\\\)*?\\)"){2})*(?!([^"]*["][^"]*)+$))`
                             )
-                        )?.[0];
+                        )?.[0]!;
                         paramEval = paramEval.slice(paramEval.indexOf(value) + value?.length) ?? "";
                         if (paramEval.startsWith(" ")) {
                             paramEval = paramEval.slice(1) ?? "";
@@ -755,7 +755,7 @@ export function evaluateParameters<T extends evaluateParametersParameter[] | [ev
                              */
                             const valueType: typeof parameter.valueType =
                                 typeof parameter.valueType === "string" ? { type: parameter.valueType } : parameter.valueType;
-                            switch (valueType.type) {
+                            switch (valueType?.type) {
                                 case "string":
                                     if (paramEval.startsWith('""')) {
                                         parameter.value = "";

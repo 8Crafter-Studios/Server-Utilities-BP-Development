@@ -12,7 +12,7 @@ import { showMessage } from "modules/utilities/functions/showMessage";
 import { securityVariables } from "security/ultraSecurityModeUtils";
 
 export async function editAreasMainMenu(sourceEntitya: executeCommandPlayerW | Entity | Player): Promise<0 | 1> {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : (sourceEntitya as Player);
     if (arguments.length !== 1) {
         throw new TypeError(
             `Incorrect number of arguments to function. Expected 1, received ${arguments.length}.`

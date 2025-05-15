@@ -31,7 +31,7 @@ export function generateMinecraftOvoid(
                         x: x,
                         y: y,
                         z: z,
-                        dimension: dimension,
+                        dimension: dimension!,
                     });
                 }
             }

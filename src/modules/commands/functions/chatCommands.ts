@@ -899,14 +899,14 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventorye.container.swapItems(i,
                                                 "§r§f\nslot: " +
                                                 i +
                                                 ", item: " +
-                                                contents[i].typeId +
+                                                contents[i]?.typeId +
                                                 ", amount: " +
-                                                contents[i].amount +
+                                                contents[i]?.amount +
                                                 ", nameTag: " +
-                                                contents[i].nameTag +
+                                                contents[i]?.nameTag +
                                                 "§r§f, lore: " +
                                                 JSONStringify(
-                                                    contents[i].getLore() ?? [],
+                                                    contents[i]?.getLore() ?? [],
                                                     true
                                                 ) +
                                                 "§r§f, enchantments: " +
@@ -10276,7 +10276,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                                                 l,
                                                                 VECTOR3_DOWN
                                                             )
-                                                          : undefined)
+                                                          : undefined)!
                                               )
                                           );
                                       });
@@ -10308,7 +10308,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                                           .heightRange.min +
                                                           2
                                                           ? l
-                                                          : undefined)
+                                                          : undefined)!
                                               )
                                           );
                                       });
@@ -12897,7 +12897,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                 eventData.cancel = true;
                 try {
                     Object.values(repeatingIntervals).forEach((v) =>
-                        tryrun(() => system.clearRun(v))
+                        tryrun(() => system.clearRun(v!))
                     );
                 } catch (e) {
                     player.sendError("§c" + e + e.stack, true);

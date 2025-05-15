@@ -5,10 +5,10 @@ export function parseBlockMatcherType(matcher: string) {
         .trim()
         .match(
             /(?:[\"\'])?(?:[a-zA-Z0-9_\-\.]+:)?[a-zA-Z0-9_\-\.]+(?:[\"\'])?(?:[\s])?(?:[\[\{](?:[^\]\}]*)[\]\}])?(?=[\s]|$)/
-        )[0];
+        )?.[0]!;
     let type: string = raw.trim();
     const statesMatch = type.match(/[\[\{]([^\]\}]*)[\]\}]/);
-    let states: { [id: string]: string | number | boolean; } = undefined;
+    let states: { [id: string]: string | number | boolean; } | undefined = undefined;
     if (!!statesMatch) {
         const statesStr = statesMatch[1];
         try {
@@ -29,7 +29,7 @@ export function parseBlockMatcherType(matcher: string) {
                 } else if (value.toLowerCase() === "false") {
                     value = false;
                 }
-                states[key] = value;
+                states![key] = value;
             });
         }
         // Remove states from the type
@@ -44,7 +44,7 @@ export function parseBlockMatcherType(matcher: string) {
     return {
         raw: raw,
         block: {
-            id: tryget(() => BlockTypes.get(type).id) ?? type,
+            id: tryget(() => BlockTypes.get(type)?.id) ?? type,
             states: states,
         },
     };

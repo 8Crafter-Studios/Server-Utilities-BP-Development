@@ -36,9 +36,10 @@ export async function playerMenu_bounty_individuals(
 ): Promise<0 | 1> {
     const player = extractPlayerFromLooseEntityType(sourceEntity);
     const target = targetPlayer ?? totalBounty.getLinkedTargetSavedPlayer();
+    if (!target) throw new ReferenceError("[playerMenu_bounty_individuals] No target player found.");
     var currentParameters = {
         player,
-        pagen,
+        pagen: pagen as number | undefined,
         maxentriesperpage,
         search,
         cachedEntries,
@@ -54,7 +55,7 @@ export async function playerMenu_bounty_individuals(
             }
         }
         const form = new ActionFormData();
-        const page = Math.max(0, pagen);
+        const page = Math.max(0, pagen ?? 0);
         let displayEntries: [bounty: Bounty, source: savedPlayer][] = cachedEntries ?? [];
         if (cachedEntries === undefined) {
             let bounties = totalBounty.getBounties().map(b=>[b, b.getLinkedSourceSavedPlayer()] as [bounty: Bounty, source: savedPlayer])
@@ -124,7 +125,7 @@ export async function playerMenu_bounty_individuals(
             if (r.canceled) return 1;
 
             switch (
-                (["search", "previous", "go", "next", "", ""] as const)[r.selection!] ??
+                (["search", "previous", "go", "next", "", "", undefined] as const)[r.selection!] ??
                 (!!displayEntriesB[r.selection! - 6] ? "entry" : undefined) ??
                 (["back", "close", "refresh"] as const)[r.selection! - displayEntriesB.length - 6]
             ) {
@@ -166,6 +167,7 @@ export async function playerMenu_bounty_individuals(
                                 .submitButton("Go To Page")
                                 .forceShow(player)
                     );
+                    if (!r || r.canceled == true) continue;
                     currentParameters = {
                         player,
                         pagen: Math.max(1, Math.min(numpages, (r.formValues?.[0] as string)?.toNumber() ?? page + 1)) - 1,
@@ -179,7 +181,7 @@ export async function playerMenu_bounty_individuals(
                     currentParameters = { player, pagen: Math.min(numpages - 1, page + 1), maxentriesperpage, search, cachedEntries: displayEntries };
                     continue;
                 case "entry":
-                    if ((await playerMenu_bounty_individual(sourceEntity, displayEntries[r.selection-6][0], target, displayEntries[r.selection-6][1])) === 1) {
+                    if ((await playerMenu_bounty_individual(sourceEntity, displayEntries[r.selection!-6][0], target, displayEntries[r.selection!-6][1])) === 1) {
                         currentParameters = { player, pagen: page, maxentriesperpage, search, cachedEntries: displayEntries };
                         continue;
                     } else {

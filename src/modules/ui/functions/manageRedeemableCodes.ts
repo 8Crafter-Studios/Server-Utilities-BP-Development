@@ -10,7 +10,7 @@ import { itemSelector } from "./itemSelector";
 import { customFormUICodes } from "../constants/customFormUICodes";
 
 export async function manageRedeemableCodes(sourceEntitya: Entity | executeCommandPlayerW | Player): Promise<0 | 1> {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : (sourceEntitya as Player);
     if (!(sourceEntity instanceof Player)) {
         throw new TypeError(
             "Invalid Player. Expected an instance of the Player class, or an instance of the executeCommandPlayerW class with a Player linked to it, but instead got " +

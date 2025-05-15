@@ -13,7 +13,7 @@ import { startZoneActionsInterval, stopZoneActionsInterval } from "modules/spawn
 import { getAllEntities } from "modules/commands/functions/getAllEntities";
 
 export async function addonDebugUI(sourceEntitya: Entity | executeCommandPlayerW | Player): Promise<0 | 1> {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : (sourceEntitya as Player);
     let form = new ActionFormData();
     form.title(customFormUICodes.action.titles.formStyles.gridMenu + "Debug");
     form.button(customFormUICodes.action.buttons.positions.main_only + "Debug Info", "textures/ui/ui_debug_glyph_color");
@@ -49,7 +49,7 @@ form.button(entity_scale_format_version!=null?"Stop All Entity Scale Built-In In
             // This will stop the code when the player closes the form
             if (r.canceled) return 1;
 
-            let response = r.selection;
+            let response = r.selection!;
             switch (response) {
                 case 0:
                     const DPTBC = new (Decimal.clone({ precision: 50 }))(world.getDynamicPropertyTotalByteCount());

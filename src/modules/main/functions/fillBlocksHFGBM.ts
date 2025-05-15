@@ -46,16 +46,16 @@ export async function fillBlocksHFGBM(
                         try {
                             if (!!v.dimension
                                 .getBlock(v)
-                                .getComponent("inventory")) {
+                                ?.getComponent("inventory")) {
                                 clearContainer(
                                     v.dimension
                                         .getBlock(v)
-                                        .getComponent("inventory").container
+                                        ?.getComponent("inventory").container
                                 );
                             }
                             v.dimension
                                 .getBlock(v)
-                                .setPermutation(block(v, index));
+                                ?.setPermutation(block(v, index));
                             counter++;
                         } catch (e) {
                             if (e instanceof TypeError ||
@@ -81,7 +81,7 @@ export async function fillBlocksHFGBM(
                         try {
                             v.dimension
                                 .getBlock(v)
-                                .setPermutation(block(v, index));
+                                ?.setPermutation(block(v, index));
                             counter++;
                         } catch (e) {
                             if (e instanceof TypeError ||
@@ -115,20 +115,20 @@ export async function fillBlocksHFGBM(
                                     options.blockMask.blocks
                                 )
                                 : options?.blockMask?.blockTypes.includes(
-                                    v.dimension.getBlock(v).typeId
+                                    v.dimension.getBlock(v)?.typeId
                                 )) {
                                 if (!!v.dimension
                                     .getBlock(v)
-                                    .getComponent("inventory")) {
+                                    ?.getComponent("inventory")) {
                                     clearContainer(
                                         v.dimension
                                             .getBlock(v)
-                                            .getComponent("inventory").container
+                                            ?.getComponent("inventory").container
                                     );
                                 }
                                 v.dimension
                                     .getBlock(v)
-                                    .setPermutation(currentBlock);
+                                    ?.setPermutation(currentBlock);
                                 counter++;
                             }
                         } catch (e) {
@@ -160,11 +160,11 @@ export async function fillBlocksHFGBM(
                                     options.blockMask.blocks
                                 )
                                 : options?.blockMask?.blockTypes.includes(
-                                    v.dimension.getBlock(v).typeId
+                                    v.dimension.getBlock(v)?.typeId
                                 )) {
                                 v.dimension
                                     .getBlock(v)
-                                    .setPermutation(currentBlock);
+                                    ?.setPermutation(currentBlock);
                                 counter++;
                             }
                         } catch (e) {

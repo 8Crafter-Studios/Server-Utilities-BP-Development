@@ -125,7 +125,7 @@ export async function playerMenu(sourceEntity) {
             const r = await form.forceShow(player);
             if (r.canceled)
                 return 0;
-            switch (buttons[r.selection]?.[0] ?? ["close"][r.selection - buttons.length]) {
+            switch ([...buttons, undefined][r.selection]?.[0] ?? ["close"][r.selection - buttons.length]) {
                 case "leaderboards":
                     if ((await playerMenu_leaderboards(player)) === 1) {
                         continue;
@@ -215,7 +215,7 @@ export async function playerMenu(sourceEntity) {
                 case "close":
                     return 0;
                 default:
-                    return 0;
+                    throw new Error("Invalid selection: " + r.selection);
             }
         }
         catch (e) {

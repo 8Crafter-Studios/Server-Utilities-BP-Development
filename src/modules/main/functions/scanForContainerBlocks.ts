@@ -12,7 +12,7 @@ export function scanForContainerBlocks(
                 { x: from.x, y: from.y, z: from.z },
                 { x: to.x, y: from.y, z: to.z }
             ).getBlockLocationIterator()
-        ).filter((v) => !!dimension.getBlock(v).getComponent("inventory"));
+        ).filter((v) => !!dimension.getBlock(v)?.getComponent("inventory"));
     } else {
         return Array.from(
             new BlockVolume(from, {

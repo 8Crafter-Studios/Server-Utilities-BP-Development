@@ -405,7 +405,7 @@ export function evaluateParameters(commandstring, parameters, useOldNamedIgnorab
                          * @type {typeof parameter.valueType}
                          */
                         const valueType = typeof parameter.valueType === "string" ? { type: parameter.valueType } : parameter.valueType;
-                        switch (valueType.type) {
+                        switch (valueType?.type) {
                             case "string":
                                 if (paramEval.startsWith('""')) {
                                     parameter.value = "";

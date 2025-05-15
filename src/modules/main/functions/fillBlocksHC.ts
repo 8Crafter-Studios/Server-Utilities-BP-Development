@@ -19,7 +19,7 @@ export function fillBlocksHC(
     placeholderid?: string,
     replacemode: boolean = false
 ) {
-    let mainArray = drawMinecraftCircle(center, radius, axis).map((v) => dimension.getBlock(v)
+    let mainArray = drawMinecraftCircle(center, radius, axis).map((v) => dimension.getBlock(v)!
     );
     let counter = 0;
     let blockb = BlockPermutation.resolve(block, blockStates);
@@ -27,7 +27,7 @@ export function fillBlocksHC(
         mainArray
             .filter((v) => !!v.getComponent("inventory"))
             .forEach((v) => {
-                clearContainer(v.getComponent("inventory").container);
+                clearContainer(v.getComponent("inventory")?.container!);
             });
     } /*
     console.warn(JSONStringify(mainArray))*/
@@ -44,12 +44,12 @@ export function fillBlocksHC(
         );
         mainArray.forEach((v) => {
             if (!!options?.matchingBlockStates
-                ? BlockTypes.get(options?.matchingBlock) == v.type &&
+                ? BlockTypes.get(options?.matchingBlock!) == v.type &&
                 matchingblockb.getAllStates() ==
                 Object.fromEntries(
                     Object.entries(
                         Object.assign(
-                            v?.permutation?.getAllStates(),
+                            v?.permutation?.getAllStates()!,
                             blockStates
                         )
                     ).filter(
@@ -58,7 +58,7 @@ export function fillBlocksHC(
                         ).find((s) => v[0] == s[0])
                     )
                 )
-                : BlockTypes.get(options?.matchingBlock) == v.type) {
+                : BlockTypes.get(options?.matchingBlock!) == v.type) {
                 v.setPermutation(blockb);
                 counter++;
             }

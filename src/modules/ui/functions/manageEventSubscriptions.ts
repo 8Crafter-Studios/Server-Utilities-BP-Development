@@ -65,7 +65,7 @@ export async function manageEventSubscriptions_event<EventTypeID extends Subscri
     const player = extractPlayerFromLooseEntityType(sourceEntity);
     var currentParameters = {
         player,
-        pagen,
+        pagen: pagen as number | undefined,
         maxentriesperpage,
         search,
         cachedEntries,
@@ -73,7 +73,7 @@ export async function manageEventSubscriptions_event<EventTypeID extends Subscri
     while (true) {
         const { player, pagen, maxentriesperpage, search, cachedEntries } = currentParameters;
         const form = new ActionFormData();
-        const page = Math.max(0, pagen);
+        const page = Math.max(0, pagen ?? 0);
         let displayEntries: SubscribedEvent<EventTypeID>[] = cachedEntries ?? [];
         if (cachedEntries === undefined) {
             displayEntries = loadedEventsOfTypeRef.filter((v) =>
@@ -147,7 +147,7 @@ export async function manageEventSubscriptions_event<EventTypeID extends Subscri
             if (r.canceled) return 1;
 
             switch (
-                (["search", "previous", "go", "next", "newSubscription", ""] as const)[r.selection!] ??
+                (["search", "previous", "go", "next", "newSubscription", "", undefined] as const)[r.selection!] ??
                 (!!displayEntriesB[r.selection! - 6] ? "entry" : undefined) ??
                 (["back", "close", "refresh"] as const)[r.selection! - displayEntriesB.length - 6]
             ) {
@@ -189,6 +189,7 @@ export async function manageEventSubscriptions_event<EventTypeID extends Subscri
                                 .submitButton("Go To Page")
                                 .forceShow(player)
                     );
+                    if(!r || r.canceled) continue;
                     currentParameters = {
                         player,
                         pagen: Math.max(1, Math.min(numpages, (r.formValues?.[0] as string)?.toNumber() ?? page + 1)) - 1,
@@ -394,7 +395,7 @@ export async function manageEventSubscriptions_event_subscription<EventTypeID ex
                     if (rb.selection === subscription.eventTypeLoadedEventsReference.length + 1) {
                         return 0;
                     }
-                    const destinationIndex = rb.selection + r.selection;
+                    const destinationIndex = rb.selection! + r.selection!;
                     subscription.eventTypeLoadedEventsReference.splice(
                         subscription.eventTypeLoadedEventsReference.findIndex((eventSubscription) => eventSubscription === subscription),
                         1

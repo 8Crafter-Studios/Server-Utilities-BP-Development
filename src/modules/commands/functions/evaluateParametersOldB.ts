@@ -407,7 +407,7 @@ export function evaluateParametersOldB<
                                                                     "|"
                                                                 )})+(?=$|\\s)`
                                                         )
-                                                    )[0];
+                                                    )![0];
                                                 paramEval =
                                                     paramEval
                                                         .trimStart()
@@ -458,7 +458,7 @@ export function evaluateParametersOldB<
                                                                         "|"
                                                                     )})+(?=$|\\s)`
                                                             )
-                                                        )[0];
+                                                        )![0];
                                                     paramEval =
                                                         paramEval
                                                             .trimStart()
@@ -649,9 +649,9 @@ export function evaluateParametersOldB<
                                                             paramEval =
                                                                 paramEval.slice(
                                                                     paramEval.indexOf(
-                                                                        ep.raw
+                                                                        ep.raw!
                                                                     ) +
-                                                                    ep.raw
+                                                                    ep.raw!
                                                                         .length
                                                                 ) ?? "";
                                                             try {
@@ -769,7 +769,7 @@ export function evaluateParametersOldB<
                                                                     "Vector1") {
                                                                     let value = paramEval.match(
                                                                         /(?<!(?<!^([^"]*["][^"]*)+)(([^"]*(?<!([^\\])(\\\\)*?\\)"){2})*([^"]*(?<!([^\\])(\\\\)*?\\)")[^"]*)(((?<=[\s\~\!\^\%\&\*\d])|^)[\~\!\^\%\&\*]([\-\+]?\d+(\.\d+)?)?|((?<=\s)|^)[\-\+]?\d+(\.\d+)?)(?!([^"]*(?<!([^\\])(\\\\)*?\\)")[^"]*(([^"]*(?<!([^\\])(\\\\)*?\\)"){2})*(?!([^"]*["][^"]*)+$))/g
-                                                                    )?.[0];
+                                                                    )?.[0]!;
                                                                     paramEval =
                                                                         paramEval.slice(
                                                                             paramEval.indexOf(
@@ -815,7 +815,7 @@ export function evaluateParametersOldB<
                                                                                     6
                                                                                 )}}(?!([^"]*(?<!([^\\])(\\\\)*?\\)")[^"]*(([^"]*(?<!([^\\])(\\\\)*?\\)"){2})*(?!([^"]*["][^"]*)+$))`
                                                                             )
-                                                                        )?.[0];
+                                                                        )?.[0]!;
                                                                         paramEval =
                                                                             paramEval.slice(
                                                                                 paramEval.indexOf(
@@ -856,7 +856,7 @@ export function evaluateParametersOldB<
                                                                                     String.raw`(?<!(?<!^([^"]*["][^"]*)+)(([^"]*(?<!([^\\])(\\\\)*?\\)"){2})*([^"]*(?<!([^\\])(\\\\)*?\\)")[^"]*)(((((?<=[\s\~\!\^\%\&\*\d])|^)[\~\!\^\%\&\*](?:[\-\+]?\d+(\.\d+)?)?)|(((?<=\s)|^)[\-\+]?\d+(\.\d+)?))\s*?){${p.vectorCount ??
                                                                                         3}}(?!([^"]*(?<!([^\\])(\\\\)*?\\)")[^"]*(([^"]*(?<!([^\\])(\\\\)*?\\)"){2})*(?!([^"]*["][^"]*)+$))`
                                                                                 )
-                                                                            )?.[0];
+                                                                            )?.[0]!;
                                                                             paramEval =
                                                                                 paramEval.slice(
                                                                                     paramEval.indexOf(

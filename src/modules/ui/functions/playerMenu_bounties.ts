@@ -10,7 +10,7 @@ import { playerMenu_bounties_list_on } from "./playerMenu_bounties_list_on";
 import { customFormUICodes } from "../constants/customFormUICodes";
 
 export async function playerMenu_bounties(sourceEntitya: Entity | executeCommandPlayerW | Player): Promise<0 | 1> {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : (sourceEntitya as Player);
     if (!(sourceEntity instanceof Player)) {
         throw new TypeError(
             "Invalid Player. Expected an instance of the Player class, or an instance of the executeCommandPlayerW class with a Player linked to it, but instead got " +
@@ -45,8 +45,7 @@ export async function playerMenu_bounties(sourceEntitya: Entity | executeCommand
     form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
     form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
     return await forceShow(form, sourceEntity)
-        .then(async (ra) => {
-            let r = ra as ActionFormResponse;
+        .then(async (r) => {
             // This will stop the code when the player closes the form
             if (r.canceled) return 1;
 
@@ -80,6 +79,7 @@ export async function playerMenu_bounties(sourceEntitya: Entity | executeCommand
                 case "close":
                     return 0;
                 default:
+                    throw new Error("Invalid selection: " + r.selection);
             }
         })
         .catch(async (e) => {

@@ -127,7 +127,7 @@ export async function manageMutes(
             if (r.canceled) return 1;
 
             switch (
-                (["search", "previous", "go", "next", "", ""] as const)[r.selection!] ??
+                (["search", "previous", "go", "next", "", "", undefined] as const)[r.selection!] ??
                 (!!displayEntriesB[r.selection! - 6] ? "entry" : undefined) ??
                 (["mutePlayer", "back", "close", "refresh"] as const)[r.selection! - displayEntriesB.length - 6]
             ) {

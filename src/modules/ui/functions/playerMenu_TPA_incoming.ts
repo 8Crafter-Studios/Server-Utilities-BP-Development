@@ -53,7 +53,7 @@ export async function playerMenu_TPA_incoming(sourceEntity: loosePlayerType): Pr
                                     [customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left"],
                                     [customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout"]
                                 )
-                            ).selection
+                            ).selection ?? 2
                         ]
                     ) {
                         case "accept":

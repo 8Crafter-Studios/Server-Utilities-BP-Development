@@ -45,14 +45,14 @@ export function evaluateParametersOld(
                                     paramEval
                                         .slice(1)
                                         .split('\\"')
-                                        .find((v) => v.includes('"'))
+                                        .find((v) => v.includes('"'))!
                                         .split('"')[0],
                                 ].join('"')
                             );
                             paramEval = paramEval
                                 .slice(1)
                                 .split('\\"')
-                                .find((v) => v.includes('"'))
+                                .find((v) => v.includes('"'))!
                                 .split('"')[1]
                                 .slice(1);
                         }

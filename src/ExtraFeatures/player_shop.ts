@@ -1299,7 +1299,7 @@ ${
                 if (r.canceled) return 1;
 
                 assertIsDefined(r.selection);
-                let response = r.selection;
+                let response = r.selection!;
                 switch (
                     (!!shopsList[r.selection!] ? "shop" : undefined) ??
                     cullUndefined([
@@ -1368,7 +1368,7 @@ export class PlayerShopManager {
      * @returns
      */
     static async playerShopSystemSettings(sourceEntitya: Entity | executeCommandPlayerW | Player): Promise<0 | 1> {
-        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
+        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : (sourceEntitya as Player);
         assertIsDefined(sourceEntity);
         if (securityVariables.ultraSecurityModeEnabled) {
             if (securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.accessExtraFeaturesSettings") == false) {
@@ -1516,7 +1516,7 @@ export class PlayerShopManager {
     }
 
     static async managePlayerShops(sourceEntitya: Entity | executeCommandPlayerW | Player, all: boolean = false): Promise<0 | 1> {
-        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
+        const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : (sourceEntitya as Player);
         assertIsDefined(sourceEntity);
         let form = new ActionFormData();
         form.title(customFormUICodes.action.titles.formStyles.medium + "Manage Player Shops");
@@ -1833,7 +1833,7 @@ Is Buy Shop: ${shop.buyShop ? "§aTrue" : "§cFalse"}
                 // This will stop the code when the player closes the form
                 if (r.canceled) return 1;
 
-                let response = r.selection;
+                let response = r.selection!;
                 switch (response) {
                     case 0:
                         if (shop.buyShop && shop.sellShop) {
@@ -1920,7 +1920,7 @@ Is Buy Shop: ${shop.buyShop ? "§aTrue" : "§cFalse"}
                         try {
                             containerToItemStackArray(entity.getComponent("inventory")?.container as Container).forEach((v) =>
                                 tryrun(() => {
-                                    sourceEntity.dimension.spawnItem(v, sourceEntity.location);
+                                    sourceEntity.dimension.spawnItem(v!, sourceEntity.location);
                                 })
                             );
                             entity.getComponent("inventory")?.container?.clearAll();
@@ -2233,7 +2233,7 @@ Is Buy Shop: ${shop.buyShop ? "§aTrue" : "§cFalse"}
                 if (r.canceled) return 1;
 
                 assertIsDefined(r.selection);
-                let response = r.selection;
+                let response = r.selection!;
                 switch (response) {
                     case shopData.length:
                         const type: "player_shop_saved" | "player_shop_sellable" = mode == "buy" ? "player_shop_saved" : "player_shop_sellable";
@@ -3523,7 +3523,7 @@ Texture: ${page.texture}`
         if (r.canceled) return 1;
         assertIsDefined(r.selection);
 
-        let response = r.selection;
+        let response = r.selection!;
         switch (response) {
             case shopData.length:
                 const type: "player_shop_saved" | "player_shop_sellable" = mode == "buy" ? "player_shop_saved" : "player_shop_sellable";

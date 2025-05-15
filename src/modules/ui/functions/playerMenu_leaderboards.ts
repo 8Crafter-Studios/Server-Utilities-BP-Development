@@ -45,7 +45,7 @@ export async function playerMenu_leaderboards(
             // This will stop the code when the player closes the form
             if (r.canceled) return 1;
 
-            switch (buttons[r.selection!]?.[0] ?? (["back", "close"] as const)[r.selection-buttons.length]) {
+            switch (buttons[r.selection!]?.[0] ?? (["back", "close"] as const)[r.selection!-buttons.length]) {
                 case "back":
                     return 1;
                 case "close":

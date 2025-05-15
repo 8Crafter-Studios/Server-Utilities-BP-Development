@@ -4,14 +4,15 @@ import type { executeCommandPlayerW } from "modules/commands/classes/executeComm
 export function inventorySwap(
     player1: Player | executeCommandPlayerW | Entity,
     player2: Player | executeCommandPlayerW | Entity
-) {
+): void {
+    if(player1.getComponent("inventory") && player2.getComponent("inventory")) return;
     for (let i = 0; i < 36; i++) {
         player1
             .getComponent("inventory")
-            .container.swapItems(
+            ?.container.swapItems(
                 i,
                 i,
-                player2.getComponent("inventory").container
+                player2.getComponent("inventory")?.container!
             );
     }
     let slots = [
@@ -22,9 +23,9 @@ export function inventorySwap(
         EquipmentSlot.Offhand,
     ];
     for (let i = 0; i < 5; i++) {
-        let item1 = player1.getComponent("equippable").getEquipment(slots[i]);
-        let item2 = player2.getComponent("equippable").getEquipment(slots[i]);
-        player1.getComponent("equippable").setEquipment(slots[i], item2);
-        player2.getComponent("equippable").setEquipment(slots[i], item1);
+        let item1 = player1.getComponent("equippable")?.getEquipment(slots[i]);
+        let item2 = player2.getComponent("equippable")?.getEquipment(slots[i]);
+        player1.getComponent("equippable")?.setEquipment(slots[i], item2);
+        player2.getComponent("equippable")?.setEquipment(slots[i], item1);
     }
 }

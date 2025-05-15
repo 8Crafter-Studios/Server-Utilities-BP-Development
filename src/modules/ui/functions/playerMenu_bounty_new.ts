@@ -18,7 +18,7 @@ export async function playerMenu_bounty_new(
     },
     cachedPlayers?: savedPlayer[]
 ): Promise<0 | 1> {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : (sourceEntitya as Player);
     if (!(sourceEntity instanceof Player)) {
         throw new TypeError(
             "Invalid Player. Expected an instance of the Player class, or an instance of the executeCommandPlayerW class with a Player linked to it, but instead got " +
@@ -113,7 +113,7 @@ export async function playerMenu_bounty_new(
             if (r.canceled) return 1;
 
             switch (
-                (["search", "previous", "go", "next", "", ""] as const)[r.selection!] ??
+                (["search", "previous", "go", "next", "", "", undefined] as const)[r.selection!] ??
                 (!!displayPlayersB[r.selection! - 6] ? "player" : undefined) ??
                 (["back", "close", "refresh"] as const)[r.selection! - displayPlayersB.length - 6]
             ) {
@@ -162,6 +162,7 @@ export async function playerMenu_bounty_new(
                                 .submitButton("Go To Page")
                                 .forceShow(sourceEntity as Player)
                     );
+                    if(!rb || rb.canceled) return await playerMenu_bounty_new(sourceEntity, page, maxplayersperpage, search, displayPlayers);
                     return await playerMenu_bounty_new(
                         sourceEntity,
                         Math.max(1, Math.min(numpages, (rb.formValues?.[0] as string)?.toNumber() ?? page + 1)) - 1,
@@ -189,7 +190,7 @@ export async function playerMenu_bounty_new(
                         ){
                             return await playerMenu_bounty_new(sourceEntity, page, maxplayersperpage, search, displayPlayers);
                         }else{
-                            Bounty.getBountiesFromPlayer(sourceEntity.id).find((b) => b.targetId === player.id).cancel();
+                            Bounty.getBountiesFromPlayer(sourceEntity.id).find((b) => b.targetId === player.id)?.cancel();
                         };
                     }
                     const ra = await new ModalFormData()
@@ -306,7 +307,7 @@ Please enter the amount of money you would like to place on the bounty below.`,
                             ).selection === 1
                         ).toNumber()
                     ) {
-                        Bounty.placeBountyOnPlayer(BigInt(ra.formValues![0]), sourceEntity.id, player.id, sourceEntity.name, player.name);
+                        Bounty.placeBountyOnPlayer(BigInt(ra.formValues![0]!), sourceEntity.id, player.id, sourceEntity.name, player.name);
                         return (
                             (
                                 await showMessage(
@@ -345,6 +346,7 @@ Please enter the amount of money you would like to place on the bounty below.`,
                 case "close":
                     return 0;
                 default:
+                    throw new Error("Invalid selection: " + r.selection);
             }
         })
         .catch(async (e) => {

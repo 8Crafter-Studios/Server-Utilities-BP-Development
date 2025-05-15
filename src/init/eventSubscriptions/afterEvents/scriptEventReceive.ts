@@ -901,7 +901,7 @@ subscribedEvents.afterScriptEventReceive = system.afterEvents.scriptEventReceive
                 // This will stop the code when the player closes the form
                 if (r.canceled) return;
             
-                let response = r.selection;
+                let response = r.selection!;
                 switch (response) {
                     case 0:
                         
@@ -1839,7 +1839,7 @@ break;*/ /*
                 // This will stop the code when the player closes the form
                 if (r.canceled) return;
 
-                let response = r.selection;
+                let response = r.selection!;
                 switch (response) {
                     case 0:
                         let form2 = new ActionFormData();

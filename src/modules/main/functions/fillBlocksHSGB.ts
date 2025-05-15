@@ -54,21 +54,21 @@ export async function fillBlocksHSGB(
                         (v, index) => {
                             try {
                                 const currentBlock = block(v, index);
-                                if (v.dimension.getBlock(v).permutation ==
+                                if (v.dimension.getBlock(v)?.permutation ==
                                     currentBlock) {
                                     if (!!v.dimension
                                         .getBlock(v)
-                                        .getComponent("inventory")) {
+                                        ?.getComponent("inventory")) {
                                         clearContainer(
                                             v.dimension
                                                 .getBlock(v)
-                                                .getComponent("inventory")
+                                                ?.getComponent("inventory")
                                                 .container
                                         );
                                     }
                                     v.dimension
                                         .getBlock(v)
-                                        .setPermutation(currentBlock);
+                                        ?.setPermutation(currentBlock);
                                     counter++;
                                 }
                             } catch (e) {
@@ -93,11 +93,11 @@ export async function fillBlocksHSGB(
                         (v, index) => {
                             try {
                                 const currentBlock = block(v, index);
-                                if (v.dimension.getBlock(v).permutation ==
+                                if (v.dimension.getBlock(v)?.permutation ==
                                     currentBlock) {
                                     v.dimension
                                         .getBlock(v)
-                                        .setPermutation(currentBlock);
+                                        ?.setPermutation(currentBlock);
                                     counter++;
                                 }
                             } catch (e) {
@@ -132,20 +132,20 @@ export async function fillBlocksHSGB(
                                         }
                                     )
                                     : options?.matchingBlock ==
-                                    v.dimension.getBlock(v).typeId) {
+                                    v.dimension.getBlock(v)?.typeId) {
                                     if (!!v.dimension
                                         .getBlock(v)
-                                        .getComponent("inventory")) {
+                                        ?.getComponent("inventory")) {
                                         clearContainer(
                                             v.dimension
                                                 .getBlock(v)
-                                                .getComponent("inventory")
+                                                ?.getComponent("inventory")
                                                 .container
                                         );
                                     }
                                     v.dimension
                                         .getBlock(v)
-                                        .setPermutation(block(v, index));
+                                        ?.setPermutation(block(v, index));
                                     counter++;
                                 }
                             } catch (e) {
@@ -178,10 +178,10 @@ export async function fillBlocksHSGB(
                                         }
                                     )
                                     : options?.matchingBlock ==
-                                    v.dimension.getBlock(v).typeId) {
+                                    v.dimension.getBlock(v)?.typeId) {
                                     v.dimension
                                         .getBlock(v)
-                                        .setPermutation(block(v, index));
+                                        ?.setPermutation(block(v, index));
                                     counter++;
                                 }
                             } catch (e) {
@@ -211,16 +211,16 @@ export async function fillBlocksHSGB(
                             try {
                                 if (!!v.dimension
                                     .getBlock(v)
-                                    .getComponent("inventory")) {
+                                    ?.getComponent("inventory")) {
                                     clearContainer(
                                         v.dimension
                                             .getBlock(v)
-                                            .getComponent("inventory").container
+                                            ?.getComponent("inventory").container
                                     );
                                 }
                                 v.dimension
                                     .getBlock(v)
-                                    .setPermutation(block(v, index));
+                                    ?.setPermutation(block(v, index));
                                 counter++;
                             } catch (e) {
                                 if (e instanceof TypeError ||
@@ -245,7 +245,7 @@ export async function fillBlocksHSGB(
                             try {
                                 v.dimension
                                     .getBlock(v)
-                                    .setPermutation(block(v, index));
+                                    ?.setPermutation(block(v, index));
                                 counter++;
                             } catch (e) {
                                 if (e instanceof TypeError ||
@@ -279,20 +279,20 @@ export async function fillBlocksHSGB(
                                         }
                                     )
                                     : options?.matchingBlock ==
-                                    v.dimension.getBlock(v).typeId) {
+                                    v.dimension.getBlock(v)?.typeId) {
                                     if (!!v.dimension
                                         .getBlock(v)
-                                        .getComponent("inventory")) {
+                                        ?.getComponent("inventory")) {
                                         clearContainer(
                                             v.dimension
                                                 .getBlock(v)
-                                                .getComponent("inventory")
+                                                ?.getComponent("inventory")
                                                 .container
                                         );
                                     }
                                     v.dimension
                                         .getBlock(v)
-                                        .setPermutation(block(v, index));
+                                        ?.setPermutation(block(v, index));
                                     counter++;
                                 }
                             } catch (e) {
@@ -325,10 +325,10 @@ export async function fillBlocksHSGB(
                                         }
                                     )
                                     : options?.matchingBlock ==
-                                    v.dimension.getBlock(v).typeId) {
+                                    v.dimension.getBlock(v)?.typeId) {
                                     v.dimension
                                         .getBlock(v)
-                                        .setPermutation(block(v, index));
+                                        ?.setPermutation(block(v, index));
                                     counter++;
                                 }
                             } catch (e) {

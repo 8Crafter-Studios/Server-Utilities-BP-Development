@@ -16,7 +16,7 @@ export function* generateNBTFileEGGB(
     }
 ): Generator<void, number, unknown> {
     var successCount = 0;
-    var b = undefined as number;
+    var b = undefined! as number;
     for (let i = 0; i < nbt.block_indices.length; i++) {
         b = nbt.block_indices[i];
         (b ?? -1) != -1
@@ -36,7 +36,7 @@ export function* generateNBTFileEGGB(
                     );
                     !!nbt.block_palette[b]?.states
                         ? Object.entries(
-                            nbt.block_palette[b]?.states
+                            nbt.block_palette[b].states!
                         ).forEach((p) => tryrun(() => location.dimension.setBlockPermutation(
                             Vector3Utils.add(
                                 location,
@@ -77,7 +77,7 @@ export function* generateNBTFileEGGB(
                                                     i % nbt.size[2],
                                                 ])
                                             )
-                                        )
+                                        )!
                                         .permutation.getAllStates(),
                                     { [p[0]]: p[1] }
                                 )

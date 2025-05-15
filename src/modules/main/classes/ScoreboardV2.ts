@@ -18,7 +18,7 @@ export class ScoreboardV2 {
     }
     static removeObjective(objectiveId: ScoreboardV2Objective | string): boolean {
         const objective = objectiveId instanceof ScoreboardV2Objective ? objectiveId : new ScoreboardV2Objective(objectiveId);
-        if(objective.isValid){
+        if(objective.isValid()){
             objective.delete();
             return true;
         }else{
@@ -32,7 +32,7 @@ export class ScoreboardV2Objective {
     private scores: {[playerId: string]: bigint} = {};
     constructor(id: string){
         this.id = id;
-        if(this.isValid){
+        if(this.isValid()){
             this.load();
         }
     }
@@ -100,7 +100,7 @@ export class ScoreboardV2Objective {
     }
     static get(objectiveId: string): ScoreboardV2Objective | undefined {
         const objective = new ScoreboardV2Objective(objectiveId);
-        if(objective.isValid){
+        if(objective.isValid()){
             return objective;
         }else{
             return undefined;
@@ -108,7 +108,7 @@ export class ScoreboardV2Objective {
     }
     static new(objectiveId: string, displayName: string = objectiveId): ScoreboardV2Objective {
         const objective = new ScoreboardV2Objective(objectiveId);
-        if(objective.isValid){
+        if(objective.isValid()){
             throw new Error("Duplicate Objective ID");
         }else{
             objective.displayName = displayName;
@@ -128,7 +128,7 @@ ipc.IPC.handle("andexdbRequestScoreboardV2AddObjective", ipc.PROTO.Object({objec
 });
 
 ipc.IPC.handle("andexdbRequestScoreboardV2GetObjective", ipc.PROTO.Object({objectiveID: ipc.PROTO.String}), ipc.PROTO.Object({id: ipc.PROTO.String, displayName: ipc.PROTO.Optional(ipc.PROTO.String), scores: ipc.PROTO.Array(ipc.PROTO.Tuple(ipc.PROTO.String, ipc.PROTO.String))}), v=>{
-    const data = ScoreboardV2.getObjective(v.objectiveID).toJSON();
+    const data = ScoreboardV2.getObjective(v.objectiveID)!.toJSON();
     return {
         id: data.id,
         displayName: data.displayName,
@@ -144,21 +144,21 @@ ipc.IPC.handle("andexdbRequestScoreboardV2GetScore", ipc.PROTO.Object({playerID:
     return {
         playerID: v.playerID,
         objectiveID: v.objectiveID,
-        money: ScoreboardV2.getObjective(v.objectiveID).getScore(v.playerID).toString(),
+        money: ScoreboardV2.getObjective(v.objectiveID)!.getScore(v.playerID)!.toString(),
     };
 });
 
 ipc.IPC.handle("andexdbRequestScoreboardV2SetScore", ipc.PROTO.Object({playerID: ipc.PROTO.String, objectiveID: ipc.PROTO.String, money: ipc.PROTO.String}), ipc.PROTO.Boolean, v=>{
-    ScoreboardV2.getObjective(v.objectiveID).setScore(v.playerID, BigInt(v.money));
+    ScoreboardV2.getObjective(v.objectiveID)!.setScore(v.playerID, BigInt(v.money));
     return true;
 });
 
 ipc.IPC.handle("andexdbRequestScoreboardV2AddScore", ipc.PROTO.Object({playerID: ipc.PROTO.String, objectiveID: ipc.PROTO.String, money: ipc.PROTO.String}), ipc.PROTO.Boolean, v=>{
-    ScoreboardV2.getObjective(v.objectiveID).addScore(v.playerID, BigInt(v.money));
+    ScoreboardV2.getObjective(v.objectiveID)!.addScore(v.playerID, BigInt(v.money));
     return true;
 });
 
 ipc.IPC.handle("andexdbRequestScoreboardV2RemoveScore", ipc.PROTO.Object({playerID: ipc.PROTO.String, objectiveID: ipc.PROTO.String, money: ipc.PROTO.String}), ipc.PROTO.Boolean, v=>{
-    ScoreboardV2.getObjective(v.objectiveID).addScore(v.playerID, -BigInt(v.money));
+    ScoreboardV2.getObjective(v.objectiveID)!.addScore(v.playerID, -BigInt(v.money));
     return true;
 });

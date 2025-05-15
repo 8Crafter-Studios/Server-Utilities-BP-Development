@@ -19,7 +19,7 @@ export async function requestConditionalChatInput(player: Player, conditions: (p
                     delete currentlyRequestedChatInput[player.id].conditionalInput[id];
                     reject(new TimeoutError("The request timed out."));
                     return;
-                } else if (!!options.expireConditions ? currentlyRequestedChatInput[player.id].conditionalInput[id].expireConditions(currentlyRequestedChatInput[player.id].conditionalInput[id]) ?? false : false) {
+                } else if (!!options.expireConditions ? currentlyRequestedChatInput[player.id].conditionalInput[id].expireConditions!(currentlyRequestedChatInput[player.id].conditionalInput[id]) ?? false : false) {
                     delete currentlyRequestedChatInput[player.id].conditionalInput[id];
                     reject(new ExpireError("The request expired."));
                     return;

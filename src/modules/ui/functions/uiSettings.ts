@@ -39,7 +39,7 @@ export async function uiSettings(sourceEntity: loosePlayerType): Promise<0 | 1> 
             const r = await form.forceShow(player);
             if (r.canceled) return 1;
 
-            let response = r.selection;
+            let response = r.selection!;
             switch ((["main", "menuConfigurations", "advanced", "back", "close"] as const)[response]) {
                 case "main":
                     if ((await uiSettings_main(player)) === 1) {

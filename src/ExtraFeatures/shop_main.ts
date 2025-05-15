@@ -74,7 +74,7 @@ export async function mainShopSystemSettings(sourceEntitya: Entity | executeComm
         .then(async (r) => {
             if (r.canceled) return 1 as const;
 
-            let response = r.selection;
+            let response = r.selection!;
             switch (response) {
                 case 0:
                     if ((await ServerShopManager.serverShopSystemSettings(sourceEntity)) === 1) {

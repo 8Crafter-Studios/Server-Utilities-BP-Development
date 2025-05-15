@@ -56,14 +56,14 @@ export async function fillBlocksHSG(
                         try {
                             if (!!v.dimension
                                 .getBlock(v)
-                                .getComponent("inventory")) {
+                                ?.getComponent("inventory")) {
                                 clearContainer(
                                     v.dimension
                                         .getBlock(v)
-                                        .getComponent("inventory").container
+                                        ?.getComponent("inventory").container
                                 );
                             }
-                            v.dimension.getBlock(v).setPermutation(blockb);
+                            v.dimension.getBlock(v)?.setPermutation(blockb);
                             counter++;
                         } catch (e) {
                             if (e instanceof TypeError ||
@@ -87,7 +87,7 @@ export async function fillBlocksHSG(
                     options?.minMSBetweenYields ?? 2000,
                     (v) => {
                         try {
-                            v.dimension.getBlock(v).setPermutation(blockb);
+                            v.dimension.getBlock(v)?.setPermutation(blockb);
                             counter++;
                         } catch (e) {
                             if (e instanceof TypeError ||
@@ -119,7 +119,7 @@ export async function fillBlocksHSG(
                         try {
                             if (!!options?.matchingBlockStates
                                 ? BlockTypes.get(options?.matchingBlock) ==
-                                v.dimension.getBlock(v).type &&
+                                v.dimension.getBlock(v)?.type &&
                                 matchingblockb.getAllStates() ==
                                 Object.fromEntries(
                                     Object.entries(
@@ -138,8 +138,8 @@ export async function fillBlocksHSG(
                                     )
                                 )
                                 : BlockTypes.get(options?.matchingBlock) ==
-                                v.dimension.getBlock(v).type) {
-                                v.dimension.getBlock(v).setPermutation(blockb);
+                                v.dimension.getBlock(v)?.type) {
+                                v.dimension.getBlock(v)?.setPermutation(blockb);
                                 counter++;
                             }
                         } catch (e) {
@@ -166,16 +166,16 @@ export async function fillBlocksHSG(
                         try {
                             if (!!v.dimension
                                 .getBlock(v)
-                                .getComponent("inventory")) {
+                                ?.getComponent("inventory")) {
                                 clearContainer(
                                     v.dimension
                                         .getBlock(v)
-                                        .getComponent("inventory").container
+                                        ?.getComponent("inventory").container
                                 );
                             }
                             if (!!options?.matchingBlockStates
                                 ? BlockTypes.get(options?.matchingBlock) ==
-                                v.dimension.getBlock(v).type &&
+                                v.dimension.getBlock(v)?.type &&
                                 matchingblockb.getAllStates() ==
                                 Object.fromEntries(
                                     Object.entries(
@@ -194,8 +194,8 @@ export async function fillBlocksHSG(
                                     )
                                 )
                                 : BlockTypes.get(options?.matchingBlock) ==
-                                v.dimension.getBlock(v).type) {
-                                v.dimension.getBlock(v).setPermutation(blockb);
+                                v.dimension.getBlock(v)?.type) {
+                                v.dimension.getBlock(v)?.setPermutation(blockb);
                                 counter++;
                             }
                         } catch (e) {

@@ -52,7 +52,7 @@ export async function extraFeaturesSettings(
             // This will stop the code when the player closes the form
             if (r.canceled) return 1 as const;
 
-            let response = r.selection;
+            let response = r.selection!;
             switch (response) {
                 case 0:
                     if ((await worldBorderSettingsDimensionSelector(sourceEntity)) == 1) {

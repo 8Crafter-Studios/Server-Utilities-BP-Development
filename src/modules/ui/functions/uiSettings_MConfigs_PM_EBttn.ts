@@ -59,7 +59,7 @@ export async function uiSettings_menuConfigurations_playerMenu_editButtons(sourc
             if (r.canceled) return 1;
 
             switch (
-                r.selection < menuConfig.buttons.length
+                r.selection! < menuConfig.buttons.length
                     ? ("button" as const)
                     : (["addRemovedButtons", "reset", "back", "close"] as const)[r.selection! - menuConfig.buttons.length]
             ) {
@@ -140,7 +140,7 @@ Default Button Index: ${button.defaultButtonIndex}${button.deprecated ? "\n§pTh
                         if (rb.selection === buttons.length + 1) {
                             return 0;
                         }
-                        const destinationIndex = rb.selection + r.selection;
+                        const destinationIndex = rb.selection! + r.selection!;
                         const currentButtons = menuConfig.buttons;
                         currentButtons.splice(
                             currentButtons.findIndex((w) => w === buttonID),

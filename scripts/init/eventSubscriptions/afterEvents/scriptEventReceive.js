@@ -823,7 +823,7 @@ forceShow(form, players[players.findIndex((x) => x == sourceEntity)] as any).the
     // This will stop the code when the player closes the form
     if (r.canceled) return;
 
-    let response = r.selection;
+    let response = r.selection!;
     switch (response) {
         case 0:
             

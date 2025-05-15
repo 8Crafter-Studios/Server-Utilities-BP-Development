@@ -46,7 +46,7 @@ export function* generateInverseSkygridBG(
                                     x: Math.floor(x),
                                     y: Math.floor(y),
                                     z: Math.floor(z),
-                                    dimension: dimension,
+                                    dimension: dimension!,
                                 },
                                 index
                             );
@@ -81,7 +81,7 @@ export function* generateInverseSkygridBG(
                                     x: Math.floor(x),
                                     y: Math.floor(y),
                                     z: Math.floor(z),
-                                    dimension: dimension,
+                                    dimension: dimension!,
                                 },
                                 index
                             );

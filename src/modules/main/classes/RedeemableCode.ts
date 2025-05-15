@@ -1,36 +1,44 @@
 import { Player, StructureSaveMode, type Dimension, type DimensionLocation, type ItemStack } from "@minecraft/server";
 import { getSuperUniqueID } from "modules/utilities/functions/getSuperUniqueID";
 
+/**
+ * The list of loaded redeemable codes.
+ *
+ * @type {RedeemableCode[]}
+ */
 let codes: RedeemableCode[] = [];
 
+/**
+ * Represents a redeemable code.
+ */
 export class RedeemableCode {
     /**
      * The code that users enter to redeem this code.
      *
      * @type {string}
      */
-    code: string;
+    public code: string;
     /**
      * The super unique ID of this code.
      *
      * @type {string}
      * @readonly
      */
-    readonly id: string;
+    public readonly id: string;
     /**
      * List of UUIDs of players who have redeemed this code.
      *
      * @type {string[]}
      * @default []
      */
-    redeemers: string[] = [];
+    public redeemers: string[] = [];
     /**
      * How many times this code has been used.
      *
      * @type {bigint}
      * @default 0n
      */
-    uses: bigint = 0n;
+    public uses: bigint = 0n;
     /**
      * The maximum number of uses allowed for this code.
      *
@@ -38,7 +46,7 @@ export class RedeemableCode {
      *
      * @type {bigint}
      */
-    maxUses: bigint = -1n;
+    public maxUses: bigint = -1n;
     /**
      * When this code should expire.
      * 
@@ -46,9 +54,9 @@ export class RedeemableCode {
      *
      * @type {number}
      */
-    expirationTime: number = -1;
+    public expirationTime: number = -1;
 
-    constructor(code: string, savedDetails?: { id: string; redeemers: string[]; uses: bigint; maxUses: bigint; expirationTime: number }) {
+    public constructor(code: string, savedDetails?: { id: string; redeemers: string[]; uses: bigint; maxUses: bigint; expirationTime: number }) {
         this.code = code;
         if(savedDetails !== undefined){
             this.redeemers = savedDetails.redeemers;
@@ -79,9 +87,9 @@ export class RedeemableCode {
      * This method performs the following actions:
      * 1. Filters out any existing code that matches the current instance's code or id.
      * 2. Adds the current instance to the list of codes.
-     * 3. Calls the static method `saveCodes` to persist the updated list of codes.
+     * 3. Calls the static method {@link saveCodes} to persist the updated list of codes.
      */
-    save(): void {
+    public save(): void {
         codes = codes.filter((c) => c.code !== this.code && c.id !== this.id);
         codes.push(this);
         RedeemableCode.saveCodes();
@@ -95,7 +103,7 @@ export class RedeemableCode {
      * list of codes by calling `RedeemableCode.saveCodes()`, and deletes the structure
      * associated with this redeemable code using the `world.structureManager.delete` method.
      */
-    remove(): void {
+    public remove(): void {
         codes = codes.filter((c) => c.code !== this.code && c.id !== this.id);
         RedeemableCode.saveCodes();
         world.structureManager.delete("redeemableCodeItem:" + this.id);
@@ -111,7 +119,7 @@ export class RedeemableCode {
      * @returns {ItemStack} The item stack retrieved from the entity's inventory.
      * @throws {ReferenceError} If no entity with the specified dynamic property is found.
      */
-    getItem(loadLocation: DimensionLocation): ItemStack {
+    public getItem(loadLocation: DimensionLocation): ItemStack {
         world.structureManager.place("redeemableCodeItem:" + this.id, loadLocation.dimension, Vector.add(loadLocation, { x: 0, y: 10, z: 0 }), {
             includeBlocks: false,
             includeEntities: true,
@@ -124,7 +132,7 @@ export class RedeemableCode {
                 `No entity with a andexdb:saved_item_save_id dynamic property set to ${this.id} was found inside of the specified structure.`
             );
         }
-        const itemStack = entity.getComponent("inventory").container.getItem(0);
+        const itemStack = entity.getComponent("inventory")!.container.getItem(0)!;
         entity.remove();
         return itemStack;
     }
@@ -141,7 +149,7 @@ export class RedeemableCode {
      * 4. Removes the storage entity after saving.
      * 5. Teleports the other entities back to their original locations.
      */
-    setItem(item: ItemStack, saveLocation: DimensionLocation): void {
+    public setItem(item: ItemStack, saveLocation: DimensionLocation): void {
         /**
          * This makes the script temporarily teleport the other entities away so that when it saves the storage entity, it can't save and possibly duplicate other entities.
          */
@@ -155,7 +163,7 @@ export class RedeemableCode {
             z: Math.floor(saveLocation.z) + 0.5,
         });
         entity.setDynamicProperty("andexdb:saved_item_save_id", this.id);
-        entity.getComponent("inventory").container.setItem(0, item);
+        entity.getComponent("inventory")!.container.setItem(0, item);
         otherEntities.forEach((v) => tryrun(() => v.teleport(Vector.add(v.location, { x: 0, y: 50, z: 0 }))));
         try {
             world.structureManager.createFromWorld(
@@ -196,7 +204,7 @@ export class RedeemableCode {
      * @throws {Error} If the code has reached the maximum number of uses.
      * @throws {Error} If the player has already redeemed the code.
      */
-    redeem(player: Player): void {
+    public redeem(player: Player): void {
         if (this.maxUses !== -1n && this.uses >= this.maxUses) {
             throw new Error("This code has reached the maximum number of uses.");
         } else if (this.redeemers.includes(player.id)) {
@@ -212,7 +220,7 @@ export class RedeemableCode {
      *
      * @returns {{ code: string; id: string; redeemers: string[]; uses: bigint; maxUses: bigint; expirationTime: number; }} An object containing the code, id, redeemers, uses, max uses, and expiration time of the RedeemableCode instance.
      */
-    toJSONB(): { code: string; id: string; redeemers: string[]; uses: bigint; maxUses: bigint; expirationTime: number } {
+    public toJSONB(): { code: string; id: string; redeemers: string[]; uses: bigint; maxUses: bigint; expirationTime: number } {
         return {
             code: this.code,
             id: this.id,
@@ -222,22 +230,22 @@ export class RedeemableCode {
             expirationTime: this.expirationTime,
         };
     }
-    static addCode(code: string, item: ItemStack, saveLocation: DimensionLocation): void {
+    public static addCode(code: string, item: ItemStack, saveLocation: DimensionLocation): void {
         const newCode = new RedeemableCode(code);
         newCode.setItem(item, saveLocation);
         newCode.save();
     }
-    static removeCode(code: string): void {
+    public static removeCode(code: string): void {
         codes = codes.filter((c) => c.code !== code);
         RedeemableCode.saveCodes();
     }
-    static getCode(code: string): RedeemableCode | undefined {
+    public static getCode(code: string): RedeemableCode | undefined {
         return codes.find((c) => c.code === code);
     }
-    static getAll(): RedeemableCode[] {
+    public static getAll(): RedeemableCode[] {
         return codes.filter(() => true);
     }
-    static redeemCode(code: string, player: Player): void {
+    public static redeemCode(code: string, player: Player): void {
         const codeInstance = this.getCode(code);
         if (codeInstance !== undefined) {
             codeInstance.redeem(player);
@@ -245,10 +253,10 @@ export class RedeemableCode {
             throw new Error("Invalid code.");
         }
     }
-    static loadCodes(): void {
+    public static loadCodes(): void {
         codes = tryget(() => JSONB.parse(world.getStringFromDynamicProperties("redeemableCodes", "[]")).map((c: ReturnType<RedeemableCode["toJSONB"]>)=>new RedeemableCode(c.code, {...c}))) ?? [];
     }
-    static saveCodes(): void {
+    public static saveCodes(): void {
         world.saveStringToDynamicProperties(JSONB.stringify(codes), "redeemableCodes", true);
     }
 }

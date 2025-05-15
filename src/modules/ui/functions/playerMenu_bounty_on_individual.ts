@@ -13,7 +13,7 @@ export async function playerMenu_bounty_on_individual(
     bounty: Bounty,
     sourcePlayer?: savedPlayer
 ): Promise<0 | 1> {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : (sourceEntitya as Player);
     if (!(sourceEntity instanceof Player)) {
         throw new TypeError(
             "Invalid Player. Expected an instance of the Player class, or an instance of the executeCommandPlayerW class with a Player linked to it, but instead got " +
@@ -40,6 +40,7 @@ export async function playerMenu_bounty_on_individual(
         }
     }
     const source = sourcePlayer ?? bounty.getLinkedSourceSavedPlayer();
+    if (!source) throw new ReferenceError("[playerMenu_bounty] No source player found.");
     let form = new ActionFormData();
     form.title(customFormUICodes.action.titles.formStyles.medium + sourceEntity.name);
     form.body(
@@ -63,6 +64,7 @@ export async function playerMenu_bounty_on_individual(
                 case "close":
                     return 0;
                 default:
+                    throw new Error("Invalid selection: " + r.selection);
             }
         })
         .catch((e) => {

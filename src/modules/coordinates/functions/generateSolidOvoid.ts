@@ -22,7 +22,7 @@ export function generateSolidOvoid(
                                 x: x,
                                 y: y,
                                 z: z,
-                                dimension: dimension,
+                                dimension: dimension!,
                             });
                         }
                     }
@@ -42,7 +42,7 @@ export function generateSolidOvoid(
                             x: x,
                             y: y,
                             z: z,
-                            dimension: dimension,
+                            dimension: dimension!,
                         });
                     }
                 }

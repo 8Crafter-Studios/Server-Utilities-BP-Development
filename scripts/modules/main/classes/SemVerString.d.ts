@@ -5,9 +5,9 @@ export declare class SemVerString {
     major: number;
     minor: number;
     patch: number;
-    private pre_release_stage_internal;
-    private pre_release_version_internal;
-    build: string;
+    private pre_release_stage_internal?;
+    private pre_release_version_internal?;
+    build?: string | undefined;
     constructor(major: number, minor: number, patch: number, pre_release?: string, build?: string);
     get pre_release(): string;
     set pre_release(pre_release: string);
@@ -22,9 +22,9 @@ export declare class SemVerString {
         major: number;
         minor: number;
         patch: number;
-        pre_release_stage: string;
-        pre_release_version: string;
-        build: string;
+        pre_release_stage: string | undefined;
+        pre_release_version: string | undefined;
+        build: string | undefined;
         type: string;
     };
     static pre_release_regex: RegExp;

@@ -34,7 +34,7 @@ export function* generateMinecraftCircleOutlineBG(
                                 x: x,
                                 y: center.y,
                                 z: z,
-                                dimension: dimension,
+                                dimension: dimension!,
                             });
                         }
                     }
@@ -61,7 +61,7 @@ export function* generateMinecraftCircleOutlineBG(
                             x: x,
                             y: center.y,
                             z: z,
-                            dimension: dimension,
+                            dimension: dimension!,
                         });
                     }
                     if (Date.now() - msSinceLastYieldStart >=

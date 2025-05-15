@@ -6,7 +6,7 @@ export function parseJSONifiedNBTData(nbt: { block_indices: number[]; block_pale
                 return Object.fromEntries(
                     Object.entries(object.value).map((t): any => [
                         t[0],
-                        parseObject(t[1]),
+                        parseObject(t[1]!),
                     ])
                 );
                 break;
@@ -35,7 +35,7 @@ export function parseJSONifiedNBTData(nbt: { block_indices: number[]; block_pale
         switch (object.type) {
             case "compound":
                 return object.value.map((t: { [s: string]: unknown; } | ArrayLike<unknown>) => Object.fromEntries(
-                    Object.entries(t).map((t) => [t[0], parseObject(t[1])])
+                    Object.entries(t).map((t) => [t[0], parseObject(t[1]!)])
                 )
                 );
                 break;

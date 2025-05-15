@@ -19,7 +19,7 @@ export async function playerMenu_bounties_list_from(
     },
     cachedBounties?: [bounty: Bounty, target: savedPlayer][]
 ): Promise<0 | 1> {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : (sourceEntitya as Player);
     if (!(sourceEntity instanceof Player)) {
         throw new TypeError(
             "Invalid Player. Expected an instance of the Player class, or an instance of the executeCommandPlayerW class with a Player linked to it, but instead got " +
@@ -114,7 +114,7 @@ export async function playerMenu_bounties_list_from(
             if (r.canceled) return 1;
 
             switch (
-                (["search", "previous", "go", "next", "", ""] as const)[r.selection!] ??
+                (["search", "previous", "go", "next", "", "", undefined] as const)[r.selection!] ??
                 (!!displayBountiesB[r.selection! - 6] ? "bounty" : undefined) ??
                 (["back", "close", "refresh"] as const)[r.selection! - displayBountiesB.length - 6]
             ) {
@@ -161,6 +161,7 @@ export async function playerMenu_bounties_list_from(
                                 .submitButton("Go To Page")
                                 .forceShow(sourceEntity as Player)
                     );
+                    if(!rb || rb.canceled) return await playerMenu_bounties_list_from(sourceEntity, page, maxbountiesperpage, search, cachedBounties);
                     return await playerMenu_bounties_list_from(
                         sourceEntity,
                         Math.max(1, Math.min(numpages, (rb.formValues?.[0] as string)?.toNumber() ?? page + 1)) - 1,
@@ -186,6 +187,7 @@ export async function playerMenu_bounties_list_from(
                 case "close":
                     return 0;
                 default:
+                    throw new Error("Invalid selection: " + r.selection);
             }
         })
         .catch(async (e) => {

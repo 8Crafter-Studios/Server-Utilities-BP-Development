@@ -40,7 +40,7 @@ export function* generateSkygridBG(
                                     x: Math.floor(x),
                                     y: Math.floor(y),
                                     z: Math.floor(z),
-                                    dimension: dimension,
+                                    dimension: dimension!,
                                 },
                                 index
                             );
@@ -68,7 +68,7 @@ export function* generateSkygridBG(
                                 x: Math.floor(x),
                                 y: Math.floor(y),
                                 z: Math.floor(z),
-                                dimension: dimension,
+                                dimension: dimension!,
                             },
                             index
                         );

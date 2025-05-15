@@ -67,7 +67,7 @@ export async function playerMenu(sourceEntity: loosePlayerType): Promise<0> {
                     return false;
                 }
                 if ((b as menuButtonIdsType[string]["buttons"][string]).extraVisibilityConditionsCheck !== undefined) {
-                    return (b as menuButtonIdsType[string]["buttons"][string]).extraVisibilityConditionsCheck();
+                    return (b as menuButtonIdsType[string]["buttons"][string]).extraVisibilityConditionsCheck!();
                 }
                 return true;
             });
@@ -138,7 +138,7 @@ form.button("Entity Debugger", "textures/ui/debug_glyph_color");*/ /*
             const r = await form.forceShow(player);
             if (r.canceled) return 0;
 
-            switch (buttons[r.selection!]?.[0] ?? (["close"] as const)[r.selection! - buttons.length]) {
+            switch (([...buttons, undefined] as const)[r.selection!]?.[0] ?? (["close"] as const)[r.selection! - buttons.length]) {
                 case "leaderboards":
                     if ((await playerMenu_leaderboards(player)) === 1) {
                         continue;
@@ -219,7 +219,7 @@ form.button("Entity Debugger", "textures/ui/debug_glyph_color");*/ /*
                 case "close":
                     return 0;
                 default:
-                    return 0;
+                    throw new Error("Invalid selection: " + r.selection);
             }
         } catch (e) {
             console.error(e, e.stack);

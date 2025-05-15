@@ -38,7 +38,7 @@ export async function advancedSettings(sourceEntity: loosePlayerType): Promise<0
             const r = await form.forceShow(player);
             if (r.canceled) return 1;
 
-            let response = r.selection;
+            let response = r.selection!;
             switch ((["debug", "manageEventSubscriptions", "evalAutoExecuteSettings", "back", "close"] as const)[response]) {
                 case "debug":
                     if ((await addonDebugUI(player)) === 1) {

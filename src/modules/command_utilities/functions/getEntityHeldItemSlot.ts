@@ -1,7 +1,7 @@
-import { Entity, EquipmentSlot } from "@minecraft/server";
+import { ContainerSlot, Entity, EquipmentSlot } from "@minecraft/server";
 
-export function getEntityHeldItemSlot(entity: Entity) {
+export function getEntityHeldItemSlot(entity: Entity): ContainerSlot | undefined {
     return entity
         .getComponent("equippable")
-        .getEquipmentSlot(EquipmentSlot.Mainhand);
+        ?.getEquipmentSlot(EquipmentSlot.Mainhand);
 }

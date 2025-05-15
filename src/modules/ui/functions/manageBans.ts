@@ -37,7 +37,7 @@ export async function manageBans(
     const player = extractPlayerFromLooseEntityType(sourceEntity);
     var currentParameters = {
         player,
-        pagen,
+        pagen: pagen as number | undefined,
         maxentriesperpage,
         search,
         cachedEntries,
@@ -61,7 +61,7 @@ export async function manageBans(
             }
         }
         let form = new ActionFormData();
-        const page = Math.max(0, pagen);
+        const page = Math.max(0, pagen ?? 0);
         let displayEntries: [ban, "id" | "name", "valid" | "expired"][] = cachedEntries ?? [];
         if (cachedEntries === undefined) {
             displayEntries = [
@@ -161,7 +161,7 @@ export async function manageBans(
             if (r.canceled) return 1;
 
             switch (
-                (["search", "previous", "go", "next", "", ""] as const)[r.selection!] ??
+                (["search", "previous", "go", "next", "", "", undefined] as const)[r.selection!] ??
                 (!!displayEntriesB[r.selection! - 6] ? "entry" : undefined) ??
                 (["addIDBan", "addNameBan", "back", "close", "refresh"] as const)[r.selection! - displayEntriesB.length - 6]
             ) {
@@ -207,6 +207,7 @@ export async function manageBans(
                                 .submitButton("Go To Page")
                                 .forceShow(player)
                     );
+                    if(!r || r.canceled) continue;
                     currentParameters = {
                         player,
                         pagen: Math.max(1, Math.min(numpages, (r.formValues?.[0] as string)?.toNumber() ?? page + 1)) - 1,
@@ -284,7 +285,7 @@ export async function manageBansOnPlayer(
     const player = extractPlayerFromLooseEntityType(sourceEntity);
     var currentParameters = {
         player,
-        pagen,
+        pagen: pagen as number | undefined,
         maxentriesperpage,
         search,
         cachedEntries,
@@ -308,7 +309,7 @@ export async function manageBansOnPlayer(
             }
         }
         let form = new ActionFormData();
-        const page = Math.max(0, pagen);
+        const page = Math.max(0, pagen ?? 0);
         let displayEntries: [ban, "id" | "name", "valid" | "expired"][] = cachedEntries ?? [];
         if (cachedEntries === undefined) {
             displayEntries = [
@@ -414,7 +415,7 @@ export async function manageBansOnPlayer(
             if (r.canceled) return 1;
 
             switch (
-                (["search", "previous", "go", "next", "", ""] as const)[r.selection!] ??
+                (["search", "previous", "go", "next", "", "", undefined] as const)[r.selection!] ??
                 (!!displayEntriesB[r.selection! - 6] ? "entry" : undefined) ??
                 (["addIDBan", "addNameBan", "back", "close", "refresh"] as const)[r.selection! - displayEntriesB.length - 6]
             ) {
@@ -460,6 +461,7 @@ export async function manageBansOnPlayer(
                                 .submitButton("Go To Page")
                                 .forceShow(player)
                     );
+                    if(!r || r.canceled) continue;
                     currentParameters = {
                         player,
                         pagen: Math.max(1, Math.min(numpages, (r.formValues?.[0] as string)?.toNumber() ?? page + 1)) - 1,

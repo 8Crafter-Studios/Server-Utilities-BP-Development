@@ -63,14 +63,14 @@ export async function fillDrain<LiteModeEnabled extends boolean = false>(
                             if (Math.random() <= integrity / 100) {
                                 try {
                                     const b = dimension.getBlock({ x, y, z });
-                                    if ([
+                                    if (b && [
                                         "minecraft:water",
                                         "minecraft:flowing_water",
                                         "minecraft:lava",
                                         "minecraft:flowing_lava",
                                     ].includes(b.typeId)) {
                                         b.setType("minecraft:air");
-                                    } else if (b.canContainLiquid(modules.mcServer.LiquidType.Water) == true &&
+                                    } else if (b && b.canContainLiquid(modules.mcServer.LiquidType.Water) == true &&
                                         b.isWaterlogged) {
                                         b.setWaterlogged(false);
                                     }
@@ -95,14 +95,14 @@ export async function fillDrain<LiteModeEnabled extends boolean = false>(
                         for (let z = Math.min(begin.z, end.z); z <= Math.max(begin.z, end.z); z++) {
                             try {
                                 const b = dimension.getBlock({ x, y, z });
-                                if ([
+                                if (b && [
                                     "minecraft:water",
                                     "minecraft:flowing_water",
                                     "minecraft:lava",
                                     "minecraft:flowing_lava",
                                 ].includes(b.typeId)) {
                                     b.setType("minecraft:air");
-                                } else if (b.canContainLiquid(modules.mcServer.LiquidType.Water) == true &&
+                                } else if (b && b.canContainLiquid(modules.mcServer.LiquidType.Water) == true &&
                                     b.isWaterlogged) {
                                     b.setWaterlogged(false);
                                 }
@@ -128,16 +128,16 @@ export async function fillDrain<LiteModeEnabled extends boolean = false>(
                         for (let z = Math.min(begin.z, end.z); z <= Math.max(begin.z, end.z); z++) {
                             try {
                                 const b = dimension.getBlock({ x, y, z });
-                                if (options.blockMask.testIfMatches(b)) {
+                                if (options.blockMask.testIfMatches(b!)) {
                                     if (Math.random() <= integrity / 100) {
-                                        if ([
+                                        if (b && [
                                             "minecraft:water",
                                             "minecraft:flowing_water",
                                             "minecraft:lava",
                                             "minecraft:flowing_lava",
                                         ].includes(b.typeId)) {
                                             b.setType("minecraft:air");
-                                        } else if (b.canContainLiquid(modules.mcServer.LiquidType.Water) == true &&
+                                        } else if (b && b.canContainLiquid(modules.mcServer.LiquidType.Water) == true &&
                                             b.isWaterlogged) {
                                             b.setWaterlogged(false);
                                         }
@@ -163,15 +163,15 @@ export async function fillDrain<LiteModeEnabled extends boolean = false>(
                         for (let z = Math.min(begin.z, end.z); z <= Math.max(begin.z, end.z); z++) {
                             try {
                                 const b = dimension.getBlock({ x, y, z });
-                                if (options.blockMask.testIfMatches(b)) {
-                                    if ([
+                                if (options.blockMask.testIfMatches(b!)) {
+                                    if (b && [
                                         "minecraft:water",
                                         "minecraft:flowing_water",
                                         "minecraft:lava",
                                         "minecraft:flowing_lava",
                                     ].includes(b.typeId)) {
                                         b.setType("minecraft:air");
-                                    } else if (b.canContainLiquid(modules.mcServer.LiquidType.Water) == true &&
+                                    } else if (b && b.canContainLiquid(modules.mcServer.LiquidType.Water) == true &&
                                         b.isWaterlogged) {
                                         b.setWaterlogged(false);
                                     }
@@ -203,7 +203,7 @@ export async function fillDrain<LiteModeEnabled extends boolean = false>(
                             if (Math.random() <= integrity / 100) {
                                 try {
                                     const b = dimension.getBlock({ x, y, z });
-                                    if ([
+                                    if (b && [
                                         "minecraft:water",
                                         "minecraft:flowing_water",
                                         "minecraft:lava",
@@ -211,7 +211,7 @@ export async function fillDrain<LiteModeEnabled extends boolean = false>(
                                     ].includes(b.typeId)) {
                                         b.setType("minecraft:air");
                                         counter++; // Increase the counter.
-                                    } else if (b.canContainLiquid(modules.mcServer.LiquidType.Water) == true &&
+                                    } else if (b && b.canContainLiquid(modules.mcServer.LiquidType.Water) == true &&
                                         b.isWaterlogged) {
                                         b.setWaterlogged(false);
                                         counter++; // Increase the counter.
@@ -237,7 +237,7 @@ export async function fillDrain<LiteModeEnabled extends boolean = false>(
                         for (let z = Math.min(begin.z, end.z); z <= Math.max(begin.z, end.z); z++) {
                             try {
                                 const b = dimension.getBlock({ x, y, z });
-                                if ([
+                                if (b && [
                                     "minecraft:water",
                                     "minecraft:flowing_water",
                                     "minecraft:lava",
@@ -245,7 +245,7 @@ export async function fillDrain<LiteModeEnabled extends boolean = false>(
                                 ].includes(b.typeId)) {
                                     b.setType("minecraft:air");
                                     counter++; // Increase the counter.
-                                } else if (b.canContainLiquid(modules.mcServer.LiquidType.Water) == true &&
+                                } else if (b && b.canContainLiquid(modules.mcServer.LiquidType.Water) == true &&
                                     b.isWaterlogged) {
                                     b.setWaterlogged(false);
                                     counter++; // Increase the counter.
@@ -272,9 +272,9 @@ export async function fillDrain<LiteModeEnabled extends boolean = false>(
                         for (let z = Math.min(begin.z, end.z); z <= Math.max(begin.z, end.z); z++) {
                             try {
                                 const b = dimension.getBlock({ x, y, z });
-                                if (options.blockMask.testIfMatches(b)) {
+                                if (options.blockMask.testIfMatches(b!)) {
                                     if (Math.random() <= integrity / 100) {
-                                        if ([
+                                        if (b && [
                                             "minecraft:water",
                                             "minecraft:flowing_water",
                                             "minecraft:lava",
@@ -282,7 +282,7 @@ export async function fillDrain<LiteModeEnabled extends boolean = false>(
                                         ].includes(b.typeId)) {
                                             b.setType("minecraft:air");
                                             counter++; // Increase the counter.
-                                        } else if (b.canContainLiquid(modules.mcServer.LiquidType.Water) == true &&
+                                        } else if (b && b.canContainLiquid(modules.mcServer.LiquidType.Water) == true &&
                                             b.isWaterlogged) {
                                             b.setWaterlogged(false);
                                             counter++; // Increase the counter.
@@ -309,8 +309,8 @@ export async function fillDrain<LiteModeEnabled extends boolean = false>(
                         for (let z = Math.min(begin.z, end.z); z <= Math.max(begin.z, end.z); z++) {
                             try {
                                 const b = dimension.getBlock({ x, y, z });
-                                if (options.blockMask.testIfMatches(b)) {
-                                    if ([
+                                if (options.blockMask.testIfMatches(b!)) {
+                                    if (b && [
                                         "minecraft:water",
                                         "minecraft:flowing_water",
                                         "minecraft:lava",
@@ -318,7 +318,7 @@ export async function fillDrain<LiteModeEnabled extends boolean = false>(
                                     ].includes(b.typeId)) {
                                         b.setType("minecraft:air");
                                         counter++; // Increase the counter.
-                                    } else if (b.canContainLiquid(modules.mcServer.LiquidType.Water) == true &&
+                                    } else if (b && b.canContainLiquid(modules.mcServer.LiquidType.Water) == true &&
                                         b.isWaterlogged) {
                                         b.setWaterlogged(false);
                                         counter++; // Increase the counter.

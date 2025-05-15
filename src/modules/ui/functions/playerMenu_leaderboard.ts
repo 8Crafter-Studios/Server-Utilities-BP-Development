@@ -20,7 +20,7 @@ export async function playerMenu_leaderboard(
     },
     cachedPlayers?: [player: savedPlayer, score: string][]
 ): Promise<0 | 1> {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : (sourceEntitya as Player);
     if (!(sourceEntity instanceof Player)) {
         throw new TypeError(
             "Invalid Player. Expected an instance of the Player class, or an instance of the executeCommandPlayerW class with a Player linked to it, but instead got " +
@@ -80,7 +80,7 @@ export async function playerMenu_leaderboard(
                 : (typeof leaderboard.sorter == "number" ? leaderboard.sorter : ObjectiveSortOrder.Descending) == ObjectiveSortOrder.Descending
                 ? (a: [savedPlayer, string], b: [savedPlayer, string]) => (a[1] > b[1] ? -1 : a[1] < b[1] ? 1 : 0)
                 : (a: [savedPlayer, string], b: [savedPlayer, string]) => (a[1] > b[1] ? 1 : a[1] < b[1] ? -1 : 0);
-        const leaderboardObjective = leaderboard.getterFunction != undefined ? undefined : world.scoreboard.getObjective(leaderboard.scoreboardObjective);
+        const leaderboardObjective = leaderboard.getterFunction != undefined ? undefined : world.scoreboard.getObjective(leaderboard.scoreboardObjective!);
         const participants = leaderboard.getterFunction != undefined ? undefined : world.scoreboard.getParticipants();
         const getterFunction =
             leaderboard.getterFunction != undefined
@@ -145,7 +145,7 @@ export async function playerMenu_leaderboard(
             displayPlayersB.forEach((p, i) => {
                 form.button(
                     customFormUICodes.action.buttons.positions.main_only +
-                        leaderboard.displayOptions.valueDisplayTransformer_button(
+                        leaderboard.displayOptions.valueDisplayTransformer_button!(
                             `${numberFormatter_compact_lite(p[1], leaderboard.displayOptions.currencyPrefix ?? "", { 3: 0, 2: 1, 1: 2 })}\n#${
                                 i + 1 + page * maxplayersperpage
                             }: ${p[0].name}`
@@ -169,7 +169,7 @@ export async function playerMenu_leaderboard(
             displayPlayersB.forEach((p, i) => {
                 form.button(
                     customFormUICodes.action.buttons.positions.main_only +
-                        leaderboard.displayOptions.valueDisplayTransformer_button(`${p[1]}\n#${i + 1 + page * maxplayersperpage}: ${p[0].name}`),
+                        leaderboard.displayOptions.valueDisplayTransformer_button!(`${p[1]}\n#${i + 1 + page * maxplayersperpage}: ${p[0].name}`),
                     p[0].isOnline ? "textures/ui/online" : p[0].isBanned ? "textures/ui/Ping_Offline_Red_Dark" : "textures/ui/offline"
                 );
             });
@@ -200,7 +200,7 @@ export async function playerMenu_leaderboard(
             if (r.canceled) return 1;
 
             switch (
-                (["search", "previous", "go", "next", "", ""] as const)[r.selection!] ??
+                (["search", "previous", "go", "next", "", "", undefined] as const)[r.selection!] ??
                 (!!displayPlayersB[r.selection! - 6] ? "player" : undefined) ??
                 (["back", "close", "refresh"] as const)[r.selection! - displayPlayersB.length - 6]
             ) {
@@ -250,6 +250,7 @@ export async function playerMenu_leaderboard(
                                 .submitButton("Go To Page")
                                 .forceShow(sourceEntity as Player)
                     );
+                    if(!rb || rb.canceled) return await playerMenu_leaderboard(sourceEntity, leaderboard, page, maxplayersperpage, search, displayPlayers);
                     return await playerMenu_leaderboard(
                         sourceEntity,
                         leaderboard,

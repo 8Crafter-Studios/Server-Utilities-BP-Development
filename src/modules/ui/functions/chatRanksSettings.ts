@@ -44,7 +44,7 @@ export async function chatRanksSettings(sourceEntity: loosePlayerType): Promise<
             const r = await form.forceShow(player);
             if (r.canceled) return 1;
 
-            let response = r.selection;
+            let response = r.selection!;
             switch ((["toggle", "chatStyle", "chatStyleSettings", "generalChatSettings", "previewChatMessage", "back", "close"] as const)[response]) {
                 case "toggle":
                     config.chatRanks.disableCustomChatMessages = !config.chatRanks.disableCustomChatMessages;

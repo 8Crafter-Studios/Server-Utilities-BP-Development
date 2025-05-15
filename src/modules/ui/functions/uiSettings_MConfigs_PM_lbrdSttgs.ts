@@ -43,7 +43,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
             const r = await form.forceShow(player);
             if (r.canceled) return 1;
 
-            let response = r.selection;
+            let response = r.selection!;
             switch (
                 ([/* "mainSettings",  */ "manageStatistics", "displayedLeaderboards", "displayedStatistics", "back", "close"] as const)[response] /* 
                 case "mainSettings":
@@ -92,7 +92,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
 export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_displayedLeaderboards(
     sourceEntitya: Entity | executeCommandPlayerW | Player
 ): Promise<0 | 1> {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : (sourceEntitya as Player);
     if (securityVariables.ultraSecurityModeEnabled) {
         if (securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.accessSettings") == false) {
             const r = await showMessage(
@@ -140,14 +140,14 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
             if (r.canceled) return 1;
 
             switch (
-                r.selection < leaderboards.length
+                r.selection! < leaderboards.length
                     ? ("button" as const)
                     : (["addLeaderboard", "back", "close", "reset"] as const)[r.selection! - leaderboards.length]
             ) {
                 case "button": {
                     const leaderboardID = leaderboards[r.selection!];
                     leaderboardID;
-                    const leaderboard = statistics.find((s) => s.id === leaderboardID);
+                    const leaderboard = statistics.find((s) => s.id === leaderboardID)!;
                     const rb = await new ActionFormData()
                         .title(customFormUICodes.action.titles.formStyles.medium + "Edit Button")
                         .body(
@@ -207,7 +207,7 @@ Default Button Index: ${leaderboard.type === "built-in" ? defaultPlayerMenuLeade
                         if (rb.selection === leaderboards.length + 1) {
                             return 0;
                         }
-                        const destinationIndex = rb.selection + r.selection;
+                        const destinationIndex = rb.selection! + r.selection!;
                         const currentButtons = menuConfig.leaderboards;
                         currentButtons.splice(
                             currentButtons.findIndex((w) => w === leaderboardID),
@@ -294,7 +294,7 @@ Default Button Index: ${leaderboard.type === "built-in" ? defaultPlayerMenuLeade
 export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_displayedLeaderboards_addLeaderboard(
     sourceEntitya: Entity | executeCommandPlayerW | Player
 ): Promise<0 | 1> {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : (sourceEntitya as Player);
     if (securityVariables.ultraSecurityModeEnabled) {
         if (securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.accessSettings") == false) {
             const r = await showMessage(
@@ -383,7 +383,7 @@ Default Button Index: ${button.type === "built-in" ? defaultPlayerMenuLeaderboar
 export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_displayedStatistics(
     sourceEntitya: Entity | executeCommandPlayerW | Player
 ): Promise<0 | 1> {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : (sourceEntitya as Player);
     if (securityVariables.ultraSecurityModeEnabled) {
         if (securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.accessSettings") == false) {
             const r = await showMessage(
@@ -433,14 +433,14 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
             if (r.canceled) return 1;
 
             switch (
-                r.selection < trackedStats.length
+                r.selection! < trackedStats.length
                     ? ("button" as const)
                     : (["addLeaderboard", "back", "close", "reset"] as const)[r.selection! - trackedStats.length]
             ) {
                 case "button": {
                     const leaderboardID = trackedStats[r.selection!];
                     leaderboardID;
-                    const leaderboard = statistics.find((s) => s.id === leaderboardID);
+                    const leaderboard = statistics.find((s) => s.id === leaderboardID)!;
                     const rb = await new ActionFormData()
                         .title(customFormUICodes.action.titles.formStyles.medium + "Edit Button")
                         .body(
@@ -500,7 +500,7 @@ Default Button Index: ${leaderboard.type === "built-in" ? defaultPlayerMenuLeade
                         if (rb.selection === trackedStats.length + 1) {
                             return 0;
                         }
-                        const destinationIndex = rb.selection + r.selection;
+                        const destinationIndex = rb.selection! + r.selection!;
                         const currentButtons = menuConfig.trackedStats;
                         currentButtons.splice(
                             currentButtons.findIndex((w) => w === leaderboardID),
@@ -584,7 +584,7 @@ Default Button Index: ${leaderboard.type === "built-in" ? defaultPlayerMenuLeade
 export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_displayedStatistics_addStatistic(
     sourceEntitya: Entity | executeCommandPlayerW | Player
 ): Promise<0 | 1> {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : (sourceEntitya as Player);
     if (securityVariables.ultraSecurityModeEnabled) {
         if (securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.accessSettings") == false) {
             const r = await showMessage(
@@ -670,7 +670,7 @@ Default Button Index: ${button.type === "built-in" ? defaultPlayerMenuLeaderboar
 export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics(
     sourceEntitya: Entity | executeCommandPlayerW | Player
 ): Promise<0 | 1> {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : (sourceEntitya as Player);
     if (securityVariables.ultraSecurityModeEnabled) {
         if (securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.accessSettings") == false) {
             const r = await showMessage(
@@ -699,7 +699,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
             let r = ra as ActionFormResponse;
             if (r.canceled) return 1;
 
-            let response = r.selection;
+            let response = r.selection!;
             switch ((["builtInStatistics", "customStatistics", "back", "close"] as const)[response]) {
                 case "builtInStatistics":
                     if ((await uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics_builtIn(sourceEntity)) == 1) {
@@ -730,7 +730,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
 export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics_builtIn(
     sourceEntitya: Entity | executeCommandPlayerW | Player
 ): Promise<0 | 1> {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : (sourceEntitya as Player);
     if (securityVariables.ultraSecurityModeEnabled) {
         if (securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.accessSettings") == false) {
             const r = await showMessage(
@@ -764,7 +764,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
             let r = ra as ActionFormResponse;
             if (r.canceled) return 1;
 
-            switch (r.selection < statistics.length ? ("button" as const) : (["back", "close", "reset"] as const)[r.selection! - statistics.length]) {
+            switch (r.selection! < statistics.length ? ("button" as const) : (["back", "close", "reset"] as const)[r.selection! - statistics.length]) {
                 case "button": {
                     if (
                         (await uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics_builtIn_statistic(
@@ -842,7 +842,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
     sourceEntitya: Entity | executeCommandPlayerW | Player,
     statistic: (typeof defaultPlayerMenuLeaderboardStatistics)[number]
 ): Promise<0 | 1> {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : (sourceEntitya as Player);
     if (securityVariables.ultraSecurityModeEnabled) {
         if (securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.accessSettings") == false) {
             const r = await showMessage(
@@ -883,6 +883,7 @@ Default Button Index: ${statistic.type === "built-in" ? defaultPlayerMenuLeaderb
                 return 0;
             }
         }
+        return 1;
     } catch (e) {
         console.error(e, e.stack);
         // Present the error to the user, and return 1 if they select "Back", and 0 if they select "Close".
@@ -910,7 +911,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
     sourceEntitya: Entity | executeCommandPlayerW | Player,
     statistic: (typeof defaultPlayerMenuLeaderboardStatistics)[number]
 ): Promise<1 | 0> {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : (sourceEntitya as Player);
     if (securityVariables.ultraSecurityModeEnabled) {
         if (securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.accessSettings") == false) {
             const r = await showMessage(
@@ -960,7 +961,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
             if (r.canceled) {
                 return 1 as const;
             }
-            const options = Object.fromEntries(includedOptions.map((o, i) => [o, r.formValues![i] as optionsList[typeof o]])) as Partial<optionsList>;
+            const options = Object.fromEntries(includedOptions.map((o, i) => [o, r.formValues![i] as optionsList[typeof o]])) as optionsList;
             includedOptions.forEach((v: keyof optionsList) => {
                 switch (v) {
                     case "enabled":
@@ -988,7 +989,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
 export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics_custom(
     sourceEntitya: Entity | executeCommandPlayerW | Player
 ): Promise<0 | 1> {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : (sourceEntitya as Player);
     if (securityVariables.ultraSecurityModeEnabled) {
         if (securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.accessSettings") == false) {
             const r = await showMessage(
@@ -1034,7 +1035,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
             let r = ra as ActionFormResponse;
             if (r.canceled) return 1;
 
-            switch (r.selection < statistics.length ? ("button" as const) : (["new", "back", "close", "reset"] as const)[r.selection! - statistics.length]) {
+            switch (r.selection! < statistics.length ? ("button" as const) : (["new", "back", "close", "reset"] as const)[r.selection! - statistics.length]) {
                 case "button":
                     if (
                         (await uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics_custom_statistic(
@@ -1117,7 +1118,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
     sourceEntitya: Entity | executeCommandPlayerW | Player,
     statistic: playerMenuLeaderboardStatistic<"custom" | "customAdvanced">
 ): Promise<0 | 1> {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : (sourceEntitya as Player);
     if (securityVariables.ultraSecurityModeEnabled) {
         if (securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.accessSettings") == false) {
             const r = await showMessage(
@@ -1215,7 +1216,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
     sourceEntitya: Entity | executeCommandPlayerW | Player,
     statistic: playerMenuLeaderboardStatistic<"custom" | "customAdvanced">
 ): Promise<1 | 0> {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : (sourceEntitya as Player);
     if (securityVariables.ultraSecurityModeEnabled) {
         if (securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.accessSettings") == false) {
             const r = await showMessage(
@@ -1290,7 +1291,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
             if (r.canceled) {
                 return 1 as const;
             }
-            const options = Object.fromEntries(includedOptions.map((o, i) => [o, r.formValues![i] as optionsList[typeof o]])) as Partial<optionsList>;
+            const options = Object.fromEntries(includedOptions.map((o, i) => [o, r.formValues![i] as optionsList[typeof o]])) as optionsList;
             includedOptions.forEach((v: keyof optionsList) => {
                 switch (v) {
                     case "addCommaSeparators":
@@ -1303,7 +1304,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
                         statistic.displayOptions.valueDisplayColor = options[v] === "" ? undefined : options[v];
                         break;
                     case "sorter":
-                        statistic.sorter = options[v];
+                        statistic.sorter = options[v]!;
                         break;
                     default:
                         throw new Error(`Save action for setting ${JSON.stringify(v)} was not defined.`);
@@ -1346,7 +1347,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
     sourceEntitya: Entity | executeCommandPlayerW | Player,
     statistic: playerMenuLeaderboardStatistic<"custom" | "customAdvanced">
 ): Promise<1 | 0> {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : (sourceEntitya as Player);
     if (securityVariables.ultraSecurityModeEnabled) {
         if (securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.accessSettings") == false) {
             const r = await showMessage(
@@ -1429,20 +1430,20 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
             if (r.canceled) {
                 return 1 as const;
             }
-            const options = Object.fromEntries(includedOptions.map((o, i) => [o, r.formValues![i] as optionsList[typeof o]])) as Partial<optionsList>;
+            const options = Object.fromEntries(includedOptions.map((o, i) => [o, r.formValues![i] as optionsList[typeof o]])) as optionsList;
             includedOptions.forEach((v: keyof optionsList) => {
                 switch (v) {
                     case "id":
-                        statistic.id = options[v];
+                        statistic.id = options[v]!;
                         break;
                     case "menuTitle":
-                        statistic.menuTitle = options[v];
+                        statistic.menuTitle = options[v]!;
                         break;
                     case "statsListDisplayName":
-                        statistic.statsListDisplayName = options[v];
+                        statistic.statsListDisplayName = options[v]!;
                         break;
                     case "buttonDisplayName":
-                        statistic.buttonDisplayName = options[v];
+                        statistic.buttonDisplayName = options[v]!;
                         break;
                     case "buttonIcon":
                         statistic.buttonIcon = options[v] === "" ? undefined : options[v];
@@ -1491,7 +1492,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
     sourceEntitya: Entity | executeCommandPlayerW | Player,
     statistic: playerMenuLeaderboardStatistic<"customAdvanced">
 ): Promise<1 | 0> {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : (sourceEntitya as Player);
     if (securityVariables.ultraSecurityModeEnabled) {
         if (securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.accessSettings") == false) {
             const r = await showMessage(
@@ -1537,7 +1538,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
             form.textField(
                 "§l§fGetter Function§r§c*§f\nA JavaScript function that will get a player's score for this statistic, it should accept one parameter of type savedPlayer, if you don't want a specific player appearing in the leaderboard, then have the function return undefined for them.\nThe type definitions for the savedPlayer class can be found in the declaration folder of the behavior pack, at §bBP/declaration/modules/player_save/classes/savedPlayer.d.ts§r.\nType: §f(§6player§b: §esavedPlayer§f) §d=> §cstring §b| §6undefined§r",
                 "(player: savedPlayer) => string | undefined",
-                { defaultValue: statistic.getterFunction.toString() }
+                { defaultValue: statistic.getterFunction?.toString() }
             ),
         valueType: () =>
             form.dropdown(
@@ -1592,7 +1593,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
             if (r.canceled) {
                 return 1 as const;
             }
-            const options = Object.fromEntries(includedOptions.map((o, i) => [o, r.formValues![i] as optionsList[typeof o]])) as Partial<optionsList>;
+            const options = Object.fromEntries(includedOptions.map((o, i) => [o, r.formValues![i] as optionsList[typeof o]])) as optionsList;
             includedOptions.forEachB((v: keyof optionsList) => {
                 switch (v) {
                     case "getterFunction":
@@ -1600,7 +1601,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
                             throw new SyntaxError("The Getter Function option is required, but you left it blank.");
                         }
                         try {
-                            statistic.getterFunction = eval?.(options[v]);
+                            statistic.getterFunction = eval?.(options[v]!);
                         } catch (e) {
                             if (e instanceof Error) {
                                 e.message = "The following error occurred while parsing the provided Getter Function: " + e.message;
@@ -1611,20 +1612,20 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
                         }
                         break;
                     case "valueType":
-                        statistic.valueType = (["string", "number", "bigint"] as const)[options[v]];
+                        statistic.valueType = (["string", "number", "bigint"] as const)[options[v]!];
                         break;
                     case "sortType":
                         if (options[v] === 2) {
                             statistic.sortType = "function";
                         } else {
                             statistic.sortType = "order";
-                            statistic.sorter = options[v];
+                            statistic.sorter = options[v]!;
                         }
                         break;
                     case "sorter":
                         if (options["sortType"] === 2) {
                             try {
-                                statistic.sorter = eval?.(options[v]);
+                                statistic.sorter = eval?.(options[v]!);
                             } catch (e) {
                                 if (e instanceof Error) {
                                     e.message = "The following error occurred while parsing the provided Sorter Function: " + e.message;
@@ -1637,7 +1638,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
                         break;
                     case "valueDisplayTransformer_button":
                         try {
-                            statistic.displayOptions.valueDisplayTransformer_button = options[v] === "" ? undefined : eval?.(options[v]);
+                            statistic.displayOptions.valueDisplayTransformer_button = options[v] === "" ? undefined : eval?.(options[v]!);
                         } catch (e) {
                             if (e instanceof Error) {
                                 e.message = "The following error occurred while parsing the provided Value Display Transformer - Button Function: " + e.message;
@@ -1649,7 +1650,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
                         break;
                     case "valueDisplayTransformer_statsList":
                         try {
-                            statistic.displayOptions.valueDisplayTransformer_statsList = options[v] === "" ? undefined : eval?.(options[v]);
+                            statistic.displayOptions.valueDisplayTransformer_statsList = options[v] === "" ? undefined : eval?.(options[v]!);
                         } catch (e) {
                             if (e instanceof Error) {
                                 e.message =
@@ -1699,7 +1700,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
 export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics_custom_newStatistic(
     sourceEntitya: Entity | executeCommandPlayerW | Player
 ): Promise<1 | 0> {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : (sourceEntitya as Player);
     if (securityVariables.ultraSecurityModeEnabled) {
         if (securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.accessSettings") == false) {
             const r = await showMessage(
@@ -1727,7 +1728,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
     })){
         throw new ReferenceError(`Error when parsing statistic.`);
     } */
-    let type: "custom" | "customAdvanced" = undefined as undefined;
+    let type: "custom" | "customAdvanced";
     const typeSelection = await showActions(
         sourceEntity,
         customFormUICodes.action.titles.formStyles.medium + "New Statistic",
@@ -1830,7 +1831,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
             if (r.canceled) {
                 return 1 as const;
             }
-            const options = Object.fromEntries(includedOptions.map((o, i) => [o, r.formValues![i] as optionsList[typeof o]])) as Partial<optionsList>;
+            const options = Object.fromEntries(includedOptions.map((o, i) => [o, r.formValues![i] as optionsList[typeof o]])) as optionsList;
             includedOptions.forEachB((v: keyof optionsList) => {
                 switch (v) {
                     case "id":

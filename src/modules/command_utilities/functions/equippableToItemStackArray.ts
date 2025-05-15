@@ -5,11 +5,11 @@ import { EquipmentSlots } from "modules/command_utilities/constants/EquipmentSlo
 export function equippableToItemStackArray(
     equippable: EntityEquippableComponent,
     includeMainhand: boolean = false
-) {
-    let itemList = [] as ItemStack[];
+): (ItemStack | undefined)[] {
+    let itemList = [] as (ItemStack | undefined)[];
     for (let i = 0; i < 5 + Number(includeMainhand); i++) {
         itemList.push(
-            equippable?.getEquipment(
+            equippable.getEquipment(
                 includeMainhand ? EquipmentSlots[i] : OtherEquipmentSlots[i]
             )
         );

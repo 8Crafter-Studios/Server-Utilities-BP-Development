@@ -5,12 +5,12 @@ export function entityToContainerSlotArray(
     entity: Entity,
     getContainer: boolean = true,
     getEquipment: boolean = true
-) {
+): ContainerSlot[] | undefined {
     let itemList = [] as ContainerSlot[];
     let container = entity.getComponent("inventory")?.container;
     let equipment = entity.getComponent("equippable");
     for (let i = 0; i < (container?.size ?? 0) && getContainer; i++) {
-        itemList.push(container.getSlot(i));
+        itemList.push(container!.getSlot(i));
     }
     for (let i = 0; i < 5 && getEquipment && !!equipment; i++) {
         itemList.push(equipment?.getEquipmentSlot(OtherEquipmentSlots[i]));

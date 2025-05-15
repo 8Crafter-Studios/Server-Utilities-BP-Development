@@ -47,7 +47,7 @@ export function* generateMinecraftOvoidBG(
                                     x: x,
                                     y: y,
                                     z: z,
-                                    dimension: dimension,
+                                    dimension: dimension!,
                                 });
                             }
                         }
@@ -83,7 +83,7 @@ export function* generateMinecraftOvoidBG(
                                 x: x,
                                 y: y,
                                 z: z,
-                                dimension: dimension,
+                                dimension: dimension!,
                             });
                         }
                     }

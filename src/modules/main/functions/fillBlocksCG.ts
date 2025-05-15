@@ -28,8 +28,8 @@ export function* fillBlocksCG(
         new BlockVolume(begin, end).getBlockLocationIterator()
     );
     var counter = 0;
-    var block = BlockTypes.get(matchingBlock).id;
-    var blockmatching = BlockTypes.get(matchingBlock).id;
+    var block = BlockTypes.get(matchingBlock!)?.id;
+    var blockmatching = BlockTypes.get(matchingBlock!)?.id;
     if (overrideAllBlockStates) {
         if (!!matchingBlock) {
             //console.warn("3");
@@ -51,13 +51,13 @@ export function* fillBlocksCG(
                                     ).every((p) => Object.entries(
                                         dimension
                                             .getBlock(mainArray[i])
-                                            ?.permutation?.getAllStates()
+                                            ?.permutation?.getAllStates()!
                                     ).includes(p)
                                     )) {
                                         //console.warn("5");
                                         dimension
                                             .getBlock(mainArray[i])
-                                            .setPermutation(
+                                            ?.setPermutation(
                                                 BlockPermutation.resolve(
                                                     blocktype,
                                                     blockStates
@@ -87,13 +87,13 @@ export function* fillBlocksCG(
                                     ).every((p) => Object.entries(
                                         dimension
                                             .getBlock(mainArray[i])
-                                            ?.permutation?.getAllStates()
+                                            ?.permutation?.getAllStates()!
                                     ).includes(p)
                                     )) {
                                         //console.warn("5");
                                         dimension
                                             .getBlock(mainArray[i])
-                                            .setPermutation(
+                                            ?.setPermutation(
                                                 BlockPermutation.resolve(
                                                     blocktype,
                                                     blockStates
@@ -124,7 +124,7 @@ export function* fillBlocksCG(
                                     //console.warn("14");
                                     dimension
                                         .getBlock(mainArray[i])
-                                        .setPermutation(
+                                        ?.setPermutation(
                                             BlockPermutation.resolve(
                                                 blocktype,
                                                 blockStates
@@ -150,7 +150,7 @@ export function* fillBlocksCG(
                                     //console.warn("14");
                                     dimension
                                         .getBlock(mainArray[i])
-                                        .setPermutation(
+                                        ?.setPermutation(
                                             BlockPermutation.resolve(blocktype)
                                         );
                                     counter++; //; console.warn("8");
@@ -174,7 +174,7 @@ export function* fillBlocksCG(
                             //console.warn("2");
                             dimension
                                 .getBlock(mainArray[i])
-                                .setPermutation(
+                                ?.setPermutation(
                                     BlockPermutation.resolve(
                                         blocktype,
                                         blockStates
@@ -194,7 +194,7 @@ export function* fillBlocksCG(
                         //console.warn("1");
                         if (dimension.getBlock(mainArray[i])?.typeId != block) {
                             //console.warn("2");
-                            dimension.getBlock(mainArray[i]).setType(blocktype);
+                            dimension.getBlock(mainArray[i])?.setType(blocktype);
                             counter++; //; console.warn("13");
                         }
                     } catch (e) {
@@ -218,7 +218,7 @@ export function* fillBlocksCG(
                                 BlockPermutation.resolve(
                                     blocktype,
                                     !overrideAllBlockStates &&
-                                        BlockTypes.get(blocktype).id ==
+                                        BlockTypes.get(blocktype)?.id ==
                                         dimension.getBlock(mainArray[i])
                                             ?.typeId
                                         ? Object.fromEntries(
@@ -228,7 +228,7 @@ export function* fillBlocksCG(
                                                         .getBlock(
                                                             mainArray[i]
                                                         )
-                                                        ?.permutation?.getAllStates(),
+                                                        ?.permutation?.getAllStates()!,
                                                     blockStates
                                                 )
                                             ).filter(
@@ -244,7 +244,7 @@ export function* fillBlocksCG(
                                         : blockStates
                                 )) {
                                 //console.warn("2");
-                                if (BlockTypes.get(matchingBlock).id ==
+                                if (BlockTypes.get(matchingBlock!)?.id ==
                                     dimension.getBlock(mainArray[i])?.typeId) {
                                     //console.warn("14");
                                     if (Object.entries(
@@ -252,19 +252,19 @@ export function* fillBlocksCG(
                                     ).every((p) => Object.entries(
                                         dimension
                                             .getBlock(mainArray[i])
-                                            ?.permutation?.getAllStates()
+                                            ?.permutation?.getAllStates()!
                                     ).includes(p)
                                     )) {
                                         //console.warn("5");
                                         dimension
                                             .getBlock(mainArray[i])
-                                            .setPermutation(
+                                            ?.setPermutation(
                                                 BlockPermutation.resolve(
                                                     blocktype,
                                                     !overrideAllBlockStates &&
                                                         BlockTypes.get(
                                                             blocktype
-                                                        ).id ==
+                                                        )?.id ==
                                                         dimension.getBlock(
                                                             mainArray[i]
                                                         )?.typeId
@@ -275,7 +275,7 @@ export function* fillBlocksCG(
                                                                         .getBlock(
                                                                             mainArray[i]
                                                                         )
-                                                                        ?.permutation?.getAllStates(),
+                                                                        ?.permutation?.getAllStates()!,
                                                                     blockStates
                                                                 )
                                                             ).filter(
@@ -309,14 +309,14 @@ export function* fillBlocksCG(
                                 BlockPermutation.resolve(
                                     blocktype,
                                     !overrideAllBlockStates &&
-                                        BlockTypes.get(blocktype).id ==
+                                        BlockTypes.get(blocktype)?.id ==
                                         dimension.getBlock(mainArray[i])
                                             ?.typeId
                                         ? Object.fromEntries(
                                             Object.entries(
                                                 dimension
                                                     .getBlock(mainArray[i])
-                                                    ?.permutation?.getAllStates()
+                                                    ?.permutation?.getAllStates()!
                                             ).filter(
                                                 (v) => !!Object.entries(
                                                     BlockPermutation.resolve(
@@ -330,7 +330,7 @@ export function* fillBlocksCG(
                                         : blockStates
                                 )) {
                                 //console.warn("2");
-                                if (BlockTypes.get(matchingBlock).id ==
+                                if (BlockTypes.get(matchingBlock!)?.id ==
                                     dimension.getBlock(mainArray[i])?.typeId) {
                                     //console.warn("14");
                                     if (Object.entries(
@@ -338,19 +338,19 @@ export function* fillBlocksCG(
                                     ).every((p) => Object.entries(
                                         dimension
                                             .getBlock(mainArray[i])
-                                            ?.permutation?.getAllStates()
+                                            ?.permutation?.getAllStates()!
                                     ).includes(p)
                                     )) {
                                         //console.warn("5");
                                         dimension
                                             .getBlock(mainArray[i])
-                                            .setPermutation(
+                                            ?.setPermutation(
                                                 BlockPermutation.resolve(
                                                     blocktype,
                                                     !overrideAllBlockStates &&
                                                         BlockTypes.get(
                                                             blocktype
-                                                        ).id ==
+                                                        )?.id ==
                                                         dimension.getBlock(
                                                             mainArray[i]
                                                         )?.typeId
@@ -360,7 +360,7 @@ export function* fillBlocksCG(
                                                                     .getBlock(
                                                                         mainArray[i]
                                                                     )
-                                                                    ?.permutation?.getAllStates()
+                                                                    ?.permutation?.getAllStates()!
                                                             ).filter(
                                                                 (v) => !!Object.entries(
                                                                     BlockPermutation.resolve(
@@ -406,7 +406,7 @@ export function* fillBlocksCG(
                                                         .getBlock(
                                                             mainArray[i]
                                                         )
-                                                        ?.permutation?.getAllStates(),
+                                                        ?.permutation?.getAllStates()!,
                                                     blockStates
                                                 )
                                             ).filter(
@@ -427,12 +427,12 @@ export function* fillBlocksCG(
                                     //console.warn("14");
                                     dimension
                                         .getBlock(mainArray[i])
-                                        .setPermutation(
+                                        ?.setPermutation(
                                             BlockPermutation.resolve(
                                                 blocktype,
                                                 !overrideAllBlockStates &&
                                                     BlockTypes.get(blocktype)
-                                                        .id ==
+                                                        ?.id ==
                                                     dimension.getBlock(
                                                         mainArray[i]
                                                     )?.typeId
@@ -443,7 +443,7 @@ export function* fillBlocksCG(
                                                                     .getBlock(
                                                                         mainArray[i]
                                                                     )
-                                                                    ?.permutation?.getAllStates(),
+                                                                    ?.permutation?.getAllStates()!,
                                                                 blockStates
                                                             )
                                                         ).filter(
@@ -483,7 +483,7 @@ export function* fillBlocksCG(
                                             Object.entries(
                                                 dimension
                                                     .getBlock(mainArray[i])
-                                                    ?.permutation?.getAllStates()
+                                                    ?.permutation?.getAllStates()!
                                             ).filter(
                                                 (v) => !!Object.entries(
                                                     BlockPermutation.resolve(
@@ -502,12 +502,12 @@ export function* fillBlocksCG(
                                     //console.warn("14");
                                     dimension
                                         .getBlock(mainArray[i])
-                                        .setPermutation(
+                                        ?.setPermutation(
                                             BlockPermutation.resolve(
                                                 blocktype,
                                                 !overrideAllBlockStates &&
                                                     BlockTypes.get(blocktype)
-                                                        .id ==
+                                                        ?.id ==
                                                     dimension.getBlock(
                                                         mainArray[i]
                                                     )?.typeId
@@ -517,7 +517,7 @@ export function* fillBlocksCG(
                                                                 .getBlock(
                                                                     mainArray[i]
                                                                 )
-                                                                ?.permutation?.getAllStates()
+                                                                ?.permutation?.getAllStates()!
                                                         ).filter(
                                                             (v) => !!Object.entries(
                                                                 BlockPermutation.resolve(
@@ -553,14 +553,14 @@ export function* fillBlocksCG(
                             BlockPermutation.resolve(
                                 blocktype,
                                 !overrideAllBlockStates &&
-                                    BlockTypes.get(blocktype).id ==
+                                    BlockTypes.get(blocktype)?.id ==
                                     dimension.getBlock(mainArray[i])?.typeId
                                     ? Object.fromEntries(
                                         Object.entries(
                                             Object.assign(
                                                 dimension
                                                     .getBlock(mainArray[i])
-                                                    ?.permutation?.getAllStates(),
+                                                    ?.permutation?.getAllStates()!,
                                                 blockStates
                                             )
                                         ).filter(
@@ -576,11 +576,11 @@ export function* fillBlocksCG(
                             //console.warn("2");
                             dimension
                                 .getBlock(mainArray[i])
-                                .setPermutation(
+                                ?.setPermutation(
                                     BlockPermutation.resolve(
                                         blocktype,
                                         !overrideAllBlockStates &&
-                                            BlockTypes.get(blocktype).id ==
+                                            BlockTypes.get(blocktype)?.id ==
                                             dimension.getBlock(mainArray[i])
                                                 ?.typeId
                                             ? Object.fromEntries(
@@ -590,7 +590,7 @@ export function* fillBlocksCG(
                                                             .getBlock(
                                                                 mainArray[i]
                                                             )
-                                                            ?.permutation?.getAllStates(),
+                                                            ?.permutation?.getAllStates()!,
                                                         blockStates
                                                     )
                                                 ).filter(
@@ -620,7 +620,7 @@ export function* fillBlocksCG(
                         //console.warn("1");
                         if (dimension.getBlock(mainArray[i])?.typeId != block) {
                             //console.warn("2");
-                            dimension.getBlock(mainArray[i]).setType(blocktype);
+                            dimension.getBlock(mainArray[i])?.setType(blocktype);
                             counter++; //; console.warn("13");
                         }
                     } catch (e) {

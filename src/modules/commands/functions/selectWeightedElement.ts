@@ -10,4 +10,6 @@ export function selectWeightedElement<T extends { [k in K]?: number } & { [k: st
             return item;
         }
     }
+
+    throw new Error("No item selected");
 }

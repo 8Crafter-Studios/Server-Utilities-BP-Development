@@ -14,7 +14,7 @@ export async function playerMenu_leaderboard_player(
     leaderboard: playerMenuLeaderboardStatistic<"built-in"|"custom"|"customAdvanced">,
     player: savedPlayer
 ): Promise<0 | 1> {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : (sourceEntitya as Player);
     if (!(sourceEntity instanceof Player)) {
         throw new TypeError(
             "Invalid Player. Expected an instance of the Player class, or an instance of the executeCommandPlayerW class with a Player linked to it, but instead got " +
@@ -54,8 +54,8 @@ export async function playerMenu_leaderboard_player(
             tryget(()=>s.getterFunction != undefined
                 ? s.getterFunction(player)
                 : world.scoreboard
-                      .getObjective(s.scoreboardObjective)
-                      .getScore(
+                      .getObjective(s.scoreboardObjective!)
+                      ?.getScore(
                           world.scoreboard.getParticipants().find((v) => tryget(() => v.getEntity()?.id) == player.id) ??
                               (world.scoreboard.getParticipants().find((v) => v.id == player.scoreboardIdentity) as any)
                       )
@@ -104,6 +104,7 @@ export async function playerMenu_leaderboard_player(
                 case "close":
                     return 0;
                 default:
+                    throw new Error("Invalid selection: " + r.selection);
             }
         })
         .catch((e) => {

@@ -27,13 +27,13 @@ export function getCommandHelpPageExtra(commandName: string, player?: Player | e
                   (cmd.currentCommandName.startsWith("\\\\") ? command.dp + cmd.currentCommandName.slice(1) : command.dp + cmd.currentCommandName) + " "
               ) ??
               tryget(() =>
-                  typeof cmd.settings.defaultSettings.formats == "string"
+                  typeof cmd.settings.defaultSettings?.formats == "string"
                       ? cmd.settings.defaultSettings.formats
-                      : cmd.settings.defaultSettings.formats instanceof Array
+                      : cmd.settings.defaultSettings?.formats instanceof Array
                       ? cmd.settings.defaultSettings.formats["map"]((v: { format: any }) => (!!v?.format ? v.format : v)).join(" ")
-                      : typeof cmd.settings.defaultSettings.formats.format === "string"
+                      : typeof cmd.settings.defaultSettings?.formats.format === "string"
                       ? cmd.settings.defaultSettings.formats.format
-                      : JSON.stringify(cmd.settings.defaultSettings.formats.format)
+                      : JSON.stringify(cmd.settings.defaultSettings?.formats.format)
               ) ??
               "missing"
           )

@@ -10,7 +10,7 @@ export function editorStickC(
     includePassableBlocks: boolean = false,
     maxDistance: number = undefined
 ): void {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : (sourceEntitya as Player);
     let form = new ModalFormData(); /*
     console.warn(maxDistance)*/
 

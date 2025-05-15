@@ -104,7 +104,7 @@ export interface chatSendMessageEvaluator_prePlayersOutput {
      *
      * @default undefined
      */
-    readonly messageGradientMode: keyof typeof patternFunctionList;
+    readonly messageGradientMode?: keyof typeof patternFunctionList;
     /**
      * The name formatting to use.
      *
@@ -129,7 +129,7 @@ export interface chatSendMessageEvaluator_prePlayersOutput {
      *
      * @default undefined
      */
-    readonly nameGradientMode: keyof typeof patternFunctionList;
+    readonly nameGradientMode?: keyof typeof patternFunctionList;
     /**
      * The separator formatting to use.
      *
@@ -154,7 +154,7 @@ export interface chatSendMessageEvaluator_prePlayersOutput {
      *
      * @default undefined
      */
-    readonly separatorGradientMode: keyof typeof patternFunctionList;
+    readonly separatorGradientMode?: keyof typeof patternFunctionList;
     /**
      * Whether to show the player's dimension in the message.
      *
@@ -232,11 +232,11 @@ export function chatSendMessageEvaluator_prePlayers(
 ): chatSendMessageEvaluator_prePlayersOutput {
     const player = options?.player;
     let messageFormatting = options?.messageFormatting ?? "";
-    let messageGradientMode: keyof typeof patternFunctionList = options?.messageGradientMode ?? undefined;
+    let messageGradientMode: keyof typeof patternFunctionList | undefined = options?.messageGradientMode ?? undefined;
     let nameFormatting = options?.nameFormatting ?? "";
-    let nameGradientMode: keyof typeof patternFunctionList = options?.nameGradientMode ?? undefined;
+    let nameGradientMode: keyof typeof patternFunctionList | undefined = options?.nameGradientMode ?? undefined;
     let separatorFormatting = options?.separatorFormatting ?? "";
-    let separatorGradientMode: keyof typeof patternFunctionList = options?.separatorGradientMode ?? undefined;
+    let separatorGradientMode: keyof typeof patternFunctionList | undefined = options?.separatorGradientMode ?? undefined;
     let showDimension = options?.showDimension ?? false;
     //    let showHealth = options?.showHealth;
     if (messageFormatting == "") {
@@ -248,7 +248,7 @@ export function chatSendMessageEvaluator_prePlayers(
     if (separatorFormatting == "") {
         separatorFormatting = options?.playerPersonalSettings?.defaultSeparatorFormatting ?? config.chatRanks.defaultSeparatorFormatting;
     }
-    const ranksListWithDefault = (options?.ranks ?? []).length > 0 ? options?.ranks : config.chatRanks.defaultRank !== "" ? [config.chatRanks.defaultRank] : [];
+    const ranksListWithDefault = (options?.ranks ?? []).length > 0 ? options?.ranks! : config.chatRanks.defaultRank !== "" ? [config.chatRanks.defaultRank] : [];
     let rank: string = "";
     switch (config.chatRanks.rankEvaluatorMode_chat) {
         case "default":
@@ -297,7 +297,7 @@ export function chatSendMessageEvaluator_prePlayers(
             });
         }
     }
-    let dimension = dimensionTypeDisplayFormatting[options?.dimension];
+    let dimension = dimensionTypeDisplayFormatting[options?.dimension!];
     let namec = name;
     if (!!messageGradientMode) {
         message = evaluateChatColorType(message, messageGradientMode);
@@ -353,28 +353,28 @@ export function chatSendMessageEvaluator_players(
                     keyof typeof dimensionTypeDisplayFormatting,
                     (typeof dimensionTypeDisplayFormatting)[keyof typeof dimensionTypeDisplayFormatting]
                 ][]
-            ).find((v) => v[1] === dimension)[0]
+            ).find((v) => v[1] === dimension)!?.[0]
         ];
     const player =
         options?.player ??
         ({
             activeSlot: undefined,
-            addEffect: () => undefined,
-            addExperience: () => undefined,
-            addLevels: () => undefined,
-            addTag: () => undefined,
-            applyDamage: () => undefined,
-            applyImpulse: () => undefined,
-            applyKnockback: () => undefined,
+            addEffect: () => undefined as any,
+            addExperience: () => undefined as any,
+            addLevels: () => undefined as any,
+            addTag: () => undefined as any,
+            applyDamage: () => undefined as any,
+            applyImpulse: () => undefined as any,
+            applyKnockback: () => undefined as any,
             camera: {
-                clear: () => undefined,
-                fade: () => undefined,
-                setCamera: () => undefined,
+                clear: () => undefined as any,
+                fade: () => undefined as any,
+                setCamera: () => undefined as any,
                 isValid: false,
             },
             chunkIndex: undefined,
-            clearDynamicProperties: () => undefined,
-            clearVelocity: () => undefined,
+            clearDynamicProperties: () => undefined as any,
+            clearVelocity: () => undefined as any,
             clientSystemInfo: {
                 maxRenderDistance: -1,
                 memoryTier: 0,
@@ -382,7 +382,7 @@ export function chatSendMessageEvaluator_players(
             },
             cursorInventory: undefined,
             dimension: dimensionObject,
-            deleteStringFromDynamicProperties: () => undefined,
+            deleteStringFromDynamicProperties: () => undefined as any,
             dimensionLocation: {
                 x: 0,
                 y: 0,
@@ -394,29 +394,29 @@ export function chatSendMessageEvaluator_players(
                 y: 0,
                 z: 0,
             },
-            eatItem: () => undefined,
+            eatItem: () => undefined as any,
             equippable: {
                 get entity() {
                     return player;
                 },
-                getEquipment: () => undefined,
-                getEquipmentSlot: () => undefined,
+                getEquipment: () => undefined as any,
+                getEquipmentSlot: () => undefined as any,
                 isValid: false,
-                setEquipment: () => undefined,
+                setEquipment: () => undefined as any,
                 typeId: "minecraft:equippable",
             },
-            extinguishFire: () => undefined,
+            extinguishFire: () => undefined as any,
             getAimAssist: () => ({
-                set: () => undefined,
+                set: () => undefined as any,
                 settings: undefined,
             }),
-            getBlockFromViewDirection: () => undefined,
+            getBlockFromViewDirection: () => undefined as any,
             getComponent: () => undefined as undefined,
-            getDynamicProperty: () => undefined,
+            getDynamicProperty: () => undefined as any,
             getComponents: () => [],
             getDynamicPropertyIds: () => [],
             getDynamicPropertyTotalByteCount: () => 0,
-            getEffect: () => undefined,
+            getEffect: () => undefined as any,
             getEffects: () => [],
             getEntitiesFromViewDirection: () => [],
             getGameMode: () => GameMode.survival,
@@ -426,13 +426,13 @@ export function chatSendMessageEvaluator_players(
                 z: 0,
             }),
             getItemCooldown: () => 0,
-            getProperty: () => undefined,
+            getProperty: () => undefined as any,
             getRotation: () => ({
                 x: 0,
                 y: 0,
             }),
             getSpawnPoint: undefined,
-            getStringFromDynamicProperties: () => undefined,
+            getStringFromDynamicProperties: () => undefined as any,
             getTags: () => options?.tags ?? [],
             getVelocity: () => ({
                 x: 0,
@@ -462,7 +462,7 @@ export function chatSendMessageEvaluator_players(
                 cameraEnabled: true,
                 isPermissionCategoryEnabled: () => true,
                 movementEnabled: true,
-                setPermissionCategory: () => undefined,
+                setPermissionCategory: () => undefined as any,
             },
             inventory: {
                 additionalSlotsPerStrength: 0,
@@ -477,17 +477,17 @@ export function chatSendMessageEvaluator_players(
                 restrictToOwner: false,
                 typeId: "minecraft:inventory",
                 container: {
-                    addItem: () => undefined,
-                    clearAll: () => undefined,
+                    addItem: () => undefined as any,
+                    clearAll: () => undefined as any,
                     emptySlotsCount: 0,
-                    getItem: () => undefined,
-                    getSlot: () => undefined,
+                    getItem: () => undefined as any,
+                    getSlot: () => undefined as any,
                     isValid: false,
-                    moveItem: () => undefined,
-                    setItem: () => undefined,
+                    moveItem: () => undefined as any,
+                    setItem: () => undefined as any,
                     size: 0,
-                    swapItems: () => undefined,
-                    transferItem: () => undefined,
+                    swapItems: () => undefined as any,
+                    transferItem: () => undefined as any,
                     contains: () => false,
                     find: () => -1,
                     firstEmptySlot: () => -1,
@@ -524,48 +524,48 @@ export function chatSendMessageEvaluator_players(
                 z: 0,
             },
             locationstring: "0 0 0",
-            lookAt: () => undefined,
+            lookAt: () => undefined as any,
             matches: () => false,
             moneySystem: new MoneySystem("0"),
             name: displayName.sourceType === "name" ? displayName.value : "Placeholder Player",
             nameTag: displayName.sourceType === "nameTag" ? displayName.value : "Placeholder Player",
             onScreenDisplay: undefined,
-            playAnimation: () => undefined,
+            playAnimation: () => undefined as any,
             playerNotifications: undefined,
             playerPermissions: undefined,
-            playMusic: () => undefined,
-            playSound: () => undefined,
-            postClientMessage: () => undefined,
-            queueMusic: () => undefined,
-            remove: () => undefined,
+            playMusic: () => undefined as any,
+            playSound: () => undefined as any,
+            postClientMessage: () => undefined as any,
+            queueMusic: () => undefined as any,
+            remove: () => undefined as any,
             removeEffect: () => false,
             removeTag: () => false,
-            resetLevel: () => undefined,
-            resetProperty: () => undefined,
+            resetLevel: () => undefined as any,
+            resetProperty: () => undefined as any,
             rotationstring: "0 0",
             rotx: 0,
             roty: 0,
-            runCommand: () => undefined,
-            saveStringToDynamicProperties: () => undefined,
+            runCommand: () => undefined as any,
+            saveStringToDynamicProperties: () => undefined as any,
             scoreboardIdentity: undefined,
             selectedSlotIndex: 0,
-            sendMessage: () => undefined,
-            setDynamicProperties: () => undefined,
-            setDynamicProperty: () => undefined,
-            setGameMode: () => undefined,
-            setOnFire: () => undefined,
-            setOp: () => undefined,
-            setProperty: () => undefined,
-            setRotation: () => undefined,
-            setSpawnPoint: () => undefined,
-            spawnParticle: () => undefined,
-            startItemCooldown: () => undefined,
-            stopMusic: () => undefined,
+            sendMessage: () => undefined as any,
+            setDynamicProperties: () => undefined as any,
+            setDynamicProperty: () => undefined as any,
+            setGameMode: () => undefined as any,
+            setOnFire: () => undefined as any,
+            setOp: () => undefined as any,
+            setProperty: () => undefined as any,
+            setRotation: () => undefined as any,
+            setSpawnPoint: () => undefined as any,
+            spawnParticle: () => undefined as any,
+            startItemCooldown: () => undefined as any,
+            stopMusic: () => undefined as any,
             target: undefined,
-            teleport: () => undefined,
+            teleport: () => undefined as any,
             timeZone: 0,
             totalXpNeededForNextLevel: 0,
-            triggerEvent: () => undefined,
+            triggerEvent: () => undefined as any,
             tryTeleport: () => false,
             typeId: "minecraft:player",
             worldEditSelection: undefined,
@@ -590,22 +590,22 @@ export function chatSendMessageEvaluator_players(
         options?.targetPlayer ??
         ({
             activeSlot: undefined,
-            addEffect: () => undefined,
-            addExperience: () => undefined,
-            addLevels: () => undefined,
-            addTag: () => undefined,
-            applyDamage: () => undefined,
-            applyImpulse: () => undefined,
-            applyKnockback: () => undefined,
+            addEffect: () => undefined as any,
+            addExperience: () => undefined as any,
+            addLevels: () => undefined as any,
+            addTag: () => undefined as any,
+            applyDamage: () => undefined as any,
+            applyImpulse: () => undefined as any,
+            applyKnockback: () => undefined as any,
             camera: {
-                clear: () => undefined,
-                fade: () => undefined,
-                setCamera: () => undefined,
+                clear: () => undefined as any,
+                fade: () => undefined as any,
+                setCamera: () => undefined as any,
                 isValid: false,
             },
             chunkIndex: undefined,
-            clearDynamicProperties: () => undefined,
-            clearVelocity: () => undefined,
+            clearDynamicProperties: () => undefined as any,
+            clearVelocity: () => undefined as any,
             clientSystemInfo: {
                 maxRenderDistance: -1,
                 memoryTier: 0,
@@ -613,7 +613,7 @@ export function chatSendMessageEvaluator_players(
             },
             cursorInventory: undefined,
             dimension: dimensionObject,
-            deleteStringFromDynamicProperties: () => undefined,
+            deleteStringFromDynamicProperties: () => undefined as any,
             dimensionLocation: {
                 x: 0,
                 y: 0,
@@ -625,29 +625,29 @@ export function chatSendMessageEvaluator_players(
                 y: 0,
                 z: 0,
             },
-            eatItem: () => undefined,
+            eatItem: () => undefined as any,
             equippable: {
                 get entity() {
                     return player;
                 },
-                getEquipment: () => undefined,
-                getEquipmentSlot: () => undefined,
+                getEquipment: () => undefined as any,
+                getEquipmentSlot: () => undefined as any,
                 isValid: false,
-                setEquipment: () => undefined,
+                setEquipment: () => undefined as any,
                 typeId: "minecraft:equippable",
             },
-            extinguishFire: () => undefined,
+            extinguishFire: () => undefined as any,
             getAimAssist: () => ({
-                set: () => undefined,
+                set: () => undefined as any,
                 settings: undefined,
             }),
-            getBlockFromViewDirection: () => undefined,
+            getBlockFromViewDirection: () => undefined as any,
             getComponent: () => undefined as undefined,
-            getDynamicProperty: () => undefined,
+            getDynamicProperty: () => undefined as any,
             getComponents: () => [],
             getDynamicPropertyIds: () => [],
             getDynamicPropertyTotalByteCount: () => 0,
-            getEffect: () => undefined,
+            getEffect: () => undefined as any,
             getEffects: () => [],
             getEntitiesFromViewDirection: () => [],
             getGameMode: () => GameMode.survival,
@@ -657,13 +657,13 @@ export function chatSendMessageEvaluator_players(
                 z: 0,
             }),
             getItemCooldown: () => 0,
-            getProperty: () => undefined,
+            getProperty: () => undefined as any,
             getRotation: () => ({
                 x: 0,
                 y: 0,
             }),
             getSpawnPoint: undefined,
-            getStringFromDynamicProperties: () => undefined,
+            getStringFromDynamicProperties: () => undefined as any,
             getTags: () => options?.tags ?? [],
             getVelocity: () => ({
                 x: 0,
@@ -693,7 +693,7 @@ export function chatSendMessageEvaluator_players(
                 cameraEnabled: true,
                 isPermissionCategoryEnabled: () => true,
                 movementEnabled: true,
-                setPermissionCategory: () => undefined,
+                setPermissionCategory: () => undefined as any,
             },
             inventory: {
                 additionalSlotsPerStrength: 0,
@@ -708,17 +708,17 @@ export function chatSendMessageEvaluator_players(
                 restrictToOwner: false,
                 typeId: "minecraft:inventory",
                 container: {
-                    addItem: () => undefined,
-                    clearAll: () => undefined,
+                    addItem: () => undefined as any,
+                    clearAll: () => undefined as any,
                     emptySlotsCount: 0,
-                    getItem: () => undefined,
-                    getSlot: () => undefined,
+                    getItem: () => undefined as any,
+                    getSlot: () => undefined as any,
                     isValid: false,
-                    moveItem: () => undefined,
-                    setItem: () => undefined,
+                    moveItem: () => undefined as any,
+                    setItem: () => undefined as any,
                     size: 0,
-                    swapItems: () => undefined,
-                    transferItem: () => undefined,
+                    swapItems: () => undefined as any,
+                    transferItem: () => undefined as any,
                     contains: () => false,
                     find: () => -1,
                     firstEmptySlot: () => -1,
@@ -755,48 +755,48 @@ export function chatSendMessageEvaluator_players(
                 z: 0,
             },
             locationstring: "0 0 0",
-            lookAt: () => undefined,
+            lookAt: () => undefined as any,
             matches: () => false,
             moneySystem: new MoneySystem("0"),
             name: displayName.sourceType === "name" ? displayName.value : "Placeholder Target Player",
             nameTag: displayName.sourceType === "nameTag" ? displayName.value : "Placeholder Target Player",
             onScreenDisplay: undefined,
-            playAnimation: () => undefined,
+            playAnimation: () => undefined as any,
             playerNotifications: undefined,
             playerPermissions: undefined,
-            playMusic: () => undefined,
-            playSound: () => undefined,
-            postClientMessage: () => undefined,
-            queueMusic: () => undefined,
-            remove: () => undefined,
+            playMusic: () => undefined as any,
+            playSound: () => undefined as any,
+            postClientMessage: () => undefined as any,
+            queueMusic: () => undefined as any,
+            remove: () => undefined as any,
             removeEffect: () => false,
             removeTag: () => false,
-            resetLevel: () => undefined,
-            resetProperty: () => undefined,
+            resetLevel: () => undefined as any,
+            resetProperty: () => undefined as any,
             rotationstring: "0 0",
             rotx: 0,
             roty: 0,
-            runCommand: () => undefined,
-            saveStringToDynamicProperties: () => undefined,
+            runCommand: () => undefined as any,
+            saveStringToDynamicProperties: () => undefined as any,
             scoreboardIdentity: undefined,
             selectedSlotIndex: 0,
-            sendMessage: () => undefined,
-            setDynamicProperties: () => undefined,
-            setDynamicProperty: () => undefined,
-            setGameMode: () => undefined,
-            setOnFire: () => undefined,
-            setOp: () => undefined,
-            setProperty: () => undefined,
-            setRotation: () => undefined,
-            setSpawnPoint: () => undefined,
-            spawnParticle: () => undefined,
-            startItemCooldown: () => undefined,
-            stopMusic: () => undefined,
+            sendMessage: () => undefined as any,
+            setDynamicProperties: () => undefined as any,
+            setDynamicProperty: () => undefined as any,
+            setGameMode: () => undefined as any,
+            setOnFire: () => undefined as any,
+            setOp: () => undefined as any,
+            setProperty: () => undefined as any,
+            setRotation: () => undefined as any,
+            setSpawnPoint: () => undefined as any,
+            spawnParticle: () => undefined as any,
+            startItemCooldown: () => undefined as any,
+            stopMusic: () => undefined as any,
             target: undefined,
-            teleport: () => undefined,
+            teleport: () => undefined as any,
             timeZone: 0,
             totalXpNeededForNextLevel: 0,
-            triggerEvent: () => undefined,
+            triggerEvent: () => undefined as any,
             tryTeleport: () => false,
             typeId: "minecraft:player",
             worldEditSelection: undefined,
@@ -910,7 +910,7 @@ export interface TagChatMessageFormat {
      *
      * @default undefined
      */
-    messageGradientMode: keyof typeof patternFunctionList;
+    messageGradientMode: keyof typeof patternFunctionList | undefined;
     /**
      * The name formatting to use.
      *
@@ -935,7 +935,7 @@ export interface TagChatMessageFormat {
      *
      * @default undefined
      */
-    nameGradientMode: keyof typeof patternFunctionList;
+    nameGradientMode: keyof typeof patternFunctionList | undefined;
     /**
      * The separator formatting to use.
      *
@@ -960,7 +960,7 @@ export interface TagChatMessageFormat {
      *
      * @default undefined
      */
-    separatorGradientMode: keyof typeof patternFunctionList;
+    separatorGradientMode: keyof typeof patternFunctionList | undefined;
     /**
      * Whether to show the player's dimension in the message.
      *
@@ -974,11 +974,11 @@ export interface TagChatMessageFormat {
 
 export function chatSend_getChatMessageFormatFromPlayerTags(player: Player | { hasTag: (tag: string) => boolean; getTags: () => string[] }): TagChatMessageFormat {
     let messageFormatting: string = "";
-    let messageGradientMode: keyof typeof patternFunctionList = undefined;
+    let messageGradientMode: keyof typeof patternFunctionList | undefined = undefined;
     let nameFormatting: string = "";
-    let nameGradientMode: keyof typeof patternFunctionList = undefined;
+    let nameGradientMode: keyof typeof patternFunctionList | undefined = undefined;
     let separatorFormatting: string = "";
-    let separatorGradientMode: keyof typeof patternFunctionList = undefined;
+    let separatorGradientMode: keyof typeof patternFunctionList | undefined = undefined;
     let showDimension: boolean = false;
     //    let showHealth = false
     if (player.hasTag("messageFormatting:r")) {
@@ -1597,8 +1597,8 @@ export function chatSend_generatePartialPlayerTypeForChatSendEvaluationFunctions
 
 export function chatSend_getPlayerPersonalSettings(
     player: Player
-): Parameters<typeof chatSendMessageEvaluator>[2]["playerPersonalSettings"] &
-    Parameters<typeof chatSend_getDisplayNameFromPlayer>[1]["playerPersonalSettings"] {
+): NonNullable<Parameters<typeof chatSendMessageEvaluator>[2]>["playerPersonalSettings"] &
+    NonNullable<Parameters<typeof chatSend_getDisplayNameFromPlayer>[1]>["playerPersonalSettings"] {
     return {
         chatNameAndMessageSeparator: player.getDynamicProperty("andexdbPersonalSettings:chatNameAndMessageSeparator") as string,
         chatRankPrefix: player.getDynamicProperty("andexdbPersonalSettings:chatRankPrefix") as string,
@@ -1614,7 +1614,7 @@ export function chatSend_getPlayerPersonalSettings(
         hideChatDisplayTimeStamp: player.hasTag("hideChatDisplayTimeStamp"),
     };
 }
-export function chatSend_getTargetPlayerSettings(player: Player): Parameters<typeof chatSendMessageEvaluator>[2]["targetPlayerSettings"] {
+export function chatSend_getTargetPlayerSettings(player: Player): NonNullable<Parameters<typeof chatSendMessageEvaluator>[2]>["targetPlayerSettings"] {
     return {
         hideChatDisplayTimeStamps: player.hasTag("hideChatDisplayTimeStamps"),
         messageTimeStampEnabled: player.hasTag("chatDisplayTimeStamps"),

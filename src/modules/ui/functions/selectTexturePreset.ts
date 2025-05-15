@@ -8,7 +8,7 @@ import { customFormUICodes } from "../constants/customFormUICodes";
 import { forceShow } from "./forceShow";
 
 export async function selectTexturePreset(sourceEntitya: Entity | executeCommandPlayerW | Player): Promise<0 | 1 | string> {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : (sourceEntitya as Player);
     if (!(sourceEntity instanceof Player)) {
         throw new TypeError(
             "Invalid Player. Expected an instance of the Player class, or an instance of the executeCommandPlayerW class with a Player linked to it, but instead got " +
@@ -47,7 +47,7 @@ export async function selectTexturePresetInCategory<C extends keyof typeof textu
     },
     cachedTextures?: [displayName: string, icon: string][]
 ): Promise<0 | 1 | string> {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player : (sourceEntitya as Player);
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : (sourceEntitya as Player);
     if (!(sourceEntity instanceof Player)) {
         throw new TypeError(
             "Invalid Player. Expected an instance of the Player class, or an instance of the executeCommandPlayerW class with a Player linked to it, but instead got " +
@@ -160,7 +160,7 @@ export async function selectTexturePresetInCategory<C extends keyof typeof textu
             if (r.canceled) return 1;
 
             switch (
-                (["search", "previous", "go", "next", "", ""] as const)[r.selection!] ??
+                (["search", "previous", "go", "next", "", "", undefined] as const)[r.selection!] ??
                 (!!texturesB[r.selection! - 6] ? "texture" : undefined) ??
                 (["back", "close"] as const)[r.selection! - texturesB.length - 6]
             ) {
@@ -199,6 +199,7 @@ export async function selectTexturePresetInCategory<C extends keyof typeof textu
                                 .submitButton("Go To Page")
                                 .forceShow(sourceEntity as Player)
                     );
+                    if(!rb || rb.canceled) return await selectTexturePresetInCategory(sourceEntity, category, page, search, textures);
                     return await selectTexturePresetInCategory(
                         sourceEntity,
                         category,

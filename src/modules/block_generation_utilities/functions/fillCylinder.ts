@@ -85,11 +85,11 @@ export async function fillCylinder<LiteModeEnabled extends boolean = false>(
             if (Math.random() <= integrity / 100) {
                 try {
                     const b = dimension.getBlock({ x, y, z });
-                    if (options?.blockMask?.testIfMatches(b)??true) {
+                    if (b && (options?.blockMask?.testIfMatches(b)??true)) {
                         const p = block({ x, y, z, dimension }, index);
                         if (!p.matches(b.typeId, b.permutation.getAllStates())) {
-                            if (replacemode && !!b.getComponent("inventory")) {
-                                b.getComponent("inventory").container.clearAll();
+                            if (replacemode && b.getComponent("inventory")) {
+                                b.getComponent("inventory")!.container!.clearAll();
                             }
                             b.setPermutation(p);
                             counter++;
