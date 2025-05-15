@@ -11,7 +11,7 @@ export function targetSelectorB(
     .find(
       (currentlySelectedPlayerEntity) => Number(currentlySelectedPlayerEntity.id) == UUID
     )
-    .runCommand(
+    ?.runCommand(
       "/execute as " +
       selector +
       filters +
@@ -20,15 +20,15 @@ export function targetSelectorB(
     );
   let selectedEntityUUIDValue = world.scoreboard
     .getObjective("andexdbDebug")
-    .getScores()
+    ?.getScores()
     .find((score) => score.score == scoreboardUUID)
-    .participant.getEntity().id;
+    ?.participant.getEntity()?.id;
   world
     .getAllPlayers()
     .find(
       (currentlySelectedPlayerEntity) => Number(currentlySelectedPlayerEntity.id) == UUID
     )
-    .runCommand(
+    ?.runCommand(
       "/execute as " +
       selector +
       filters +
@@ -38,9 +38,9 @@ export function targetSelectorB(
     .getDimension(
       DimensionTypes.getAll().find((dimension) => world
         .getDimension(dimension.typeId)
-        .getEntities()
-        .find((entity) => entity.id == selectedEntityUUIDValue)
-      ).typeId
+        ?.getEntities()
+        .find((entity) => entity.id == selectedEntityUUIDValue)!
+      )!?.typeId
     )
     .getEntities()
     .find((entity) => entity.id == selectedEntityUUIDValue);

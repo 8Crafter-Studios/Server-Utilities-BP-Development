@@ -25,12 +25,12 @@ export class LandClaimSystem {
     static land_claim_format_version = "0.0.1-indev.1";
     static getClaims(claimIds: string[]) {
         let claims = [] as LandClaim[];
-        claimIds.forEach((c) => claims.push(LandClaim.get(c)));
+        claimIds.forEach((c) => claims.push(LandClaim.get(c)!));
         return claims;
     }
     static getAllClaims() {
         let claims = [] as LandClaim[];
-        this.getClaimIds().forEach((c) => claims.push(LandClaim.get(c)));
+        this.getClaimIds().forEach((c) => claims.push(LandClaim.get(c)!));
         return claims;
     }
     static getClaimIds() {

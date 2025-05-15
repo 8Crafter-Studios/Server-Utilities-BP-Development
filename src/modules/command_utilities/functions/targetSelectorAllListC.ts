@@ -32,13 +32,13 @@ export function targetSelectorAllListC(
   }
   let selectedEntity: Entity[];
   selectedEntity = [];
-  for (let i in world.scoreboard.getObjective("andexdbDebug").getScores()) {
+  for (let i in world.scoreboard.getObjective("andexdbDebug")!?.getScores()) {
     try {
       selectedEntity.push(
         world.scoreboard
           .getObjective("andexdbDebug")
-          .getScores()
-          .filter((score) => score.score == scoreboardUUID)[i].participant.getEntity()
+          ?.getScores()
+          .filter((score) => score.score == scoreboardUUID)[i].participant.getEntity()!
       );
     } catch (e) { }
   }

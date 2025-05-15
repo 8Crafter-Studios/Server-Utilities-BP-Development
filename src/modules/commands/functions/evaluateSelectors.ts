@@ -81,13 +81,13 @@ export function evaluateSelectors(
                 .trim()
                 .match(
                     /^(?<=@i\s*\[((?:uu)?id=)?(?:")?)[\-\+]?\d(?=(?:")?\])/
-                )[0]
+                )!?.[0]
         );
     } else if ((options?.enableJ ?? false) == true &&
         !!selector
             .trimStart()
             .replaceAll("\\", "")
             .match(/^(@j\s*\[|@j\s+)/)) {
-        return eval(selector.trim().match(/^(?<=@j\s*\[)[\-\+]?\d(?=\])/)[0]);
+        return eval(selector.trim().match(/^(?<=@j\s*\[)[\-\+]?\d(?=\])/)!?.[0]);
     }
 }

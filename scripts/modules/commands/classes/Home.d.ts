@@ -98,7 +98,7 @@ export declare class Home {
      * @param {string} homeId The save ID of the home.
      * @returns {Home} The home with the given save ID.
      */
-    static get(homeId: string): Home;
+    static get(homeId: string): Home | undefined;
     /**
      * Deletes the home with the given save ID.
      *

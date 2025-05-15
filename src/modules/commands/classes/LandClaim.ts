@@ -150,7 +150,7 @@ export class LandClaim {
     remove() {
         world.setDynamicProperty(this.saveId); /*; this=undefined*/
     }
-    static get(claimId: string) {
+    static get(claimId: string): LandClaim | undefined {
         return !!world.getDynamicProperty(claimId)
             ? new LandClaim(
                 Object.assign(

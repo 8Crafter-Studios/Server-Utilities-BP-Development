@@ -11,20 +11,20 @@ export function targetSelectorAllListB(
     .find(
       (currentlySelectedPlayerEntity) => Number(currentlySelectedPlayerEntity.id) == UUID
     )
-    .runCommand(
+    ?.runCommand(
       "/execute as " +
       selector +
       filters +
       " at @s run /scoreboard players set @s andexdbDebug " +
       scoreboardUUID
     );
-  let selectedEntity: Entity[];
-  for (let i in world.scoreboard.getObjective("andexdbDebug").getScores()) {
+  let selectedEntity: Entity[] = [];
+  for (let i in world.scoreboard.getObjective("andexdbDebug")!?.getScores()) {
     selectedEntity.push(
       world.scoreboard
         .getObjective("andexdbDebug")
-        .getScores()
-        .filter((score) => score.score == scoreboardUUID)[i].participant.getEntity()
+        ?.getScores()
+        .filter((score) => score.score == scoreboardUUID)[i].participant.getEntity()!
     );
   }
   world
@@ -32,7 +32,7 @@ export function targetSelectorAllListB(
     .find(
       (currentlySelectedPlayerEntity) => Number(currentlySelectedPlayerEntity.id) == UUID
     )
-    .runCommand(
+    ?.runCommand(
       "/execute as " +
       selector +
       filters +

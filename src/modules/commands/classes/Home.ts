@@ -59,7 +59,7 @@ export class Home {
     }) {
         this.location = home.location;
         this.name = home.name;
-        this.ownerId = home.ownerId ?? home.owner?.id;
+        this.ownerId = home.ownerId ?? home.owner?.id!;
         this.ownerName = home.ownerName ?? home.owner?.name;
         this.saveId = home.saveId;
         this.format_version = home.format_version ?? format_version;
@@ -98,7 +98,7 @@ export class Home {
             }),
             name: this.name,
             ownerId: this.ownerId,
-            ownerName: this.ownerName,
+            ownerName: this.ownerName!,
             format_version: this.format_version ?? format_version,
             home_format_version: this.home_format_version ?? HomeSystem.home_format_version,
         };
@@ -146,7 +146,7 @@ export class Home {
      * @param {string} homeId The save ID of the home.
      * @returns {Home} The home with the given save ID.
      */
-    static get(homeId: string): Home {
+    static get(homeId: string): Home | undefined {
         return !!world.getDynamicProperty(homeId)
             ? new Home(
                 Object.assign(
