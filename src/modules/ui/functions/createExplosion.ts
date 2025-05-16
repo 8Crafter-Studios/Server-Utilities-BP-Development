@@ -63,7 +63,7 @@ export async function createExplosion(
             formError.button1("Back");
             formError.button2("Close");
             return await forceShow(formError, sourceEntity as Player).then((r) => {
-                return (1 - r.selection) as 0 | 1;
+                return (1 - r.selection!) as 0 | 1;
             });
         });
 }

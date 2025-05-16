@@ -26,7 +26,7 @@ export async function itemEditorTypeSelection(
     ...functionargs: any
 ) {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW
-        ? sourceEntitya.player
+        ? sourceEntitya.player!
         : sourceEntitya;
     let form = new ActionFormData();
     form.title("§eItem Editor §f[§cAlpha§f]");

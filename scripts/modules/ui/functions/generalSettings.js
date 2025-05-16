@@ -137,9 +137,9 @@ export async function generalSettings(sourceEntity) {
                 case "spawnCommandLocation":
                     config.spawnCommandLocation = {
                         ...config.spawnCommandLocation,
-                        x: options[v].split(" ")[0]?.toNumber(),
-                        y: options[v].split(" ")[1]?.toNumber(),
-                        z: options[v].split(" ")[2]?.toNumber(),
+                        x: options[v].split(" ")[0]?.toNumber() ?? null,
+                        y: options[v].split(" ")[1]?.toNumber() ?? null,
+                        z: options[v].split(" ")[2]?.toNumber() ?? null,
                     };
                     break;
                 case "useLegacyPlayerInventoryDataSaveSystem":

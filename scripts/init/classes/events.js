@@ -4403,6 +4403,9 @@ export class andexdb_ModifiedChatMessageSendBeforeEvent {
         this.sender = data?.sender;
         this.targets = data?.targets;
         this.originalMessage = data?.originalMessage;
+        this.tokenData = data?.tokenData;
+        this.formatOptions = data?.formatOptions;
+        this.nameTag = data?.nameTag;
     }
     /**
      * @remarks

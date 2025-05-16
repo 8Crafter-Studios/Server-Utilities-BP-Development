@@ -10,7 +10,7 @@ export function scanForContainerBlocks(from, to, dimension, returnMode) {
             z: to.z,
         }).getBlockLocationIterator())
             .map((v) => dimension.getBlock(v))
-            .filter((v) => !!v.getComponent("inventory"));
+            .filter((v) => v?.getComponent("inventory"));
     }
 }
 //# sourceMappingURL=scanForContainerBlocks.js.map

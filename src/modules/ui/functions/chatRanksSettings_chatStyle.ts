@@ -63,7 +63,7 @@ The default is Custom(Simple).`
             case "style":
                 config.chatRanks.rankMode = (Object.entries(rankModes) as [keyof typeof rankModes, (typeof rankModes)[keyof typeof rankModes]][]).find(
                     (m) => m[1] === rankModesArray[r.selection!]
-                )[0];
+                )?.[0];
                 return 1;
             case "back":
                 return 1;

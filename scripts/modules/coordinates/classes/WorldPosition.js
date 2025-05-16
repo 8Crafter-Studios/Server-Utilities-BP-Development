@@ -16,8 +16,11 @@ export class WorldPosition {
     block;
     sendErrorsTo;
     constructor(location, rotation, dimension, entity, block, sendErrorsTo) {
-        this.location = location;
-        this.rotation = rotation;
+        this.x = location.x;
+        this.y = location.y;
+        this.z = location.z;
+        this.rotx = rotation.x;
+        this.roty = rotation.y;
         if (dimension == undefined) { }
         else {
             this.dimension = world.getDimension(dimension?.typeId ?? dimension?.id ?? dimension);

@@ -124,7 +124,7 @@ export function debugActionb(
                                                         "debugStickPropertyIndex"
                                                     )
                                                 )]
-                                        )
+                                        )!
                                         .validValues.findIndex(
                                             (value) => value ==
                                                 Object.entries(
@@ -145,7 +145,7 @@ export function debugActionb(
                                                     "debugStickPropertyIndex"
                                                 )
                                             )]
-                                    ).validValues.length
+                                    )!.validValues.length
                                 )
                             );
                         } else {
@@ -162,7 +162,7 @@ export function debugActionb(
                                                         "debugStickPropertyIndex"
                                                     )
                                                 )]
-                                        )
+                                        )!
                                         .validValues.findIndex(
                                             (value) => value ==
                                                 Object.entries(
@@ -183,7 +183,7 @@ export function debugActionb(
                                                     "debugStickPropertyIndex"
                                                 )
                                             )]
-                                    ).validValues.length
+                                    )!.validValues.length
                                 )
                             );
                         }
@@ -217,7 +217,7 @@ export function debugActionb(
                                 "debugStickPropertyIndex"
                             )
                         )]
-                ).validValues[Number(
+                )!.validValues[Number(
                     player.getDynamicProperty(
                         "debugStickPropertyIndexIndex"
                     )

@@ -30,22 +30,22 @@ export function playerController(sourceEntitya: Entity | executeCommandPlayerW |
     function playerControllerFormPopup(playerTargetB: number, playerViewerB: number) {
         let form = new ModalFormData();
         try {
-            dimension = String(playerList[playerTargetB].getSpawnPoint().dimension.id);
+            dimension = String(playerList[playerTargetB].getSpawnPoint()?.dimension.id);
         } catch (e) {
             dimension = "";
         }
         try {
-            spawnXPosition = String(playerList[playerTargetB].getSpawnPoint().x);
+            spawnXPosition = String(playerList[playerTargetB].getSpawnPoint()?.x);
         } catch (e) {
             spawnXPosition = "";
         }
         try {
-            spawnYPosition = String(playerList[playerTargetB].getSpawnPoint().y);
+            spawnYPosition = String(playerList[playerTargetB].getSpawnPoint()?.y);
         } catch (e) {
             spawnYPosition = "";
         }
         try {
-            spawnZPosition = String(playerList[playerTargetB].getSpawnPoint().z);
+            spawnZPosition = String(playerList[playerTargetB].getSpawnPoint()?.z);
         } catch (e) {
             spawnZPosition = "";
         }
@@ -205,7 +205,7 @@ export function playerController(sourceEntitya: Entity | executeCommandPlayerW |
                     openTheItemModificationFormAfterwards,
                     resetLevel,
                     debug,
-                ] = (r as ModalFormResponse).formValues;
+                ] = (r as ModalFormResponse).formValues!;
                 let newNameTag = String(nameTag);
                 if (Boolean(multilineNameTag) == true) {
                     newNameTag = String(nameTag).split("\\\\newline").join("\n");
@@ -471,7 +471,7 @@ export function playerController(sourceEntitya: Entity | executeCommandPlayerW |
         forceShow(form2, playerList[playerList.findIndex((x) => x == sourceEntity)])
             .then((t) => {
                 if ((t as ModalFormResponse).canceled) return;
-                let [playerTarget, playerViewer] = (t as ModalFormResponse).formValues;
+                let [playerTarget, playerViewer] = (t as ModalFormResponse).formValues!;
                 let playerTargetB = Number(playerTarget);
                 let playerViewerB = Number(playerViewer);
                 playerControllerFormPopup(playerTargetB, playerViewerB);

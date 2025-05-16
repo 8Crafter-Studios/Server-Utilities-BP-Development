@@ -41,12 +41,12 @@ export function* generateOutlineFillBG(
                     if (Date.now() - msSinceLastYieldStart >=
                         minMSBetweenYields) {
                         msSinceLastYieldStart = Date.now();
-                        yield undefined as void;
+                        yield undefined! as void;
                     }
                 }
                 if (Date.now() - msSinceLastYieldStart >= minMSBetweenYields) {
                     msSinceLastYieldStart = Date.now();
-                    yield undefined as void;
+                    yield undefined! as void;
                 }
             }
         } else {
@@ -65,12 +65,12 @@ export function* generateOutlineFillBG(
                     if (Date.now() - msSinceLastYieldStart >=
                         minMSBetweenYields) {
                         msSinceLastYieldStart = Date.now();
-                        yield undefined as void;
+                        yield undefined! as void;
                     }
                 }
                 if (Date.now() - msSinceLastYieldStart >= minMSBetweenYields) {
                     msSinceLastYieldStart = Date.now();
-                    yield undefined as void;
+                    yield undefined! as void;
                 }
             }
         }

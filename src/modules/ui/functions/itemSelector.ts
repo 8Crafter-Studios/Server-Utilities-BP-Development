@@ -6,7 +6,7 @@ import { customFormUICodes } from "../constants/customFormUICodes";
 
 export async function itemSelector<
     FuncType extends (...args: any) => FuncReturnType,
-    FuncReturnType extends any
+    FuncReturnType extends any = void
 >(
     sourceEntitya: Entity | executeCommandPlayerW | Player,
     targetPlayer: Entity | Player,
@@ -15,9 +15,9 @@ export async function itemSelector<
 ): Promise<{
     slot: number | EquipmentSlot;
     item: ContainerSlot;
-}> {
+} | FuncReturnType | undefined> {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW
-        ? sourceEntitya.player
+        ? sourceEntitya.player!
         : sourceEntitya;
     let form = new ActionFormData();
     form.title(customFormUICodes.action.titles.formStyles.fullscreen + "Select Item");
@@ -25,10 +25,10 @@ export async function itemSelector<
         slot: number | EquipmentSlot;
         item: ContainerSlot;
     }[];
-    for (let i = 0; i < targetPlayer.getComponent("inventory").inventorySize; i++) {
+    for (let i = 0; i < (targetPlayer.getComponent("inventory")?.inventorySize ?? 0); i++) {
         itemsList.push({
             slot: i,
-            item: targetPlayer.getComponent("inventory").container.getSlot(i),
+            item: targetPlayer.getComponent("inventory")!.container.getSlot(i),
         });
     }
     let equipmentList = [] as {
@@ -46,8 +46,8 @@ export async function itemSelector<
                 EquipmentSlot.Feet,
             ][i],
             item: targetPlayer
-                .getComponent("equippable")
-                .getEquipmentSlot(
+                .getComponent("equippable")!
+                ?.getEquipmentSlot(
                     [
                         EquipmentSlot.Mainhand,
                         EquipmentSlot.Offhand,
@@ -77,7 +77,7 @@ export async function itemSelector<
         }
         switch (r.selection) {
             case slotsList.length:
-                return backFunction(
+                return (backFunction ?? (()=>{}))(
                     ...(functionargs.length == 0
                         ? [sourceEntity as Player]
                         : functionargs ?? [sourceEntity as Player])

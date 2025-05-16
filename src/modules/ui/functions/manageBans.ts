@@ -555,7 +555,7 @@ export async function manageBan(sourceEntity: loosePlayerType, ban: ban): Promis
                 }: §6${ban.type == "id" ? ban.originalPlayerName : ban.playerName}\n§r§bBanned By: §a${ban.bannedByName ?? "Unknown Name"}<${
                     ban.bannedById ?? "Unknown ID"
                 }>\n§r§bRemove After Ban Expires: §d${ban.removeAfterBanExpires}\n§r§bReason: §r§f${ban.reason}\n§r§b${
-                    /*JSON.stringify(banList[g.selection]).replaceAll(/(?<!\\)(?![},:](\"|{\"))\"/g, "§r§f\"")*/ ""
+                    /*JSON.stringify(banList[g.selection!]).replaceAll(/(?<!\\)(?![},:](\"|{\"))\"/g, "§r§f\"")*/ ""
                 }`
             );
             form.button(customFormUICodes.action.buttons.positions.main_only + "Unban", "textures/ui/trash_default");

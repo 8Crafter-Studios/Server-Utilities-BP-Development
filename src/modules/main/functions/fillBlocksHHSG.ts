@@ -60,7 +60,7 @@ export async function fillBlocksHHSG(
                                 clearContainer(
                                     v.dimension
                                         .getBlock(v)
-                                        ?.getComponent("inventory").container
+                                        ?.getComponent("inventory")?.container
                                 );
                             }
                             v.dimension.getBlock(v)?.setPermutation(blockb);
@@ -120,7 +120,7 @@ export async function fillBlocksHHSG(
                     options?.minMSBetweenYields ?? 2000,
                     (v) => {
                         if (!!options?.matchingBlockStates
-                            ? BlockTypes.get(options?.matchingBlock) ==
+                            ? BlockTypes.get(options?.matchingBlock!) ==
                             v.dimension.getBlock(v)?.type &&
                             matchingblockb.getAllStates() ==
                             Object.fromEntries(
@@ -128,7 +128,7 @@ export async function fillBlocksHHSG(
                                     Object.assign(
                                         v.dimension
                                             .getBlock(v)
-                                            ?.permutation?.getAllStates(),
+                                            ?.permutation?.getAllStates()!,
                                         blockStates
                                     )
                                 ).filter(
@@ -137,7 +137,7 @@ export async function fillBlocksHHSG(
                                     ).find((s) => v[0] == s[0])
                                 )
                             )
-                            : BlockTypes.get(options?.matchingBlock) ==
+                            : BlockTypes.get(options?.matchingBlock!) ==
                             v.dimension.getBlock(v)?.type) {
                             try {
                                 v.dimension.getBlock(v)?.setPermutation(blockb);
@@ -168,11 +168,11 @@ export async function fillBlocksHHSG(
                             clearContainer(
                                 v.dimension
                                     .getBlock(v)
-                                    ?.getComponent("inventory").container
+                                    ?.getComponent("inventory")?.container
                             );
                         }
                         if (!!options?.matchingBlockStates
-                            ? BlockTypes.get(options?.matchingBlock) ==
+                            ? BlockTypes.get(options?.matchingBlock!) ==
                             v.dimension.getBlock(v)?.type &&
                             matchingblockb.getAllStates() ==
                             Object.fromEntries(
@@ -180,7 +180,7 @@ export async function fillBlocksHHSG(
                                     Object.assign(
                                         v.dimension
                                             .getBlock(v)
-                                            ?.permutation?.getAllStates(),
+                                            ?.permutation?.getAllStates()!,
                                         blockStates
                                     )
                                 ).filter(
@@ -189,7 +189,7 @@ export async function fillBlocksHHSG(
                                     ).find((s) => v[0] == s[0])
                                 )
                             )
-                            : BlockTypes.get(options?.matchingBlock) ==
+                            : BlockTypes.get(options?.matchingBlock!) ==
                             v.dimension.getBlock(v)?.type) {
                             try {
                                 v.dimension.getBlock(v)?.setPermutation(blockb);

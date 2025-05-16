@@ -112,6 +112,7 @@ async function executeZoneActions(players: Player[]) {
                                 .filter((id) => id.startsWith("noPVPZoneActiveFromCustomAreaCategory:"))
                                 .some((id) => {
                                     const category = ProtectedAreas.areas.advancedAreaCategories.find((category) => category.id === id.split(":")[1]);
+                                    if (!category) return;
                                     if (new ProtectedAreaCategory("advancedArea", category.id).testIsInArea(player.location, player.dimension)) {
                                         return true;
                                     } else {
@@ -152,6 +153,7 @@ async function executeZoneActions(players: Player[]) {
                                                     const category = ProtectedAreas.areas.advancedAreaCategories.find(
                                                         (category) => category.id === id.split(":")[1]
                                                     );
+                                                    if (!category) return;
                                                     if (
                                                         category.tagZone !== false &&
                                                         category.tagZone !== undefined &&
@@ -201,6 +203,7 @@ async function executeZoneActions(players: Player[]) {
                                                     const category = ProtectedAreas.areas.advancedAreaCategories.find(
                                                         (category) => category.id === id.split(":")[1]
                                                     );
+                                                    if (!category) return;
                                                     if (
                                                         category.tagZone !== false &&
                                                         category.tagZone !== undefined &&

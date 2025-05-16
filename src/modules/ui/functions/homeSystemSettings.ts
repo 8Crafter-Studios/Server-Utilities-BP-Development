@@ -20,7 +20,7 @@ export async function homeSystemSettings(
     sourceEntitya: Entity | executeCommandPlayerW | Player
 ): Promise<1 | 0 | -2> {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW
-        ? sourceEntitya.player
+        ? sourceEntitya.player!
         : sourceEntitya;
     if (securityVariables.ultraSecurityModeEnabled) {
         if(securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.accessSettings") == false){

@@ -290,7 +290,7 @@ declare module "@minecraft/server" {
          *
          * Only works on players, on non-players it will return undefined.
          *
-         * This returns the same value as `Entity.prototype.getComponent("inventory").container.getItem(Entity.prototype.selectedSlotIndex)`.
+         * This returns the same value as `Entity.prototype.getComponent("inventory")?.container.getItem(Entity.prototype.selectedSlotIndex)`.
          *
          * @author 8Crafter
          */
@@ -300,7 +300,7 @@ declare module "@minecraft/server" {
          *
          * Only works on players, on non-players it will return undefined.
          *
-         * This returns the same value as `Entity.prototype.getComponent("inventory").container.getSlot(Entity.prototype.selectedSlotIndex)`.
+         * This returns the same value as `Entity.prototype.getComponent("inventory")?.container.getSlot(Entity.prototype.selectedSlotIndex)`.
          *
          * @author 8Crafter
          */

@@ -21,7 +21,7 @@ export async function worldBorderSettings(
     dimension: number = 0
 ): Promise<1 | 0 | -2> {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW
-        ? sourceEntitya.player
+        ? sourceEntitya.player!
         : sourceEntitya;
     if (securityVariables.ultraSecurityModeEnabled) {
         if(securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.accessExtraFeaturesSettings") == false){

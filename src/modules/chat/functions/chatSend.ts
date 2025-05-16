@@ -34,11 +34,11 @@ export function chatSend(params: {
     event: ChatSendBeforeEvent | undefined;
     newMessage: string | undefined;
 }) {
-    let returnBeforeChatSend = params.returnBeforeChatSend;
-    let player = params.player;
-    let eventData = params.eventData;
-    let event = params.event;
-    let newMessage = params.newMessage;
+    let returnBeforeChatSend = params.returnBeforeChatSend ?? false;
+    let player = params.player!;
+    let eventData = params.eventData ?? params.event!;
+    let event = params.event ?? params.eventData!;
+    let newMessage = params.newMessage!;
     if (config.antiSpamSystem.antispamEnabled) {
         if (!player.hasTag("canBypassAntiSpam")) {
             if (
@@ -77,7 +77,7 @@ export function chatSend(params: {
     }
 
     if (ModerationActions.testForMutedPlayer(player.name)) {
-        const mute = ModerationActions.getMuteData(player.name);
+        const mute = ModerationActions.getMuteData(player.name)!;
         returnBeforeChatSend = true;
         event.cancel = true;
         if (newMessage.toLowerCase().includes("mute details")) {
@@ -111,7 +111,7 @@ Mute reason: ${mute.reason}`);
         });
     }
     if (returnBeforeChatSend) return;
-    const playerPersonalSettings = chatSend_getPlayerPersonalSettings(player);
+    const playerPersonalSettings = chatSend_getPlayerPersonalSettings(player)!;
     const msgFormatFromTags = chatSend_getChatMessageFormatFromPlayerTags(player);
     // let messageFormatting: string = msgFormatFromTags.messageFormatting;
     // let messageGradientMode: string = msgFormatFromTags.messageGradientMode;
@@ -165,7 +165,7 @@ Mute reason: ${mute.reason}`);
         targetPlayer: undefined,
         targetPlayerSettings: undefined,
         ...beforeFormatData.formatOptions,
-    } as Parameters<typeof chatSendMessageEvaluator>[2];
+    } as NonNullable<Parameters<typeof chatSendMessageEvaluator>[2]>;
     let prePlayersOutput = chatSendMessageEvaluator_prePlayers(beforeFormatData.message, beforeFormatData.nameTag, options);
     //    let showHealth = false
     /* if (player.hasTag('messageFormatting:r')) { messageFormatting += "§r"; };

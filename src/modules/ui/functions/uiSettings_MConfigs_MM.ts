@@ -7,6 +7,7 @@ import { showMessage } from "modules/utilities/functions/showMessage";
 import { customFormUICodes } from "../constants/customFormUICodes";
 import type { loosePlayerType } from "modules/utilities/types/loosePlayerType";
 import { uiSettings_menuConfigurations_mainMenu_mainSettings } from "./uiSettings_MConfigs_MM_MSttgs";
+import { extractPlayerFromLooseEntityType } from "modules/utilities/functions/extractPlayerFromLooseEntityType";
 
 /**
  * Displays and handles the main menu settings form for a given entity.
@@ -26,7 +27,7 @@ import { uiSettings_menuConfigurations_mainMenu_mainSettings } from "./uiSetting
  * 6. Returns the appropriate status code based on the outcome.
  */
 export async function uiSettings_menuConfigurations_mainMenu(sourceEntity: loosePlayerType): Promise<0 | 1> {
-    const player = sourceEntity instanceof executeCommandPlayerW ? sourceEntity.player : (sourceEntity as Player);
+    const player = extractPlayerFromLooseEntityType(sourceEntity);
     while (true) {
         try {
             if (securityVariables.ultraSecurityModeEnabled) {

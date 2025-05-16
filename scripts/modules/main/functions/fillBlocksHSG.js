@@ -36,7 +36,7 @@ export async function fillBlocksHSG(center, radius, dimension, block, blockState
                         ?.getComponent("inventory")) {
                         clearContainer(v.dimension
                             .getBlock(v)
-                            ?.getComponent("inventory").container);
+                            ?.getComponent("inventory")?.container);
                     }
                     v.dimension.getBlock(v)?.setPermutation(blockb);
                     counter++;
@@ -101,7 +101,7 @@ export async function fillBlocksHSG(center, radius, dimension, block, blockState
                         ?.getComponent("inventory")) {
                         clearContainer(v.dimension
                             .getBlock(v)
-                            ?.getComponent("inventory").container);
+                            ?.getComponent("inventory")?.container);
                     }
                     if (!!options?.matchingBlockStates
                         ? BlockTypes.get(options?.matchingBlock) ==

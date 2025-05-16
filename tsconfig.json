@@ -23,7 +23,7 @@
     "noFallthroughCasesInSwitch": true,
     "strictBindCallApply": true,
     "strictNullChecks": true,
-    // "strictPropertyInitialization": true,
+    "strictPropertyInitialization": true,
     "noImplicitAny": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,

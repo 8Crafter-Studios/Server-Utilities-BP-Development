@@ -49,13 +49,13 @@ export function* generateMinecraftOvoidCG(
                     if (Date.now() - msSinceLastYieldStart >=
                         (options?.minMSBetweenYields ?? 2000)) {
                         msSinceLastYieldStart = Date.now();
-                        yield undefined as void;
+                        yield undefined! as void;
                     }
                 }
                 if (Date.now() - msSinceLastYieldStart >=
                     (options?.minMSBetweenYields ?? 2000)) {
                     msSinceLastYieldStart = Date.now();
-                    yield undefined as void;
+                    yield undefined! as void;
                 }
             }
         } else {
@@ -84,13 +84,13 @@ export function* generateMinecraftOvoidCG(
                     if (Date.now() - msSinceLastYieldStart >=
                         (options?.minMSBetweenYields ?? 2000)) {
                         msSinceLastYieldStart = Date.now();
-                        yield undefined as void;
+                        yield undefined! as void;
                     }
                 }
                 if (Date.now() - msSinceLastYieldStart >=
                     (options?.minMSBetweenYields ?? 2000)) {
                     msSinceLastYieldStart = Date.now();
-                    yield undefined as void;
+                    yield undefined! as void;
                 }
             }
         }

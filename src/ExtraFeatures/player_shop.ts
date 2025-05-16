@@ -2243,7 +2243,7 @@ Is Buy Shop: ${shop.buyShop ? "§aTrue" : "§cFalse"}
                                 sourceEntity,
                                 () => {} /*, PlayerShopManager.managePlayerShop_contents, sourceEntity, shop, mode*/
                             );
-                            if (!item.item.hasItem()) {
+                            if (!item?.item.hasItem()) {
                                 if (
                                     (await showMessage(sourceEntity as Player, "", `You cannot sell this item because that slot is empty.`, "Back", "Close"))
                                         .selection != 0
@@ -2566,7 +2566,7 @@ ${mode == "buy" ? "Price" : "Value"}: ${mode == "buy" ? (item as PlayerSavedShop
                 }
                 case "restock": {
                     const itemb = await itemSelector(sourceEntity, sourceEntity, PlayerShopManager.managePlayerShop_contents, sourceEntity, shop, mode);
-                    if (!itemb.item.hasItem()) {
+                    if (!itemb?.item.hasItem()) {
                         if (
                             (
                                 await showMessage(
@@ -3533,7 +3533,7 @@ Texture: ${page.texture}`
                         sourceEntity,
                         () => 1 /*, PlayerShopManager.managePlayerShop_contents, sourceEntity, shop, mode*/
                     );
-                    if (!item.item.hasItem()) {
+                    if (!item?.item.hasItem()) {
                         if (
                             (await showMessage(sourceEntity as Player, "", `You cannot sell this item because that slot is empty.`, "Back", "Close"))
                                 .selection != 0
@@ -3855,7 +3855,7 @@ Texture: ${page.texture}`
                 }
                 case "restock": {
                     const itemb = await itemSelector(sourceEntity, sourceEntity, PlayerShopManager.managePlayerShop_contents, sourceEntity, shop, mode);
-                    if (!itemb.item.hasItem()) {
+                    if (!itemb?.item.hasItem()) {
                         if (
                             (
                                 await showMessage(

@@ -4,7 +4,7 @@ export function getAllBuiltInCommandsCategories() {
     let set = new Set() as Set<string>;
     commands
         .map((v) => v.category)
-        .forEach((v) => typeof v == "string" ? set.add(v) : v.forEach((v) => set.add(v))
+        .forEach((v) => typeof v == "string" ? set.add(v) : v?.forEach((v) => set.add(v))
         );
     return [...set];
 }

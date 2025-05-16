@@ -3,9 +3,10 @@ import type { extendedExecuteCommandPlayerW } from "modules/commands/types/exten
 import { Home } from "./Home";
 /**
  * This class is used for managing homes for the home system.
+ *
+ * @hideconstructor
  */
 export declare class HomeSystem {
-    constructor();
     /**
      * The format version of the home system.
      */

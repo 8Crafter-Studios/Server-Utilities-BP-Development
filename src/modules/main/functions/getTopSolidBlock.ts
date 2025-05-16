@@ -9,10 +9,10 @@ export function getTopSolidBlock(
         x: location.x,
         y: dimension.heightRange.max,
         z: location.z,
-    });
+    })!;
     while (block.y >= dimension.heightRange.min) {
         if (onlySolid ? !block.isSolid : block.isAir) {
-            block = block.below(1);
+            block = block.below(1)!;
         } else {
             return block;
         }

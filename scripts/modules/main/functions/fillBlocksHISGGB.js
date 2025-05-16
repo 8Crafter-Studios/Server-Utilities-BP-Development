@@ -33,7 +33,7 @@ export async function fillBlocksHISGGB(from, to, skygridSize, dimension, block, 
                         ?.getComponent("inventory")) {
                         clearContainer(v.dimension
                             .getBlock(v)
-                            ?.getComponent("inventory").container);
+                            ?.getComponent("inventory")?.container);
                     }
                     v.dimension
                         .getBlock(v)
@@ -87,7 +87,7 @@ export async function fillBlocksHISGGB(from, to, skygridSize, dimension, block, 
                             ?.getComponent("inventory")) {
                             clearContainer(v.dimension
                                 .getBlock(v)
-                                ?.getComponent("inventory").container);
+                                ?.getComponent("inventory")?.container);
                         }
                         v.dimension
                             .getBlock(v)
@@ -114,7 +114,7 @@ export async function fillBlocksHISGGB(from, to, skygridSize, dimension, block, 
                         ?.getComponent("inventory")) {
                         clearContainer(v.dimension
                             .getBlock(v)
-                            ?.getComponent("inventory").container);
+                            ?.getComponent("inventory")?.container);
                     }
                     if (!!options?.matchingBlockStates
                         ? testBlockForMatch(v.dimension.getBlock(v), {

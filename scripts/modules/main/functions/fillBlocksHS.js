@@ -24,7 +24,7 @@ export function fillBlocksHS(center, radius, dimension, block, blockStates, opti
         if (replacemode) {
             generateMinecraftSphereB(center, radius, dimension, (v) => {
                 if (!!v.dimension.getBlock(v)?.getComponent("inventory")) {
-                    clearContainer(v.dimension.getBlock(v)?.getComponent("inventory")
+                    clearContainer(v.dimension.getBlock(v).getComponent("inventory")
                         .container);
                 }
                 v.dimension.getBlock(v)?.setPermutation(blockb);
@@ -59,7 +59,7 @@ export function fillBlocksHS(center, radius, dimension, block, blockStates, opti
         else {
             generateMinecraftSphereB(center, radius, dimension, (v) => {
                 if (!!v.dimension.getBlock(v)?.getComponent("inventory")) {
-                    clearContainer(v.dimension.getBlock(v)?.getComponent("inventory")
+                    clearContainer(v.dimension.getBlock(v).getComponent("inventory")
                         .container);
                 }
                 if (!!options?.matchingBlockStates

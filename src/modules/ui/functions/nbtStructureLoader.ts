@@ -56,9 +56,9 @@ export async function nbtStructureLoader(sourceEntity: loosePlayerType): Promise
         generateNBTFileD(
             {
                 dimension: dimensions[dimension as number] ?? player.dimension,
-                x: x.toNumber() ?? player.location.x,
-                y: y.toNumber() ?? player.location.y,
-                z: z.toNumber() ?? player.location.z,
+                x: x?.toNumber() ?? player.location.x,
+                y: y?.toNumber() ?? player.location.y,
+                z: z?.toNumber() ?? player.location.z,
             },
             newsnbta,
             player

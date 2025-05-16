@@ -432,7 +432,7 @@ export async function manageBan(sourceEntity, ban) {
                     : moment(ban.banDate).preciseDiff(moment(ban.unbanDate)) /* `${duration.days}d, ${duration.hours}h ${duration.minutes}m ${duration.seconds}s ${duration.milliseconds}ms` */}${isPermanent ? "" : `\n§r§bTime Remaining: §q${timeRemaining}`}\n§r§bBan Date: §q${formatDateTime(new Date(ban.banDate), timeZone) + " UTC" + (timeZone > 0 || Object.is(timeZone, 0) ? "+" : "") + timeZone}${isPermanent
                 ? ""
                 : `\n§r§bUnban Date: §q${formatDateTime(new Date(ban.unbanDate), timeZone) + " UTC" + (timeZone > 0 || Object.is(timeZone, 0) ? "+" : "") + timeZone}`}\n§r§b${ban.type == "id" ? "Player ID" : "Original Player ID"}: §6${ban.type == "id" ? ban.playerId : ban.originalPlayerId}\n§r§b${ban.type == "id" ? "Original Player Name" : "Player Name"}: §6${ban.type == "id" ? ban.originalPlayerName : ban.playerName}\n§r§bBanned By: §a${ban.bannedByName ?? "Unknown Name"}<${ban.bannedById ?? "Unknown ID"}>\n§r§bRemove After Ban Expires: §d${ban.removeAfterBanExpires}\n§r§bReason: §r§f${ban.reason}\n§r§b${
-            /*JSON.stringify(banList[g.selection]).replaceAll(/(?<!\\)(?![},:](\"|{\"))\"/g, "§r§f\"")*/ ""}`);
+            /*JSON.stringify(banList[g.selection!]).replaceAll(/(?<!\\)(?![},:](\"|{\"))\"/g, "§r§f\"")*/ ""}`);
             form.button(customFormUICodes.action.buttons.positions.main_only + "Unban", "textures/ui/trash_default");
             form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
             form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");

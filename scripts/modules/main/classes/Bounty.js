@@ -22,16 +22,18 @@ export class Bounty {
         if (properties.new === false) {
             this.valid = properties.valid;
             this.status = properties.status;
+            this.id = properties.id;
             Object.defineProperty(this, "id", {
-                value: properties.id,
+                value: this.id,
                 configurable: true,
                 enumerable: true,
                 writable: false,
             });
         }
         else {
+            this.id = currentId++;
             Object.defineProperty(this, "id", {
-                value: currentId++,
+                value: this.id,
                 configurable: true,
                 enumerable: true,
                 writable: false,
@@ -147,8 +149,9 @@ export class Bounty {
 export class TotalBounty {
     targetId;
     constructor(targetId) {
+        this.targetId = targetId;
         Object.defineProperty(this, "targetId", {
-            value: targetId,
+            value: this.targetId,
             configurable: true,
             enumerable: true,
             writable: false,

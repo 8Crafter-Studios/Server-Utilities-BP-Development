@@ -74,9 +74,9 @@ export async function startPlayerDataAutoSave() {
 export function stopPlayerDataAutoSave() {
     try {
         try {
-            system.clearRun(repeatingIntervals.playerDataAutoSave);
+            system.clearRun(repeatingIntervals.playerDataAutoSave!);
         } catch { }
-        repeatingIntervals.playerDataAutoSave = null;
+        repeatingIntervals.playerDataAutoSave = undefined;
         globalThis.stopPlayerDataAutoSaveAsync = true;
         return 1;
     } catch {

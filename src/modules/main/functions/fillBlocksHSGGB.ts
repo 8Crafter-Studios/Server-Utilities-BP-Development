@@ -56,7 +56,7 @@ export async function fillBlocksHSGGB(
                                 clearContainer(
                                     v.dimension
                                         .getBlock(v)
-                                        ?.getComponent("inventory").container
+                                        ?.getComponent("inventory")?.container
                                 );
                             }
                             v.dimension
@@ -131,7 +131,7 @@ export async function fillBlocksHSGGB(
                                     clearContainer(
                                         v.dimension
                                             .getBlock(v)
-                                            ?.getComponent("inventory").container
+                                            ?.getComponent("inventory")?.container
                                     );
                                 }
                                 v.dimension
@@ -168,7 +168,7 @@ export async function fillBlocksHSGGB(
                                 clearContainer(
                                     v.dimension
                                         .getBlock(v)
-                                        ?.getComponent("inventory").container
+                                        ?.getComponent("inventory")?.container
                                 );
                             }
                             if (!!options?.matchingBlockStates

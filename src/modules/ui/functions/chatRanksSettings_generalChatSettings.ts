@@ -309,7 +309,7 @@ export async function chatRanksSettings_generalChatSettings(sourceEntity: looseP
                 case "rankMode":
                     config.chatRanks.rankMode = (Object.entries(rankModes) as [keyof typeof rankModes, (typeof rankModes)[keyof typeof rankModes]][]).find(
                         (m) => m[1] === rankModesArray[options[v]]
-                    )[0];
+                    )?.[0];
                     break;
                 case "rankTemplateString":
                     config.chatRanks.rankTemplateString = options[v] === "" ? undefined : options[v];

@@ -13,7 +13,8 @@ export function getGroundSolidBlock(
         ),
         z: location.z,
     });
-    while (block.y >= dimension.heightRange.min) {
+    if(!block) return undefined;
+    while (block && block.y >= dimension.heightRange.min) {
         if (onlySolid ? !block.isSolid : block.isAir) {
             block = block.below(1);
         } else {

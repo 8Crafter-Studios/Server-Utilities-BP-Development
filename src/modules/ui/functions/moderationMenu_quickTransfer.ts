@@ -62,10 +62,10 @@ export async function moderationMenu_quickTransfer(sourceEntity: loosePlayerType
                     if (!/^[0-9]+$/.test(rb.formValues![1] as string)) {
                         throw new TypeError("Port must be an integer.");
                     }
-                    if (rb.formValues![1].toNumber() < 0 || rb.formValues![1].toNumber() > 65535) {
+                    if (rb.formValues![1]?.toNumber()! < 0 || rb.formValues![1]?.toNumber()! > 65535) {
                         throw new TypeError("Port must be between 0 and 65535 (inclusive).");
                     }
-                    transferPlayer(target, rb.formValues![0] as string, rb.formValues![1].toNumber());
+                    transferPlayer(target, rb.formValues![0] as string, rb.formValues![1]!.toNumber()!);
                     return 1;
                 }
                 case "back":

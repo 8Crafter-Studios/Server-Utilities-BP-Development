@@ -7,7 +7,7 @@ export function editorStickMenuB(
     sourceEntitya: Entity | executeCommandPlayerW | Player
 ) {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW
-        ? sourceEntitya.player
+        ? sourceEntitya.player!
         : sourceEntitya;
     let form = new ModalFormData();
     let playerList = world.getPlayers();

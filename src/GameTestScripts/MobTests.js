@@ -199,7 +199,7 @@ GameTest.register("MobTests", "axolotl_bucket_capture", (test) => {
     .thenExecuteAfter(20, () => testEx.giveItem(playerSim, MinecraftItemTypes.waterBucket, 1, 0))
     .thenExecute(() => test.assert(playerSim.interactWithEntity(target) == true, ""))
     .thenExecute(() =>
-      test.assert(playerSim.getComponent("inventory").container.getItem(0).id === "minecraft:axolotl_bucket", "")
+      test.assert(playerSim.getComponent("inventory")?.container.getItem(0).id === "minecraft:axolotl_bucket", "")
     )
     .thenSucceed();
 })
@@ -211,11 +211,11 @@ GameTest.register("MobTests", "axolotl_attacks_squid", (test) => {
   let squidSpawn = new BlockLocationIterator(2, 4, 2);
   test.spawn("minecraft:axolotl", axlSpawn);
   let prey = test.spawn("minecraft:squid", squidSpawn);
-  let preyHealth = prey.getComponent("health").current;
+  let preyHealth = prey.getComponent("health")?.current;
   test
     .startSequence()
     .thenIdle(20)
-    .thenWait(() => test.assert(prey.getComponent("health").current < preyHealth, ""))
+    .thenWait(() => test.assert(prey.getComponent("health")?.current < preyHealth, ""))
     .thenSucceed();
 })
   .maxTicks(140)
@@ -225,7 +225,7 @@ GameTest.register("MobTests", "axolotl_attacks_squid", (test) => {
 GameTest.register("MobTests", "axolotl_lure_no_attack", (test) => {
   const playerSim = test.spawnSimulatedPlayer(new BlockLocationIterator(1, 5, 0), "playerSim_axolotl_lure");
   let prey = test.spawn("minecraft:squid", new BlockLocationIterator(1, 1, 1));
-  let prey_health = prey.getComponent("health").current;
+  let prey_health = prey.getComponent("health")?.current;
   const testEx = new GameTestExtensions(test);
 
   test
@@ -233,7 +233,7 @@ GameTest.register("MobTests", "axolotl_lure_no_attack", (test) => {
     .thenExecuteAfter(20, () => testEx.giveItem(playerSim, MinecraftItemTypes.tropicalFishBucket, 1, 0))
     .thenExecute(() => test.spawn("minecraft:axolotl", new BlockLocationIterator(1, 5, 2)))
     .thenIdle(60)
-    .thenExecute(() => test.assert(prey.getComponent("health").current == prey_health, ""))
+    .thenExecute(() => test.assert(prey.getComponent("health")?.current == prey_health, ""))
     .thenSucceed();
 })
   .structureName("MobTests:axolotl_lure")
@@ -265,7 +265,7 @@ GameTest.register("MobTests", "goat_wheat_breeding", (test) => {
 GameTest.register("MobTests", "piglin_should_drop_different_loots", (test) => {
   const testEx = new GameTestExtensions(test);
   const player = test.spawnSimulatedPlayer(new BlockLocationIterator(1, 3, 1));
-  const inventoryContainer = player.getComponent("inventory").container;
+  const inventoryContainer = player.getComponent("inventory")?.container;
   const goldIngotCount = 10;
   const piglinEntityType = "minecraft:piglin<spawn_adult>";
   const piglin = test.spawn(piglinEntityType, new BlockLocationIterator(1, 2, 2));

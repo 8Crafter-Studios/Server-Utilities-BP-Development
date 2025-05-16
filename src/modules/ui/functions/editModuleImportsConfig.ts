@@ -30,7 +30,7 @@ export async function editModuleImportsConfig(
 ): Promise<0 | 1 | -2> {
     const sourceEntity =
         sourceEntitya instanceof executeCommandPlayerW
-            ? sourceEntitya.player
+            ? sourceEntitya.player!
             : sourceEntitya;
     let form = new ActionFormData();
     form.title("Edit Module Imports Config");
@@ -66,7 +66,7 @@ export async function editModuleImportsConfig(
                         }
                         moduleImportsConfig.override =
                             moduleImportsConfig.overrideOptions[
-                                response.selection
+                                response.selection!
                             ];
                         return await editModuleImportsConfig(sourceEntity);
                     });
@@ -115,7 +115,7 @@ export async function editModuleImportsConfig_module(
 ): Promise<0 | 1 | -2> {
     const sourceEntity =
         sourceEntitya instanceof executeCommandPlayerW
-            ? sourceEntitya.player
+            ? sourceEntitya.player!
             : sourceEntitya;
     const items = Object.entries(moduleImportsConfig.toJSON_module(module)) as [
         (typeof optionalModuleObjectImportFilePaths)[number],
@@ -174,7 +174,7 @@ export async function editModuleImportsConfig_module(
                         }
                         moduleImportsConfig.moduleOverrides[module] =
                             moduleImportsConfig.overrideOptions[
-                                response.selection
+                                response.selection!
                             ];
                         return await editModuleImportsConfig_module(
                             sourceEntity,
@@ -231,7 +231,7 @@ export async function editModuleImportsConfig_module_folder(
 ): Promise<0 | 1 | -2> {
     const sourceEntity =
         sourceEntitya instanceof executeCommandPlayerW
-            ? sourceEntitya.player
+            ? sourceEntitya.player!
             : sourceEntitya;
     const items = Object.entries(
         moduleImportsConfig.toJSON_module(module)
@@ -284,7 +284,7 @@ export async function editModuleImportsConfig_module_folder(
                         }
                         moduleImportsConfig.moduleOverrides[module] =
                             moduleImportsConfig.overrideOptions[
-                                response.selection
+                                response.selection!
                             ];
                         return await editModuleImportsConfig_module(
                             sourceEntity,
@@ -342,7 +342,7 @@ export async function editModuleImportsConfig_module_item(
 ): Promise<0 | 1 | -2> {
     const sourceEntity =
         sourceEntitya instanceof executeCommandPlayerW
-            ? sourceEntitya.player
+            ? sourceEntitya.player!
             : sourceEntitya;
     const configJSON = moduleImportsConfig.toJSON();
     let form = new ActionFormData();

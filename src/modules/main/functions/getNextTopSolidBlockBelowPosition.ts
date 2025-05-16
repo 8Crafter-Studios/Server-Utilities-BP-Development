@@ -8,7 +8,7 @@ export function getNextTopSolidBlockBelowPosition(
     allowNonSolidBlocksAbove: boolean = false,
     allowLiquidBelow: boolean = false
 ) {
-    let block = tryget(() => dimension.getBlock(location));
+    let block = tryget(() => dimension.getBlock(location))!;
     let readyToSearch = !(onlySolid
         ? !block.isSolid
         : (block.isLiquid && allowLiquidAbove) ||
@@ -19,7 +19,7 @@ export function getNextTopSolidBlockBelowPosition(
             (block.isSolid && allowNonSolidBlocksAbove) ||
             block.isAir) &&
             !readyToSearch) {
-            block = block.below(1);
+            block = block.below(1)!;
         } else {
             if ((onlySolid
                 ? !block.isSolid
@@ -28,15 +28,15 @@ export function getNextTopSolidBlockBelowPosition(
                 block.isAir) &&
                 readyToSearch &&
                 (onlySolid
-                    ? block.below(1).isSolid
+                    ? block.below(1)?.isSolid
                     : !(
                         (!allowLiquidBelow
-                            ? block.below(1).isLiquid
-                            : false) || block.below(1).isAir
+                            ? block.below(1)?.isLiquid
+                            : false) || block.below(1)?.isAir
                     ))) {
                 return block;
             } else {
-                block = block.below(1);
+                block = block.below(1)!;
             }
         }
         readyToSearch = readyToSearch

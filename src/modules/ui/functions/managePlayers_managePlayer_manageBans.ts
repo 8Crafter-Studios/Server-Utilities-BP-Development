@@ -212,7 +212,7 @@ export async function managePlayers_managePlayer_manageBans(
                 default:
                     let form4 = new ActionFormData();
                     form4.title(`Manage Bans`);
-                    let ba = banList[g.selection];
+                    let ba = banList[g.selection!];
                     let timeRemaining = ba.timeRemaining;
                     form4.body(
                         `§bformat_version: §e${ba.format_version}\n§r§bban_format_version: §e${ba.ban_format_version}\n§r§bbanId: §6${ba.banId}\n§r§btype: §a${ba.type}\ntimeRemaining: ${timeRemaining.days}d, ${timeRemaining.hours}h ${timeRemaining.minutes}m ${timeRemaining.seconds}s ${timeRemaining.milliseconds}ms\n§r§bbanDate: §q${new Date(ba.banDate).formatDateTime(
@@ -228,7 +228,7 @@ export async function managePlayers_managePlayer_manageBans(
                             : "playerName"}: §6${ba.type == "id"
                             ? ba.originalPlayerName
                             : ba.playerName}\n§r§bbannedByName: §a${ba.bannedByName}\n§r§bbannedById: §6${ba.bannedById}\n§r§bremoveAfterBanExpires: §d${ba.removeAfterBanExpires}\n§r§breason: §r§f${ba.reason}\n§r§b${
-                    /*JSON.stringify(banList[g.selection]).replaceAll(/(?<!\\)(?![},:](\"|{\"))\"/g, "§r§f\"")*/ ""}`
+                    /*JSON.stringify(banList[g.selection!]).replaceAll(/(?<!\\)(?![},:](\"|{\"))\"/g, "§r§f\"")*/ ""}`
                     );
                     form4.button("Unban");
                     form4.button("Back");
@@ -249,7 +249,7 @@ export async function managePlayers_managePlayer_manageBans(
                                         }
                                     }
                                 }
-                                banList[g.selection].remove();
+                                banList[g.selection!].remove();
                                 return 1;
                             }
                             if (h.selection == 1) {

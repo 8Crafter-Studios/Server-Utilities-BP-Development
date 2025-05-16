@@ -63,7 +63,7 @@ export async function editAreas(player: Player, prefix: (typeof protectedAreaCat
     form1234.title(customFormUICodes.action.titles.formStyles.medium + prefix);
     return await forceShow(form1234, player).then(async (t) => {
         if (t.canceled) return 1;
-        switch ((!!areas[t.selection] ? "area" : undefined) ?? (["new", "back", "close", "refresh"] as const)[t.selection - areas.length]) {
+        switch ((!!areas[t.selection!] ? "area" : undefined) ?? (["new", "back", "close", "refresh"] as const)[t.selection! - areas.length]) {
             case "new":
                 form12345.title("New Protected Area");
                 form12345.textField("Identifier Name", "myArea");
@@ -113,7 +113,7 @@ export async function editAreas(player: Player, prefix: (typeof protectedAreaCat
                 ProtectedAreas.load();
                 return await editAreas(player, prefix);
             case "area":
-                const currentArea = areas[t.selection];
+                const currentArea = areas[t.selection!];
                 form1234567.title(customFormUICodes.action.titles.formStyles.medium + currentArea.id);
                 form1234567.body(currentArea.id);
                 form1234567.button(customFormUICodes.action.buttons.positions.main_only + "Edit", "textures/ui/book_edit_default");
@@ -140,7 +140,7 @@ export async function editAreas(player: Player, prefix: (typeof protectedAreaCat
 
                             return await forceShow(form123456, player).then(async (q) => {
                                 if (q.canceled) return await editAreas(player, prefix);
-                                const [from, to, dimension, mode, icon_path] = (q as ModalFormResponse).formValues;
+                                const [from, to, dimension, mode, icon_path] = (q as ModalFormResponse).formValues!;
                                 const newValue = {
                                     from: {
                                         x: Number(String(from).split(",")[0]),
@@ -180,10 +180,10 @@ export async function editAreas(player: Player, prefix: (typeof protectedAreaCat
                             });
                         }
                         case 1:
-                            world.setDynamicProperty(areas[t.selection].id, undefined);
-                            ProtectedAreas.areas[prefix][dimensionse[areas[t.selection].dimension]].splice(
-                                ProtectedAreas.areas[prefix][dimensionse[areas[t.selection].dimension as number]].findIndex(
-                                    (a) => a.id === areas[t.selection].id
+                            world.setDynamicProperty(areas[t.selection!].id, undefined);
+                            ProtectedAreas.areas[prefix][dimensionse[areas[t.selection!].dimension]].splice(
+                                ProtectedAreas.areas[prefix][dimensionse[areas[t.selection!].dimension as number]].findIndex(
+                                    (a) => a.id === areas[t.selection!].id
                                 ),
                                 1
                             );
@@ -192,6 +192,8 @@ export async function editAreas(player: Player, prefix: (typeof protectedAreaCat
                             return await editAreas(player, prefix);
                         case 3:
                             return 0;
+                        default:
+                            return 1;
                     }
                 });
             default:

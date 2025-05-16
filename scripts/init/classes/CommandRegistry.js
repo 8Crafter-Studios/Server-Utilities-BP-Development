@@ -5,6 +5,7 @@
  * @todo Finish the command registry system.
  */
 import { tfsb } from "init/functions/tfsb";
+import { command } from "modules/commands/classes/command";
 import { commandSettings } from "modules/commands/classes/commandSettings";
 import { commands_format_version } from "modules/commands/constants/commands_format_version";
 import { extractPlayerFromLooseEntityType } from "modules/utilities/functions/extractPlayerFromLooseEntityType";
@@ -49,9 +50,9 @@ class RegisteredCommand {
      * The regular expression used to access the command.
      */
     regexp;
-    syntax;
-    command_version;
-    description;
+    syntax = "Syntax Missing";
+    command_version = "1.0.0";
+    description = "Description Missing";
     commandSettingsId;
     aliases;
     categories = [];
@@ -66,6 +67,13 @@ class RegisteredCommand {
     #execute;
     constructor(commandData) {
         this.commandData = commandData;
+        this.type = commandData.type;
+        this.accessType = commandData.accessType;
+        this.id = commandData.commandName;
+        this.name = commandData.commandName;
+        this.regexp = (commandData.accessType === "regexp" ? RegExp(commandData.escregexp.v, commandData.escregexp.f) : undefined);
+        this.commandSettingsId = commandData.commandSettingsId;
+        this.#execute = commandData.callback;
     }
     /**
      * The settings of the command, will be an instance of the {@link commandSettings} class.
@@ -134,12 +142,12 @@ export class CommandRegistry {
     regexpAccessCommands = new Map(); //`[regexp: RegExp, command: RegisteredCommand][] = new Map();
     getCommand(commandName) {
         // First, attempt to get the command by direct name match
-        const directMatch = this.commands.get(commandName);
+        const directMatch = this.namedAccessCommands.get(commandName);
         if (directMatch) {
             return directMatch;
         }
         // If no direct match, search for a regex match
-        for (const command of this.commands.values()) {
+        for (const command of this.regexpAccessCommands.values()) {
             const regexPattern = command.commandData.escregexp?.v;
             if (regexPattern && new RegExp(regexPattern).test(commandName)) {
                 return command;
@@ -148,9 +156,16 @@ export class CommandRegistry {
         // Return undefined if no match is found
         return undefined;
     }
-    registerCommand(commandData, accessType = "named") {
+    registerCommand(commandData) {
         const registeredCommand = new RegisteredCommand(commandData);
         this.commands.set(commandData.commandName, registeredCommand);
+        if (commandData.accessType === "named") {
+            this.namedAccessCommands.set(commandData.commandName, registeredCommand);
+        }
+        else if (commandData.accessType === "regexp") {
+            this.regexpAccessCommands.set(RegExp(commandData.escregexp.v, commandData.escregexp.f).toString(), registeredCommand);
+        }
+        return registeredCommand;
     }
 }
 //# sourceMappingURL=CommandRegistry.js.map

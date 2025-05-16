@@ -48,9 +48,9 @@ export function fillBlocksHT(
     let blockb = BlockPermutation.resolve(block, blockStates);
     if (replacemode) {
         mainArray
-            .filter((v) => !!v.getComponent("inventory"))
+            .filter((v) => v?.getComponent("inventory"))
             .forEach((v) => {
-                clearContainer(v.getComponent("inventory").container);
+                clearContainer(v!.getComponent("inventory")!.container);
             });
     } /*
     console.warn(JSONStringify(mainArray))*/
@@ -58,7 +58,7 @@ export function fillBlocksHT(
     if (!!!options?.matchingBlock) {
         mainArray.forEach((v) => {
             try {
-                v.setPermutation(blockb);
+                v?.setPermutation(blockb);
                 counter++;
             } catch { }
         });
@@ -69,12 +69,12 @@ export function fillBlocksHT(
         );
         mainArray.forEach((v) => {
             if (!!options?.matchingBlockStates
-                ? BlockTypes.get(options?.matchingBlock) == v.type &&
+                ? BlockTypes.get(options?.matchingBlock!) == v?.type &&
                 matchingblockb.getAllStates() ==
                 Object.fromEntries(
                     Object.entries(
                         Object.assign(
-                            v?.permutation?.getAllStates(),
+                            v?.permutation?.getAllStates()!,
                             blockStates
                         )
                     ).filter(
@@ -83,8 +83,8 @@ export function fillBlocksHT(
                         ).find((s) => v[0] == s[0])
                     )
                 )
-                : BlockTypes.get(options?.matchingBlock) == v.type) {
-                v.setPermutation(blockb);
+                : BlockTypes.get(options?.matchingBlock!) == v?.type) {
+                v!.setPermutation(blockb);
                 counter++;
             }
         });

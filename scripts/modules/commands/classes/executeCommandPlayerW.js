@@ -57,6 +57,7 @@ export class executeCommandPlayerW {
             this.modifieddimension = player.dimension;
             this.rotation = player.getRotation();
             this.isFromWorldPosition = false;
+            this.fromPlayerWorldPosition = false;
             this.fromEntityWorldPosition = false;
             this.fromBlockWorldPosition = false;
             this.fromPlayer = player instanceof Player;

@@ -72,13 +72,14 @@ export async function editCustomAreas(sourceEntitya: executeCommandPlayerW | Ent
             return await editCustomAreas(sourceEntity);
         };
         try {
-            if ((await editAreasForCustomCategory(sourceEntity as Player, customAreaCategories[l.selection].id)) === 1) {
+            if ((await editAreasForCustomCategory(sourceEntity as Player, customAreaCategories[l.selection!].id)) === 1) {
                 return await editCustomAreas(sourceEntity);
             } else {
                 return 0;
             }
         } catch (e) {
             console.error(e, e.stack);
+            return 0;
         }
     });
 }

@@ -106,11 +106,10 @@ export function startProtectedAreasRefresher(): void {
  */
 export function stopProtectedAreasRefresher(): 0 | 1 {
     try {
-        system.clearRun(repeatingIntervals.protectedAreasRefresher);
+        system.clearRun(repeatingIntervals.protectedAreasRefresher!);
         protectedAreasRefresherIntervalID = null;
-        repeatingIntervals.protectedAreasRefresher = null;
         repeatingIntervals.protectedAreasRefresher =
-            protectedAreasRefresherIntervalID;
+            protectedAreasRefresherIntervalID ?? undefined;
         return 1;
     } catch {
         return 0;

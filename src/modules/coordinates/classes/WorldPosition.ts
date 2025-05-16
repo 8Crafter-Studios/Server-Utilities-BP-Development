@@ -18,8 +18,11 @@ export class WorldPosition {
     block?: Block;
     sendErrorsTo?: any;
     constructor(location: Vector3, rotation: Vector2, dimension?: DimensionType | Dimension | string, entity?: Entity | Player, block?: Block, sendErrorsTo?: any) {
-        this.location = location;
-        this.rotation = rotation;
+        this.x = location.x;
+        this.y = location.y;
+        this.z = location.z;
+        this.rotx = rotation.x;
+        this.roty = rotation.y;
         if (dimension == undefined) { } else { this.dimension = world.getDimension((dimension as DimensionType)?.typeId ?? (dimension as Dimension)?.id ?? (dimension as string)); };
         this.entity = entity as Entity;
         this.block = block;

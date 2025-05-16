@@ -22,6 +22,6 @@ export function scanForContainerBlocks(
             }).getBlockLocationIterator()
         )
             .map((v) => dimension.getBlock(v))
-            .filter((v) => !!v.getComponent("inventory"));
+            .filter((v) => v?.getComponent("inventory"));
     }
 }

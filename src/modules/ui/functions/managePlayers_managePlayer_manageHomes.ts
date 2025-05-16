@@ -47,12 +47,12 @@ export async function managePlayers_managePlayer_manageHomes(
                 default:
                     return await new ActionFormData()
                         .body(
-                            `Home Name: ${homes[g.selection].name}\nLocation: ${dimensionTypeDisplayFormatting[dimensionse[dimensions.indexOf(
-                                homes[g.selection].location
+                            `Home Name: ${homes[g.selection!].name}\nLocation: ${dimensionTypeDisplayFormatting[dimensionse[dimensions.indexOf(
+                                homes[g.selection!].location
                                     .dimension
                             )]]}§r ${vTStr(
-                                homes[g.selection].location
-                            )}\nFormat Version: ${homes[g.selection].format_version}\nHome Format Version: ${homes[g.selection].home_format_version}`
+                                homes[g.selection!].location
+                            )}\nFormat Version: ${homes[g.selection!].format_version}\nHome Format Version: ${homes[g.selection!].home_format_version}`
                         )
                         .button("Teleport")
                         .button("§cEdit")
@@ -67,9 +67,9 @@ export async function managePlayers_managePlayer_manageHomes(
                             if (h.selection == 0) {
                                 assertIsDefined(g.selection);
                                 sourceEntity.teleport(
-                                    homes[g.selection].location,
+                                    homes[g.selection!].location,
                                     {
-                                        dimension: homes[g.selection].location
+                                        dimension: homes[g.selection!].location
                                             .dimension,
                                     }
                                 );
@@ -90,7 +90,7 @@ export async function managePlayers_managePlayer_manageHomes(
                                     )
                                 ).selection == 1) {
                                     assertIsDefined(g.selection);
-                                    homes[g.selection].remove();
+                                    homes[g.selection!].remove();
                                 }
                                 return 1;
                             }

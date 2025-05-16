@@ -69,7 +69,7 @@ export async function mainMenu(sourceEntity: loosePlayerType): Promise<0 | 1> {
                         return false;
                     }
                     if ((b as menuButtonIdsType[string]["buttons"][string]).extraVisibilityConditionsCheck !== undefined) {
-                        return (b as menuButtonIdsType[string]["buttons"][string]).extraVisibilityConditionsCheck();
+                        return (b as menuButtonIdsType[string]["buttons"][string]).extraVisibilityConditionsCheck!();
                     }
                     return true;
                 });
@@ -142,7 +142,7 @@ export async function mainMenu(sourceEntity: loosePlayerType): Promise<0 | 1> {
             // This will stop the code when the player closes the form
             if (r.canceled) return 1;
 
-            switch (buttons[r.selection!]?.[0] ?? (["close"] as const)[r.selection! - buttons.length]) {
+            switch ((buttons[r.selection!]?.[0] ? buttons[r.selection!][0] : undefined) ?? (["close"] as const)[r.selection! - buttons.length]) {
                 case "editorStick":
                     editorStick(player);
                     return 0;

@@ -146,7 +146,7 @@ export function debugAction(
                                 )
                             )]
                     )
-                    .validValues.findIndex(
+                    ?.validValues.findIndex(
                         (v) => v ==
                             permutation[Number(
                                 player.getDynamicProperty(
@@ -154,6 +154,7 @@ export function debugAction(
                                 )
                             )][1]
                     );
+                if (permindex === undefined) throw new InternalError("Unable to find permutation index.");
                 permutation[Number(player.getDynamicProperty("debugStickPropertyIndex"))][1] = BlockStates.getAll().find(
                     (state) => state.id ==
                         Object.keys(block.permutation.getAllStates())[Number(
@@ -161,8 +162,8 @@ export function debugAction(
                                 "debugStickPropertyIndex"
                             )
                         )]
-                ).validValues[customModulo(
-                    permindex + 1 + -2 * direction,
+                )!.validValues[customModulo(
+                    permindex + 1 + -2 * (direction ?? 0),
                     0,
                     BlockStates.getAll().find(
                         (state) => state.id ==
@@ -171,7 +172,7 @@ export function debugAction(
                                     "debugStickPropertyIndex"
                                 )
                             )]
-                    ).validValues.length
+                    )!.validValues.length
                 )];
                 system.run(() => {
                     block.setPermutation(

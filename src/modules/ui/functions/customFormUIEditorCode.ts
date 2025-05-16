@@ -25,9 +25,9 @@ export function customFormUIEditorCode(
         .then((to) => {
             let t = to as ModalFormResponse;
             if (t.canceled) return;
-            let elementValues = t.formValues.slice(0, -2);
+            let elementValues = t.formValues?.slice(0, -2);
             console.warn(elementValues);
-            elementValues.forEach((v, i) => {
+            elementValues?.forEach((v, i) => {
                 switch (i % 2) {
                     case 0:
                         world.setDynamicProperty(
@@ -44,9 +44,9 @@ export function customFormUIEditorCode(
                         break;
                 }
             });
-            if (t.formValues![t.formValues.length - 2]) {
+            if (t.formValues![t.formValues?.length! - 2]) {
                 world.setDynamicProperty(
-                    `customUICode:${formId}|${Number(t.formValues![t.formValues.length - 1]) ??
+                    `customUICode:${formId}|${Number(t.formValues![t.formValues?.length! - 1]) ??
                     (form.indexListB[form.indexListB.length - 1] ?? -1) + 1}`,
                     ""
                 );

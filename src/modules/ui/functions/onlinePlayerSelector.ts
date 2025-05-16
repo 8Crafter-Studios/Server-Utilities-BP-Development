@@ -12,7 +12,7 @@ export async function onlinePlayerSelector(
     ...functionargs: any
 ): Promise<Player | undefined> {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW
-        ? sourceEntitya.player
+        ? sourceEntitya.player!
         : sourceEntitya;
     let form = new ActionFormData();
     form.title("Select Player");

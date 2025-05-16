@@ -8,7 +8,7 @@ export function itemDynamicPropertyEditor(
     item: ContainerSlot
 ) {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW
-        ? sourceEntitya.player
+        ? sourceEntitya.player!
         : sourceEntitya;
     let formb = new ActionFormData();
     formb.title("Item Dynamic Property Editor");

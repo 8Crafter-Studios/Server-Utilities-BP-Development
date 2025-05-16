@@ -20,9 +20,9 @@ export async function itemEditor(sourceEntitya: Entity | executeCommandPlayerW |
         defaultValueIndex: [ItemLockMode.none, ItemLockMode.slot, ItemLockMode.inventory].indexOf(item.lockMode),
     });
     form.toggle("Keep On Death", { defaultValue: item.keepOnDeath });
-    form.textField((!!!item.getItem().getComponent("cooldown") ? "§c(UNAVAILABLE)§f " : "") + "Set Cooldown (In Ticks)", "ticks");
-    form.textField((!!!item.getItem().getComponent("durability") ? "§c(UNAVAILABLE)§f " : "") + "Set Damage", "int", {
-        defaultValue: String(item.getItem().getComponent("durability")?.damage),
+    form.textField((!!!item.getItem()?.getComponent("cooldown") ? "§c(UNAVAILABLE)§f " : "") + "Set Cooldown (In Ticks)", "ticks");
+    form.textField((!!!item.getItem()?.getComponent("durability") ? "§c(UNAVAILABLE)§f " : "") + "Set Damage", "int", {
+        defaultValue: String(item.getItem()?.getComponent("durability")?.damage),
     });
     form.submitButton("Done");
     let result: any;
@@ -83,20 +83,20 @@ export async function itemEditor(sourceEntitya: Entity | executeCommandPlayerW |
             } catch (e) {
                 console.error(e, e.stack);
             }
-            if (!!item.getItem().getComponent("cooldown")) {
+            if (!!item.getItem()?.getComponent("cooldown")) {
                 try {
                     if (String(cooldown) != "") {
-                        (targetPlayer as Player).startItemCooldown(item.getItem().getComponent("cooldown").cooldownCategory, Number(cooldown));
+                        (targetPlayer as Player).startItemCooldown(item.getItem()!.getComponent("cooldown")!.cooldownCategory, Number(cooldown));
                     }
                 } catch (e) {
                     console.error(e, e.stack);
                 }
             }
-            if (!!item.getItem().getComponent("durability")) {
+            if (!!item.getItem()?.getComponent("durability")) {
                 try {
-                    if (Number(durability) != item.getItem().getComponent("durability").damage) {
+                    if (Number(durability) != item.getItem()?.getComponent("durability")?.damage) {
                         const a = item.getItem();
-                        a.getComponent("durability").damage = Number(durability);
+                        a!.getComponent("durability")!.damage = Number(durability);
                         item.setItem(a);
                     }
                 } catch (e) {

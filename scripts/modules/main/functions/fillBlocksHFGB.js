@@ -32,7 +32,7 @@ export async function fillBlocksHFGB(begin, end, dimension, block, options, repl
                         ?.getComponent("inventory")) {
                         clearContainer(v.dimension
                             .getBlock(v)
-                            ?.getComponent("inventory").container);
+                            ?.getComponent("inventory")?.container);
                     }
                     v.dimension
                         .getBlock(v)
@@ -84,7 +84,7 @@ export async function fillBlocksHFGB(begin, end, dimension, block, options, repl
                             ?.getComponent("inventory")) {
                             clearContainer(v.dimension
                                 .getBlock(v)
-                                ?.getComponent("inventory").container);
+                                ?.getComponent("inventory")?.container);
                         }
                         v.dimension
                             .getBlock(v)

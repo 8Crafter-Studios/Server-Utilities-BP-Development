@@ -1,10 +1,10 @@
 import { Vector3Utils } from "@minecraft/math.js";
 import { Entity, Player, type DimensionLocation, world, Block, BlockPermutation, SignSide, ItemStack, DyeColor, BlockTypes } from "@minecraft/server";
-import { ModalFormData, ModalFormResponse } from "@minecraft/server-ui";
+import { MessageFormData, MessageFormResponse, ModalFormData, ModalFormResponse } from "@minecraft/server-ui";
 import { forceShow } from "modules/ui/functions/forceShow";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 
-export function editorStickB(
+export async function editorStickB(
     sourceEntitya: Entity | executeCommandPlayerW | Player,
     dimensionLocation: DimensionLocation = {
         x: sourceEntitya.location.x,
@@ -13,13 +13,17 @@ export function editorStickB(
         dimension: sourceEntitya.dimension,
     }
 ) {
-    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : sourceEntitya;
+    const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : sourceEntitya as Player;
     let form = new ModalFormData();
     let playerList = world.getPlayers(); /*
     let block = sourceEntity.getBlockFromViewDirection({includeLiquidBlocks: true, includePassableBlocks: true})*/
 
-    let block2: Block; /* = block.block*/
+    let block2: Block | undefined; /* = block.block*/
     block2 = dimensionLocation.dimension.getBlock(dimensionLocation);
+    if (!block2) {
+        const r: MessageFormResponse = await new MessageFormData().title("No Block Found").body("No block was found to use the Editor Stick C on.").button1("OK").button2("Close").forceShow(sourceEntity);
+        return;
+    }
     form.title("Editor Stick B");
     form.submitButton("Save");
     let blockStatesFullList: any; /*
@@ -102,21 +106,21 @@ export function editorStickB(
     try {
         if (block2.getComponent("fluid_container") != undefined) {
             form.textField(
-                `Cauldron Water RGBA Color/Fill Level\n§cRed: §g${block2.getComponent("fluid_container").fluidColor.red}\n§aGreen: §g${
-                    block2.getComponent("fluid_container").fluidColor.green
-                }\n§bBlue: §g${block2.getComponent("fluid_container").fluidColor.blue}\n§dAlpha: §g${block2.getComponent("fluid_container").fluidColor.alpha}`,
+                `Cauldron Water RGBA Color/Fill Level\n§cRed: §g${block2.getComponent("fluid_container")!.fluidColor.red}\n§aGreen: §g${
+                    block2.getComponent("fluid_container")!.fluidColor.green
+                }\n§bBlue: §g${block2.getComponent("fluid_container")!.fluidColor.blue}\n§dAlpha: §g${block2.getComponent("fluid_container")!.fluidColor.alpha}`,
                 `red: 0-1, green: 0-1, blue: 0-1, alpha: 0-1`,
                 {
-                    defaultValue: `${block2.getComponent("fluid_container").fluidColor.red}, ${block2.getComponent("fluid_container").fluidColor.green}, ${
-                        block2.getComponent("fluid_container").fluidColor.blue
-                    }, ${block2.getComponent("fluid_container").fluidColor.alpha}`,
+                    defaultValue: `${block2.getComponent("fluid_container")!.fluidColor.red}, ${block2.getComponent("fluid_container")!.fluidColor.green}, ${
+                        block2.getComponent("fluid_container")!.fluidColor.blue
+                    }, ${block2.getComponent("fluid_container")!.fluidColor.alpha}`,
                 }
             );
-            form.slider(`Cauldron Fill Level\nFill Level: §g${block2.getComponent("fluid_container").fillLevel}`, 0, 6, {
+            form.slider(`Cauldron Fill Level\nFill Level: §g${block2.getComponent("fluid_container")!.fillLevel}`, 0, 6, {
                 valueStep: 1,
-                defaultValue: block2.getComponent("fluid_container").fillLevel,
+                defaultValue: block2.getComponent("fluid_container")!.fillLevel,
             });
-            form.textField(`Cauldron Potion Type Contents\nHas Potion: §g${block2.getComponent("fluid_container").getFluidType() == "Potion"}`, `item type`);
+            form.textField(`Cauldron Potion Type Contents\nHas Potion: §g${block2.getComponent("fluid_container")!.getFluidType() == "Potion"}`, `item type`);
         } else {
             form.textField(`§4Cauldron RGBA Color`, `§4Unavailable`);
             form.slider(`§4Cauldron Fill Level (Unavailable)`, 0, 0, { valueStep: 0, defaultValue: 0 });
@@ -130,9 +134,9 @@ export function editorStickB(
     form.toggle("setSignFrontRawText Enabled", { defaultValue: false });
     if (block2.getComponent("sign") != undefined) {
         form.textField(
-            `Sign Front RawText\nRawText: §g${JSON.stringify(block2.getComponent("sign").getRawText(SignSide.Front))}`,
+            `Sign Front RawText\nRawText: §g${JSON.stringify(block2.getComponent("sign")?.getRawText(SignSide.Front))}`,
             `{rawtext: [{text|translate|rawtext|score|with: value, ...}]}`,
-            { defaultValue: JSON.stringify(block2.getComponent("sign").getRawText(SignSide.Front)) }
+            { defaultValue: JSON.stringify(block2.getComponent("sign")?.getRawText(SignSide.Front)) }
         );
     } else {
         form.textField(`§4Sign Front RawText`, `§r§4Unavailable`);
@@ -140,41 +144,41 @@ export function editorStickB(
     form.toggle("setSignBackRawText Enabled", { defaultValue: false });
     if (block2.getComponent("sign") != undefined) {
         form.textField(
-            `Sign Back RawText\nRawText: §g${JSON.stringify(block2.getComponent("sign").getRawText(SignSide.Back))}`,
+            `Sign Back RawText\nRawText: §g${JSON.stringify(block2.getComponent("sign")?.getRawText(SignSide.Back))}`,
             `{rawtext: [{text|translate|rawtext|score|with: value, ...}]}`,
-            { defaultValue: JSON.stringify(block2.getComponent("sign").getRawText(SignSide.Back)) }
+            { defaultValue: JSON.stringify(block2.getComponent("sign")?.getRawText(SignSide.Back)) }
         );
     } else {
         form.textField(`§4Sign Back RawText`, `§r§4Unavailable`);
     }
     form.toggle("setSignFrontText Enabled", { defaultValue: false });
     if (block2.getComponent("sign") != undefined) {
-        form.textField(`Sign Front Text\nRawText: §g${block2.getComponent("sign").getText(SignSide.Front)}`, `text`, {
-            defaultValue: block2.getComponent("sign").getText(SignSide.Front),
+        form.textField(`Sign Front Text\nRawText: §g${block2.getComponent("sign")?.getText(SignSide.Front)}`, `text`, {
+            defaultValue: block2.getComponent("sign")?.getText(SignSide.Front),
         });
     } else {
         form.textField(`§4Sign Front Text`, `§r§4Unavailable`);
     }
     form.toggle("setSignBackText Enabled", { defaultValue: false });
     if (block2.getComponent("sign") != undefined) {
-        form.textField(`Sign Back Text\Text: §g${block2.getComponent("sign").getText(SignSide.Back)}`, `text`, {
-            defaultValue: block2.getComponent("sign").getText(SignSide.Back),
+        form.textField(`Sign Back Text\Text: §g${block2.getComponent("sign")?.getText(SignSide.Back)}`, `text`, {
+            defaultValue: block2.getComponent("sign")?.getText(SignSide.Back),
         });
     } else {
         form.textField(`§4Sign Back Text`, `§r§4Unavailable`);
     }
     form.toggle("setSignFrontTextColor Enabled", { defaultValue: false });
     if (block2.getComponent("sign") != undefined) {
-        form.textField(`Sign Front Text Color\Text: §g${block2.getComponent("sign").getTextDyeColor(SignSide.Front)}`, `dye color`, {
-            defaultValue: block2.getComponent("sign").getTextDyeColor(SignSide.Front),
+        form.textField(`Sign Front Text Color\Text: §g${block2.getComponent("sign")?.getTextDyeColor(SignSide.Front)}`, `dye color`, {
+            defaultValue: block2.getComponent("sign")?.getTextDyeColor(SignSide.Front),
         });
     } else {
         form.textField(`§4Sign Front Text Color`, `§r§4Unavailable`);
     }
     form.toggle("setSignBackTextColor Enabled", { defaultValue: false });
     if (block2.getComponent("sign") != undefined) {
-        form.textField(`Sign Back Text Color\Text: §g${block2.getComponent("sign").getTextDyeColor(SignSide.Back)}`, `dye color`, {
-            defaultValue: block2.getComponent("sign").getTextDyeColor(SignSide.Back),
+        form.textField(`Sign Back Text Color\Text: §g${block2.getComponent("sign")?.getTextDyeColor(SignSide.Back)}`, `dye color`, {
+            defaultValue: block2.getComponent("sign")?.getTextDyeColor(SignSide.Back),
         });
     } else {
         form.textField(`§4Sign Back Text Color`, `§r§4Unavailable`);
@@ -247,24 +251,24 @@ clearVelocity*/,
             let blockPropertyValueLength = String(blockPropertyIdentifier).split(", ").length;
             if (block2.getComponent("fluid_container") != undefined) {
                 if (
-                    ((c) => `${c.red},${c.green},${c.blue},${c.alpha}`)(block2.getComponent("fluid_container").fluidColor) !=
+                    ((c) => `${c.red},${c.green},${c.blue},${c.alpha}`)(block2.getComponent("fluid_container")!.fluidColor) !=
                     fluidContainerColor
                         .split(",")
                         .map((v) => v.trim())
                         .join()
                 ) {
-                    block2.getComponent("fluid_container").fluidColor = {
-                        red: fluidContainerColor.split(",")[0].toNumber(),
-                        green: fluidContainerColor.split(",")[1].toNumber(),
-                        blue: fluidContainerColor.split(",")[2].toNumber(),
-                        alpha: fluidContainerColor.split(",")[3].toNumber(),
+                    block2.getComponent("fluid_container")!.fluidColor = {
+                        red: fluidContainerColor.split(",")[0].toNumber()!,
+                        green: fluidContainerColor.split(",")[1].toNumber()!,
+                        blue: fluidContainerColor.split(",")[2].toNumber()!,
+                        alpha: fluidContainerColor.split(",")[3].toNumber()!,
                     };
                 }
-                if (fluidContainerFillLevel != block2.getComponent("fluid_container").fillLevel) {
-                    block2.getComponent("fluid_container").fillLevel = fluidContainerFillLevel;
+                if (fluidContainerFillLevel != block2.getComponent("fluid_container")!.fillLevel) {
+                    block2.getComponent("fluid_container")!.fillLevel = fluidContainerFillLevel;
                 }
                 if (potionType != "") {
-                    block2.getComponent("fluid_container").setPotion(new ItemStack(potionType, 255));
+                    block2.getComponent("fluid_container")!.setPotion(new ItemStack(potionType, 255));
                 }
             }
             if (
@@ -272,7 +276,7 @@ clearVelocity*/,
                 block2.getComponent("sign") != undefined /*&&/^{(rawtext|score|text|translate|with):/.test((String(signText)))&&/}$/.test((String(signText)))*/
             ) {
                 /*{ translate: "accessibility.list.or.two", with: ["Player 1", "Player 2"] }*/ block2
-                    .getComponent("sign")
+                    .getComponent("sign")!
                     .setText(JSON.parse(String(signFrontRawText)), SignSide.Front);
             }
             if (
@@ -280,7 +284,7 @@ clearVelocity*/,
                 block2.getComponent("sign") != undefined /*&&/^{(rawtext|score|text|translate|with):/.test((String(signText)))&&/}$/.test((String(signText)))*/
             ) {
                 /*{ translate: "accessibility.list.or.two", with: ["Player 1", "Player 2"] }*/ block2
-                    .getComponent("sign")
+                    .getComponent("sign")!
                     .setText(JSON.parse(String(signBackRawText)), SignSide.Back);
             }
             if (
@@ -288,7 +292,7 @@ clearVelocity*/,
                 block2.getComponent("sign") != undefined /*&&/^{(rawtext|score|text|translate|with):/.test((String(signText)))&&/}$/.test((String(signText)))*/
             ) {
                 /*{ translate: "accessibility.list.or.two", with: ["Player 1", "Player 2"] }*/ block2
-                    .getComponent("sign")
+                    .getComponent("sign")!
                     .setText(String(signFrontText).replaceAll("\\n", "\n"), SignSide.Front);
             }
             if (
@@ -296,13 +300,13 @@ clearVelocity*/,
                 block2.getComponent("sign") != undefined /*&&/^{(rawtext|score|text|translate|with):/.test((String(signText)))&&/}$/.test((String(signText)))*/
             ) {
                 /*{ translate: "accessibility.list.or.two", with: ["Player 1", "Player 2"] }*/ block2
-                    .getComponent("sign")
+                    .getComponent("sign")!
                     .setText(String(signBackText).replaceAll("\\n", "\n"), SignSide.Back);
             }
             if (
                 block2.getComponent("sign") != undefined /*&&/^{(rawtext|score|text|translate|with):/.test((String(signText)))&&/}$/.test((String(signText)))*/
             ) {
-                /*{ translate: "accessibility.list.or.two", with: ["Player 1", "Player 2"] }*/ block2.getComponent("sign").setWaxed(Boolean(setSignIsWaxed));
+                /*{ translate: "accessibility.list.or.two", with: ["Player 1", "Player 2"] }*/ block2.getComponent("sign")?.setWaxed(Boolean(setSignIsWaxed));
             }
             DyeColor.Blue; //make it save this DyeColor in the imports from @minecraft/server.
             if (
@@ -310,7 +314,7 @@ clearVelocity*/,
                 block2.getComponent("sign") != undefined /*&&/^{(rawtext|score|text|translate|with):/.test((String(signText)))&&/}$/.test((String(signText)))*/
             ) {
                 /*{ translate: "accessibility.list.or.two", with: ["Player 1", "Player 2"] }*/ block2
-                    .getComponent("sign")
+                    .getComponent("sign")!
                     .setTextDyeColor(eval(`DyeColor.${signFrontTextColor}`), SignSide.Front);
             }
             if (
@@ -318,7 +322,7 @@ clearVelocity*/,
                 block2.getComponent("sign") != undefined /*&&/^{(rawtext|score|text|translate|with):/.test((String(signText)))&&/}$/.test((String(signText)))*/
             ) {
                 /*{ translate: "accessibility.list.or.two", with: ["Player 1", "Player 2"] }*/ block2
-                    .getComponent("sign")
+                    .getComponent("sign")!
                     .setTextDyeColor(eval(`DyeColor.${signBackTextColor}`), SignSide.Back);
             }
             for (let index in blockPropertyValueArray) {
@@ -355,7 +359,7 @@ clearVelocity*/,
             }
             if (setTypeEnabled == true) {
                 try {
-                    block2.setType(BlockTypes.get(String(setType)) /*String(setType)*/);
+                    block2.setType(BlockTypes.get(String(setType))! /*String(setType)*/);
                 } catch (e) {
                     console.error(e, e.stack);
                 }

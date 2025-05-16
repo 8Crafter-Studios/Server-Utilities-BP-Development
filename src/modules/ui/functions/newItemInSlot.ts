@@ -8,7 +8,7 @@ export function newItemInSlot(
     item: ContainerSlot
 ) {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW
-        ? sourceEntitya.player
+        ? sourceEntitya.player!
         : sourceEntitya;
     let form = new ModalFormData();
     form.title("New Item");

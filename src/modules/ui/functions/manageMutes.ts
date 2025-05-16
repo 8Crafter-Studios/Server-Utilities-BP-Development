@@ -32,7 +32,7 @@ export async function manageMutes(
     const player = extractPlayerFromLooseEntityType(sourceEntity);
     var currentParameters = {
         player,
-        pagen,
+        pagen: pagen as number | undefined,
         maxentriesperpage,
         search,
         cachedEntries,
@@ -56,7 +56,7 @@ export async function manageMutes(
             }
         }
         let form = new ActionFormData();
-        const page = Math.max(0, pagen);
+        const page = Math.max(0, pagen ?? 0);
         let displayEntries: [playerName: string, status: "online" | "offline"][] = cachedEntries ?? [];
         if (cachedEntries === undefined) {
             const onlinePlayerNames = world.getAllPlayers().map((v) => v.name);
@@ -169,6 +169,7 @@ export async function manageMutes(
                                 .submitButton("Go To Page")
                                 .forceShow(player)
                     );
+                    if (!r || r.canceled) continue;
                     currentParameters = {
                         player,
                         pagen: Math.max(1, Math.min(numpages, (r.formValues?.[0] as string)?.toNumber() ?? page + 1)) - 1,
@@ -185,7 +186,7 @@ export async function manageMutes(
                     if (
                         (await manageMute(player, [
                             displayEntriesB[r.selection! - 6][0],
-                            ModerationActions.getMuteData(displayEntriesB[r.selection! - 6][0]),
+                            ModerationActions.getMuteData(displayEntriesB[r.selection! - 6][0])!,
                         ])) === 1
                     ) {
                         currentParameters = { player, pagen: page, maxentriesperpage, search, cachedEntries: undefined };
@@ -240,7 +241,7 @@ export async function manageMute(sourceEntity: loosePlayerType, mute: [playerNam
                 `§bPlayer Name: §a${mute[0]}\n§r§bMute Duration: §q${
                     isPermanent
                         ? "Permanent"
-                        : mute[1].muteDate > mute[1].unmuteDate
+                        : mute[1].muteDate > mute[1].unmuteDate!
                         ? "-" + moment(mute[1].muteDate).preciseDiff(moment(mute[1].unmuteDate))
                         : moment(mute[1].muteDate).preciseDiff(
                               moment(mute[1].unmuteDate)
@@ -251,7 +252,7 @@ export async function manageMute(sourceEntity: loosePlayerType, mute: [playerNam
                     isPermanent
                         ? ""
                         : `\n§r§bUnmute Date: §q${
-                              formatDateTime(new Date(mute[1].unmuteDate), timeZone) + " UTC" + (timeZone > 0 || Object.is(timeZone, 0) ? "+" : "") + timeZone
+                              formatDateTime(new Date(mute[1].unmuteDate!), timeZone) + " UTC" + (timeZone > 0 || Object.is(timeZone, 0) ? "+" : "") + timeZone
                           }`
                 }\n§r§bMuted By: §a${mute[1].mutedByName ?? "Unknown Name"}<${mute[1].mutedById ?? "Unknown ID"}>\n§r§bReason: §r§f${
                     mute[1].reason ?? "No reason provided."
@@ -397,8 +398,8 @@ export async function addMute(sourceEntity: loosePlayerType): Promise<0 | 1> {
                 muteDate,
                 mutedById: player.id,
                 mutedByName: player.name ?? player.nameTag,
-                unmuteDate,
-                reason: r.formValues![2] === "" ? null : (r.formValues![2] as string),
+                unmuteDate: unmuteDate!,
+                reason: r.formValues![2] === "" ? undefined : (r.formValues![2] as string),
             });
             return 1;
         } catch (e) {
@@ -475,7 +476,7 @@ export async function addMuteOnPlayer(sourceEntity: loosePlayerType, targetName:
                 mutedById: player.id,
                 mutedByName: player.name ?? player.nameTag,
                 unmuteDate,
-                reason: r.formValues![1] === "" ? null : (r.formValues![1] as string),
+                reason: r.formValues![1] === "" ? undefined : (r.formValues![1] as string),
             });
             return 1;
         } catch (e) {

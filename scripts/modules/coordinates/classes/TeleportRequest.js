@@ -37,8 +37,9 @@ export class TeleportRequest {
         this.player = player;
         this.target = target;
         this.sendTime = sendTime;
+        this.id = currentId++;
         Object.defineProperty(this, "id", {
-            value: currentId++,
+            value: this.id,
             configurable: true,
             enumerable: true,
             writable: false,

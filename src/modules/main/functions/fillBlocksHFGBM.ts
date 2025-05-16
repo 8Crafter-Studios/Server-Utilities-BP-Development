@@ -50,7 +50,7 @@ export async function fillBlocksHFGBM(
                                 clearContainer(
                                     v.dimension
                                         .getBlock(v)
-                                        ?.getComponent("inventory").container
+                                        ?.getComponent("inventory")?.container
                                 );
                             }
                             v.dimension
@@ -97,7 +97,7 @@ export async function fillBlocksHFGBM(
             );
         }
     } else {
-        let currentBlock = undefined as BlockPermutation;
+        let currentBlock = undefined! as BlockPermutation;
         if (replacemode) {
             system.runJob(
                 generateFillBG(
@@ -115,7 +115,7 @@ export async function fillBlocksHFGBM(
                                     options.blockMask.blocks
                                 )
                                 : options?.blockMask?.blockTypes.includes(
-                                    v.dimension.getBlock(v)?.typeId
+                                    v.dimension.getBlock(v)?.typeId!
                                 )) {
                                 if (!!v.dimension
                                     .getBlock(v)
@@ -123,7 +123,7 @@ export async function fillBlocksHFGBM(
                                     clearContainer(
                                         v.dimension
                                             .getBlock(v)
-                                            ?.getComponent("inventory").container
+                                            ?.getComponent("inventory")?.container
                                     );
                                 }
                                 v.dimension
@@ -160,7 +160,7 @@ export async function fillBlocksHFGBM(
                                     options.blockMask.blocks
                                 )
                                 : options?.blockMask?.blockTypes.includes(
-                                    v.dimension.getBlock(v)?.typeId
+                                    v.dimension.getBlock(v)?.typeId!
                                 )) {
                                 v.dimension
                                     .getBlock(v)

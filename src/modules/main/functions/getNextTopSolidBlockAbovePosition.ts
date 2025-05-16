@@ -16,7 +16,7 @@ export function getNextTopSolidBlockAbovePosition(
         ),
         z: location.z,
     })
-    );
+    )!;
     let readyToSearch = !(onlySolid
         ? !block.isSolid
         : (block.isLiquid && allowLiquidAbove) ||
@@ -27,7 +27,7 @@ export function getNextTopSolidBlockAbovePosition(
             (block.isSolid && allowNonSolidBlocksAbove) ||
             block.isAir) &&
             !readyToSearch) {
-            block = block.above(1);
+            block = block.above(1)!;
         } else {
             if ((onlySolid
                 ? !block.isSolid
@@ -36,16 +36,16 @@ export function getNextTopSolidBlockAbovePosition(
                 block.isAir) &&
                 readyToSearch &&
                 (onlySolid
-                    ? block.below(1).isSolid
+                    ? block.below(1)?.isSolid
                     : !(
                         (!allowLiquidBelow
-                            ? block.below(1).isLiquid
-                            : false) || block.below(1).isAir
+                            ? block.below(1)?.isLiquid
+                            : false) || block.below(1)?.isAir
                     ))) {
                 return block;
             } else {
                 try {
-                    block = block.above(1);
+                    block = block.above(1)!;
                 } catch (e) {
                     if (e instanceof LocationOutOfWorldBoundariesError) {
                         throw new Error(

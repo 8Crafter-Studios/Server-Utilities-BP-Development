@@ -63,8 +63,9 @@ export class RedeemableCode {
             this.uses = savedDetails.uses;
             this.maxUses = savedDetails.maxUses;
             this.expirationTime = savedDetails.expirationTime;
+            this.id = savedDetails.id;
             Object.defineProperty(this, "id", {
-                value: savedDetails.id,
+                value: this.id,
                 configurable: true,
                 enumerable: true,
                 writable: false,
@@ -73,8 +74,9 @@ export class RedeemableCode {
             if (!!codes.find((c) => c.code === code)) {
                 throw new Error("Duplicate Code");
             }
+            this.id = getSuperUniqueID();
             Object.defineProperty(this, "id", {
-                value: getSuperUniqueID(),
+                value: this.id,
                 configurable: true,
                 enumerable: true,
                 writable: false,

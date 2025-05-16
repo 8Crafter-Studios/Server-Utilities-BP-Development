@@ -5,6 +5,6 @@ export function entityController(
     sourceEntitya: Entity | executeCommandPlayerW | Player
 ) {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW
-        ? sourceEntitya.player
+        ? sourceEntitya.player!
         : sourceEntitya;
 }

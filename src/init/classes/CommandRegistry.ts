@@ -7,6 +7,7 @@
 
 import type { ChatSendBeforeEvent } from "@minecraft/server";
 import { tfsb } from "init/functions/tfsb";
+import { command } from "modules/commands/classes/command";
 import { commandSettings } from "modules/commands/classes/commandSettings";
 import type { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { commands_format_version } from "modules/commands/constants/commands_format_version";
@@ -16,15 +17,16 @@ import { extractPlayerFromLooseEntityType } from "modules/utilities/functions/ex
 import type { loosePlayerType } from "modules/utilities/types/loosePlayerType";
 import { securityVariables } from "security/ultraSecurityModeUtils";
 
-type CommandType = {
+export interface CommandTypeBase {
     type: "built-in" | "custom" | "unknown";
+    accessType: "named" | "regexp";
     requiredTags?: string[];
     formatting_code?: string;
-    commandName: string;
-    escregexp: {
+    commandName: string;/* 
+    escregexp?: {
         v: string;
         f?: string;
-    };
+    }; */
     formats?: command_formats_type_list;
     command_version: string;
     description: string;
@@ -32,34 +34,57 @@ type CommandType = {
     aliases?: {
         commandName: string;
         escregexp?: {
-            v?: string;
+            v: string;
             f?: string;
         };
     }[];
-    category?: commandCategory | commandCategory[];
+    categories?: commandCategory[];
     deprecated?: boolean;
     functional?: boolean;
     hidden?: boolean;
     enabled?: boolean;
-};
+    callback: (player: executeCommandPlayerW, event: ChatSendBeforeEvent) => void;
+}
 
-class RegisteredCommand {
+export interface NameAccessibleCommandType extends CommandTypeBase {
+    accessType: "named";
+    aliases?: {
+        commandName: string;
+    }[];
+}
+
+export interface RegExpAccessibleCommandType extends CommandTypeBase {
+    accessType: "regexp"
+    escregexp: {
+        v: string;
+        f?: string;
+    };
+    aliases?: {
+        commandName: string;
+        escregexp: {
+            v: string;
+            f?: string;
+        };
+    }[];
+}
+
+class RegisteredCommand<CommandType extends CommandTypeBase> {
     /**
      * The type of command.
      */
-    type: "built-in" | "custom" | "unknown";
+    public type: "built-in" | "custom" | "unknown";
     /**
      * The type of access to the command.
      */
-    readonly accessType: "name" | "regexp";
+    public readonly accessType: CommandType["accessType"];
     /**
      * The ID of the command.
      */
-    readonly id: string;
+    public readonly id: string;
     /**
      * The name of the command.
      */
-    readonly name: string;
+    public readonly name: string;
     /**
      * The tags required to execute the command.
      * 
@@ -73,44 +98,52 @@ class RegisteredCommand {
     /**
      * The formatting code to display the command with.
      */
-    formatting_code: string = "§f";
+    public formatting_code: string = "§f";
     /**
      * The name used to access the command.
      */
-    readonly commandName?: string;
+    public readonly commandName?: string;
     /**
      * The regular expression used to access the command.
      */
-    readonly regexp?: RegExp;
-    syntax: string;
-    command_version: string;
-    description: string;
-    commandSettingsId: string;
-    aliases?: {
+    public readonly regexp: CommandType extends NameAccessibleCommandType ? undefined : CommandType extends RegExpAccessibleCommandType ? RegExp : (RegExp | undefined);
+    public syntax: string = "Syntax Missing";
+    public command_version: string = "1.0.0";
+    public description: string = "Description Missing";
+    public commandSettingsId: string;
+    public aliases?: {
         commandName: string;
         escregexp?: {
             v?: string;
             f?: string;
         };
     }[];
-    categories: commandCategory[] = [];
-    deprecated: boolean = false;
-    functional: boolean = true;
-    hidden: boolean = false;
-    enabled: boolean = true;
+    public categories: commandCategory[] = [];
+    public deprecated: boolean = false;
+    public functional: boolean = true;
+    public hidden: boolean = false;
+    public enabled: boolean = true;
     /**
      * The commands format version that the custom command was created in.
      */
-    commands_format_version: string = commands_format_version;
+    public commands_format_version: string = commands_format_version;
     #execute: (player: executeCommandPlayerW, event: ChatSendBeforeEvent) => void;
-    constructor(public commandData: CommandType) {}
+    public constructor(public commandData: CommandType) {
+        this.type = commandData.type;
+        this.accessType = commandData.accessType;
+        this.id = commandData.commandName;
+        this.name = commandData.commandName;
+        this.regexp = (commandData.accessType === "regexp" ? RegExp((commandData as unknown as RegExpAccessibleCommandType).escregexp.v, (commandData as unknown as RegExpAccessibleCommandType).escregexp.f) : undefined) as typeof this["regexp"];
+        this.commandSettingsId = commandData.commandSettingsId;
+        this.#execute = commandData.callback;
+    }
     /**
      * The settings of the command, will be an instance of the {@link commandSettings} class.
      */
-    get settings(): commandSettings<"built-in" | "custom" | "unknown"> {
+    public get settings(): commandSettings<"built-in" | "custom" | "unknown"> {
         return new commandSettings(this.commandSettingsId);
     }
-    playerCanExecute(player: loosePlayerType): boolean {
+    public playerCanExecute(player: loosePlayerType): boolean {
         const playerToTest = extractPlayerFromLooseEntityType(player);
         if (
             tfsb(!!(playerToTest)?.name ? (playerToTest) : ({ name: "" } as any)) &&
@@ -124,27 +157,27 @@ class RegisteredCommand {
     
             if(securityVariables.ultraSecurityModeEnabled){
                 
-                if ((securityVariables.commandsUltraSecurityModeSecurityLevelOverrides[this.type=="custom"?"customCommandOverrides":"commandOverrides"][this.commandName!] ?? securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][this.categories?.find(c=>!!securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][c as keyof typeof securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"]]) as commandCategory] ?? (this.type=="built-in"?this.#ultraSecurityModeSecurityLevel:undefined as unknown as "owner" | "headAdmin" | "admin" | "moderator" | "WorldEdit" | "everyone")) == "owner") {
+                if ((securityVariables.commandsUltraSecurityModeSecurityLevelOverrides[this.type=="custom"?"customCommandOverrides":"commandOverrides"][this.commandName!] ?? securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][this.categories?.find(c=>!!securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][c as keyof typeof securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"]]) as commandCategory] ?? (this.type=="built-in"?this.#ultraSecurityModeSecurityLevel:undefined! as unknown as "owner" | "headAdmin" | "admin" | "moderator" | "WorldEdit" | "everyone")) == "owner") {
                     if(!securityVariables.testPlayerForPermission(playerToTest, "andexdb.fullControl") && !securityVariables.testPlayerForPermission(playerToTest, "andexdb.useOwnerLevelCommands")){
                         return false;
                     }
-                }else if ((securityVariables.commandsUltraSecurityModeSecurityLevelOverrides[this.type=="custom"?"customCommandOverrides":"commandOverrides"][this.commandName!] ?? securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][this.categories?.find(c=>!!securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][c as keyof typeof securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"]]) as commandCategory] ?? (this.type=="built-in"?this.#ultraSecurityModeSecurityLevel:undefined as unknown as "owner" | "headAdmin" | "admin" | "moderator" | "WorldEdit" | "everyone")) == "headAdmin") {
+                }else if ((securityVariables.commandsUltraSecurityModeSecurityLevelOverrides[this.type=="custom"?"customCommandOverrides":"commandOverrides"][this.commandName!] ?? securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][this.categories?.find(c=>!!securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][c as keyof typeof securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"]]) as commandCategory] ?? (this.type=="built-in"?this.#ultraSecurityModeSecurityLevel:undefined! as unknown as "owner" | "headAdmin" | "admin" | "moderator" | "WorldEdit" | "everyone")) == "headAdmin") {
                     if(!securityVariables.testPlayerForPermission(playerToTest, "andexdb.headAdmin") && !securityVariables.testPlayerForPermission(playerToTest, "andexdb.useHeadAdminLevelCommands")){
                         return false;
                     }
-                }else if ((securityVariables.commandsUltraSecurityModeSecurityLevelOverrides[this.type=="custom"?"customCommandOverrides":"commandOverrides"][this.commandName!] ?? securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][this.categories?.find(c=>!!securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][c as keyof typeof securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"]]) as commandCategory] ?? (this.type=="built-in"?this.#ultraSecurityModeSecurityLevel:undefined as unknown as "owner" | "headAdmin" | "admin" | "moderator" | "WorldEdit" | "everyone")) == "admin") {
+                }else if ((securityVariables.commandsUltraSecurityModeSecurityLevelOverrides[this.type=="custom"?"customCommandOverrides":"commandOverrides"][this.commandName!] ?? securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][this.categories?.find(c=>!!securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][c as keyof typeof securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"]]) as commandCategory] ?? (this.type=="built-in"?this.#ultraSecurityModeSecurityLevel:undefined! as unknown as "owner" | "headAdmin" | "admin" | "moderator" | "WorldEdit" | "everyone")) == "admin") {
                     if(!securityVariables.testPlayerForPermission(playerToTest, "andexdb.admin") && !securityVariables.testPlayerForPermission(playerToTest, "andexdb.useAdminLevelCommands")){
                         return false;
                     }
-                }else if ((securityVariables.commandsUltraSecurityModeSecurityLevelOverrides[this.type=="custom"?"customCommandOverrides":"commandOverrides"][this.commandName!] ?? securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][this.categories?.find(c=>!!securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][c as keyof typeof securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"]]) as commandCategory] ?? (this.type=="built-in"?this.#ultraSecurityModeSecurityLevel:undefined as unknown as "owner" | "headAdmin" | "admin" | "moderator" | "WorldEdit" | "everyone")) == "moderator") {
+                }else if ((securityVariables.commandsUltraSecurityModeSecurityLevelOverrides[this.type=="custom"?"customCommandOverrides":"commandOverrides"][this.commandName!] ?? securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][this.categories?.find(c=>!!securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][c as keyof typeof securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"]]) as commandCategory] ?? (this.type=="built-in"?this.#ultraSecurityModeSecurityLevel:undefined! as unknown as "owner" | "headAdmin" | "admin" | "moderator" | "WorldEdit" | "everyone")) == "moderator") {
                     if(!securityVariables.testPlayerForPermission(playerToTest, "andexdb.moderator") && !securityVariables.testPlayerForPermission(playerToTest, "andexdb.useModeratorLevelCommands")){
                         return false;
                     }
-                }else if ((securityVariables.commandsUltraSecurityModeSecurityLevelOverrides[this.type=="custom"?"customCommandOverrides":"commandOverrides"][this.commandName!] ?? securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][this.categories?.find(c=>!!securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][c as keyof typeof securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"]]) as commandCategory] ?? (this.type=="built-in"?this.#ultraSecurityModeSecurityLevel:undefined as unknown as "owner" | "headAdmin" | "admin" | "moderator" | "WorldEdit" | "everyone")) == "WorldEdit") {
+                }else if ((securityVariables.commandsUltraSecurityModeSecurityLevelOverrides[this.type=="custom"?"customCommandOverrides":"commandOverrides"][this.commandName!] ?? securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][this.categories?.find(c=>!!securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][c as keyof typeof securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"]]) as commandCategory] ?? (this.type=="built-in"?this.#ultraSecurityModeSecurityLevel:undefined! as unknown as "owner" | "headAdmin" | "admin" | "moderator" | "WorldEdit" | "everyone")) == "WorldEdit") {
                     if(!securityVariables.testPlayerForPermission(playerToTest, "andexdb.useWorldEdit")){
                         return false;
                     }
-                }else if ((securityVariables.commandsUltraSecurityModeSecurityLevelOverrides[this.type=="custom"?"customCommandOverrides":"commandOverrides"][this.commandName!] ?? securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][this.categories?.find(c=>!!securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][c as keyof typeof securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"]]) as commandCategory] ?? (this.type=="built-in"?this.#ultraSecurityModeSecurityLevel:undefined as unknown as "owner" | "headAdmin" | "admin" | "moderator" | "WorldEdit" | "everyone")) == "everyone") {
+                }else if ((securityVariables.commandsUltraSecurityModeSecurityLevelOverrides[this.type=="custom"?"customCommandOverrides":"commandOverrides"][this.commandName!] ?? securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][this.categories?.find(c=>!!securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"][c as keyof typeof securityVariables.commandsUltraSecurityModeSecurityLevelOverrides["categoryOverrides"]]) as commandCategory] ?? (this.type=="built-in"?this.#ultraSecurityModeSecurityLevel:undefined! as unknown as "owner" | "headAdmin" | "admin" | "moderator" | "WorldEdit" | "everyone")) == "everyone") {
                 }
             }
     
@@ -173,18 +206,18 @@ class RegisteredCommand {
 }
 
 export class CommandRegistry {
-    private commands: Map<string, RegisteredCommand> = new Map();
-    private namedAccessCommands: Map<string, RegisteredCommand> = new Map();
-    private regexpAccessCommands: Map<`/${string}/${string}`, RegisteredCommand> = new Map(); //`[regexp: RegExp, command: RegisteredCommand][] = new Map();
-    getCommand(commandName: string): RegisteredCommand | undefined {
+    private commands: Map<string, RegisteredCommand<CommandTypeBase>> = new Map();
+    private namedAccessCommands: Map<string, RegisteredCommand<NameAccessibleCommandType>> = new Map();
+    private regexpAccessCommands: Map<`/${string}/${string}`, RegisteredCommand<RegExpAccessibleCommandType>> = new Map(); //`[regexp: RegExp, command: RegisteredCommand][] = new Map();
+    public getCommand(commandName: string): RegisteredCommand<CommandTypeBase> | undefined {
         // First, attempt to get the command by direct name match
-        const directMatch = this.commands.get(commandName);
+        const directMatch = this.namedAccessCommands.get(commandName);
         if (directMatch) {
             return directMatch;
         }
 
         // If no direct match, search for a regex match
-        for (const command of this.commands.values()) {
+        for (const command of this.regexpAccessCommands.values()) {
             const regexPattern = command.commandData.escregexp?.v;
             if (regexPattern && new RegExp(regexPattern).test(commandName)) {
                 return command;
@@ -195,9 +228,15 @@ export class CommandRegistry {
         return undefined;
     }
 
-    registerCommand(commandData: CommandType, accessType: "named" | "regexp" = "named"): void {
+    public registerCommand<CommandType extends CommandTypeBase>(commandData: CommandType): RegisteredCommand<CommandTypeBase> {
         const registeredCommand = new RegisteredCommand(commandData);
         this.commands.set(commandData.commandName, registeredCommand);
+        if (commandData.accessType === "named") {
+            this.namedAccessCommands.set(commandData.commandName, registeredCommand as RegisteredCommand<NameAccessibleCommandType>);
+        } else if (commandData.accessType === "regexp") {
+            this.regexpAccessCommands.set(RegExp((commandData as unknown as RegExpAccessibleCommandType).escregexp.v, (commandData as unknown as RegExpAccessibleCommandType).escregexp.f).toString() as `/${string}/${string}`, registeredCommand as unknown as RegisteredCommand<RegExpAccessibleCommandType>);
+        }
+        return registeredCommand;
     }
 }
 

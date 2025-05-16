@@ -8,8 +8,8 @@ export class worldPlayers {
     savedPlayers: savedPlayerData[];
     bans: {idBans: ban[], nameBans: ban[], allBans: ban[]};
     idBans: number; */
-    rotx: number;
-    roty: number;
+    rotx?: number;
+    roty?: number;
     dimension?: Dimension;
     entity?: Entity;
     block?: Block; /*

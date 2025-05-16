@@ -305,18 +305,18 @@ export type ShopPage = {
  */
 export type SavedShopItem = {
     itemDetails: {
-        typeId: ItemStack["typeId"];
-        nameTag?: ItemStack["nameTag"];
-        loreLineCount: ReturnType<ItemStack["getLore"]>["length"] /*
+        typeId: ItemStack["typeId"] | null;
+        nameTag?: ItemStack["nameTag"] | null;
+        loreLineCount: ReturnType<ItemStack["getLore"]>["length"] | null /*
         canDestroyLength: ReturnType<ItemStack["getCanDestroy"]>["length"]
         canPlaceOnLength: ReturnType<ItemStack["getCanPlaceOn"]>["length"]*/;
         enchantments:
             | ReturnType<ItemEnchantableComponent["getEnchantments"]>
-            | "N/A, This item may have enchantments but they cannot be read because this item is not normally enchantable.";
-        maxDurability: ItemDurabilityComponent["maxDurability"];
-        damage: ItemDurabilityComponent["damage"];
-        keepOnDeath: ItemStack["keepOnDeath"];
-        lockMode: ItemStack["lockMode"];
+            | "N/A, This item may have enchantments but they cannot be read because this item is not normally enchantable." | null;
+        maxDurability: ItemDurabilityComponent["maxDurability"] | null;
+        damage: ItemDurabilityComponent["damage"] | null;
+        keepOnDeath: ItemStack["keepOnDeath"] | null;
+        lockMode: ItemStack["lockMode"] | null;
     };
     texture?: string;
     title: string;

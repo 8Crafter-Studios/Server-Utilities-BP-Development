@@ -179,7 +179,7 @@ Icon Path: ${category.icon_path ?? "None"}`
                     "duplicate",
                     "refresh",
                     debugMode ? "rawData" : undefined,
-                ] as const)[rb.selection]
+                ] as const)[rb.selection!]
             ) {
                 case "settings":
                     if ((await editCustomAreaCategorySettings(player, categoryID)) === 1) {
@@ -655,9 +655,9 @@ export async function editCustomAreaCategorySetting(
                             !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
                         }Allowed Bypass Tags\n${
                             !!option && !!option.allowedBypassTags
-                                ? option.allowedBypassTags.length === 1
+                                ? option.allowedBypassTags!.length === 1
                                     ? "1 tag"
-                                    : `${option.allowedBypassTags.length} tags`
+                                    : `${option.allowedBypassTags!.length} tags`
                                 : "0 tags"
                         }`,
                         "textures/ui/pencil_edit_icon"
@@ -696,9 +696,9 @@ export async function editCustomAreaCategorySetting(
                             !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
                         }Allowed Bypass Tags\n${
                             !!option && !!option.allowedBypassTags
-                                ? option.allowedBypassTags.length === 1
+                                ? option.allowedBypassTags!.length === 1
                                     ? "1 tag"
-                                    : `${option.allowedBypassTags.length} tags`
+                                    : `${option.allowedBypassTags!.length} tags`
                                 : "0 tags"
                         }`,
                         "textures/ui/pencil_edit_icon"
@@ -737,9 +737,9 @@ export async function editCustomAreaCategorySetting(
                             !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
                         }Allowed Bypass Tags\n${
                             !!option && !!option.allowedBypassTags
-                                ? option.allowedBypassTags.length === 1
+                                ? option.allowedBypassTags!.length === 1
                                     ? "1 tag"
-                                    : `${option.allowedBypassTags.length} tags`
+                                    : `${option.allowedBypassTags!.length} tags`
                                 : "0 tags"
                         }`,
                         "textures/ui/pencil_edit_icon"
@@ -778,9 +778,9 @@ export async function editCustomAreaCategorySetting(
                             !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
                         }Allowed Bypass Tags\n${
                             !!option && !!option.allowedBypassTags
-                                ? option.allowedBypassTags.length === 1
+                                ? option.allowedBypassTags!.length === 1
                                     ? "1 tag"
-                                    : `${option.allowedBypassTags.length} tags`
+                                    : `${option.allowedBypassTags!.length} tags`
                                 : "0 tags"
                         }`,
                         "textures/ui/pencil_edit_icon"
@@ -807,9 +807,9 @@ export async function editCustomAreaCategorySetting(
                             !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
                         }Allowed Bypass Tags\n${
                             !!option && !!option.allowedBypassTags
-                                ? option.allowedBypassTags.length === 1
+                                ? option.allowedBypassTags!.length === 1
                                     ? "1 tag"
-                                    : `${option.allowedBypassTags.length} tags`
+                                    : `${option.allowedBypassTags!.length} tags`
                                 : "0 tags"
                         }`,
                         "textures/ui/pencil_edit_icon"
@@ -844,29 +844,29 @@ export async function editCustomAreaCategorySetting(
                         }Source Entity Filter\n${
                             !!option &&
                             !!option.sourceEntityFilter &&
-                            (option.sourceEntityFilter.excludeTags?.length > 0 ||
-                                option.sourceEntityFilter.includeTags?.length > 0 ||
-                                option.sourceEntityFilter.excludeTypes?.length > 0 ||
-                                option.sourceEntityFilter.includeTypes?.length > 0)
+                            (option.sourceEntityFilter.excludeTags?.length! > 0 ||
+                                option.sourceEntityFilter.includeTags?.length! > 0 ||
+                                option.sourceEntityFilter.excludeTypes?.length! > 0 ||
+                                option.sourceEntityFilter.includeTypes?.length! > 0)
                                 ? `${
-                                      option.sourceEntityFilter.excludeTags?.length > 0
-                                          ? option.sourceEntityFilter.excludeTags.length === 1
+                                      option.sourceEntityFilter.excludeTags?.length! > 0
+                                          ? option.sourceEntityFilter.excludeTags!.length === 1
                                               ? `1 tag excluded`
-                                              : `${option.sourceEntityFilter.excludeTags.length} tags excluded`
-                                          : option.sourceEntityFilter.includeTags?.length > 0
+                                              : `${option.sourceEntityFilter.excludeTags!.length} tags excluded`
+                                          : option.sourceEntityFilter.includeTags?.length! > 0
                                           ? option.sourceEntityFilter.includeTags?.length === 1
                                               ? `1 tag included`
-                                              : `${option.sourceEntityFilter.includeTags.length} tags included`
+                                              : `${option.sourceEntityFilter.includeTags!.length} tags included`
                                           : ""
                                   }${
-                                      option.sourceEntityFilter.excludeTypes?.length > 0
-                                          ? option.sourceEntityFilter.excludeTypes.length === 1
+                                      option.sourceEntityFilter.excludeTypes?.length! > 0
+                                          ? option.sourceEntityFilter.excludeTypes!.length === 1
                                               ? `1 type excluded`
-                                              : `${option.sourceEntityFilter.excludeTypes.length} types excluded`
-                                          : option.sourceEntityFilter.includeTypes?.length > 0
+                                              : `${option.sourceEntityFilter.excludeTypes!.length} types excluded`
+                                          : option.sourceEntityFilter.includeTypes?.length! > 0
                                           ? option.sourceEntityFilter.includeTypes?.length === 1
                                               ? `1 type included`
-                                              : `${option.sourceEntityFilter.includeTypes.length} types included`
+                                              : `${option.sourceEntityFilter.includeTypes!.length} types included`
                                           : ""
                                   }`
                                 : "No Filter"
@@ -884,29 +884,29 @@ export async function editCustomAreaCategorySetting(
                         }Target Entity Filter\n${
                             !!option &&
                             !!option.targetEntityFilter &&
-                            (option.targetEntityFilter.excludeTags?.length > 0 ||
-                                option.targetEntityFilter.includeTags?.length > 0 ||
-                                option.targetEntityFilter.excludeTypes?.length > 0 ||
-                                option.targetEntityFilter.includeTypes?.length > 0)
+                            (option.targetEntityFilter.excludeTags?.length! > 0 ||
+                                option.targetEntityFilter.includeTags?.length! > 0 ||
+                                option.targetEntityFilter.excludeTypes?.length! > 0 ||
+                                option.targetEntityFilter.includeTypes?.length! > 0)
                                 ? `${
-                                      option.targetEntityFilter.excludeTags?.length > 0
-                                          ? option.targetEntityFilter.excludeTags.length === 1
+                                      option.targetEntityFilter.excludeTags?.length! > 0
+                                          ? option.targetEntityFilter.excludeTags!.length === 1
                                               ? `1 tag excluded`
-                                              : `${option.targetEntityFilter.excludeTags.length} tags excluded`
-                                          : option.targetEntityFilter.includeTags?.length > 0
+                                              : `${option.targetEntityFilter.excludeTags!.length} tags excluded`
+                                          : option.targetEntityFilter.includeTags?.length! > 0
                                           ? option.targetEntityFilter.includeTags?.length === 1
                                               ? `1 tag included`
-                                              : `${option.targetEntityFilter.includeTags.length} tags included`
+                                              : `${option.targetEntityFilter.includeTags!.length} tags included`
                                           : ""
                                   }${
-                                      option.targetEntityFilter.excludeTypes?.length > 0
-                                          ? option.targetEntityFilter.excludeTypes.length === 1
+                                      option.targetEntityFilter.excludeTypes?.length! > 0
+                                          ? option.targetEntityFilter.excludeTypes!.length === 1
                                               ? `1 type excluded`
-                                              : `${option.targetEntityFilter.excludeTypes.length} types excluded`
-                                          : option.targetEntityFilter.includeTypes?.length > 0
+                                              : `${option.targetEntityFilter.excludeTypes!.length} types excluded`
+                                          : option.targetEntityFilter.includeTypes?.length! > 0
                                           ? option.targetEntityFilter.includeTypes?.length === 1
                                               ? `1 type included`
-                                              : `${option.targetEntityFilter.includeTypes.length} types included`
+                                              : `${option.targetEntityFilter.includeTypes!.length} types included`
                                           : ""
                                   }`
                                 : "No Filter"
@@ -918,9 +918,9 @@ export async function editCustomAreaCategorySetting(
                             !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
                         }Allowed Bypass Tags\n${
                             !!option && !!option.allowedBypassTags
-                                ? option.allowedBypassTags.length === 1
+                                ? option.allowedBypassTags!.length === 1
                                     ? "1 tag"
-                                    : `${option.allowedBypassTags.length} tags`
+                                    : `${option.allowedBypassTags!.length} tags`
                                 : "0 tags"
                         }`,
                         "textures/ui/pencil_edit_icon"
@@ -947,9 +947,9 @@ export async function editCustomAreaCategorySetting(
                             !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
                         }Allowed Bypass Tags\n${
                             !!option && !!option.allowedBypassTags
-                                ? option.allowedBypassTags.length === 1
+                                ? option.allowedBypassTags!.length === 1
                                     ? "1 tag"
-                                    : `${option.allowedBypassTags.length} tags`
+                                    : `${option.allowedBypassTags!.length} tags`
                                 : "0 tags"
                         }`,
                         "textures/ui/pencil_edit_icon"
@@ -996,9 +996,9 @@ export async function editCustomAreaCategorySetting(
                             !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
                         }Allowed Bypass Tags\n${
                             !!option && !!option.allowedBypassTags
-                                ? option.allowedBypassTags.length === 1
+                                ? option.allowedBypassTags!.length === 1
                                     ? "1 tag"
-                                    : `${option.allowedBypassTags.length} tags`
+                                    : `${option.allowedBypassTags!.length} tags`
                                 : "0 tags"
                         }`,
                         "textures/ui/pencil_edit_icon"
@@ -1024,14 +1024,14 @@ export async function editCustomAreaCategorySetting(
                         `${customFormUICodes.action.buttons.positions.main_only}${
                             !!option && option.enabled ? "" : customFormUICodes.action.buttons.options.disabled
                         }Effect Filter\n${
-                            !!option && !!option.effectFilter && (option.effectFilter.excludeTypes?.length > 0 || option.effectFilter.includeTypes?.length > 0)
-                                ? option.effectFilter.excludeTypes?.length > 0
-                                    ? option.effectFilter.excludeTypes.length === 1
+                            !!option && !!option.effectFilter && (option.effectFilter.excludeTypes?.length! > 0 || option.effectFilter.includeTypes?.length! > 0)
+                                ? option.effectFilter.excludeTypes?.length! > 0
+                                    ? option.effectFilter.excludeTypes!.length === 1
                                         ? "1 effect excluded"
-                                        : `${option.effectFilter.excludeTypes.length} effects excluded`
-                                    : option.effectFilter.includeTypes.length === 1
+                                        : `${option.effectFilter.excludeTypes!.length} effects excluded`
+                                    : option.effectFilter.includeTypes!.length === 1
                                     ? "1 effect included"
-                                    : `${option.effectFilter.includeTypes.length} effects included`
+                                    : `${option.effectFilter.includeTypes!.length} effects included`
                                 : "All Effects"
                         }${
                             !!option && !!option.effectFilter && !Number.isNaN(Number(option.effectFilter.minDuration))
@@ -1050,29 +1050,29 @@ export async function editCustomAreaCategorySetting(
                         }Source Entity Filter\n${
                             !!option &&
                             !!option.sourceEntityFilter &&
-                            (option.sourceEntityFilter.excludeTags?.length > 0 ||
-                                option.sourceEntityFilter.includeTags?.length > 0 ||
-                                option.sourceEntityFilter.excludeTypes?.length > 0 ||
-                                option.sourceEntityFilter.includeTypes?.length > 0)
+                            (option.sourceEntityFilter.excludeTags?.length! > 0 ||
+                                option.sourceEntityFilter.includeTags?.length! > 0 ||
+                                option.sourceEntityFilter.excludeTypes?.length! > 0 ||
+                                option.sourceEntityFilter.includeTypes?.length! > 0)
                                 ? `${
-                                      option.sourceEntityFilter.excludeTags?.length > 0
-                                          ? option.sourceEntityFilter.excludeTags.length === 1
+                                      option.sourceEntityFilter.excludeTags?.length! > 0
+                                          ? option.sourceEntityFilter.excludeTags!.length === 1
                                               ? `1 tag excluded`
-                                              : `${option.sourceEntityFilter.excludeTags.length} tags excluded`
-                                          : option.sourceEntityFilter.includeTags?.length > 0
+                                              : `${option.sourceEntityFilter.excludeTags!.length} tags excluded`
+                                          : option.sourceEntityFilter.includeTags?.length! > 0
                                           ? option.sourceEntityFilter.includeTags?.length === 1
                                               ? `1 tag included`
-                                              : `${option.sourceEntityFilter.includeTags.length} tags included`
+                                              : `${option.sourceEntityFilter.includeTags!.length} tags included`
                                           : ""
                                   }${
-                                      option.sourceEntityFilter.excludeTypes?.length > 0
-                                          ? option.sourceEntityFilter.excludeTypes.length === 1
+                                      option.sourceEntityFilter.excludeTypes?.length! > 0
+                                          ? option.sourceEntityFilter.excludeTypes!.length === 1
                                               ? `1 type excluded`
-                                              : `${option.sourceEntityFilter.excludeTypes.length} types excluded`
-                                          : option.sourceEntityFilter.includeTypes?.length > 0
+                                              : `${option.sourceEntityFilter.excludeTypes!.length} types excluded`
+                                          : option.sourceEntityFilter.includeTypes?.length! > 0
                                           ? option.sourceEntityFilter.includeTypes?.length === 1
                                               ? `1 type included`
-                                              : `${option.sourceEntityFilter.includeTypes.length} types included`
+                                              : `${option.sourceEntityFilter.includeTypes!.length} types included`
                                           : ""
                                   }`
                                 : "No Filter"
@@ -1116,7 +1116,7 @@ export async function editCustomAreaCategorySetting(
             form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
             const r = await form.forceShow(player);
             if (r.canceled) return 1;
-            switch ((["toggle"] as const)[r.selection!] ?? optionsList[r.selection! - 1] ?? (["back", "close"] as const)[r.selection! - optionsList.length - 1]) {
+            switch ((["toggle", undefined] as const)[r.selection!] ?? (optionsList[r.selection! - 1] ? optionsList[r.selection! - 1] : undefined) ?? (["back", "close"] as const)[r.selection! - optionsList.length - 1]) {
                 case "toggle": {
                     if (!!category[setting]) {
                         if (category[setting].enabled === false) {
@@ -1204,7 +1204,7 @@ export async function editCustomAreaCategorySetting(
                         }
                     }
                     if (!("effectFilter" in category[setting])) throw new Error("effectFilter is not a property of this event");
-                    const catProp = category[setting] as Exclude<(typeof category)["effectAdd"], false>;
+                    const catProp = category[setting] as Exclude<(typeof category)["effectAdd"], false | undefined>;
                     let form = new ModalFormData();
                     form.title(customFormUICodes.modal.titles.formStyles.medium + "Effect Filter");
                     form.dropdown(
@@ -1213,15 +1213,15 @@ export async function editCustomAreaCategorySetting(
                         { defaultValueIndex: catProp.effectFilter?.excludeTypes?.length === 1 ? 0 : 1 }
                     );
                     form.textField(
-                        `Types\nList of effect types to allow or block.\nValid Effect Types: ${EffectTypes.getAll()
+                        `Types\nList of effect types to allow or block.\nValid Effect Types: ${EffectTypes!.getAll()
                             .map((t) => t.getName())
                             .join(", ")}\nComma separated list.`,
                         "Comma separated list.",
                         {
                             defaultValue:
-                                ((category[setting] as Exclude<(typeof category)["effectAdd"], false>).effectFilter?.excludeTypes?.length ?? 0) === 0
-                                    ? (category[setting] as Exclude<(typeof category)["effectAdd"], false>).effectFilter?.includeTypes?.join(",") ?? ""
-                                    : (category[setting] as Exclude<(typeof category)["effectAdd"], false>).effectFilter?.excludeTypes?.join(",") ?? "",
+                                ((category[setting] as Exclude<(typeof category)["effectAdd"], false | undefined>).effectFilter?.excludeTypes?.length ?? 0) === 0
+                                    ? (category[setting] as Exclude<(typeof category)["effectAdd"], false | undefined>).effectFilter?.includeTypes?.join(",") ?? ""
+                                    : (category[setting] as Exclude<(typeof category)["effectAdd"], false | undefined>).effectFilter?.excludeTypes?.join(",") ?? "",
                         }
                     );
                     form.textField(
@@ -1238,20 +1238,20 @@ export async function editCustomAreaCategorySetting(
                     const r = await form.forceShow(player);
                     if (r.canceled) continue;
                     const [mode, types, minDuration, maxDuration] = r.formValues as [mode: 0 | 1, types: string, minDuration: string, maxDuration: string];
-                    catProp.effectFilter.excludeTypes = mode === 0 ? (types === "" ? [] : types.split(/,\s?/g)) : [];
-                    catProp.effectFilter.includeTypes = mode === 1 ? (types === "" ? [] : types.split(/,\s?/g)) : [];
-                    catProp.effectFilter.minDuration = minDuration === "" ? undefined : minDuration.toNumber();
-                    catProp.effectFilter.maxDuration = maxDuration === "" ? undefined : maxDuration.toNumber();
+                    catProp.effectFilter!.excludeTypes = mode === 0 ? (types === "" ? [] : types.split(/,\s?/g)) : [];
+                    catProp.effectFilter!.includeTypes = mode === 1 ? (types === "" ? [] : types.split(/,\s?/g)) : [];
+                    catProp.effectFilter!.minDuration = minDuration === "" ? undefined : minDuration.toNumber();
+                    catProp.effectFilter!.maxDuration = maxDuration === "" ? undefined : maxDuration.toNumber();
                     const out: AdvancedProtectedAreaCategory<true> = JSON.parse(
                         world.getDynamicProperty("advancedProtectedAreaCategory:" + categoryID) as string
                     );
-                    const outProp = out[setting] as Exclude<(typeof out)["effectAdd"], false>;
-                    outProp.effectFilter.excludeTypes =
+                    const outProp = out[setting] as Exclude<(typeof out)["effectAdd"], false | undefined>;
+                    outProp.effectFilter!.excludeTypes =
                         (r.formValues?.[0] as 0 | 1) === 0 ? (r.formValues?.[1] === "" ? [] : (r.formValues?.[1] as string).split(/,\s?/g)) : [];
-                    outProp.effectFilter.includeTypes =
+                    outProp.effectFilter!.includeTypes =
                         (r.formValues?.[0] as 0 | 1) === 1 ? (r.formValues?.[1] === "" ? [] : (r.formValues?.[1] as string).split(/,\s?/g)) : [];
-                    outProp.effectFilter.minDuration = minDuration === "" ? undefined : minDuration.toNumber();
-                    outProp.effectFilter.maxDuration = maxDuration === "" ? undefined : maxDuration.toNumber();
+                    outProp.effectFilter!.minDuration = minDuration === "" ? undefined : minDuration.toNumber();
+                    outProp.effectFilter!.maxDuration = maxDuration === "" ? undefined : maxDuration.toNumber();
                     world.setDynamicProperty("advancedProtectedAreaCategory:" + categoryID, JSON.stringify(out));
                     continue;
                 }
@@ -1283,11 +1283,11 @@ export async function editCustomAreaCategorySetting(
                         "Comma separated list.",
                         {
                             defaultValue:
-                                (category[setting] as Exclude<(typeof category)["playerGameModeChange"], false>).fromGameModes?.length === 0
-                                    ? (category[setting] as Exclude<(typeof category)["playerGameModeChange"], false>).fromGameModes?.length === 0
-                                        ? (category[setting] as Exclude<(typeof category)["playerGameModeChange"], false>).fromGameModes?.join(",") ?? ""
+                                (category[setting] as Exclude<(typeof category)["playerGameModeChange"], false | undefined>).fromGameModes?.length === 0
+                                    ? (category[setting] as Exclude<(typeof category)["playerGameModeChange"], false | undefined>).fromGameModes?.length === 0
+                                        ? (category[setting] as Exclude<(typeof category)["playerGameModeChange"], false | undefined>).fromGameModes?.join(",") ?? ""
                                         : ""
-                                    : (category[setting] as Exclude<(typeof category)["playerGameModeChange"], false>).fromGameModes?.join(",") ?? "",
+                                    : (category[setting] as Exclude<(typeof category)["playerGameModeChange"], false | undefined>).fromGameModes?.join(",") ?? "",
                         }
                     );
                     form.textField(
@@ -1295,11 +1295,11 @@ export async function editCustomAreaCategorySetting(
                         "Comma separated list.",
                         {
                             defaultValue:
-                                (category[setting] as Exclude<(typeof category)["playerGameModeChange"], false>).fromGameModes?.length === 0
-                                    ? (category[setting] as Exclude<(typeof category)["playerGameModeChange"], false>).fromGameModes?.length === 0
-                                        ? (category[setting] as Exclude<(typeof category)["playerGameModeChange"], false>).fromGameModes?.join(",") ?? ""
+                                (category[setting] as Exclude<(typeof category)["playerGameModeChange"], false | undefined>).fromGameModes?.length === 0
+                                    ? (category[setting] as Exclude<(typeof category)["playerGameModeChange"], false | undefined>).fromGameModes?.length === 0
+                                        ? (category[setting] as Exclude<(typeof category)["playerGameModeChange"], false | undefined>).fromGameModes?.join(",") ?? ""
                                         : ""
-                                    : (category[setting] as Exclude<(typeof category)["playerGameModeChange"], false>).fromGameModes?.join(",") ?? "",
+                                    : (category[setting] as Exclude<(typeof category)["playerGameModeChange"], false | undefined>).fromGameModes?.join(",") ?? "",
                         }
                     );
                     form.textField(
@@ -1307,11 +1307,11 @@ export async function editCustomAreaCategorySetting(
                         "Comma separated list.",
                         {
                             defaultValue:
-                                (category[setting] as Exclude<(typeof category)["playerGameModeChange"], false>).fromGameModes?.length === 0
-                                    ? (category[setting] as Exclude<(typeof category)["playerGameModeChange"], false>).fromGameModes?.length === 0
-                                        ? (category[setting] as Exclude<(typeof category)["playerGameModeChange"], false>).fromGameModes?.join(",") ?? ""
+                                (category[setting] as Exclude<(typeof category)["playerGameModeChange"], false | undefined>).fromGameModes?.length === 0
+                                    ? (category[setting] as Exclude<(typeof category)["playerGameModeChange"], false | undefined>).fromGameModes?.length === 0
+                                        ? (category[setting] as Exclude<(typeof category)["playerGameModeChange"], false | undefined>).fromGameModes?.join(",") ?? ""
                                         : ""
-                                    : (category[setting] as Exclude<(typeof category)["playerGameModeChange"], false>).fromGameModes?.join(",") ?? "",
+                                    : (category[setting] as Exclude<(typeof category)["playerGameModeChange"], false | undefined>).fromGameModes?.join(",") ?? "",
                         }
                     );
                     form.submitButton("Save");
@@ -1322,7 +1322,7 @@ export async function editCustomAreaCategorySetting(
                         toGameModes: string,
                         fromGameModesToGameModes: string
                     ];
-                    const catProp = category[setting] as Exclude<(typeof category)["playerGameModeChange"], false>;
+                    const catProp = category[setting] as Exclude<(typeof category)["playerGameModeChange"], false | undefined>;
                     catProp.fromGameModes = fromGameModes === "" ? [] : (fromGameModes.split(/,\s?/g) as GameMode[]);
                     catProp.toGameModes = toGameModes === "" ? [] : (toGameModes.split(/,\s?/g) as GameMode[]);
                     catProp.fromGameModesToGameModes =
@@ -1330,7 +1330,7 @@ export async function editCustomAreaCategorySetting(
                     const out: AdvancedProtectedAreaCategory<true> = JSON.parse(
                         world.getDynamicProperty("advancedProtectedAreaCategory:" + categoryID) as string
                     );
-                    const outProp = out[setting] as Exclude<(typeof out)["playerGameModeChange"], false>;
+                    const outProp = out[setting] as Exclude<(typeof out)["playerGameModeChange"], false | undefined>;
                     outProp.fromGameModes = fromGameModes === "" ? [] : (fromGameModes.split(/,\s?/g) as GameMode[]);
                     outProp.toGameModes = toGameModes === "" ? [] : (toGameModes.split(/,\s?/g) as GameMode[]);
                     outProp.fromGameModesToGameModes =
@@ -1357,8 +1357,8 @@ export async function editCustomAreaCategorySetting(
                         }
                     }
                     if (!("heldItemFilters" in category[setting])) throw new Error("heldItemFilters is not a property of this event");
-                    const catProp = category[setting] as Exclude<(typeof category)["playerBreakBlock"], false>;
-                    const catFilters = catProp?.heldItemFilters as Exclude<(typeof catProp)["heldItemFilters"], false>;
+                    const catProp = category[setting] as Exclude<(typeof category)["playerBreakBlock"], false | undefined>;
+                    const catFilters = catProp?.heldItemFilters as Exclude<(typeof catProp)["heldItemFilters"], false | undefined>;
                     let form = new ModalFormData();
                     form.title(customFormUICodes.modal.titles.formStyles.medium + "Held Item Filters");
                     form.dropdown(
@@ -1380,8 +1380,8 @@ export async function editCustomAreaCategorySetting(
                     const out: AdvancedProtectedAreaCategory<true> = JSON.parse(
                         world.getDynamicProperty("advancedProtectedAreaCategory:" + categoryID) as string
                     );
-                    const outProp = out[setting] as Exclude<(typeof out)["playerBreakBlock"], false>;
-                    const outFilters = outProp.heldItemFilters as Exclude<(typeof outProp)["heldItemFilters"], false>;
+                    const outProp = out[setting] as Exclude<(typeof out)["playerBreakBlock"], false | undefined>;
+                    const outFilters = outProp.heldItemFilters as Exclude<(typeof outProp)["heldItemFilters"], false | undefined>;
                     outFilters.mode = mode === 0 ? "exclude" : "include";
                     outFilters.items = types === "" ? [] : types.split(/,\s?/g);
                     world.setDynamicProperty("advancedProtectedAreaCategory:" + categoryID, JSON.stringify(out));
@@ -1406,7 +1406,7 @@ export async function editCustomAreaCategorySetting(
                         }
                     }
                     if (!("mask" in category[setting])) throw new Error("mask is not a property of this event");
-                    const catProp = category[setting] as Exclude<(typeof category)["playerBreakBlock"], false>;
+                    const catProp = category[setting] as Exclude<(typeof category)["playerBreakBlock"], false | undefined>;
                     let form = new ModalFormData();
                     form.title(customFormUICodes.modal.titles.formStyles.medium + "Block Mask");
                     form.dropdown(
@@ -1430,7 +1430,7 @@ export async function editCustomAreaCategorySetting(
                     const out: AdvancedProtectedAreaCategory<true> = JSON.parse(
                         world.getDynamicProperty("advancedProtectedAreaCategory:" + categoryID) as string
                     );
-                    const outProp = out[setting] as Exclude<(typeof out)["playerBreakBlock"], false>;
+                    const outProp = out[setting] as Exclude<(typeof out)["playerBreakBlock"], false | undefined>;
                     outProp.mode = mode === 0 ? "exclude" : "include";
                     outProp.mask = mask === "" ? "none" : mask;
                     world.setDynamicProperty("advancedProtectedAreaCategory:" + categoryID, JSON.stringify(out));
@@ -1455,7 +1455,7 @@ export async function editCustomAreaCategorySetting(
                         }
                     }
                     if (!("sourceEntityFilter" in category[setting])) throw new Error("sourceEntityFilter is not a property of this event");
-                    const catProp = category[setting] as Exclude<(typeof category)["effectAdd"], false>;
+                    const catProp = category[setting] as Exclude<(typeof category)["effectAdd"], false | undefined>;
                     let form = new ModalFormData();
                     form.title(customFormUICodes.modal.titles.formStyles.medium + "Source Entity Filter");
                     form.dropdown(
@@ -1468,9 +1468,9 @@ export async function editCustomAreaCategorySetting(
                         "Comma separated list.",
                         {
                             defaultValue:
-                                ((category[setting] as Exclude<(typeof category)["effectAdd"], false>).sourceEntityFilter?.excludeTypes?.length ?? 0) === 0
-                                    ? (category[setting] as Exclude<(typeof category)["effectAdd"], false>).sourceEntityFilter?.includeTypes?.join(",") ?? ""
-                                    : (category[setting] as Exclude<(typeof category)["effectAdd"], false>).sourceEntityFilter?.excludeTypes?.join(",") ?? "",
+                                ((category[setting] as Exclude<(typeof category)["effectAdd"], false | undefined>).sourceEntityFilter?.excludeTypes?.length ?? 0) === 0
+                                    ? (category[setting] as Exclude<(typeof category)["effectAdd"], false | undefined>).sourceEntityFilter?.includeTypes?.join(",") ?? ""
+                                    : (category[setting] as Exclude<(typeof category)["effectAdd"], false | undefined>).sourceEntityFilter?.excludeTypes?.join(",") ?? "",
                         }
                     );
                     form.dropdown(
@@ -1480,9 +1480,9 @@ export async function editCustomAreaCategorySetting(
                     );
                     form.textField(`Entity Tags\nList of entity tags to allow or block.\nComma separated list.`, "Comma separated list.", {
                         defaultValue:
-                            ((category[setting] as Exclude<(typeof category)["effectAdd"], false>).sourceEntityFilter?.excludeTags?.length ?? 0) === 0
-                                ? (category[setting] as Exclude<(typeof category)["effectAdd"], false>).sourceEntityFilter?.includeTags?.join(",") ?? ""
-                                : (category[setting] as Exclude<(typeof category)["effectAdd"], false>).sourceEntityFilter?.excludeTags?.join(",") ?? "",
+                            ((category[setting] as Exclude<(typeof category)["effectAdd"], false | undefined>).sourceEntityFilter?.excludeTags?.length ?? 0) === 0
+                                ? (category[setting] as Exclude<(typeof category)["effectAdd"], false | undefined>).sourceEntityFilter?.includeTags?.join(",") ?? ""
+                                : (category[setting] as Exclude<(typeof category)["effectAdd"], false | undefined>).sourceEntityFilter?.excludeTags?.join(",") ?? "",
                     });
                     form.submitButton("Save");
                     const r = await form.forceShow(player);
@@ -1495,7 +1495,7 @@ export async function editCustomAreaCategorySetting(
                     const out: AdvancedProtectedAreaCategory<true> = JSON.parse(
                         world.getDynamicProperty("advancedProtectedAreaCategory:" + categoryID) as string
                     );
-                    const outProp = out[setting] as Exclude<(typeof out)["effectAdd"], false>;
+                    const outProp = out[setting] as Exclude<(typeof out)["effectAdd"], false | undefined>;
                     outProp.sourceEntityFilter.excludeTypes = mode === 0 ? (types === "" ? [] : types.split(/,\s?/g)) : [];
                     outProp.sourceEntityFilter.includeTypes = mode === 1 ? (types === "" ? [] : types.split(/,\s?/g)) : [];
                     outProp.sourceEntityFilter.excludeTags = tagsMode === 0 ? (tags === "" ? [] : tags.split(/,\s?/g)) : [];
@@ -1522,7 +1522,7 @@ export async function editCustomAreaCategorySetting(
                         }
                     }
                     if (!("targetEntityFilter" in category[setting])) throw new Error("targetEntityFilter is not a property of this event");
-                    const catProp = category[setting] as Exclude<(typeof category)["playerInteractWithEntity"], false>;
+                    const catProp = category[setting] as Exclude<(typeof category)["playerInteractWithEntity"], false | undefined>;
                     let form = new ModalFormData();
                     form.title(customFormUICodes.modal.titles.formStyles.medium + "Target Entity Filter");
                     form.dropdown(
@@ -1562,7 +1562,7 @@ export async function editCustomAreaCategorySetting(
                     const out: AdvancedProtectedAreaCategory<true> = JSON.parse(
                         world.getDynamicProperty("advancedProtectedAreaCategory:" + categoryID) as string
                     );
-                    const outProp = out[setting] as Exclude<(typeof out)["playerInteractWithEntity"], false>;
+                    const outProp = out[setting] as Exclude<(typeof out)["playerInteractWithEntity"], false | undefined>;
                     outProp.targetEntityFilter.excludeTypes = mode === 0 ? (types === "" ? [] : types.split(/,\s?/g)) : [];
                     outProp.targetEntityFilter.includeTypes = mode === 1 ? (types === "" ? [] : types.split(/,\s?/g)) : [];
                     outProp.targetEntityFilter.excludeTags = tagsMode === 0 ? (tags === "" ? [] : tags.split(/,\s?/g)) : [];
@@ -1589,7 +1589,7 @@ export async function editCustomAreaCategorySetting(
                         }
                     }
                     if (!("tags" in category[setting])) throw new Error("tags is not a property of this event");
-                    const catProp = category[setting] as Exclude<(typeof category)["tagZone"], false>;
+                    const catProp = category[setting] as Exclude<(typeof category)["tagZone"], false | undefined>;
                     let form = new ModalFormData();
                     form.title(customFormUICodes.modal.titles.formStyles.medium + "Tag Zone Tags");
                     form.textField("Tags\nThis is a comma-separated list of tags to will be given to players entering this area.", "Comma separated list.", {
@@ -1606,7 +1606,7 @@ export async function editCustomAreaCategorySetting(
                     const out: AdvancedProtectedAreaCategory<true> = JSON.parse(
                         world.getDynamicProperty("advancedProtectedAreaCategory:" + categoryID) as string
                     );
-                    const outProp = out[setting] as Exclude<(typeof out)["tagZone"], false>;
+                    const outProp = out[setting] as Exclude<(typeof out)["tagZone"], false | undefined>;
                     outProp.tags = !!r.formValues?.[0] ? (r.formValues?.[0] as string).split(/,\s?/g) : [];
                     outProp.removeOnExit = r.formValues?.[1] as boolean;
                     world.setDynamicProperty("advancedProtectedAreaCategory:" + categoryID, JSON.stringify(out));

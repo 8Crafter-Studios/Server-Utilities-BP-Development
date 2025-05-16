@@ -232,6 +232,7 @@ export async function managePlayers(
                                 .submitButton("Go To Page")
                                 .forceShow(player)
                     );
+                    if(!rb || rb.canceled) return await managePlayers(player, pagen, maxplayersperpage, search, displayPlayers);
                     return await managePlayers(
                         player,
                         Math.max(1, Math.min(numpages, (rb.formValues?.[0] as string)?.toNumber() ?? page + 1)) - 1,

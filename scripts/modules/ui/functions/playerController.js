@@ -28,25 +28,25 @@ export function playerController(sourceEntitya, message = "") {
     function playerControllerFormPopup(playerTargetB, playerViewerB) {
         let form = new ModalFormData();
         try {
-            dimension = String(playerList[playerTargetB].getSpawnPoint().dimension.id);
+            dimension = String(playerList[playerTargetB].getSpawnPoint()?.dimension.id);
         }
         catch (e) {
             dimension = "";
         }
         try {
-            spawnXPosition = String(playerList[playerTargetB].getSpawnPoint().x);
+            spawnXPosition = String(playerList[playerTargetB].getSpawnPoint()?.x);
         }
         catch (e) {
             spawnXPosition = "";
         }
         try {
-            spawnYPosition = String(playerList[playerTargetB].getSpawnPoint().y);
+            spawnYPosition = String(playerList[playerTargetB].getSpawnPoint()?.y);
         }
         catch (e) {
             spawnYPosition = "";
         }
         try {
-            spawnZPosition = String(playerList[playerTargetB].getSpawnPoint().z);
+            spawnZPosition = String(playerList[playerTargetB].getSpawnPoint()?.z);
         }
         catch (e) {
             spawnZPosition = "";

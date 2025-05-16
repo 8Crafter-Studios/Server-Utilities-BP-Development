@@ -1,13 +1,14 @@
 import { Block, BlockPermutation } from "@minecraft/server";
 
 export function testBlockForMatchToMask(
-    block: Block,
-    matches: { type: string; states?: { [id: string]: string | number | boolean; }; } |
+    block?: Block,
+    matches?: { type: string; states?: { [id: string]: string | number | boolean; }; } |
         {
             type: string;
             states?: { [id: string]: string | number | boolean; };
         }[]
 ) {
+    if (!block || !matches) return false;
     if (matches instanceof Array) {
         if (!!matches.find((v) => v.type == "isAir")) {
             return block.isAir;

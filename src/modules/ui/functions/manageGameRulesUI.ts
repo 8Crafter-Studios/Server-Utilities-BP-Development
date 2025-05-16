@@ -65,7 +65,7 @@ export async function manageGameRulesUI(sourceEntitya: Entity | executeCommandPl
             let t = to as ModalFormResponse;
             if (t.canceled) return 1 as const;
             try {
-                t.formValues.forEach((v, i) => {
+                t.formValues?.forEach((v, i) => {
                     if (ruleValues[ruleNames[i] as keyof typeof world.gameRules] != v) {
                         (ruleValues[ruleNames[i] as keyof typeof world.gameRules] as number | boolean) =
                             typeof ruleValues[ruleNames[i] as keyof typeof world.gameRules] == "number" ? Number(v) : (v as boolean);

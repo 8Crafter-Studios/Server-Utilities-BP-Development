@@ -80,7 +80,7 @@ try{inventory = players[playerTargetB].getComponent("equipment_inventory") as En
                     return undefined;
                 }
             }
-            const durability = getDurability();
+            const durability = getDurability()!;
             function itemNameTextCalculator() {
                 try {
                     if (item.nameTag == undefined) {
@@ -352,7 +352,7 @@ form.textField("Item Data", "Trigger Event", {defaultValue: ""});*/
                         transferToContainer,
                         transferToContainerBlock,
                         debug,
-                    ] = (r as ModalFormResponse).formValues; /*
+                    ] = r.formValues!; /*
 console.warn(r.formValues);*/
 
                     /*let item = inventory.container.getItem(Number(slotNumber));
@@ -361,32 +361,32 @@ console.warn(r.formValues);*/
                         x: Number(String(transferFromContainerBlock).split(", ")[1]),
                         y: Number(String(transferFromContainerBlock).split(", ")[2]),
                         z: Number(String(transferFromContainerBlock).split(", ")[3]),
-                    });
+                    })!;
                     let transferToContainerBlockB = world.getDimension(String(transferToContainerBlock).split(", ")[0]).getBlock({
                         x: Number(String(transferToContainerBlock).split(", ")[1]),
                         y: Number(String(transferToContainerBlock).split(", ")[2]),
                         z: Number(String(transferToContainerBlock).split(", ")[3]),
-                    });
+                    })!;
                     let moveFromContainerBlockB = world.getDimension(String(moveFromContainerBlock).split(", ")[0]).getBlock({
                         x: Number(String(moveFromContainerBlock).split(", ")[1]),
                         y: Number(String(moveFromContainerBlock).split(", ")[2]),
                         z: Number(String(moveFromContainerBlock).split(", ")[3]),
-                    });
+                    })!;
                     let moveToContainerBlockB = world.getDimension(String(moveToContainerBlock).split(", ")[0]).getBlock({
                         x: Number(String(moveToContainerBlock).split(", ")[1]),
                         y: Number(String(moveToContainerBlock).split(", ")[2]),
                         z: Number(String(moveToContainerBlock).split(", ")[3]),
-                    });
+                    })!;
                     let swapContainerBlockB = world.getDimension(String(swapContainerBlock).split(", ")[0]).getBlock({
                         x: Number(String(swapContainerBlock).split(", ")[1]),
                         y: Number(String(swapContainerBlock).split(", ")[2]),
                         z: Number(String(swapContainerBlock).split(", ")[3]),
-                    });
+                    })!;
                     let swapOtherContainerBlockB = world.getDimension(String(swapOtherContainerBlock).split(", ")[0]).getBlock({
                         x: Number(String(swapOtherContainerBlock).split(", ")[1]),
                         y: Number(String(swapOtherContainerBlock).split(", ")[2]),
                         z: Number(String(swapOtherContainerBlock).split(", ")[3]),
-                    });
+                    })!;
                     let durability2 = getDurability();
                     let enchantments2 = getEnchantments(); /*
 for (const index in inventory.) {

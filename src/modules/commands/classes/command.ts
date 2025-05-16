@@ -564,7 +564,7 @@ namespace exports {
                         ] ??
                         (this.type == "built-in"
                             ? commands.find((c) => c.commandName == this.commandName)?.ultraSecurityModeSecurityLevel
-                            : (undefined as unknown as "owner" | "headAdmin" | "admin" | "moderator" | "WorldEdit" | "everyone"))) == "owner"
+                            : (undefined! as unknown as "owner" | "headAdmin" | "admin" | "moderator" | "WorldEdit" | "everyone"))) == "owner"
                 ) {
                     if (
                         !securityVariables.testPlayerForPermission(playerE, "andexdb.fullControl") &&
@@ -586,7 +586,7 @@ namespace exports {
                         ] ??
                         (this.type == "built-in"
                             ? commands.find((c) => c.commandName == this.commandName)?.ultraSecurityModeSecurityLevel
-                            : (undefined as unknown as "owner" | "headAdmin" | "admin" | "moderator" | "WorldEdit" | "everyone"))) == "headAdmin"
+                            : (undefined! as unknown as "owner" | "headAdmin" | "admin" | "moderator" | "WorldEdit" | "everyone"))) == "headAdmin"
                 ) {
                     if (
                         !securityVariables.testPlayerForPermission(playerE, "andexdb.headAdmin") &&
@@ -608,7 +608,7 @@ namespace exports {
                         ] ??
                         (this.type == "built-in"
                             ? commands.find((c) => c.commandName == this.commandName)?.ultraSecurityModeSecurityLevel
-                            : (undefined as unknown as "owner" | "headAdmin" | "admin" | "moderator" | "WorldEdit" | "everyone"))) == "admin"
+                            : (undefined! as unknown as "owner" | "headAdmin" | "admin" | "moderator" | "WorldEdit" | "everyone"))) == "admin"
                 ) {
                     if (
                         !securityVariables.testPlayerForPermission(playerE, "andexdb.admin") &&
@@ -630,7 +630,7 @@ namespace exports {
                         ] ??
                         (this.type == "built-in"
                             ? commands.find((c) => c.commandName == this.commandName)?.ultraSecurityModeSecurityLevel
-                            : (undefined as unknown as "owner" | "headAdmin" | "admin" | "moderator" | "WorldEdit" | "everyone"))) == "moderator"
+                            : (undefined! as unknown as "owner" | "headAdmin" | "admin" | "moderator" | "WorldEdit" | "everyone"))) == "moderator"
                 ) {
                     if (
                         !securityVariables.testPlayerForPermission(playerE, "andexdb.moderator") &&
@@ -652,7 +652,7 @@ namespace exports {
                         ] ??
                         (this.type == "built-in"
                             ? commands.find((c) => c.commandName == this.commandName)?.ultraSecurityModeSecurityLevel
-                            : (undefined as unknown as "owner" | "headAdmin" | "admin" | "moderator" | "WorldEdit" | "everyone"))) == "WorldEdit"
+                            : (undefined! as unknown as "owner" | "headAdmin" | "admin" | "moderator" | "WorldEdit" | "everyone"))) == "WorldEdit"
                 ) {
                     if (!securityVariables.testPlayerForPermission(playerE, "andexdb.useWorldEdit")) {
                         return false;
@@ -671,7 +671,7 @@ namespace exports {
                         ] ??
                         (this.type == "built-in"
                             ? commands.find((c) => c.commandName == this.commandName)?.ultraSecurityModeSecurityLevel
-                            : (undefined as unknown as "owner" | "headAdmin" | "admin" | "moderator" | "WorldEdit" | "everyone"))) == "everyone"
+                            : (undefined! as unknown as "owner" | "headAdmin" | "admin" | "moderator" | "WorldEdit" | "everyone"))) == "everyone"
                 ) {
                 }
             } else {

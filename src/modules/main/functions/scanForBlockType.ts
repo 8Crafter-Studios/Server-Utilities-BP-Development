@@ -24,6 +24,6 @@ export function scanForBlockType(
             }).getBlockLocationIterator()
         )
             .map((v) => dimension.getBlock(v))
-            .filter((v) => v.typeId == blockType);
+            .filter((v) => v?.typeId == blockType);
     }
 }

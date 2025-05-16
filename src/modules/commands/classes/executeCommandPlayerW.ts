@@ -94,6 +94,7 @@ export class executeCommandPlayerW implements Omit<Player, "name" | "id"> {
             this.modifieddimension = player.dimension;
             this.rotation = player.getRotation();
             this.isFromWorldPosition = false;
+            this.fromPlayerWorldPosition = false;
             this.fromEntityWorldPosition = false;
             this.fromBlockWorldPosition = false;
             this.fromPlayer = player instanceof Player;

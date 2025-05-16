@@ -83,7 +83,7 @@ export async function manageRedeemableCodes(sourceEntitya: Entity | executeComma
                                     [customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left"],
                                     [customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout"]
                                 )
-                            ).selection
+                            ).selection ?? 2
                         ]
                     ) {
                         case "loadItem": {
@@ -141,7 +141,7 @@ export async function manageRedeemableCodes(sourceEntitya: Entity | executeComma
                             return 0;
                         }
                     }
-                    RedeemableCode.addCode(r.formValues?.[0] as string, item.item.getItem(), sourceEntity.dimensionLocation);
+                    RedeemableCode.addCode(r.formValues?.[0] as string, item.item.getItem()!, sourceEntity.dimensionLocation);
                     return await manageRedeemableCodes(sourceEntity);
                 }
                 case "back":

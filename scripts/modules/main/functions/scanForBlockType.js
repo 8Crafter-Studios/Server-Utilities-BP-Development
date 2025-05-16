@@ -11,7 +11,7 @@ export function scanForBlockType(from, to, dimension, block, returnMode) {
             z: to.z,
         }).getBlockLocationIterator())
             .map((v) => dimension.getBlock(v))
-            .filter((v) => v.typeId == blockType);
+            .filter((v) => v?.typeId == blockType);
     }
 }
 //# sourceMappingURL=scanForBlockType.js.map

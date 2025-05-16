@@ -183,7 +183,7 @@ export async function managePlayers_managePlayer(sourceEntity: loosePlayerType, 
                                             "§r§f, lore: " +
                                             JSONStringify(item[1].getLore() ?? [], true) +
                                             "§r§f, enchantments: " +
-                                            JSONStringify(tryget(() => item[1].getComponent("enchantable").getEnchantments()) ?? "N/A", true)
+                                            JSONStringify(tryget(() => item[1].getComponent("enchantable")?.getEnchantments()) ?? "N/A", true)
                                     )
                                 );
                             } else {
@@ -191,8 +191,8 @@ export async function managePlayers_managePlayer(sourceEntity: loosePlayerType, 
                             }
                         });
                     } else {
-                        let items = targetPlayer.items.inventory.concat(targetPlayer.items.equipment);
-                        items.forEach((item) => {
+                        let items = targetPlayer.items?.inventory?.concat(targetPlayer.items.equipment!);
+                        items?.forEach((item) => {
                             if (item.count !== 0) {
                                 slotsArray = slotsArray.concat(
                                     String(
@@ -304,14 +304,14 @@ export async function managePlayers_managePlayer(sourceEntity: loosePlayerType, 
                     const items = targetPlayer.getItems(player);
                     const block2 = player.dimension.getBlock(player.location);
                     const block = player.dimension.getBlock(Vector.add(player.location, Vector.up));
-                    if (!!!block.getComponent("inventory")) {
-                        block.setType("barrel");
+                    if (block && !block.getComponent("inventory")) {
+                        block!.setType("barrel");
                     }
-                    if (!!!block2.getComponent("inventory")) {
-                        block2.setType("barrel");
+                    if (block2 && !block2.getComponent("inventory")) {
+                        block2!.setType("barrel");
                     }
-                    const bc = block.getComponent("inventory").container;
-                    const bc2 = block2.getComponent("inventory").container;
+                    const bc = block!.getComponent("inventory")?.container!;
+                    const bc2 = block2!.getComponent("inventory")?.container!;
                     for (let i = 0; i < 27; i++) {
                         bc.setItem(i, items[i as keyof typeof items]);
                     }
@@ -332,7 +332,7 @@ export async function managePlayers_managePlayer(sourceEntity: loosePlayerType, 
                     }
                 case "mute":
                     if (isMuted) {
-                        if ((await manageMute(player, [targetPlayer.name, ModerationActions.getMuteData(targetPlayer.name)])) === 1) {
+                        if ((await manageMute(player, [targetPlayer.name, ModerationActions.getMuteData(targetPlayer.name)!])) === 1) {
                             continue;
                         } else {
                             return 0;
@@ -352,7 +352,7 @@ export async function managePlayers_managePlayer(sourceEntity: loosePlayerType, 
                             .forceShow(player);
 
                         if (r.canceled) continue;
-                        if (!!r.formValues![0].toBigInt()) {
+                        if (!!r.formValues![0]?.toBigInt()) {
                             MoneySystem.get(targetPlayer.id).setMoney(r.formValues![0].toBigInt());
                         } else {
                             if (
@@ -482,7 +482,7 @@ export async function managePlayers_managePlayer_managePermissions(sourceEntity:
                       }§a when the player joins)`
                     : ""
             }`,
-            { defaultValue: targetPlayer.playerPermissions.canUseChatCommands }
+            { defaultValue: targetPlayer.playerPermissions?.canUseChatCommands }
         );
         form.toggle(
             `canUseDangerousCommands${
@@ -496,7 +496,7 @@ export async function managePlayers_managePlayer_managePermissions(sourceEntity:
                       }§a when the player joins)`
                     : ""
             }`,
-            { defaultValue: targetPlayer.playerPermissions.canUseDangerousCommands }
+            { defaultValue: targetPlayer.playerPermissions?.canUseDangerousCommands }
         );
         form.toggle(
             `canUseScriptEval${
@@ -510,7 +510,7 @@ export async function managePlayers_managePlayer_managePermissions(sourceEntity:
                       }§a when the player joins)`
                     : ""
             }`,
-            { defaultValue: targetPlayer.playerPermissions.canUseScriptEval }
+            { defaultValue: targetPlayer.playerPermissions?.canUseScriptEval }
         );
         form.toggle(
             `canUseCommands${
@@ -524,7 +524,7 @@ export async function managePlayers_managePlayer_managePermissions(sourceEntity:
                       }§a when the player joins)`
                     : ""
             }`,
-            { defaultValue: targetPlayer.playerPermissions.canUseCommands }
+            { defaultValue: targetPlayer.playerPermissions?.canUseCommands }
         );
         form.toggle(
             `canBypassProtectedAreas${
@@ -538,7 +538,7 @@ export async function managePlayers_managePlayer_managePermissions(sourceEntity:
                       }§a when the player joins)`
                     : ""
             }`,
-            { defaultValue: targetPlayer.playerPermissions.canBypassProtectedAreas }
+            { defaultValue: targetPlayer.playerPermissions?.canBypassProtectedAreas }
         );
         form.toggle(
             `getAllChatCommands${
@@ -552,7 +552,7 @@ export async function managePlayers_managePlayer_managePermissions(sourceEntity:
                       }§a when the player joins)`
                     : ""
             }`,
-            { defaultValue: targetPlayer.playerPermissions.getAllChatCommands }
+            { defaultValue: targetPlayer.playerPermissions?.getAllChatCommands }
         );
         form.toggle(
             `admin${
@@ -566,7 +566,7 @@ export async function managePlayers_managePlayer_managePermissions(sourceEntity:
                       }§a when the player joins)`
                     : ""
             }`,
-            { defaultValue: targetPlayer.playerPermissions.admin }
+            { defaultValue: targetPlayer.playerPermissions?.admin }
         );
         form.slider(
             `permissionLevel${
@@ -583,7 +583,7 @@ export async function managePlayers_managePlayer_managePermissions(sourceEntity:
             0,
             10,
             {
-                defaultValue: targetPlayer.playerPermissions.permissionLevel,
+                defaultValue: targetPlayer.playerPermissions?.permissionLevel,
                 valueStep: 1,
             }
         );
@@ -593,14 +593,15 @@ export async function managePlayers_managePlayer_managePermissions(sourceEntity:
             return 1;
         }
         if (targetPlayer.isOnline) {
-            targetPlayer.playerPermissions.canUseChatCommands = r.formValues![0] as boolean;
-            targetPlayer.playerPermissions.canUseDangerousCommands = r.formValues![1] as boolean;
-            targetPlayer.playerPermissions.canUseScriptEval = r.formValues![2] as boolean;
-            targetPlayer.playerPermissions.canUseCommands = r.formValues![3] as boolean;
-            targetPlayer.playerPermissions.canBypassProtectedAreas = r.formValues![4] as boolean;
-            targetPlayer.playerPermissions.getAllChatCommands = r.formValues![5] as boolean;
-            targetPlayer.playerPermissions.admin = r.formValues![6] as boolean;
-            targetPlayer.playerPermissions.permissionLevel = r.formValues![7] as number;
+            targetPlayer.playerPermissions!.canUseChatCommands = r.formValues![0] as boolean;
+            targetPlayer.playerPermissions!.canUseDangerousCommands = r.formValues![1] as boolean;
+            targetPlayer.playerPermissions!.canUseScriptEval = r.formValues![2] as boolean;
+            targetPlayer.playerPermissions!.canUseCommands = r.formValues![3] as boolean;
+            targetPlayer.playerPermissions!.canBypassProtectedAreas = r.formValues![4] as boolean;
+            targetPlayer.playerPermissions!.getAllChatCommands = r.formValues![5] as boolean;
+            targetPlayer.playerPermissions!.admin = r.formValues![6] as boolean;
+            targetPlayer.playerPermissions!.permissionLevel = r.formValues![7] as number;
+            return 1;
         } else {
             if (
                 (

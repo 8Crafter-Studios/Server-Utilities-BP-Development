@@ -40,7 +40,7 @@ export async function fillBlocksHHSGB(center, radius, thickness, dimension, bloc
                                 ?.getComponent("inventory")) {
                                 clearContainer(v.dimension
                                     .getBlock(v)
-                                    ?.getComponent("inventory")
+                                    .getComponent("inventory")
                                     .container);
                             }
                             v.dimension
@@ -94,7 +94,7 @@ export async function fillBlocksHHSGB(center, radius, thickness, dimension, bloc
                                 ?.getComponent("inventory")) {
                                 clearContainer(v.dimension
                                     .getBlock(v)
-                                    ?.getComponent("inventory")
+                                    .getComponent("inventory")
                                     .container);
                             }
                             v.dimension
@@ -147,7 +147,7 @@ export async function fillBlocksHHSGB(center, radius, thickness, dimension, bloc
                             ?.getComponent("inventory")) {
                             clearContainer(v.dimension
                                 .getBlock(v)
-                                ?.getComponent("inventory").container);
+                                ?.getComponent("inventory")?.container);
                         }
                         v.dimension
                             .getBlock(v)
@@ -195,7 +195,7 @@ export async function fillBlocksHHSGB(center, radius, thickness, dimension, bloc
                                 ?.getComponent("inventory")) {
                                 clearContainer(v.dimension
                                     .getBlock(v)
-                                    ?.getComponent("inventory")
+                                    .getComponent("inventory")
                                     .container);
                             }
                             v.dimension

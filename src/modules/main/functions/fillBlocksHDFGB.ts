@@ -39,7 +39,7 @@ export async function fillBlocksHDFGB(
                         "minecraft:flowing_water",
                         "minecraft:lava",
                         "minecraft:flowing_lava",
-                    ].includes(v.dimension.getBlock(v)?.typeId)) {
+                    ].includes(v.dimension.getBlock(v)!?.typeId)) {
                         v.dimension.getBlock(v)?.setType("minecraft:air");
                         counter++;
                     } else if (v.dimension.getBlock(v)?.canContainLiquid(modules.mcServer.LiquidType.Water) == true &&

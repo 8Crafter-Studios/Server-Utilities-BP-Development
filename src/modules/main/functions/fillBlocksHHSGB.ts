@@ -64,8 +64,8 @@ export async function fillBlocksHHSGB(
                                         ?.getComponent("inventory")) {
                                         clearContainer(
                                             v.dimension
-                                                .getBlock(v)
-                                                ?.getComponent("inventory")
+                                                .getBlock(v)!
+                                                .getComponent("inventory")!
                                                 .container
                                         );
                                     }
@@ -142,11 +142,11 @@ export async function fillBlocksHHSGB(
                                         .getBlock(v)
                                         ?.getComponent("inventory")) {
                                         clearContainer(
-                                            v.dimension
-                                                .getBlock(v)
-                                                ?.getComponent("inventory")
-                                                .container
-                                        );
+                                            v.dimension
+                                                .getBlock(v)!
+                                                .getComponent("inventory")!
+                                                .container
+                                        );
                                     }
                                     v.dimension
                                         .getBlock(v)
@@ -222,7 +222,7 @@ export async function fillBlocksHHSGB(
                                     clearContainer(
                                         v.dimension
                                             .getBlock(v)
-                                            ?.getComponent("inventory").container
+                                            ?.getComponent("inventory")?.container
                                     );
                                 }
                                 v.dimension
@@ -294,8 +294,8 @@ export async function fillBlocksHHSGB(
                                         ?.getComponent("inventory")) {
                                         clearContainer(
                                             v.dimension
-                                                .getBlock(v)
-                                                ?.getComponent("inventory")
+                                                .getBlock(v)!
+                                                .getComponent("inventory")!
                                                 .container
                                         );
                                     }

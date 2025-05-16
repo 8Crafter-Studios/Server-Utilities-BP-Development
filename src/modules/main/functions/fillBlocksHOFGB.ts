@@ -54,7 +54,7 @@ export async function fillBlocksHOFGB(
                                 clearContainer(
                                     v.dimension
                                         .getBlock(v)
-                                        ?.getComponent("inventory").container
+                                        ?.getComponent("inventory")?.container
                                 );
                             }
                             v.dimension
@@ -101,7 +101,7 @@ export async function fillBlocksHOFGB(
             );
         }
     } else {
-        let currentBlock = undefined as BlockPermutation;
+        let currentBlock = undefined! as BlockPermutation;
         if (replacemode) {
             system.runJob(
                 generateHollowFillBG(
@@ -129,7 +129,7 @@ export async function fillBlocksHOFGB(
                                     clearContainer(
                                         v.dimension
                                             .getBlock(v)
-                                            ?.getComponent("inventory").container
+                                            ?.getComponent("inventory")?.container
                                     );
                                 }
                                 v.dimension

@@ -169,7 +169,7 @@ Server Timezone: ${config.system.timeZone}`,
                     stopZoneActionsInterval();
                     return await addonDebugUI(sourceEntity);
                 case 8:
-                    Object.values(repeatingIntervals).forEach((v) => tryrun(() => system.clearRun(v)));
+                    Object.values(repeatingIntervals).forEach((v) => tryrun(() => system.clearRun(v!)));
                     return await addonDebugUI(sourceEntity);
                 case 9:
                     if (entity_scale_format_version != null) {

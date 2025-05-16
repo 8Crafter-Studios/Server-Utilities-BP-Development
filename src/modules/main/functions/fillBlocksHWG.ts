@@ -43,7 +43,7 @@ export async function fillBlocksHWG(
                                     clearContainer(
                                         v.dimension
                                             .getBlock(v)
-                                            ?.getComponent("inventory").container
+                                            ?.getComponent("inventory")?.container
                                     );
                                 }
                                 v.dimension.getBlock(v)?.setType(block(v));
@@ -88,7 +88,7 @@ export async function fillBlocksHWG(
                 options?.matchingBlock,
                 options?.matchingBlockStates
             );
-            let currentBlock = undefined as BlockType;
+            let currentBlock = undefined! as BlockType;
             if (replacemode) {
                 system.runJob(
                     generateWallsFillBG(
@@ -100,7 +100,7 @@ export async function fillBlocksHWG(
                         (v) => {
                             currentBlock = block(v);
                             if (!!options?.matchingBlockStates
-                                ? BlockTypes.get(options?.matchingBlock) ==
+                                ? BlockTypes.get(options?.matchingBlock!) ==
                                 v.dimension.getBlock(v)?.type &&
                                 matchingblockb.getAllStates() ==
                                 Object.fromEntries(
@@ -108,7 +108,7 @@ export async function fillBlocksHWG(
                                         Object.assign(
                                             v.dimension
                                                 .getBlock(v)
-                                                ?.permutation?.getAllStates(),
+                                                ?.permutation?.getAllStates()!,
                                             blockStates
                                         )
                                     ).filter(
@@ -121,7 +121,7 @@ export async function fillBlocksHWG(
                                         )
                                     )
                                 )
-                                : BlockTypes.get(options?.matchingBlock) ==
+                                : BlockTypes.get(options?.matchingBlock!) ==
                                 v.dimension.getBlock(v)?.type) {
                                 try {
                                     v.dimension
@@ -156,11 +156,11 @@ export async function fillBlocksHWG(
                                 clearContainer(
                                     v.dimension
                                         .getBlock(v)
-                                        ?.getComponent("inventory").container
+                                        ?.getComponent("inventory")?.container
                                 );
                             }
                             if (!!options?.matchingBlockStates
-                                ? BlockTypes.get(options?.matchingBlock) ==
+                                ? BlockTypes.get(options?.matchingBlock!) ==
                                 v.dimension.getBlock(v)?.type &&
                                 matchingblockb.getAllStates() ==
                                 Object.fromEntries(
@@ -168,7 +168,7 @@ export async function fillBlocksHWG(
                                         Object.assign(
                                             v.dimension
                                                 .getBlock(v)
-                                                ?.permutation?.getAllStates(),
+                                                ?.permutation?.getAllStates()!,
                                             blockStates
                                         )
                                     ).filter(
@@ -181,7 +181,7 @@ export async function fillBlocksHWG(
                                         )
                                     )
                                 )
-                                : BlockTypes.get(options?.matchingBlock) ==
+                                : BlockTypes.get(options?.matchingBlock!) ==
                                 v.dimension.getBlock(v)?.type) {
                                 try {
                                     v.dimension
@@ -221,7 +221,7 @@ export async function fillBlocksHWG(
                                     clearContainer(
                                         v.dimension
                                             .getBlock(v)
-                                            ?.getComponent("inventory").container
+                                            ?.getComponent("inventory")?.container
                                     );
                                 }
                                 v.dimension.getBlock(v)?.setPermutation(blockb);
@@ -276,7 +276,7 @@ export async function fillBlocksHWG(
                         options?.minMSBetweenYields ?? 2000,
                         (v) => {
                             if (!!options?.matchingBlockStates
-                                ? BlockTypes.get(options?.matchingBlock) ==
+                                ? BlockTypes.get(options?.matchingBlock!) ==
                                 v.dimension.getBlock(v)?.type &&
                                 matchingblockb.getAllStates() ==
                                 Object.fromEntries(
@@ -284,7 +284,7 @@ export async function fillBlocksHWG(
                                         Object.assign(
                                             v.dimension
                                                 .getBlock(v)
-                                                ?.permutation?.getAllStates(),
+                                                ?.permutation?.getAllStates()!,
                                             blockStates
                                         )
                                     ).filter(
@@ -295,7 +295,7 @@ export async function fillBlocksHWG(
                                         )
                                     )
                                 )
-                                : BlockTypes.get(options?.matchingBlock) ==
+                                : BlockTypes.get(options?.matchingBlock!) ==
                                 v.dimension.getBlock(v)?.type) {
                                 try {
                                     v.dimension
@@ -329,11 +329,11 @@ export async function fillBlocksHWG(
                                 clearContainer(
                                     v.dimension
                                         .getBlock(v)
-                                        ?.getComponent("inventory").container
+                                        ?.getComponent("inventory")?.container
                                 );
                             }
                             if (!!options?.matchingBlockStates
-                                ? BlockTypes.get(options?.matchingBlock) ==
+                                ? BlockTypes.get(options?.matchingBlock!) ==
                                 v.dimension.getBlock(v)?.type &&
                                 matchingblockb.getAllStates() ==
                                 Object.fromEntries(
@@ -341,7 +341,7 @@ export async function fillBlocksHWG(
                                         Object.assign(
                                             v.dimension
                                                 .getBlock(v)
-                                                ?.permutation?.getAllStates(),
+                                                ?.permutation?.getAllStates()!,
                                             blockStates
                                         )
                                     ).filter(
@@ -352,7 +352,7 @@ export async function fillBlocksHWG(
                                         )
                                     )
                                 )
-                                : BlockTypes.get(options?.matchingBlock) ==
+                                : BlockTypes.get(options?.matchingBlock!) ==
                                 v.dimension.getBlock(v)?.type) {
                                 try {
                                     v.dimension

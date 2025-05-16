@@ -27,7 +27,7 @@ export class ScoreboardV2 {
     }
 }
 export class ScoreboardV2Objective {
-    displayName: string;
+    displayName?: string;
     id: string;
     private scores: {[playerId: string]: bigint} = {};
     constructor(id: string){

@@ -23,7 +23,7 @@ export async function extraFeaturesSettings(
     sourceEntitya: Entity | executeCommandPlayerW | Player
 ): Promise<-2 | 0 | 1> {
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW
-        ? sourceEntitya.player
+        ? sourceEntitya.player!
         : sourceEntitya;
     if (securityVariables.ultraSecurityModeEnabled) {
         if(securityVariables.testPlayerForPermission(sourceEntity as Player, "andexdb.accessExtraFeaturesSettings") == false){

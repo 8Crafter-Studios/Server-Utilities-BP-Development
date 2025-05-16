@@ -4,19 +4,18 @@
  * @description This file contains types and classes related to the command registry. This is not functional yet. This will be completed in a future update.
  * @todo Finish the command registry system.
  */
+import type { ChatSendBeforeEvent } from "@minecraft/server";
 import { commandSettings } from "modules/commands/classes/commandSettings";
+import type { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import type { command_formats_type_list } from "modules/commands/types/command_formats_type_list";
 import type { commandCategory } from "modules/commands/types/commandCategory";
 import type { loosePlayerType } from "modules/utilities/types/loosePlayerType";
-type CommandType = {
+export interface CommandTypeBase {
     type: "built-in" | "custom" | "unknown";
+    accessType: "named" | "regexp";
     requiredTags?: string[];
     formatting_code?: string;
     commandName: string;
-    escregexp: {
-        v: string;
-        f?: string;
-    };
     formats?: command_formats_type_list;
     command_version: string;
     description: string;
@@ -24,17 +23,38 @@ type CommandType = {
     aliases?: {
         commandName: string;
         escregexp?: {
-            v?: string;
+            v: string;
             f?: string;
         };
     }[];
-    category?: commandCategory | commandCategory[];
+    categories?: commandCategory[];
     deprecated?: boolean;
     functional?: boolean;
     hidden?: boolean;
     enabled?: boolean;
-};
-declare class RegisteredCommand {
+    callback: (player: executeCommandPlayerW, event: ChatSendBeforeEvent) => void;
+}
+export interface NameAccessibleCommandType extends CommandTypeBase {
+    accessType: "named";
+    aliases?: {
+        commandName: string;
+    }[];
+}
+export interface RegExpAccessibleCommandType extends CommandTypeBase {
+    accessType: "regexp";
+    escregexp: {
+        v: string;
+        f?: string;
+    };
+    aliases?: {
+        commandName: string;
+        escregexp: {
+            v: string;
+            f?: string;
+        };
+    }[];
+}
+declare class RegisteredCommand<CommandType extends CommandTypeBase> {
     #private;
     commandData: CommandType;
     /**
@@ -44,7 +64,7 @@ declare class RegisteredCommand {
     /**
      * The type of access to the command.
      */
-    readonly accessType: "name" | "regexp";
+    readonly accessType: CommandType["accessType"];
     /**
      * The ID of the command.
      */
@@ -64,7 +84,7 @@ declare class RegisteredCommand {
     /**
      * The regular expression used to access the command.
      */
-    readonly regexp?: RegExp;
+    readonly regexp: CommandType extends NameAccessibleCommandType ? undefined : CommandType extends RegExpAccessibleCommandType ? RegExp : (RegExp | undefined);
     syntax: string;
     command_version: string;
     description: string;
@@ -96,7 +116,7 @@ export declare class CommandRegistry {
     private commands;
     private namedAccessCommands;
     private regexpAccessCommands;
-    getCommand(commandName: string): RegisteredCommand | undefined;
-    registerCommand(commandData: CommandType, accessType?: "named" | "regexp"): void;
+    getCommand(commandName: string): RegisteredCommand<CommandTypeBase> | undefined;
+    registerCommand<CommandType extends CommandTypeBase>(commandData: CommandType): RegisteredCommand<CommandTypeBase>;
 }
 export {};
