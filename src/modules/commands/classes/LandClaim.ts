@@ -4,6 +4,7 @@ import { LandClaimSystem } from "./LandClaimSystem";
 
 /**
  * A land claim for the land claim system.
+ *
  * @alpha
  * @deprecated This class is not functional yet.
  */

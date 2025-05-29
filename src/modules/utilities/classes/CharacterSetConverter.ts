@@ -1,20 +1,62 @@
+/**
+ * Converts between a string and a custom character set.
+ *
+ * Supports all unicode characters.
+ */
 export class CharacterSetConverter {
-    private customCharset: string;
+    /**
+     * The custom character set to use.
+     *
+     * @type {string}
+     */
+    private readonly customCharset: string;
 
-    constructor(customCharset: string) {
+    /**
+     * Creates a new instance of the CharacterSetConverter class.
+     *
+     * @param {string} customCharset The custom character set to use.
+     * @throws {TypeError} If the custom character set is less than 2 characters in length.
+     */
+    public constructor(customCharset: string) {
         if (customCharset.length < 2) {
-            throw new Error("Custom character set must contain at least 2 characters.");
+            throw new TypeError("Custom character set must contain at least 2 characters.");
         }
         this.customCharset = customCharset;
     }
 
+    /**
+     * Encodes a string using the custom character set.
+     *
+     * @param {string} input The string to encode.
+     * @returns {string} The encoded string.
+     */
     public encode(input: string): string {
-        const base = this.customCharset.length;
-        let encoded = '';
+        /**
+         * The base of the custom character set.
+         *
+         * @type {number}
+         */
+        const base: number = this.customCharset.length;
+        /**
+         * The encoded string.
+         *
+         * @type {string}
+         */
+        let encoded: string = '';
 
         for (const char of input) {
-            let codePoint = char.codePointAt(0)!;
-            let encodedChar = '';
+            /**
+             * The code point of the character.
+             *
+             * @type {number}
+             */
+            let codePoint: number = char.codePointAt(0)!;
+            /**
+             * The encoded character.
+             *
+             * @type {string}
+             */
+            let encodedChar: string = '';
 
             while (codePoint > 0) {
                 encodedChar = this.customCharset[codePoint % base] + encodedChar;
@@ -27,13 +69,39 @@ export class CharacterSetConverter {
         return encoded;
     }
 
+    /**
+     * Decodes a string using the custom character set.
+     *
+     * @param {string} input The string to decode.
+     * @returns {string} The decoded string.
+     */
     public decode(input: string): string {
-        const base = this.customCharset.length;
-        const parts = input.split(this.customCharset[0]).filter(Boolean);
-        let decoded = '';
+        /**
+         * The base of the custom character set.
+         *
+         * @type {number}
+         */
+        const base: number = this.customCharset.length;
+        /**
+         * The parts of the input string.
+         *
+         * @type {string[]}
+         */
+        const parts: string[] = input.split(this.customCharset[0]).filter(Boolean);
+        /**
+         * The decoded string.
+         *
+         * @type {string}
+         */
+        let decoded: string = '';
 
         for (const part of parts) {
-            let codePoint = 0;
+            /**
+             * The code point of the character.
+             *
+             * @type {number}
+             */
+            let codePoint: number = 0;
 
             for (const char of part) {
                 codePoint = codePoint * base + this.customCharset.indexOf(char);

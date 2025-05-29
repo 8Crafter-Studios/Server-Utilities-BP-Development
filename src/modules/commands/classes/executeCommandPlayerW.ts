@@ -48,6 +48,9 @@ import { deleteStringFromEntityDynamicProperties } from "modules/utilities/funct
 import { getStringFromEntityDynamicProperties } from "modules/utilities/functions/getStringFromEntityDynamicProperties";
 import { saveStringToEntityDynamicProperties } from "modules/utilities/functions/saveStringToEntityDynamicProperties";
 
+/**
+ * Represents a player to be used for the `\execute` command without the `name` and `id` properties.
+ */
 export class executeCommandPlayerW implements Omit<Player, "name" | "id"> {
     player?: Player;
     sendErrorsTo?: Player | Console | Player[] | (() => Player | Player[] | Console) | null | undefined;

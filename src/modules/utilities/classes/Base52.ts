@@ -1,3 +1,6 @@
+/**
+ * Converts between a string and a base52 encoded string.
+ */
 export class Base52 {
     private static readonly charMap: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 

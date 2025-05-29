@@ -4,8 +4,18 @@ import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPl
 import moment from "moment";
 import { securityVariables } from "security/ultraSecurityModeUtils";
 
+/**
+ * An array of active teleport requests.
+ *
+ * @type {TeleportRequest[]}
+ */
 const activeRequests: TeleportRequest[] = [];
-let currentId = 0n;
+/**
+ * The current teleport request ID.
+ *
+ * @type {bigin}
+ */
+let currentId: bigint = 0n;
 
 /**
  * The TeleportRequest class, it is used to handle teleport requests.
@@ -13,28 +23,51 @@ let currentId = 0n;
 export class TeleportRequest {
     /**
      * The unique identifier of this teleport request.
+     *
+     * @type {bigint}
      */
     readonly id: bigint;
     /**
      * The player who sent this teleport request.
+     *
+     * @type {Player}
      */
     player: Player;
     /**
      * The player this teleport request was sent to.
+     *
+     * @type {Player}
      */
     target: Player;
     /**
      * When this teleport request was sent.
+     *
+     * @type {number}
      */
     sendTime: number;
     /**
      * Whether or not this teleport request is valid.
+     *
+     * @type {boolean}
+     *
+     * @default true
      */
     valid: boolean = true;
     /**
      * Whether or not this teleport request has been accepted.
+     *
+     * @type {boolean}
+     *
+     * @default false
      */
     accepted: boolean = false;
+    /**
+     * Creates a new teleport request.
+     *
+     * @param {Player} player The player who sent this teleport request.
+     * @param {Player} target The player this teleport request was sent to.
+     * @param {number} [sendTime=Date.now()] When this teleport request was sent.
+     */
     private constructor(player: Player, target: Player, sendTime: number = Date.now()) {
         this.player = player;
         this.target = target;
@@ -48,7 +81,12 @@ export class TeleportRequest {
         });
         this.init();
     }
-    private async init() {
+    /**
+     * Initializes this teleport request.
+     *
+     * @returns {Promise<void>} A promise that resolves when this teleport request is accepted, denied, made invalid, or timed out.
+     */
+    private async init(): Promise<void> {
         activeRequests.push(this);
         while (this.valid && !this.accepted) {
             if (Date.now() - this.sendTime > config.tpaSystem.timeoutDuration * 1000) {
@@ -58,7 +96,12 @@ export class TeleportRequest {
             await waitTick();
         }
     }
-    delete() {
+    /**
+     * Deletes this teleport request.
+     *
+     * @returns {boolean} Whether or not this teleport request was deleted.
+     */
+    public delete(): boolean {
         if (this.valid) {
             this.valid = false;
             activeRequests.splice(
@@ -70,7 +113,12 @@ export class TeleportRequest {
             return false;
         }
     }
-    cancel() {
+    /**
+     * Cancels this teleport request.
+     *
+     * @returns {boolean} Whether or not this teleport request was canceled.
+     */
+    public cancel(): boolean {
         if (this.valid) {
             this.cancelSequence();
             this.delete();
@@ -79,7 +127,12 @@ export class TeleportRequest {
             return false;
         }
     }
-    timeOut() {
+    /**
+     * Times out this teleport request.
+     *
+     * @returns {boolean} Whether or not this teleport request was timed out.
+     */
+    public timeOut(): boolean {
         if (this.valid) {
             this.timeOutSequence();
             this.delete();
@@ -88,7 +141,12 @@ export class TeleportRequest {
             return false;
         }
     }
-    deny() {
+    /**
+     * Denies this teleport request.
+     *
+     * @returns {boolean} Whether or not this teleport request was denied.
+     */
+    public deny(): boolean {
         if (this.valid) {
             this.denySequence();
             this.delete();
@@ -97,7 +155,12 @@ export class TeleportRequest {
             return false;
         }
     }
-    async accept() {
+    /**
+     * Accepts this teleport request.
+     *
+     * @returns {Promise<boolean>} Whether or not this teleport request was accepted.
+     */
+    public async accept(): Promise<boolean> {
         if (this.valid) {
             this.delete();
             await this.teleportSequence();
@@ -107,18 +170,32 @@ export class TeleportRequest {
             return false;
         }
     }
-    cancelSequence() {
+    /**
+     * Runs the cancel sequence for this teleport request.
+     */
+    public cancelSequence(): void {
         this.target.sendMessage(`§c${this.player.name} canceled their teleport request to you.`);
     }
-    timeOutSequence() {
+    /**
+     * Runs the time out sequence for this teleport request.
+     */
+    public timeOutSequence(): void {
         this.target.sendMessage(`§c${this.player.name}'s teleport request timed out.`);
         this.player.sendMessage(`§cThe teleport request to ${this.target.name} timed out.`);
     }
-    denySequence() {
+    /**
+     * Runs the deny sequence for this teleport request.
+     */
+    public denySequence(): void {
         this.target.sendMessage(`§cDenied ${this.player.name}'s teleport request.`);
         this.player.sendMessage(`§c${this.target.name} denied your teleport request.`);
     }
-    async teleportSequence() {
+    /**
+     * Runs the teleport sequence for this teleport request.
+     *
+     * @returns {Promise<0 | 1>} A promise that resolves with `1` when the teleport sequence is complete, or `0` if the teleport sequence fails.
+     */
+    public async teleportSequence(): Promise<0 | 1> {
         const canBypassTeleportCooldowns = securityVariables.ultraSecurityModeEnabled
             ? securityVariables.testPlayerForPermission(this.player, "andexdb.bypassTeleportCooldowns")
             : this.player.hasTag("admin");
@@ -241,18 +318,33 @@ export class TeleportRequest {
                     this.player.teleport(this.target.location, { dimension: this.target.dimension });
                     this.player.setDynamicProperty("lastTeleportTime", Date.now());
                     this.player.sendMessage(`§aSuccessfully teleported to ${this.target.name}.`);
+                    return 1;
                 } catch (e) {
                     this.player.sendMessage("§cAn error occurred while trying to teleport you to your home: " + e + e.stack);
                     this.target.sendMessage(`§cAn error occurred while ${this.target.name} was trying to teleport to you.`);
+                    return 0;
                 }
             } else {
                 this.player.sendMessage("§cTeleport canceled.");
                 this.target.sendMessage(`§c${this.player.name} moved so their teleport to you was canceled.`);
                 this.delete();
+                return 0;
             }
         }
+        return 0;
     }
-    static send(fromPlayer: Player, toPlayer: Player, sendTime: number = Date.now()) {
+    /**
+     * Sends a teleport request from one player to another.
+     *
+     * @param {Player | executeCommandPlayerW} fromPlayer The player who sent this teleport request.
+     * @param {Player | executeCommandPlayerW} toPlayer The player this teleport request was sent to.
+     * @param {number} [sendTime=Date.now()] When this teleport request was sent. Defaults to the current time.
+     * @returns {TeleportRequest} The teleport request that was sent.
+     *
+     * @throws {TypeError} If the {@link fromPlayer} or {@link toPlayer} parameter is not an instance of the {@link Player} class, or an instance of the {@link executeCommandPlayerW} class with a {@link Player} linked to it.
+     * @throws {Error} If there is already a teleport request from the {@link fromPlayer} to the {@link toPlayer}.
+     */
+    public static send(fromPlayer: Player | executeCommandPlayerW, toPlayer: Player | executeCommandPlayerW, sendTime: number = Date.now()): TeleportRequest {
         const player = fromPlayer instanceof executeCommandPlayerW ? fromPlayer.player : (fromPlayer as Player);
         const target = toPlayer instanceof executeCommandPlayerW ? toPlayer.player : (toPlayer as Player);
         if (!(player instanceof Player)) {
@@ -308,9 +400,23 @@ export class TeleportRequest {
                 }.`
             );
         }
+        return request;
     }
-    static getRequestsFromPlayer(fromPlayer: Player): TeleportRequest[] {
-        const player = fromPlayer instanceof executeCommandPlayerW ? fromPlayer.player : (fromPlayer as Player);
+    /**
+     * Gets all teleport requests from a player.
+     *
+     * @param {Player | executeCommandPlayerW} fromPlayer The player to get the teleport requests from.
+     * @returns {TeleportRequest[]} The array of teleport requests sent by the player.
+     *
+     * @throws {TypeError} If the player is not an instance of the {@link Player} class, or an instance of the {@link executeCommandPlayerW} class with a {@link Player} linked to it.
+     */
+    public static getRequestsFromPlayer(fromPlayer: Player): TeleportRequest[] {
+        /**
+         * The player to get the teleport requests from.
+         *
+         * @type {Player | undefined}
+         */
+        const player: Player | undefined = fromPlayer instanceof executeCommandPlayerW ? fromPlayer.player : (fromPlayer as Player);
         if (!(player instanceof Player)) {
             throw new TypeError(
                 "Invalid Player. Expected an instance of the Player class, or an instance of the executeCommandPlayerW class with a Player linked to it, but instead got " +
@@ -324,8 +430,21 @@ export class TeleportRequest {
         }
         return activeRequests.filter((r) => r.player === player);
     }
-    static getRequestsToPlayer(toPlayer: Player): TeleportRequest[] {
-        const target = toPlayer instanceof executeCommandPlayerW ? toPlayer.player : (toPlayer as Player);
+    /**
+     * Gets all teleport requests to a player.
+     *
+     * @param {Player | executeCommandPlayerW} toPlayer The player to get the teleport requests to.
+     * @returns {TeleportRequest[]} The array of teleport requests sent to the player.
+     *
+     * @throws {TypeError} If the player is not an instance of the {@link Player} class, or an instance of the {@link executeCommandPlayerW} class with a {@link Player} linked to it.
+     */
+    public static getRequestsToPlayer(toPlayer: Player): TeleportRequest[] {
+        /**
+         * The player to get the teleport requests to.
+         *
+         * @type {Player | undefined}
+         */
+        const target: Player | undefined = toPlayer instanceof executeCommandPlayerW ? toPlayer.player : (toPlayer as Player);
         if (!(target instanceof Player)) {
             throw new TypeError(
                 "Invalid Player. Expected an instance of the Player class, or an instance of the executeCommandPlayerW class with a Player linked to it, but instead got " +
@@ -339,7 +458,12 @@ export class TeleportRequest {
         }
         return activeRequests.filter((r) => r.target === target);
     }
-    static getAllRequests(): TeleportRequest[] {
+    /**
+     * Gets all active teleport requests.
+     *
+     * @returns {TeleportRequest[]} The array of active teleport requests.
+     */
+    public static getAllRequests(): TeleportRequest[] {
         return activeRequests.filter((b) => b.valid);
     }
 }

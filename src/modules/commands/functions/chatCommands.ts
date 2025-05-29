@@ -94,7 +94,7 @@ import { getTopSolidBlock } from "modules/main/functions/getTopSolidBlock";
 import { command } from "modules/commands/classes/command";
 import { disconnectingPlayers } from "modules/commands/constants/disconnectingPlayers";
 import { AreaBackups } from "modules/coordinates/classes/AreaBackups";
-import { blockClipboard } from "modules/coordinates/classes/blockClipboard";
+import { BlockClipboard } from "modules/coordinates/classes/BlockClipboard";
 import { undoClipboard } from "modules/coordinates/classes/undoClipboard";
 import { WorldPosition } from "modules/coordinates/classes/WorldPosition";
 import { caretNotationC } from "modules/coordinates/functions/caretNotationC";
@@ -34311,9 +34311,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                             "§c" + e + " " + e.stack
                                         );
                                     }
-                                    tryrun(() => blockClipboard.clear());
+                                    tryrun(() => BlockClipboard.global.clear());
                                     try {
-                                        blockClipboard.save(
+                                        BlockClipboard.global.copy(
                                             dimensiona!,
                                             { from: ca, to: cb },
                                             {
@@ -34438,9 +34438,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                 );
                             } else {
                                 system.run(() => {
-                                    tryrun(() => blockClipboard.clear());
+                                    tryrun(() => BlockClipboard.global.clear());
                                     try {
-                                        blockClipboard.save(
+                                        BlockClipboard.global.copy(
                                             dimensiona!,
                                             { from: ca, to: cb },
                                             {
@@ -34535,7 +34535,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     player.sendMessageB(
                                         "§cError: pos2 is not set."
                                     );
-                                } else if (blockClipboard.ids.length == 0) {
+                                } else if (BlockClipboard.global.isEmpty) {
                                     player.sendMessageB(
                                         "§cError: The clipboard is currently empty."
                                     );
@@ -34548,7 +34548,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                     from: ca,
                                                     to: Vector.add(
                                                         ca,
-                                                        blockClipboard.saveSize
+                                                        BlockClipboard.global.contentsSize
                                                     ),
                                                 },
                                                 Date.now(),
@@ -34564,7 +34564,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                 "§c" + e + " " + e.stack
                                             );
                                         }
-                                        blockClipboard.place(
+                                        BlockClipboard.global.paste(
                                             Object.assign(
                                                 { dimension: dimensiona! },
                                                 ca

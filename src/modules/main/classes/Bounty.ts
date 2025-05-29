@@ -1,21 +1,74 @@
 import { Player } from "@minecraft/server";
 import { MoneySystem } from "ExtraFeatures/money";
-import { command } from "modules/commands/classes/command";
-import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import { savedPlayer } from "modules/player_save/classes/savedPlayer";
 import { numberFormatter_compact } from "modules/utilities/functions/numberFormatter";
 
 let activeBounties: Bounty[] = [];
 let currentId = BigInt((gwdp("lastBountyID") as string) ?? 0n);
 
+/**
+ * Represents a bounty.
+ */
 export class Bounty {
-    readonly id: bigint;
-    playerId: string;
-    targetId: string;
-    value: bigint;
-    creationTime: number;
-    valid: boolean = true;
-    status: "none" | "deleted" | "claimed" | "canceled" = "none";
+    /**
+     * The unique identifier of this bounty.
+     *
+     * @type {bigint}
+     */
+    public readonly id: bigint;
+    /**
+     * The UUID of the player who placed this bounty.
+     *
+     * @type {string}
+     */
+    public playerId: string;
+    /**
+     * The UUID of the target of this bounty.
+     *
+     * @type {string}
+     */
+    public targetId: string;
+    /**
+     * The value of this bounty.
+     *
+     * @type {bigint}
+     */
+    public value: bigint;
+    /**
+     * The creation time of this bounty.
+     *
+     * @type {number}
+     */
+    public creationTime: number;
+    /**
+     * Whether this bounty is valid.
+     *
+     * @type {boolean}
+     *
+     * @default true
+     */
+    public valid: boolean = true;
+    /**
+     * The status of this bounty.
+     *
+     * @type {"none" | "deleted" | "claimed" | "canceled"}
+     *
+     * @default "none"
+     */
+    public status: "none" | "deleted" | "claimed" | "canceled" = "none";
+    /**
+     * Creates a new bounty.
+     *
+     * @param {object} properties - The properties of the bounty.
+     * @param {string} properties.playerId - The UUID of the player who placed this bounty.
+     * @param {string} properties.targetId - The UUID of the target of this bounty.
+     * @param {bigint} properties.value - The value of this bounty.
+     * @param {number} [properties.creationTime] - The creation time of this bounty. Defaults to the current time.
+     * @param {boolean} [properties.new] - Whether this bounty is new. Defaults to true.
+     * @param {boolean} [properties.valid] - Whether this bounty is valid. Defaults to undefined.
+     * @param {"none" | "deleted" | "claimed" | "canceled"} [properties.status] - The status of this bounty. Defaults to undefined.
+     * @param {bigint} [properties.id] - The unique identifier of this bounty.
+     */
     private constructor(
         properties:
             | { playerId: string; targetId: string; value: bigint; creationTime?: number; new?: true; valid?: undefined; status?: undefined; id?: undefined }
@@ -55,11 +108,19 @@ export class Bounty {
             this.init();
         }
     }
-    private async init() {
+    /**
+     * Initializes this bounty.
+     */
+    private init(): void {
         activeBounties.push(this);
         Bounty.saveBounties();
     }
-    delete() {
+    /**
+     * Deletes this bounty.
+     *
+     * @returns {boolean} Whether this bounty was deleted.
+     */
+    public delete(): boolean {
         if (this.valid) {
             if (this.status === "none") {
                 this.status = "deleted";
@@ -75,7 +136,12 @@ export class Bounty {
             return false;
         }
     }
-    cancel() {
+    /**
+     * Cancels this bounty.
+     *
+     * @returns {boolean} Whether this bounty was canceled.
+     */
+    public cancel(): boolean {
         if (this.valid) {
             this.status = "canceled";
             this.delete();
@@ -85,7 +151,13 @@ export class Bounty {
             return false;
         }
     }
-    claim(claimer: Player) {
+    /**
+     * Claims this bounty.
+     *
+     * @param {Player} claimer The player who claimed this bounty.
+     * @returns {boolean} Whether this bounty was claimed.
+     */
+    public claim(claimer: Player): boolean {
         if (this.valid) {
             this.status = "claimed";
             this.delete();
@@ -95,13 +167,26 @@ export class Bounty {
             return false;
         }
     }
-    getLinkedTargetSavedPlayer(): savedPlayer | undefined {
+    /**
+     * Gets a {@link savedPlayer} instance for the {@link targetId | target} of this bounty.
+     *
+     * @returns {savedPlayer | undefined} The saved player instance for the target of this bounty, or undefined if the target of this bounty has not been saved.
+     */
+    public getLinkedTargetSavedPlayer(): savedPlayer | undefined {
         return savedPlayer.getSavedPlayer("player:" + this.targetId);
     }
-    getLinkedSourceSavedPlayer(): savedPlayer | undefined {
+    /**
+     * Gets a {@link savedPlayer} instance for the {@link playerId | source} of this bounty.
+     *
+     * @returns {savedPlayer | undefined} The saved player instance for the source of this bounty, or undefined if the source of this bounty has not been saved.
+     */
+    public getLinkedSourceSavedPlayer(): savedPlayer | undefined {
         return savedPlayer.getSavedPlayer("player:" + this.playerId);
     }
-    toJSONB(): {
+    /**
+     * Converts this bounty to a {@link JSONB} serializable object.
+     */
+    public toJSONB(): {
         readonly id: bigint;
         playerId: string;
         targetId: string;
@@ -120,17 +205,41 @@ export class Bounty {
             status: this.status,
         };
     }
-    static loadBounties() {
+    /**
+     * Loads all saved bounties.
+     *
+     * @throws {SyntaxError} If the saved bounties are not valid stringified {@link JSONB}.
+     */
+    public static loadBounties(): void {
         activeBounties = JSONB.parse(world.getStringFromDynamicProperties("activeBounties", "[]")).map(
             (v: ReturnType<Bounty["toJSONB"]>) => new Bounty({ new: false, ...v })
         );
         currentId = BigInt((gwdp("lastBountyID") as string) ?? 0n);
     }
-    static saveBounties() {
+    /**
+     * Saves all loaded bounties.
+     */
+    public static saveBounties(): void {
         world.saveStringToDynamicProperties(JSONB.stringify(activeBounties), "activeBounties");
         swdp("lastBountyID", currentId.toString());
     }
-    static placeBountyOnPlayer(
+    /**
+     * Places a bounty on the specified player.
+     *
+     * @param {bigint} value The bounty value.
+     * @param {string} playerId The player's UUID.
+     * @param {string} targetId The target's UUID.
+     * @param {string} [playerDisplayName] The player's display name.
+     * @param {string} [targetDisplayName] The target's display name.
+     * @param {boolean} [silent=false] If set to true, will not notify all online players of the bounty. Defaults to false.
+     * @param {boolean} [chargePlayer=true] Whether to charge the player for the bounty. Defaults to true.
+     * @param {number} [creationTime=Date.now()] The creation time of the bounty. Defaults to the current time.
+     * @returns {Bounty} The created bounty.
+     *
+     * @throws {Error} If the player has already placed a bounty on the target.
+     * @throws {Error} If {@link chargePlayer} is `true` and the player does not have enough money to place the bounty.
+     */
+    public static placeBountyOnPlayer(
         value: bigint,
         playerId: string,
         targetId: string,
@@ -139,7 +248,7 @@ export class Bounty {
         silent: boolean = false,
         chargePlayer: boolean = true,
         creationTime: number = Date.now()
-    ) {
+    ): Bounty {
         if (!!activeBounties.find((r) => r.playerId === playerId && r.targetId === targetId)) {
             throw new Error("Duplicate Bounty");
         }
@@ -152,7 +261,7 @@ export class Bounty {
             }
         }
         if (silent) {
-            new Bounty({ playerId, targetId, creationTime, value });
+            return new Bounty({ playerId, targetId, creationTime, value });
         } else {
             const playerName =
                 playerDisplayName ??
@@ -162,25 +271,52 @@ export class Bounty {
                 targetDisplayName ??
                 world.getAllPlayers().find((p) => p.id === targetId)?.id ??
                 tryget(() => savedPlayer.getSavedPlayer("player:" + targetId)?.id);
-            new Bounty({ playerId, targetId, creationTime, value });
+            const bounty: Bounty = new Bounty({ playerId, targetId, creationTime, value });
             world.sendMessage(`§e${playerName} has just placed a ${numberFormatter_compact(value, true, undefined, 0)} bounty on ${targetName}.`);
+            return bounty;
         }
     }
-    static getBountiesFromPlayer(playerId: string): Bounty[] {
+    /**
+     * Retrieves all bounties placed by the specified player.
+     *
+     * @param {string} playerId The player's UUID.
+     * @returns {Bounty[]} An array of bounties placed by the player.
+     */
+    public static getBountiesFromPlayer(playerId: string): Bounty[] {
         return activeBounties.filter((r) => r.playerId === playerId);
     }
-    static getBountiesOnPlayer(targetId: string): Bounty[] {
+    /**
+     * Retrieves all bounties placed on the specified player.
+     *
+     * @param {string} targetId The target's UUID.
+     * @returns {Bounty[]} An array of bounties placed on the target.
+     */
+    public static getBountiesOnPlayer(targetId: string): Bounty[] {
         return activeBounties.filter((r) => r.targetId === targetId);
     }
-    static getMergedBounties(): Bounty[] {
+    /**
+     * @todo Make this method functional.
+     */
+    public static getMergedBounties(): Bounty[] {
         return activeBounties.filter((b) => b.valid);
     }
-    static getAllBounties(): Bounty[] {
+    /**
+     * Retrieves all active bounties.
+     *
+     * @returns {Bounty[]} An array of active bounties.
+     */
+    public static getAllBounties(): Bounty[] {
         return activeBounties.filter((b) => b.valid);
     }
 }
 
+/**
+ * Represents a total bounty on a player.
+ */
 export class TotalBounty {
+    /**
+     * The target's UUID.
+     */
     readonly targetId: string;
     constructor(targetId: string) {
         this.targetId = targetId;

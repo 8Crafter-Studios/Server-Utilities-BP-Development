@@ -7,6 +7,11 @@ import { anglesToDirectionVectorDeg } from "../functions/anglesToDirectionVector
 import { coordinates } from "../functions/coordinates";
 import { facingPoint } from "../functions/facingPoint";
 
+/**
+ * A class that represents a location and rotation in the world, with optional dimension, entity, and block to be linked to it, and an options for where to send errors.
+ *
+ * @todo Add documentation.
+ */
 export class WorldPosition {
     x: number;
     y: number;

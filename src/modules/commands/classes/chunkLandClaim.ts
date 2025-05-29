@@ -6,6 +6,7 @@ import { LandClaim } from "./LandClaim";
 
 /**
  * A chunk land claim for the land claim system.
+ *
  * @alpha
  * @deprecated This class is not functional yet.
  */
