@@ -242,7 +242,7 @@ declare namespace exports {
         /**
          * The ultra security mode security level of the command.
          *
-         * Only applies when {@link https://wiki.8crafter.com/andexdb/usm/usm ultra security mode} is enabled.
+         * Only applies when {@link https://wiki.8crafter.com/andexdb/usm/usm Ultra Security Mode} is enabled.
          *
          * - `owner`: Only the owner or people with the `andexdb.fullControl` or `andexdb.useOwnerLevelCommands` permissions can execute the command.
          * - `headAdmin`: Only players with the `andexdb.headAdmin` or `andexdb.useHeadAdminLevelCommands` permissions can execute the command.

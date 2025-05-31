@@ -4922,7 +4922,7 @@ var exports;
                 loadedEventsOfTypeRef = loadedEventsOfTypeRef[key];
             });
             loadedEventsOfTypeRef.push(subscription);
-            if (initialize) {
+            if (initialize && data.enabled !== false) {
                 system.run(() => {
                     try {
                         subscription.initialize();

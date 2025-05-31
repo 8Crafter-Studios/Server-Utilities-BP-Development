@@ -234,6 +234,7 @@ export async function generalSettings(sourceEntity: loosePlayerType): Promise<0 
             );
             if (r.selection === 1) {
                 let buffer = new ArrayBuffer(250000000); // Uses all of the currently available scripting memory, forcefully shutting down the world/realm/server.
+                throw new InternalError("The server should have been shut down due to exceeding the scripting memory limit, but was not, this is likely due to an increased scripting memory limit, so please restart the world/realm/server manually.");
             }
         }
         return 1;

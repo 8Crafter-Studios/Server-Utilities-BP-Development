@@ -1,6 +1,14 @@
 import { type Vector3, Dimension, type StructureCreateOptions, type StructurePlaceOptions } from "@minecraft/server";
 import "init/classes/config";
+/**
+ * Stores WorldEdit undo history for the `\\undo` command.
+ *
+ * @todo Add documentation.
+ *
+ * @hideconstructor
+ */
 export declare class undoClipboard {
+    private constructor();
     static get ids(): string[];
     static saveIds(timestamp: number | string): string[];
     static saveSize(timestamp: number | string): Vector3;

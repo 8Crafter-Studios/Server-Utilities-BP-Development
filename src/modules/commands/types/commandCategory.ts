@@ -5,6 +5,7 @@ export type commandCategory = "items" |
     "containers/inventories" |
     "entities" |
     "warps" |
+    "system" |
     "world" |
     "uis" |
     "shop_system" |

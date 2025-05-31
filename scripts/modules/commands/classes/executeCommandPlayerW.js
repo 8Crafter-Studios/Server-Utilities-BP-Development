@@ -11,6 +11,9 @@ import { getChunkIndexD } from "modules/coordinates/functions/getChunkIndexD";
 import { deleteStringFromEntityDynamicProperties } from "modules/utilities/functions/deleteStringFromEntityDynamicProperties";
 import { getStringFromEntityDynamicProperties } from "modules/utilities/functions/getStringFromEntityDynamicProperties";
 import { saveStringToEntityDynamicProperties } from "modules/utilities/functions/saveStringToEntityDynamicProperties";
+/**
+ * Represents a player to be used for the `\execute` command without the `name` and `id` properties.
+ */
 export class executeCommandPlayerW {
     player;
     sendErrorsTo;

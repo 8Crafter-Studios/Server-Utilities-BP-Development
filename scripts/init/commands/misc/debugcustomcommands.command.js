@@ -1,5 +1,3 @@
-import type { CommandResponse } from "init/classes/CommandRegistry";
-
 export const registeredDeubgcustomcommandsCommand = CommandRegistry.registerCommand({
     commandName: "debugcustomcommands",
     aliases: [
@@ -19,7 +17,7 @@ export const registeredDeubgcustomcommandsCommand = CommandRegistry.registerComm
     description: "Debugs the custom commands.",
     type: "built-in",
     accessType: "named",
-    callback(player, event): CommandResponse {
+    callback(player, event) {
         event.cancel = true;
         pdcsend(player, {
             message: "debug",
@@ -35,4 +33,5 @@ export const registeredDeubgcustomcommandsCommand = CommandRegistry.registerComm
     categories: ["system", "Entity Scale Add-On", "built-in"],
     ultraSecurityModeSecurityLevel: "admin",
 });
-registeredDeubgcustomcommandsCommand.categories
+registeredDeubgcustomcommandsCommand.categories;
+//# sourceMappingURL=debugcustomcommands.command.js.map

@@ -4,6 +4,8 @@ declare namespace exports {
      * A class that manages the permissions of a player.
      *
      * Note: This only applies when the security mode is set to "Standard Security Mode" and not "Ultra Security Mode".
+     *
+     * @see {@link securityVariables}
      */
     class PlayerPermissions {
         /**

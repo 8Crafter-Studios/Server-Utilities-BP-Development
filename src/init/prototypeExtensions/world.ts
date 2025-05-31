@@ -8,19 +8,19 @@ Object.defineProperties(World.prototype, {
         value: saveStringToDynamicProperties,
         configurable: false,
         enumerable: true,
-        writable: true,
+        writable: false,
     },
     getStringFromDynamicProperties: {
         value: getStringFromDynamicProperties,
         configurable: false,
         enumerable: true,
-        writable: true,
+        writable: false,
     },
     deleteStringFromDynamicProperties: {
         value: deleteStringFromDynamicProperties,
         configurable: false,
         enumerable: true,
-        writable: true,
+        writable: false,
     },
 });
 declare module "@minecraft/server" {

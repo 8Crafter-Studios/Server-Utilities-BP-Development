@@ -5,7 +5,7 @@
         "name": "v1.37.0-preview.20+BUILD.1 8Crafter's Server Utilities & Debug Sticks BP by 8Crafter. (for minecraft bedrock edition 1.21.8x)",
         "uuid": "53170125-3e79-4659-9bba-e49eb90b6ded",
         "version": "1.37.0-preview.20+BUILD.1",
-        "min_engine_version": [1, 21, 70]
+        "min_engine_version": [1, 21, 80]
     },
     "capabilities": ["script_eval"],
     "modules": [

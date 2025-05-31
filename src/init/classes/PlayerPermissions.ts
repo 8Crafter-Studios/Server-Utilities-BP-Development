@@ -1,10 +1,13 @@
 import { Entity } from "@minecraft/server";
+import type { securityVariables } from "security/ultraSecurityModeUtils";
 
 namespace exports {
     /**
      * A class that manages the permissions of a player.
      *
      * Note: This only applies when the security mode is set to "Standard Security Mode" and not "Ultra Security Mode".
+     *
+     * @see {@link securityVariables}
      */
     export class PlayerPermissions {
         /**
@@ -242,7 +245,7 @@ export function customFormUIEditor(sourceEntity: Entity|Player){
 });}*/
 
 Object.defineProperty(globalThis, "PlayerPermissions", {
-    value: PlayerPermissions,
+    value: exports.PlayerPermissions,
     enumerable: true,
     configurable: true,
     writable: false,

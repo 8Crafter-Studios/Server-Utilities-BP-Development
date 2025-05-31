@@ -1,7 +1,15 @@
 import { world, Dimension } from "@minecraft/server";
 import "init/classes/config";
 import { splitArea } from "modules/coordinates/functions/splitArea";
+/**
+ * Stores WorldEdit undo history for the `\\undo` command.
+ *
+ * @todo Add documentation.
+ *
+ * @hideconstructor
+ */
 export class undoClipboard {
+    constructor() { }
     static get ids() {
         return world.structureManager
             .getWorldStructureIds()

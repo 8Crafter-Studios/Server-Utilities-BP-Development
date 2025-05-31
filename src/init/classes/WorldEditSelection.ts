@@ -321,8 +321,8 @@ export function customFormUIEditor(sourceEntity: Entity|Player){
     console.error(e, e.stack);
 });}*/
 
-Object.defineProperty(globalThis, "PlayerPermissions", {
-    value: PlayerPermissions,
+Object.defineProperty(globalThis, "WorldEditSelection", {
+    value: exports.WorldEditSelection,
     enumerable: true,
     configurable: true,
     writable: false,

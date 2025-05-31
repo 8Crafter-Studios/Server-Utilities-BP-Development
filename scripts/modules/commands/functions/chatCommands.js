@@ -40,7 +40,7 @@ import { getTopSolidBlock } from "modules/main/functions/getTopSolidBlock";
 import { command } from "modules/commands/classes/command";
 import { disconnectingPlayers } from "modules/commands/constants/disconnectingPlayers";
 import { AreaBackups } from "modules/coordinates/classes/AreaBackups";
-import { blockClipboard } from "modules/coordinates/classes/blockClipboard";
+import { BlockClipboard } from "modules/coordinates/classes/BlockClipboard";
 import { undoClipboard } from "modules/coordinates/classes/undoClipboard";
 import { WorldPosition } from "modules/coordinates/classes/WorldPosition";
 import { caretNotationC } from "modules/coordinates/functions/caretNotationC";
@@ -21920,9 +21920,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     catch (e) {
                                         player.sendMessageB("§c" + e + " " + e.stack);
                                     }
-                                    tryrun(() => blockClipboard.clear());
+                                    tryrun(() => BlockClipboard.global.clear());
                                     try {
-                                        blockClipboard.save(dimensiona, { from: ca, to: cb }, {
+                                        BlockClipboard.global.copy(dimensiona, { from: ca, to: cb }, {
                                             includeBlocks: !args[1].includes("b"),
                                             includeEntities: !args[1].includes("e"),
                                             saveMode: args[1].includes("m")
@@ -22007,9 +22007,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                             }
                             else {
                                 system.run(() => {
-                                    tryrun(() => blockClipboard.clear());
+                                    tryrun(() => BlockClipboard.global.clear());
                                     try {
-                                        blockClipboard.save(dimensiona, { from: ca, to: cb }, {
+                                        BlockClipboard.global.copy(dimensiona, { from: ca, to: cb }, {
                                             includeBlocks: !args[1].includes("b"),
                                             includeEntities: !args[1].includes("e"),
                                             saveMode: args[1].includes("m")
@@ -22077,7 +22077,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                 else if (!!!coordinatesb) {
                                     player.sendMessageB("§cError: pos2 is not set.");
                                 }
-                                else if (blockClipboard.ids.length == 0) {
+                                else if (BlockClipboard.global.isEmpty) {
                                     player.sendMessageB("§cError: The clipboard is currently empty.");
                                 }
                                 else {
@@ -22085,7 +22085,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                         try {
                                             undoClipboard.save(dimensiona, {
                                                 from: ca,
-                                                to: Vector.add(ca, blockClipboard.saveSize),
+                                                to: Vector.add(ca, BlockClipboard.global.contentsSize),
                                             }, Date.now(), {
                                                 includeBlocks: true,
                                                 includeEntities: false,
@@ -22095,7 +22095,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                         catch (e) {
                                             player.sendMessageB("§c" + e + " " + e.stack);
                                         }
-                                        blockClipboard.place(Object.assign({ dimension: dimensiona }, ca), {
+                                        BlockClipboard.global.paste(Object.assign({ dimension: dimensiona }, ca), {
                                             includeBlocks: !args[1].includes("b"),
                                             includeEntities: !args[1].includes("e"),
                                             waterlogged: args[1].includes("w"),

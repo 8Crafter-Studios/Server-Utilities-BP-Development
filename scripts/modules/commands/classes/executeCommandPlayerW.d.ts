@@ -6,6 +6,9 @@ import { WorldEditSelection } from "init/classes/WorldEditSelection";
 import "init/classes/config";
 import { WorldPosition } from "modules/coordinates/classes/WorldPosition";
 import type { RotationLocation } from "modules/coordinates/interfaces/RotationLocation";
+/**
+ * Represents a player to be used for the `\execute` command without the `name` and `id` properties.
+ */
 export declare class executeCommandPlayerW implements Omit<Player, "name" | "id"> {
     player?: Player;
     sendErrorsTo?: Player | Console | Player[] | (() => Player | Player[] | Console) | null | undefined;

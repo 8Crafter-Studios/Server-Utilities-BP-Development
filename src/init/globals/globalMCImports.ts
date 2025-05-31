@@ -4,13 +4,13 @@ import * as mcServer from "@minecraft/server";
 Object.defineProperties(globalThis, {
     world: {
         value: world,
-        configurable: true,
+        configurable: false,
         enumerable: true,
         writable: false,
     },
     system: {
         value: system,
-        configurable: true,
+        configurable: false,
         enumerable: true,
         writable: false,
     },
