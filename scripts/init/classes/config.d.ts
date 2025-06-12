@@ -275,9 +275,6 @@ declare namespace exports {
                  * @deprecated
                  */
                 get useShadersCompatibleBorderParticles(): boolean;
-                /**
-                 * @deprecated
-                 */
                 set useShadersCompatibleBorderParticles(useShadersCompatibleBorderParticles: boolean | undefined);
                 /**
                  * The minimum distance outside of the overworld world border that the player has to be before they start taking damage when the {@link mode} is set to `2` (Damage Players).
@@ -450,9 +447,6 @@ declare namespace exports {
                  * @deprecated
                  */
                 get useShadersCompatibleBorderParticles(): boolean;
-                /**
-                 * @deprecated
-                 */
                 set useShadersCompatibleBorderParticles(useShadersCompatibleBorderParticles: boolean | undefined);
                 /**
                  * The minimum distance outside of the nether world border that the player has to be before they start taking damage when the {@link mode} is set to `2` (Damage Players).
@@ -625,9 +619,6 @@ declare namespace exports {
                  * @deprecated
                  */
                 get useShadersCompatibleBorderParticles(): boolean;
-                /**
-                 * @deprecated
-                 */
                 set useShadersCompatibleBorderParticles(useShadersCompatibleBorderParticles: boolean | undefined);
                 /**
                  * The minimum distance outside of the end world border that the player has to be before they start taking damage when the {@link mode} is set to `2` (Damage Players).
@@ -1610,9 +1601,12 @@ declare namespace exports {
         static applySettings<T extends FilterKey<typeof config, ["prototype", "reset", "applySettings", "toJSON"]>>(settings: DeepPartial<T>): void;
         /**
          * Converts the config object to a JSON-serializable object.
-         * @returns {FilterKey<typeof config, ["prototype", "reset", "applySettings", "toJSON"]>} An object that can be serialized to JSON, containing all the properties of the config object except for the ones with the names "prototype", "reset", "applySettings", and "toJSON", and the ones that are not enumerable.
+         *
+         * @template {object} T The type of the settings category to convert to JSON.
+         * @param {T} [subconfig=this] The subconfig to convert to JSON. If not specified, the entire config will be converted to JSON.
+         * @returns {FilterKey<T, ["prototype", "reset", "applySettings", "toJSON"]>} An object that can be serialized to JSON, containing all the properties of the config object except for the ones with the names "prototype", "reset", "applySettings", and "toJSON", and the ones that are not enumerable.
          */
-        static toJSON(): FilterKey<typeof config, ["prototype", "reset", "applySettings", "toJSON"]>;
+        static toJSON<T extends object = typeof config>(subconfig?: T): FilterKey<T, ["prototype", "reset", "applySettings", "toJSON"]>;
     }
 }
 export import config = exports.config;

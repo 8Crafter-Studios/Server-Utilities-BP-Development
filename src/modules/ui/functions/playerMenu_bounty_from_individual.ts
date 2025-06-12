@@ -66,7 +66,7 @@ export async function playerMenu_bounty_from_individual(
             let r = ra as ActionFormResponse;
             if (r.canceled) return 1;
 
-            switch ((["cancel", "back", "close"] as const)[r.selection!]) {
+            switch ((["cancel", "back", "close"] as const)[r.selection!]!) {
                 case "cancel":
                     try {
                         const s = bounty.cancel();

@@ -63,8 +63,8 @@ export function parseDuration(durationString: string): number {
     let totalMilliseconds = 0;
 
     while ((match = regex.exec(extractedString)) !== null) {
-        const value = parseFloat(match[1].replaceAll(",", ""));
-        const unit = match[2].toLowerCase();
+        const value = parseFloat(match[1]!.replaceAll(",", ""));
+        const unit = match[2]!.toLowerCase();
         if (units[unit] !== undefined) {
             totalMilliseconds += value * units[unit];
         } else {
@@ -233,8 +233,8 @@ export function parseDurationRelative(durationString: string, relativeTo: number
     let match;
 
     while ((match = regex.exec(extractedString)) !== null) {
-        const value = parseFloat(match[1].replaceAll(",", ""));
-        const unit = match[2].toLowerCase();
+        const value = parseFloat(match[1]!.replaceAll(",", ""));
+        const unit = match[2]!.toLowerCase();
         if (units[unit] !== undefined) {
             units[unit](value);
         } else {

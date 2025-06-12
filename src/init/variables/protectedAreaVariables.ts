@@ -1709,7 +1709,7 @@ export class ProtectedAreaCategory {
         if (this.category !== "advancedArea") {
             return ProtectedAreas.areas[this.category];
         } else {
-            return ProtectedAreas.areas.advancedArea[this.advancedCategoryID!];
+            return ProtectedAreas.areas.advancedArea[this.advancedCategoryID!]!;
         }
     }
     /**

@@ -398,7 +398,7 @@ subscribedEvents.afterScriptEventReceive = system.afterEvents.scriptEventReceive
                 catch (e) {
                     blockProperties = "§4None§a";
                 } /*
-        let effectsList = [players[playerTargetB].getComponents[0]]*/
+        let effectsList = [players[playerTargetB]!.getComponents[0]]*/
                 let distance = Vector3Utils.distance(players[playerViewerB].location, players[playerTargetB].location);
                 try {
                     entityViewedEntityType = players[playerTargetB].getEntitiesFromViewDirection()[0].entity.typeId;
@@ -687,7 +687,7 @@ subscribedEvents.afterScriptEventReceive = system.afterEvents.scriptEventReceive
                 catch (e) {
                     console.error(e, e.stack);
                 } /*
-        let effectsList = [players[playerTargetB].getComponents[0]]*/
+        let effectsList = [players[playerTargetB]!.getComponents[0]]*/
                 try {
                     scoreboardIdentity = playerTargetB.scoreboardIdentity.id;
                 }
@@ -1064,7 +1064,7 @@ console.error(e, e.stack);
             let playerTargetB = Number(playerTarget);
             let playerViewerB = Number(playerViewer);
             let inventory = players[playerTargetB].getComponent("inventory"); /*
-try{inventory = players[playerTargetB].getComponent("equipment_inventory") as EntityEquipmentInventoryComponent;} catch(e){if (Boolean(debug2) == true) { console.error(e, e.stack); }};*/
+try{inventory = players[playerTargetB]!.getComponent("equipment_inventory") as EntityEquipmentInventoryComponent;} catch(e){if (Boolean(debug2) == true) { console.error(e, e.stack); }};*/
             let item = inventory.container.getItem(Number(slotNumber));
             let equipmentPlayerSlotsList = [
                 EquipmentSlot.Head,
@@ -1340,7 +1340,7 @@ form.textField("Item Data", "Trigger Event", {defaultValue: ""});*/
                 let [itemName, itemLore, canDestroy, canPlaceOn, triggerEvent, setAmount, amount, keepOnDeath, lockMode, setLore, clearLore, newItem, newItemType, newItemCount /*, newItemData*/, moveItem, moveFromSlot, moveToSlot, moveFromContainerType, moveFromContainer, moveFromContainerBlock, moveToContainerType, moveToContainer, moveToContainerBlock, swapItems, swapSlot, swapOtherSlot, swapContainerType, swapContainer, swapContainerBlock, swapOtherContainerType, swapOtherContainer, swapOtherContainerBlock, transferItem, transferFromSlot, transferFromContainerType, transferFromContainer, transferFromContainerBlock, transferToContainerType, transferToContainer, transferToContainerBlock, debug,] = r.formValues; /*
 console.warn(r.formValues);*/
                 /*let item = inventory.container.getItem(Number(slotNumber));
-    if (Number(slotType) == 1) { try{let a = players[playerTargetB].getComponent("equipment_inventory") as EntityEquipmentInventoryComponent; item = a.getEquipmentSlot(equipmentPlayerSlotsList[Number(slotNumber)])} catch(e){if (Boolean(debug2) == true) { console.error(e, e.stack); }};};*/
+    if (Number(slotType) == 1) { try{let a = players[playerTargetB]!.getComponent("equipment_inventory") as EntityEquipmentInventoryComponent; item = a.getEquipmentSlot(equipmentPlayerSlotsList[Number(slotNumber)])} catch(e){if (Boolean(debug2) == true) { console.error(e, e.stack); }};};*/
                 let transferFromContainerBlockB = world.getDimension(String(transferFromContainerBlock).split(", ")[0]).getBlock({
                     x: Number(String(transferFromContainerBlock).split(", ")[1]),
                     y: Number(String(transferFromContainerBlock).split(", ")[2]),
@@ -1375,7 +1375,7 @@ console.warn(r.formValues);*/
                 let enchantments2 = getEnchantments(); /*
 for (const index in inventory.) {
 if (Number(index) != 0) {
-targetList = String([String(targetList), players[index].nameTag]).split(",");
+targetList = String([String(targetList), players[index]!.nameTag]).split(",");
 }
 }*/
                 let newItemNameTag = String(itemName).split("\\\\newline");
@@ -1799,10 +1799,10 @@ try {console.warn(item.getCanPlaceOn());} catch(e){
                     // Don't forget "break" for every case
                     break;*/:
                                 let form3 = new ModalFormData(); /*Z
-    let targetList = [players[0].nameTag]
+    let targetList = [players[0]!.nameTag]
     for (const index in players) {
         if (Number(index) != 0) {
-        targetList = String([String(targetList), players[index].nameTag]).split(",");
+        targetList = String([String(targetList), players[index]!.nameTag]).split(",");
         }
     }*/
                                 form3.dropdown("Transfer Type", ["Swap", "Transfer", "Move"], { defaultValueIndex: 0 });
@@ -2373,10 +2373,10 @@ try {console.warn(item.getCanPlaceOn());} catch(e){
                         switch (response) {
                             case 0:
                                 let form3 = new ModalFormData(); /*Z
-    let targetList = [players[0].nameTag]
+    let targetList = [players[0]!.nameTag]
     for (const index in players) {
         if (Number(index) != 0) {
-        targetList = String([String(targetList), players[index].nameTag]).split(",");
+        targetList = String([String(targetList), players[index]!.nameTag]).split(",");
         }
     }*/
                                 form3.dropdown("Transfer Type", ["Swap", "Transfer", "Move"], { defaultValueIndex: 0 });
@@ -2961,7 +2961,7 @@ console.warn(r.formValues);*/
                 let durability2 = getDurability(); /*
 for (const index in inventory.) {
 if (Number(index) != 0) {
-targetList = String([String(targetList), players[index].nameTag]).split(",");
+targetList = String([String(targetList), players[index]!.nameTag]).split(",");
 }
 }*/
                 let newItemNameTag = String(itemName).split("\\\\newline");
@@ -3204,7 +3204,7 @@ try {console.warn(item.getCanPlaceOn());} catch(e){
             console.warn(index);*/
             if (Number(index) != 0) {
                 targetList = String([String(targetList), playerList[index].nameTag]).split(","); /*
-            targetList = String([String(targetList), playerList[index].nameTag]).split(",");*/
+            targetList = String([String(targetList), playerList[index]!.nameTag]).split(",");*/
             } /*
             console.warn(targetList);*/
         } /*
@@ -3276,9 +3276,9 @@ try {console.warn(item.getCanPlaceOn());} catch(e){
             form2.dropdown("damageType", ["entity", "projectile"], 0)
             form2.dropdown("damageCause", ["anvil", "none"], 0)*/
             form.toggle("§eapplyImpulse", { defaultValue: false });
-            form.textField("§eX Velocity", "§eX Velocity" /*, String(playerList[playerTargetB].getVelocity().x)*/);
-            form.textField("§eY Velocity", "§eY Velocity" /*, String(playerList[playerTargetB].getVelocity().y)*/);
-            form.textField("§eZ Velocity", "§eZ Velocity" /*, String(playerList[playerTargetB].getVelocity().z)*/);
+            form.textField("§eX Velocity", "§eX Velocity" /*, String(playerList[playerTargetB]!.getVelocity().x)*/);
+            form.textField("§eY Velocity", "§eY Velocity" /*, String(playerList[playerTargetB]!.getVelocity().y)*/);
+            form.textField("§eZ Velocity", "§eZ Velocity" /*, String(playerList[playerTargetB]!.getVelocity().z)*/);
             form.toggle("applyKnockback", { defaultValue: false });
             form.textField("directionX", "directionX");
             form.textField("directionZ", "directionZ");
@@ -3328,7 +3328,7 @@ try {console.warn(item.getCanPlaceOn());} catch(e){
                     newNameTag = String(nameTag).split("\\\\newline").join("\n");
                 }
                 /*
-            let scale = playerList[0].getComponent("scale") as EntityScaleComponent;
+            let scale = playerList[0]!.getComponent("scale") as EntityScaleComponent;
             scale.value = Number(scaleValue);*/ /**/
                 if (Boolean(changeNameTag) == true) {
                     try {
@@ -3562,10 +3562,10 @@ try {console.warn(item.getCanPlaceOn());} catch(e){
                     catch (e) {
                         console.error(e, e.stack);
                     } /*
-            if (playerList[playerTargetB].hasTag("isSneaking")) {
+            if (playerList[playerTargetB]!.hasTag("isSneaking")) {
               system.runInterval( () => {
-              playerList[playerTargetB].isSneaking == true
-              if (playerList[playerTargetB].hasTag("isSneaking") == false) {
+              playerList[playerTargetB]!.isSneaking == true
+              if (playerList[playerTargetB]!.hasTag("isSneaking") == false) {
               return
               }
               }, 2)
@@ -3630,7 +3630,7 @@ try {console.warn(item.getCanPlaceOn());} catch(e){
         console.warn(index);*/
             if (Number(index) != 0) {
                 targetList = String([String(targetList), playerList[index].nameTag]).split(","); /*
-        targetList = String([String(targetList), playerList[index].nameTag]).split(",");*/
+        targetList = String([String(targetList), playerList[index]!.nameTag]).split(",");*/
             } /*
         console.warn(targetList);*/
         } /*
@@ -3702,9 +3702,9 @@ try {console.warn(item.getCanPlaceOn());} catch(e){
         form2.dropdown("damageType", ["entity", "projectile"], 0)
         form2.dropdown("damageCause", ["anvil", "none"], 0)*/
             form.toggle("§eapplyImpulse", { defaultValue: false });
-            form.textField("§eX Velocity", "§eX Velocity" /*, String(playerList[playerTargetB].getVelocity().x)*/);
-            form.textField("§eY Velocity", "§eY Velocity" /*, String(playerList[playerTargetB].getVelocity().y)*/);
-            form.textField("§eZ Velocity", "§eZ Velocity" /*, String(playerList[playerTargetB].getVelocity().z)*/);
+            form.textField("§eX Velocity", "§eX Velocity" /*, String(playerList[playerTargetB]!.getVelocity().x)*/);
+            form.textField("§eY Velocity", "§eY Velocity" /*, String(playerList[playerTargetB]!.getVelocity().y)*/);
+            form.textField("§eZ Velocity", "§eZ Velocity" /*, String(playerList[playerTargetB]!.getVelocity().z)*/);
             form.toggle("applyKnockback", { defaultValue: false });
             form.textField("directionX", "directionX");
             form.textField("directionZ", "directionZ");
@@ -3754,7 +3754,7 @@ try {console.warn(item.getCanPlaceOn());} catch(e){
                     newNameTag = String(nameTag).split("\\\\newline").join("\n");
                 }
                 /*
-        let scale = playerList[0].getComponent("scale") as EntityScaleComponent;
+        let scale = playerList[0]!.getComponent("scale") as EntityScaleComponent;
         scale.value = Number(scaleValue);*/
                 playerList[playerTargetB].setOp(Boolean(setOp));
                 if (Boolean(changeNameTag) == true) {
@@ -3981,10 +3981,10 @@ try {console.warn(item.getCanPlaceOn());} catch(e){
                     catch (e) {
                         console.error(e, e.stack);
                     } /*
-        if (playerList[playerTargetB].hasTag("isSneaking")) {
+        if (playerList[playerTargetB]!.hasTag("isSneaking")) {
           system.runInterval( () => {
-          playerList[playerTargetB].isSneaking == true
-          if (playerList[playerTargetB].hasTag("isSneaking") == false) {
+          playerList[playerTargetB]!.isSneaking == true
+          if (playerList[playerTargetB]!.hasTag("isSneaking") == false) {
           return
           }
           }, 2)
@@ -4281,7 +4281,7 @@ if (Number(index) != 0) {*/ /*
         form.toggle("setProperty Enabled", false)*/ /*
         try {console.warn(block.block.permutation.getAllStates()) } catch(e){console.error(e, e.stack);}
         try {console.warn(block.block.permutation.getAllStates()[0]) } catch(e){console.error(e, e.stack);}
-        try {console.warn(block.block.permutation.getAllStates()[0][0]) } catch(e){console.error(e, e.stack);}*/
+        try {console.warn(block.block.permutation.getAllStates()[0]![0]) } catch(e){console.error(e, e.stack);}*/
         /*form.dropdown("Block Permutation To Set", block.getTags())*/ /*
         form.slider("Selected Slot", 0, 56, 1)*/ /*
                 form.toggle("isWaterlogged", block2.isWaterlogged)*/ /*
@@ -4309,7 +4309,7 @@ if (Number(index) != 0) {*/ /*
         if(block2.getComponent("sign") != undefined){form.textField(`Sign Back Text Color\Text: §g${block2.getComponent("sign")?.getTextDyeColor(SignSide.Back)}`, `dye color`, block2.getComponent("sign")?.getTextDyeColor(SignSide.Back))}else{form.textField(`§4Sign Back Text Color`, `§r§4Unavailable`)}
         form.toggle("setSignIsWaxed", block2.getComponent("sign")?.isWaxed)
   
-    form.show(playerList[playerList.findIndex((x) => x == sourceEntity)]).then(r => {
+    form.show(playerList[playerList.findIndex((x) => x == sourceEntity)]!).then(r => {
         if (r.canceled) return;
     
         let [ setType, setTypeEnabled, blockPropertyIdentifier, blockPropertyValue, setPropertyEnabled*/ /*, selectedSlotIndex*/ /*, isWaterlogged/*, clearVelocity*/ //, debug, waterContainerEnabled, waterContainer, snowContainerEnabled, snowContainer, lavaContainerEnabled, lavaContainer, potionContainerEnabled, potionContainer, signFrontRawTextEnabled, signFrontRawText, signBackRawTextEnabled, signBackRawText, signFrontTextEnabled, signFrontText, signBackTextEnabled, signBackText, signFrontTextColorEnabled, signFrontTextColor, signBackTextColorEnabled, signBackTextColor, setSignIsWaxed ] = r.formValues!;
@@ -4346,34 +4346,34 @@ if (Number(index) != 0) {*/ /*
         if (setTypeEnabled == true) { try { block2.setType(BlockTypes.get(String(setType))/*String(setType)*/ //) } catch(e){console.error(e, e.stack)} };
         /*if (setPropertyEnabled == true) { switch(blockPropertyValueLength) {
             case 1:
-                try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0] })/*block2.permutation.clone().withState(String(blockPropertyIdentifier), blockPropertyValue2).clone().getAllStates()*/ // ) } catch ( e ) { console.error(e, e.stack) }
+                try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(blockPropertyIdentifier).split(", ")[0]!]: blockPropertyValueArray[0] })/*block2.permutation.clone().withState(String(blockPropertyIdentifier), blockPropertyValue2).clone().getAllStates()*/ // ) } catch ( e ) { console.error(e, e.stack) }
         /*break;
             case 2:
-                try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0], [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1] }) ) } catch ( e ) { console.error(e, e.stack) }
+                try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(blockPropertyIdentifier).split(", ")[0]!]: blockPropertyValueArray[0], [String(blockPropertyIdentifier).split(", ")[1]!]: blockPropertyValueArray[1] }) ) } catch ( e ) { console.error(e, e.stack) }
             break;
             case 3:
-                try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0], [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1], [String(blockPropertyIdentifier).split(", ")[2]]: blockPropertyValueArray[2] }) ) } catch ( e ) { console.error(e, e.stack) }
+                try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(blockPropertyIdentifier).split(", ")[0]!]: blockPropertyValueArray[0], [String(blockPropertyIdentifier).split(", ")[1]!]: blockPropertyValueArray[1], [String(blockPropertyIdentifier).split(", ")[2]!]: blockPropertyValueArray[2] }) ) } catch ( e ) { console.error(e, e.stack) }
             break;
             case 4:
-                try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0], [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1], [String(blockPropertyIdentifier).split(", ")[2]]: blockPropertyValueArray[2], [String(blockPropertyIdentifier).split(", ")[3]]: blockPropertyValueArray[3] }) ) } catch ( e ) { console.error(e, e.stack) }
+                try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(blockPropertyIdentifier).split(", ")[0]!]: blockPropertyValueArray[0], [String(blockPropertyIdentifier).split(", ")[1]!]: blockPropertyValueArray[1], [String(blockPropertyIdentifier).split(", ")[2]!]: blockPropertyValueArray[2], [String(blockPropertyIdentifier).split(", ")[3]!]: blockPropertyValueArray[3] }) ) } catch ( e ) { console.error(e, e.stack) }
             break;
             case 5:
-                try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0], [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1], [String(blockPropertyIdentifier).split(", ")[2]]: blockPropertyValueArray[2], [String(blockPropertyIdentifier).split(", ")[3]]: blockPropertyValueArray[3], [String(blockPropertyIdentifier).split(", ")[4]]: blockPropertyValueArray[4] }) ) } catch ( e ) { console.error(e, e.stack) }
+                try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(blockPropertyIdentifier).split(", ")[0]!]: blockPropertyValueArray[0], [String(blockPropertyIdentifier).split(", ")[1]!]: blockPropertyValueArray[1], [String(blockPropertyIdentifier).split(", ")[2]!]: blockPropertyValueArray[2], [String(blockPropertyIdentifier).split(", ")[3]!]: blockPropertyValueArray[3], [String(blockPropertyIdentifier).split(", ")[4]!]: blockPropertyValueArray[4] }) ) } catch ( e ) { console.error(e, e.stack) }
             break;
             case 6:
-                try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0], [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1], [String(blockPropertyIdentifier).split(", ")[2]]: blockPropertyValueArray[2], [String(blockPropertyIdentifier).split(", ")[3]]: blockPropertyValueArray[3], [String(blockPropertyIdentifier).split(", ")[4]]: blockPropertyValueArray[4], [String(blockPropertyIdentifier).split(", ")[5]]: blockPropertyValueArray[5] }) ) } catch ( e ) { console.error(e, e.stack) }
+                try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(blockPropertyIdentifier).split(", ")[0]!]: blockPropertyValueArray[0], [String(blockPropertyIdentifier).split(", ")[1]!]: blockPropertyValueArray[1], [String(blockPropertyIdentifier).split(", ")[2]!]: blockPropertyValueArray[2], [String(blockPropertyIdentifier).split(", ")[3]!]: blockPropertyValueArray[3], [String(blockPropertyIdentifier).split(", ")[4]!]: blockPropertyValueArray[4], [String(blockPropertyIdentifier).split(", ")[5]!]: blockPropertyValueArray[5] }) ) } catch ( e ) { console.error(e, e.stack) }
             break;
             case 7:
-                try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0], [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1], [String(blockPropertyIdentifier).split(", ")[2]]: blockPropertyValueArray[2], [String(blockPropertyIdentifier).split(", ")[3]]: blockPropertyValueArray[3], [String(blockPropertyIdentifier).split(", ")[4]]: blockPropertyValueArray[4], [String(blockPropertyIdentifier).split(", ")[5]]: blockPropertyValueArray[5], [String(blockPropertyIdentifier).split(", ")[6]]: blockPropertyValueArray[6] }) ) } catch ( e ) { console.error(e, e.stack) }
+                try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(blockPropertyIdentifier).split(", ")[0]!]: blockPropertyValueArray[0], [String(blockPropertyIdentifier).split(", ")[1]!]: blockPropertyValueArray[1], [String(blockPropertyIdentifier).split(", ")[2]!]: blockPropertyValueArray[2], [String(blockPropertyIdentifier).split(", ")[3]!]: blockPropertyValueArray[3], [String(blockPropertyIdentifier).split(", ")[4]!]: blockPropertyValueArray[4], [String(blockPropertyIdentifier).split(", ")[5]!]: blockPropertyValueArray[5], [String(blockPropertyIdentifier).split(", ")[6]!]: blockPropertyValueArray[6] }) ) } catch ( e ) { console.error(e, e.stack) }
             break;
             case 8:
-                try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0], [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1], [String(blockPropertyIdentifier).split(", ")[2]]: blockPropertyValueArray[2], [String(blockPropertyIdentifier).split(", ")[3]]: blockPropertyValueArray[3], [String(blockPropertyIdentifier).split(", ")[4]]: blockPropertyValueArray[4], [String(blockPropertyIdentifier).split(", ")[5]]: blockPropertyValueArray[5], [String(blockPropertyIdentifier).split(", ")[6]]: blockPropertyValueArray[6], [String(blockPropertyIdentifier).split(", ")[7]]: blockPropertyValueArray[7] }) ) } catch ( e ) { console.error(e, e.stack) }
+                try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(blockPropertyIdentifier).split(", ")[0]!]: blockPropertyValueArray[0], [String(blockPropertyIdentifier).split(", ")[1]!]: blockPropertyValueArray[1], [String(blockPropertyIdentifier).split(", ")[2]!]: blockPropertyValueArray[2], [String(blockPropertyIdentifier).split(", ")[3]!]: blockPropertyValueArray[3], [String(blockPropertyIdentifier).split(", ")[4]!]: blockPropertyValueArray[4], [String(blockPropertyIdentifier).split(", ")[5]!]: blockPropertyValueArray[5], [String(blockPropertyIdentifier).split(", ")[6]!]: blockPropertyValueArray[6], [String(blockPropertyIdentifier).split(", ")[7]!]: blockPropertyValueArray[7] }) ) } catch ( e ) { console.error(e, e.stack) }
             break;
             case 9:
-                try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0], [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1], [String(blockPropertyIdentifier).split(", ")[2]]: blockPropertyValueArray[2], [String(blockPropertyIdentifier).split(", ")[3]]: blockPropertyValueArray[3], [String(blockPropertyIdentifier).split(", ")[4]]: blockPropertyValueArray[4], [String(blockPropertyIdentifier).split(", ")[5]]: blockPropertyValueArray[5], [String(blockPropertyIdentifier).split(", ")[6]]: blockPropertyValueArray[6], [String(blockPropertyIdentifier).split(", ")[7]]: blockPropertyValueArray[7], [String(blockPropertyIdentifier).split(", ")[8]]: blockPropertyValueArray[8] }) ) } catch ( e ) { console.error(e, e.stack) }
+                try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(blockPropertyIdentifier).split(", ")[0]!]: blockPropertyValueArray[0], [String(blockPropertyIdentifier).split(", ")[1]!]: blockPropertyValueArray[1], [String(blockPropertyIdentifier).split(", ")[2]!]: blockPropertyValueArray[2], [String(blockPropertyIdentifier).split(", ")[3]!]: blockPropertyValueArray[3], [String(blockPropertyIdentifier).split(", ")[4]!]: blockPropertyValueArray[4], [String(blockPropertyIdentifier).split(", ")[5]!]: blockPropertyValueArray[5], [String(blockPropertyIdentifier).split(", ")[6]!]: blockPropertyValueArray[6], [String(blockPropertyIdentifier).split(", ")[7]!]: blockPropertyValueArray[7], [String(blockPropertyIdentifier).split(", ")[8]!]: blockPropertyValueArray[8] }) ) } catch ( e ) { console.error(e, e.stack) }
             break;
             case 10:
-                try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0], [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1], [String(blockPropertyIdentifier).split(", ")[2]]: blockPropertyValueArray[2], [String(blockPropertyIdentifier).split(", ")[3]]: blockPropertyValueArray[3], [String(blockPropertyIdentifier).split(", ")[4]]: blockPropertyValueArray[4], [String(blockPropertyIdentifier).split(", ")[5]]: blockPropertyValueArray[5], [String(blockPropertyIdentifier).split(", ")[6]]: blockPropertyValueArray[6], [String(blockPropertyIdentifier).split(", ")[7]]: blockPropertyValueArray[7], [String(blockPropertyIdentifier).split(", ")[8]]: blockPropertyValueArray[8], [String(blockPropertyIdentifier).split(", ")[9]]: blockPropertyValueArray[9] }) ) } catch ( e ) { console.error(e, e.stack) }
+                try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(blockPropertyIdentifier).split(", ")[0]!]: blockPropertyValueArray[0], [String(blockPropertyIdentifier).split(", ")[1]!]: blockPropertyValueArray[1], [String(blockPropertyIdentifier).split(", ")[2]!]: blockPropertyValueArray[2], [String(blockPropertyIdentifier).split(", ")[3]!]: blockPropertyValueArray[3], [String(blockPropertyIdentifier).split(", ")[4]!]: blockPropertyValueArray[4], [String(blockPropertyIdentifier).split(", ")[5]!]: blockPropertyValueArray[5], [String(blockPropertyIdentifier).split(", ")[6]!]: blockPropertyValueArray[6], [String(blockPropertyIdentifier).split(", ")[7]!]: blockPropertyValueArray[7], [String(blockPropertyIdentifier).split(", ")[8]!]: blockPropertyValueArray[8], [String(blockPropertyIdentifier).split(", ")[9]!]: blockPropertyValueArray[9] }) ) } catch ( e ) { console.error(e, e.stack) }
             break;
             default:
             break;/*
@@ -4519,7 +4519,7 @@ if (Number(index) != 0) {*/ /*
         form.toggle("setProperty Enabled", { defaultValue: false }); /*
         try {console.warn(block.block.permutation.getAllStates()) } catch(e){console.error(e, e.stack);}
         try {console.warn(block.block.permutation.getAllStates()[0]) } catch(e){console.error(e, e.stack);}
-        try {console.warn(block.block.permutation.getAllStates()[0][0]) } catch(e){console.error(e, e.stack);}*/
+        try {console.warn(block.block.permutation.getAllStates()[0]![0]) } catch(e){console.error(e, e.stack);}*/
         /*form.dropdown("Block Permutation To Set", block.getTags())*/ /*
         form.slider("Selected Slot", 0, 56, 1)*/
         form.toggle("isWaterlogged", { defaultValue: block2.isWaterlogged }); /*
@@ -4954,7 +4954,7 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
             console.warn(index);*/
             if (Number(index) != 0) {
                 targetList = String([String(targetList), playerList[index].nameTag]).split(","); /*
-            targetList = String([String(targetList), playerList[index].nameTag]).split(",");*/
+            targetList = String([String(targetList), playerList[index]!.nameTag]).split(",");*/
             } /*
             console.warn(targetList);*/
         } /*
@@ -5061,7 +5061,7 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
                     return;
                 let [changeNameTag, nameTag, triggerEvent, setProperty, propertyIdentifier, propertyValue, resetProperty, resetPropertyIdentifier, setDynamicProperty, dynamicPropertyIdentifier, dynamicPropertyValue, removeDynamicProperty, removeDynamicPropertyIdentifier, scaleValue, isSneaking, clearVelocity, extinguishFire, kill, remove, setOnFire, setOnFireSeconds, setOnFireRemoveEffects, addEffect, effectToAdd, secondsOfEffect, effectAmplifier, effectShowEffectParticles, addTag, tagToAdd, removeEffect, effectToRemove, removeTag, tagToRemove, applyImpulse, velocityX, velocityY, velocityZ, applyKnockback, kockbackDirectionX, knockbackDirectionZ, knockbackHorizontalStrength, knockbackVerticalStrength, setRot, rotX, rotY, teleport, teleportDimension, teleportX, teleportY, teleportZ, teleportRotX, teleportRotY, teleportCheckForBlocks, teleportKeepVelocity, tryTeleport, tryTeleportDimension, tryTeleportX, tryTeleportY, tryTeleportZ, tryTeleportCheckForBlocks, tryTeleportKeepVelocity, sendMessage, messageToSend, openTheItemModificationFormAfterwards, debug,] = r.formValues;
                 /*
-            let scale = playerList[0].getComponent("scale") as EntityScaleComponent;
+            let scale = playerList[0]!.getComponent("scale") as EntityScaleComponent;
             scale.value = Number(scaleValue);*/
                 if (Boolean(changeNameTag) == true) {
                     try {
@@ -5350,7 +5350,7 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
       let form = new ModalFormData();
       let players = world.getPlayers()
       let block = sourceEntity.getBlockFromViewDirection()
-      let entity = players[0].getEntitiesFromViewDirection()
+      let entity = players[0]!.getEntitiesFromViewDirection()
       form.title("Entity Controller");
       form.textField("Name Tag", "Name Tag", entity[0].entity.nameTag)
       form.textField("Trigger Event", "Trigger Event")*/ /*
@@ -5416,7 +5416,7 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
     
     if (players[players.findIndex((x) => x == sourceEntity)] as any.hasTag("showDebug")) {
       system.runInterval( () => {
-      players[0].onScreenDisplay.setActionBar("dimension: " + entity[0].entity.dimension + "\nfallDistance: " + entity[0].entity.fallDistance + "\nid: entity[0].entity.id: " + entity[0].entity.id + "\nisClimbing: " + entity[0].entity.isClimbing + "\nisFalling: " + entity[0].entity.isFalling + "\nisInWater: " + entity[0].entity.isInWater + "\nisOnGround: " + entity[0].entity.isOnGround + "\nisSleeping: " + entity[0].entity.isSleeping + "\nisSneaking: " + entity[0].entity.isSneaking + "\nisSprinting: " + entity[0].entity.isSprinting + "\nisSwimming: " + entity[0].entity.isSwimming + "\nlifetimeState: " + entity[0].entity.lifetimeState + "\nlocation: " + entity[0].entity.location + "\nnameTag: " + entity[0].entity.nameTag + "\nscoreboardIdentity(or_the_actor_id_very_long_complicated_number): " + entity[0].entity.scoreboardIdentity + "\ntarget: " + entity[0].entity.target + "\ntypeId: " + entity[0].entity.typeId + "\ngetBlockFromViewDirection(): " + entity[0].entity.getBlockFromViewDirection() + "\ngetComponents(): " + entity[0].entity.getComponents() + "\ngetEffects(): " + entity[0].entity.getEffects() + "\ngetEntitiesFromViewDirection(): " + entity[0].entity.getEntitiesFromViewDirection() + "\ngetHeadLocation(): " + entity[0].entity.getHeadLocation() + "\ngetRotation(): " + entity[0].entity.getRotation() + "\ngetTags(): " + entity[0].entity.getTags() + "\ngetVelocity(): " + entity[0].entity.getVelocity() + "\ngetViewDirection(): " + entity[0].entity.getViewDirection + "\nisValid(): " + entity[0].entity.isValid);
+      players[0]!.onScreenDisplay.setActionBar("dimension: " + entity[0].entity.dimension + "\nfallDistance: " + entity[0].entity.fallDistance + "\nid: entity[0].entity.id: " + entity[0].entity.id + "\nisClimbing: " + entity[0].entity.isClimbing + "\nisFalling: " + entity[0].entity.isFalling + "\nisInWater: " + entity[0].entity.isInWater + "\nisOnGround: " + entity[0].entity.isOnGround + "\nisSleeping: " + entity[0].entity.isSleeping + "\nisSneaking: " + entity[0].entity.isSneaking + "\nisSprinting: " + entity[0].entity.isSprinting + "\nisSwimming: " + entity[0].entity.isSwimming + "\nlifetimeState: " + entity[0].entity.lifetimeState + "\nlocation: " + entity[0].entity.location + "\nnameTag: " + entity[0].entity.nameTag + "\nscoreboardIdentity(or_the_actor_id_very_long_complicated_number): " + entity[0].entity.scoreboardIdentity + "\ntarget: " + entity[0].entity.target + "\ntypeId: " + entity[0].entity.typeId + "\ngetBlockFromViewDirection(): " + entity[0].entity.getBlockFromViewDirection() + "\ngetComponents(): " + entity[0].entity.getComponents() + "\ngetEffects(): " + entity[0].entity.getEffects() + "\ngetEntitiesFromViewDirection(): " + entity[0].entity.getEntitiesFromViewDirection() + "\ngetHeadLocation(): " + entity[0].entity.getHeadLocation() + "\ngetRotation(): " + entity[0].entity.getRotation() + "\ngetTags(): " + entity[0].entity.getTags() + "\ngetVelocity(): " + entity[0].entity.getVelocity() + "\ngetViewDirection(): " + entity[0].entity.getViewDirection + "\nisValid(): " + entity[0].entity.isValid);
       if (players[players.findIndex((x) => x == sourceEntity)] as any.hasTag("showDebug") == false) {
       return
       }
@@ -5450,7 +5450,7 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
             console.warn(index);*/
             if (Number(index) != 0) {
                 targetList = String([String(targetList), playerList[index].nameTag]).split(","); /*
-            targetList = String([String(targetList), playerList[index].nameTag]).split(",");*/
+            targetList = String([String(targetList), playerList[index]!.nameTag]).split(",");*/
             } /*
             console.warn(targetList);*/
         } /*
@@ -5521,7 +5521,7 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
                 return;
             let [setWeather, weatherType, weatherDimension, weatherDuration, brodcastClientMessage, clientMessageId, clientMessageValue, sendMessage, messageMessage, setAbsoluteTime, newAbsoluteTime, setDefaultSpawnLocation, spawnX, spawnY, spawnZ, setDynamicProperty, dynamicPropertyId, dynamicPropertyValue, setTimeOfDay, newTimeOfDay, spawnEntity, entityIdentifier, entityX, entityY, entityZ, entityDimension, debug,] = r.formValues;
             /*
-            let scale = playerList[0].getComponent("scale") as EntityScaleComponent;
+            let scale = playerList[0]!.getComponent("scale") as EntityScaleComponent;
             scale.value = Number(scaleValue);*/
             if (Boolean(setWeather) == true && weatherDuration == "") {
                 try {
@@ -5808,7 +5808,7 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
         for (let i in playerName) {
             playerName[i] = playerName[i].replaceAll("\\l", "|").replaceAll("\\n", "\n").replaceAll("\\x", "");
         }
-        if (playerName.length == 1) {
+        if (playerName.length < 2) {
             try {
                 sourceEntity.sendMessage(
                 /*"§r§fplayerControllerCommandForm Command Format: <playerName: string>|<setPlayerNameTag: boolean>|<multilineNameTag: boolean>|<newPlayerNameTag: string>|<triggerEvent: boolean>|<eventId: string>|<addExperience: boolean>|<experienceAmount: int>|<>|<>"*/ "§r§fplayerControllerCommandForm Command Format: <targets: quotedTargetSelector>|<option: optionName>:<optionValue: optionValue>{list: list; listObject: |[<option: optionName>:<optionValue: optionValue>]}\nOptions: triggerEvent, setProperty, setPropertyInt, setPropertyBool, setDynamicProperty, setDynamicPropertyInt, setDynamicPropertyBool, setDynamicPropertyVector3");
@@ -5840,7 +5840,7 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
             console.warn(index);*/
                 if (Number(index) != 0) {
                     targetList = String([String(targetList), playerList[index].name]).split(","); /*
-            targetList = String([String(targetList), playerList[index].name]).split(",");*/
+            targetList = String([String(targetList), playerList[index]!.name]).split(",");*/
                 } /*
             console.warn(targetList);*/
             }
@@ -5880,7 +5880,7 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
                             }
                             break; /*
     case "setPropertyVector3":
-    try {targets[l].setProperty(playerName.slice(1)[i].split(":")[1].replaceAll("\\c", ":"), Boolean(playerName.slice(1)[i].split(":").slice(2).join(":").replaceAll("\\c", ":")));} catch(e){console.error(e, e.stack);}
+    try {targets[l]!.setProperty(playerName.slice(1)[i]!.split(":")[1]!.replaceAll("\\c", ":"), Boolean(playerName.slice(1)[i]!.split(":").slice(2).join(":").replaceAll("\\c", ":")));} catch(e){console.error(e, e.stack);}
     break; */
                         case "setDynamicProperty":
                             try {
@@ -5919,12 +5919,12 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
                             }
                             break; /*
     case "setVariant":
-    try {(targets[l].getComponent("minecraft:variant") as EntityVariantComponent).value = Number(playerName.slice(1)[i].split(":")[1]);} catch(e){console.error(e, e.stack);}
+    try {(targets[l]!.getComponent("minecraft:variant") as EntityVariantComponent).value = Number(playerName.slice(1)[i]!.split(":")[1]!);} catch(e){console.error(e, e.stack);}
     break; */
                         // case "setMarkVariant": // Broke in 1.21.80, switch to use entiiy scale.
                         //     try {
-                        //         (targets[l].getComponent("minecraft:mark_variant") as EntityMarkVariantComponent).value = Number(
-                        //             playerName.slice(1)[i].split(":")[1]
+                        //         (targets[l]!.getComponent("minecraft:mark_variant") as EntityMarkVariantComponent).value = Number(
+                        //             playerName.slice(1)[i]!.split(":")[1]
                         //         );
                         //     } catch (e) {
                         //         console.error(e, e.stack);
@@ -5932,8 +5932,8 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
                         //     break;
                         // case "setPushThrough": // Broke in 1.21.80, switch to use entiiy scale.
                         //     try {
-                        //         (targets[l].getComponent("minecraft:push_through") as EntityPushThroughComponent).value = Number(
-                        //             playerName.slice(1)[i].split(":")[1]
+                        //         (targets[l]!.getComponent("minecraft:push_through") as EntityPushThroughComponent).value = Number(
+                        //             playerName.slice(1)[i]!.split(":")[1]
                         //         );
                         //     } catch (e) {
                         //         console.error(e, e.stack);
@@ -5952,7 +5952,7 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
                             break;
                         // case "setSkinId": // Broke in 1.21.80, switch to use entiiy scale.
                         //     try {
-                        //         (targets[l].getComponent("minecraft:skin_id") as EntitySkinIdComponent).value = Number(playerName.slice(1)[i].split(":")[1]);
+                        //         (targets[l]!.getComponent("minecraft:skin_id") as EntitySkinIdComponent).value = Number(playerName.slice(1)[i]!.split(":")[1]!);
                         //     } catch (e) {
                         //         console.error(e, e.stack);
                         //     }
@@ -5991,8 +5991,8 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
                             break;
                         // case "setFrictionModifier": // Broke in 1.21.80, switch to use entiiy scale.
                         //     try {
-                        //         (targets[l].getComponent("minecraft:friction_modifier") as EntityFrictionModifierComponent).value = Number(
-                        //             playerName.slice(1)[i].split(":")[1]
+                        //         (targets[l]!.getComponent("minecraft:friction_modifier") as EntityFrictionModifierComponent).value = Number(
+                        //             playerName.slice(1)[i]!.split(":")[1]
                         //         );
                         //     } catch (e) {
                         //         console.error(e, e.stack);
@@ -6000,8 +6000,8 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
                         //     break;
                         // case "setGroundOffset": // Broke in 1.21.80, switch to use entiiy scale.
                         //     try {
-                        //         (targets[l].getComponent("minecraft:ground_offset") as EntityGroundOffsetComponent).value = Number(
-                        //             playerName.slice(1)[i].split(":")[1]
+                        //         (targets[l]!.getComponent("minecraft:ground_offset") as EntityGroundOffsetComponent).value = Number(
+                        //             playerName.slice(1)[i]!.split(":")[1]
                         //         );
                         //     } catch (e) {
                         //         console.error(e, e.stack);
@@ -6049,7 +6049,7 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
         for (let i in playerName) {
             playerName[i] = playerName[i].replaceAll("\\l", "|").replaceAll("\\n", "\n").replaceAll("\\x", "");
         }
-        if (playerName.length == 1) {
+        if (playerName.length < 2) {
             try {
                 sourceEntity.sendMessage(
                 /*"§r§fplayerControllerCommandForm Command Format: <playerName: string>|<setPlayerNameTag: boolean>|<multilineNameTag: boolean>|<newPlayerNameTag: string>|<triggerEvent: boolean>|<eventId: string>|<addExperience: boolean>|<experienceAmount: int>|<>|<>"*/ "§r§fplayerControllerCommandForm Command Format: <targets: quotedTargetSelector>|<option: optionName>:<optionValue: optionValue>{list: list; listObject: |[<option: optionName>:<optionValue: optionValue>]}\nOptions: triggerEvent, setProperty, setPropertyInt, setPropertyBool, setDynamicProperty, setDynamicPropertyInt, setDynamicPropertyBool, setDynamicPropertyVector3");
@@ -6081,7 +6081,7 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
             console.warn(index);*/
                 if (Number(index) != 0) {
                     targetList = String([String(targetList), playerList[index].name]).split(","); /*
-            targetList = String([String(targetList), playerList[index].name]).split(",");*/
+            targetList = String([String(targetList), playerList[index]!.name]).split(",");*/
                 } /*
             console.warn(targetList);*/
             }
@@ -6138,7 +6138,7 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
         for (let i in playerName) {
             playerName[i] = playerName[i].replaceAll("\\l", "|").replaceAll("\\n", "\n").replaceAll("\\x", "");
         }
-        if (playerName.length == 1) {
+        if (playerName.length < 2) {
             try {
                 sourceEntity.sendMessage("§r§fsetPlayerNameTag Command Format: playerName|newPlayerNameTag");
             }
@@ -6155,7 +6155,7 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
             console.warn(index);*/
                 if (Number(index) != 0) {
                     targetList = String([String(targetList), playerList[index].name]).split(","); /*
-            targetList = String([String(targetList), playerList[index].name]).split(",");*/
+            targetList = String([String(targetList), playerList[index]!.name]).split(",");*/
                 } /*
             console.warn(targetList);*/
             }
@@ -6169,7 +6169,7 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
     }
     if (id == "andexdb:playerControllerCommandForm") {
         let playerName = message.split("|");
-        if (playerName.length == 1) {
+        if (playerName.length < 2) {
             try {
                 sourceEntity.sendMessage(
                 /*"§r§fplayerControllerCommandForm Command Format: <playerName: string>|<setPlayerNameTag: boolean>|<multilineNameTag: boolean>|<newPlayerNameTag: string>|<triggerEvent: boolean>|<eventId: string>|<addExperience: boolean>|<experienceAmount: int>|<>|<>"*/ "§r§fplayerControllerCommandForm Command Format: <playerName: string>|<option: optionName>:<optionValue: optionValue>{list: list; listObject: |[<option: optionName>:<optionValue: optionValue>]}");
@@ -6184,7 +6184,7 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
             console.warn(index);*/
                 if (Number(index) != 0) {
                     targetList = String([String(targetList), playerList[index].name]).split(","); /*
-            targetList = String([String(targetList), playerList[index].name]).split(",");*/
+            targetList = String([String(targetList), playerList[index]!.name]).split(",");*/
                 } /*
             console.warn(targetList);*/
             }
@@ -6242,7 +6242,7 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
     }
     if (id == "andexdb:playerControllerCommandForm") {
         let playerName = message.split("|");
-        if (playerName.length == 1) {
+        if (playerName.length < 2) {
             try {
                 sourceEntity.sendMessage(
                 /*"§r§fplayerControllerCommandForm Command Format: <playerName: string>|<setPlayerNameTag: boolean>|<multilineNameTag: boolean>|<newPlayerNameTag: string>|<triggerEvent: boolean>|<eventId: string>|<addExperience: boolean>|<experienceAmount: int>|<>|<>"*/ "§r§fplayerControllerCommandForm Command Format: <playerName: string>|<option: optionName>:<optionValue: optionValue>{list: list; listObject: |[<option: optionName>:<optionValue: optionValue>]}");
@@ -6257,7 +6257,7 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
             console.warn(index);*/
                 if (Number(index) != 0) {
                     targetList = String([String(targetList), playerList[index].name]).split(","); /*
-            targetList = String([String(targetList), playerList[index].name]).split(",");*/
+            targetList = String([String(targetList), playerList[index]!.name]).split(",");*/
                 } /*
             console.warn(targetList);*/
             }
@@ -6327,7 +6327,7 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
         for (let i in playerName) {
             playerName[i] = playerName[i].replaceAll("\\l", "|").replaceAll("\\n", "\n").replaceAll("\\x", "");
         }
-        if (playerName.length == 1) {
+        if (playerName.length < 2) {
             try {
                 sourceEntity.sendMessage(
                 /*"§r§fplayerControllerCommandForm Command Format: <playerName: string>|<setPlayerNameTag: boolean>|<multilineNameTag: boolean>|<newPlayerNameTag: string>|<triggerEvent: boolean>|<eventId: string>|<addExperience: boolean>|<experienceAmount: int>|<>|<>"*/ "§r§fplayerControllerCommandForm Command Format: <targets: quotedTargetSelector>|<option: optionName>:<optionValue: optionValue>{list: list; listObject: |[<option: optionName>:<optionValue: optionValue>]}");
@@ -6359,7 +6359,7 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
             console.warn(index);*/
                 if (Number(index) != 0) {
                     targetList = String([String(targetList), playerList[index].name]).split(","); /*
-            targetList = String([String(targetList), playerList[index].name]).split(",");*/
+            targetList = String([String(targetList), playerList[index]!.name]).split(",");*/
                 } /*
             console.warn(targetList);*/
             }
@@ -6415,7 +6415,7 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
                             }
                             break; /*
     case "setPropertyVector3":
-    try {targets[l].setProperty(playerName.slice(1)[i].split(":")[1], Boolean(playerName.slice(1)[i].split(":").slice(2).join(":")));} catch(e){console.error(e, e.stack);}
+    try {targets[l]!.setProperty(playerName.slice(1)[i]!.split(":")[1]!, Boolean(playerName.slice(1)[i]!.split(":").slice(2).join(":")));} catch(e){console.error(e, e.stack);}
     break; */
                         case "setDynamicProperty":
                             try {
@@ -6454,7 +6454,7 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
                             }
                             break;
                         case "clearVelocity" /*
-            if(playerName.slice(1)[i].split(":")[1].toLowerCase() == "true"){*/:
+            if(playerName.slice(1)[i]!.split(":")[1]!.toLowerCase() == "true"){*/:
                             try {
                                 targets[l].clearVelocity();
                             }
@@ -7348,8 +7348,8 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
                             catch (e) {
                                 console.error(e, e.stack);
                             } /*
-            console.warn(message2[index].slice(13).split(":")[0], {alpha: Number(message2[index].slice(13).split(":")[4]), blue: Number(message2[index].slice(13).split(":")[3]), green: Number(message2[index].slice(13).split(":")[2]), red: Number(message2[index].slice(13).split(":")[1])})
-            console.warn(message2[index].slice(13).split(":")[0] + "," + Number(message2[index].slice(13).split(":")[4]) + "," + Number(message2[index].slice(13).split(":")[3]) + "," + Number(message2[index].slice(13).split(":")[2]) + "," + Number(message2[index].slice(13).split(":")[1]))*/
+            console.warn(message2[index]!.slice(13).split(":")[0], {alpha: Number(message2[index]!.slice(13).split(":")[4]), blue: Number(message2[index]!.slice(13).split(":")[3]), green: Number(message2[index]!.slice(13).split(":")[2]), red: Number(message2[index]!.slice(13).split(":")[1])})
+            console.warn(message2[index]!.slice(13).split(":")[0] + "," + Number(message2[index]!.slice(13).split(":")[4]) + "," + Number(message2[index]!.slice(13).split(":")[3]) + "," + Number(message2[index]!.slice(13).split(":")[2]) + "," + Number(message2[index]!.slice(13).split(":")[1]))*/
                         }
                         else {
                             if (String(message2[index]).startsWith("setVector3:")) {
@@ -7408,8 +7408,8 @@ GameTest.register("StarterTests", "simpleMobTest", (test: GameTest.Test) => {
                                             catch (e) {
                                                 console.error(e, e.stack);
                                             } /*
-                console.warn(message2[index].slice(13).split(":")[0], {alpha: Number(message2[index].slice(13).split(":")[4]), blue: Number(message2[index].slice(13).split(":")[3]), green: Number(message2[index].slice(13).split(":")[2]), red: Number(message2[index].slice(13).split(":")[1])})
-                console.warn(message2[index].slice(13).split(":")[0] + "," + Number(message2[index].slice(13).split(":")[4]) + "," + Number(message2[index].slice(13).split(":")[3]) + "," + Number(message2[index].slice(13).split(":")[2]) + "," + Number(message2[index].slice(13).split(":")[1]))*/
+                console.warn(message2[index]!.slice(13).split(":")[0], {alpha: Number(message2[index]!.slice(13).split(":")[4]), blue: Number(message2[index]!.slice(13).split(":")[3]), green: Number(message2[index]!.slice(13).split(":")[2]), red: Number(message2[index]!.slice(13).split(":")[1])})
+                console.warn(message2[index]!.slice(13).split(":")[0] + "," + Number(message2[index]!.slice(13).split(":")[4]) + "," + Number(message2[index]!.slice(13).split(":")[3]) + "," + Number(message2[index]!.slice(13).split(":")[2]) + "," + Number(message2[index]!.slice(13).split(":")[1]))*/
                                         }
                                         else {
                                             if (String(message2[index]).startsWith("v3:")) {

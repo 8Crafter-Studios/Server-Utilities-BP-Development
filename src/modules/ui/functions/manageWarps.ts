@@ -8,6 +8,7 @@ import { securityVariables } from "security/ultraSecurityModeUtils";
 import { extractPlayerFromLooseEntityType } from "modules/utilities/functions/extractPlayerFromLooseEntityType";
 import type { loosePlayerType } from "modules/utilities/types/loosePlayerType";
 import { customFormUICodes } from "../constants/customFormUICodes";
+import { selectTexturePreset } from "./selectTexturePreset";
 
 /**
  * Shows the manage warps UI to the player.
@@ -74,12 +75,12 @@ export async function manageWarps(sourceEntity: loosePlayerType): Promise<0 | 1>
             const r = await form.forceShow(player);
             if (r.canceled) return 1;
 
-            switch ((!!warps[r.selection!] ? "warp" : undefined) ?? (["newWarp", "back", "close"] as const)[r.selection! - warps.length]) {
+            switch ((!!warps[r.selection!]! ? "warp" : undefined) ?? (["newWarp", "back", "close"] as const)[r.selection! - warps.length]) {
                 case "warp": {
-                    const warp = warps[r.selection!];
+                    const warp = warps[r.selection!]!;
                     const warpsb = warps.filter((w) => w !== warp);
                     switch (
-                        (["move", "edit", "delete", "back", "close"] as const)[
+                        (["applyIconTexturePreset", "move", "edit", "delete", "back", "close"] as const)[
                             (
                                 await showActions(
                                     player,
@@ -87,15 +88,28 @@ export async function manageWarps(sourceEntity: loosePlayerType): Promise<0 | 1>
                                     `${warp.displayName}\nDimension: ${dimensionTypeDisplayFormattingD[warp.dimension]}\nLocation: ${vTStr(
                                         warp.location
                                     )}\nIcon: ${warp.icon}`,
+                                    [customFormUICodes.action.buttons.positions.main_only + "Apply Icon Texture Preset", "textures/items/map_locked"],
                                     [customFormUICodes.action.buttons.positions.main_only + "Move", "textures/ui/move"],
                                     [customFormUICodes.action.buttons.positions.main_only + "Edit", "textures/ui/pencil_edit_icon"],
                                     [customFormUICodes.action.buttons.positions.main_only + "Delete", "textures/ui/trash_default"],
                                     [customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left"],
                                     [customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout"]
                                 )
-                            )?.selection ?? 3
+                            )?.selection ?? 4
                         ]
                     ) {
+                        case "applyIconTexturePreset": {
+                            const r = await selectTexturePreset(player);
+                            if (r === 1) {
+                                continue;
+                            } else if (r === 0) {
+                                return 0;
+                            } else {
+                                warp.icon = r;
+                                config.warpsSystem.warps = warps;
+                                continue;
+                            }
+                        }
                         case "move": {
                             const r = await showActions(
                                 player,
@@ -172,7 +186,7 @@ export async function manageWarps(sourceEntity: loosePlayerType): Promise<0 | 1>
                                     return 0;
                                 }
                             }
-                            warp.dimension = dimensionsd[r.formValues?.[2] as number];
+                            warp.dimension = dimensionsd[r.formValues?.[2] as number]!;
                             warp.displayName = r.formValues?.[0] as string;
                             warp.location = coordinatesB(r.formValues?.[1] as string, player.location, player.getViewDirection());
                             warp.icon = (r.formValues?.[3] as string) !== "" ? (r.formValues?.[3] as string) : undefined;
@@ -206,10 +220,11 @@ export async function manageWarps(sourceEntity: loosePlayerType): Promise<0 | 1>
                     const r = await new ModalFormData()
                         .title(customFormUICodes.modal.titles.formStyles.medium + "New Warp")
                         .textField(`Please enter the name for the new warp below.`, "Warp Name")
-                        .textField(`Please enter the coordinates for the new warp below. ex. 172.41 76 29.5`, "x y z")
+                        .textField(`Please enter the coordinates for the new warp below (put ~~~ to use your current location). ex. 172.41 76 29.5`, "x y z")
                         .dropdown(
                             "Please select the dimension for the new warp below.",
-                            dimensionsd.map((d) => dimensionTypeDisplayFormattingE[d])
+                            dimensionsd.map((d) => dimensionTypeDisplayFormattingE[d]),
+                            { defaultValueIndex: dimensions.indexOf(player.dimension) }
                         )
                         .textField(`Enter the path to an icon for the warp button below. (Optional)`, "textures/items/ender_pearl")
                         .submitButton("Create Warp")
@@ -238,7 +253,7 @@ export async function manageWarps(sourceEntity: loosePlayerType): Promise<0 | 1>
                             return 0;
                         }
                     }
-                    const dimension = dimensionsd[r.formValues?.[2] as number];
+                    const dimension = dimensionsd[r.formValues?.[2] as number]!;
                     const displayName = r.formValues?.[0] as string;
                     const location = coordinatesB(r.formValues?.[1] as string, player.location, player.getViewDirection());
                     const icon = (r.formValues?.[3] as string) !== "" ? (r.formValues?.[3] as string) : undefined;

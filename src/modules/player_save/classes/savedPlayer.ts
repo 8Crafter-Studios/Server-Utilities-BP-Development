@@ -515,7 +515,7 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
             var error = e;
         } finally {
             try {
-                otherEntities!?.forEach((v, i) => tryrun(() => v.teleport(locs[i], { keepVelocity: false })));
+                otherEntities!?.forEach((v, i) => tryrun(() => v.teleport(locs[i]!, { keepVelocity: false })));
             } catch {}
             try {
                 entity.remove();
@@ -630,7 +630,7 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
             var error = e;
         } finally {
             try {
-                otherEntities!?.forEach((v, i) => tryrun(() => v.teleport(locs[i], { keepVelocity: false })));
+                otherEntities!?.forEach((v, i) => tryrun(() => v.teleport(locs[i]!, { keepVelocity: false })));
             } catch {}
             try {
                 entity.remove();

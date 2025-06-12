@@ -73,9 +73,9 @@ export function* generateMinecraftConeBG(
         generateMinecraftSphereBGProgress[generateMinecraftConeBGProgressId].done = true;
         return;
     } catch (e) {
-        generateMinecraftSphereBGProgress[generateMinecraftConeBGProgressId].endTick = system.currentTick;
-        generateMinecraftSphereBGProgress[generateMinecraftConeBGProgressId].endTime = Date.now();
-        generateMinecraftSphereBGProgress[generateMinecraftConeBGProgressId].done = true;
+        generateMinecraftSphereBGProgress[generateMinecraftConeBGProgressId]!.endTick = system.currentTick;
+        generateMinecraftSphereBGProgress[generateMinecraftConeBGProgressId]!.endTime = Date.now();
+        generateMinecraftSphereBGProgress[generateMinecraftConeBGProgressId]!.done = true;
         throw e;
     }
 }

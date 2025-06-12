@@ -264,7 +264,7 @@ export async function playerMenu_leaderboard(
                     return await playerMenu_leaderboard(sourceEntity, leaderboard, Math.min(numpages - 1, page + 1), maxplayersperpage, search, displayPlayers);
                     break;
                 case "player":
-                    if ((await playerMenu_leaderboard_player(sourceEntity, leaderboard, displayPlayers[r.selection! - 6][0])) == 1) {
+                    if ((await playerMenu_leaderboard_player(sourceEntity, leaderboard, displayPlayers[r.selection! - 6]![0])) == 1) {
                         return await playerMenu_leaderboard(sourceEntity, leaderboard, page, maxplayersperpage, search, displayPlayers);
                     } else {
                         return 0;

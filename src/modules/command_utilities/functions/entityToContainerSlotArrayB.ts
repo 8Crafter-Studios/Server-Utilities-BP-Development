@@ -14,7 +14,7 @@ export function entityToContainerSlotArrayB(
         itemList.push(container!.getSlot(i));
     }
     for (let i = 0; i < 5 && getEquipment && !!equipment; i++) {
-        itemListB.push(equipment?.getEquipmentSlot(OtherEquipmentSlots[i]));
+        itemListB.push(equipment?.getEquipmentSlot(OtherEquipmentSlots[i]!));
     }
     return !!container || !!equipment
         ? { inventory: itemList, equipment: itemListB }

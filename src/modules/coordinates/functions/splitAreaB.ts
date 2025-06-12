@@ -1,19 +1,19 @@
-import type { Vector3 } from "@minecraft/server";
+import type { Vector3, VectorXZ } from "@minecraft/server";
 import { splitRange } from "./splitRange";
 
 export function* splitAreaB(
     area: { from: Vector3; to: Vector3; },
     sizes: Vector3 = { x: 64, y: 128, z: 64 }
 ) {
-    const indices = { x: 0, y: 0, z: 0 };
+    const indices: Vector3 = { x: 0, y: 0, z: 0 };
 
-    const xRanges = splitRange([area.from.x, area.to.x], sizes.x);
+    const xRanges: [min: number, max: number][] = splitRange([area.from.x, area.to.x], sizes.x);
 
     for (const xRange of xRanges) {
-        const zRanges = splitRange([area.from.z, area.to.z], sizes.z);
+        const zRanges: [min: number, max: number][] = splitRange([area.from.z, area.to.z], sizes.z);
 
         for (const zRange of zRanges) {
-            const partialRanges = [
+            const partialRanges: [from: VectorXZ, to: VectorXZ] = [
                 { x: xRange[0], z: zRange[0] },
                 { x: xRange[1], z: zRange[1] },
             ];

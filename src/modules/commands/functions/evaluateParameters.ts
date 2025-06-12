@@ -10,6 +10,144 @@ import type {
 } from "modules/commands/types/evaluateParametersParameter";
 import { extractSelectors } from "./extractSelectors";
 
+export const flagsParameterFlagKeysList = [
+    "a",
+    "b",
+    "c",
+    "d",
+    "e",
+    "f",
+    "g",
+    "h",
+    "i",
+    "j",
+    "k",
+    "l",
+    "m",
+    "n",
+    "o",
+    "p",
+    "q",
+    "r",
+    "s",
+    "t",
+    "u",
+    "v",
+    "w",
+    "x",
+    "y",
+    "z",
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+    "J",
+    "K",
+    "L",
+    "M",
+    "N",
+    "O",
+    "P",
+    "Q",
+    "R",
+    "S",
+    "T",
+    "U",
+    "V",
+    "W",
+    "X",
+    "Y",
+    "Z",
+    "!",
+    "@",
+    "#",
+    "$",
+    "%",
+    "^",
+    "&",
+    "*",
+    "<",
+    ">",
+    ",",
+    ".",
+    "~",
+] as const;
+
+/**
+ * A union type of all the valid flag keys for the flags parameter.
+ */
+export type FlagsParamterFlagKeys =
+    | "a"
+    | "b"
+    | "c"
+    | "d"
+    | "e"
+    | "f"
+    | "g"
+    | "h"
+    | "i"
+    | "j"
+    | "k"
+    | "l"
+    | "m"
+    | "n"
+    | "o"
+    | "p"
+    | "q"
+    | "r"
+    | "s"
+    | "t"
+    | "u"
+    | "v"
+    | "w"
+    | "x"
+    | "y"
+    | "z"
+    | "A"
+    | "B"
+    | "C"
+    | "D"
+    | "E"
+    | "F"
+    | "G"
+    | "H"
+    | "I"
+    | "J"
+    | "K"
+    | "L"
+    | "M"
+    | "N"
+    | "O"
+    | "P"
+    | "Q"
+    | "R"
+    | "S"
+    | "T"
+    | "U"
+    | "V"
+    | "W"
+    | "X"
+    | "Y"
+    | "Z"
+    | "!"
+    | "@"
+    | "#"
+    | "$"
+    | "%"
+    | "^"
+    | "&"
+    | "*"
+    | "<"
+    | ">"
+    | ","
+    | "."
+    | "~";
+
 /**
  * The result of the {@link evaluateParameters} function.
  *
@@ -69,7 +207,9 @@ export interface EvalutateParamtersResult<T extends evaluateParametersParameter[
  *
  * @template {evaluateParametersParameter[] | [evaluateParametersParameter]} T The paramter types.
  */
-export type EvaluateParamtersParamterTypeMapper<T extends evaluateParametersParameter> = T extends "presetText"
+export type EvaluateParamtersParamterTypeMapper<T extends evaluateParametersParameter> = T extends "placeholder"
+    ? undefined
+    : T extends "presetText"
     ? string | undefined
     : T extends "number"
     ? number | undefined
@@ -124,8 +264,12 @@ export type EvaluateParamtersParamterTypeMapper<T extends evaluateParametersPara
     ? string
     : T extends `f-${string}`
     ? T extends `f-${infer Flags}`
-        ? { [key in Split<Flags>[number]]: boolean }
+        ? {
+              [key in Split<Flags>[number] as key extends FlagsParamterFlagKeys ? key : never]: boolean;
+          }
         : never
+    : T extends { type: "placeholder" }
+    ? undefined
     : T extends { type: "number"; key?: infer PK extends string }
     ? number | undefined
     : T extends { type: "boolean"; key?: infer PK extends string }
@@ -181,7 +325,7 @@ export type EvaluateParamtersParamterTypeMapper<T extends evaluateParametersPara
     ? string
     : T extends { type: `f-${string}` }
     ? T extends { type: `f-${infer Flags}` }
-        ? { [key in Split<Flags>[number]]: boolean }
+        ? { [key in Split<Flags>[number] as key extends FlagsParamterFlagKeys ? key : never]: boolean }
         : never
     : T extends { type: `ignorableNamedParameter` }
     ? T extends {
@@ -394,9 +538,14 @@ export function evaluateParameters<T extends evaluateParametersParameter[] | [ev
                                 )
                             );
                         } else {
-                            addValueToArgumentsA(p.key, null);
+                            addValueToArgumentsA(p.key, undefined);
                         }
                         return;
+                    }
+                    break;
+                case p.type == "placeholder":
+                    {
+                        addValueToArgumentsA(p.key, undefined);
                     }
                     break;
                 case p.type == "presetText":
@@ -421,7 +570,7 @@ export function evaluateParameters<T extends evaluateParametersParameter[] | [ev
                                       JSON.parse(
                                           paramEval
                                               .trimStart()
-                                              .split(" ")[0]
+                                              .split(" ")[0]!
                                               .replace(/^t$/i, "true")
                                               .replace(/^f$/i, "false")
                                               .replace(/^true$/i, "true")
@@ -443,7 +592,7 @@ export function evaluateParameters<T extends evaluateParametersParameter[] | [ev
                                           JSON.parse(
                                               paramEval
                                                   .trimStart()
-                                                  .split(" ")[0]
+                                                  .split(" ")[0]!
                                                   .replace(/^t$/i, "true")
                                                   .replace(/^f$/i, "false")
                                                   .replace(/^true$/i, "true")
@@ -464,12 +613,12 @@ export function evaluateParameters<T extends evaluateParametersParameter[] | [ev
                             paramEval = paramEval.trimStart().slice(2);
                         } else if (paramEval.trimStart().startsWith('"')) {
                             let value = getParametersFromString(paramEval.trimStart()).resultsincludingunmodified[0];
-                            paramEval = paramEval.trimStart().slice(value?.s?.length + 1) ?? "";
+                            paramEval = paramEval.trimStart().slice(value?.s?.length! + 1) ?? "";
                             try {
                                 addValueToArgumentsA(p.key, value?.v);
                             } catch (e) {
                                 ea.push([e, e.stack]);
-                                addValueToArgumentsA(p.key, null);
+                                addValueToArgumentsA(p.key, undefined);
                             }
                         } else {
                             addValueToArgumentsA(p.key, paramEval.trimStart().split(" ")[0]);
@@ -479,16 +628,16 @@ export function evaluateParameters<T extends evaluateParametersParameter[] | [ev
                     break;
                 case p.type == "non-booleanString":
                     {
-                        if (["true", "false", "t", "f", "1", "0"].includes(paramEval.trimStart().split(" ")[0].toLowerCase())) {
+                        if (["true", "false", "t", "f", "1", "0"].includes(paramEval.trimStart().split(" ")[0]!.toLowerCase())) {
                             addValueToArgumentsA(p.key, undefined);
                         } else if (paramEval.trimStart().startsWith('"')) {
                             let value = getParametersFromString(paramEval.trimStart()).resultsincludingunmodified[0];
-                            paramEval = paramEval.trimStart().slice(value?.s?.length + 1) ?? "";
+                            paramEval = paramEval.trimStart().slice(value?.s?.length! + 1) ?? "";
                             try {
                                 addValueToArgumentsA(p.key, value?.v);
                             } catch (e) {
                                 ea.push([e, e.stack]);
-                                addValueToArgumentsA(p.key, null);
+                                addValueToArgumentsA(p.key, undefined);
                             }
                         } else {
                             addValueToArgumentsA(p.key, paramEval.trimStart().split(" ")[0]);
@@ -555,12 +704,12 @@ export function evaluateParameters<T extends evaluateParametersParameter[] | [ev
                 case p.type == "json":
                     {
                         let value = getParametersFromString(paramEval.trimStart()).resultsincludingunmodified[0];
-                        paramEval = paramEval.trimStart().slice(value?.s?.length + 1) ?? "";
+                        paramEval = paramEval.trimStart().slice(value?.s?.length! + 1) ?? "";
                         try {
                             addValueToArgumentsA(p.key, value?.v ?? JSONParse(value?.s ?? paramEval, true));
                         } catch (e) {
                             ea.push([e, e.stack]);
-                            addValueToArgumentsA(p.key, null);
+                            addValueToArgumentsA(p.key, undefined);
                         }
                     }
                     break;
@@ -574,21 +723,21 @@ export function evaluateParameters<T extends evaluateParametersParameter[] | [ev
                         ) {
                             let value = getParametersFromString(paramEval.replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"))
                                 .resultsincludingunmodified[0];
-                            paramEval = paramEval.slice(value?.s?.length + 1) ?? "";
+                            paramEval = paramEval.slice(value?.s?.length! + 1) ?? "";
                             try {
                                 addValueToArgumentsA(p.key, value?.v ?? JSONParse(value?.s ?? "undefined", true));
                             } catch (e) {
                                 ea.push([e, e.stack]);
-                                addValueToArgumentsA(p.key, null);
+                                addValueToArgumentsA(p.key, undefined);
                             }
                         } else {
                             let value = getParametersFromString(paramEval).resultsincludingunmodified[0];
-                            paramEval = paramEval.slice(value?.s?.length + 1) ?? "";
+                            paramEval = paramEval.slice(value?.s?.length! + 1) ?? "";
                             try {
                                 addValueToArgumentsA(p.key, value?.v ?? JSONParse(value?.s ?? "undefined", true));
                             } catch (e) {
                                 ea.push([e, e.stack]);
-                                addValueToArgumentsA(p.key, null);
+                                addValueToArgumentsA(p.key, undefined);
                             }
                         }
                     }
@@ -601,7 +750,7 @@ export function evaluateParameters<T extends evaluateParametersParameter[] | [ev
                             addValueToArgumentsA(p.key, ep.parsed);
                         } catch (e) {
                             ea.push([e, e.stack]);
-                            addValueToArgumentsA(p.key, null);
+                            addValueToArgumentsA(p.key, undefined);
                         }
                     }
                     break;
@@ -613,7 +762,7 @@ export function evaluateParameters<T extends evaluateParametersParameter[] | [ev
                             addValueToArgumentsA(p.key, ep.block);
                         } catch (e) {
                             ea.push([e, e.stack]);
-                            addValueToArgumentsA(p.key, null);
+                            addValueToArgumentsA(p.key, undefined);
                         }
                     }
                     break;
@@ -625,7 +774,7 @@ export function evaluateParameters<T extends evaluateParametersParameter[] | [ev
                             addValueToArgumentsA(p.key, ep.parsed);
                         } catch (e) {
                             ea.push([e, e.stack]);
-                            addValueToArgumentsA(p.key, null);
+                            addValueToArgumentsA(p.key, undefined);
                         }
                     }
                     break;
@@ -640,7 +789,7 @@ export function evaluateParameters<T extends evaluateParametersParameter[] | [ev
                                     addValueToArgumentsA(p.key, !!!value?.v ? undefined : '"' + value?.v + '"');
                                 } catch (e) {
                                     ea.push([e, e.stack]);
-                                    addValueToArgumentsA(p.key, null);
+                                    addValueToArgumentsA(p.key, undefined);
                                 }
                             } else {
                                 addValueToArgumentsA(p.key, paramEval.trimStart().split(" ")[0]);
@@ -654,16 +803,16 @@ export function evaluateParameters<T extends evaluateParametersParameter[] | [ev
                                     addValueToArgumentsA(p.key, value);
                                 } catch (e) {
                                     ea.push([e, e.stack]);
-                                    addValueToArgumentsA(p.key, null);
+                                    addValueToArgumentsA(p.key, undefined);
                                 }
                             } else {
                                 let value = extractSelectors(paramEval)[0];
-                                paramEval = paramEval.slice(paramEval.indexOf(value) + value?.length) ?? "";
+                                paramEval = paramEval.slice(paramEval.indexOf(value!) + value?.length!) ?? "";
                                 try {
                                     addValueToArgumentsA(p.key, value);
                                 } catch (e) {
                                     ea.push([e, e.stack]);
-                                    addValueToArgumentsA(p.key, null);
+                                    addValueToArgumentsA(p.key, undefined);
                                 }
                             }
                         }
@@ -682,7 +831,7 @@ export function evaluateParameters<T extends evaluateParametersParameter[] | [ev
                             addValueToArgumentsA(p.key, value);
                         } catch (e) {
                             ea.push([e, e.stack]);
-                            addValueToArgumentsA(p.key, null);
+                            addValueToArgumentsA(p.key, undefined);
                         }
                     }
                     break;
@@ -703,7 +852,7 @@ export function evaluateParameters<T extends evaluateParametersParameter[] | [ev
                             addValueToArgumentsA(p.key, value);
                         } catch (e) {
                             ea.push([e, e.stack]);
-                            addValueToArgumentsA(p.key, null);
+                            addValueToArgumentsA(p.key, undefined);
                         }
                     }
                     break;
@@ -724,7 +873,7 @@ export function evaluateParameters<T extends evaluateParametersParameter[] | [ev
                             addValueToArgumentsA(p.key, value);
                         } catch (e) {
                             ea.push([e, e.stack]);
-                            addValueToArgumentsA(p.key, null);
+                            addValueToArgumentsA(p.key, undefined);
                         }
                     }
                     break;
@@ -762,7 +911,7 @@ export function evaluateParameters<T extends evaluateParametersParameter[] | [ev
                                         paramEval = paramEval.slice(2);
                                     } else if (paramEval.startsWith('"')) {
                                         let value = getParametersFromString(paramEval).resultsincludingunmodified[0];
-                                        paramEval = paramEval.slice(value?.s?.length + 1) ?? "";
+                                        paramEval = paramEval.slice(value?.s?.length! + 1) ?? "";
                                         try {
                                             parameter.value = value?.v;
                                         } catch (e) {
@@ -785,7 +934,7 @@ export function evaluateParameters<T extends evaluateParametersParameter[] | [ev
                                             : Boolean(
                                                   JSON.parse(
                                                       paramEval
-                                                          .split(" ")[0]
+                                                          .split(" ")[0]!
                                                           .replace(/^t$/i, "true")
                                                           .replace(/^f$/i, "false")
                                                           .replace(/^true$/i, "true")
@@ -883,9 +1032,9 @@ export class EvaluateParameters_NamedIgnorableParamaters {
             ? EvaluateParemtersResultArgs_basic<T>
             : EvaluateParemtersResultArgs_v2_KeyedOnly<T> & EvaluateParemtersResultArgs_v2_TupleOnly<T>
     ): void {
-        for (const key in Object.keys(args)) {
-            if (args[key] instanceof EvaluateParameters_NamedIgnorableParamater) {
-                args[key] = args[key].value;
+        for (const key of Object.keys(args)) {
+            if (args[key as any] instanceof EvaluateParameters_NamedIgnorableParamater) {
+                args[key as keyof typeof args] = args[key as keyof typeof args].value;
             }
         }
     }

@@ -25,7 +25,7 @@ export async function managePlayers_managePlayer_manageHomes(
     form6.title(player.name);
     const homes = HomeSystem.getHomesForPlayer(player.id);
     homes.forEach((h) => form6.button(
-        `${h.name}\n${dimensionTypeDisplayFormatting[dimensionse[dimensions.indexOf(h.location.dimension)]]}§r ${vTStr(Vector.floor(h.location))}`
+        `${h.name}\n${dimensionTypeDisplayFormatting[dimensionse[dimensions.indexOf(h.location.dimension)]!]}§r ${vTStr(Vector.floor(h.location))}`
     )
     );
     form6.button("Back", "textures/ui/arrow_left");

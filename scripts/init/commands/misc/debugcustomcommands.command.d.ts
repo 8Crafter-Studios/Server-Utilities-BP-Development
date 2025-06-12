@@ -32,4 +32,5 @@ export declare const registeredDeubgcustomcommandsCommand: RegisteredCommand<{
     command_version: string;
     categories: ["system", "Entity Scale Add-On", "built-in"];
     ultraSecurityModeSecurityLevel: "admin";
+    syntax: string;
 }>;

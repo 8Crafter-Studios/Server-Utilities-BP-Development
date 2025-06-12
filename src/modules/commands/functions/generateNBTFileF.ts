@@ -28,14 +28,14 @@ export function generateNBTFileF(
                             i % nbt.size[2],
                         ])
                     ),
-                    nbt.block_palette[b].name.replace(
+                    nbt.block_palette[b]!.name.replace(
                         "minecraft:active - lit_redstone_lamp",
                         "minecraft:lit_redstone_lamp"
                     )
                 ),
                 // Not needed any more as coarse_dirt is now a valid block id.
-                /* nbt.block_palette[b].name == "minecraft:coarse_dirt" ||
-                    nbt.block_palette[b].name == "coarse_dirt"
+                /* nbt.block_palette[b]!.name == "minecraft:coarse_dirt" ||
+                    nbt.block_palette[b]!.name == "coarse_dirt"
                     ? location.dimension.setBlockPermutation(
                         Vector3Utils.add(
                             location,
@@ -52,8 +52,8 @@ export function generateNBTFileF(
                             dirt_type: "coarse",
                         })
                     )
-                    :  */!!nbt.block_palette[b].states
-                        ? Object.entries(nbt.block_palette[b].states).forEach(
+                    :  */!!nbt.block_palette[b]!.states
+                        ? Object.entries(nbt.block_palette[b]!.states).forEach(
                             (p) => tryrun(() => location.dimension.setBlockPermutation(
                                 Vector3Utils.add(
                                     location,
@@ -70,7 +70,7 @@ export function generateNBTFileF(
                                     ])
                                 ),
                                 BlockPermutation.resolve(
-                                    nbt.block_palette[b].name.replace(
+                                    nbt.block_palette[b]!.name.replace(
                                         "minecraft:active - lit_redstone_lamp",
                                         "minecraft:lit_redstone_lamp"
                                     ),

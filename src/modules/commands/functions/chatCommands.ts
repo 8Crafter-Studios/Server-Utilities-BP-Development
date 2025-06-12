@@ -94,8 +94,8 @@ import { getTopSolidBlock } from "modules/main/functions/getTopSolidBlock";
 import { command } from "modules/commands/classes/command";
 import { disconnectingPlayers } from "modules/commands/constants/disconnectingPlayers";
 import { AreaBackups } from "modules/coordinates/classes/AreaBackups";
-import { BlockClipboard } from "modules/coordinates/classes/BlockClipboard";
-import { undoClipboard } from "modules/coordinates/classes/undoClipboard";
+import { BlockClipboard, GlobalBlockClipboard } from "modules/coordinates/classes/BlockClipboard";
+import { UndoClipboard } from "modules/coordinates/classes/UndoClipboard";
 import { WorldPosition } from "modules/coordinates/classes/WorldPosition";
 import { caretNotationC } from "modules/coordinates/functions/caretNotationC";
 import { chunkIndexToBoundingBox } from "modules/coordinates/functions/chunkIndexToBoundingBox";
@@ -203,6 +203,7 @@ import { securityVariables } from "security/ultraSecurityModeUtils";
 import { TeleportRequest } from "modules/coordinates/classes/TeleportRequest";
 import { biomeToDefaultTerrainDetailsMap, generateTerrainV2, type TerrainGeneratorBiome } from "modules/utilities/functions/generateTerrain";
 import type { VerifyConstraint } from "modules/utilities/functions/filterProperties";
+import { overlayArea } from "modules/block_generation_utilities/functions/overlayArea";
 
 export function chatCommands(params: {
     returnBeforeChatSend: boolean | undefined;
@@ -343,7 +344,7 @@ export function chatCommands(params: {
             .getDimension(
                 String(player.getDynamicProperty("hotbarPreset" + preset))
                     .replaceAll(",", "")
-                    .split(" ")[0]
+                    .split(" ")[0]!
             )
             .getBlock({
                 x: Number(
@@ -384,7 +385,7 @@ export function chatCommands(params: {
                     "\\"
             ).length
         )
-        .split(" ")[0];
+        .split(" ")[0]!;
     let switchTestB = newMessage.slice(
         String(
             world.getDynamicProperty("andexdbSettings:chatCommandPrefix") ??
@@ -449,10 +450,10 @@ export function chatCommands(params: {
                         (v.customCommandPrefix != "" &&
                             !!v.customCommandPrefix &&
                             newMessage
-                                .split(" ")[0]
+                                .split(" ")[0]!
                                 .startsWith(v.customCommandPrefix) &&
                             !!newMessage
-                                .split(" ")[0]
+                                .split(" ")[0]!
                                 .slice(v.customCommandPrefix.length)
                                 .match(v.regexp) &&
                             (params.fromExecute ||
@@ -473,10 +474,10 @@ export function chatCommands(params: {
                         v.customCommandPrefix != "" &&
                         !!v.customCommandPrefix &&
                         newMessage
-                            .split(" ")[0]
+                            .split(" ")[0]!
                             .startsWith(v.customCommandPrefix) &&
                         !!newMessage
-                            .split(" ")[0]
+                            .split(" ")[0]!
                             .slice(v.customCommandPrefix.length)
                             .match(v.regexp) &&
                         (params.fromExecute ||
@@ -485,7 +486,7 @@ export function chatCommands(params: {
                                 .testCanPlayerUseCommand(player))
                 );
     } /*
-        let commanda = commands.find(v=>(newMessage.startsWith(String(world.getDynamicProperty("andexdbSettings:chatCommandPrefix") ?? "\\"))&&(command.get(v.commandName, "built-in").settings.enabled&&(!!(switchTest.match((command.get(v.commandName, "built-in").regexp))))))&&(command.get(v.commandName, "built-in").testCanPlayerUseCommand(player)))??command.getCustomCommands().find(v=>(v.settings.enabled&&((v.customCommandPrefix==undefined||v.customCommandPrefix=="")&&(!!switchTest.match(v.regexp)))||((v.customCommandPrefix!=""&&!!v.customCommandPrefix)&&newMessage.split(" ")[0].startsWith(v.customCommandPrefix)&&(!!newMessage.split(" ")[0].slice(v.customCommandPrefix.length).match(v.regexp))&&(command.get(v.commandName, "custom").testCanPlayerUseCommand(player)))))*/
+        let commanda = commands.find(v=>(newMessage.startsWith(String(world.getDynamicProperty("andexdbSettings:chatCommandPrefix") ?? "\\"))&&(command.get(v.commandName, "built-in").settings.enabled&&(!!(switchTest.match((command.get(v.commandName, "built-in").regexp))))))&&(command.get(v.commandName, "built-in").testCanPlayerUseCommand(player)))??command.getCustomCommands().find(v=>(v.settings.enabled&&((v.customCommandPrefix==undefined||v.customCommandPrefix=="")&&(!!switchTest.match(v.regexp)))||((v.customCommandPrefix!=""&&!!v.customCommandPrefix)&&newMessage.split(" ")[0]!.startsWith(v.customCommandPrefix)&&(!!newMessage.split(" ")[0]!.slice(v.customCommandPrefix.length).match(v.regexp))&&(command.get(v.commandName, "custom").testCanPlayerUseCommand(player)))))*/
 
     if (commanda?.type == "server_shop") {
         eventData.cancel = true;
@@ -514,7 +515,7 @@ export function chatCommands(params: {
                         try {
                             inventory.container.addItem(
                                 new ItemStack(
-                                    newMessage.slice(6).split(" ")[0],
+                                    newMessage.slice(6).split(" ")[0]!,
                                     Number(
                                         newMessage.slice(6).split(" ")[1] ?? "1"
                                     )
@@ -556,7 +557,7 @@ export function chatCommands(params: {
                                 (itemName) => itemName == "undefined"
                             ),
                             new ItemStack(
-                                newMessage.slice(7).split(" ")[0],
+                                newMessage.slice(7).split(" ")[0]!,
                                 Number(newMessage.slice(7).split(" ")[1] ?? 1)
                             )
                         ); /*; eventData.sender.sendMessage(String("l" + slotsArray))*/
@@ -709,10 +710,10 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventorye.container.swapItems(i,
             case !!switchTest.match(/^h\d*$/):
                 eventData.cancel = true;
                 try {
-                    /*player.sendMessageB([String(Number(switchTestB.split(" ")[1] ?? 0)+1), String(switchTestB.split(" ")[0].slice(1))]); */
+                    /*player.sendMessageB([String(Number(switchTestB.split(" ")[1] ?? 0)+1), String(switchTestB.split(" ")[0]!.slice(1))]); */
                     hotbarSwap(
                         Number(switchTestB.split(" ")[1] ?? 0) + 1,
-                        Number(switchTestB.split(" ")[0].slice(1))
+                        Number(switchTestB.split(" ")[0]!.slice(1))
                     );
                 } catch (e) {
                     player.sendMessageB([e, e.stack]);
@@ -736,7 +737,7 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventorye.container.swapItems(i,
                             .join(" *")
                             .replaceAll("  ", " ")
                             .trimStart()
-                            .split(" ")[0]
+                            .split(" ")[0]!
                             .replaceAll(" ", ""),
                         (
                             switchTestB?.split(" ")?.slice(3)?.join(" ") ??
@@ -751,7 +752,7 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventorye.container.swapItems(i,
                             .join(" *")
                             .replaceAll("  ", " ")
                             .trimStart()
-                            .split(" ")[1]
+                            .split(" ")[1]!
                             .replaceAll(" ", ""),
                         (
                             switchTestB?.split(" ")?.slice(3)?.join(" ") ??
@@ -766,7 +767,7 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventorye.container.swapItems(i,
                             .join(" *")
                             .replaceAll("  ", " ")
                             .trimStart()
-                            .split(" ")[2]
+                            .split(" ")[2]!
                             .replaceAll(" ", ""),
                         player?.location ?? { x: 0, y: 0, z: 0 },
                         player?.getRotation() ?? { x: 0, y: 0 }
@@ -788,7 +789,7 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventorye.container.swapItems(i,
                             .join(" *")
                             .replaceAll("  ", " ")
                             .trimStart()
-                            .split(" ")[0]
+                            .split(" ")[0]!
                             .replaceAll(" ", "")
                 );
                 if (
@@ -871,16 +872,16 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventorye.container.swapItems(i,
                                     const contents = tryget(() =>
                                         containerToItemStackArray(
                                             world
-                                                .getDimension(v.split(" ")[0])
+                                                .getDimension(v.split(" ")[0]!)
                                                 .getBlock({
                                                     x: v
-                                                        .split(" ")[1]
+                                                        .split(" ")[1]!
                                                         .toNumber()!,
                                                     y: v
-                                                        .split(" ")[2]
+                                                        .split(" ")[2]!
                                                         .toNumber()!,
                                                     z: v
-                                                        .split(" ")[3]
+                                                        .split(" ")[3]!
                                                         .toNumber()!,
                                                 })
                                                 ?.getComponent("inventory")
@@ -952,7 +953,7 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventorye.container.swapItems(i,
                                                             player.getDynamicProperty(
                                                                 v
                                                             )
-                                                        ).split(" ")[0]
+                                                        ).split(" ")[0]!
                                                     )
                                                     .getBlock({
                                                         x: String(
@@ -960,21 +961,21 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventorye.container.swapItems(i,
                                                                 v
                                                             )
                                                         )
-                                                            .split(" ")[1]
+                                                            .split(" ")[1]!
                                                             .toNumber()!,
                                                         y: String(
                                                             player.getDynamicProperty(
                                                                 v
                                                             )
                                                         )
-                                                            .split(" ")[2]
+                                                            .split(" ")[2]!
                                                             .toNumber()!,
                                                         z: String(
                                                             player.getDynamicProperty(
                                                                 v
                                                             )
                                                         )
-                                                            .split(" ")[3]
+                                                            .split(" ")[3]!
                                                             .toNumber()!,
                                                     })
                                                     ?.getComponent("inventory")
@@ -1190,7 +1191,7 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                                         EquipmentSlot.Feet,
                                         EquipmentSlot.Mainhand,
                                         EquipmentSlot.Offhand,
-                                    ][i]
+                                    ][i]!
                                 );
                                 if (item !== undefined) {
                                     slotsArray = slotsArray.concat(
@@ -1433,7 +1434,7 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                                         EquipmentSlot.Feet,
                                         EquipmentSlot.Mainhand,
                                         EquipmentSlot.Offhand,
-                                    ][i]
+                                    ][i]!
                                 );
                                 if (item !== undefined) {
                                     slotsArray = slotsArray.concat(
@@ -1626,7 +1627,7 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                                     ]
                             );
                         } else {
-                            let player = players[0];
+                            let player = players[0]!;
                             eventData.sender.sendMessage(
                                 String(
                                     player.name +
@@ -1674,7 +1675,7 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                             "§cError: no players with that uuid were found"
                         );
                     } else {
-                        let player = players[0];
+                        let player = players[0]!;
                         eventData.sender.sendMessage(
                             String(
                                 player.name +
@@ -1732,7 +1733,7 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                                     ]
                             );
                         } else {
-                            let player = players[0];
+                            let player = players[0]!;
                             eventData.sender.sendMessage(
                                 String(
                                     player.name +
@@ -1780,7 +1781,7 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                             "§cError: no players with that uuid were found"
                         );
                     } else {
-                        let player = players[0];
+                        let player = players[0]!;
                         eventData.sender.sendMessage(
                             String(
                                 player.name +
@@ -1835,7 +1836,7 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                                     ]
                             );
                         } else {
-                            let player = players[0];
+                            let player = players[0]!;
                             eventData.sender.sendMessage(
                                 String(
                                     player.name +
@@ -1880,7 +1881,7 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                             "§cError: no players with that uuid were found"
                         );
                     } else {
-                        let player = players[0];
+                        let player = players[0]!;
                         eventData.sender.sendMessage(
                             String(
                                 player.name +
@@ -1935,7 +1936,7 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                                     ]
                             );
                         } else {
-                            let player = players[0];
+                            let player = players[0]!;
                             eventData.sender.sendMessage(
                                 String(
                                     player.name +
@@ -1983,7 +1984,7 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                             "§cError: no players with that uuid were found"
                         );
                     } else {
-                        let player = players[0];
+                        let player = players[0]!;
                         eventData.sender.sendMessage(
                             String(
                                 player.name +
@@ -2043,7 +2044,7 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                                         ]
                                 );
                             } else {
-                                let playerb = players[0];
+                                let playerb = players[0]!;
                                 if (
                                     semver.satisfies(
                                         playerb.player_save_format_version ??
@@ -2187,7 +2188,7 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                                 "§cError: no players with that uuid were found"
                             );
                         } else {
-                            let playerb = players[0];
+                            let playerb = players[0]!;
                             if (
                                 semver.satisfies(
                                     playerb.player_save_format_version ??
@@ -2311,23 +2312,23 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                 eventData.cancel = true;
                 system.run(() => {
                     /*
-                console.warn(switchTestB.split(" ")[1].trim(), switchTestB.split(" ").slice(2).join(" ").trim(), player.location, player.getViewDirection())
+                console.warn(switchTestB.split(" ")[1]!.trim(), switchTestB.split(" ").slice(2).join(" ").trim(), player.location, player.getViewDirection())
                 console.warn(JSONStringify(coordinatesB(switchTestB.split(" ").slice(2).join(" ").trim(), player.location, player.getViewDirection())))
-                console.warn(JSONStringify(world.getDimension(switchTestB.split(" ")[1].trim())))*/
+                console.warn(JSONStringify(world.getDimension(switchTestB.split(" ")[1]!.trim())))*/
                     let block = world
                         .getDimension(
                             switchTestB
-                                .split(" ")[1]
+                                .split(" ")[1]!
                                 .trim()
                                 .replace("~", player.dimension.id + "\0")
                         )
                         .getBlock(
                             coordinatesB(
                                 switchTestB
-                                    .split(" ")[1]
+                                    .split(" ")[1]!
                                     .trim()
                                     .startsWith("~") &&
-                                    switchTestB.split(" ")[1].trim().length != 1
+                                    switchTestB.split(" ")[1]!.trim().length != 1
                                     ? switchTestB
                                           .split(" ")
                                           .slice(1)
@@ -2630,7 +2631,7 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                                             EquipmentSlot.Feet,
                                             EquipmentSlot.Mainhand,
                                             EquipmentSlot.Offhand,
-                                        ][i]
+                                        ][i]!
                                     );
                                     if (item !== undefined) {
                                         slotsArray = slotsArray.concat(
@@ -2823,7 +2824,7 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                                             EquipmentSlot.Feet,
                                             EquipmentSlot.Mainhand,
                                             EquipmentSlot.Offhand,
-                                        ][i]
+                                        ][i]!
                                     );
                                     if (item !== undefined) {
                                         slotsArray = slotsArray.concat(
@@ -2937,7 +2938,7 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                                             new ItemStack(
                                                 newMessage
                                                     .slice(9)
-                                                    .split(" ")[0],
+                                                    .split(" ")[0]!,
                                                 Number(
                                                     newMessage
                                                         .slice(9)
@@ -3015,7 +3016,7 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                                             newMessage.slice(9).split(" ")[2]
                                         ),
                                         new ItemStack(
-                                            newMessage.slice(9).split(" ")[0],
+                                            newMessage.slice(9).split(" ")[0]!,
                                             Number(
                                                 newMessage
                                                     .slice(9)
@@ -4168,7 +4169,7 @@ potionModifierType: ${d.potionModifierType.id}`)(item.getComponent("potion")!)
                                                             ?.removeEnchantment(
                                                                 command.split(
                                                                     " "
-                                                                )[3]
+                                                                )[3]!
                                                             );
                                                         player
                                                             .getComponent(
@@ -4227,7 +4228,7 @@ potionModifierType: ${d.potionModifierType.id}`)(item.getComponent("potion")!)
                                                             ?.getEnchantment(
                                                                 command.split(
                                                                     " "
-                                                                )[3]
+                                                                )[3]!
                                                             )
                                                     )
                                                 );
@@ -4281,7 +4282,7 @@ potionModifierType: ${d.potionModifierType.id}`)(item.getComponent("potion")!)
                                                             ?.hasEnchantment(
                                                                 command.split(
                                                                     " "
-                                                                )[3]
+                                                                )[3]!
                                                             )
                                                     )
                                                 );
@@ -4979,7 +4980,7 @@ potionModifierType: ${d.potionModifierType.id}`)(item.getComponent("potion")!)
                                                                     ?.removeEnchantment(
                                                                         command.split(
                                                                             " "
-                                                                        )[5]
+                                                                        )[5]!
                                                                     );
                                                                 (
                                                                     slot as ContainerSlot
@@ -5043,7 +5044,7 @@ potionModifierType: ${d.potionModifierType.id}`)(item.getComponent("potion")!)
                                                                     ?.getEnchantment(
                                                                         command.split(
                                                                             " "
-                                                                        )[5]
+                                                                        )[5]!
                                                                     )
                                                             )
                                                         );
@@ -7758,8 +7759,8 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
         srun(()=>{
             switch (Math.min(newMessage.split(" ").length, 3)){
                 case 3:
-                    try{player.runCommand("/scriptevent andexdb:setWorldDynamicPropertyB " + newMessage.slice(10).split(" ")[0] + "|" + newMessage.slice(newMessage.split(" ")[1].length+10))}catch(e){player.sendError("§c" + e + e.stack, true)}
-                    try{eventData.sender.sendMessage("Set " + newMessage.split(" ")[1] + " to " + newMessage.slice(newMessage.split(" ")[1].length+10)); }catch(e){player.sendError("§c" + e + e.stack, true)}
+                    try{player.runCommand("/scriptevent andexdb:setWorldDynamicPropertyB " + newMessage.slice(10).split(" ")[0] + "|" + newMessage.slice(newMessage.split(" ")[1]!.length+10))}catch(e){player.sendError("§c" + e + e.stack, true)}
+                    try{eventData.sender.sendMessage("Set " + newMessage.split(" ")[1] + " to " + newMessage.slice(newMessage.split(" ")[1]!.length+10)); }catch(e){player.sendError("§c" + e + e.stack, true)}
                 break;
                 case 2:
                     try{eventData.sender.sendMessage("Setting " + newMessage.split(" ")[1] + ": " + world.getDynamicProperty(newMessage.split(" ")[1])); }catch(e){player.sendError("§c" + e + e.stack, true)}
@@ -7800,9 +7801,9 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                     case 3:
                         try {
                             player.setDynamicProperty(
-                                newMessage.split(" ")[1],
+                                newMessage.split(" ")[1]!,
                                 newMessage.slice(
-                                    newMessage.split(" ")[1].length + 17
+                                    newMessage.split(" ")[1]!.length + 17
                                 )
                             );
                         } catch (e) {
@@ -7814,7 +7815,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                     newMessage.split(" ")[1] +
                                     " to " +
                                     newMessage.slice(
-                                        newMessage.split(" ")[1].length + 17
+                                        newMessage.split(" ")[1]!.length + 17
                                     )
                             );
                         } catch (e) {
@@ -7828,7 +7829,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                     newMessage.split(" ")[1] +
                                     ": " +
                                     player.getDynamicProperty(
-                                        newMessage.split(" ")[1]
+                                        newMessage.split(" ")[1]!
                                     )
                             );
                         } catch (e) {
@@ -7843,14 +7844,14 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                     case 3:
                         try {
                             targetSelectorAllListB(
-                                newMessage.split(" ")[1].replaceAll("\\s", " "),
+                                newMessage.split(" ")[1]!.replaceAll("\\s", " "),
                                 "",
                                 Number(eventData.sender.id)
                             ).forEach((currentEntitySelectedValues) => {
                                 currentEntitySelectedValues.setDynamicProperty(
-                                    newMessage.split(" ")[1],
+                                    newMessage.split(" ")[1]!,
                                     newMessage.slice(
-                                        newMessage.split(" ")[1].length + 17
+                                        newMessage.split(" ")[1]!.length + 17
                                     )
                                 );
                             });
@@ -7863,7 +7864,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                     newMessage.split(" ")[2] +
                                     " to " +
                                     newMessage.slice(
-                                        newMessage.split(" ")[2].length + 17
+                                        newMessage.split(" ")[2]!.length + 17
                                     )
                             );
                         } catch (e) {
@@ -7877,7 +7878,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                     newMessage.split(" ")[2] +
                                     ": " +
                                     player.getDynamicProperty(
-                                        newMessage.split(" ")[2]
+                                        newMessage.split(" ")[2]!
                                     )
                             );
                         } catch (e) {
@@ -7910,9 +7911,9 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                         entity.id == newMessage.split(" ")[1]
                                 )
                                 ?.setDynamicProperty(
-                                    newMessage.split(" ")[1],
+                                    newMessage.split(" ")[1]!,
                                     newMessage.slice(
-                                        newMessage.split(" ")[1].length + 30
+                                        newMessage.split(" ")[1]!.length + 30
                                     )
                                 );
                         } catch (e) {
@@ -7924,7 +7925,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                     newMessage.split(" ")[1] +
                                     " to " +
                                     newMessage.slice(
-                                        newMessage.split(" ")[1].length + 17
+                                        newMessage.split(" ")[1]!.length + 17
                                     )
                             );
                         } catch (e) {
@@ -7938,7 +7939,7 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                     newMessage.split(" ")[1] +
                                     ": " +
                                     player.getDynamicProperty(
-                                        newMessage.split(" ")[1]
+                                        newMessage.split(" ")[1]!
                                     )
                             );
                         } catch (e) {
@@ -9082,7 +9083,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                         .replaceAll(", ", " ") +
                                         ", " +
                                         world.getDimension(
-                                            newMessage.split(" ")[1]
+                                            newMessage.split(" ")[1]!
                                         ).id +
                                         ", " +
                                         Number(newMessage.split(" ")[2]) +
@@ -9203,7 +9204,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                     warpListB.find(
                         (findWarp) =>
                             findWarp
-                                .split(", ")[0]
+                                .split(", ")[0]!
                                 .escapeCharacters(true)
                                 .replaceAll(", ", " ")
                                 .replaceAll("|", "\\u007c") ==
@@ -9225,7 +9226,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                     warpListB.findIndex(
                                         (findWarp) =>
                                             findWarp
-                                                .split(", ")[0]
+                                                .split(", ")[0]!
                                                 .escapeCharacters(true)
                                                 .replaceAll(", ", " ")
                                                 .replaceAll("|", "\\u007c") ==
@@ -9297,7 +9298,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                     warpListD.find(
                         (findWarp) =>
                             findWarp
-                                .split(", ")[0]
+                                .split(", ")[0]!
                                 .escapeCharacters(true)
                                 .replaceAll("|", "\\u007c") ==
                             newMessage
@@ -9316,7 +9317,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                 .find(
                                     (findWarp) =>
                                         findWarp
-                                            .split(", ")[0]
+                                            .split(", ")[0]!
                                             .escapeCharacters(true)
                                             .replaceAll("|", "\\u007c") ==
                                         newMessage
@@ -9411,7 +9412,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                     world.getDynamicProperty("globalWarpListValues")
                 ).split("||||");
                 for (let i in warpListE) {
-                    warpListE[i] = warpListE[i].split(", ")[0];
+                    warpListE[i] = warpListE[i]!.split(", ")[0]!;
                 }
                 if (warpListE.length == 1) {
                     player.sendMessageB(
@@ -9466,7 +9467,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                     wList.find(
                         (findWarp) =>
                             findWarp
-                                .split(", ")[0]
+                                .split(", ")[0]!
                                 .escapeCharacters(true)
                                 .replaceAll("|", "\\u007c") ==
                             newMessage
@@ -9484,7 +9485,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                 wList.findIndex(
                                     (warpItem) =>
                                         warpItem
-                                            .split(", ")[0]
+                                            .split(", ")[0]!
                                             .escapeCharacters(true)
                                             .replaceAll("|", "\\u007c") ==
                                         newMessage
@@ -9502,7 +9503,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                     .replaceAll(", ", " ")
                                     .replaceAll("|", "\\u007c") +
                                     ", " +
-                                    world.getDimension(newMessage.split(" ")[1])
+                                    world.getDimension(newMessage.split(" ")[1]!)
                                         .id +
                                     ", " +
                                     Number(newMessage.split(" ")[2]) +
@@ -9615,7 +9616,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                     wListB.find(
                         (findWarp) =>
                             findWarp
-                                .split(", ")[0]
+                                .split(", ")[0]!
                                 .escapeCharacters(true)
                                 .replaceAll("|", "\\u007c") ==
                             newMessage
@@ -9633,7 +9634,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                     wListB.findIndex(
                                         (findWarp) =>
                                             findWarp
-                                                .split(", ")[0]
+                                                .split(", ")[0]!
                                                 .escapeCharacters(true)
                                                 .replaceAll("|", "\\u007c") ==
                                             newMessage
@@ -9793,7 +9794,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                     player.getDynamicProperty("warpList")
                 ).split("||||");
                 for (let i in wListE) {
-                    wListE[i] = wListE[i].split(", ")[0];
+                    wListE[i] = wListE[i]!.split(", ")[0]!;
                 }
                 if (wListE.length == 1) {
                     eventData.sender.sendMessage(
@@ -11315,7 +11316,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                         const matchedRequests = TeleportRequest.getRequestsToPlayer(player).filter(r=>targets.some(p=>r.player?.id === p.id));
                         if(matchedRequests.length === 0) {
                             if(targets.length === 1) {
-                                player.sendError(`§c${targets[0].name} has not sent you a teleport request.`, true);
+                                player.sendError(`§c${targets[0]!.name} has not sent you a teleport request.`, true);
                             }else{
                                 player.sendError(`§cNone of the ${targets.length} players matching the specified target selector have sent you any teleport requests.`, true);
                             }
@@ -11369,7 +11370,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                         const matchedRequests = TeleportRequest.getRequestsToPlayer(player).filter(r=>targets.some(p=>r.player?.id === p.id));
                         if(matchedRequests.length === 0) {
                             if(targets.length === 1) {
-                                player.sendError(`§c${targets[0].name} has not sent you a teleport request.`, true);
+                                player.sendError(`§c${targets[0]!.name} has not sent you a teleport request.`, true);
                             }else{
                                 player.sendError(`§cNone of the ${targets.length} players matching the specified target selector have sent you any teleport requests.`, true);
                             }
@@ -11472,7 +11473,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                             let spawnEvent: string | undefined = undefined
                             if (/^[^<]+<[^>]*>$/.test(entityType)) {
                                 spawnEvent = entityType.match(/^[^<]+<([^>]*)>$/)![1];
-                                entityType = entityType.match(/^([^<]+)<[^>]*>$/)![1];
+                                entityType = entityType.match(/^([^<]+)<[^>]*>$/)![1]!;
                             }
                             for (let i = 0; i < args[1]!; i++) {
                                 let a = player.dimension.spawnEntity(
@@ -12583,7 +12584,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                     "andexpr:entity_scale_variable_override_enabled",
                                     Boolean(
                                         newMessage
-                                            .split(" ")[1]
+                                            .split(" ")[1]!
                                             .replaceAll("false", "")
                                             .replaceAll("0", "")
                                             .replaceAll("False", "")
@@ -12631,7 +12632,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                     "andexpr:entity_scale_variable_override_enabled",
                                     Boolean(
                                         newMessage
-                                            .split(" ")[1]
+                                            .split(" ")[1]!
                                             .replaceAll("false", "")
                                             .replaceAll("0", "")
                                             .replaceAll("False", "")
@@ -13026,7 +13027,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[0][0],
+                        )[0]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -13035,7 +13036,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[1][0],
+                        )[1]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -13044,7 +13045,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[2][0],
+                        )[2]![0],
                         player.location,
                         player.getRotation()
                     );
@@ -13057,7 +13058,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[3][0],
+                        )[3]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -13066,7 +13067,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[4][0],
+                        )[4]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -13075,7 +13076,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[5][0],
+                        )[5]![0],
                         player.location,
                         player.getRotation()
                     );
@@ -13088,7 +13089,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[5].index +
+                        )[5]!.index +
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -13097,7 +13098,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[5][0].indexOf(" ") +
+                        )[5]![0].indexOf(" ") +
                         1;
                     let reststringaftercoordinates = switchTestB
                         .split(" ")
@@ -13105,7 +13106,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                         .join(" ")
                         .slice(firstblocknameindex);
                     let firstblockname =
-                        reststringaftercoordinates.split(" ")[0];
+                        reststringaftercoordinates.split(" ")[0]!;
                     let firstblockstates = reststringaftercoordinates
                         .split(" ")
                         .slice(1)
@@ -13161,10 +13162,10 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                           .join(" ")
                                           .trimStart(),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
-                              .split(" ")[0]
+                              .split(" ")[0]!
                         : reststringaftercoordinates
                               .split(" ")
                               .slice(1)
@@ -13187,17 +13188,17 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                           .replaceAll("[", "{")
                                           .replaceAll("]", "}"),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
-                              .split(" ")[0]
+                              .split(" ")[0]!
                         : reststringaftercoordinates
                               .trimStart()
                               .split(" ")
                               .slice(1)
                               .join(" ")
                               .trimStart()
-                              .split(" ")[0];
+                              .split(" ")[0]!;
                     let somethingtest = reststringaftercoordinates
                         .split(" ")
                         .slice(1)
@@ -13217,7 +13218,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                           .join(" ")
                                           .trimStart(),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
                               .split(" ")
@@ -13246,7 +13247,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                           .replaceAll("[", "{")
                                           .replaceAll("]", "}"),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
                               .split(" ")
@@ -13310,7 +13311,7 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                     } catch (e) {
                         player.sendError("§c" + e + e.stack, true);
                     }
-                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2][0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1).split(" ")[0], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
+                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2]![0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1).split(" ")[0]!, extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
                 }
                 break;
             case !!switchTest.match(/^ifill$/):
@@ -15485,7 +15486,7 @@ ${command.dp}ifill <center: x y z> <radius: x y z> <offset: x y z> <length: floa
                             default:
                         }
                     }
-                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2][0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1).split(" ")[0], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
+                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2]![0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1).split(" ")[0]!, extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
                 }
                 break;
             case !!switchTest.match(/^itfill$/):
@@ -19034,7 +19035,7 @@ ${command.dp}itfill <center: x y z> <radius: x y z> <offset: x y z> <length: flo
                             default:
                         }
                     }
-                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2][0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1).split(" ")[0], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
+                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2]![0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1).split(" ")[0]!, extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
                 }
                 break;
             case !!switchTest.match(/^idtfill$/):
@@ -19617,7 +19618,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                                       blocktypes.length *
                                                                           Math.random()
                                                                   )
-                                                              ]
+                                                              ]!
                                                         : firstblockname!,
                                                     firstblockstates,
                                                     {
@@ -19724,7 +19725,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                                       blocktypes.length *
                                                                           Math.random()
                                                                   )
-                                                              ]
+                                                              ]!
                                                         : firstblockname!,
                                                     firstblockstates,
                                                     {
@@ -19953,7 +19954,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                                       blocktypes.length *
                                                                           Math.random()
                                                                   )
-                                                              ]
+                                                              ]!
                                                         : firstblockname!,
                                                     firstblockstates,
                                                     {
@@ -20060,7 +20061,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                                       blocktypes.length *
                                                                           Math.random()
                                                                   )
-                                                              ]
+                                                              ]!
                                                         : firstblockname!,
                                                     firstblockstates,
                                                     {
@@ -20164,7 +20165,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                                       blocktypes.length *
                                                                           Math.random()
                                                                   )
-                                                              ]
+                                                              ]!
                                                         : firstblockname!,
                                                     firstblockstates,
                                                     {
@@ -20271,7 +20272,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                                       blocktypes.length *
                                                                           Math.random()
                                                                   )
-                                                              ]
+                                                              ]!
                                                         : firstblockname!,
                                                     firstblockstates,
                                                     {
@@ -20378,7 +20379,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                                       blocktypes.length *
                                                                           Math.random()
                                                                   )
-                                                              ]
+                                                              ]!
                                                         : firstblockname!,
                                                     firstblockstates,
                                                     {
@@ -22466,7 +22467,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                             default:
                         }
                     }
-                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2][0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1).split(" ")[0], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
+                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2]![0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1).split(" ")[0]!, extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
                 }
                 break;
             case !!switchTest.match(/^ifillc$/):
@@ -22481,7 +22482,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[0][0],
+                        )[0]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -22490,7 +22491,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[1][0],
+                        )[1]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -22499,7 +22500,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[2][0],
+                        )[2]![0],
                         player.location,
                         player.getRotation()
                     );
@@ -22512,7 +22513,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[3][0],
+                        )[3]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -22521,7 +22522,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[4][0],
+                        )[4]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -22530,7 +22531,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[5][0],
+                        )[5]![0],
                         player.location,
                         player.getRotation()
                     );
@@ -22543,7 +22544,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[5].index +
+                        )[5]!.index +
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -22552,7 +22553,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[5][0].indexOf(" ") +
+                        )[5]![0].indexOf(" ") +
                         1;
                     let reststringaftercoordinates = switchTestB
                         .split(" ")
@@ -22560,7 +22561,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         .join(" ")
                         .slice(firstblocknameindex);
                     let firstblockname =
-                        reststringaftercoordinates.split(" ")[0];
+                        reststringaftercoordinates.split(" ")[0]!;
                     let firstblockstates = reststringaftercoordinates
                         .split(" ")
                         .slice(1)
@@ -22616,10 +22617,10 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .join(" ")
                                           .trimStart(),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
-                              .split(" ")[0]
+                              .split(" ")[0]!
                         : reststringaftercoordinates
                               .split(" ")
                               .slice(1)
@@ -22642,17 +22643,17 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .replaceAll("[", "{")
                                           .replaceAll("]", "}"),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
-                              .split(" ")[0]
+                              .split(" ")[0]!
                         : reststringaftercoordinates
                               .trimStart()
                               .split(" ")
                               .slice(1)
                               .join(" ")
                               .trimStart()
-                              .split(" ")[0];
+                              .split(" ")[0]!;
                     let somethingtest = reststringaftercoordinates
                         .split(" ")
                         .slice(1)
@@ -22672,7 +22673,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .join(" ")
                                           .trimStart(),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
                               .split(" ")
@@ -22701,7 +22702,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .replaceAll("[", "{")
                                           .replaceAll("]", "}"),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
                               .split(" ")
@@ -22766,7 +22767,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                             player.sendError("§c" + e + e.stack, true);
                         }
                     });
-                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2][0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1).split(" ")[0], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
+                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2]![0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1).split(" ")[0]!, extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
                 }
                 break;
             case !!switchTest.match(/^ifilld$/):
@@ -22781,7 +22782,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[0][0],
+                        )[0]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -22790,7 +22791,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[1][0],
+                        )[1]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -22799,7 +22800,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[2][0],
+                        )[2]![0],
                         player.location,
                         player.getRotation()
                     );
@@ -22812,7 +22813,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[3][0],
+                        )[3]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -22821,7 +22822,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[4][0],
+                        )[4]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -22830,7 +22831,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[5][0],
+                        )[5]![0],
                         player.location,
                         player.getRotation()
                     );
@@ -22843,7 +22844,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[5].index +
+                        )[5]!.index +
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -22852,7 +22853,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[5][0].indexOf(" ") +
+                        )[5]![0].indexOf(" ") +
                         1;
                     let reststringaftercoordinates = switchTestB
                         .split(" ")
@@ -22860,7 +22861,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         .join(" ")
                         .slice(firstblocknameindex);
                     let firstblockname =
-                        reststringaftercoordinates.split(" ")[0];
+                        reststringaftercoordinates.split(" ")[0]!;
                     let firstblockstates = reststringaftercoordinates
                         .split(" ")
                         .slice(1)
@@ -22916,10 +22917,10 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .join(" ")
                                           .trimStart(),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
-                              .split(" ")[0]
+                              .split(" ")[0]!
                         : reststringaftercoordinates
                               .split(" ")
                               .slice(1)
@@ -22942,17 +22943,17 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .replaceAll("[", "{")
                                           .replaceAll("]", "}"),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
-                              .split(" ")[0]
+                              .split(" ")[0]!
                         : reststringaftercoordinates
                               .trimStart()
                               .split(" ")
                               .slice(1)
                               .join(" ")
                               .trimStart()
-                              .split(" ")[0];
+                              .split(" ")[0]!;
                     let somethingtest = reststringaftercoordinates
                         .split(" ")
                         .slice(1)
@@ -22972,7 +22973,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .join(" ")
                                           .trimStart(),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
                               .split(" ")
@@ -23001,7 +23002,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .replaceAll("[", "{")
                                           .replaceAll("]", "}"),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
                               .split(" ")
@@ -23066,7 +23067,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                             player.sendError("§c" + e + e.stack, true);
                         }
                     });
-                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2][0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1).split(" ")[0], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
+                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2]![0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1).split(" ")[0]!, extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
                 }
                 break;
             case !!switchTest.match(/^itfillc$/):
@@ -23081,7 +23082,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[0][0],
+                        )[0]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -23090,7 +23091,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[1][0],
+                        )[1]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -23099,7 +23100,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[2][0],
+                        )[2]![0],
                         player.location,
                         player.getRotation()
                     );
@@ -23112,7 +23113,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[3][0],
+                        )[3]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -23121,7 +23122,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[4][0],
+                        )[4]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -23130,7 +23131,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[5][0],
+                        )[5]![0],
                         player.location,
                         player.getRotation()
                     );
@@ -23143,7 +23144,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[5].index +
+                        )[5]!.index +
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -23152,7 +23153,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[5][0].indexOf(" ") +
+                        )[5]![0].indexOf(" ") +
                         1;
                     let reststringaftercoordinates = switchTestB
                         .split(" ")
@@ -23160,7 +23161,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         .join(" ")
                         .slice(firstblocknameindex);
                     let firstblockname =
-                        reststringaftercoordinates.split(" ")[0];
+                        reststringaftercoordinates.split(" ")[0]!;
                     let firstblockstates = reststringaftercoordinates
                         .split(" ")
                         .slice(1)
@@ -23216,10 +23217,10 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .join(" ")
                                           .trimStart(),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
-                              .split(" ")[0]
+                              .split(" ")[0]!
                         : reststringaftercoordinates
                               .split(" ")
                               .slice(1)
@@ -23242,17 +23243,17 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .replaceAll("[", "{")
                                           .replaceAll("]", "}"),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
-                              .split(" ")[0]
+                              .split(" ")[0]!
                         : reststringaftercoordinates
                               .trimStart()
                               .split(" ")
                               .slice(1)
                               .join(" ")
                               .trimStart()
-                              .split(" ")[0];
+                              .split(" ")[0]!;
                     let somethingtest = reststringaftercoordinates
                         .split(" ")
                         .slice(1)
@@ -23272,7 +23273,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .join(" ")
                                           .trimStart(),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
                               .split(" ")
@@ -23301,7 +23302,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .replaceAll("[", "{")
                                           .replaceAll("]", "}"),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
                               .split(" ")
@@ -23392,7 +23393,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                             player.sendError("§c" + e + e.stack, true);
                         }
                     });
-                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2][0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1).split(" ")[0], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
+                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2]![0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1).split(" ")[0]!, extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
                 }
                 break;
             case !!switchTest.match(/^iwalls$/):
@@ -23407,7 +23408,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[0][0],
+                        )[0]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -23416,7 +23417,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[1][0],
+                        )[1]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -23425,7 +23426,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[2][0],
+                        )[2]![0],
                         player.location,
                         player.getRotation()
                     );
@@ -23438,7 +23439,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[3][0],
+                        )[3]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -23447,7 +23448,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[4][0],
+                        )[4]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -23456,7 +23457,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[5][0],
+                        )[5]![0],
                         player.location,
                         player.getRotation()
                     );
@@ -23469,7 +23470,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[5].index +
+                        )[5]!.index +
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -23478,7 +23479,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[5][0].indexOf(" ") +
+                        )[5]![0].indexOf(" ") +
                         1;
                     let reststringaftercoordinates = switchTestB
                         .split(" ")
@@ -23486,7 +23487,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         .join(" ")
                         .slice(firstblocknameindex);
                     let firstblockname =
-                        reststringaftercoordinates.split(" ")[0];
+                        reststringaftercoordinates.split(" ")[0]!;
                     let firstblockstates = reststringaftercoordinates
                         .split(" ")
                         .slice(1)
@@ -23542,10 +23543,10 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .join(" ")
                                           .trimStart(),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
-                              .split(" ")[0]
+                              .split(" ")[0]!
                         : reststringaftercoordinates
                               .split(" ")
                               .slice(1)
@@ -23568,17 +23569,17 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .replaceAll("[", "{")
                                           .replaceAll("]", "}"),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
-                              .split(" ")[0]
+                              .split(" ")[0]!
                         : reststringaftercoordinates
                               .trimStart()
                               .split(" ")
                               .slice(1)
                               .join(" ")
                               .trimStart()
-                              .split(" ")[0];
+                              .split(" ")[0]!;
                     let somethingtest = reststringaftercoordinates
                         .split(" ")
                         .slice(1)
@@ -23598,7 +23599,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .join(" ")
                                           .trimStart(),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
                               .split(" ")
@@ -23627,7 +23628,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .replaceAll("[", "{")
                                           .replaceAll("]", "}"),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
                               .split(" ")
@@ -23692,7 +23693,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                             player.sendError("§c" + e + e.stack, true);
                         }
                     });
-                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2][0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1).split(" ")[0], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
+                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2]![0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1).split(" ")[0]!, extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
                 }
                 break;
             case !!switchTest.match(/^itwalls$/):
@@ -23724,7 +23725,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         player.location,
                         player.getRotation()
                     );
-                    //let firstblocknameindex = Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1
+                    //let firstblocknameindex = Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1
                     //let reststringaftercoordinates = switchTestB.split(" ").slice(1).join(" ").slice(firstblocknameindex)
                     let firstblockname = args[7];
                     let firstblockstates = argsa.extra
@@ -23755,7 +23756,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                   extractJSONStrings(
                                       argsa.extra.trimStart(),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
                               .split(" ")[0]
@@ -23770,11 +23771,11 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .replaceAll("[", "{")
                                           .replaceAll("]", "}"),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
                               .split(" ")[0]
-                        : argsa.extra.trimStart().split(" ")[0];
+                        : argsa.extra.trimStart().split(" ")[0]!;
                     let somethingtest = argsa.extra.trimStart().startsWith("{")
                         ? argsa.extra
                               .trimStart()
@@ -23782,7 +23783,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                   extractJSONStrings(
                                       argsa.extra.trimStart(),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
                               .split(" ")
@@ -23800,7 +23801,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .replaceAll("[", "{")
                                           .replaceAll("]", "}"),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
                               .split(" ")
@@ -23905,7 +23906,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                             player.sendError("§c" + e + e.stack, true);
                         }
                     });
-                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2][0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1).split(" ")[0], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
+                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2]![0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1).split(" ")[0]!, extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
                 }
                 break;
             case !!switchTest.match(/^ihollow$/):
@@ -23920,7 +23921,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[0][0],
+                        )[0]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -23929,7 +23930,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[1][0],
+                        )[1]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -23938,7 +23939,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[2][0],
+                        )[2]![0],
                         player.location,
                         player.getRotation()
                     );
@@ -23951,7 +23952,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[3][0],
+                        )[3]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -23960,7 +23961,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[4][0],
+                        )[4]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -23969,7 +23970,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[5][0],
+                        )[5]![0],
                         player.location,
                         player.getRotation()
                     );
@@ -23982,7 +23983,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[5].index +
+                        )[5]!.index +
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -23991,7 +23992,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[5][0].indexOf(" ") +
+                        )[5]![0].indexOf(" ") +
                         1;
                     let reststringaftercoordinates = switchTestB
                         .split(" ")
@@ -23999,7 +24000,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         .join(" ")
                         .slice(firstblocknameindex);
                     let firstblockname =
-                        reststringaftercoordinates.split(" ")[0];
+                        reststringaftercoordinates.split(" ")[0]!;
                     let firstblockstates = reststringaftercoordinates
                         .split(" ")
                         .slice(1)
@@ -24055,10 +24056,10 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .join(" ")
                                           .trimStart(),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
-                              .split(" ")[0]
+                              .split(" ")[0]!
                         : reststringaftercoordinates
                               .split(" ")
                               .slice(1)
@@ -24081,17 +24082,17 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .replaceAll("[", "{")
                                           .replaceAll("]", "}"),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
-                              .split(" ")[0]
+                              .split(" ")[0]!
                         : reststringaftercoordinates
                               .trimStart()
                               .split(" ")
                               .slice(1)
                               .join(" ")
                               .trimStart()
-                              .split(" ")[0];
+                              .split(" ")[0]!;
                     let somethingtest = reststringaftercoordinates
                         .split(" ")
                         .slice(1)
@@ -24111,7 +24112,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .join(" ")
                                           .trimStart(),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
                               .split(" ")
@@ -24140,7 +24141,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .replaceAll("[", "{")
                                           .replaceAll("]", "}"),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
                               .split(" ")
@@ -24205,7 +24206,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                             player.sendError("§c" + e + e.stack, true);
                         }
                     });
-                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2][0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1).split(" ")[0], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
+                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2]![0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1).split(" ")[0]!, extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
                 }
                 break;
             case !!switchTest.match(/^ithollow$/):
@@ -24237,7 +24238,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         player.location,
                         player.getRotation()
                     );
-                    //let firstblocknameindex = Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1
+                    //let firstblocknameindex = Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1
                     //let reststringaftercoordinates = switchTestB.split(" ").slice(1).join(" ").slice(firstblocknameindex)
                     let firstblockname = args[7];
                     let firstblockstates = argsa.extra
@@ -24268,7 +24269,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                   extractJSONStrings(
                                       argsa.extra.trimStart(),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
                               .split(" ")[0]
@@ -24283,11 +24284,11 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .replaceAll("[", "{")
                                           .replaceAll("]", "}"),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
                               .split(" ")[0]
-                        : argsa.extra.trimStart().split(" ")[0];
+                        : argsa.extra.trimStart().split(" ")[0]!;
                     let somethingtest = argsa.extra.trimStart().startsWith("{")
                         ? argsa.extra
                               .trimStart()
@@ -24295,7 +24296,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                   extractJSONStrings(
                                       argsa.extra.trimStart(),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
                               .split(" ")
@@ -24313,7 +24314,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .replaceAll("[", "{")
                                           .replaceAll("]", "}"),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
                               .split(" ")
@@ -24418,7 +24419,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                             player.sendError("§c" + e + e.stack, true);
                         }
                     });
-                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2][0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1).split(" ")[0], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
+                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2]![0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1).split(" ")[0]!, extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
                 }
                 break;
             case !!switchTest.match(/^ioutline$/):
@@ -24433,7 +24434,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[0][0],
+                        )[0]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -24442,7 +24443,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[1][0],
+                        )[1]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -24451,7 +24452,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[2][0],
+                        )[2]![0],
                         player.location,
                         player.getRotation()
                     );
@@ -24464,7 +24465,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[3][0],
+                        )[3]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -24473,7 +24474,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[4][0],
+                        )[4]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -24482,7 +24483,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[5][0],
+                        )[5]![0],
                         player.location,
                         player.getRotation()
                     );
@@ -24495,7 +24496,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[5].index +
+                        )[5]!.index +
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -24504,7 +24505,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[5][0].indexOf(" ") +
+                        )[5]![0].indexOf(" ") +
                         1;
                     let reststringaftercoordinates = switchTestB
                         .split(" ")
@@ -24512,7 +24513,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         .join(" ")
                         .slice(firstblocknameindex);
                     let firstblockname =
-                        reststringaftercoordinates.split(" ")[0];
+                        reststringaftercoordinates.split(" ")[0]!;
                     let firstblockstates = reststringaftercoordinates
                         .split(" ")
                         .slice(1)
@@ -24568,10 +24569,10 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .join(" ")
                                           .trimStart(),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
-                              .split(" ")[0]
+                              .split(" ")[0]!
                         : reststringaftercoordinates
                               .split(" ")
                               .slice(1)
@@ -24594,17 +24595,17 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .replaceAll("[", "{")
                                           .replaceAll("]", "}"),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
-                              .split(" ")[0]
+                              .split(" ")[0]!
                         : reststringaftercoordinates
                               .trimStart()
                               .split(" ")
                               .slice(1)
                               .join(" ")
                               .trimStart()
-                              .split(" ")[0];
+                              .split(" ")[0]!;
                     let somethingtest = reststringaftercoordinates
                         .split(" ")
                         .slice(1)
@@ -24624,7 +24625,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .join(" ")
                                           .trimStart(),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
                               .split(" ")
@@ -24653,7 +24654,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .replaceAll("[", "{")
                                           .replaceAll("]", "}"),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
                               .split(" ")
@@ -24718,7 +24719,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                             player.sendError("§c" + e + e.stack, true);
                         }
                     });
-                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2][0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1).split(" ")[0], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
+                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2]![0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1).split(" ")[0]!, extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
                 }
                 break;
             case !!switchTest.match(/^itoutline$/):
@@ -24750,7 +24751,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         player.location,
                         player.getRotation()
                     );
-                    //let firstblocknameindex = Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1
+                    //let firstblocknameindex = Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1
                     //let reststringaftercoordinates = switchTestB.split(" ").slice(1).join(" ").slice(firstblocknameindex)
                     let firstblockname = args[7];
                     let firstblockstates = argsa.extra
@@ -24781,7 +24782,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                   extractJSONStrings(
                                       argsa.extra.trimStart(),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
                               .split(" ")[0]
@@ -24796,11 +24797,11 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .replaceAll("[", "{")
                                           .replaceAll("]", "}"),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
                               .split(" ")[0]
-                        : argsa.extra.trimStart().split(" ")[0];
+                        : argsa.extra.trimStart().split(" ")[0]!;
                     let somethingtest = argsa.extra.trimStart().startsWith("{")
                         ? argsa.extra
                               .trimStart()
@@ -24808,7 +24809,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                   extractJSONStrings(
                                       argsa.extra.trimStart(),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
                               .split(" ")
@@ -24826,7 +24827,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .replaceAll("[", "{")
                                           .replaceAll("]", "}"),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
                               .split(" ")
@@ -24931,7 +24932,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                             player.sendError("§c" + e + e.stack, true);
                         }
                     });
-                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2][0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1).split(" ")[0], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
+                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2]![0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1).split(" ")[0]!, extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
                 }
                 break;
             case !!switchTest.match(/^ipillars$/):
@@ -24946,7 +24947,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[0][0],
+                        )[0]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -24955,7 +24956,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[1][0],
+                        )[1]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -24964,7 +24965,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[2][0],
+                        )[2]![0],
                         player.location,
                         player.getRotation()
                     );
@@ -24977,7 +24978,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[3][0],
+                        )[3]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -24986,7 +24987,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[4][0],
+                        )[4]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -24995,7 +24996,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[5][0],
+                        )[5]![0],
                         player.location,
                         player.getRotation()
                     );
@@ -25008,7 +25009,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[5].index +
+                        )[5]!.index +
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -25017,7 +25018,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[5][0].indexOf(" ") +
+                        )[5]![0].indexOf(" ") +
                         1;
                     let reststringaftercoordinates = switchTestB
                         .split(" ")
@@ -25025,7 +25026,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         .join(" ")
                         .slice(firstblocknameindex);
                     let firstblockname =
-                        reststringaftercoordinates.split(" ")[0];
+                        reststringaftercoordinates.split(" ")[0]!;
                     let firstblockstates = reststringaftercoordinates
                         .split(" ")
                         .slice(1)
@@ -25081,10 +25082,10 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .join(" ")
                                           .trimStart(),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
-                              .split(" ")[0]
+                              .split(" ")[0]!
                         : reststringaftercoordinates
                               .split(" ")
                               .slice(1)
@@ -25107,17 +25108,17 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .replaceAll("[", "{")
                                           .replaceAll("]", "}"),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
-                              .split(" ")[0]
+                              .split(" ")[0]!
                         : reststringaftercoordinates
                               .trimStart()
                               .split(" ")
                               .slice(1)
                               .join(" ")
                               .trimStart()
-                              .split(" ")[0];
+                              .split(" ")[0]!;
                     let somethingtest = reststringaftercoordinates
                         .split(" ")
                         .slice(1)
@@ -25137,7 +25138,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .join(" ")
                                           .trimStart(),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
                               .split(" ")
@@ -25166,7 +25167,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .replaceAll("[", "{")
                                           .replaceAll("]", "}"),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
                               .split(" ")
@@ -25231,7 +25232,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                             player.sendError("§c" + e + e.stack, true);
                         }
                     });
-                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2][0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1).split(" ")[0], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
+                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2]![0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1).split(" ")[0]!, extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
                 }
                 break;
             case !!switchTest.match(/^itpillars$/):
@@ -25263,7 +25264,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         player.location,
                         player.getRotation()
                     );
-                    //let firstblocknameindex = Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1
+                    //let firstblocknameindex = Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1
                     //let reststringaftercoordinates = switchTestB.split(" ").slice(1).join(" ").slice(firstblocknameindex)
                     let firstblockname = args[7];
                     let firstblockstates = argsa.extra
@@ -25294,7 +25295,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                   extractJSONStrings(
                                       argsa.extra.trimStart(),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
                               .split(" ")[0]
@@ -25309,11 +25310,11 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .replaceAll("[", "{")
                                           .replaceAll("]", "}"),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
                               .split(" ")[0]
-                        : argsa.extra.trimStart().split(" ")[0];
+                        : argsa.extra.trimStart().split(" ")[0]!;
                     let somethingtest = argsa.extra.trimStart().startsWith("{")
                         ? argsa.extra
                               .trimStart()
@@ -25321,7 +25322,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                   extractJSONStrings(
                                       argsa.extra.trimStart(),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
                               .split(" ")
@@ -25339,7 +25340,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .replaceAll("[", "{")
                                           .replaceAll("]", "}"),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
                               .split(" ")
@@ -25444,7 +25445,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                             player.sendError("§c" + e + e.stack, true);
                         }
                     });
-                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2][0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1).split(" ")[0], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
+                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2]![0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1).split(" ")[0]!, extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
                 }
                 break;
             case !!switchTest.match(/^igfill$/):
@@ -25459,7 +25460,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[0][0],
+                        )[0]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -25468,7 +25469,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[1][0],
+                        )[1]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -25477,7 +25478,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[2][0],
+                        )[2]![0],
                         player.location,
                         player.getRotation()
                     );
@@ -25490,7 +25491,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[3][0],
+                        )[3]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -25499,7 +25500,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[4][0],
+                        )[4]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -25508,7 +25509,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[5][0],
+                        )[5]![0],
                         player.location,
                         player.getRotation()
                     );
@@ -25521,7 +25522,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[5].index +
+                        )[5]!.index +
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -25530,7 +25531,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[5][0].indexOf(" ") +
+                        )[5]![0].indexOf(" ") +
                         1;
                     let reststringaftercoordinates = switchTestB
                         .split(" ")
@@ -25538,7 +25539,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         .join(" ")
                         .slice(firstblocknameindex);
                     let firstblockname =
-                        reststringaftercoordinates.split(" ")[0];
+                        reststringaftercoordinates.split(" ")[0]!;
                     let firstblockstates = reststringaftercoordinates
                         .split(" ")
                         .slice(1)
@@ -25594,10 +25595,10 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .join(" ")
                                           .trimStart(),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
-                              .split(" ")[0]
+                              .split(" ")[0]!
                         : reststringaftercoordinates
                               .split(" ")
                               .slice(1)
@@ -25620,17 +25621,17 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .replaceAll("[", "{")
                                           .replaceAll("]", "}"),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
-                              .split(" ")[0]
+                              .split(" ")[0]!
                         : reststringaftercoordinates
                               .trimStart()
                               .split(" ")
                               .slice(1)
                               .join(" ")
                               .trimStart()
-                              .split(" ")[0];
+                              .split(" ")[0]!;
                     let somethingtest = reststringaftercoordinates
                         .split(" ")
                         .slice(1)
@@ -25650,7 +25651,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .join(" ")
                                           .trimStart(),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
                               .split(" ")
@@ -25679,7 +25680,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .replaceAll("[", "{")
                                           .replaceAll("]", "}"),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
                               .split(" ")
@@ -25761,7 +25762,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                     } catch (e) {
                         player.sendError("§c" + e + e.stack, true);
                     }
-                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2][0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1).split(" ")[0], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
+                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2]![0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1).split(" ")[0]!, extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
                 }
                 break;
             case !!switchTest.match(/^iogfill$/):
@@ -25776,7 +25777,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[0][0],
+                        )[0]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -25785,7 +25786,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[1][0],
+                        )[1]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -25794,7 +25795,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[2][0],
+                        )[2]![0],
                         player.location,
                         player.getRotation()
                     );
@@ -25807,7 +25808,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[3][0],
+                        )[3]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -25816,7 +25817,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[4][0],
+                        )[4]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -25825,7 +25826,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[5][0],
+                        )[5]![0],
                         player.location,
                         player.getRotation()
                     );
@@ -25838,7 +25839,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[5].index +
+                        )[5]!.index +
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -25847,7 +25848,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[5][0].indexOf(" ") +
+                        )[5]![0].indexOf(" ") +
                         1;
                     let reststringaftercoordinates = switchTestB
                         .split(" ")
@@ -25855,7 +25856,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         .join(" ")
                         .slice(firstblocknameindex);
                     let firstblockname =
-                        reststringaftercoordinates.split(" ")[0];
+                        reststringaftercoordinates.split(" ")[0]!;
                     let firstblockstates = reststringaftercoordinates
                         .split(" ")
                         .slice(1)
@@ -25911,10 +25912,10 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .join(" ")
                                           .trimStart(),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
-                              .split(" ")[0]
+                              .split(" ")[0]!
                         : reststringaftercoordinates
                               .split(" ")
                               .slice(1)
@@ -25937,17 +25938,17 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .replaceAll("[", "{")
                                           .replaceAll("]", "}"),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
-                              .split(" ")[0]
+                              .split(" ")[0]!
                         : reststringaftercoordinates
                               .trimStart()
                               .split(" ")
                               .slice(1)
                               .join(" ")
                               .trimStart()
-                              .split(" ")[0];
+                              .split(" ")[0]!;
                     let somethingtest = reststringaftercoordinates
                         .split(" ")
                         .slice(1)
@@ -25967,7 +25968,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .join(" ")
                                           .trimStart(),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
                               .split(" ")
@@ -25996,7 +25997,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .replaceAll("[", "{")
                                           .replaceAll("]", "}"),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
                               .split(" ")
@@ -26078,7 +26079,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                     } catch (e) {
                         player.sendError("§c" + e + e.stack, true);
                     }
-                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2][0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1).split(" ")[0], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
+                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2]![0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1).split(" ")[0]!, extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
                 }
                 break;
             case !!switchTest.match(/^stopgen$/):
@@ -26094,7 +26095,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                     } catch (e) {
                         player.sendError("§c" + e + e.stack, true);
                     }
-                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2][0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1).split(" ")[0], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
+                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2]![0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1).split(" ")[0]!, extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
                 }
                 break;
             case !!switchTest.match(/^ingfill$/):
@@ -26109,7 +26110,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[0][0],
+                        )[0]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -26118,7 +26119,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[1][0],
+                        )[1]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -26127,7 +26128,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[2][0],
+                        )[2]![0],
                         player.location,
                         player.getRotation()
                     );
@@ -26140,7 +26141,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[3][0],
+                        )[3]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -26149,7 +26150,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[4][0],
+                        )[4]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -26158,7 +26159,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[5][0],
+                        )[5]![0],
                         player.location,
                         player.getRotation()
                     );
@@ -26171,7 +26172,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[5].index +
+                        )[5]!.index +
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -26180,7 +26181,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[5][0].indexOf(" ") +
+                        )[5]![0].indexOf(" ") +
                         1;
                     let reststringaftercoordinates = switchTestB
                         .split(" ")
@@ -26188,7 +26189,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         .join(" ")
                         .slice(firstblocknameindex);
                     let firstblockname =
-                        reststringaftercoordinates.split(" ")[0];
+                        reststringaftercoordinates.split(" ")[0]!;
                     let firstblockstates = reststringaftercoordinates
                         .split(" ")
                         .slice(1)
@@ -26244,10 +26245,10 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .join(" ")
                                           .trimStart(),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
-                              .split(" ")[0]
+                              .split(" ")[0]!
                         : reststringaftercoordinates
                               .split(" ")
                               .slice(1)
@@ -26270,17 +26271,17 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .replaceAll("[", "{")
                                           .replaceAll("]", "}"),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
-                              .split(" ")[0]
+                              .split(" ")[0]!
                         : reststringaftercoordinates
                               .trimStart()
                               .split(" ")
                               .slice(1)
                               .join(" ")
                               .trimStart()
-                              .split(" ")[0];
+                              .split(" ")[0]!;
                     let somethingtest = reststringaftercoordinates
                         .split(" ")
                         .slice(1)
@@ -26300,7 +26301,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .join(" ")
                                           .trimStart(),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
                               .split(" ")
@@ -26329,7 +26330,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .replaceAll("[", "{")
                                           .replaceAll("]", "}"),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
                               .split(" ")
@@ -26395,7 +26396,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                     } catch (e) {
                         player.sendError("§c" + e + e.stack, true);
                     }
-                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2][0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1).split(" ")[0], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
+                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2]![0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1).split(" ")[0]!, extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
                 }
                 break;
             case !!switchTest.match(/^iongfill$/):
@@ -26410,7 +26411,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[0][0],
+                        )[0]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -26419,7 +26420,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[1][0],
+                        )[1]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -26428,7 +26429,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[2][0],
+                        )[2]![0],
                         player.location,
                         player.getRotation()
                     );
@@ -26441,7 +26442,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[3][0],
+                        )[3]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -26450,7 +26451,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[4][0],
+                        )[4]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -26459,7 +26460,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[5][0],
+                        )[5]![0],
                         player.location,
                         player.getRotation()
                     );
@@ -26472,7 +26473,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[5].index +
+                        )[5]!.index +
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -26481,7 +26482,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[5][0].indexOf(" ") +
+                        )[5]![0].indexOf(" ") +
                         1;
                     let reststringaftercoordinates = switchTestB
                         .split(" ")
@@ -26489,7 +26490,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         .join(" ")
                         .slice(firstblocknameindex);
                     let firstblockname =
-                        reststringaftercoordinates.split(" ")[0];
+                        reststringaftercoordinates.split(" ")[0]!;
                     let firstblockstates = reststringaftercoordinates
                         .split(" ")
                         .slice(1)
@@ -26545,10 +26546,10 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .join(" ")
                                           .trimStart(),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
-                              .split(" ")[0]
+                              .split(" ")[0]!
                         : reststringaftercoordinates
                               .split(" ")
                               .slice(1)
@@ -26571,17 +26572,17 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .replaceAll("[", "{")
                                           .replaceAll("]", "}"),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
-                              .split(" ")[0]
+                              .split(" ")[0]!
                         : reststringaftercoordinates
                               .trimStart()
                               .split(" ")
                               .slice(1)
                               .join(" ")
                               .trimStart()
-                              .split(" ")[0];
+                              .split(" ")[0]!;
                     let somethingtest = reststringaftercoordinates
                         .split(" ")
                         .slice(1)
@@ -26601,7 +26602,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .join(" ")
                                           .trimStart(),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
                               .split(" ")
@@ -26630,7 +26631,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .replaceAll("[", "{")
                                           .replaceAll("]", "}"),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
                               .split(" ")
@@ -26690,7 +26691,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                     } catch (e) {
                         player.sendError("§c" + e + e.stack, true);
                     }
-                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2][0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1).split(" ")[0], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
+                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2]![0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1).split(" ")[0]!, extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
                 }
                 break;
             case !!switchTest.match(/^ifillb$/):
@@ -26705,7 +26706,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[0][0],
+                        )[0]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -26714,7 +26715,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[1][0],
+                        )[1]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -26723,7 +26724,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[2][0],
+                        )[2]![0],
                         player.location,
                         player.getRotation()
                     );
@@ -26736,7 +26737,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[3][0],
+                        )[3]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -26745,7 +26746,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[4][0],
+                        )[4]![0],
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -26754,7 +26755,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[5][0],
+                        )[5]![0],
                         player.location,
                         player.getRotation()
                     );
@@ -26767,7 +26768,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[5].index +
+                        )[5]!.index +
                         Array.from(
                             switchTestB
                                 .split(" ")
@@ -26776,7 +26777,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 .matchAll(
                                     /\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis
                                 )
-                        )[5][0].indexOf(" ") +
+                        )[5]![0].indexOf(" ") +
                         1;
                     let reststringaftercoordinates = switchTestB
                         .split(" ")
@@ -26784,7 +26785,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         .join(" ")
                         .slice(firstblocknameindex);
                     let firstblockname =
-                        reststringaftercoordinates.split(" ")[0];
+                        reststringaftercoordinates.split(" ")[0]!;
                     let firstblockstates = reststringaftercoordinates
                         .split(" ")
                         .slice(1)
@@ -26840,10 +26841,10 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .join(" ")
                                           .trimStart(),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
-                              .split(" ")[0]
+                              .split(" ")[0]!
                         : reststringaftercoordinates
                               .split(" ")
                               .slice(1)
@@ -26866,17 +26867,17 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .replaceAll("[", "{")
                                           .replaceAll("]", "}"),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
-                              .split(" ")[0]
+                              .split(" ")[0]!
                         : reststringaftercoordinates
                               .trimStart()
                               .split(" ")
                               .slice(1)
                               .join(" ")
                               .trimStart()
-                              .split(" ")[0];
+                              .split(" ")[0]!;
                     let somethingtest = reststringaftercoordinates
                         .split(" ")
                         .slice(1)
@@ -26896,7 +26897,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .join(" ")
                                           .trimStart(),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
                               .split(" ")
@@ -26925,7 +26926,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                           .replaceAll("[", "{")
                                           .replaceAll("]", "}"),
                                       false
-                                  )[0].length
+                                  )[0]!.length
                               )
                               .trimStart()
                               .split(" ")
@@ -26989,7 +26990,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                     } catch (e) {
                         player.sendError("§c" + e + e.stack, true);
                     }
-                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2][0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1).split(" ")[0], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
+                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2]![0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1).split(" ")[0]!, extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
                 }
                 break;
             case !!switchTest.match(/^cloneitem$/):
@@ -27035,7 +27036,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
             case !!switchTest.match(/^copyitemfrom$/):
                 {
                     //world.scoreboard.getObjective("MinsDisplay").getParticipants().filter(p=>!!!tryget(()=>p.getEntity())).forEach(p=>world.scoreboard.getObjective("balance").removeParticipant(p))
-                    //if((world.scoreboard.getObjective("balance").getScore(player)??0)>JSON.parse(world.getDynamicProperty("shop:costs"))[r.selection!]){world.scoreboard.getObjective("balance").addScore(player, -(JSON.parse(world.getDynamicProperty("shop:costs"))[r.selection!])); player.getComponent("inventory")!.container.addItem(cmds.overworld.getBlock({x: 823, y: 84, z: 1037}).getComponent("inventory")!.container.getItem(r.selection))}
+                    //if((world.scoreboard.getObjective("balance").getScore(player)??0)>JSON.parse(world.getDynamicProperty("shop:costs"))[r.selection!]!){world.scoreboard.getObjective("balance").addScore(player, -(JSON.parse(world.getDynamicProperty("shop:costs"))[r.selection!]!)); player.getComponent("inventory")!.container.addItem(cmds.overworld.getBlock({x: 823, y: 84, z: 1037}).getComponent("inventory")!.container.getItem(r.selection))}
                     //${se}swdp("shop:costs", "[20, 50, 70, 80]")
                     eventData.cancel = true;
                     let args = evaluateParameters(switchTestB, [
@@ -27116,7 +27117,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
             case !!switchTest.match(/^copyitem$/):
                 {
                     //world.scoreboard.getObjective("MinsDisplay").getParticipants().filter(p=>!!!tryget(()=>p.getEntity())).forEach(p=>world.scoreboard.getObjective("balance").removeParticipant(p))
-                    //if((world.scoreboard.getObjective("balance").getScore(player)??0)>JSON.parse(world.getDynamicProperty("shop:costs"))[r.selection!]){world.scoreboard.getObjective("balance").addScore(player, -(JSON.parse(world.getDynamicProperty("shop:costs"))[r.selection!])); player.getComponent("inventory")!.container.addItem(cmds.overworld.getBlock({x: 823, y: 84, z: 1037}).getComponent("inventory")!.container.getItem(r.selection))}
+                    //if((world.scoreboard.getObjective("balance").getScore(player)??0)>JSON.parse(world.getDynamicProperty("shop:costs"))[r.selection!]!){world.scoreboard.getObjective("balance").addScore(player, -(JSON.parse(world.getDynamicProperty("shop:costs"))[r.selection!]!)); player.getComponent("inventory")!.container.addItem(cmds.overworld.getBlock({x: 823, y: 84, z: 1037}).getComponent("inventory")!.container.getItem(r.selection))}
                     //${se}swdp("shop:costs", "[20, 50, 70, 80]")
                     eventData.cancel = true;
                     system.run(() => {
@@ -27149,7 +27150,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                     player.sendMessageB(`Successfully copied item to slot ${args[1]} of your own inventory.`);
                                     break;
                                 case targets.length === 1:
-                                    player.sendMessageB(`Successfully copied item to slot ${args[1]} of ${targets[0].name}'s inventory.`);
+                                    player.sendMessageB(`Successfully copied item to slot ${args[1]} of ${targets[0]!.name}'s inventory.`);
                                     break;
                                 default:
                                     player.sendMessageB(`Successfully copied item to slot ${args[1]} of ${targets.length} players' inventories.`);
@@ -27206,7 +27207,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                             )}. `
                         );
                     }); /*
-            system.run(()=>{let slot = [EquipmentSlot.Head, EquipmentSlot.Chest,  EquipmentSlot.Legs, EquipmentSlot.Feet, EquipmentSlot.Mainhand, EquipmentSlot.Offhand][["head", "chest", "legs", "feet", "mainhand", "offhand", "helmet", "chestplate", "leggings", "boots", "hand", "otherhand", "cap", "tunic", "pants", "shoes", "righthand", "lefthand"].findIndex(v=>v==switchTestB.split(" ")[1]?.trim()?.toLowerCase())%6]??Number((!!!switchTestB.split(" ")[1]?.trim()?"~":switchTestB.split(" ")[1].trim()).replaceAll("~", String(player.selectedSlotIndex))); let fromSlot = typeof slot == "string"?player.getComponent("equippable")!.getEquipmentSlot(slot):player.getComponent("inventory")!.container.getSlot(slot); player.getComponent("inventory")!.container.addItem(player.getComponent("inventory")!.container.getItem(event.sender.selectedSlotIndex).clone())})*/
+            system.run(()=>{let slot = [EquipmentSlot.Head, EquipmentSlot.Chest,  EquipmentSlot.Legs, EquipmentSlot.Feet, EquipmentSlot.Mainhand, EquipmentSlot.Offhand][["head", "chest", "legs", "feet", "mainhand", "offhand", "helmet", "chestplate", "leggings", "boots", "hand", "otherhand", "cap", "tunic", "pants", "shoes", "righthand", "lefthand"].findIndex(v=>v==switchTestB.split(" ")[1]?.trim()?.toLowerCase())%6]??Number((!!!switchTestB.split(" ")[1]?.trim()?"~":switchTestB.split(" ")[1]!.trim()).replaceAll("~", String(player.selectedSlotIndex))); let fromSlot = typeof slot == "string"?player.getComponent("equippable")!.getEquipmentSlot(slot):player.getComponent("inventory")!.container.getSlot(slot); player.getComponent("inventory")!.container.addItem(player.getComponent("inventory")!.container.getItem(event.sender.selectedSlotIndex).clone())})*/
                 }
                 break;
             case !!switchTest.match(/^transferitem$/):
@@ -27695,7 +27696,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                         Math.round(args[1]!.toNumber()! * 9) + 6
                                     )
                                 ).forEach((s, i) => {
-                                    slotsb[i].setItem(items[i]);
+                                    slotsb[i]!.setItem(items[i]);
                                     s.setItem(itemsb[i]);
                                 });
                             } else {
@@ -28463,7 +28464,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         .find((_) => _.name == args[1]);
                     if (
                         !!!BlockTypes.get(
-                            JSONParse(switchTestB.split(" ")[1])?.id
+                            JSONParse(switchTestB.split(" ")[1]!)?.id
                         )
                     ) {
                         player.sendMessageB(
@@ -28488,9 +28489,9 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                     )!;
                                     block.setPermutation(
                                         BlockPermutation.resolve(
-                                            JSONParse(switchTestB.split(" ")[1])
+                                            JSONParse(switchTestB.split(" ")[1]!)
                                                 ?.id,
-                                            JSONParse(switchTestB.split(" ")[1])
+                                            JSONParse(switchTestB.split(" ")[1]!)
                                                 ?.states
                                         )
                                     );
@@ -28503,7 +28504,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 player.sendError(
                                     `§cError: Block of type ${
                                         BlockTypes.get(
-                                            JSONParse(switchTestB.split(" ")[1])
+                                            JSONParse(switchTestB.split(" ")[1]!)
                                                 ?.id!
                                         )!?.id
                                     } is not a container block. `,
@@ -28520,9 +28521,9 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                     let items = [] as ItemStack[];
                                     block.setPermutation(
                                         BlockPermutation.resolve(
-                                            JSONParse(switchTestB.split(" ")[1])
+                                            JSONParse(switchTestB.split(" ")[1]!)
                                                 ?.id,
-                                            JSONParse(switchTestB.split(" ")[1])
+                                            JSONParse(switchTestB.split(" ")[1]!)
                                                 ?.states
                                         )
                                     );
@@ -29020,7 +29021,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                         .size;
                                     i++
                                 ) {
-                                    let t = shuffle(JunkItemTypes)[0];
+                                    let t = shuffle(JunkItemTypes)[0]!;
                                     target
                                         .getComponent("inventory")!
                                         .container.addItem(
@@ -29062,7 +29063,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                         .size;
                                     i++
                                 ) {
-                                    let t = shuffle(JunkItemTypes)[0];
+                                    let t = shuffle(JunkItemTypes)[0]!;
                                     target
                                         .getComponent("inventory")!
                                         .container.setItem(
@@ -29096,7 +29097,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                     );
                                     i++
                                 ) {
-                                    let t = shuffle(JunkItemTypes)[0];
+                                    let t = shuffle(JunkItemTypes)[0]!;
                                     target
                                         .getComponent("inventory")!
                                         .container.addItem(
@@ -29156,7 +29157,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                         .size;
                                     i++
                                 ) {
-                                    let t = shuffle(ItemTypes.getAll())[0];
+                                    let t = shuffle(ItemTypes.getAll())[0]!;
                                     target
                                         .getComponent("inventory")!
                                         .container.addItem(
@@ -29198,7 +29199,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                         .size;
                                     i++
                                 ) {
-                                    let t = shuffle(ItemTypes.getAll())[0];
+                                    let t = shuffle(ItemTypes.getAll())[0]!;
                                     target
                                         .getComponent("inventory")!
                                         .container.setItem(
@@ -29232,7 +29233,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                     );
                                     i++
                                 ) {
-                                    let t = shuffle(ItemTypes.getAll())[0];
+                                    let t = shuffle(ItemTypes.getAll())[0]!;
                                     target
                                         .getComponent("inventory")!
                                         .container.addItem(
@@ -29292,7 +29293,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                         .size;
                                     i++
                                 ) {
-                                    let t = shuffle(OpItemTypes)[0];
+                                    let t = shuffle(OpItemTypes)[0]!;
                                     target
                                         .getComponent("inventory")!
                                         .container.addItem(
@@ -29334,7 +29335,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                         .size;
                                     i++
                                 ) {
-                                    let t = shuffle(OpItemTypes)[0];
+                                    let t = shuffle(OpItemTypes)[0]!;
                                     target
                                         .getComponent("inventory")!
                                         .container.setItem(
@@ -29368,7 +29369,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                     );
                                     i++
                                 ) {
-                                    let t = shuffle(OpItemTypes)[0];
+                                    let t = shuffle(OpItemTypes)[0]!;
                                     target
                                         .getComponent("inventory")!
                                         .container.addItem(
@@ -29428,7 +29429,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                         .size;
                                     i++
                                 ) {
-                                    let t = shuffle(IllegalItemTypes)[0];
+                                    let t = shuffle(IllegalItemTypes)[0]!;
                                     target
                                         .getComponent("inventory")!
                                         .container.addItem(
@@ -29470,7 +29471,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                         .size;
                                     i++
                                 ) {
-                                    let t = shuffle(IllegalItemTypes)[0];
+                                    let t = shuffle(IllegalItemTypes)[0]!;
                                     target
                                         .getComponent("inventory")!
                                         .container.setItem(
@@ -29504,7 +29505,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                     );
                                     i++
                                 ) {
-                                    let t = shuffle(IllegalItemTypes)[0];
+                                    let t = shuffle(IllegalItemTypes)[0]!;
                                     target
                                         .getComponent("inventory")!
                                         .container.addItem(
@@ -30441,7 +30442,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                     ).then(async (tac) => {
                                         ta = tac;
                                         try {
-                                            undoClipboard.save(
+                                            UndoClipboard.getClipboard(`player_${player.id}`).save(
                                                 dimensiona!,
                                                 { from: ca, to: cb },
                                                 Date.now(),
@@ -30601,7 +30602,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                             nameIsCaseSensitive: false,
                         },
                 ]).args;
-                console.log(JSONB.stringify(args));
+                // console.log(JSONB.stringify(args));
                     const ca = player.worldEditSelection.minPos;
                     const cb = player.worldEditSelection.maxPos;
                     const dimensiona = player.worldEditSelection.dimension;
@@ -30635,7 +30636,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 ).then(async (tac) => {
                                     ta = tac;
                                     try {
-                                        undoClipboard.save(dimensiona!, { from: ca, to: cb }, Date.now(), {
+                                        UndoClipboard.getClipboard(`player_${player.id}`).save(dimensiona!, { from: ca, to: cb }, Date.now(), {
                                             includeBlocks: true,
                                             includeEntities: false,
                                             saveMode: config.undoClipboardMode,
@@ -30768,7 +30769,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     ).then((tac) => {
                                         ta = tac;
                                         try {
-                                            undoClipboard.save(
+                                            UndoClipboard.getClipboard(`player_${player.id}`).save(
                                                 dimensiona!,
                                                 { from: ca, to: cb },
                                                 Date.now(),
@@ -30786,6 +30787,167 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                         }
                                         try {
                                             mazeGenerator(ca, cb, dimensiona!, {wallBlockType: tryget(()=>BlockPermutation.resolve(wallBlock!.id, wallBlock!.states))??BlockPermutation.resolve("stone"), airBlockType: tryget(()=>BlockPermutation.resolve(airBlock!.id, airBlock!.states))??BlockPermutation.resolve("air"), complexity, entranceDirection, exitDirection})
+                                        } catch (e) {
+                                            player.sendError(
+                                                "§c" + e + e.stack,
+                                                true
+                                            );
+                                        } finally {
+                                            tac.forEach((tab) => tab?.remove());
+                                        }
+                                    });
+                                } catch (e) {
+                                    player.sendError("§c" + e + e.stack, true);
+                                }
+                            });
+                        }
+                    }
+                }
+                break;
+            case !!switchTest.match(/^\\overlay$/):
+                {
+                    eventData.cancel = true;
+                    const args = evaluateParameters(switchTestB, [
+                        "presetText",
+                        "f-sp",
+                        {
+                            name: "layers",
+                            type: "ignorableNamedParameter",
+                            key: "layers",
+                            valueType: "number",
+                        },
+                        "blockPattern",
+                        "blockMask",
+                    ]).args;
+                    const firstblockpattern = args[2] as BlockPattern;
+                    const mask = args[3];
+                    const coordinatesa = player.getDynamicProperty("pos1") as
+                        | Vector3
+                        | undefined;
+                    const coordinatesb = player.getDynamicProperty("pos2") as
+                        | Vector3
+                        | undefined;
+                    const ca = {
+                        x: Math.min(coordinatesa!?.x, coordinatesb!?.x),
+                        y: Math.min(coordinatesa!?.y, coordinatesb!?.y),
+                        z: Math.min(coordinatesa!?.z, coordinatesb!?.z),
+                    };
+                    const cb = {
+                        x: Math.max(coordinatesa!?.x, coordinatesb!?.x),
+                        y: Math.max(coordinatesa!?.y, coordinatesb!?.y),
+                        z: Math.max(coordinatesa!?.z, coordinatesb!?.z),
+                    };
+                    const dimensiona = world.getDimension(
+                        (player.getDynamicProperty("posD") ??
+                            player.dimension.id) as string
+                    ) as Dimension | undefined;
+                    if (!!!coordinatesa) {
+                        player.sendError("§cError: pos1 is not set.", true);
+                    } else {
+                        if (!!!coordinatesb) {
+                            player.sendError("§cError: pos2 is not set.", true);
+                        } else {
+                            system.run(() => {
+                                let ta: Entity[];
+                                try {
+                                    generateTickingAreaFillCoordinatesC(
+                                        player.location,
+                                        (() => {
+                                            let a = new CompoundBlockVolume();
+                                            a.pushVolume({
+                                                volume: new BlockVolume(ca, cb),
+                                            });
+                                            return a;
+                                        })(),
+                                        dimensiona!
+                                    ).then((tac) => {
+                                        ta = tac;
+                                        try {
+                                            UndoClipboard.getClipboard(`player_${player.id}`).save(
+                                                dimensiona!,
+                                                { from: ca, to: cb },
+                                                Date.now(),
+                                                {
+                                                    includeBlocks: true,
+                                                    includeEntities: false,
+                                                    saveMode:
+                                                        config.undoClipboardMode,
+                                                }
+                                            );
+                                        } catch (e) {
+                                            player.sendMessageB(
+                                                "§c" + e + " " + e.stack
+                                            );
+                                        }
+                                        const blocktypes = BlockTypes.getAll();
+                                        try {
+                                            overlayArea(
+                                                ca,
+                                                cb,
+                                                dimensiona!,
+                                                (l, i) => {
+                                                    const b =
+                                                        firstblockpattern.generateBlock(
+                                                            i
+                                                        );
+                                                    return b.type == "random"
+                                                        ? BlockPermutation.resolve(
+                                                              blocktypes[
+                                                                  Math.floor(
+                                                                      blocktypes.length *
+                                                                          Math.random()
+                                                                  )
+                                                              ]!.id
+                                                          )
+                                                        : BlockPermutation.resolve(
+                                                              b.type,
+                                                              b.states
+                                                          );
+                                                },
+                                                {
+                                                    blockMask: mask!,
+                                                    minMSBetweenTickWaits: config.system.defaultMinMSBetweenTickWaits,
+                                                    integrity: 100,
+                                                    liteMode: false,
+                                                    layers: args.layers ?? undefined,
+                                                    onlySolid: args[1].s,
+                                                    pillarSequencePatternMode: args[1].p,
+                                                }
+                                            ).then(
+                                                (a) => {
+                                                    player.sendMessageB(
+                                                        `${
+                                                            a.counter == 0n
+                                                                ? "§c"
+                                                                : ""
+                                                        }${
+                                                            a.counter
+                                                        } blocks overlayed in ${
+                                                            a.endTime -
+                                                            a.startTime
+                                                        } ms over ${
+                                                            a.endTick -
+                                                            a.startTick
+                                                        } tick${
+                                                            a.endTick -
+                                                                a.startTick ==
+                                                            1
+                                                                ? ""
+                                                                : "s"
+                                                        }${
+                                                            a.containsUnloadedChunks
+                                                                ? "; Some blocks were not generated because they were in unloaded chunks."
+                                                                : ""
+                                                        }`
+                                                    );
+                                                },
+                                                (e) => {
+                                                    player.sendError(
+                                                        "§c" + e + e.stack,
+                                                        true
+                                                    );
+                                                }
+                                            );
                                         } catch (e) {
                                             player.sendError(
                                                 "§c" + e + e.stack,
@@ -30856,7 +31018,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     ).then((tac) => {
                                         ta = tac;
                                         try {
-                                            undoClipboard.save(
+                                            UndoClipboard.getClipboard(`player_${player.id}`).save(
                                                 dimensiona!,
                                                 { from: ca, to: cb },
                                                 Date.now(),
@@ -30890,7 +31052,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                                       blocktypes.length *
                                                                           Math.random()
                                                                   )
-                                                              ].id
+                                                              ]!.id
                                                           )
                                                         : BlockPermutation.resolve(
                                                               b.type,
@@ -31009,7 +31171,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     ).then((tac) => {
                                         ta = tac;
                                         try {
-                                            undoClipboard.save(
+                                            UndoClipboard.getClipboard(`player_${player.id}`).save(
                                                 dimensiona!,
                                                 { from: ca, to: cb },
                                                 Date.now(),
@@ -31043,7 +31205,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                                       blocktypes.length *
                                                                           Math.random()
                                                                   )
-                                                              ].id
+                                                              ]!.id
                                                           )
                                                         : BlockPermutation.resolve(
                                                               b.type,
@@ -31162,7 +31324,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     ).then((tac) => {
                                         ta = tac;
                                         try {
-                                            undoClipboard.save(
+                                            UndoClipboard.getClipboard(`player_${player.id}`).save(
                                                 dimensiona!,
                                                 { from: ca, to: cb },
                                                 Date.now(),
@@ -31196,7 +31358,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                                       blocktypes.length *
                                                                           Math.random()
                                                                   )
-                                                              ].id
+                                                              ]!.id
                                                           )
                                                         : BlockPermutation.resolve(
                                                               b.type,
@@ -31315,7 +31477,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     ).then((tac) => {
                                         ta = tac;
                                         try {
-                                            undoClipboard.save(
+                                            UndoClipboard.getClipboard(`player_${player.id}`).save(
                                                 dimensiona!,
                                                 { from: ca, to: cb },
                                                 Date.now(),
@@ -31349,7 +31511,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                                       blocktypes.length *
                                                                           Math.random()
                                                                   )
-                                                              ].id
+                                                              ]!.id
                                                           )
                                                         : BlockPermutation.resolve(
                                                               b.type,
@@ -31468,7 +31630,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     ).then((tac) => {
                                         ta = tac;
                                         try {
-                                            undoClipboard.save(
+                                            UndoClipboard.getClipboard(`player_${player.id}`).save(
                                                 dimensiona!,
                                                 { from: ca, to: cb },
                                                 Date.now(),
@@ -31502,7 +31664,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                                       blocktypes.length *
                                                                           Math.random()
                                                                   )
-                                                              ].id
+                                                              ]!.id
                                                           )
                                                         : BlockPermutation.resolve(
                                                               b.type,
@@ -31627,7 +31789,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     ).then((tac) => {
                                         ta = tac;
                                         try {
-                                            undoClipboard.save(
+                                            UndoClipboard.getClipboard(`player_${player.id}`).save(
                                                 dimensiona!,
                                                 { from: ca, to: cb },
                                                 Date.now(),
@@ -31661,7 +31823,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                                       blocktypes.length *
                                                                           Math.random()
                                                                   )
-                                                              ].id
+                                                              ]!.id
                                                           )
                                                         : BlockPermutation.resolve(
                                                               b.type,
@@ -31802,7 +31964,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     ).then((tac) => {
                                         ta = tac;
                                         try {
-                                            undoClipboard.save(
+                                            UndoClipboard.getClipboard(`player_${player.id}`).save(
                                                 dimensiona!,
                                                 { from: ca, to: cb },
                                                 Date.now(),
@@ -31838,7 +32000,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                                       blocktypes.length *
                                                                           Math.random()
                                                                   )
-                                                              ].id
+                                                              ]!.id
                                                           )
                                                         : BlockPermutation.resolve(
                                                               b.type,
@@ -31979,7 +32141,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     ).then((tac) => {
                                         ta = tac;
                                         try {
-                                            undoClipboard.save(
+                                            UndoClipboard.getClipboard(`player_${player.id}`).save(
                                                 dimensiona!,
                                                 { from: ca, to: cb },
                                                 Date.now(),
@@ -32015,7 +32177,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                                         blocktypes.length *
                                                                             Math.random()
                                                                     )
-                                                                ].id
+                                                                ]!.id
                                                             )
                                                         : BlockPermutation.resolve(
                                                                 b.type,
@@ -32200,7 +32362,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     ).then((tac) => {
                                         ta = tac;
                                         try {
-                                            undoClipboard.save(
+                                            UndoClipboard.getClipboard(`player_${player.id}`).save(
                                                 dimensiona!,
                                                 { from: ca, to: cb },
                                                 Date.now(),
@@ -32234,7 +32396,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                                       blocktypes.length *
                                                                           Math.random()
                                                                   )
-                                                              ].id
+                                                              ]!.id
                                                           )
                                                         : BlockPermutation.resolve(
                                                               b.type,
@@ -32356,7 +32518,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     ).then((tac) => {
                                         ta = tac;
                                         try {
-                                            undoClipboard.save(
+                                            UndoClipboard.getClipboard(`player_${player.id}`).save(
                                                 dimensiona!,
                                                 { from: ca, to: cb },
                                                 Date.now(),
@@ -32390,7 +32552,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                                       blocktypes.length *
                                                                           Math.random()
                                                                   )
-                                                              ].id
+                                                              ]!.id
                                                           )
                                                         : BlockPermutation.resolve(
                                                               b.type,
@@ -32509,7 +32671,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     ).then((tac) => {
                                         ta = tac;
                                         try {
-                                            undoClipboard.save(
+                                            UndoClipboard.getClipboard(`player_${player.id}`).save(
                                                 dimensiona!,
                                                 { from: ca, to: cb },
                                                 Date.now(),
@@ -32639,7 +32801,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     ).then((tac) => {
                                         ta = tac;
                                         try {
-                                            undoClipboard.save(
+                                            UndoClipboard.getClipboard(`player_${player.id}`).save(
                                                 dimensiona!,
                                                 { from: ca, to: cb },
                                                 Date.now(),
@@ -32785,7 +32947,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     ).then((tac) => {
                                         ta = tac;
                                         try {
-                                            undoClipboard.save(
+                                            UndoClipboard.getClipboard(`player_${player.id}`).save(
                                                 dimensiona!,
                                                 { from: ca, to: cb },
                                                 Date.now(),
@@ -32939,7 +33101,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     ).then((tac) => {
                                         ta = tac;
                                         try {
-                                            undoClipboard.save(
+                                            UndoClipboard.getClipboard(`player_${player.id}`).save(
                                                 dimensiona!,
                                                 { from: ca, to: cb },
                                                 Date.now(),
@@ -32973,7 +33135,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                                       blocktypes.length *
                                                                           Math.random()
                                                                   )
-                                                              ].id
+                                                              ]!.id
                                                           )
                                                         : BlockPermutation.resolve(
                                                               b.type,
@@ -33101,7 +33263,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     ).then((tac) => {
                                         ta = tac;
                                         try {
-                                            undoClipboard.save(
+                                            UndoClipboard.getClipboard(`player_${player.id}`).save(
                                                 dimensiona!,
                                                 {
                                                     from: Vector.subtract(
@@ -33150,7 +33312,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                                       blocktypes.length *
                                                                           Math.random()
                                                                   )
-                                                              ].id
+                                                              ]!.id
                                                           )
                                                         : BlockPermutation.resolve(
                                                               b.type,
@@ -33278,7 +33440,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     ).then((tac) => {
                                         ta = tac;
                                         try {
-                                            undoClipboard.save(
+                                            UndoClipboard.getClipboard(`player_${player.id}`).save(
                                                 dimensiona!,
                                                 {
                                                     from: Vector.subtract(
@@ -33328,7 +33490,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                                       blocktypes.length *
                                                                           Math.random()
                                                                   )
-                                                              ].id
+                                                              ]!.id
                                                           )
                                                         : BlockPermutation.resolve(
                                                               b.type,
@@ -33458,7 +33620,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     ).then((tac) => {
                                         ta = tac;
                                         try {
-                                            undoClipboard.save(
+                                            UndoClipboard.getClipboard(`player_${player.id}`).save(
                                                 dimensiona!,
                                                 {
                                                     from: Vector.subtract(
@@ -33508,7 +33670,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                                       blocktypes.length *
                                                                           Math.random()
                                                                   )
-                                                              ].id
+                                                              ]!.id
                                                           )
                                                         : BlockPermutation.resolve(
                                                               b.type,
@@ -33635,7 +33797,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     ).then((tac) => {
                                         ta = tac;
                                         try {
-                                            undoClipboard.save(
+                                            UndoClipboard.getClipboard(`player_${player.id}`).save(
                                                 dimensiona!,
                                                 {
                                                     from: Vector.subtract(
@@ -33687,7 +33849,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                                       blocktypes.length *
                                                                           Math.random()
                                                                   )
-                                                              ].id
+                                                              ]!.id
                                                           )
                                                         : BlockPermutation.resolve(
                                                               b.type,
@@ -33822,7 +33984,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                                               blocktypes.length *
                                                                                   Math.random()
                                                                           )
-                                                                      ].id
+                                                                      ]!.id
                                                                   )
                                                                 : BlockPermutation.resolve(
                                                                       b.type,
@@ -33944,7 +34106,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                                               blocktypes.length *
                                                                                   Math.random()
                                                                           )
-                                                                      ].id
+                                                                      ]!.id
                                                                   )
                                                                 : BlockPermutation.resolve(
                                                                       b.type,
@@ -34070,7 +34232,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                                               blocktypes.length *
                                                                                   Math.random()
                                                                           )
-                                                                      ].id
+                                                                      ]!.id
                                                                   )
                                                                 : BlockPermutation.resolve(
                                                                       b.type,
@@ -34184,7 +34346,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                             ta = tac;
                                             try {
                                                 try {
-                                                    undoClipboard.save(
+                                                    UndoClipboard.getClipboard(`player_${player.id}`).save(
                                                         dimensiona!,
                                                         {
                                                             from: ca,
@@ -34263,8 +34425,15 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                         const args = evaluateParameters(switchTestB, [
                             "presetText",
                             "-meb",
-                        ]).args as [string, string];
+                            {
+                                type: "ignorableNamedParameter",
+                                name: "clipboard",
+                                valueType: "string",
+                                key: "clipboard",
+                            }
+                        ]).args;
                         args[1] ??= "";
+                        const clipboard: typeof GlobalBlockClipboard | BlockClipboard<string> = args.clipboard === "global" ? BlockClipboard.global : BlockClipboard.getClipboard(!args.clipboard ? `player_${player.id}` : args.clipboard);
                         const coordinatesa = player.getDynamicProperty(
                             "pos1"
                         ) as Vector3 | undefined;
@@ -34295,7 +34464,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                             } else {
                                 system.run(() => {
                                     try {
-                                        undoClipboard.save(
+                                        UndoClipboard.getClipboard(`player_${player.id}`).save(
                                             dimensiona!,
                                             { from: ca, to: cb },
                                             Date.now(),
@@ -34311,9 +34480,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                             "§c" + e + " " + e.stack
                                         );
                                     }
-                                    tryrun(() => BlockClipboard.global.clear());
+                                    tryrun(() => clipboard.clear());
                                     try {
-                                        BlockClipboard.global.copy(
+                                        clipboard.copy(
                                             dimensiona!,
                                             { from: ca, to: cb },
                                             {
@@ -34327,7 +34496,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                             }
                                         );
                                         player.sendMessageB(
-                                            "The selected area has been cut to the clipboard."
+                                            `The selected area has been cut to the ${args.clipboard || `player_${player.id}`} clipboard.`
                                         );
                                     } catch (e) {
                                         player.sendMessageB(
@@ -34407,8 +34576,15 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                         const args = evaluateParameters(switchTestB, [
                             "presetText",
                             "-meb",
-                        ]).args as [string, string];
+                            {
+                                type: "ignorableNamedParameter",
+                                name: "clipboard",
+                                valueType: "string",
+                                key: "clipboard",
+                            }
+                        ]).args;
                         args[1] ??= "";
+                            const clipboard: typeof GlobalBlockClipboard | BlockClipboard<string> = args.clipboard === "global" ? BlockClipboard.global : BlockClipboard.getClipboard(!args.clipboard ? `player_${player.id}` : args.clipboard);
                         const coordinatesa = player.getDynamicProperty(
                             "pos1"
                         ) as Vector3 | undefined;
@@ -34438,9 +34614,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                 );
                             } else {
                                 system.run(() => {
-                                    tryrun(() => BlockClipboard.global.clear());
+                                    tryrun(() => clipboard.clear());
                                     try {
-                                        BlockClipboard.global.copy(
+                                        clipboard.copy(
                                             dimensiona!,
                                             { from: ca, to: cb },
                                             {
@@ -34454,7 +34630,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                             }
                                         );
                                         player.sendMessageB(
-                                            "The selected area has been copied to the clipboard."
+                                            `The selected area has been copied to the ${args.clipboard || `player_${player.id}`} clipboard.`
                                         );
                                     } catch (e) {
                                         player.sendMessageB(
@@ -34478,20 +34654,19 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                 const args = evaluateParameters(switchTestB, [
                                     "presetText",
                                     "-webxzh",
+                                    {
+                                        type: "ignorableNamedParameter",
+                                        name: "clipboard",
+                                        valueType: "string",
+                                        key: "clipboard",
+                                    },
                                     "number",
                                     "string",
                                     "number",
                                     "string",
                                     "number",
-                                ]).args as [
-                                    commandText: string,
-                                    flags: string,
-                                    integrity: number,
-                                    integritySeed: string,
-                                    rotation: number,
-                                    animationMode: "none" | "blocks" | "layers",
-                                    animationSeconds: number
-                                ];
+                                ]).args;
+                                const clipboard: typeof GlobalBlockClipboard | BlockClipboard<string> = args.clipboard === "global" ? BlockClipboard.global : BlockClipboard.getClipboard(!args.clipboard ? `player_${player.id}` : args.clipboard);
                                 //console.warn(JSON.stringify(args[1]))
                                 args[1] ??= "";
                                 args[2] ??= 1;
@@ -34535,20 +34710,20 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     player.sendMessageB(
                                         "§cError: pos2 is not set."
                                     );
-                                } else if (BlockClipboard.global.isEmpty) {
+                                } else if (clipboard.isEmpty) {
                                     player.sendMessageB(
                                         "§cError: The clipboard is currently empty."
                                     );
                                 } else {
                                     try {
                                         try {
-                                            undoClipboard.save(
+                                            UndoClipboard.getClipboard(`player_${player.id}`).save(
                                                 dimensiona!,
                                                 {
                                                     from: ca,
                                                     to: Vector.add(
                                                         ca,
-                                                        BlockClipboard.global.contentsSize
+                                                        clipboard.contentsSize
                                                     ),
                                                 },
                                                 Date.now(),
@@ -34564,7 +34739,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                 "§c" + e + " " + e.stack
                                             );
                                         }
-                                        BlockClipboard.global.paste(
+                                        clipboard.paste(
                                             Object.assign(
                                                 { dimension: dimensiona! },
                                                 ca
@@ -34614,7 +34789,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                             }
                                         );
                                         player.sendMessageB(
-                                            "The clipboard has been pasted to the selected area."
+                                            `The ${args.clipboard || `player_${player.id}`} clipboard has been pasted to the selected area.`
                                         );
                                     } catch (e) {
                                         player.sendError(
@@ -34638,86 +34813,81 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                         eventData.cancel = true;
                         const args = evaluateParameters(switchTestB, [
                             "presetText",
-                            "f-kt",
+                            "f-ktg",
+                            {
+                                type: "ignorableNamedParameter",
+                                name: "undoClipboard",
+                                key: "undoClipboard",
+                                valueType: "string",
+                                nameIsCaseSensitive: false,
+                            }
                         ]).args;
-                        system.run(() => {
+                        system.run(async () => {
                             try {
-                                if (undoClipboard.ids.length == 0) {
-                                    player.sendMessageB("§cNothing to undo.");
-                                } else if (!(args[1]?.t ?? false)) {
-                                    try {
-                                        if (
-                                            undoClipboard.undo(
-                                                undefined,
-                                                undefined,
-                                                !(args[1]?.k ?? false)
-                                            ) == 0
-                                        ) {
-                                            player.sendMessageB(
-                                                "§cNothing to undo."
-                                            );
-                                        } else {
-                                            player.sendMessageB(
-                                                "Successfully reverted the area."
+                                if (args[1].g) {
+                                    if (UndoClipboard.getSaveTimesFromAllClipboards().length === 0) {
+                                        player.sendMessageB("§cNothing to undo.");
+                                    } else if (!(args[1]?.t ?? false)) {
+                                        try {
+                                            if (
+                                                UndoClipboard.undoLastAction(
+                                                    undefined,
+                                                    !(args[1]?.k ?? false)
+                                                ) === 0
+                                            ) {
+                                                player.sendMessageB(
+                                                    "§cNothing to undo."
+                                                );
+                                            } else {
+                                                player.sendMessageB(
+                                                    "Successfully reverted the area."
+                                                );
+                                            }
+                                        } catch (e) {
+                                            player.sendError(
+                                                e + " " + e.stack,
+                                                true
                                             );
                                         }
-                                    } catch (e) {
-                                        player.sendError(
-                                            e + " " + e.stack,
-                                            true
-                                        );
-                                    }
-                                } else {
-                                    let ta: Entity[];
-                                    try {
-                                        generateTickingAreaFillCoordinatesC(
-                                            player.location,
-                                            (() => {
-                                                let a =
-                                                    new CompoundBlockVolume();
-                                                a.pushVolume({
-                                                    volume: new BlockVolume(
-                                                        world.getDynamicProperty(
-                                                            `andexdb:undoclipboard;${undoClipboard.newestSaveTime}`
-                                                        ) as Vector3,
-                                                        Vector.add(
-                                                            world.getDynamicProperty(
-                                                                `andexdb:undoclipboard;${undoClipboard.newestSaveTime}`
-                                                            ) as Vector3,
-                                                            undoClipboard.saveSize(
-                                                                undoClipboard.newestSaveTime
+                                    } else {
+                                        let ta: Entity[];
+                                        try {
+                                            const saveTime = UndoClipboard.getSaveTimesFromAllClipboards()[0]!;
+                                            const clipboard = UndoClipboard.getClipboard(saveTime.clipboardID);
+                                            const saveLocation = clipboard.getSaveLocation(saveTime.saveTime);
+                                            const saveSize = clipboard.getSaveSize(saveTime.saveTime);
+                                            ta = await generateTickingAreaFillCoordinatesC(
+                                                player.location,
+                                                (() => {
+                                                    let a =
+                                                        new CompoundBlockVolume();
+                                                    a.pushVolume({
+                                                        volume: new BlockVolume(
+                                                            saveLocation,
+                                                            Vector.add(
+                                                                saveLocation,
+                                                                saveSize
                                                             )
-                                                        )
-                                                    ),
-                                                });
-                                                return a;
-                                            })(),
-                                            dimensionsb[
-                                                String(
-                                                    world.getDynamicProperty(
-                                                        `andexdb:undoclipboardd;${undoClipboard.newestSaveTime}`
-                                                    )
-                                                ) as keyof typeof dimensionsb
-                                            ] ??
-                                                dimensionsb[
-                                                    "minecraft:overworld"
-                                                ]
-                                        ).then((tac) => {
-                                            ta = tac;
+                                                        ),
+                                                    });
+                                                    return a;
+                                                })(),
+                                                saveLocation.dimension
+                                            );
                                             try {
                                                 if (
-                                                    undoClipboard.undo(
+                                                    clipboard.undo(
                                                         undefined,
                                                         undefined,
                                                         !(args[1]?.k ?? false)
-                                                    ) == 0
+                                                    ) === 0
                                                 ) {
                                                     player.sendMessageB(
-                                                        "§cNothing to undo. "
+                                                        "§cNothing to undo."
                                                     );
                                                 } else {
                                                     player.sendMessageB(
-                                                        "Successfully reverted the area. "
+                                                        "Successfully reverted the area."
                                                     );
                                                 }
                                             } catch (e) {
@@ -34726,16 +34896,99 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                     true
                                                 );
                                             } finally {
-                                                tac.forEach((tab) =>
+                                                ta.forEach((tab) =>
                                                     tab?.remove()
                                                 );
                                             }
-                                        });
-                                    } catch (e) {
-                                        player.sendError(
-                                            "§c" + e + e.stack,
-                                            true
-                                        );
+                                        } catch (e) {
+                                            player.sendError(
+                                                "§c" + e + e.stack,
+                                                true
+                                            );
+                                        }
+                                    }
+                                } else {
+                                    const clipboard = UndoClipboard.getClipboard(args.undoClipboard ?? `player_${player.id}`)
+                                    if (clipboard.ids.length == 0) {
+                                        player.sendMessageB("§cNothing to undo.");
+                                    } else if (!(args[1]?.t ?? false)) {
+                                        try {
+                                            if (
+                                                clipboard.undo(
+                                                    undefined,
+                                                    undefined,
+                                                    !(args[1]?.k ?? false)
+                                                ) == 0
+                                            ) {
+                                                player.sendMessageB(
+                                                    "§cNothing to undo."
+                                                );
+                                            } else {
+                                                player.sendMessageB(
+                                                    "Successfully reverted the area."
+                                                );
+                                            }
+                                        } catch (e) {
+                                            player.sendError(
+                                                e + " " + e.stack,
+                                                true
+                                            );
+                                        }
+                                    } else {
+                                        let ta: Entity[];
+                                        try {
+                                            const saveLocation = clipboard.getSaveLocation(clipboard.newestSaveTime!);
+                                            const saveSize = clipboard.getSaveSize(clipboard.newestSaveTime!);
+                                            ta = await generateTickingAreaFillCoordinatesC(
+                                                player.location,
+                                                (() => {
+                                                    let a =
+                                                        new CompoundBlockVolume();
+                                                    a.pushVolume({
+                                                        volume: new BlockVolume(
+                                                            saveLocation,
+                                                            Vector.add(
+                                                                saveLocation,
+                                                                saveSize
+                                                            )
+                                                        ),
+                                                    });
+                                                    return a;
+                                                })(),
+                                                saveLocation.dimension
+                                            );
+                                            try {
+                                                if (
+                                                    clipboard.undo(
+                                                        undefined,
+                                                        undefined,
+                                                        !(args[1]?.k ?? false)
+                                                    ) == 0
+                                                ) {
+                                                    player.sendMessageB(
+                                                        "§cNothing to undo."
+                                                    );
+                                                } else {
+                                                    player.sendMessageB(
+                                                        "Successfully reverted the area."
+                                                    );
+                                                }
+                                            } catch (e) {
+                                                player.sendError(
+                                                    e + " " + e.stack,
+                                                    true
+                                                );
+                                            } finally {
+                                                ta.forEach((tab) =>
+                                                    tab?.remove()
+                                                );
+                                            }
+                                        } catch (e) {
+                                            player.sendError(
+                                                "§c" + e + e.stack,
+                                                true
+                                            );
+                                        }
                                     }
                                 }
                             } catch (e) {
@@ -34790,7 +35043,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     );
                                     return;
                                 }
-                                if(!args[1]!.o && [...ProtectedAreas.areas.advancedArea[args[2]].overworld, ...ProtectedAreas.areas.advancedArea[args[2]].nether, ...ProtectedAreas.areas.advancedArea[args[2]].the_end].some((c) => c.id === args[3])){
+                                if(!args[1]!.o && [...ProtectedAreas.areas.advancedArea[args[2]]!.overworld, ...ProtectedAreas.areas.advancedArea[args[2]]!.nether, ...ProtectedAreas.areas.advancedArea[args[2]]!.the_end].some((c) => c.id === args[3])){
                                     player.sendError(
                                         `§cError: The custom protected area category ${
                                             JSON.stringify(args[2])
@@ -34852,7 +35105,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                         areas.overworld = areas.overworld.filter(v=>v.id!==args[3]);
                                         areas.nether = areas.nether.filter(v=>v.id!==args[3]);
                                         areas.the_end = areas.the_end.filter(v=>v.id!==args[3]);
-                                        ProtectedAreas.areas[args[2]!.slice(0, -1) as typeof protectedAreaCategories[number]][dimensionse[dimensions.indexOf(dimensiona!)]].push({id: args[3]!, ...data});
+                                        ProtectedAreas.areas[args[2]!.slice(0, -1) as typeof protectedAreaCategories[number]][dimensionse[dimensions.indexOf(dimensiona!)]!].push({id: args[3]!, ...data});
                                         world.setDynamicProperty(
                                             "v2:" + args[2] + args[3]!,
                                             JSON.stringify(data)
@@ -34861,11 +35114,11 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                             "The protected area has been saved."
                                         );
                                     } else {
-                                        const areas = ProtectedAreas.areas.advancedArea[args[2]];
+                                        const areas = ProtectedAreas.areas.advancedArea[args[2]]!;
                                         areas.overworld = areas.overworld.filter(v=>v.id!==args[3]);
                                         areas.nether = areas.nether.filter(v=>v.id!==args[3]);
                                         areas.the_end = areas.the_end.filter(v=>v.id!==args[3]);
-                                        ProtectedAreas.areas.advancedArea[args[2]][dimensionse[dimensions.indexOf(dimensiona!)]].push({id: args[3]!, ...data});
+                                        ProtectedAreas.areas.advancedArea[args[2]]![dimensionse[dimensions.indexOf(dimensiona!)]!].push({id: args[3]!, ...data});
                                         world.setDynamicProperty(
                                             "advancedProtectedArea:" + args[2] + ":" + args[3]!,
                                             JSON.stringify(data)
@@ -38428,7 +38681,7 @@ ${command.dp}\\itfill <offsetx: float> <offsety: float> <offsetz: float> <thickn
                             default:
                         }
                     }
-                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2][0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1).split(" ")[0], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
+                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2]![0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1).split(" ")[0]!, extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
                 }
                 break;
             case !!switchTest.match(/^\\idtfill$/):
@@ -38951,7 +39204,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                                       blocktypes.length *
                                                                           Math.random()
                                                                   )
-                                                              ]
+                                                              ]!
                                                         : firstblockname!,
                                                     firstblockstates,
                                                     {
@@ -39058,7 +39311,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                                       blocktypes.length *
                                                                           Math.random()
                                                                   )
-                                                              ]
+                                                              ]!
                                                         : firstblockname!,
                                                     firstblockstates,
                                                     {
@@ -39287,7 +39540,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                                       blocktypes.length *
                                                                           Math.random()
                                                                   )
-                                                              ]
+                                                              ]!
                                                         : firstblockname!,
                                                     firstblockstates,
                                                     {
@@ -39394,7 +39647,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                                       blocktypes.length *
                                                                           Math.random()
                                                                   )
-                                                              ]
+                                                              ]!
                                                         : firstblockname!,
                                                     firstblockstates,
                                                     {
@@ -39498,7 +39751,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                                       blocktypes.length *
                                                                           Math.random()
                                                                   )
-                                                              ]
+                                                              ]!
                                                         : firstblockname!,
                                                     firstblockstates,
                                                     {
@@ -39605,7 +39858,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                                       blocktypes.length *
                                                                           Math.random()
                                                                   )
-                                                              ]
+                                                              ]!
                                                         : firstblockname!,
                                                     firstblockstates,
                                                     {
@@ -39712,7 +39965,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                                       blocktypes.length *
                                                                           Math.random()
                                                                   )
-                                                              ]
+                                                              ]!
                                                         : firstblockname!,
                                                     firstblockstates,
                                                     {
@@ -41800,7 +42053,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                             default:
                         }
                     }
-                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2][0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1).split(" ")[0], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
+                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2]![0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1).split(" ")[0]!, extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
                 }
                 break;
             case !!switchTest.match(/^brush$/) ||
@@ -41875,7 +42128,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                         )
                                         .setDynamicProperty(
                                             "radius",
-                                            isNaN(Number(args[3]))
+                                            isNaN(Number(args[3] ?? undefined))
                                                 ? 10
                                                 : args[3]
                                         );
@@ -41899,7 +42152,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                         )}`,
                                                     `§r§bBrush Type: §aExtinguish`,
                                                     `§r§bBrush Radius: ${
-                                                        isNaN(Number(args[3]))
+                                                        isNaN(Number(args[3] ?? undefined))
                                                             ? 10
                                                             : args[3]
                                                     }`,
@@ -41908,7 +42161,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                     }
                                     player.sendMessageB(
                                         `Successfully set brush type of the held item to extinguish with a radius of ${
-                                            isNaN(Number(args[3]))
+                                            isNaN(Number(args[3] ?? undefined))
                                                 ? 10
                                                 : args[3]
                                         }.`
@@ -41939,7 +42192,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                         )
                                         .setDynamicProperty(
                                             "radius",
-                                            isNaN(Number(args[3]))
+                                            isNaN(Number(args[3] ?? undefined))
                                                 ? 10
                                                 : args[3]
                                         );
@@ -41953,7 +42206,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                 .setLore([
                                                     `§r§bBrush Type: §aExtinguish`,
                                                     `§r§bBrush Radius: ${
-                                                        isNaN(Number(args[3]))
+                                                        isNaN(Number(args[3] ?? undefined))
                                                             ? 10
                                                             : args[3]
                                                     }`,
@@ -41962,7 +42215,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                     }
                                     player.sendMessageB(
                                         `Successfully set brush type of the held item to extinguish with a radius of ${
-                                            isNaN(Number(args[3]))
+                                            isNaN(Number(args[3] ?? undefined))
                                                 ? 10
                                                 : args[3]
                                         }.`
@@ -41993,7 +42246,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                         )
                                         .setDynamicProperty(
                                             "radius",
-                                            isNaN(Number(args[3]))
+                                            isNaN(Number(args[3] ?? undefined))
                                                 ? 10
                                                 : args[3]
                                         );
@@ -42007,7 +42260,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                 .setLore([
                                                     `§r§bBrush Type: §aRemExp`,
                                                     `§r§bBrush Radius: ${
-                                                        isNaN(Number(args[3]))
+                                                        isNaN(Number(args[3] ?? undefined))
                                                             ? 10
                                                             : args[3]
                                                     }`,
@@ -42016,7 +42269,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                     }
                                     player.sendMessageB(
                                         `Successfully set brush type of the held item to remexp with a radius of ${
-                                            isNaN(Number(args[3]))
+                                            isNaN(Number(args[3] ?? undefined))
                                                 ? 10
                                                 : args[3]
                                         }.`
@@ -42047,7 +42300,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                         )
                                         .setDynamicProperty(
                                             "radius",
-                                            isNaN(Number(args[3]))
+                                            isNaN(Number(args[3] ?? undefined))
                                                 ? 10
                                                 : args[3]
                                         );
@@ -42061,7 +42314,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                 .setLore([
                                                     `§r§bBrush Type: §aRemExpE`,
                                                     `§r§bBrush Radius: ${
-                                                        isNaN(Number(args[3]))
+                                                        isNaN(Number(args[3] ?? undefined))
                                                             ? 10
                                                             : args[3]
                                                     }`,
@@ -42070,7 +42323,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                     }
                                     player.sendMessageB(
                                         `Successfully set brush type of the held item to remexp with a radius of ${
-                                            isNaN(Number(args[3]))
+                                            isNaN(Number(args[3] ?? undefined))
                                                 ? 10
                                                 : args[3]
                                         }.`
@@ -42101,7 +42354,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                         )
                                         .setDynamicProperty(
                                             "radius",
-                                            isNaN(Number(args[3]))
+                                            isNaN(Number(args[3] ?? undefined))
                                                 ? 10
                                                 : args[3]
                                         );
@@ -42115,7 +42368,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                 .setLore([
                                                     `§r§bBrush Type: §aRemExpNE`,
                                                     `§r§bBrush Radius: ${
-                                                        isNaN(Number(args[3]))
+                                                        isNaN(Number(args[3] ?? undefined))
                                                             ? 10
                                                             : args[3]
                                                     }`,
@@ -42124,7 +42377,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                     }
                                     player.sendMessageB(
                                         `Successfully set brush type of the held item to remexp with a radius of ${
-                                            isNaN(Number(args[3]))
+                                            isNaN(Number(args[3] ?? undefined))
                                                 ? 10
                                                 : args[3]
                                         }.`
@@ -42178,7 +42431,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                         )
                                         .setDynamicProperty(
                                             "radius",
-                                            isNaN(Number(args[5])) ? 3 : args[5]
+                                            isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]
                                         );
                                     if(args[6] != undefined){
                                         player
@@ -42229,7 +42482,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                 .setLore([
                                                     `§r§bBrush Type: §aSphere`,
                                                     `§r§bBrush Radius: §c${
-                                                        isNaN(Number(args[5]))
+                                                        isNaN(Number(args[5] ?? undefined))
                                                             ? 3
                                                             : args[5]
                                                     }`,
@@ -42283,7 +42536,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                     }
                                     player.sendMessageB(
                                         `Successfully set brush type of the held item to sphere with a radius of ${
-                                            isNaN(Number(args[5])) ? 3 : args[5]
+                                            isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]
                                         }.`
                                     );
                                 }
@@ -42335,7 +42588,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                         )
                                         .setDynamicProperty(
                                             "radius",
-                                            isNaN(Number(args[5])) ? 3 : args[5]
+                                            isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]
                                         );
                                     if(args[6] != undefined){
                                         player
@@ -42386,7 +42639,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                 .setLore([
                                                     `§r§bBrush Type: §aCube`,
                                                     `§r§bBrush Radius: §c${
-                                                        isNaN(Number(args[5]))
+                                                        isNaN(Number(args[5] ?? undefined))
                                                             ? 3
                                                             : args[5]
                                                     }`,
@@ -42440,7 +42693,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                     }
                                     player.sendMessageB(
                                         `Successfully set brush type of the held item to cube with a radius of ${
-                                            isNaN(Number(args[5])) ? 3 : args[5]
+                                            isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]
                                         }.`
                                     );
                                 }
@@ -42492,7 +42745,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                         )
                                         .setDynamicProperty(
                                             "radius",
-                                            isNaN(Number(args[5])) ? 3 : args[5]
+                                            isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]
                                         );
                                     if(args[6] != undefined){
                                         player
@@ -42543,7 +42796,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                 .setLore([
                                                     `§r§bBrush Type: §aSquare`,
                                                     `§r§bBrush Radius: §c${
-                                                        isNaN(Number(args[5]))
+                                                        isNaN(Number(args[5] ?? undefined))
                                                             ? 3
                                                             : args[5]
                                                     }`,
@@ -42597,7 +42850,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                     }
                                     player.sendMessageB(
                                         `Successfully set brush type of the held item to square with a radius of ${
-                                            isNaN(Number(args[5])) ? 3 : args[5]
+                                            isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]
                                         }.`
                                     );
                                 }
@@ -42650,7 +42903,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                         )
                                         .setDynamicProperty(
                                             "decay",
-                                            isNaN(Number(args[6])) ? 0 : args[6]
+                                            isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]
                                         );
                                     player
                                         .getComponent("inventory")!
@@ -42659,7 +42912,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                         )
                                         .setDynamicProperty(
                                             "radius",
-                                            isNaN(Number(args[5])) ? 3 : args[5]
+                                            isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]
                                         );
                                     if(args[7] != undefined){
                                         player
@@ -42711,12 +42964,12 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                 .setLore([
                                                     `§r§bBrush Type: §aSplatter`,
                                                     `§r§bBrush Radius: §c${
-                                                        isNaN(Number(args[5]))
+                                                        isNaN(Number(args[5] ?? undefined))
                                                             ? 3
                                                             : args[5]
                                                     }`,
                                                     `§r§bBrush Decay: §c${
-                                                        isNaN(Number(args[6]))
+                                                        isNaN(Number(args[6] ?? undefined))
                                                             ? 0
                                                             : args[6]
                                                     }`,
@@ -42771,9 +43024,9 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                     }
                                     player.sendMessageB(
                                         `Successfully set brush type of the held item to splatter with a radius of ${
-                                            isNaN(Number(args[5])) ? 3 : args[5]
+                                            isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]
                                         } and a decay level of ${
-                                            isNaN(Number(args[6])) ? 0 : args[6]
+                                            isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]
                                         }.`
                                     );
                                 }
@@ -42826,7 +43079,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                         )
                                         .setDynamicProperty(
                                             "decay",
-                                            isNaN(Number(args[6])) ? 0 : args[6]
+                                            isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]
                                         );
                                     player
                                         .getComponent("inventory")!
@@ -42835,7 +43088,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                         )
                                         .setDynamicProperty(
                                             "radius",
-                                            isNaN(Number(args[5])) ? 3 : args[5]
+                                            isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]
                                         );
                                     if(args[7] != undefined){
                                         player
@@ -42886,12 +43139,12 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                 .setLore([
                                                     `§r§bBrush Type: §aSplatterCube`,
                                                     `§r§bBrush Radius: §c${
-                                                        isNaN(Number(args[5]))
+                                                        isNaN(Number(args[5] ?? undefined))
                                                             ? 3
                                                             : args[5]
                                                     }`,
                                                     `§r§bBrush Decay: §c${
-                                                        isNaN(Number(args[6]))
+                                                        isNaN(Number(args[6] ?? undefined))
                                                             ? 0
                                                             : args[6]
                                                     }`,
@@ -42945,9 +43198,9 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                     }
                                     player.sendMessageB(
                                         `Successfully set brush type of the held item to splatter with a radius of ${
-                                            isNaN(Number(args[5])) ? 3 : args[5]
+                                            isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]
                                         } and a decay level of ${
-                                            isNaN(Number(args[6])) ? 0 : args[6]
+                                            isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]
                                         }.`
                                     );
                                 }
@@ -43000,7 +43253,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                         )
                                         .setDynamicProperty(
                                             "decay",
-                                            isNaN(Number(args[6])) ? 0 : args[6]
+                                            isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]
                                         );
                                     player
                                         .getComponent("inventory")!
@@ -43009,7 +43262,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                         )
                                         .setDynamicProperty(
                                             "radius",
-                                            isNaN(Number(args[5])) ? 3 : args[5]
+                                            isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]
                                         );
                                     if(args[7] != undefined){
                                         player
@@ -43060,12 +43313,12 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                 .setLore([
                                                     `§r§bBrush Type: §aSplatterSquare`,
                                                     `§r§bBrush Radius: §c${
-                                                        isNaN(Number(args[5]))
+                                                        isNaN(Number(args[5] ?? undefined))
                                                             ? 3
                                                             : args[5]
                                                     }`,
                                                     `§r§bBrush Decay: §c${
-                                                        isNaN(Number(args[6]))
+                                                        isNaN(Number(args[6] ?? undefined))
                                                             ? 0
                                                             : args[6]
                                                     }`,
@@ -43119,9 +43372,9 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                     }
                                     player.sendMessageB(
                                         `Successfully set brush type of the held item to splatter with a radius of ${
-                                            isNaN(Number(args[5])) ? 3 : args[5]
+                                            isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]
                                         } and a decay level of ${
-                                            isNaN(Number(args[6])) ? 0 : args[6]
+                                            isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]
                                         }.`
                                     );
                                 }
@@ -43174,7 +43427,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                         )
                                         .setDynamicProperty(
                                             "decay",
-                                            isNaN(Number(args[6])) ? 0 : args[6]
+                                            isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]
                                         );
                                     player
                                         .getComponent("inventory")!
@@ -43183,7 +43436,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                         )
                                         .setDynamicProperty(
                                             "radius",
-                                            isNaN(Number(args[5])) ? 3 : args[5]
+                                            isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]
                                         );
                                     if(args[7] != undefined){
                                         player
@@ -43234,12 +43487,12 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                 .setLore([
                                                     `§r§bBrush Type: §aSplatterSurface`,
                                                     `§r§bBrush Radius: §c${
-                                                        isNaN(Number(args[5]))
+                                                        isNaN(Number(args[5] ?? undefined))
                                                             ? 3
                                                             : args[5]
                                                     }`,
                                                     `§r§bBrush Decay: §c${
-                                                        isNaN(Number(args[6]))
+                                                        isNaN(Number(args[6] ?? undefined))
                                                             ? 0
                                                             : args[6]
                                                     }`,
@@ -43293,9 +43546,9 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                     }
                                     player.sendMessageB(
                                         `Successfully set brush type of the held item to splatter surface with a radius of ${
-                                            isNaN(Number(args[5])) ? 3 : args[5]
+                                            isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]
                                         } and a decay level of ${
-                                            isNaN(Number(args[6])) ? 0 : args[6]
+                                            isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]
                                         }.`
                                     );
                                 }
@@ -43348,7 +43601,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                         )
                                         .setDynamicProperty(
                                             "decay",
-                                            isNaN(Number(args[6])) ? 0 : args[6]
+                                            isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]
                                         );
                                     player
                                         .getComponent("inventory")!
@@ -43357,7 +43610,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                         )
                                         .setDynamicProperty(
                                             "radius",
-                                            isNaN(Number(args[5])) ? 3 : args[5]
+                                            isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]
                                         );
                                     if(args[7] != undefined){
                                         player
@@ -43408,12 +43661,12 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                 .setLore([
                                                     `§r§bBrush Type: §aSplatterCubeSurface`,
                                                     `§r§bBrush Radius: §c${
-                                                        isNaN(Number(args[5]))
+                                                        isNaN(Number(args[5] ?? undefined))
                                                             ? 3
                                                             : args[5]
                                                     }`,
                                                     `§r§bBrush Decay: §c${
-                                                        isNaN(Number(args[6]))
+                                                        isNaN(Number(args[6] ?? undefined))
                                                             ? 0
                                                             : args[6]
                                                     }`,
@@ -43467,9 +43720,9 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                     }
                                     player.sendMessageB(
                                         `Successfully set brush type of the held item to splatter cube surface with a radius of ${
-                                            isNaN(Number(args[5])) ? 3 : args[5]
+                                            isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]
                                         } and a decay level of ${
-                                            isNaN(Number(args[6])) ? 0 : args[6]
+                                            isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]
                                         }.`
                                     );
                                 }
@@ -43522,7 +43775,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                         )
                                         .setDynamicProperty(
                                             "decay",
-                                            isNaN(Number(args[6])) ? 0 : args[6]
+                                            isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]
                                         );
                                     player
                                         .getComponent("inventory")!
@@ -43531,7 +43784,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                         )
                                         .setDynamicProperty(
                                             "radius",
-                                            isNaN(Number(args[5])) ? 3 : args[5]
+                                            isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]
                                         );
                                     if(args[7] != undefined){
                                         player
@@ -43582,12 +43835,12 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                 .setLore([
                                                     `§r§bBrush Type: §aSplatterSquareSurface`,
                                                     `§r§bBrush Radius: §c${
-                                                        isNaN(Number(args[5]))
+                                                        isNaN(Number(args[5] ?? undefined))
                                                             ? 3
                                                             : args[5]
                                                     }`,
                                                     `§r§bBrush Decay: §c${
-                                                        isNaN(Number(args[6]))
+                                                        isNaN(Number(args[6] ?? undefined))
                                                             ? 0
                                                             : args[6]
                                                     }`,
@@ -43641,10 +43894,1762 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                     }
                                     player.sendMessageB(
                                         `Successfully set brush type of the held item to splatter square surface with a radius of ${
-                                            isNaN(Number(args[5])) ? 3 : args[5]
+                                            isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]
                                         } and a decay level of ${
-                                            isNaN(Number(args[6])) ? 0 : args[6]
+                                            isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]
                                         }.`
+                                    );
+                                }
+                                break;
+                            case "overlaysurface":
+                                {
+                                    let args = evaluateParameters(switchTestB, [
+                                        "presetText",
+                                        "f-l",
+                                        "string",
+                                        "f-h",
+                                        "blockPattern",
+                                        "number",
+                                        "number",
+                                        "blockMask",
+                                    ]).args;
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "brushtype",
+                                            "overlaysurface"
+                                        );
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "pattern",
+                                            JSON.stringify(
+                                                (args[4] as BlockPattern).blocks
+                                            )
+                                        );
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "patterntype",
+                                            (args[4] as BlockPattern).type
+                                        );
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "decay",
+                                            isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]
+                                        );
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "radius",
+                                            isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]
+                                        );
+                                    if(args[7] != undefined){
+                                        player
+                                            .getComponent("inventory")!
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "mask",
+                                                JSON.stringify(
+                                                    args[7]!.blocks
+                                                )
+                                            );
+                                        player
+                                            .getComponent("inventory")!
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "masktype",
+                                                args[7]!.type
+                                            );
+                                    }else{
+                                        player
+                                            .getComponent("inventory")!
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "mask"
+                                            );
+                                        player
+                                            .getComponent("inventory")!
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "masktype"
+                                            );
+                                    }
+                                    if (!args[1]!.l) {
+                                        srun(() =>
+                                            player
+                                                .getComponent("inventory")!
+                                                .container.getSlot(
+                                                    player.selectedSlotIndex
+                                                )
+                                                .setLore([
+                                                    `§r§bBrush Type: §aOverlaySurface`,
+                                                    `§r§bBrush Radius: §c${
+                                                        isNaN(Number(args[5] ?? undefined))
+                                                            ? 3
+                                                            : args[5]
+                                                    }`,
+                                                    `§r§bBrush Decay: §c${
+                                                        isNaN(Number(args[6] ?? undefined))
+                                                            ? 0
+                                                            : args[6]
+                                                    }`,
+                                                    ...[
+                                                        ...(
+                                                            args[4] as BlockPattern
+                                                        ).blocks
+                                                            .map((v) => v.rawns)
+                                                            .slice(0, 15)
+                                                            .map(
+                                                                (v) =>
+                                                                    `§r§d${v}`
+                                                            ),
+                                                        "§r§d...",
+                                                    ].slice(
+                                                        0,
+                                                        (
+                                                            args[4] as BlockPattern
+                                                        ).blocks.length <= 15
+                                                            ? -1
+                                                            : undefined
+                                                    ),
+                                                    `§r§bBrush Pattern Type: §a${
+                                                        (
+                                                            args[4] as BlockPattern
+                                                        ).type
+                                                    }`,
+                                                    ...(args[7] != undefined ? 
+                                                        [
+                                                            "§r§bBrush Mask: §d",
+                                                            ...args[7]!.blocks
+                                                            .map((v) => v.rawns)
+                                                            .slice(0, 15)
+                                                            .map(
+                                                                (v) =>
+                                                                    `§r§d${v}`
+                                                            ),
+                                                            "§r§d..."
+                                                        ].slice(
+                                                            0,
+                                                            args[7]!.blocks.length <= 15
+                                                                ? -1
+                                                                : undefined
+                                                        )
+                                                    : []),
+                                                    ...(args[7] != undefined ? [`§r§bBrush Mask Type: §a${
+                                                        args[7]!.type
+                                                    }`] : []),
+                                                ])
+                                        );
+                                    }
+                                    player.sendMessageB(
+                                        `Successfully set brush type of the held item to overlay surface with a radius of ${
+                                            isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]
+                                        } and a decay level of ${
+                                            isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]
+                                        }.`
+                                    );
+                                }
+                                break;
+                            case "overlaysquaresurface":
+                                {
+                                    let args = evaluateParameters(switchTestB, [
+                                        "presetText",
+                                        "f-l",
+                                        "string",
+                                        "f-h",
+                                        "blockPattern",
+                                        "number",
+                                        "number",
+                                        "blockMask",
+                                    ]).args;
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "brushtype",
+                                            "overlaysquaresurface"
+                                        );
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "pattern",
+                                            JSON.stringify(
+                                                (args[4] as BlockPattern).blocks
+                                            )
+                                        );
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "patterntype",
+                                            (args[4] as BlockPattern).type
+                                        );
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "decay",
+                                            isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]
+                                        );
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "radius",
+                                            isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]
+                                        );
+                                    if(args[7] != undefined){
+                                        player
+                                            .getComponent("inventory")!
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "mask",
+                                                JSON.stringify(
+                                                    args[7]!.blocks
+                                                )
+                                            );
+                                        player
+                                            .getComponent("inventory")!
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "masktype",
+                                                args[7]!.type
+                                            );
+                                    }else{
+                                        player
+                                            .getComponent("inventory")!
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "mask"
+                                            );
+                                        player
+                                            .getComponent("inventory")!
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "masktype"
+                                            );
+                                    }
+                                    if (!args[1]!.l) {
+                                        srun(() =>
+                                            player
+                                                .getComponent("inventory")!
+                                                .container.getSlot(
+                                                    player.selectedSlotIndex
+                                                )
+                                                .setLore([
+                                                    `§r§bBrush Type: §aOverlaySquareSurface`,
+                                                    `§r§bBrush Radius: §c${
+                                                        isNaN(Number(args[5] ?? undefined))
+                                                            ? 3
+                                                            : args[5]
+                                                    }`,
+                                                    `§r§bBrush Decay: §c${
+                                                        isNaN(Number(args[6] ?? undefined))
+                                                            ? 0
+                                                            : args[6]
+                                                    }`,
+                                                    ...[
+                                                        ...(
+                                                            args[4] as BlockPattern
+                                                        ).blocks
+                                                            .map((v) => v.rawns)
+                                                            .slice(0, 15)
+                                                            .map(
+                                                                (v) =>
+                                                                    `§r§d${v}`
+                                                            ),
+                                                        "§r§d...",
+                                                    ].slice(
+                                                        0,
+                                                        (
+                                                            args[4] as BlockPattern
+                                                        ).blocks.length <= 15
+                                                            ? -1
+                                                            : undefined
+                                                    ),
+                                                    `§r§bBrush Pattern Type: §a${
+                                                        (
+                                                            args[4] as BlockPattern
+                                                        ).type
+                                                    }`,
+                                                    ...(args[7] != undefined ? 
+                                                        [
+                                                            "§r§bBrush Mask: §d",
+                                                            ...args[7]!.blocks
+                                                            .map((v) => v.rawns)
+                                                            .slice(0, 15)
+                                                            .map(
+                                                                (v) =>
+                                                                    `§r§d${v}`
+                                                            ),
+                                                            "§r§d..."
+                                                        ].slice(
+                                                            0,
+                                                            args[7]!.blocks.length <= 15
+                                                                ? -1
+                                                                : undefined
+                                                        )
+                                                    : []),
+                                                    ...(args[7] != undefined ? [`§r§bBrush Mask Type: §a${
+                                                        args[7]!.type
+                                                    }`] : []),
+                                                ])
+                                        );
+                                    }
+                                    player.sendMessageB(
+                                        `Successfully set brush type of the held item to overlay square surface with a radius of ${
+                                            isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]
+                                        } and a decay level of ${
+                                            isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]
+                                        }.`
+                                    );
+                                }
+                                break;
+                            case "overlaycubesurface":
+                                {
+                                    let args = evaluateParameters(switchTestB, [
+                                        "presetText",
+                                        "f-l",
+                                        "string",
+                                        "f-h",
+                                        "blockPattern",
+                                        "number",
+                                        "number",
+                                        "blockMask",
+                                    ]).args;
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "brushtype",
+                                            "overlaycubesurface"
+                                        );
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "pattern",
+                                            JSON.stringify(
+                                                (args[4] as BlockPattern).blocks
+                                            )
+                                        );
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "patterntype",
+                                            (args[4] as BlockPattern).type
+                                        );
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "decay",
+                                            isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]
+                                        );
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "radius",
+                                            isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]
+                                        );
+                                    if(args[7] != undefined){
+                                        player
+                                            .getComponent("inventory")!
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "mask",
+                                                JSON.stringify(
+                                                    args[7]!.blocks
+                                                )
+                                            );
+                                        player
+                                            .getComponent("inventory")!
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "masktype",
+                                                args[7]!.type
+                                            );
+                                    }else{
+                                        player
+                                            .getComponent("inventory")!
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "mask"
+                                            );
+                                        player
+                                            .getComponent("inventory")!
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "masktype"
+                                            );
+                                    }
+                                    if (!args[1]!.l) {
+                                        srun(() =>
+                                            player
+                                                .getComponent("inventory")!
+                                                .container.getSlot(
+                                                    player.selectedSlotIndex
+                                                )
+                                                .setLore([
+                                                    `§r§bBrush Type: §aOverlayCubeSurface`,
+                                                    `§r§bBrush Radius: §c${
+                                                        isNaN(Number(args[5] ?? undefined))
+                                                            ? 3
+                                                            : args[5]
+                                                    }`,
+                                                    `§r§bBrush Decay: §c${
+                                                        isNaN(Number(args[6] ?? undefined))
+                                                            ? 0
+                                                            : args[6]
+                                                    }`,
+                                                    ...[
+                                                        ...(
+                                                            args[4] as BlockPattern
+                                                        ).blocks
+                                                            .map((v) => v.rawns)
+                                                            .slice(0, 15)
+                                                            .map(
+                                                                (v) =>
+                                                                    `§r§d${v}`
+                                                            ),
+                                                        "§r§d...",
+                                                    ].slice(
+                                                        0,
+                                                        (
+                                                            args[4] as BlockPattern
+                                                        ).blocks.length <= 15
+                                                            ? -1
+                                                            : undefined
+                                                    ),
+                                                    `§r§bBrush Pattern Type: §a${
+                                                        (
+                                                            args[4] as BlockPattern
+                                                        ).type
+                                                    }`,
+                                                    ...(args[7] != undefined ? 
+                                                        [
+                                                            "§r§bBrush Mask: §d",
+                                                            ...args[7]!.blocks
+                                                            .map((v) => v.rawns)
+                                                            .slice(0, 15)
+                                                            .map(
+                                                                (v) =>
+                                                                    `§r§d${v}`
+                                                            ),
+                                                            "§r§d..."
+                                                        ].slice(
+                                                            0,
+                                                            args[7]!.blocks.length <= 15
+                                                                ? -1
+                                                                : undefined
+                                                        )
+                                                    : []),
+                                                    ...(args[7] != undefined ? [`§r§bBrush Mask Type: §a${
+                                                        args[7]!.type
+                                                    }`] : []),
+                                                ])
+                                        );
+                                    }
+                                    player.sendMessageB(
+                                        `Successfully set brush type of the held item to overlay cube surface with a radius of ${
+                                            isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]
+                                        } and a decay level of ${
+                                            isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]
+                                        }.`
+                                    );
+                                }
+                                break;
+                            case "flatten":
+                                {
+                                    let args = evaluateParameters(switchTestB, [
+                                        "presetText",
+                                        "f-l",
+                                        "string",
+                                        "f-rw",
+                                        "string",
+                                        "number",
+                                        "number",
+                                        "blockMask",
+                                    ]).args;
+                                    if (!["up", "down", "north", "east", "south", "west", "auto", "autor"].includes(args[4]?.toLowerCase() as any)) {
+                                        player.sendError(
+                                            `§cError: Unknown direction "${args[4]?.toLowerCase()}".`,
+                                            true
+                                        );
+                                    }
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "brushtype",
+                                            "flatten"
+                                        );
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "flattendirection",
+                                            args[4]!.toLowerCase()
+                                        );
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "decay",
+                                            isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]
+                                        );
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "radius",
+                                            isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]
+                                        );
+                                    if(args[7] != undefined){
+                                        player
+                                            .getComponent("inventory")!
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "mask",
+                                                JSON.stringify(
+                                                    args[7]!.blocks
+                                                )
+                                            );
+                                        player
+                                            .getComponent("inventory")!
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "masktype",
+                                                args[7]!.type
+                                            );
+                                    }else{
+                                        player
+                                            .getComponent("inventory")!
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "mask"
+                                            );
+                                        player
+                                            .getComponent("inventory")!
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "masktype"
+                                            );
+                                    }
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "usereverseoffset",
+                                            args[3].r
+                                        );
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "wholemode",
+                                            args[3].w
+                                        );
+                                    if (!args[1]!.l) {
+                                        srun(() =>
+                                            player
+                                                .getComponent("inventory")!
+                                                .container.getSlot(
+                                                    player.selectedSlotIndex
+                                                )
+                                                .setLore([
+                                                    `§r§bBrush Type: §aFlatten`,
+                                                    `§r§bBrush Radius: §c${
+                                                        isNaN(Number(args[5] ?? undefined))
+                                                            ? 3
+                                                            : args[5]
+                                                    }`,
+                                                    `§r§bBrush Decay: §c${
+                                                        isNaN(Number(args[6] ?? undefined))
+                                                            ? 0
+                                                            : args[6]
+                                                    }`,
+                                                    `§r§bFlatten Direction: §a${
+                                                        args[4]!.toLowerCase()
+                                                    }`,
+                                                    `§r§bUse Reverse Offset: ${
+                                                        args[3].r.toFormattedString()
+                                                    }`,
+                                                    `§r§bWhole Mode: §c${
+                                                        args[3].w.toFormattedString()
+                                                    }`,
+                                                    ...(args[7] != undefined ? 
+                                                        [
+                                                            "§r§bBrush Mask: §d",
+                                                            ...args[7]!.blocks
+                                                            .map((v) => v.rawns)
+                                                            .slice(0, 15)
+                                                            .map(
+                                                                (v) =>
+                                                                    `§r§d${v}`
+                                                            ),
+                                                            "§r§d..."
+                                                        ].slice(
+                                                            0,
+                                                            args[7]!.blocks.length <= 15
+                                                                ? -1
+                                                                : undefined
+                                                        )
+                                                    : []),
+                                                    ...(args[7] != undefined ? [`§r§bBrush Mask Type: §a${
+                                                        args[7]!.type
+                                                    }`] : []),
+                                                ])
+                                        );
+                                    }
+                                    player.sendMessageB(
+                                        `Successfully set brush type of the held item to flatten with a direction of ${args[4]?.toLowerCase()}, a radius of ${
+                                            isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]
+                                        }, and a decay level of ${
+                                            isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]
+                                        }.`
+                                    );
+                                }
+                                break;
+                            case "flattensquare":
+                                {
+                                    let args = evaluateParameters(switchTestB, [
+                                        "presetText",
+                                        "f-l",
+                                        "string",
+                                        "f-rw",
+                                        "string",
+                                        "number",
+                                        "number",
+                                        "blockMask",
+                                    ]).args;
+                                    if (!["up", "down", "north", "east", "south", "west", "auto", "autor"].includes(args[4]?.toLowerCase() as any)) {
+                                        player.sendError(
+                                            `§cError: Unknown direction "${args[4]?.toLowerCase()}".`,
+                                            true
+                                        );
+                                    }
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "brushtype",
+                                            "flattensquare"
+                                        );
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "flattendirection",
+                                            args[4]!.toLowerCase()
+                                        );
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "decay",
+                                            isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]
+                                        );
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "radius",
+                                            isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]
+                                        );
+                                    if(args[7] != undefined){
+                                        player
+                                            .getComponent("inventory")!
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "mask",
+                                                JSON.stringify(
+                                                    args[7]!.blocks
+                                                )
+                                            );
+                                        player
+                                            .getComponent("inventory")!
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "masktype",
+                                                args[7]!.type
+                                            );
+                                    }else{
+                                        player
+                                            .getComponent("inventory")!
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "mask"
+                                            );
+                                        player
+                                            .getComponent("inventory")!
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "masktype"
+                                            );
+                                    }
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "usereverseoffset",
+                                            args[3].r
+                                        );
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "wholemode",
+                                            args[3].w
+                                        );
+                                    if (!args[1]!.l) {
+                                        srun(() =>
+                                            player
+                                                .getComponent("inventory")!
+                                                .container.getSlot(
+                                                    player.selectedSlotIndex
+                                                )
+                                                .setLore([
+                                                    `§r§bBrush Type: §aFlattenSquare`,
+                                                    `§r§bBrush Radius: §c${
+                                                        isNaN(Number(args[5] ?? undefined))
+                                                            ? 3
+                                                            : args[5]
+                                                    }`,
+                                                    `§r§bBrush Decay: §c${
+                                                        isNaN(Number(args[6] ?? undefined))
+                                                            ? 0
+                                                            : args[6]
+                                                    }`,
+                                                    `§r§bFlatten Direction: §a${
+                                                        args[4]!.toLowerCase()
+                                                    }`,
+                                                    `§r§bUse Reverse Offset: ${
+                                                        args[3].r.toFormattedString()
+                                                    }`,
+                                                    `§r§bWhole Mode: ${
+                                                        args[3].w.toFormattedString()
+                                                    }`,
+                                                    ...(args[7] != undefined ? 
+                                                        [
+                                                            "§r§bBrush Mask: §d",
+                                                            ...args[7]!.blocks
+                                                            .map((v) => v.rawns)
+                                                            .slice(0, 15)
+                                                            .map(
+                                                                (v) =>
+                                                                    `§r§d${v}`
+                                                            ),
+                                                            "§r§d..."
+                                                        ].slice(
+                                                            0,
+                                                            args[7]!.blocks.length <= 15
+                                                                ? -1
+                                                                : undefined
+                                                        )
+                                                    : []),
+                                                    ...(args[7] != undefined ? [`§r§bBrush Mask Type: §a${
+                                                        args[7]!.type
+                                                    }`] : []),
+                                                ])
+                                        );
+                                    }
+                                    player.sendMessageB(
+                                        `Successfully set brush type of the held item to flatten square with a direction of ${args[4]?.toLowerCase()}, a radius of ${
+                                            isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]
+                                        }, and a decay level of ${
+                                            isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]
+                                        }.`
+                                    );
+                                }
+                                break;
+                            case "flattenfill":
+                                {
+                                    let args = evaluateParameters(switchTestB, [
+                                        "presetText",
+                                        "f-l",
+                                        "string",
+                                        "f-r",
+                                        "string",
+                                        "blockPattern",
+                                        "number",
+                                        "number",
+                                        "blockMask",
+                                    ]).args;
+                                    if (!["up", "down", "north", "east", "south", "west", "auto", "autor"].includes(args[4]?.toLowerCase() as any)) {
+                                        player.sendError(
+                                            `§cError: Unknown direction "${args[4]?.toLowerCase()}".`,
+                                            true
+                                        );
+                                    }
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "brushtype",
+                                            "flattenfill"
+                                        );
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "flattendirection",
+                                            args[4]!.toLowerCase()
+                                        );
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "pattern",
+                                            JSON.stringify(
+                                                (args[5] as BlockPattern).blocks
+                                            )
+                                        );
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "patterntype",
+                                            (args[5] as BlockPattern).type
+                                        );
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "decay",
+                                            isNaN(Number(args[7] ?? undefined)) ? 0 : args[7]
+                                        );
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "radius",
+                                            isNaN(Number(args[6] ?? undefined)) ? 3 : args[6]
+                                        );
+                                    if(args[7] != undefined){
+                                        player
+                                            .getComponent("inventory")!
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "mask",
+                                                JSON.stringify(
+                                                    args[8]!.blocks
+                                                )
+                                            );
+                                        player
+                                            .getComponent("inventory")!
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "masktype",
+                                                args[8]!.type
+                                            );
+                                    }else{
+                                        player
+                                            .getComponent("inventory")!
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "mask"
+                                            );
+                                        player
+                                            .getComponent("inventory")!
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "masktype"
+                                            );
+                                    }
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "usereverseoffset",
+                                            args[3].r
+                                        );
+                                    if (!args[1]!.l) {
+                                        srun(() =>
+                                            player
+                                                .getComponent("inventory")!
+                                                .container.getSlot(
+                                                    player.selectedSlotIndex
+                                                )
+                                                .setLore([
+                                                    `§r§bBrush Type: §aFlattenFill`,
+                                                    `§r§bBrush Radius: §c${
+                                                        isNaN(Number(args[6] ?? undefined))
+                                                            ? 3
+                                                            : args[6]
+                                                    }`,
+                                                    `§r§bBrush Decay: §c${
+                                                        isNaN(Number(args[7] ?? undefined))
+                                                            ? 0
+                                                            : args[7]
+                                                    }`,
+                                                    `§r§bFlatten Direction: §a${
+                                                        args[4]!.toLowerCase()
+                                                    }`,
+                                                    `§r§bUse Reverse Offset: ${
+                                                        args[3].r.toFormattedString()
+                                                    }`,
+                                                    ...[
+                                                        ...(
+                                                            args[5] as BlockPattern
+                                                        ).blocks
+                                                            .map((v) => v.rawns)
+                                                            .slice(0, 15)
+                                                            .map(
+                                                                (v) =>
+                                                                    `§r§d${v}`
+                                                            ),
+                                                        "§r§d...",
+                                                    ].slice(
+                                                        0,
+                                                        (
+                                                            args[5] as BlockPattern
+                                                        ).blocks.length <= 15
+                                                            ? -1
+                                                            : undefined
+                                                    ),
+                                                    `§r§bBrush Pattern Type: §a${
+                                                        (
+                                                            args[5] as BlockPattern
+                                                        ).type
+                                                    }`,
+                                                    ...(args[8] != undefined ? 
+                                                        [
+                                                            "§r§bBrush Mask: §d",
+                                                            ...args[8]!.blocks
+                                                            .map((v) => v.rawns)
+                                                            .slice(0, 15)
+                                                            .map(
+                                                                (v) =>
+                                                                    `§r§d${v}`
+                                                            ),
+                                                            "§r§d..."
+                                                        ].slice(
+                                                            0,
+                                                            args[8]!.blocks.length <= 15
+                                                                ? -1
+                                                                : undefined
+                                                        )
+                                                    : []),
+                                                    ...(args[8] != undefined ? [`§r§bBrush Mask Type: §a${
+                                                        args[8]!.type
+                                                    }`] : []),
+                                                ])
+                                        );
+                                    }
+                                    player.sendMessageB(
+                                        `Successfully set brush type of the held item to flatten fill with a direction of ${args[4]?.toLowerCase()}, a radius of ${
+                                            isNaN(Number(args[6] ?? undefined)) ? 3 : args[6]
+                                        }, and a decay level of ${
+                                            isNaN(Number(args[7] ?? undefined)) ? 0 : args[7]
+                                        }.`
+                                    );
+                                }
+                                break;
+                            case "flattensquarefill":
+                                {
+                                    let args = evaluateParameters(switchTestB, [
+                                        "presetText",
+                                        "f-l",
+                                        "string",
+                                        "f-r",
+                                        "string",
+                                        "blockPattern",
+                                        "number",
+                                        "number",
+                                        "blockMask",
+                                    ]).args;
+                                    if (!["up", "down", "north", "east", "south", "west", "auto", "autor"].includes(args[4]?.toLowerCase() as any)) {
+                                        player.sendError(
+                                            `§cError: Unknown direction "${args[4]?.toLowerCase()}".`,
+                                            true
+                                        );
+                                    }
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "brushtype",
+                                            "flattensquarefill"
+                                        );
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "flattendirection",
+                                            args[4]!.toLowerCase()
+                                        );
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "pattern",
+                                            JSON.stringify(
+                                                (args[5] as BlockPattern).blocks
+                                            )
+                                        );
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "patterntype",
+                                            (args[5] as BlockPattern).type
+                                        );
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "decay",
+                                            isNaN(Number(args[7] ?? undefined)) ? 0 : args[7]
+                                        );
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "radius",
+                                            isNaN(Number(args[6] ?? undefined)) ? 3 : args[6]
+                                        );
+                                    if(args[7] != undefined){
+                                        player
+                                            .getComponent("inventory")!
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "mask",
+                                                JSON.stringify(
+                                                    args[8]!.blocks
+                                                )
+                                            );
+                                        player
+                                            .getComponent("inventory")!
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "masktype",
+                                                args[8]!.type
+                                            );
+                                    }else{
+                                        player
+                                            .getComponent("inventory")!
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "mask"
+                                            );
+                                        player
+                                            .getComponent("inventory")!
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "masktype"
+                                            );
+                                    }
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "usereverseoffset",
+                                            args[3].r
+                                        );
+                                    if (!args[1]!.l) {
+                                        srun(() =>
+                                            player
+                                                .getComponent("inventory")!
+                                                .container.getSlot(
+                                                    player.selectedSlotIndex
+                                                )
+                                                .setLore([
+                                                    `§r§bBrush Type: §aFlattenSquareFill`,
+                                                    `§r§bBrush Radius: §c${
+                                                        isNaN(Number(args[6] ?? undefined))
+                                                            ? 3
+                                                            : args[6]
+                                                    }`,
+                                                    `§r§bBrush Decay: §c${
+                                                        isNaN(Number(args[7] ?? undefined))
+                                                            ? 0
+                                                            : args[7]
+                                                    }`,
+                                                    `§r§bFlatten Direction: §a${
+                                                        args[4]!.toLowerCase()
+                                                    }`,
+                                                    `§r§bUse Reverse Offset: ${
+                                                        args[3].r.toFormattedString()
+                                                    }`,
+                                                    ...[
+                                                        ...(
+                                                            args[5] as BlockPattern
+                                                        ).blocks
+                                                            .map((v) => v.rawns)
+                                                            .slice(0, 15)
+                                                            .map(
+                                                                (v) =>
+                                                                    `§r§d${v}`
+                                                            ),
+                                                        "§r§d...",
+                                                    ].slice(
+                                                        0,
+                                                        (
+                                                            args[5] as BlockPattern
+                                                        ).blocks.length <= 15
+                                                            ? -1
+                                                            : undefined
+                                                    ),
+                                                    `§r§bBrush Pattern Type: §a${
+                                                        (
+                                                            args[5] as BlockPattern
+                                                        ).type
+                                                    }`,
+                                                    ...(args[8] != undefined ? 
+                                                        [
+                                                            "§r§bBrush Mask: §d",
+                                                            ...args[8]!.blocks
+                                                            .map((v) => v.rawns)
+                                                            .slice(0, 15)
+                                                            .map(
+                                                                (v) =>
+                                                                    `§r§d${v}`
+                                                            ),
+                                                            "§r§d..."
+                                                        ].slice(
+                                                            0,
+                                                            args[8]!.blocks.length <= 15
+                                                                ? -1
+                                                                : undefined
+                                                        )
+                                                    : []),
+                                                    ...(args[8] != undefined ? [`§r§bBrush Mask Type: §a${
+                                                        args[8]!.type
+                                                    }`] : []),
+                                                ])
+                                        );
+                                    }
+                                    player.sendMessageB(
+                                        `Successfully set brush type of the held item to flatten square fill with a direction of ${args[4]?.toLowerCase()}, a radius of ${
+                                            isNaN(Number(args[6] ?? undefined)) ? 3 : args[6]
+                                        }, and a decay level of ${
+                                            isNaN(Number(args[7] ?? undefined)) ? 0 : args[7]
+                                        }.`
+                                    );
+                                }
+                                break;
+                            case "nudge":
+                            case "nudgecube":
+                                {
+                                    let args = evaluateParameters(switchTestB, [
+                                        "presetText",
+                                        "f-l",
+                                        "string",
+                                        "f-t",
+                                        "string",
+                                        "number",
+                                        "number",
+                                        "blockMask",
+                                    ]).args;
+                                    if (!["up", "down", "north", "east", "south", "west", "auto", "autor"].includes(args[4]?.toLowerCase() as any)) {
+                                        player.sendError(
+                                            `§cError: Unknown direction "${args[4]?.toLowerCase()}".`,
+                                            true
+                                        );
+                                    }
+                                    const shape: "sphere" | "cube" = args[2]!.toLowerCase().slice(5) as any || "sphere";
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "brushtype",
+                                            "nudge"
+                                        );
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "shape",
+                                            shape
+                                        );
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "trailmode",
+                                            args[3].t
+                                        );
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "nudgedirection",
+                                            args[4]!.toLowerCase()
+                                        );
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "decay",
+                                            isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]
+                                        );
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "radius",
+                                            isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]
+                                        );
+                                    if(args[7] != undefined){
+                                        player
+                                            .getComponent("inventory")!
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "mask",
+                                                JSON.stringify(
+                                                    args[7]!.blocks
+                                                )
+                                            );
+                                        player
+                                            .getComponent("inventory")!
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "masktype",
+                                                args[7]!.type
+                                            );
+                                    }else{
+                                        player
+                                            .getComponent("inventory")!
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "mask"
+                                            );
+                                        player
+                                            .getComponent("inventory")!
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "masktype"
+                                            );
+                                    }
+                                    if (!args[1]!.l) {
+                                        srun(() =>
+                                            player
+                                                .getComponent("inventory")!
+                                                .container.getSlot(
+                                                    player.selectedSlotIndex
+                                                )
+                                                .setLore([
+                                                    `§r§bBrush Type: §aNudge`,
+                                                    `§r§bShape: §a${shape}`,
+                                                    `§r§bBrush Radius: §c${
+                                                        isNaN(Number(args[5] ?? undefined))
+                                                            ? 3
+                                                            : args[5]
+                                                    }`,
+                                                    `§r§bBrush Decay: §c${
+                                                        isNaN(Number(args[6] ?? undefined))
+                                                            ? 0
+                                                            : args[6]
+                                                    }`,
+                                                    `§r§bNudge Direction: §a${
+                                                        args[4]!.toLowerCase()
+                                                    }`,
+                                                    `§r§bTrail Mode: §a${
+                                                        args[3].t
+                                                    }`,
+                                                    ...(args[7] != undefined ? 
+                                                        [
+                                                            "§r§bBrush Mask: §d",
+                                                            ...args[7]!.blocks
+                                                            .map((v) => v.rawns)
+                                                            .slice(0, 15)
+                                                            .map(
+                                                                (v) =>
+                                                                    `§r§d${v}`
+                                                            ),
+                                                            "§r§d..."
+                                                        ].slice(
+                                                            0,
+                                                            args[7]!.blocks.length <= 15
+                                                                ? -1
+                                                                : undefined
+                                                        )
+                                                    : []),
+                                                    ...(args[7] != undefined ? [`§r§bBrush Mask Type: §a${
+                                                        args[7]!.type
+                                                    }`] : []),
+                                                ])
+                                        );
+                                    }
+                                    player.sendMessageB(
+                                        `Successfully set brush type of the held item to nudge with a shape of ${shape}, a direction of ${args[4]?.toLowerCase()}, a radius of ${
+                                            isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]
+                                        }, and a decay level of ${
+                                            isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]
+                                        }.`
+                                    );
+                                }
+                                break;
+                            case "copy":
+                            case "copycube":
+                                {
+                                    let args = evaluateParameters(switchTestB, [
+                                        "presetText",
+                                        "f-la",
+                                        "string",
+                                        "f-a",
+                                        {
+                                            type: "ignorableNamedParameter",
+                                            name: "clipboard",
+                                            valueType: "string",
+                                            key: "clipboard",
+                                        },
+                                        "placeholder",
+                                        "number",
+                                        "number",
+                                        "blockMask",
+                                    ]).args;
+                                    const shape: "sphere" | "cube" = args[2]!.toLowerCase().slice(5) as any || "sphere";
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "brushtype",
+                                            "copy"
+                                        );
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "decay",
+                                            isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]
+                                        );
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "radius",
+                                            isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]
+                                        );
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "copyair",
+                                            args[3].a
+                                        );
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "clipboard",
+                                            args.clipboard ?? `player_WorldEdit_brush_${player.id}`
+                                        );
+                                    if(args[7] != undefined){
+                                        player
+                                            .getComponent("inventory")!
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "mask",
+                                                JSON.stringify(
+                                                    args[7]!.blocks
+                                                )
+                                            );
+                                        player
+                                            .getComponent("inventory")!
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "masktype",
+                                                args[7]!.type
+                                            );
+                                    }else{
+                                        player
+                                            .getComponent("inventory")!
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "mask"
+                                            );
+                                        player
+                                            .getComponent("inventory")!
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "masktype"
+                                            );
+                                    }
+                                    if (!args[1]!.l) {
+                                        srun(() =>
+                                            player
+                                                .getComponent("inventory")!
+                                                .container.getSlot(
+                                                    player.selectedSlotIndex
+                                                )
+                                                .setLore([
+                                                    `§r§bBrush Type: §aCopy`,
+                                                    `§r§bClipboard: §a${args.clipboard ?? `player_WorldEdit_brush_${player.id}`}`,
+                                                    `§r§bShape: §a${shape}`,
+                                                    `§r§bBrush Radius: §c${
+                                                        isNaN(Number(args[5] ?? undefined))
+                                                            ? 3
+                                                            : args[5]
+                                                    }`,
+                                                    `§r§bBrush Decay: §c${
+                                                        isNaN(Number(args[6] ?? undefined))
+                                                            ? 0
+                                                            : args[6]
+                                                    }`,
+                                                    ...(args[7] != undefined ? 
+                                                        [
+                                                            "§r§bBrush Mask: §d",
+                                                            ...args[7]!.blocks
+                                                            .map((v) => v.rawns)
+                                                            .slice(0, 15)
+                                                            .map(
+                                                                (v) =>
+                                                                    `§r§d${v}`
+                                                            ),
+                                                            "§r§d..."
+                                                        ].slice(
+                                                            0,
+                                                            args[7]!.blocks.length <= 15
+                                                                ? -1
+                                                                : undefined
+                                                        )
+                                                    : []),
+                                                    ...(args[7] != undefined ? [`§r§bBrush Mask Type: §a${
+                                                        args[7]!.type
+                                                    }`] : []),
+                                                ])
+                                        );
+                                    }
+                                    player.sendMessageB(
+                                        `Successfully set brush type of the held item to copy with a shape of ${shape}, a radius of ${
+                                            isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]
+                                        }, and a decay level of ${
+                                            isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]
+                                        }.`
+                                    );
+                                }
+                                break;
+                            case "paste":
+                                {
+                                    let args = evaluateParameters(switchTestB, [
+                                        "presetText",
+                                        "f-l",
+                                        "string",
+                                        {
+                                            type: "ignorableNamedParameter",
+                                            name: "clipboard",
+                                            valueType: "string",
+                                            key: "clipboard",
+                                        },
+                                        "placeholder",
+                                        "placeholder",
+                                        "number",
+                                        "number",
+                                        "blockMask",
+                                    ]).args;
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "brushtype",
+                                            "paste"
+                                        );
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "decay",
+                                            isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]
+                                        );
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "radius",
+                                            isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]
+                                        );
+                                    player
+                                        .getComponent("inventory")!
+                                        .container.getSlot(
+                                            player.selectedSlotIndex
+                                        )
+                                        .setDynamicProperty(
+                                            "clipboard",
+                                            args.clipboard ?? `player_WorldEdit_brush_${player.id}`
+                                        );
+                                    if(args[7] != undefined){
+                                        player
+                                            .getComponent("inventory")!
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "mask",
+                                                JSON.stringify(
+                                                    args[7]!.blocks
+                                                )
+                                            );
+                                        player
+                                            .getComponent("inventory")!
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "masktype",
+                                                args[7]!.type
+                                            );
+                                    }else{
+                                        player
+                                            .getComponent("inventory")!
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "mask"
+                                            );
+                                        player
+                                            .getComponent("inventory")!
+                                            .container.getSlot(
+                                                player.selectedSlotIndex
+                                            )
+                                            .setDynamicProperty(
+                                                "masktype"
+                                            );
+                                    }
+                                    if (!args[1]!.l) {
+                                        srun(() =>
+                                            player
+                                                .getComponent("inventory")!
+                                                .container.getSlot(
+                                                    player.selectedSlotIndex
+                                                )
+                                                .setLore([
+                                                    `§r§bBrush Type: §aPaste`,
+                                                    `§r§bClipboard: §a${args.clipboard ?? `player_WorldEdit_brush_${player.id}`}`/* 
+                                                    `§r§bBrush Radius: §c${
+                                                        isNaN(Number(args[5] ?? undefined))
+                                                            ? 3
+                                                            : args[5]
+                                                    }`,
+                                                    `§r§bBrush Decay: §c${
+                                                        isNaN(Number(args[6] ?? undefined))
+                                                            ? 0
+                                                            : args[6]
+                                                    }`,
+                                                    ...(args[7] != undefined ? 
+                                                        [
+                                                            "§r§bBrush Mask: §d",
+                                                            ...args[7]!.blocks
+                                                            .map((v) => v.rawns)
+                                                            .slice(0, 15)
+                                                            .map(
+                                                                (v) =>
+                                                                    `§r§d${v}`
+                                                            ),
+                                                            "§r§d..."
+                                                        ].slice(
+                                                            0,
+                                                            args[7]!.blocks.length <= 15
+                                                                ? -1
+                                                                : undefined
+                                                        )
+                                                    : []),
+                                                    ...(args[7] != undefined ? [`§r§bBrush Mask Type: §a${
+                                                        args[7]!.type
+                                                    }`] : []), */
+                                                ])
+                                        );
+                                    }
+                                    player.sendMessageB(
+                                        `Successfully set brush type of the held item to paste.`/* with a radius of ${
+                                            isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]
+                                        } and a decay level of ${
+                                            isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]
+                                        }.`*/
                                     );
                                 }
                                 break;
@@ -43788,7 +45793,16 @@ ${command.dp}snapshot list`);
                                         }
                                         let backup = AreaBackups.get(
                                             "areabackup:" + args[2]
-                                        ).backups[args[3] ?? 0]
+                                        ).backups[args[3] ?? 0];
+                                        if (!backup) {
+                                            player.sendError(
+                                                `§cError: No backup at index ${args[3]} found with for area ${JSON.stringify(
+                                                    args[2]
+                                                )}.`,
+                                                true
+                                            );
+                                            return;
+                                        }
                                         AreaBackups.get(
                                             "areabackup:" + args[2]
                                         ).rollback(
@@ -44188,7 +46202,26 @@ ${command.dp}snapshot list`);
                             })(),
                             dimension
                         );
-                        try {
+                        try {/* 
+                            const begin = Vector.add(player.location, {x: -100, z: -100});
+                            const end = Vector.add(player.location, {x: 100, z: 100});
+                            const molangVariables = new modules.mcServer.MolangVariableMap();
+                            molangVariables.setFloat("variable.max_lifetime", 100);
+                            for (let x = Math.min(begin.x, end.x); x <= Math.max(begin.x, end.x); x++) {
+                                for (
+                                    let z = Math.min(begin.z, end.z);
+                                    z <= Math.max(begin.z, end.z);
+                                    z++
+                                ) {
+                                    try {
+                                        player.dimension.spawnParticle(
+                                                "andexdb:xz_axis_particle_pos1",
+                                            Vector.add({x, y: player.location.y, z}, { x: 0.5, y: 1.005, z: 0.5 }),
+                                            molangVariables
+                                        );
+                                    } catch {}
+                                }
+                            } */
                             for (let x = Math.min(begin.x, end.x); x <= Math.max(begin.x, end.x); x++) {
                                 for (let y = Math.min(begin.y, end.y); y <= Math.max(begin.y, end.y); y++) {
                                     for (
@@ -44729,7 +46762,7 @@ ${command.dp}snapshot list`);
                             ).then((tac) => {
                                 ta = tac;
                                 try {
-                                    undoClipboard.save(
+                                    UndoClipboard.getClipboard(`player_${player.id}`).save(
                                         player.dimension,
                                         { from: coordinatesa, to: coordinatesb },
                                         Date.now(),
@@ -44751,7 +46784,7 @@ ${command.dp}snapshot list`);
                                                           blocktypes.length *
                                                               Math.random()
                                                       )
-                                                  ]
+                                                  ]!
                                             : matchingblock[0],
                                         matchingblock[1],
                                         {
@@ -45526,7 +47559,7 @@ ${command.dp}snapshot list`);
                             ).then((tac) => {
                                 ta = tac;
                                 try {
-                                    undoClipboard.save(
+                                    UndoClipboard.getClipboard(`player_${player.id}`).save(
                                         player.dimension,
                                         { from: from, to: to },
                                         Date.now(),

@@ -40,11 +40,11 @@ export async function playerMenu_warps(sourceEntity: loosePlayerType): Promise<0
             if (r.canceled) return 1;
 
             switch (
-                (!!warps[r.selection!] ? "warp" : undefined) ??
+                (!!warps[r.selection!]! ? "warp" : undefined) ??
                 cullUndefined([canAccessManageWarpsUI ? "manageWarps" : undefined, "back", "close"] as const)[r.selection! - warps.length]
             ) {
                 case "warp":
-                    const warp = warps[r.selection!];
+                    const warp = warps[r.selection!]!;
                     if (player.dimension !== dimensionsb[warp.dimension] && !config.teleportSystems.allowCrossDimensionalTeleport) {
                         if (
                             (await showMessage(player, "Error", `§cSorry but all cross-dimensional teleports have been disabled.`, "Back", "Close"))

@@ -23,9 +23,9 @@ export function inventorySwap(
         EquipmentSlot.Offhand,
     ];
     for (let i = 0; i < 5; i++) {
-        let item1 = player1.getComponent("equippable")?.getEquipment(slots[i]);
-        let item2 = player2.getComponent("equippable")?.getEquipment(slots[i]);
-        player1.getComponent("equippable")?.setEquipment(slots[i], item2);
-        player2.getComponent("equippable")?.setEquipment(slots[i], item1);
+        let item1 = player1.getComponent("equippable")?.getEquipment(slots[i]!);
+        let item2 = player2.getComponent("equippable")?.getEquipment(slots[i]!);
+        player1.getComponent("equippable")?.setEquipment(slots[i]!, item2);
+        player2.getComponent("equippable")?.setEquipment(slots[i]!, item1);
     }
 }

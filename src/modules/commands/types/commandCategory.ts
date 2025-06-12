@@ -7,9 +7,11 @@ export type commandCategory = "items" |
     "warps" |
     "system" |
     "world" |
+    "server" |
     "uis" |
     "shop_system" |
     "dangerous" |
+    "worldedit" |
     "Entity Scale Add-On" |
     "built-in" |
     "custom" |

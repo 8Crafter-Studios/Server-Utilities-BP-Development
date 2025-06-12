@@ -6,7 +6,7 @@ export function ultraCompressIntArrayB(s: string, replacement: string = "-1") {
             v[0],
             v[1] +
             "^" +
-            ((v[0].length + 1) / (v[1].length + 1)).toString(36)
+            ((v[0].length + 1) / (v[1]!.length + 1)).toString(36)
         ))
     );
     s = s.replaceAll(replacement, "");

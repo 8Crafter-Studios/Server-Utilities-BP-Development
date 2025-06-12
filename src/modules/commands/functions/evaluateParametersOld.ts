@@ -53,7 +53,7 @@ export function evaluateParametersOld(
                                 .slice(1)
                                 .split('\\"')
                                 .find((v) => v.includes('"'))!
-                                .split('"')[1]
+                                .split('"')[1]!
                                 .slice(1);
                         }
                     } else {
@@ -92,37 +92,37 @@ export function evaluateParametersOld(
                                 args.push(
                                     Boolean(
                                         paramEval
-                                            .split(" ")[0]
+                                            .split(" ")[0]!
                                             .trimStart()
                                             .toLowerCase()
                                             .startsWith("t") ||
                                         paramEval
-                                            .split(" ")[0]
+                                            .split(" ")[0]!
                                             .trimStart()
                                             .toLowerCase()
                                             .startsWith("y") ||
                                         paramEval
-                                            .split(" ")[0]
+                                            .split(" ")[0]!
                                             .trimStart()
                                             .toLowerCase()
                                             .startsWith("1") ||
                                         paramEval
-                                            .split(" ")[0]
+                                            .split(" ")[0]!
                                             .trimStart()
                                             .toLowerCase()
                                             .startsWith("+") ||
                                         paramEval
-                                            .split(" ")[0]
+                                            .split(" ")[0]!
                                             .trimStart()
                                             .toLowerCase()
                                             .startsWith("c") ||
                                         paramEval
-                                            .split(" ")[0]
+                                            .split(" ")[0]!
                                             .trimStart()
                                             .toLowerCase()
                                             .startsWith("v") ||
                                         paramEval
-                                            .split(" ")[0]
+                                            .split(" ")[0]!
                                             .trimStart()
                                             .toLowerCase()
                                             .startsWith("p")

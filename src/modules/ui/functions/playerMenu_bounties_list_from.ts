@@ -174,7 +174,7 @@ export async function playerMenu_bounties_list_from(
                     return await playerMenu_bounties_list_from(sourceEntity, Math.min(numpages - 1, page + 1), maxbountiesperpage, search, cachedBounties);
                 case "bounty":
                     if (
-                        (await playerMenu_bounty_from_individual(sourceEntity, displayBountiesB[r.selection! - 6][0], displayBountiesB[r.selection! - 6][1])) == 1
+                        (await playerMenu_bounty_from_individual(sourceEntity, displayBountiesB[r.selection! - 6]![0], displayBountiesB[r.selection! - 6]![1])) == 1
                     ) {
                         return await playerMenu_bounties_list_from(sourceEntity, page, maxbountiesperpage, search, cachedBounties);
                     } else {

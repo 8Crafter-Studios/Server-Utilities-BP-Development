@@ -21,7 +21,7 @@ export function targetSelectorAllListE(selector: string, position: string) {
         world.scoreboard
           .getObjective("andexdbDebug")
           ?.getScores()
-          .filter((score) => score.score == scoreboardUUID)[i].participant.getEntity()!
+          .filter((score) => score.score == scoreboardUUID)[i]!.participant.getEntity()!
       );
     } catch (e) { }
   }

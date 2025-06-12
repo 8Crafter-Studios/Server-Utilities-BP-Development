@@ -73,7 +73,7 @@ export async function playerMenu_bounty_new(sourceEntitya, pagen = 0, maxplayers
         let r = ra;
         if (r.canceled)
             return 1;
-        switch (["search", "previous", "go", "next", "", "", undefined][r.selection] ??
+        switch (["search", "previous", "go", "next", "", ""][r.selection] ??
             (!!displayPlayersB[r.selection - 6] ? "player" : undefined) ??
             ["back", "close", "refresh"][r.selection - displayPlayersB.length - 6]) {
             case "search":

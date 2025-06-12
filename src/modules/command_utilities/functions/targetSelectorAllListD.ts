@@ -22,7 +22,7 @@ export function targetSelectorAllListD(
         world.scoreboard
           .getObjective("andexdbDebug")
           ?.getScores()
-          .filter((score) => score.score == scoreboardUUID)[i].participant.getEntity()!
+          .filter((score) => score.score == scoreboardUUID)[i]!.participant.getEntity()!
       );
     } catch (e) { }
   }

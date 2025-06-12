@@ -68,8 +68,8 @@ export async function manageCommands(sourceEntitya: Entity | executeCommandPlaye
                     mainMenu(sourceEntity);
                     break;
                 default: {
-                    let category = commandCategories[r.selection!];
-                    let categoryDisplay = commandCategories[r.selection!];
+                    let category = commandCategories[r.selection!]!;
+                    let categoryDisplay = commandCategories[r.selection!]!;
                     // pbsend(player, command.getCustomCommands().find((v) => v.commandName == "tpmenu").settings);
                     let commandsListB =
                         category == "all"
@@ -180,7 +180,7 @@ export async function manageCommands(sourceEntitya: Entity | executeCommandPlaye
                                 case commandsListB.length + 2 - +(category != "custom" && category != "all"):
                                     return 0;
                                 default:
-                                    let commandsItem = commandsListB[r.selection!];
+                                    let commandsItem = commandsListB[r.selection!]!;
                                     let form2 = new ActionFormData();
                                     form2.title(commandsItem.commandName);
                                     form2.body(

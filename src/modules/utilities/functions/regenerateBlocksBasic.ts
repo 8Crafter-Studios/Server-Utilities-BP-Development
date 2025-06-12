@@ -325,12 +325,12 @@ export async function regenerateBlocksBasic(
                             }
                             Object.keys(blockTypeCounts).forEach(
                                 (b) =>
-                                    (blockTypeCounts[b] *=
+                                    (blockTypeCounts[b]! *=
                                         Math.random() >= 0.5 ? Math.random() * opts.randomization + 1 : 1 / (Math.random() * opts.randomization + 1))
                             );
                             const mostCommonBlockType = JSON.parse(
                                 Object.keys(blockTypeCounts).reduce((a, b) =>
-                                    blockTypeCounts[a] > blockTypeCounts[b] ? a : blockTypeCounts[a] < blockTypeCounts[b] ? b : Math.random() >= 0.5 ? a : b
+                                    blockTypeCounts[a]! > blockTypeCounts[b]! ? a : blockTypeCounts[a]! < blockTypeCounts[b]! ? b : Math.random() >= 0.5 ? a : b
                                 )
                             ) as [type: string, states: [string, boolean | number | string][]];
                             dimension.setBlockPermutation(

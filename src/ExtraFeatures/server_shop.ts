@@ -219,7 +219,7 @@ export class ServerShop {
                 if (r.selection == data.length + +showBackButton) {
                     return 0;
                 }
-                const item = data[r.selection!];
+                const item = data[r.selection!]!;
                 if (item.type == "item") {
                     return await this.sellItem(player, item).then(async (v) => {
                         if (v == 1) {
@@ -266,7 +266,7 @@ export class ServerShop {
                 if (r.selection == data.length + +showBackButton) {
                     return 0;
                 }
-                const item = data[r.selection!];
+                const item = data[r.selection!]!;
                 if (item.type == "item") {
                     return await this.buyItem(player, item).then(async (v) => {
                         if (v == 1) {
@@ -366,7 +366,7 @@ export class ServerShop {
                 if (r.selection == newData.length + 1) {
                     return 0;
                 }
-                const item = newData[r.selection!];
+                const item = newData[r.selection!]!;
                 if (item.type == "item") {
                     return await this.sellItem(player, item).then(async (v) => {
                         if (v == 1) {
@@ -431,7 +431,7 @@ export class ServerShop {
                 if (r.selection == newData.length + 1) {
                     return 0;
                 }
-                const item = newData[r.selection!];
+                const item = newData[r.selection!]!;
                 if (item.type == "item") {
                     return await this.buyItem(player, item).then(async (v) => {
                         if (v == 1) {
@@ -772,12 +772,12 @@ export class ServerShop {
                     let amountToRemove = r.formValues![0] as number;
                     const playerMoneySystem = MoneySystem.get(player.id);
                     for (let i = 0; amountToRemove > 0; i++) {
-                        const iamount = items[i].amount;
+                        const iamount = items[i]!.amount;
                         let amount = Math.min(amountToRemove, iamount);
                         if (amount == iamount) {
-                            items[i].setItem();
+                            items[i]!.setItem();
                         } else {
-                            items[i].amount -= amount;
+                            items[i]!.amount -= amount;
                         }
                         playerMoneySystem.addMoney(item.value * amount);
                         amountToRemove -= amount;
@@ -845,7 +845,7 @@ export class ServerShop {
                 if (r.canceled) return 1;
 
                 switch (
-                    (!!shopsList[r.selection!] ? "shop" : undefined) ??
+                    (!!shopsList[r.selection!]! ? "shop" : undefined) ??
                     cullUndefined([
                         showBackButton ? "back" : undefined,
                         "close",
@@ -872,7 +872,7 @@ export class ServerShop {
                     case "refresh":
                         return await ServerShop.openPublicShopsSelector(sourceEntity, showBackButton);
                     case "shop":
-                        if ((await shopsList[r.selection!].openShop(sourceEntity as Player)) === 1) {
+                        if ((await shopsList[r.selection!]!.openShop(sourceEntity as Player)) === 1) {
                             return await ServerShop.openPublicShopsSelector(sourceEntity, showBackButton);
                         } else {
                             return 0;
@@ -932,11 +932,11 @@ export class LinkedServerShopCommands {
         return !!this.LinkedCommands.find((c) => c[1] == shopID);
     }
     static testCommandIsLinked(commandString: string) {
-        const str = commandString.split(" ")[0];
+        const str = commandString.split(" ")[0]!;
         return !!this.LinkedCommands.find((c) => c[0] == str);
     }
     static openShopForCommand(commandString: string, player: Player) {
-        const str = commandString.split(" ")[0];
+        const str = commandString.split(" ")[0]!;
         ServerShop.get(this.LinkedCommands.find((c) => c[0] == str)![1])!.openShop(player);
     }
 }
@@ -949,25 +949,25 @@ export class ServerShopManager {
      *
      * @see {@link PlayerShopManager.playerShopItemTextureHints}
      */
-    static serverShopItemTextureHints = ["textures/items/stick", "textures/blocks/gravel", "textures/blocks/reactor_core_stage_0"];
+    static serverShopItemTextureHints = ["textures/items/stick", "textures/blocks/gravel", "textures/blocks/reactor_core_stage_0"] as const satisfies string[];
     /**
      *
      * @see {@link PlayerShopManager.playerShopPageTextureHints}
      */
-    static serverShopPageTextureHints = ["textures/ui/arrowRight"];
+    static serverShopPageTextureHints = ["textures/ui/arrowRight"] as const satisfies string[];
     /**
      *
      * @see {@link PlayerShopManager.playerShopItemTextureHint}
      */
-    static get serverShopItemTextureHint() {
-        return this.serverShopItemTextureHints[Math.floor(Math.random() * this.serverShopItemTextureHints.length)];
+    static get serverShopItemTextureHint(): typeof this.serverShopItemTextureHints[number] {
+        return this.serverShopItemTextureHints[Math.floor(Math.random() * this.serverShopItemTextureHints.length)]!;
     }
     /**
      *
      * @see {@link PlayerShopManager.playerShopPageTextureHint}
      */
-    static get serverShopPageTextureHint() {
-        return this.serverShopPageTextureHints[Math.floor(Math.random() * this.serverShopPageTextureHints.length)];
+    static get serverShopPageTextureHint(): typeof this.serverShopPageTextureHints[number] {
+        return this.serverShopPageTextureHints[Math.floor(Math.random() * this.serverShopPageTextureHints.length)]!;
     }
     /**
      * Handles the server shop system settings interface and its interactions.
@@ -1029,7 +1029,7 @@ export class ServerShopManager {
             .then(async (r) => {
                 if (r.canceled) return 1;
 
-                switch ((["manageShops", "mainSettings", "shopItemSettings", "back", "close"] as const)[r.selection!]) {
+                switch ((["manageShops", "mainSettings", "shopItemSettings", "back", "close"] as const)[r.selection!]!) {
                     case "manageShops":
                         if (((await ServerShopManager.manageServerShops(sourceEntity)) as any) !== 0) {
                             return await ServerShopManager.serverShopSystemSettings(sourceEntity);
@@ -1122,7 +1122,7 @@ export class ServerShopManager {
             .then(async (r) => {
                 if (r.canceled) return 1;
 
-                switch ((!!shopsList[r.selection!] ? "shop" : undefined) ?? (["newShop", "back", "close", "refresh"] as const)[r.selection!]) {
+                switch ((!!shopsList[r.selection!]! ? "shop" : undefined) ?? (["newShop", "back", "close", "refresh"] as const)[r.selection!]!) {
                     case "newShop":
                         if ((await ServerShopManager.addServerShop(sourceEntity)) === 1) {
                             return await ServerShopManager.manageServerShops(sourceEntity);
@@ -1136,7 +1136,7 @@ export class ServerShopManager {
                     case "refresh":
                         return await ServerShopManager.manageServerShops(sourceEntity); // Refresh
                     case "shop":
-                        if ((await ServerShopManager.manageServerShop(sourceEntity, shopsList[r.selection!])) === 1) {
+                        if ((await ServerShopManager.manageServerShop(sourceEntity, shopsList[r.selection!]!)) === 1) {
                             return await ServerShopManager.manageServerShops(sourceEntity);
                         } else {
                             return 0;
@@ -1579,7 +1579,7 @@ Is Buy Shop: ${shop.buyShop ? "§aTrue" : "§cFalse"}
                 if (command.trim() == "") {
                     LinkedServerShopCommands.removeCommandLinkedToShop(shop.id);
                 } else {
-                    LinkedServerShopCommands.relinkShopIDCommand(shop.id, command.trim().split(" ")[0]);
+                    LinkedServerShopCommands.relinkShopIDCommand(shop.id, command.trim().split(" ")[0]!);
                 }
                 return 1;
             })
@@ -1608,7 +1608,7 @@ Is Buy Shop: ${shop.buyShop ? "§aTrue" : "§cFalse"}
             }
             let [command] = t.formValues as [command: string];
             if (command.trim() != "") {
-                LinkedServerShopCommands.addLinkedCommand([command.trim().split(" ")[0], shop.id]);
+                LinkedServerShopCommands.addLinkedCommand([command.trim().split(" ")[0]!, shop.id]);
                 ServerShopManager.manageServerShop(sourceEntity, shop);
                 return 1;
             } else {
@@ -1783,7 +1783,7 @@ Is Buy Shop: ${shop.buyShop ? "§aTrue" : "§cFalse"}
                         return 0;
                     default:
                         if (
-                            (shopData[response].type == "item"
+                            (shopData[response]!.type == "item"
                                 ? await ServerShopManager.manageServerShop_manageItem(
                                       sourceEntity,
                                       shop,
@@ -1849,7 +1849,7 @@ ${mode == "buy" ? "Price" : "Value"}: ${mode == "buy" ? (item as ShopItem).price
         return await form.forceShow(sourceEntity as Player).then(async (r) => {
             if (r.canceled) return 1;
 
-            switch (cullUndefined(["move", "edit", "delete", "applyTexturePreset", "back", "close"] as const)[r.selection!]) {
+            switch (cullUndefined(["move", "edit", "delete", "applyTexturePreset", "back", "close"] as const)[r.selection!]!) {
                 case "move": {
                     const form = new ModalFormData();
                     form.textField("New Position\nThe position is zero-indexed.", "index", { defaultValue: String(itemIndex) });
@@ -2043,7 +2043,7 @@ ${mode == "buy" ? "Price" : "Value"}: ${mode == "buy" ? (item as ShopItem).price
                 item.itemLore = JSON.parse(itemLore == "" ? "[]" : itemLore);
                 item.canDestroy = JSON.parse(canDestroy == "" ? "[]" : canDestroy);
                 item.canPlaceOn = JSON.parse(canPlaceOn == "" ? "[]" : canPlaceOn);
-                item.lockMode = [ItemLockMode.none, ItemLockMode.slot, ItemLockMode.inventory][lockMode];
+                item.lockMode = [ItemLockMode.none, ItemLockMode.slot, ItemLockMode.inventory][lockMode]!;
                 item.keepOnDeath = keepOnDeath;
             } else if (item.itemType == "giveCommand") {
                 let [title, texture, price, step, max, itemID, itemData] = r.formValues as [
@@ -2256,7 +2256,7 @@ ${mode == "buy" ? "Price" : "Value"}: ${mode == "buy" ? (item as ShopItem).price
                     itemLore: JSON.parse(itemLore == "" ? "[]" : itemLore),
                     canDestroy: JSON.parse(canDestroy == "" ? "[]" : canDestroy),
                     canPlaceOn: JSON.parse(canPlaceOn == "" ? "[]" : canPlaceOn),
-                    lockMode: [ItemLockMode.none, ItemLockMode.slot, ItemLockMode.inventory][lockMode],
+                    lockMode: [ItemLockMode.none, ItemLockMode.slot, ItemLockMode.inventory][lockMode]!,
                     keepOnDeath: keepOnDeath,
                 };
             } else if (type == "giveCommand") {
@@ -2410,7 +2410,7 @@ Texture: ${page.texture}`
             // This will stop the code when the player closes the form
             if (r.canceled) return 1;
 
-            switch (cullUndefined(["contents", "move", "edit", "delete", "applyTexturePreset", "back", "close"] as const)[r.selection!]) {
+            switch (cullUndefined(["contents", "move", "edit", "delete", "applyTexturePreset", "back", "close"] as const)[r.selection!]!) {
                 case "contents":
                     if ((await ServerShopManager.manageServerShopPage_contents(sourceEntity, shop, [mode, String(pageIndex)])) == 1) {
                         return await ServerShopManager.manageServerShop_managePage(sourceEntity, shop, page, pageIndex, mode);
@@ -2764,7 +2764,7 @@ Texture: ${page.texture}`
                 return 1;
             default:
                 if (
-                    (shopData[response].type == "item"
+                    (shopData[response]!.type == "item"
                         ? await ServerShopManager.manageServerShopPage_manageItem(
                               sourceEntity,
                               shop,
@@ -2827,7 +2827,7 @@ ${mode == "buy" ? "Price" : "Value"}: ${mode == "buy" ? (item as ShopItem).price
             // This will stop the code when the player closes the form
             if (r.canceled) return 1;
 
-            switch (cullUndefined(["move", "edit", "delete", "applyTexturePreset", "back", "close"] as const)[r.selection!]) {
+            switch (cullUndefined(["move", "edit", "delete", "applyTexturePreset", "back", "close"] as const)[r.selection!]!) {
                 case "move": {
                     const form = new ModalFormData();
                     form.textField("New Position\nThe position is zero-indexed.", "index", { defaultValue: String(itemIndex) });
@@ -3027,7 +3027,7 @@ ${mode == "buy" ? "Price" : "Value"}: ${mode == "buy" ? (item as ShopItem).price
                 item.itemLore = JSON.parse(itemLore == "" ? "[]" : itemLore);
                 item.canDestroy = JSON.parse(canDestroy == "" ? "[]" : canDestroy);
                 item.canPlaceOn = JSON.parse(canPlaceOn == "" ? "[]" : canPlaceOn);
-                item.lockMode = [ItemLockMode.none, ItemLockMode.slot, ItemLockMode.inventory][lockMode];
+                item.lockMode = [ItemLockMode.none, ItemLockMode.slot, ItemLockMode.inventory][lockMode]!;
                 item.keepOnDeath = keepOnDeath;
             } else if (item.itemType == "giveCommand") {
                 let [title, texture, price, step, max, itemID, itemData] = r.formValues as [
@@ -3243,7 +3243,7 @@ ${mode == "buy" ? "Price" : "Value"}: ${mode == "buy" ? (item as ShopItem).price
                     itemLore: JSON.parse(itemLore == "" ? "[]" : itemLore),
                     canDestroy: JSON.parse(canDestroy == "" ? "[]" : canDestroy),
                     canPlaceOn: JSON.parse(canPlaceOn == "" ? "[]" : canPlaceOn),
-                    lockMode: [ItemLockMode.none, ItemLockMode.slot, ItemLockMode.inventory][lockMode],
+                    lockMode: [ItemLockMode.none, ItemLockMode.slot, ItemLockMode.inventory][lockMode]!,
                     keepOnDeath: keepOnDeath,
                 };
             } else if (type == "giveCommand") {
@@ -3401,7 +3401,7 @@ Texture: ${page.texture}`
             if (r.canceled) return 1;
 
             let response = r.selection!;
-            switch (cullUndefined(["contents", "move", "edit", "delete", "applyTexturePreset", "back", "close"] as const)[r.selection!]) {
+            switch (cullUndefined(["contents", "move", "edit", "delete", "applyTexturePreset", "back", "close"] as const)[r.selection!]!) {
                 case "contents":
                     if ((await ServerShopManager.manageServerShopPage_contents(sourceEntity, shop, path)) == 1) {
                         return await ServerShopManager.manageServerShopPage_managePage(sourceEntity, shop, path, page, pageIndex);

@@ -102,7 +102,7 @@ export interface CommandTypeBase {
     /**
      * The way the command is accessed.
      *
-     * - `named` - Accessed through the command's name;
+     * - `named` - Accessed through the command's name.
      * - `regexp` - Accessed through a regular expression.
      */
     accessType: "named" | "regexp";
@@ -131,15 +131,15 @@ export interface CommandTypeBase {
      */
     commandName: string;
     /**
-     * The custom prefix of the command.
-     */
-    customPrefix?: string;
-    /**
      * The syntax of the command.
      *
      * @default "Syntax Missing"
      */
     syntax?: string;
+    /**
+     * The documentation on the flags parameters of the command.
+     */
+    flagsDocs?: string | undefined;
     /**
      * The version of the command.
      *
@@ -207,13 +207,20 @@ export interface CommandTypeBase {
  */
 export interface NameAccessibleCommandType extends CommandTypeBase {
     accessType: "named";
-    aliases?: NameAccessibleCommandTypeAlias[];
+    /**
+     * The custom prefix of the command.
+     */
+    customPrefix?: undefined;
 }
 
 /**
  * The type of command data with an `accessType` of `named` and a `customPrefix`.
  */
-export interface PrefixAccessibleCommandType extends NameAccessibleCommandType {
+export interface PrefixAccessibleCommandType extends CommandTypeBase {
+    accessType: "named";
+    /**
+     * The custom prefix of the command.
+     */
     customPrefix: string;
 }
 
@@ -237,7 +244,6 @@ export interface RegExpAccessibleCommandType extends CommandTypeBase {
          */
         f?: string;
     };
-    aliases?: RegExpAccessibleCommandTypeAlias[];
 }
 
 /**
@@ -286,6 +292,11 @@ export interface CommandRegistryGetCommandOptions {
     includeAliases?: boolean;
 }
 
+/**
+ * The data structure that holds the settings of a registered command.
+ *
+ * @see {@link RegisteredCommandSettings}
+ */
 export interface RegisteredCommandSettingsData {
     /**
      * The type of command.
@@ -606,6 +617,10 @@ namespace exports {
          */
         public syntax: string;
         /**
+         * The documentation on the flags parameters of the command.
+         */
+        public flagsDocs: string | undefined;
+        /**
          * The version of the command.
          *
          * @default "1.0.0"
@@ -727,6 +742,7 @@ namespace exports {
             this.enabled = commandData.enabled ?? true;
             this.aliases = commandData.aliases ?? [];
             this.syntax = commandData.syntax ?? "Syntax Missing";
+            this.flagsDocs = commandData.flagsDocs;
             this.command_version = commandData.command_version ?? "1.0.0";
             this.description = commandData.description ?? "Description Missing";
             Object.defineProperties(this, {
@@ -763,10 +779,10 @@ namespace exports {
          *
          * @type {commandSettings<"built-in" | "custom"> | undefined}
          */
-        public get settings(): commandSettings<"built-in" | "custom"> | undefined {
+        public get settings(): RegisteredCommandSettings<this> | undefined {
             return this.type === "unknown" && this.commandSettingsId !== undefined
                 ? undefined
-                : (new commandSettings(this.commandSettingsId!) as commandSettings<"built-in" | "custom">);
+                : (new RegisteredCommandSettings(this));
         }
         /**
          * The tags required to execute the command.
@@ -1175,7 +1191,14 @@ namespace exports {
          *
          * @throws {TypeError} If the {@link CommandRegistryGetCommandOptions.typeFilter | typeFilter} is not `built-in`, `custom`, or `undefined`.
          */
-        public static getCommand(commandName: string, options: CommandRegistryGetCommandOptions = {}): RegisteredCommand<CommandTypeBase> | undefined {
+        public static getCommand(
+            commandName: string,
+            options: CommandRegistryGetCommandOptions = {}
+        ): { command: RegisteredCommand<CommandTypeBase>; currentCommandName: string } | undefined {
+            /**
+             * The text matched when finding the command.
+             */
+            let currentCommandName: string = commandName;
             /**
              * The direct match for the command, if it exists.
              *
@@ -1210,7 +1233,16 @@ namespace exports {
                     throw new TypeError(`Invalid type filter, the valid type filters are built-in and custom.`);
             }
             if (directMatch) {
-                return directMatch;
+                currentCommandName =
+                    directMatch.accessType === "named"
+                        ? directMatch.customPrefix !== undefined || commandName.startsWith(config.chatCommandPrefix)
+                            ? commandName
+                            : config.chatCommandPrefix + commandName
+                        : commandName;
+                return {
+                    command: directMatch,
+                    currentCommandName: currentCommandName,
+                };
             }
 
             /**
@@ -1228,14 +1260,20 @@ namespace exports {
                     `namedAccess${options.typeFilter === "built-in" ? "BuiltIn" : options.typeFilter === "custom" ? "Custom" : ""}CommandAliases`
                 ].get(commandNameWithoutPrefix) ?? []) {
                     if (commandAlias.command.enabled) {
-                        return commandAlias.command;
+                        return {
+                            command: commandAlias.command,
+                            currentCommandName: config.chatCommandPrefix + commandAlias.alias.commandName,
+                        };
                     }
                 }
                 for (const commandAlias of this[
                     `prefixedAccess${options.typeFilter === "built-in" ? "BuiltIn" : options.typeFilter === "custom" ? "Custom" : ""}CommandAliases`
                 ].get(commandName) ?? []) {
                     if (commandAlias.command.enabled) {
-                        return commandAlias.command;
+                        return {
+                            command: commandAlias.command,
+                            currentCommandName: commandAlias.alias.prefix + commandAlias.alias.commandName
+                        };
                     }
                 }
             }
@@ -1254,10 +1292,13 @@ namespace exports {
 
             // If no direct match or matching alias, search for a regex match
             for (const commands of this[regexpCommandsKey].values()) {
-                if (commands[0].regexp.test(commandNameWithoutPrefix)) {
-                    const match: RegisteredCommand<CommandTypeBase> | undefined = commands?.find((command) => command.enabled);
+                if (commands[0]!.regexp.test(commandNameWithoutPrefix)) {
+                    const match: RegisteredCommand<RegExpAccessibleCommandType> | undefined = commands?.find((command) => command.enabled);
                     if (match) {
-                        return match;
+                        return {
+                            command: match,
+                            currentCommandName: config.chatCommandPrefix + commandNameWithoutPrefix,
+                        };
                     }
                 }
             }
@@ -1267,12 +1308,15 @@ namespace exports {
                 for (const commandAliases of this[
                     `regexpAccess${options.typeFilter === "built-in" ? "BuiltIn" : options.typeFilter === "custom" ? "Custom" : ""}CommandAliases`
                 ].values()) {
-                    if (commandAliases[0].alias.regexp.test(commandNameWithoutPrefix)) {
+                    if (commandAliases[0]!.alias.regexp.test(commandNameWithoutPrefix)) {
                         const match: CommandAliasRegistryEntry<RegExpAccessibleCommandTypeAlias> | undefined = commandAliases?.find(
                             (commandAlias) => commandAlias.command.enabled
                         );
                         if (match) {
-                            return match.command;
+                            return {
+                                command: match.command,
+                                currentCommandName: config.chatCommandPrefix + commandNameWithoutPrefix,
+                            };
                         }
                     }
                 }
@@ -1384,7 +1428,7 @@ namespace exports {
 
             // If no direct match or matching alias, search for a regex match
             for (const command of this[regexpCommandsKey].values()) {
-                if (command[0].regexp.test(commandNameWithoutPrefix)) {
+                if (command[0]!.regexp.test(commandNameWithoutPrefix)) {
                     const match: RegisteredCommand<RegExpAccessibleCommandType> | undefined = command?.find(
                         (command) => command.enabled && command.playerCanExecute(playerToTest)
                     );
@@ -1399,7 +1443,7 @@ namespace exports {
                 for (const commandAliases of this[
                     `regexpAccess${options.typeFilter === "built-in" ? "BuiltIn" : options.typeFilter === "custom" ? "Custom" : ""}CommandAliases`
                 ].values()) {
-                    if (commandAliases[0].alias.regexp.test(commandNameWithoutPrefix)) {
+                    if (commandAliases[0]!.alias.regexp.test(commandNameWithoutPrefix)) {
                         const match: CommandAliasRegistryEntry<RegExpAccessibleCommandTypeAlias> | undefined = commandAliases?.find(
                             (commandAlias) => commandAlias.command.enabled && commandAlias.command.playerCanExecute(playerToTest)
                         );
@@ -1479,7 +1523,7 @@ namespace exports {
                 typeFilter === "built-in" ? "builtInRegexpAccessCommands" : typeFilter === "custom" ? "customRegexpAccessCommands" : "regexpAccessCommands";
 
             for (const command of this[regexpCommandsKey].values()) {
-                if (command[0].regexp.test(commandNameWithoutPrefix)) {
+                if (command[0]!.regexp.test(commandNameWithoutPrefix)) {
                     matches.push(...command);
                 }
             }
@@ -1508,7 +1552,7 @@ namespace exports {
          * @throws {TypeError} If any of the {@link CommandTypeBase.aliases | commandData.aliases} has a {@link NameAccessibleCommandTypeAlias.type | type} of `regexpAccessibleAlias` and has an {@link EscRegExp.v | escregexp.v} that is not a string.
          * @throws {TypeError} If any of the {@link CommandTypeBase.aliases | commandData.aliases} has a {@link NameAccessibleCommandTypeAlias.type | type} of `regexpAccessibleAlias` and has an {@link EscRegExp.f | escregexp.f} that is not a string or `undefined`.
          */
-        public static registerCommand<CommandType extends CommandTypeBase>(commandData: CommandType): RegisteredCommand<CommandType> {
+        public static registerCommand<CommandType extends NameAccessibleCommandType | PrefixAccessibleCommandType | RegExpAccessibleCommandType>(commandData: CommandType): RegisteredCommand<CommandType> {
             if (arguments.length !== 1) {
                 throw new TypeError(`Incorrect number of arguments to function. Expected 1, received ${arguments.length}.`);
             }

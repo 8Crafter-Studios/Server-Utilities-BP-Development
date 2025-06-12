@@ -36,7 +36,7 @@ export async function playerMenu_TPA(sourceEntity: loosePlayerType): Promise<0 |
             const r = await form.forceShow(player);
             if (r.canceled) return 1;
 
-            switch ((["send", "outgoing", "incoming", "back", "close"] as const)[r.selection!]) {
+            switch ((["send", "outgoing", "incoming", "back", "close"] as const)[r.selection!]!) {
                 case "send": {
                     let form = new ActionFormData();
                     form.title(customFormUICodes.action.titles.formStyles.medium + "Select Player");
@@ -52,7 +52,7 @@ export async function playerMenu_TPA(sourceEntity: loosePlayerType): Promise<0 |
                     const r = await form.forceShow(player);
                     if (r.canceled || r.selection === playerslist.length) continue;
                     if (r.selection === playerslist.length + 1) return 0;
-                    const target = playerslist[r.selection!];
+                    const target = playerslist[r.selection!]!;
                     try {
                         TeleportRequest.send(player, target);
                     } catch (e) {

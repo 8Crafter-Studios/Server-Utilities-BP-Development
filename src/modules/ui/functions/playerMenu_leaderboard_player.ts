@@ -97,7 +97,7 @@ export async function playerMenu_leaderboard_player(
             let r = ra as ActionFormResponse;
             if (r.canceled) return 1;
 
-            switch ((["done", "back", "close"] as const)[r.selection!]) {
+            switch ((["done", "back", "close"] as const)[r.selection!]!) {
                 case "done":
                 case "back":
                     return 1;

@@ -26,21 +26,21 @@ export function rotate(pitchb: number, rollb: number, yawb: number, points: Vect
     var Azz = cosb * cosc;
 
     for (var i = 0; i < points.length; i++) {
-        var px = points[i].x;
-        var py = points[i].y;
-        var pz = points[i].z;
+        var px = points[i]!.x;
+        var py = points[i]!.y;
+        var pz = points[i]!.z;
 
-        points[i].x = Number(
+        points[i]!.x = Number(
             (Axx * px + Axy * py + Axz * pz).toFixed(
                 Number(world.getDynamicProperty("scriptPrecision") ?? 10)
             )
         );
-        points[i].y = Number(
+        points[i]!.y = Number(
             (Ayx * px + Ayy * py + Ayz * pz).toFixed(
                 Number(world.getDynamicProperty("scriptPrecision") ?? 10)
             )
         );
-        points[i].z = Number(
+        points[i]!.z = Number(
             (Azx * px + Azy * py + Azz * pz).toFixed(
                 Number(world.getDynamicProperty("scriptPrecision") ?? 10)
             )

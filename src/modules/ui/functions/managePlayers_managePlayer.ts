@@ -125,7 +125,7 @@ export async function managePlayers_managePlayer(sourceEntity: loosePlayerType, 
                     "back",
                     "close",
                     "clearData",
-                ] as const)[r.selection!]
+                ] as const)[r.selection!]!
             ) {
                 case "clearData": {
                     if (securityVariables.ultraSecurityModeEnabled) {

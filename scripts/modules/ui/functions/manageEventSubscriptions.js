@@ -556,7 +556,7 @@ export async function manageEventSubscriptions(sourceEntity) {
             eventCategories.forEach((e) => {
                 const length = [
                     Object.keys(Events.loadedEvents[e]["beforeEvents"]).map((eB) => Events.loadedEvents[e]["beforeEvents"][eB].length),
-                    Object.keys(Events.loadedEvents[e]["beforeEvents"]).map((eB) => Events.loadedEvents[e]["beforeEvents"][eB].length),
+                    Object.keys(Events.loadedEvents[e]["afterEvents"]).map((eB) => Events.loadedEvents[e]["afterEvents"][eB].length),
                 ]
                     .flat()
                     .reduce((a, b) => a + b, 0);

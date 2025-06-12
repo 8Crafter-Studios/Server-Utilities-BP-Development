@@ -9,7 +9,7 @@ export function targetSelectorAllListC(
   let scoreboardUUID = Math.round(Math.random() * 1000 + 500);
   if (sourceEntityCommandExecution == undefined) {
     world
-      .getAllPlayers()[0]
+      .getAllPlayers()[0]!
       .runCommand(
         "/execute positioned " +
         position +
@@ -38,13 +38,13 @@ export function targetSelectorAllListC(
         world.scoreboard
           .getObjective("andexdbDebug")
           ?.getScores()
-          .filter((score) => score.score == scoreboardUUID)[i].participant.getEntity()!
+          .filter((score) => score.score == scoreboardUUID)[i]!.participant.getEntity()!
       );
     } catch (e) { }
   }
   if (sourceEntityCommandExecution == undefined) {
     world
-      .getAllPlayers()[0]
+      .getAllPlayers()[0]!
       .runCommand(
         "/execute positioned " +
         position +

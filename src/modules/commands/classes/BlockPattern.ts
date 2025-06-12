@@ -35,7 +35,7 @@ function extractCustomPatternTypes(str: string): (Omit<BlockPatternEntry, "raw" 
                     /[%*]{1,2}(\d+)(?=[\s\n]*$|\[|\{)/
                 );
                 if (!!weightMatch) {
-                    weight = parseInt(weightMatch[1]);
+                    weight = parseInt(weightMatch[1]!);
                     type = type
                         .replace(/[%*]{1,2}(\d+)(?=[\s\n]*$|\[|\{)/, "")
                         .trim();
@@ -44,7 +44,7 @@ function extractCustomPatternTypes(str: string): (Omit<BlockPatternEntry, "raw" 
                 // Extract states if present
                 const statesMatch = type.match(/[\[\{]([^\]\}]*)[\]\}]/);
                 if (!!statesMatch) {
-                    const statesStr = statesMatch[1];
+                    const statesStr = statesMatch[1]!;
                     try {
                         states = JSON.parse(statesMatch[0].replace(/'/g, '"'));
                     } catch (error) {
@@ -53,8 +53,8 @@ function extractCustomPatternTypes(str: string): (Omit<BlockPatternEntry, "raw" 
                         const keyValuePairs = statesStr.split(",");
                         keyValuePairs.forEach((pair) => {
                             const keyValue = pair.trim().split("=");
-                            const key = keyValue[0].trim().slice(1, -1);
-                            let value = keyValue[1].trim() as any;
+                            const key = keyValue[0]!.trim().slice(1, -1);
+                            let value = keyValue[1]!.trim() as any;
                             // Convert value to number or boolean if possible
                             if (!isNaN(value)) {
                                 value = parseFloat(value);
@@ -73,7 +73,7 @@ function extractCustomPatternTypes(str: string): (Omit<BlockPatternEntry, "raw" 
                 // Extract chance if present
                 const stringMatch = type.match(/^["']([^"]+)["']$/);
                 if (!!stringMatch) {
-                    type = stringMatch[1].trim() /*.escapeCharactersB()*/;
+                    type = stringMatch[1]!.trim() /*.escapeCharactersB()*/;
                 }
 
                 patternTypes.push({ type, states, weight });
@@ -108,7 +108,7 @@ function extractCustomPatternType(str: string): Omit<BlockPatternEntry, "raw" | 
             // Extract chance if present
             const weightMatch = type.match(/[%*]{1,2}(\d+)(?=[\s\n]*$|\[|\{)/);
             if (!!weightMatch) {
-                weight = parseInt(weightMatch[1]);
+                weight = parseInt(weightMatch[1]!);
                 type = type
                     .replace(/[%*]{1,2}(\d+)(?=[\s\n]*$|\[|\{)/, "")
                     .trim();
@@ -117,7 +117,7 @@ function extractCustomPatternType(str: string): Omit<BlockPatternEntry, "raw" | 
             // Extract states if present
             const statesMatch = type.match(/[\[\{]([^\]\}]*)[\]\}]/);
             if (!!statesMatch) {
-                const statesStr = statesMatch[1];
+                const statesStr = statesMatch[1]!;
                 try {
                     states = JSON.parse(statesMatch[0].replace(/'/g, '"'));
                 } catch (error) {
@@ -126,8 +126,8 @@ function extractCustomPatternType(str: string): Omit<BlockPatternEntry, "raw" | 
                     const keyValuePairs = statesStr.split(",");
                     keyValuePairs.forEach((pair) => {
                         const keyValue = pair.trim().split("=");
-                        const key = keyValue[0].trim().slice(1, -1);
-                        let value = keyValue[1].trim() as any;
+                        const key = keyValue[0]!.trim().slice(1, -1);
+                        let value = keyValue[1]!.trim() as any;
                         // Convert value to number or boolean if possible
                         if (!isNaN(value)) {
                             value = parseFloat(value);
@@ -146,7 +146,7 @@ function extractCustomPatternType(str: string): Omit<BlockPatternEntry, "raw" | 
             // Extract chance if present
             const stringMatch = type.match(/^["']([^"]+)["']$/);
             if (!!stringMatch) {
-                type = stringMatch[1].trim() /*.escapeCharactersB()*/;
+                type = stringMatch[1]!.trim() /*.escapeCharactersB()*/;
             }
 
             patternTypes.push({ type, states, weight });

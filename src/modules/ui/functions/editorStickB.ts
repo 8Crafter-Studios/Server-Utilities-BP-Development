@@ -95,7 +95,7 @@ export async function editorStickB(
     form.toggle("setProperty Enabled", { defaultValue: false }); /*
     try {console.warn(block.block.permutation.getAllStates()) } catch(e){console.error(e, e.stack);}
     try {console.warn(block.block.permutation.getAllStates()[0]) } catch(e){console.error(e, e.stack);}
-    try {console.warn(block.block.permutation.getAllStates()[0][0]) } catch(e){console.error(e, e.stack);}*/
+    try {console.warn(block.block.permutation.getAllStates()[0]![0]) } catch(e){console.error(e, e.stack);}*/
 
     /*form.dropdown("Block Permutation To Set", block.getTags())*/ /*
     form.slider("Selected Slot", 0, 56, 1)*/
@@ -258,10 +258,10 @@ clearVelocity*/,
                         .join()
                 ) {
                     block2.getComponent("fluid_container")!.fluidColor = {
-                        red: fluidContainerColor.split(",")[0].toNumber()!,
-                        green: fluidContainerColor.split(",")[1].toNumber()!,
-                        blue: fluidContainerColor.split(",")[2].toNumber()!,
-                        alpha: fluidContainerColor.split(",")[3].toNumber()!,
+                        red: fluidContainerColor.split(",")[0]!.toNumber()!,
+                        green: fluidContainerColor.split(",")[1]!.toNumber()!,
+                        blue: fluidContainerColor.split(",")[2]!.toNumber()!,
+                        alpha: fluidContainerColor.split(",")[3]!.toNumber()!,
                     };
                 }
                 if (fluidContainerFillLevel != block2.getComponent("fluid_container")!.fillLevel) {
@@ -370,7 +370,7 @@ clearVelocity*/,
                         try {
                             block2.setPermutation(
                                 BlockPermutation.resolve(block2.typeId, {
-                                    [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0],
+                                    [String(blockPropertyIdentifier).split(", ")[0]!]: blockPropertyValueArray[0],
                                 }) /*block2.permutation.clone().withState(String(blockPropertyIdentifier), blockPropertyValue2).clone().getAllStates()*/
                             );
                         } catch (e) {
@@ -381,8 +381,8 @@ clearVelocity*/,
                         try {
                             block2.setPermutation(
                                 BlockPermutation.resolve(block2.typeId, {
-                                    [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0],
-                                    [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1],
+                                    [String(blockPropertyIdentifier).split(", ")[0]!]: blockPropertyValueArray[0],
+                                    [String(blockPropertyIdentifier).split(", ")[1]!]: blockPropertyValueArray[1],
                                 })
                             );
                         } catch (e) {
@@ -393,9 +393,9 @@ clearVelocity*/,
                         try {
                             block2.setPermutation(
                                 BlockPermutation.resolve(block2.typeId, {
-                                    [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0],
-                                    [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1],
-                                    [String(blockPropertyIdentifier).split(", ")[2]]: blockPropertyValueArray[2],
+                                    [String(blockPropertyIdentifier).split(", ")[0]!]: blockPropertyValueArray[0],
+                                    [String(blockPropertyIdentifier).split(", ")[1]!]: blockPropertyValueArray[1],
+                                    [String(blockPropertyIdentifier).split(", ")[2]!]: blockPropertyValueArray[2],
                                 })
                             );
                         } catch (e) {
@@ -406,10 +406,10 @@ clearVelocity*/,
                         try {
                             block2.setPermutation(
                                 BlockPermutation.resolve(block2.typeId, {
-                                    [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0],
-                                    [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1],
-                                    [String(blockPropertyIdentifier).split(", ")[2]]: blockPropertyValueArray[2],
-                                    [String(blockPropertyIdentifier).split(", ")[3]]: blockPropertyValueArray[3],
+                                    [String(blockPropertyIdentifier).split(", ")[0]!]: blockPropertyValueArray[0],
+                                    [String(blockPropertyIdentifier).split(", ")[1]!]: blockPropertyValueArray[1],
+                                    [String(blockPropertyIdentifier).split(", ")[2]!]: blockPropertyValueArray[2],
+                                    [String(blockPropertyIdentifier).split(", ")[3]!]: blockPropertyValueArray[3],
                                 })
                             );
                         } catch (e) {
@@ -420,11 +420,11 @@ clearVelocity*/,
                         try {
                             block2.setPermutation(
                                 BlockPermutation.resolve(block2.typeId, {
-                                    [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0],
-                                    [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1],
-                                    [String(blockPropertyIdentifier).split(", ")[2]]: blockPropertyValueArray[2],
-                                    [String(blockPropertyIdentifier).split(", ")[3]]: blockPropertyValueArray[3],
-                                    [String(blockPropertyIdentifier).split(", ")[4]]: blockPropertyValueArray[4],
+                                    [String(blockPropertyIdentifier).split(", ")[0]!]: blockPropertyValueArray[0],
+                                    [String(blockPropertyIdentifier).split(", ")[1]!]: blockPropertyValueArray[1],
+                                    [String(blockPropertyIdentifier).split(", ")[2]!]: blockPropertyValueArray[2],
+                                    [String(blockPropertyIdentifier).split(", ")[3]!]: blockPropertyValueArray[3],
+                                    [String(blockPropertyIdentifier).split(", ")[4]!]: blockPropertyValueArray[4],
                                 })
                             );
                         } catch (e) {
@@ -435,12 +435,12 @@ clearVelocity*/,
                         try {
                             block2.setPermutation(
                                 BlockPermutation.resolve(block2.typeId, {
-                                    [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0],
-                                    [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1],
-                                    [String(blockPropertyIdentifier).split(", ")[2]]: blockPropertyValueArray[2],
-                                    [String(blockPropertyIdentifier).split(", ")[3]]: blockPropertyValueArray[3],
-                                    [String(blockPropertyIdentifier).split(", ")[4]]: blockPropertyValueArray[4],
-                                    [String(blockPropertyIdentifier).split(", ")[5]]: blockPropertyValueArray[5],
+                                    [String(blockPropertyIdentifier).split(", ")[0]!]: blockPropertyValueArray[0],
+                                    [String(blockPropertyIdentifier).split(", ")[1]!]: blockPropertyValueArray[1],
+                                    [String(blockPropertyIdentifier).split(", ")[2]!]: blockPropertyValueArray[2],
+                                    [String(blockPropertyIdentifier).split(", ")[3]!]: blockPropertyValueArray[3],
+                                    [String(blockPropertyIdentifier).split(", ")[4]!]: blockPropertyValueArray[4],
+                                    [String(blockPropertyIdentifier).split(", ")[5]!]: blockPropertyValueArray[5],
                                 })
                             );
                         } catch (e) {
@@ -451,13 +451,13 @@ clearVelocity*/,
                         try {
                             block2.setPermutation(
                                 BlockPermutation.resolve(block2.typeId, {
-                                    [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0],
-                                    [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1],
-                                    [String(blockPropertyIdentifier).split(", ")[2]]: blockPropertyValueArray[2],
-                                    [String(blockPropertyIdentifier).split(", ")[3]]: blockPropertyValueArray[3],
-                                    [String(blockPropertyIdentifier).split(", ")[4]]: blockPropertyValueArray[4],
-                                    [String(blockPropertyIdentifier).split(", ")[5]]: blockPropertyValueArray[5],
-                                    [String(blockPropertyIdentifier).split(", ")[6]]: blockPropertyValueArray[6],
+                                    [String(blockPropertyIdentifier).split(", ")[0]!]: blockPropertyValueArray[0],
+                                    [String(blockPropertyIdentifier).split(", ")[1]!]: blockPropertyValueArray[1],
+                                    [String(blockPropertyIdentifier).split(", ")[2]!]: blockPropertyValueArray[2],
+                                    [String(blockPropertyIdentifier).split(", ")[3]!]: blockPropertyValueArray[3],
+                                    [String(blockPropertyIdentifier).split(", ")[4]!]: blockPropertyValueArray[4],
+                                    [String(blockPropertyIdentifier).split(", ")[5]!]: blockPropertyValueArray[5],
+                                    [String(blockPropertyIdentifier).split(", ")[6]!]: blockPropertyValueArray[6],
                                 })
                             );
                         } catch (e) {
@@ -468,14 +468,14 @@ clearVelocity*/,
                         try {
                             block2.setPermutation(
                                 BlockPermutation.resolve(block2.typeId, {
-                                    [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0],
-                                    [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1],
-                                    [String(blockPropertyIdentifier).split(", ")[2]]: blockPropertyValueArray[2],
-                                    [String(blockPropertyIdentifier).split(", ")[3]]: blockPropertyValueArray[3],
-                                    [String(blockPropertyIdentifier).split(", ")[4]]: blockPropertyValueArray[4],
-                                    [String(blockPropertyIdentifier).split(", ")[5]]: blockPropertyValueArray[5],
-                                    [String(blockPropertyIdentifier).split(", ")[6]]: blockPropertyValueArray[6],
-                                    [String(blockPropertyIdentifier).split(", ")[7]]: blockPropertyValueArray[7],
+                                    [String(blockPropertyIdentifier).split(", ")[0]!]: blockPropertyValueArray[0],
+                                    [String(blockPropertyIdentifier).split(", ")[1]!]: blockPropertyValueArray[1],
+                                    [String(blockPropertyIdentifier).split(", ")[2]!]: blockPropertyValueArray[2],
+                                    [String(blockPropertyIdentifier).split(", ")[3]!]: blockPropertyValueArray[3],
+                                    [String(blockPropertyIdentifier).split(", ")[4]!]: blockPropertyValueArray[4],
+                                    [String(blockPropertyIdentifier).split(", ")[5]!]: blockPropertyValueArray[5],
+                                    [String(blockPropertyIdentifier).split(", ")[6]!]: blockPropertyValueArray[6],
+                                    [String(blockPropertyIdentifier).split(", ")[7]!]: blockPropertyValueArray[7],
                                 })
                             );
                         } catch (e) {
@@ -486,15 +486,15 @@ clearVelocity*/,
                         try {
                             block2.setPermutation(
                                 BlockPermutation.resolve(block2.typeId, {
-                                    [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0],
-                                    [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1],
-                                    [String(blockPropertyIdentifier).split(", ")[2]]: blockPropertyValueArray[2],
-                                    [String(blockPropertyIdentifier).split(", ")[3]]: blockPropertyValueArray[3],
-                                    [String(blockPropertyIdentifier).split(", ")[4]]: blockPropertyValueArray[4],
-                                    [String(blockPropertyIdentifier).split(", ")[5]]: blockPropertyValueArray[5],
-                                    [String(blockPropertyIdentifier).split(", ")[6]]: blockPropertyValueArray[6],
-                                    [String(blockPropertyIdentifier).split(", ")[7]]: blockPropertyValueArray[7],
-                                    [String(blockPropertyIdentifier).split(", ")[8]]: blockPropertyValueArray[8],
+                                    [String(blockPropertyIdentifier).split(", ")[0]!]: blockPropertyValueArray[0],
+                                    [String(blockPropertyIdentifier).split(", ")[1]!]: blockPropertyValueArray[1],
+                                    [String(blockPropertyIdentifier).split(", ")[2]!]: blockPropertyValueArray[2],
+                                    [String(blockPropertyIdentifier).split(", ")[3]!]: blockPropertyValueArray[3],
+                                    [String(blockPropertyIdentifier).split(", ")[4]!]: blockPropertyValueArray[4],
+                                    [String(blockPropertyIdentifier).split(", ")[5]!]: blockPropertyValueArray[5],
+                                    [String(blockPropertyIdentifier).split(", ")[6]!]: blockPropertyValueArray[6],
+                                    [String(blockPropertyIdentifier).split(", ")[7]!]: blockPropertyValueArray[7],
+                                    [String(blockPropertyIdentifier).split(", ")[8]!]: blockPropertyValueArray[8],
                                 })
                             );
                         } catch (e) {
@@ -505,16 +505,16 @@ clearVelocity*/,
                         try {
                             block2.setPermutation(
                                 BlockPermutation.resolve(block2.typeId, {
-                                    [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0],
-                                    [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1],
-                                    [String(blockPropertyIdentifier).split(", ")[2]]: blockPropertyValueArray[2],
-                                    [String(blockPropertyIdentifier).split(", ")[3]]: blockPropertyValueArray[3],
-                                    [String(blockPropertyIdentifier).split(", ")[4]]: blockPropertyValueArray[4],
-                                    [String(blockPropertyIdentifier).split(", ")[5]]: blockPropertyValueArray[5],
-                                    [String(blockPropertyIdentifier).split(", ")[6]]: blockPropertyValueArray[6],
-                                    [String(blockPropertyIdentifier).split(", ")[7]]: blockPropertyValueArray[7],
-                                    [String(blockPropertyIdentifier).split(", ")[8]]: blockPropertyValueArray[8],
-                                    [String(blockPropertyIdentifier).split(", ")[9]]: blockPropertyValueArray[9],
+                                    [String(blockPropertyIdentifier).split(", ")[0]!]: blockPropertyValueArray[0],
+                                    [String(blockPropertyIdentifier).split(", ")[1]!]: blockPropertyValueArray[1],
+                                    [String(blockPropertyIdentifier).split(", ")[2]!]: blockPropertyValueArray[2],
+                                    [String(blockPropertyIdentifier).split(", ")[3]!]: blockPropertyValueArray[3],
+                                    [String(blockPropertyIdentifier).split(", ")[4]!]: blockPropertyValueArray[4],
+                                    [String(blockPropertyIdentifier).split(", ")[5]!]: blockPropertyValueArray[5],
+                                    [String(blockPropertyIdentifier).split(", ")[6]!]: blockPropertyValueArray[6],
+                                    [String(blockPropertyIdentifier).split(", ")[7]!]: blockPropertyValueArray[7],
+                                    [String(blockPropertyIdentifier).split(", ")[8]!]: blockPropertyValueArray[8],
+                                    [String(blockPropertyIdentifier).split(", ")[9]!]: blockPropertyValueArray[9],
                                 })
                             );
                         } catch (e) {

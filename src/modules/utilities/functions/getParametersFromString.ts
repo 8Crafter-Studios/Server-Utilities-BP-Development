@@ -31,10 +31,10 @@ export function getParametersFromString(string: string) {
     let a = rawdata;
     let b = string;
     let c = [] as { t: string; v: string; }[];
-    c.push(...getStringsFromString(b.substring(0, (a[0] as RegExpMatchArray)?.indices![0][0])));
+    c.push(...getStringsFromString(b.substring(0, (a[0] as RegExpMatchArray)?.indices![0]![0])));
     a.forEach((v, i) => {
-        c.push({ t: "json", v: v[0] });
-        c.push(...getStringsFromString(b.substring((v as RegExpMatchArray)?.indices![0][1], (a[i + 1] as RegExpMatchArray)?.indices![0][0] ?? b.length)));
+        c.push({ t: "json", v: v![0] });
+        c.push(...getStringsFromString(b.substring((v as RegExpMatchArray)?.indices![0]![1], (a[i + 1] as RegExpMatchArray)?.indices![0]![0] ?? b.length)));
     });
     let e = [] as { i: number; v: Error; }[];
     let d = arrayModifier(c, (cb, i) => arrayModifier((cb.t == "json" ? [cb.v] : String(cb.v).trimStart().trimEnd().split(/\x20+?/g)), v => {

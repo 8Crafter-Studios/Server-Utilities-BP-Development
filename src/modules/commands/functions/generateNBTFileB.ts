@@ -22,7 +22,7 @@ export function generateNBTFileB(
                     y: b.pos[1],
                     z: b.pos[2],
                 }),
-                nbt.palette[b.state].Name.replace(
+                nbt.palette[b.state]!.Name.replace(
                     "minecraft:active - lit_redstone_lamp",
                     "minecraft:light_gray_terracotta"
                 )
@@ -30,8 +30,8 @@ export function generateNBTFileB(
                 /* .replace("minecraft:coarse_dirt", "minecraft:dirt") */
             ),
             // Not needed any more as coarse_dirt is now a valid block id.
-            /* nbt.palette[b.state].Name == "minecraft:coarse_dirt" ||
-                nbt.palette[b.state].Name == "coarse_dirt"
+            /* nbt.palette[b.state]!.Name == "minecraft:coarse_dirt" ||
+                nbt.palette[b.state]!.Name == "coarse_dirt"
                 ? location.dimension.setBlockPermutation(
                     Vector3Utils.add(location, {
                         x: b.pos[0],
@@ -42,9 +42,9 @@ export function generateNBTFileB(
                         dirt_type: "coarse",
                     })
                 )
-                :  */!!nbt.palette[b.state].Properties
+                :  */!!nbt.palette[b.state]!.Properties
                     ? Object.entries(
-                        nbt.palette[b.state].Properties as {
+                        nbt.palette[b.state]!.Properties as {
                             [stateName: string]: string | number | boolean;
                         }
                     ).forEach((p) => tryrun(() => location.dimension.setBlockPermutation(
@@ -54,7 +54,7 @@ export function generateNBTFileB(
                             z: b.pos[2],
                         }),
                         BlockPermutation.resolve(
-                            nbt.palette[b.state].Name.replace(
+                            nbt.palette[b.state]!.Name.replace(
                                 "minecraft:active - lit_redstone_lamp",
                                 "minecraft:lit_redstone_lamp"
                             ),

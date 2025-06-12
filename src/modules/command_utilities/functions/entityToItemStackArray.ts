@@ -13,7 +13,7 @@ export function entityToItemStackArray(
         itemList.push(container!.getItem(i));
     }
     for (let i = 0; i < 5 && getEquipment && !!equipment; i++) {
-        itemList.push(equipment?.getEquipment(OtherEquipmentSlots[i]));
+        itemList.push(equipment?.getEquipment(OtherEquipmentSlots[i]!));
     }
     return itemList;
 }

@@ -14,7 +14,11 @@ declare namespace exports {
          *
          * @public
          */
-        zero: Vector3;
+        zero: {
+            x: 0;
+            y: 0;
+            z: 0;
+        } & Vector3;
         /**
          * one
          *
@@ -22,7 +26,11 @@ declare namespace exports {
          *
          * @public
          */
-        one: Vector3;
+        one: {
+            x: 1;
+            y: 1;
+            z: 1;
+        } & Vector3;
         /**
          * up
          *
@@ -30,7 +38,11 @@ declare namespace exports {
          *
          * @public
          */
-        up: Vector3;
+        up: {
+            x: 0;
+            y: 1;
+            z: 0;
+        } & Vector3;
         /**
          * down
          *
@@ -38,34 +50,50 @@ declare namespace exports {
          *
          * @public
          */
-        down: Vector3;
+        down: {
+            x: 0;
+            y: -1;
+            z: 0;
+        } & Vector3;
         /**
          * north
          *
-         * A unit vector representing the world NORTH direction (-1,0,0)
+         * A unit vector representing the world NORTH direction (0,0,1)
          *   (same as FORWARD)
          *
          * @public
          */
-        north: Vector3;
+        north: {
+            x: 0;
+            y: 0;
+            z: 1;
+        } & Vector3;
         /**
          * south
          *
-         * A unit vector representing the world SOUTH direction (-1,0,0)
+         * A unit vector representing the world SOUTH direction (0,0,-1)
          *   (same as BACK)
          *
          * @public
          */
-        south: Vector3;
+        south: {
+            x: 0;
+            y: 0;
+            z: -1;
+        } & Vector3;
         /**
          * east
          *
-         * A unit vector representing the world EAST direction (-1,0,0)
+         * A unit vector representing the world EAST direction (1,0,0)
          *   (same as RIGHT)
          *
          * @public
          */
-        east: Vector3;
+        east: {
+            x: 1;
+            y: 0;
+            z: 0;
+        } & Vector3;
         /**
          * west
          *
@@ -74,7 +102,11 @@ declare namespace exports {
          *
          * @public
          */
-        west: Vector3;
+        west: {
+            x: -1;
+            y: 0;
+            z: 0;
+        } & Vector3;
         /**
          * right
          *
@@ -82,7 +114,11 @@ declare namespace exports {
          *
          * @public
          */
-        right: Vector3;
+        right: {
+            x: 1;
+            y: 0;
+            z: 0;
+        } & Vector3;
         /**
          * left
          *
@@ -90,7 +126,11 @@ declare namespace exports {
          *
          * @public
          */
-        left: Vector3;
+        left: {
+            x: -1;
+            y: 0;
+            z: 0;
+        } & Vector3;
         /**
          * back
          *
@@ -98,7 +138,11 @@ declare namespace exports {
          *
          * @public
          */
-        back: Vector3;
+        back: {
+            x: 0;
+            y: 0;
+            z: -1;
+        } & Vector3;
         /**
          * forward
          *
@@ -106,7 +150,11 @@ declare namespace exports {
          *
          * @public
          */
-        forward: Vector3;
+        forward: {
+            x: 0;
+            y: 0;
+            z: 1;
+        } & Vector3;
         /**
          * zero
          *
@@ -114,7 +162,11 @@ declare namespace exports {
          *
          * @public
          */
-        static zero: Vector3;
+        static zero: {
+            x: 0;
+            y: 0;
+            z: 0;
+        } & Vector3;
         /**
          * one
          *
@@ -122,7 +174,11 @@ declare namespace exports {
          *
          * @public
          */
-        static one: Vector3;
+        static one: {
+            x: 1;
+            y: 1;
+            z: 1;
+        } & Vector3;
         /**
          * up
          *
@@ -130,7 +186,11 @@ declare namespace exports {
          *
          * @public
          */
-        static up: Vector3;
+        static up: {
+            x: 0;
+            y: 1;
+            z: 0;
+        } & Vector3;
         /**
          * down
          *
@@ -138,34 +198,50 @@ declare namespace exports {
          *
          * @public
          */
-        static down: Vector3;
+        static down: {
+            x: 0;
+            y: -1;
+            z: 0;
+        } & Vector3;
         /**
          * north
          *
-         * A unit vector representing the world NORTH direction (-1,0,0)
+         * A unit vector representing the world NORTH direction (0,0,1)
          *   (same as FORWARD)
          *
          * @public
          */
-        static north: Vector3;
+        static north: {
+            x: 0;
+            y: 0;
+            z: 1;
+        } & Vector3;
         /**
          * south
          *
-         * A unit vector representing the world SOUTH direction (-1,0,0)
+         * A unit vector representing the world SOUTH direction (0,0,-1)
          *   (same as BACK)
          *
          * @public
          */
-        static south: Vector3;
+        static south: {
+            x: 0;
+            y: 0;
+            z: -1;
+        } & Vector3;
         /**
          * east
          *
-         * A unit vector representing the world EAST direction (-1,0,0)
+         * A unit vector representing the world EAST direction (1,0,0)
          *   (same as RIGHT)
          *
          * @public
          */
-        static east: Vector3;
+        static east: {
+            x: 1;
+            y: 0;
+            z: 0;
+        } & Vector3;
         /**
          * west
          *
@@ -174,7 +250,11 @@ declare namespace exports {
          *
          * @public
          */
-        static west: Vector3;
+        static west: {
+            x: -1;
+            y: 0;
+            z: 0;
+        } & Vector3;
         /**
          * right
          *
@@ -182,7 +262,11 @@ declare namespace exports {
          *
          * @public
          */
-        static right: Vector3;
+        static right: {
+            x: 1;
+            y: 0;
+            z: 0;
+        } & Vector3;
         /**
          * left
          *
@@ -190,7 +274,11 @@ declare namespace exports {
          *
          * @public
          */
-        static left: Vector3;
+        static left: {
+            x: -1;
+            y: 0;
+            z: 0;
+        } & Vector3;
         /**
          * back
          *
@@ -198,7 +286,11 @@ declare namespace exports {
          *
          * @public
          */
-        static back: Vector3;
+        static back: {
+            x: 0;
+            y: 0;
+            z: -1;
+        } & Vector3;
         /**
          * forward
          *
@@ -206,7 +298,11 @@ declare namespace exports {
          *
          * @public
          */
-        static forward: Vector3;
+        static forward: {
+            x: 0;
+            y: 0;
+            z: 1;
+        } & Vector3;
         static add: typeof Vector3Utils.add;
         static clamp: typeof Vector3Utils.clamp;
         static cross: typeof Vector3Utils.cross;

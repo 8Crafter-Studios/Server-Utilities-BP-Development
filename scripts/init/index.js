@@ -182,7 +182,7 @@ import "./systems/zone_actions_interval";
 import "./types";
 import "./variables/protectedAreaVariables";
 import "modules/errors/index";
-import "./commands/misc/debugcustomcommands.command";
+import "./commands/misc/-debugcustomcommands.command";
 import { Color } from "color-core";
 import * as colorCore from "color-core";
 import { Decimal } from "decimal.js";

@@ -42,7 +42,7 @@ var exports;
         /**
          * north
          *
-         * A unit vector representing the world NORTH direction (-1,0,0)
+         * A unit vector representing the world NORTH direction (0,0,1)
          *   (same as FORWARD)
          *
          * @public
@@ -51,7 +51,7 @@ var exports;
         /**
          * south
          *
-         * A unit vector representing the world SOUTH direction (-1,0,0)
+         * A unit vector representing the world SOUTH direction (0,0,-1)
          *   (same as BACK)
          *
          * @public
@@ -60,7 +60,7 @@ var exports;
         /**
          * east
          *
-         * A unit vector representing the world EAST direction (-1,0,0)
+         * A unit vector representing the world EAST direction (1,0,0)
          *   (same as RIGHT)
          *
          * @public
@@ -142,7 +142,7 @@ var exports;
         /**
          * north
          *
-         * A unit vector representing the world NORTH direction (-1,0,0)
+         * A unit vector representing the world NORTH direction (0,0,1)
          *   (same as FORWARD)
          *
          * @public
@@ -151,7 +151,7 @@ var exports;
         /**
          * south
          *
-         * A unit vector representing the world SOUTH direction (-1,0,0)
+         * A unit vector representing the world SOUTH direction (0,0,-1)
          *   (same as BACK)
          *
          * @public
@@ -160,7 +160,7 @@ var exports;
         /**
          * east
          *
-         * A unit vector representing the world EAST direction (-1,0,0)
+         * A unit vector representing the world EAST direction (1,0,0)
          *   (same as RIGHT)
          *
          * @public

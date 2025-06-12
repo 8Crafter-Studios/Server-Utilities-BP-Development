@@ -172,7 +172,7 @@ export async function playerMenu_bounties_list(
                     return await playerMenu_bounties_list(sourceEntity, Math.min(numpages - 1, page + 1), maxbountiesperpage, search, displayBounties);
                     break;
                 case "bounty":
-                    if ((await playerMenu_bounty(sourceEntity, displayBountiesB[r.selection! - 6][0], displayBountiesB[r.selection! - 6][1])) == 1) {
+                    if ((await playerMenu_bounty(sourceEntity, displayBountiesB[r.selection! - 6]![0], displayBountiesB[r.selection! - 6]![1])) == 1) {
                         return await playerMenu_bounties_list(sourceEntity, page, maxbountiesperpage, search, displayBounties);
                     } else {
                         return 0;

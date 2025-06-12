@@ -157,8 +157,8 @@ export async function editAreas(player: Player, prefix: (typeof protectedAreaCat
                                     icon_path: (icon_path ?? "") == "" ? undefined : (icon_path as string),
                                 };
                                 if (defaults.dimension === dimension) {
-                                    ProtectedAreas.areas[prefix][dimensionse[dimension as number]].splice(
-                                        ProtectedAreas.areas[prefix][dimensionse[dimension as number]].findIndex((a) => a.id === defaults.id),
+                                    ProtectedAreas.areas[prefix][dimensionse[dimension as number]!].splice(
+                                        ProtectedAreas.areas[prefix][dimensionse[dimension as number]!].findIndex((a) => a.id === defaults.id),
                                         1,
                                         {
                                             id: defaults.id,
@@ -170,7 +170,7 @@ export async function editAreas(player: Player, prefix: (typeof protectedAreaCat
                                         ProtectedAreas.areas[prefix][dimensionse[defaults.dimension as number]].findIndex((a) => a.id === defaults.id),
                                         1
                                     );
-                                    ProtectedAreas.areas[prefix][dimensionse[dimension as number]].push({
+                                    ProtectedAreas.areas[prefix][dimensionse[dimension as number]!].push({
                                         id: defaults.id,
                                         ...newValue,
                                     });

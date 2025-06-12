@@ -52,11 +52,11 @@
         {
             "module_name": "@minecraft/server-net",
             "version": "1.0.0-beta"
-        } */ /*,
+        } *//* ,
         {
             "module_name": "@minecraft/server-editor",
             "version": "0.1.0-beta"
-        }*/
+        } */
     ],
     "metadata": {
         "authors": ["Andexter8", "Andersen Zahn", "8Crafter", "StormStqr"],

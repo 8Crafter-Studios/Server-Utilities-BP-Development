@@ -767,7 +767,7 @@ GameTest.register("APITests", "explosion_event", (test) => {
   const polishedAndesiteLoc = { x: 1, y: 1, z: 1 };
 
   const beforeExplosionCallback = world.beforeEvents.explosion.subscribe((explosionEvent) => {
-    if (!isLocationInTest(test, explosionEvent.getImpactedBlocks()[0])) return;
+    if (!isLocationInTest(test, explosionEvent.getImpactedBlocks()[0]!)) return;
     test.assert(explosionEvent.dimension !== undefined, "Expected dimension");
     test.assert(explosionEvent.source !== undefined, "Expected source");
     test.assert(explosionEvent.getImpactedBlocks().length === 10, "Unexpected number of impacted blocks");
@@ -806,7 +806,7 @@ GameTest.register("APITests", "explosion_event_canceled", (test) => {
   const cobblestoneLoc = { x: 1, y: 3, z: 1 };
 
   const explosionCallback = world.beforeEvents.explosion.subscribe((explosionEvent) => {
-    if (!isLocationInTest(test, explosionEvent.getImpactedBlocks()[0])) return;
+    if (!isLocationInTest(test, explosionEvent.getImpactedBlocks()[0]!)) return;
     test.assert(explosionEvent.dimension !== undefined, "Expected dimension");
     test.assert(explosionEvent.source !== undefined, "Expected source");
     test.assert(explosionEvent.getImpactedBlocks().length === 10, "Unexpected number of impacted blocks");

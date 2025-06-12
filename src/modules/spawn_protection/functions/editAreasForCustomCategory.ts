@@ -23,9 +23,9 @@ export async function editAreasForCustomCategory(
     while (true) {
         try {
             const areas = [
-                ...ProtectedAreas.areas.advancedArea[prefix].overworld,
-                ...ProtectedAreas.areas.advancedArea[prefix].nether,
-                ...ProtectedAreas.areas.advancedArea[prefix].the_end,
+                ...ProtectedAreas.areas.advancedArea[prefix]!.overworld,
+                ...ProtectedAreas.areas.advancedArea[prefix]!.nether,
+                ...ProtectedAreas.areas.advancedArea[prefix]!.the_end,
             ];
             // let a = world.getDynamicPropertyIds().filter((dpi) => dpi.startsWith("v2:" + prefix));
             // let b = world.getDynamicPropertyIds().filter((dpi) => dpi.startsWith("v2:" + prefix));
@@ -43,7 +43,7 @@ export async function editAreasForCustomCategory(
             form.title(customFormUICodes.action.titles.formStyles.medium + prefix);
             const r = await form.forceShow(player);
             if (r.canceled) return 1;
-            switch ((!!areas[r.selection!] ? "area" : undefined) ?? (["new", "back", "close", "refresh"] as const)[r.selection! - areas.length]) {
+            switch ((!!areas[r.selection!]! ? "area" : undefined) ?? (["new", "back", "close", "refresh"] as const)[r.selection! - areas.length]) {
                 case "new": {
                     const form = new ModalFormData();
                     form.title(customFormUICodes.modal.titles.formStyles.medium + "New Protected Area");
@@ -81,7 +81,7 @@ export async function editAreasForCustomCategory(
                         icon_path: (icon_path ?? "") == "" ? undefined : (icon_path as string),
                     };
                     world.setDynamicProperty("advancedProtectedArea:" + prefix + ":" + id, JSON.stringify(newValue));
-                    ProtectedAreas.areas.advancedArea[prefix][dimensionse[dimension]].push({ id, ...newValue });
+                    ProtectedAreas.areas.advancedArea[prefix]![dimensionse[dimension]].push({ id, ...newValue });
                     continue;
                 }
                 case "back":
@@ -92,7 +92,7 @@ export async function editAreasForCustomCategory(
                     ProtectedAreas.loadAreasForAdvancedCategory(prefix);
                     continue;
                 case "area":
-                    if ((await manageAreaForCustomCategory(player, areas[r.selection!].id, prefix)) === 1) {
+                    if ((await manageAreaForCustomCategory(player, areas[r.selection!]!.id, prefix)) === 1) {
                         continue;
                     } else {
                         return 0;
@@ -121,9 +121,9 @@ export async function manageAreaForCustomCategory(sourceEntity: loosePlayerType,
     while (true) {
         try {
             const area = [
-                ...ProtectedAreas.areas.advancedArea[prefix].overworld,
-                ...ProtectedAreas.areas.advancedArea[prefix].nether,
-                ...ProtectedAreas.areas.advancedArea[prefix].the_end,
+                ...ProtectedAreas.areas.advancedArea[prefix]!.overworld,
+                ...ProtectedAreas.areas.advancedArea[prefix]!.nether,
+                ...ProtectedAreas.areas.advancedArea[prefix]!.the_end,
             ].find((a) => a.id === areaID)!;
             const form = new ActionFormData();
             form.title(customFormUICodes.action.titles.formStyles.medium + area.id);
@@ -139,7 +139,7 @@ export async function manageAreaForCustomCategory(sourceEntity: loosePlayerType,
             const r = await form.forceShow(player);
             if (r.canceled) continue;
 
-            switch ((["edit", "applyIconTexturePreset", "delete", "back", "close"] as const)[r.selection!]) {
+            switch ((["edit", "applyIconTexturePreset", "delete", "back", "close"] as const)[r.selection!]!) {
                 case "edit":
                     return editAreaForCustomCategory(player, areaID, prefix);
                 case "applyIconTexturePreset": {
@@ -160,8 +160,8 @@ export async function manageAreaForCustomCategory(sourceEntity: loosePlayerType,
                 }
                 case "delete":
                     world.setDynamicProperty("advancedProtectedArea:" + prefix + ":" + area.id, undefined);
-                    ProtectedAreas.areas.advancedArea[prefix][dimensionse[area.dimension]].splice(
-                        ProtectedAreas.areas.advancedArea[prefix][dimensionse[area.dimension]].findIndex((a) => a.id === area.id),
+                    ProtectedAreas.areas.advancedArea[prefix]![dimensionse[area.dimension]!].splice(
+                        ProtectedAreas.areas.advancedArea[prefix]![dimensionse[area.dimension]!].findIndex((a) => a.id === area.id),
                         1
                     );
                     return 1;
@@ -200,9 +200,9 @@ export async function editAreaForCustomCategory(sourceEntity: loosePlayerType, a
     const player = extractPlayerFromLooseEntityType(sourceEntity);
     try {
         const area = [
-            ...ProtectedAreas.areas.advancedArea[prefix].overworld,
-            ...ProtectedAreas.areas.advancedArea[prefix].nether,
-            ...ProtectedAreas.areas.advancedArea[prefix].the_end,
+            ...ProtectedAreas.areas.advancedArea[prefix]!.overworld,
+            ...ProtectedAreas.areas.advancedArea[prefix]!.nether,
+            ...ProtectedAreas.areas.advancedArea[prefix]!.the_end,
         ].find((a) => a.id === areaID)!;
         const form = new ModalFormData();
         form.title(customFormUICodes.modal.titles.formStyles.medium + "Edit Protected Area");
@@ -236,17 +236,17 @@ export async function editAreaForCustomCategory(sourceEntity: loosePlayerType, a
             ...newValue,
         };
         if (area.dimension === dimension) {
-            ProtectedAreas.areas.advancedArea[prefix][dimensionse[dimension as number]].splice(
-                ProtectedAreas.areas.advancedArea[prefix][dimensionse[dimension as number]].findIndex((a) => a.id === area.id),
+            ProtectedAreas.areas.advancedArea[prefix]![dimensionse[dimension as number]!].splice(
+                ProtectedAreas.areas.advancedArea[prefix]![dimensionse[dimension as number]!].findIndex((a) => a.id === area.id),
                 1,
                 newArea
             );
         } else {
-            ProtectedAreas.areas.advancedArea[prefix][dimensionse[area.dimension]].splice(
-                ProtectedAreas.areas.advancedArea[prefix][dimensionse[area.dimension as number]].findIndex((a) => a.id === area.id),
+            ProtectedAreas.areas.advancedArea[prefix]![dimensionse[area.dimension]!].splice(
+                ProtectedAreas.areas.advancedArea[prefix]![dimensionse[area.dimension as number]!].findIndex((a) => a.id === area.id),
                 1
             );
-            ProtectedAreas.areas.advancedArea[prefix][dimensionse[dimension as number]].push(newArea);
+            ProtectedAreas.areas.advancedArea[prefix]![dimensionse[dimension as number]!].push(newArea);
         }
         world.setDynamicProperty("advancedProtectedArea:" + prefix + ":" + area.id, JSON.stringify(newValue));
         return 1;

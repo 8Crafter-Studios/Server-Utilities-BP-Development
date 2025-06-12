@@ -58,7 +58,7 @@ export async function playerMenu_bounty_on_individual(
             // This will stop the code when the player closes the form
             if (r.canceled) return 1;
 
-            switch ((["back", "close"] as const)[r.selection!]) {
+            switch ((["back", "close"] as const)[r.selection!]!) {
                 case "back":
                     return 1;
                 case "close":

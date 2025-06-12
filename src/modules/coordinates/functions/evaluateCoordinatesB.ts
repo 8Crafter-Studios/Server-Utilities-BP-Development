@@ -13,7 +13,7 @@ export function evaluateCoordinatesB(
         if (v.startsWith("^")) {
             if (v.length == 1) {
             } else {
-                let crds = [0, 0, 0];
+                let crds = [0, 0, 0] as [number, number, number];
                 crds[i] = Number(v.slice(1));
                 coordinates = caretNotation(
                     coordinates,
@@ -27,8 +27,8 @@ export function evaluateCoordinatesB(
         if (v.startsWith("~")) {
             if (v.length == 1) {
             } else {
-                let crds = [coordinates.x, coordinates.y, coordinates.z];
-                crds[i] = crds[i] + Number(v.slice(1));
+                let crds = [coordinates.x, coordinates.y, coordinates.z] as [number, number, number];
+                crds[i] = crds[i as 0 | 1 | 2] + Number(v.slice(1));
                 coordinates = { x: crds[0], y: crds[1], z: crds[2] };
             }
         }
@@ -36,22 +36,22 @@ export function evaluateCoordinatesB(
     [x, y, z].forEach((v, i) => {
         if (v.startsWith("*")) {
             if (v.length == 1) {
-                let crds = [coordinates.x, coordinates.y, coordinates.z];
+                let crds = [coordinates.x, coordinates.y, coordinates.z] as [number, number, number];
                 let crdsb = [
                     startingPosition.x,
                     startingPosition.y,
                     startingPosition.z,
-                ];
-                crds[i] = crdsb[i];
+                ] as [number, number, number];
+                crds[i] = crdsb[i as 0 | 1 | 2];
                 coordinates = { x: crds[0], y: crds[1], z: crds[2] };
             } else {
-                let crds = [coordinates.x, coordinates.y, coordinates.z];
+                let crds = [coordinates.x, coordinates.y, coordinates.z] as [number, number, number];
                 let crdsb = [
                     startingPosition.x,
                     startingPosition.y,
                     startingPosition.z,
-                ];
-                crds[i] = crdsb[i] + Number(v.slice(1));
+                ] as [number, number, number];
+                crds[i] = crdsb[i as 0 | 1 | 2] + Number(v.slice(1));
                 coordinates = { x: crds[0], y: crds[1], z: crds[2] };
             }
         }
@@ -63,7 +63,7 @@ export function evaluateCoordinatesB(
             } else {
                 if (v.startsWith("*")) {
                 } else {
-                    let crds = [coordinates.x, coordinates.y, coordinates.z];
+                    let crds = [coordinates.x, coordinates.y, coordinates.z] as [number, number, number];
                     crds[i] = Number(v.slice(0));
                     coordinates = { x: crds[0], y: crds[1], z: crds[2] };
                 }

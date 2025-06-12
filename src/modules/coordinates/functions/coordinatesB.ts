@@ -9,9 +9,9 @@ export function coordinatesB(
     let location = { x: NaN, y: NaN, z: NaN };
     try {
         location = evaluateCoordinatesB(
-            coordinateText.split(/(?=[\^\!\~\*\&\s])/g)[0],
-            coordinateText.split(/(?=[\^\!\~\*\&\s])/g)[1],
-            coordinateText.split(/(?=[\^\!\~\*\&\s])/g)[2],
+            coordinateText.split(/(?=[\^\!\~\*\&\s])/g)[0]!,
+            coordinateText.split(/(?=[\^\!\~\*\&\s])/g)[1]!,
+            coordinateText.split(/(?=[\^\!\~\*\&\s])/g)[2]!,
             startingPosition,
             rotation
         );

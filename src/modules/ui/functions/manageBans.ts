@@ -221,7 +221,7 @@ export async function manageBans(
                     currentParameters = { player, pagen: Math.min(numpages - 1, page + 1), maxentriesperpage, search, cachedEntries: displayEntries };
                     continue;
                 case "entry":
-                    if ((await manageBan(player, displayEntriesB[r.selection! - 6][0])) === 1) {
+                    if ((await manageBan(player, displayEntriesB[r.selection! - 6]![0])) === 1) {
                         currentParameters = { player, pagen: page, maxentriesperpage, search, cachedEntries: undefined };
                         continue;
                     } else {
@@ -475,7 +475,7 @@ export async function manageBansOnPlayer(
                     currentParameters = { player, pagen: Math.min(numpages - 1, page + 1), maxentriesperpage, search, cachedEntries: displayEntries };
                     continue;
                 case "entry":
-                    if ((await manageBan(player, displayEntriesB[r.selection! - 6][0])) === 1) {
+                    if ((await manageBan(player, displayEntriesB[r.selection! - 6]![0])) === 1) {
                         currentParameters = { player, pagen: page, maxentriesperpage, search, cachedEntries: undefined };
                         continue;
                     } else {
@@ -563,7 +563,7 @@ export async function manageBan(sourceEntity: loosePlayerType, ban: ban): Promis
             form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
             const r = await form.forceShow(player);
             if (r.canceled) return 1 as const;
-            switch ((["unban", "back", "close"] as const)[r.selection!]) {
+            switch ((["unban", "back", "close"] as const)[r.selection!]!) {
                 case "unban":
                     switch (await unbanPlayer(player, ban)) {
                         case 0:
@@ -624,7 +624,7 @@ export async function unbanPlayer(sourceEntity: loosePlayerType, selectedBan: ba
             "Unban"
         );
         if (r.canceled) return 1 as const;
-        switch ((["cancel", "unban"] as const)[r.selection!]) {
+        switch ((["cancel", "unban"] as const)[r.selection!]!) {
             case "cancel": {
                 return (
                     (

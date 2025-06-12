@@ -14,35 +14,35 @@ import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPl
 
 export function chatMessage(eventData: ChatSendBeforeEvent, bypassChatInputRequests = false) {
     if (!bypassChatInputRequests && Object.keys(currentlyRequestedChatInput[eventData.sender.id]?.anyInput ?? {}).length != 0) {
-        currentlyRequestedChatInput[eventData.sender.id].anyInput[
+        currentlyRequestedChatInput[eventData.sender.id]!.anyInput[
             Object.keys(currentlyRequestedChatInput[eventData.sender.id]?.anyInput ?? {}).sort(
-                (a, b) => currentlyRequestedChatInput[eventData.sender.id].anyInput[a].time - currentlyRequestedChatInput[eventData.sender.id].anyInput[b].time
-            )[0]
-        ].input = eventData.message;
+                (a, b) => currentlyRequestedChatInput[eventData.sender.id]!.anyInput[a]!.time - currentlyRequestedChatInput[eventData.sender.id]!.anyInput[b]!.time
+            )[0]!
+        ]!.input = eventData.message;
         eventData.cancel = true;
         return;
     }
     if (
         !bypassChatInputRequests &&
         Object.keys(currentlyRequestedChatInput[eventData.sender.id]?.conditionalInput ?? {}).filter((r) =>
-            !!currentlyRequestedChatInput[eventData.sender.id].conditionalInput[r].conditions
-                ? currentlyRequestedChatInput[eventData.sender.id].conditionalInput[r].conditions(eventData.sender, eventData.message, eventData)
+            !!currentlyRequestedChatInput[eventData.sender.id]!.conditionalInput[r]!.conditions
+                ? currentlyRequestedChatInput[eventData.sender.id]!.conditionalInput[r]!.conditions(eventData.sender, eventData.message, eventData)
                 : true
         ).length != 0
     ) {
-        currentlyRequestedChatInput[eventData.sender.id].conditionalInput[
+        currentlyRequestedChatInput[eventData.sender.id]!.conditionalInput[
             Object.keys(currentlyRequestedChatInput[eventData.sender.id]?.conditionalInput ?? {})
                 .filter((r) =>
-                    !!currentlyRequestedChatInput[eventData.sender.id].conditionalInput[r].conditions
-                        ? currentlyRequestedChatInput[eventData.sender.id].conditionalInput[r].conditions(eventData.sender, eventData.message, eventData)
+                    !!currentlyRequestedChatInput[eventData.sender.id]!.conditionalInput[r]!.conditions
+                        ? currentlyRequestedChatInput[eventData.sender.id]!.conditionalInput[r]!.conditions(eventData.sender, eventData.message, eventData)
                         : true
                 )
                 .sort(
                     (a, b) =>
-                        currentlyRequestedChatInput[eventData.sender.id].conditionalInput[a].time -
-                        currentlyRequestedChatInput[eventData.sender.id].conditionalInput[b].time
-                )[0]
-        ].input = eventData.message;
+                        currentlyRequestedChatInput[eventData.sender.id]!.conditionalInput[a]!.time -
+                        currentlyRequestedChatInput[eventData.sender.id]!.conditionalInput[b]!.time
+                )[0]!
+        ]!.input = eventData.message;
         eventData.cancel = true;
         return;
     }
@@ -68,7 +68,7 @@ export function chatMessage(eventData: ChatSendBeforeEvent, bypassChatInputReque
     ///scriptevent andexdb:scriptEval world.setDynamicProperty("evalBeforeEvents:chatSend", `if(!(event.message.includes("${se}")&&player.hasTag("canUseScriptEval"))&&!player.hasTag("canBypassAntiSpam")){if(!!globalThis["lastChatMessage"+player.id]){if(globalThis["lastChatMessage"+player.id]==event.message&&((Date.now()-(globalThis["lastChatTime"+player.id]??0))<10000)){globalThis["msgAmountOfSpam"+player.id]=(globalThis["msgAmountOfSpam"+player.id]??0)+1; if(globalThis["msgAmountOfSpam"+player.id]\>\=4){returnBeforeChatCommandsOrChatSend=true; returnBeforeChatSend=true; runreturn=true; event.cancel=true; player.sendMessage("§cStop Spamming")}}else{globalThis["lastChatMessage"+player.id]=event.message; globalThis["msgAmountOfSpam"+player.id]=0}}else{globalThis["lastChatMessage"+player.id]=event.message}; globalThis["lastChatTime"+player.id]=Date.now(); }`)
     ///scriptevent andexdb:scriptEval world.setDynamicProperty("evalBeforeEvents:chatSend", `if(!player.hasTag("canBypassAntiSpam")){if(!!globalThis["lastChatMessage"+player.id]){if(globalThis["lastChatMessage"+player.id]==event.message&&((Date.now()-(globalThis["lastChatTime"+player.id]??0))<10000)){globalThis["msgAmountOfSpam"+player.id]=(globalThis["msgAmountOfSpam"+player.id]??0)+1; if(globalThis["msgAmountOfSpam"+player.id]\>\=4){returnBeforeChatCommandsOrChatSend=true; returnBeforeChatSend=true; runreturn=true; event.cancel=true; player.sendMessage("§cStop Spamming")}}else{globalThis["lastChatMessage"+player.id]=event.message; globalThis["msgAmountOfSpam"+player.id]=0}}else{globalThis["lastChatMessage"+player.id]=event.message}; globalThis["lastChatTime"+player.id]=Date.now(); }`)
     let newMessage = eventData.message;
-    const cmd = CommandRegistry.getCommandForPlayer(newMessage.split(" ")[0], player);
+    const cmd = CommandRegistry.getCommandForPlayer(newMessage.split(" ")[0]!, player);
     if (cmd) {
         let playera: executeCommandPlayerW | undefined =
             player instanceof executeCommandPlayerW ? player : player ? new executeCommandPlayerW(player) : undefined;
@@ -97,7 +97,7 @@ export function chatMessage(eventData: ChatSendBeforeEvent, bypassChatInputReque
             return;
         }
     }
-    let switchTest = newMessage.slice(config.chatCommandPrefix.length).split(" ")[0];
+    let switchTest = newMessage.slice(config.chatCommandPrefix.length).split(" ")[0]!;
     let switchTestB = newMessage.slice(config.chatCommandPrefix.length);
     let commanda = undefined;
     if (newMessage.startsWith(config.chatCommandPrefix)) {
@@ -130,8 +130,8 @@ export function chatMessage(eventData: ChatSendBeforeEvent, bypassChatInputReque
                         (v.settings.enabled && (v.customCommandPrefix == undefined || v.customCommandPrefix == "") && !!switchTest.match(v.regexp)) ||
                         (v.customCommandPrefix != "" &&
                             !!v.customCommandPrefix &&
-                            newMessage.split(" ")[0].startsWith(v.customCommandPrefix) &&
-                            !!newMessage.split(" ")[0].slice(v.customCommandPrefix.length).match(v.regexp) &&
+                            newMessage.split(" ")[0]!.startsWith(v.customCommandPrefix) &&
+                            !!newMessage.split(" ")[0]!.slice(v.customCommandPrefix.length).match(v.regexp) &&
                             command.get(v.commandName, "custom").testCanPlayerUseCommand(player))
                 );
     } else if (true) {
@@ -144,12 +144,12 @@ export function chatMessage(eventData: ChatSendBeforeEvent, bypassChatInputReque
                         v.settings.enabled &&
                         v.customCommandPrefix != "" &&
                         !!v.customCommandPrefix &&
-                        newMessage.split(" ")[0].startsWith(v.customCommandPrefix) &&
-                        !!newMessage.split(" ")[0].slice(v.customCommandPrefix.length).match(v.regexp) &&
+                        newMessage.split(" ")[0]!.startsWith(v.customCommandPrefix) &&
+                        !!newMessage.split(" ")[0]!.slice(v.customCommandPrefix.length).match(v.regexp) &&
                         command.get(v.commandName, "custom").testCanPlayerUseCommand(player)
                 );
     } /*
-    let commanda = commands.find(v=>(newMessage.startsWith(String(world.getDynamicProperty("andexdbSettings:chatCommandPrefix") ?? "\\"))&&(command.get(v.commandName, "built-in").settings.enabled&&!!switchTest.match(command.get(v.commandName, "built-in").regexp)))&&(command.get(v.commandName, "built-in").testCanPlayerUseCommand(player)))??command.getCustomCommands().find(v=>(v.settings.enabled&&((v.customCommandPrefix==undefined||v.customCommandPrefix=="")&&(!!switchTest.match(v.regexp))&&(command.get(v.commandName, "custom").testCanPlayerUseCommand(player)))||((v.customCommandPrefix!=""&&!!v.customCommandPrefix)&&newMessage.split(" ")[0].startsWith(v.customCommandPrefix)&&(!!newMessage.split(" ")[0].slice(v.customCommandPrefix.length).match(v.regexp))&&(command.get(v.commandName, "custom").testCanPlayerUseCommand(player)))))*/
+    let commanda = commands.find(v=>(newMessage.startsWith(String(world.getDynamicProperty("andexdbSettings:chatCommandPrefix") ?? "\\"))&&(command.get(v.commandName, "built-in").settings.enabled&&!!switchTest.match(command.get(v.commandName, "built-in").regexp)))&&(command.get(v.commandName, "built-in").testCanPlayerUseCommand(player)))??command.getCustomCommands().find(v=>(v.settings.enabled&&((v.customCommandPrefix==undefined||v.customCommandPrefix=="")&&(!!switchTest.match(v.regexp))&&(command.get(v.commandName, "custom").testCanPlayerUseCommand(player)))||((v.customCommandPrefix!=""&&!!v.customCommandPrefix)&&newMessage.split(" ")[0]!.startsWith(v.customCommandPrefix)&&(!!newMessage.split(" ")[0]!.slice(v.customCommandPrefix.length).match(v.regexp))&&(command.get(v.commandName, "custom").testCanPlayerUseCommand(player)))))*/
 
     try {
         world

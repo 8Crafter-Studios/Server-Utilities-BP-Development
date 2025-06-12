@@ -5,7 +5,7 @@ export function compressIntArrayB(s: string, replacement: string = "-1") {
     ).forEach(
         (v) => (s = s.replace(
             v[0],
-            v[1] + "^" + (v[0].length + 1) / (v[1].length + 1)
+            v[1] + "^" + (v[0].length + 1) / (v[1]!.length + 1)
         ))
     );
     s = s.replaceAll(replacement, "");

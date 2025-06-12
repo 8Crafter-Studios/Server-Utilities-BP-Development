@@ -697,7 +697,7 @@ try{ durability2.damage = Number(10); } catch(e){if (Boolean(debug2) == true) { 
                         } catch (e) {
                             console.error(e, e.stack);
                         }
-                        let componentList = [item.getComponents()[0].typeId];
+                        let componentList = [item.getComponents()[0]!.typeId];
                         for (const index in players) {
                             if (Number(index) != 0) {
                                 componentList = String([String(componentList), item.getComponents()[index].typeId]).split(",");

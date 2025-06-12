@@ -325,6 +325,13 @@ declare global {
          * @param options The options for colorizing the JSON string.
          */
         function pfcsend(player: Player | executeCommandPlayerW, value: any, space?: string | number, options?: Parameters<typeof colorizeJSONString>[1]): void;
+        /**
+         * Sends a player an error message.
+         *
+         * @param {Player | executeCommandPlayerW} player The player to send the message to.
+         * @param {Error} error The error to send.
+         * @param {string} [prefix="§c"] The prefix for the error message. Defaults to `§c`.
+         */
         function perror(player: Player | executeCommandPlayerW, error: Error, prefix?: string): void;
         /**
          * An alias of {@link console.info}.
@@ -408,7 +415,18 @@ declare global {
             yield: T[];
             return: TReturn;
         }>;
+        /**
+         * Waits for a tick to pass.
+         *
+         * @returns {Promise<void>} A promise that resolves when a tick passes.
+         */
         function waitTick(): Promise<void>;
+        /**
+         * Waits for a set number of ticks to pass.
+         *
+         * @param {number} [ticks=1] The number of ticks to wait. Defaults to `1`.
+         * @returns {Promise<void>} A promise that resolves when the specified number of ticks have passed.
+         */
         function waitTicks(ticks?: number): Promise<void>;
         function twoWayModulo(number: number, modulo: number): number;
         function clamp24HoursTo12Hours(hours: number): number;

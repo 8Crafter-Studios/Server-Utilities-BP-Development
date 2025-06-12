@@ -35,14 +35,14 @@ export function extractJSONStrings(inputString: string, includeOtherResultData: 
                         JSONParse(jsonString); // Attempt to parse JSON
                         jsonStringArray.push(includeOtherResultData ? (() => {
                             let atest = Array.from((" ".repeat(currentIndex) + inputString.slice(currentIndex))?.matchAll(new RegExp("")?.compile("" + escapeRegExp(jsonString) + "", `g`)))[0];
-                            (atest as any).indices = [[atest?.index, atest?.index + atest[0]?.length]];
+                            (atest as any).indices = [[atest?.index, atest?.index! + atest![0]?.length]];
                             try {
-                                (atest as any).value = JSONParse(atest[0]);
+                                (atest as any).value = JSONParse(atest![0]);
                             } catch (e) {
-                                (atest as any).value = atest[0];
+                                (atest as any).value = atest![0];
                             };
-                            try { (atest as any).modifiedinput = structuredClone(atest.input); } catch (e) { (atest as any).modifiedinput = atest.input; };
-                            atest.input = inputString;
+                            try { (atest as any).modifiedinput = structuredClone(atest!.input); } catch (e) { (atest as any).modifiedinput = atest!.input; };
+                            atest!.input = inputString;
                             (atest as any).evaluationindex = currentIndex;
                             return atest;
                         })() : jsonString); // Convert string into RegExp match data, then push valid JSON string to array. 

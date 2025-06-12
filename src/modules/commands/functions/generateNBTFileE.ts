@@ -30,7 +30,7 @@ export function generateNBTFileE(
                             i % nbt.size[2],
                         ])
                     ),
-                    nbt.block_palette[b].name
+                    nbt.block_palette[b]!.name
                 );
                 !!nbt.block_palette[b]?.states
                     ? Object.entries(
@@ -50,7 +50,7 @@ export function generateNBTFileE(
                             ])
                         ),
                         BlockPermutation.resolve(
-                            nbt.block_palette[b].name.replace(
+                            nbt.block_palette[b]!.name.replace(
                                 "minecraft:active - lit_redstone_lamp",
                                 "minecraft:lit_redstone_lamp"
                             ),

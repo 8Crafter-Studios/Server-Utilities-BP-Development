@@ -56,24 +56,24 @@ subscribedEvents.beforePlayerInteractWithEntity = world.beforeEvents.playerInter
         let scoreboardIdentityType = undefined;
         let distance = Vector3Utils.distance(event.player.location, playerTargetB.location);
         try {
-            entityViewedEntityType = playerTargetB.getEntitiesFromViewDirection()[0].entity.typeId;
+            entityViewedEntityType = playerTargetB.getEntitiesFromViewDirection()[0]!.entity.typeId;
         } catch (e) {
             entityViewedEntityType = "§4None§a";
         }
         try {
-            entityViewedEntityName = playerTargetB.getEntitiesFromViewDirection()[0].entity.typeId;
+            entityViewedEntityName = playerTargetB.getEntitiesFromViewDirection()[0]!.entity.typeId;
         } catch (e) {
             entityViewedEntityName = "§4None§a";
         }
         try {
-            entityViewedEntityDistance = playerTargetB.getEntitiesFromViewDirection()[0].distance;
+            entityViewedEntityDistance = playerTargetB.getEntitiesFromViewDirection()[0]!.distance;
         } catch (e) {
             entityViewedEntityDistance = "§4None§a";
         }
         let componentList: any;
         componentList = [];
         try {
-            componentList = [playerTargetB.getComponents()[0].typeId];
+            componentList = [playerTargetB.getComponents()[0]!.typeId];
         } catch (e) {
             console.error(e, e.stack);
             componentList = "§4None§a";
@@ -82,13 +82,13 @@ subscribedEvents.beforePlayerInteractWithEntity = world.beforeEvents.playerInter
         try {
             effectsList = [
                 "§9{ §stypeId§a: §u" +
-                    playerTargetB.getEffects()[0].typeId +
+                    playerTargetB.getEffects()[0]!.typeId +
                     "§a, §sdisplayName§a: §u" +
-                    playerTargetB.getEffects()[0].displayName +
+                    playerTargetB.getEffects()[0]!.displayName +
                     "§a, §sduration§a: §c" +
-                    playerTargetB.getEffects()[0].duration +
+                    playerTargetB.getEffects()[0]!.duration +
                     "§a, §samplifier§a: §c" +
-                    playerTargetB.getEffects()[0].amplifier +
+                    playerTargetB.getEffects()[0]!.amplifier +
                     "§9 }§a",
             ];
         } catch (e) {
@@ -130,7 +130,7 @@ subscribedEvents.beforePlayerInteractWithEntity = world.beforeEvents.playerInter
             /*
                     console.warn(index);*/
             if (Number(index) != 0) {
-                componentList = String([String(componentList), playerTargetB.getComponents()[index].typeId]).split(",");
+                componentList = String([String(componentList), playerTargetB.getComponents()[index]!.typeId]).split(",");
             } /*
                     console.warn(targetList);*/
         }
@@ -141,13 +141,13 @@ subscribedEvents.beforePlayerInteractWithEntity = world.beforeEvents.playerInter
                 effectsList = String([
                     String(effectsList),
                     "§9{ §stypeId§a: §u" +
-                        playerTargetB.getEffects()[index].typeId +
+                        playerTargetB.getEffects()[index]!.typeId +
                         "§a, §sdisplayName§a: §u" +
-                        playerTargetB.getEffects()[index].displayName +
+                        playerTargetB.getEffects()[index]!.displayName +
                         ", §sduration§a: §c" +
-                        playerTargetB.getEffects()[index].duration +
+                        playerTargetB.getEffects()[index]!.duration +
                         "§a, §samplifier§a: §c" +
-                        playerTargetB.getEffects()[index].amplifier +
+                        playerTargetB.getEffects()[index]!.amplifier +
                         "§9 }§a",
                 ]).split(",");
             } /*

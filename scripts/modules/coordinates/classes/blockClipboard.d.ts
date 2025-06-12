@@ -1,4 +1,4 @@
-import { type Vector3, Dimension, type StructureCreateOptions, type DimensionLocation, type StructurePlaceOptions } from "@minecraft/server";
+import { type Vector3, Dimension, type StructureCreateOptions, type DimensionLocation, type StructurePlaceOptions, Structure } from "@minecraft/server";
 /**
  * The global block clipboard.
  *
@@ -13,7 +13,7 @@ export declare class GlobalBlockClipboard {
      *
      * @type {string[]}
      */
-    static get ids(): string[];
+    static get ids(): `andexdb:clipboard,${number},${number},${number}`[];
     /**
      * The size of the contents of the global block clipboard.
      *
@@ -27,6 +27,19 @@ export declare class GlobalBlockClipboard {
      * ```
      */
     static get contentsSize(): Vector3;
+    /**
+     * The sizes of the chunks of the contents of this block clipboard.
+     *
+     * When the block clipboard is empty, this will be `{ x: 64, y: 128, z: 64 }`.
+     *
+     * @type {Vector3}
+     *
+     * @default
+     * ```typescript
+     * { x: 64, y: 128, z: 64 }
+     * ```
+     */
+    static get contentsSizeLimits(): Vector3;
     /**
      * Whether the global block clipboard is empty.
      *
@@ -68,36 +81,53 @@ export declare class GlobalBlockClipboard {
      *
      * @param {DimensionLocation} location The location to paste the contents of the clipboard.
      * @param {StructurePlaceOptions} [options] The options to paste the contents of the clipboard with.
-     * @param {Vector3} [sizes] The sizes of the chunks of the clipboard. Defaults to `{ x: 64, y: 128, z: 64 }`.
+     * @param {Vector3} [sizes] The sizes of the chunks of the clipboard. Defaults to {@link GlobalBlockClipboard.contentsSizeLimits}.
      *
      * @throws {ReferenceError} If the clipboard is empty.
      */
     static paste(location: DimensionLocation, options?: StructurePlaceOptions, sizes?: Vector3): void;
+    /**
+     * Gets the structure that contains the specified position in the clipboard contents.
+     *
+     * @param {Vector3} position The position to get the structure for.
+     * @returns {Structure | undefined} The structure that contains the specified position in the clipboard contents, or `undefined` if no structure is found containing the specified position.
+     */
+    static getStructureForPosition(position: Vector3): Structure | undefined;
+    /**
+     * Gets the structure at the specified indices in the clipboard contents.
+     *
+     * @param {Vector3} indices The indices to get the structure for.
+     * @returns {Structure | undefined} The structure at the specified indices in the clipboard contents, or `undefined` if no structure is found at the specified indices.
+     */
+    static getStructureAtIndices(indices: Vector3): Structure | undefined;
 }
 /**
  * A class for working with block clipboards.
+ *
+ * @template ClipboardID The ID of this block clipboard.
  */
-export declare class BlockClipboard {
+export declare class BlockClipboard<ClipboardID extends string = string> {
     /**
      * The ID of this block clipboard.
      *
-     * @type {string}
+     * @type {ClipboardID}
      */
-    readonly clipboardID: string;
+    readonly clipboardID: ClipboardID;
     /**
      * Creates a new block clipboard.
      *
-     * @param {string} clipboardID The ID of the block clipboard, must be unique, cannot contain commas.
+     * @param {ClipboardID} clipboardID The ID of the block clipboard, must be unique, cannot contain commas, cannot be `global`.
      *
      * @throws {TypeError} If the block clipboard ID contains a comma.
+     * @throws {TypeError} If the block clipboard ID is `global`.
      */
-    constructor(clipboardID: string);
+    constructor(clipboardID: ClipboardID);
     /**
      * The structure IDs of the contents of this block clipboard.
      *
-     * @type {string[]}
+     * @type {`clipboard:${ClipboardID},${number},${number},${number}`[]}
      */
-    get ids(): string[];
+    get ids(): `clipboard:${ClipboardID},${number},${number},${number}`[];
     /**
      * The size of the contents of this block clipboard.
      *
@@ -111,6 +141,19 @@ export declare class BlockClipboard {
      * ```
      */
     get contentsSize(): Vector3;
+    /**
+     * The sizes of the chunks of the contents of this block clipboard.
+     *
+     * When the block clipboard is empty, this will be `{ x: 64, y: 128, z: 64 }`.
+     *
+     * @type {Vector3}
+     *
+     * @default
+     * ```typescript
+     * { x: 64, y: 128, z: 64 }
+     * ```
+     */
+    get contentsSizeLimits(): Vector3;
     /**
      * Whether this block clipboard is empty.
      *
@@ -132,7 +175,7 @@ export declare class BlockClipboard {
      * @param {[from: Vector3, to: Vector3, indices: Vector3]} range The area to copy to the clipboard.
      * @param {StructureCreateOptions} [options] The options to copy the area to the clipboard with.
      */
-    copyRange(dimension: Dimension, range: [from: Vector3, to: Vector3, indices: Vector3], options?: StructureCreateOptions): void;
+    copyRange(dimension: Dimension, range: [from: Vector3, to: Vector3, indices: Vector3], options?: StructureCreateOptions): Structure | undefined;
     /**
      * Copies the specified area to this block clipboard.
      *
@@ -150,11 +193,25 @@ export declare class BlockClipboard {
      *
      * @param {DimensionLocation} location The location to paste the contents of the clipboard.
      * @param {StructurePlaceOptions} [options] The options to paste the contents of the clipboard with.
-     * @param {Vector3} [sizes] The sizes of the chunks of the clipboard. Defaults to `{ x: 64, y: 128, z: 64 }`.
+     * @param {Vector3} [sizes] The sizes of the chunks of the clipboard. Defaults to {@link BlockClipboard.contentsSize}.
      *
      * @throws {ReferenceError} If the clipboard is empty.
      */
     paste(location: DimensionLocation, options?: StructurePlaceOptions, sizes?: Vector3): void;
+    /**
+     * Gets the structure that contains the specified position in the clipboard contents.
+     *
+     * @param {Vector3} position The position to get the structure for.
+     * @returns {Structure | undefined} The structure that contains the specified position in the clipboard contents, or `undefined` if no structure is found containing the specified position.
+     */
+    getStructureForPosition(position: Vector3): Structure | undefined;
+    /**
+     * Gets the structure at the specified indices in the clipboard contents.
+     *
+     * @param {Vector3} indices The indices to get the structure for.
+     * @returns {Structure | undefined} The structure at the specified indices in the clipboard contents, or `undefined` if no structure is found at the specified indices.
+     */
+    getStructureAtIndices(indices: Vector3): Structure | undefined;
     /**
      * Gets all block clipboard IDs.
      *
@@ -170,12 +227,16 @@ export declare class BlockClipboard {
     /**
      * Gets block clipboards by their IDs.
      *
-     * @param {string[]} clipboardIDs The IDs of the block clipboards to get.
-     * @returns {BlockClipboard[]} An array of the block clipboards with the specified IDs.
+     * @template ClipboardIDs The IDs of the block clipboards to get.
+     * @param {ClipboardIDs} clipboardIDs The IDs of the block clipboards to get.
+     * @returns {{ [K in keyof ClipboardIDs]: BlockClipboard<ClipboardIDs[K]> }} An array of the block clipboards with the specified IDs.
      *
      * @throws {TypeError} If any of the block clipboard IDs contain a comma.
+     * @throws {TypeError} If any of the block clipboard IDs are `global`.
      */
-    static getClipboards(clipboardIDs: string[]): BlockClipboard[];
+    static getClipboards<ClipboardIDs extends string[]>(clipboardIDs: ClipboardIDs): {
+        [K in keyof ClipboardIDs]: BlockClipboard<ClipboardIDs[K]>;
+    };
     /**
      * Gets a block clipboard by its ID.
      *
@@ -185,14 +246,16 @@ export declare class BlockClipboard {
      * @returns {BlockClipboard} The block clipboard.
      *
      * @throws {TypeError} If the block clipboard ID contains a comma.
+     * @throws {TypeError} If the block clipboard ID is `global`.
      */
-    static getClipboard(clipboardID: string): BlockClipboard;
+    static getClipboard<ClipboardID extends string>(clipboardID: ClipboardID): BlockClipboard<ClipboardID>;
     /**
      * Deletes a block clipboard by its ID.
      *
      * @param {string} clipboardID The ID of the block clipboard.
      *
      * @throws {TypeError} If the block clipboard ID contains a comma.
+     * @throws {TypeError} If the block clipboard ID is `global`.
      */
     static deleteClipboard(clipboardID: string): void;
     /**

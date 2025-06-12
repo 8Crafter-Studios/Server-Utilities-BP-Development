@@ -5,7 +5,6 @@
  * @todo Finish the command registry system.
  */
 import { ChatSendBeforeEvent } from "@minecraft/server";
-import { commandSettings } from "modules/commands/classes/commandSettings";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 import type { commandCategory } from "modules/commands/types/commandCategory";
 import type { loosePlayerType } from "modules/utilities/types/loosePlayerType";
@@ -86,7 +85,7 @@ export interface CommandTypeBase {
     /**
      * The way the command is accessed.
      *
-     * - `named` - Accessed through the command's name;
+     * - `named` - Accessed through the command's name.
      * - `regexp` - Accessed through a regular expression.
      */
     accessType: "named" | "regexp";
@@ -115,15 +114,15 @@ export interface CommandTypeBase {
      */
     commandName: string;
     /**
-     * The custom prefix of the command.
-     */
-    customPrefix?: string;
-    /**
      * The syntax of the command.
      *
      * @default "Syntax Missing"
      */
     syntax?: string;
+    /**
+     * The documentation on the flags parameters of the command.
+     */
+    flagsDocs?: string | undefined;
     /**
      * The version of the command.
      *
@@ -190,12 +189,19 @@ export interface CommandTypeBase {
  */
 export interface NameAccessibleCommandType extends CommandTypeBase {
     accessType: "named";
-    aliases?: NameAccessibleCommandTypeAlias[];
+    /**
+     * The custom prefix of the command.
+     */
+    customPrefix?: undefined;
 }
 /**
  * The type of command data with an `accessType` of `named` and a `customPrefix`.
  */
-export interface PrefixAccessibleCommandType extends NameAccessibleCommandType {
+export interface PrefixAccessibleCommandType extends CommandTypeBase {
+    accessType: "named";
+    /**
+     * The custom prefix of the command.
+     */
     customPrefix: string;
 }
 /**
@@ -218,7 +224,6 @@ export interface RegExpAccessibleCommandType extends CommandTypeBase {
          */
         f?: string;
     };
-    aliases?: RegExpAccessibleCommandTypeAlias[];
 }
 /**
  * The response type of a command execution.
@@ -264,6 +269,11 @@ export interface CommandRegistryGetCommandOptions {
      */
     includeAliases?: boolean;
 }
+/**
+ * The data structure that holds the settings of a registered command.
+ *
+ * @see {@link RegisteredCommandSettings}
+ */
 export interface RegisteredCommandSettingsData {
     /**
      * The type of command.
@@ -482,6 +492,10 @@ declare namespace exports {
          */
         syntax: string;
         /**
+         * The documentation on the flags parameters of the command.
+         */
+        flagsDocs: string | undefined;
+        /**
          * The version of the command.
          *
          * @default "1.0.0"
@@ -567,7 +581,7 @@ declare namespace exports {
          *
          * @type {commandSettings<"built-in" | "custom"> | undefined}
          */
-        get settings(): commandSettings<"built-in" | "custom"> | undefined;
+        get settings(): RegisteredCommandSettings<this> | undefined;
         /**
          * The tags required to execute the command.
          *
@@ -783,7 +797,10 @@ declare namespace exports {
          *
          * @throws {TypeError} If the {@link CommandRegistryGetCommandOptions.typeFilter | typeFilter} is not `built-in`, `custom`, or `undefined`.
          */
-        static getCommand(commandName: string, options?: CommandRegistryGetCommandOptions): RegisteredCommand<CommandTypeBase> | undefined;
+        static getCommand(commandName: string, options?: CommandRegistryGetCommandOptions): {
+            command: RegisteredCommand<CommandTypeBase>;
+            currentCommandName: string;
+        } | undefined;
         /**
          * Gets a command by the beginning of the command string, but based on a player's permissions.
          *
@@ -832,7 +849,7 @@ declare namespace exports {
          * @throws {TypeError} If any of the {@link CommandTypeBase.aliases | commandData.aliases} has a {@link NameAccessibleCommandTypeAlias.type | type} of `regexpAccessibleAlias` and has an {@link EscRegExp.v | escregexp.v} that is not a string.
          * @throws {TypeError} If any of the {@link CommandTypeBase.aliases | commandData.aliases} has a {@link NameAccessibleCommandTypeAlias.type | type} of `regexpAccessibleAlias` and has an {@link EscRegExp.f | escregexp.f} that is not a string or `undefined`.
          */
-        static registerCommand<CommandType extends CommandTypeBase>(commandData: CommandType): RegisteredCommand<CommandType>;
+        static registerCommand<CommandType extends NameAccessibleCommandType | PrefixAccessibleCommandType | RegExpAccessibleCommandType>(commandData: CommandType): RegisteredCommand<CommandType>;
         /**
          * Unregisters a command.
          *

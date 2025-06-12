@@ -140,15 +140,15 @@ export async function worldBorderSettings(
                 from == ""
                     ? undefined
                     : {
-                        x: JSON.parse(from.split(" ")[0]),
-                        z: JSON.parse(from.split(" ")[1]),
+                        x: JSON.parse(from.split(" ")[0]!),
+                        z: JSON.parse(from.split(" ")[1]!),
                     };
             configobj.to =
                 to == ""
                     ? undefined
                     : {
-                        x: JSON.parse(to.split(" ")[0]),
-                        z: JSON.parse(to.split(" ")[1]),
+                        x: JSON.parse(to.split(" ")[0]!),
+                        z: JSON.parse(to.split(" ")[1]!),
                     };
             configobj.tintIntensity =
                 tintIntensity == "" ? undefined : Number(tintIntensity);

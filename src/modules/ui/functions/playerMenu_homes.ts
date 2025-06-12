@@ -41,7 +41,7 @@ export async function playerMenu_homes(sourceEntitya: Entity | executeCommandPla
     form.title(customFormUICodes.action.titles.formStyles.medium + "Homes");
     const homes = HomeSystem.getHomesForPlayer(sourceEntity.id);
     homes.forEach((h) =>
-        form.button(`${customFormUICodes.action.buttons.positions.main_only}${h.name}\n${dimensionTypeDisplayFormatting[dimensionse[dimensions.indexOf(h.location.dimension)]]}§r ${vTStr(Vector.floor(h.location))}`)
+        form.button(`${customFormUICodes.action.buttons.positions.main_only}${h.name}\n${dimensionTypeDisplayFormatting[dimensionse[dimensions.indexOf(h.location.dimension)]!]}§r ${vTStr(Vector.floor(h.location))}`)
     );
     form.button(customFormUICodes.action.buttons.positions.main_only + "New Home", "textures/ui/color_plus");
     form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left");
@@ -51,9 +51,9 @@ export async function playerMenu_homes(sourceEntitya: Entity | executeCommandPla
             let r = ra as ActionFormResponse;
             if (r.canceled) return 1;
 
-            switch ((!!homes[r.selection!] ? "home" : undefined) ?? (["newHome", "back", "close"] as const)[r.selection! - homes.length]) {
+            switch ((!!homes[r.selection!]! ? "home" : undefined) ?? (["newHome", "back", "close"] as const)[r.selection! - homes.length]) {
                 case "home":
-                    const home = homes[r.selection!];
+                    const home = homes[r.selection!]!;
                     switch (
                         (["teleport", "delete", "back", "close"] as const)[
                             (
@@ -184,6 +184,8 @@ export async function playerMenu_homes(sourceEntitya: Entity | executeCommandPla
                             return await playerMenu_homes(sourceEntity);
                         case "close":
                             return 0;
+                        default:
+                            return await playerMenu_homes(sourceEntity);
                     }
                 case "newHome":{
                     if (sourceEntity.dimension !== overworld && !config.homeSystem.allowHomesInOtherDimensions) {

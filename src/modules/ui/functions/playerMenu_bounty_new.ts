@@ -113,7 +113,7 @@ export async function playerMenu_bounty_new(
             if (r.canceled) return 1;
 
             switch (
-                (["search", "previous", "go", "next", "", "", undefined] as const)[r.selection!] ??
+                (["search", "previous", "go", "next", "", ""] as const)[r.selection!] ??
                 (!!displayPlayersB[r.selection! - 6] ? "player" : undefined) ??
                 (["back", "close", "refresh"] as const)[r.selection! - displayPlayersB.length - 6]
             ) {
@@ -175,7 +175,7 @@ export async function playerMenu_bounty_new(
                     return await playerMenu_bounty_new(sourceEntity, Math.min(numpages - 1, page + 1), maxplayersperpage, search, displayPlayers);
                     break;
                 case "player": {
-                    const player = displayPlayersB[r.selection! - 6];
+                    const player = displayPlayersB[r.selection! - 6]!;
                     if (Bounty.getBountiesFromPlayer(sourceEntity.id).some((b) => b.targetId === player.id)) {
                         if(
                             (

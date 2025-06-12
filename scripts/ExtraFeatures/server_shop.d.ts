@@ -172,22 +172,22 @@ export declare class ServerShopManager {
      *
      * @see {@link PlayerShopManager.playerShopItemTextureHints}
      */
-    static serverShopItemTextureHints: string[];
+    static serverShopItemTextureHints: ["textures/items/stick", "textures/blocks/gravel", "textures/blocks/reactor_core_stage_0"];
     /**
      *
      * @see {@link PlayerShopManager.playerShopPageTextureHints}
      */
-    static serverShopPageTextureHints: string[];
+    static serverShopPageTextureHints: ["textures/ui/arrowRight"];
     /**
      *
      * @see {@link PlayerShopManager.playerShopItemTextureHint}
      */
-    static get serverShopItemTextureHint(): string;
+    static get serverShopItemTextureHint(): typeof this.serverShopItemTextureHints[number];
     /**
      *
      * @see {@link PlayerShopManager.playerShopPageTextureHint}
      */
-    static get serverShopPageTextureHint(): string;
+    static get serverShopPageTextureHint(): typeof this.serverShopPageTextureHints[number];
     /**
      * Handles the server shop system settings interface and its interactions.
      *

@@ -1,4 +1,4 @@
-import { world, Dimension } from "@minecraft/server";
+import { world, Dimension, Structure } from "@minecraft/server";
 import { splitArea } from "modules/coordinates/functions/splitArea";
 /**
  * The global block clipboard.
@@ -15,7 +15,9 @@ export class GlobalBlockClipboard {
      * @type {string[]}
      */
     static get ids() {
-        return world.structureManager.getWorldStructureIds().filter((v) => v.startsWith("andexdb:clipboard"));
+        return world.structureManager
+            .getWorldStructureIds()
+            .filter((v) => v.startsWith("andexdb:clipboard"));
     }
     /**
      * The size of the contents of the global block clipboard.
@@ -31,6 +33,21 @@ export class GlobalBlockClipboard {
      */
     static get contentsSize() {
         return (world.getDynamicProperty(`andexdb:clipboards`) ?? { x: -1, y: -1, z: -1 });
+    }
+    /**
+     * The sizes of the chunks of the contents of this block clipboard.
+     *
+     * When the block clipboard is empty, this will be `{ x: 64, y: 128, z: 64 }`.
+     *
+     * @type {Vector3}
+     *
+     * @default
+     * ```typescript
+     * { x: 64, y: 128, z: 64 }
+     * ```
+     */
+    static get contentsSizeLimits() {
+        return (world.getDynamicProperty(`andexdb:globalClipboardSizeLimits`) ?? { x: 64, y: 128, z: 64 });
     }
     /**
      * Whether the global block clipboard is empty.
@@ -83,6 +100,7 @@ export class GlobalBlockClipboard {
             y: Math.abs(v.y),
             z: Math.abs(v.z),
         }))(Vector.subtract(area.to, area.from)));
+        world.setDynamicProperty(`andexdb:globalClipboardSizeLimits`, sizeLimits);
         for (const range of splitArea(area, sizeLimits)) {
             this.copyRange(dimension, range, options);
         }
@@ -92,11 +110,11 @@ export class GlobalBlockClipboard {
      *
      * @param {DimensionLocation} location The location to paste the contents of the clipboard.
      * @param {StructurePlaceOptions} [options] The options to paste the contents of the clipboard with.
-     * @param {Vector3} [sizes] The sizes of the chunks of the clipboard. Defaults to `{ x: 64, y: 128, z: 64 }`.
+     * @param {Vector3} [sizes] The sizes of the chunks of the clipboard. Defaults to {@link GlobalBlockClipboard.contentsSizeLimits}.
      *
      * @throws {ReferenceError} If the clipboard is empty.
      */
-    static paste(location, options, sizes = { x: 64, y: 128, z: 64 }) {
+    static paste(location, options, sizes = this.contentsSizeLimits) {
         if (this.isEmpty) {
             throw new ReferenceError(`The global clipboard is empty.`);
         }
@@ -109,27 +127,55 @@ export class GlobalBlockClipboard {
         }))
             .forEach((v) => world.structureManager.place(v.id, location.dimension, Vector.add(v, location), options));
     }
+    /**
+     * Gets the structure that contains the specified position in the clipboard contents.
+     *
+     * @param {Vector3} position The position to get the structure for.
+     * @returns {Structure | undefined} The structure that contains the specified position in the clipboard contents, or `undefined` if no structure is found containing the specified position.
+     */
+    static getStructureForPosition(position) {
+        const sizeLimits = this.contentsSizeLimits;
+        const x = Math.floor(position.x / sizeLimits.x);
+        const y = Math.floor(position.y / sizeLimits.y);
+        const z = Math.floor(position.z / sizeLimits.z);
+        return this.getStructureAtIndices({ x, y, z });
+    }
+    /**
+     * Gets the structure at the specified indices in the clipboard contents.
+     *
+     * @param {Vector3} indices The indices to get the structure for.
+     * @returns {Structure | undefined} The structure at the specified indices in the clipboard contents, or `undefined` if no structure is found at the specified indices.
+     */
+    static getStructureAtIndices(indices) {
+        return world.structureManager.get(`andexdb:clipboard,${indices.x},${indices.y},${indices.z}`);
+    }
 }
 /**
  * A class for working with block clipboards.
+ *
+ * @template ClipboardID The ID of this block clipboard.
  */
 export class BlockClipboard {
     /**
      * The ID of this block clipboard.
      *
-     * @type {string}
+     * @type {ClipboardID}
      */
     clipboardID;
     /**
      * Creates a new block clipboard.
      *
-     * @param {string} clipboardID The ID of the block clipboard, must be unique, cannot contain commas.
+     * @param {ClipboardID} clipboardID The ID of the block clipboard, must be unique, cannot contain commas, cannot be `global`.
      *
      * @throws {TypeError} If the block clipboard ID contains a comma.
+     * @throws {TypeError} If the block clipboard ID is `global`.
      */
     constructor(clipboardID) {
         if (clipboardID.includes(",")) {
             throw new TypeError(`Invalid clipboard ID: ${clipboardID}; Clipboard IDs cannot contain commas.`);
+        }
+        if (clipboardID === "global") {
+            throw new TypeError(`Invalid clipboard ID: ${clipboardID}; The "global" clipboard ID is reserved .`);
         }
         this.clipboardID = clipboardID;
         Object.defineProperty(this, "clipboardID", {
@@ -144,10 +190,12 @@ export class BlockClipboard {
     /**
      * The structure IDs of the contents of this block clipboard.
      *
-     * @type {string[]}
+     * @type {`clipboard:${ClipboardID},${number},${number},${number}`[]}
      */
     get ids() {
-        return world.structureManager.getWorldStructureIds().filter((v) => v.startsWith(`clipboard:${this.clipboardID},`));
+        return world.structureManager
+            .getWorldStructureIds()
+            .filter((v) => v.startsWith(`clipboard:${this.clipboardID},`));
     }
     /**
      * The size of the contents of this block clipboard.
@@ -163,6 +211,21 @@ export class BlockClipboard {
      */
     get contentsSize() {
         return (world.getDynamicProperty(`clipboardSize:${this.clipboardID}`) ?? { x: -1, y: -1, z: -1 });
+    }
+    /**
+     * The sizes of the chunks of the contents of this block clipboard.
+     *
+     * When the block clipboard is empty, this will be `{ x: 64, y: 128, z: 64 }`.
+     *
+     * @type {Vector3}
+     *
+     * @default
+     * ```typescript
+     * { x: 64, y: 128, z: 64 }
+     * ```
+     */
+    get contentsSizeLimits() {
+        return (world.getDynamicProperty(`clipboardSizeLimits:${this.clipboardID}`) ?? { x: 64, y: 128, z: 64 });
     }
     /**
      * Whether this block clipboard is empty.
@@ -195,10 +258,11 @@ export class BlockClipboard {
      */
     copyRange(dimension, range, options) {
         try {
-            world.structureManager.createFromWorld(`andexdb:clipboard,${range[2].x ?? 0},${range[2].y ?? 0},${range[2].z ?? 0}`, dimension, range[0], range[1], options);
+            return world.structureManager.createFromWorld(`clipboard:${this.clipboardID},${range[2].x ?? 0},${range[2].y ?? 0},${range[2].z ?? 0}`, dimension, range[0], range[1], options);
         }
         catch (e) {
             console.error(e, e.stack);
+            return undefined;
         }
     }
     /**
@@ -215,6 +279,7 @@ export class BlockClipboard {
             y: Math.abs(v.y),
             z: Math.abs(v.z),
         }))(Vector.subtract(area.to, area.from)));
+        world.setDynamicProperty(`clipboardSizeLimits:${this.clipboardID}`, sizeLimits);
         for (const range of splitArea(area, sizeLimits)) {
             this.copyRange(dimension, range, options);
         }
@@ -224,11 +289,11 @@ export class BlockClipboard {
      *
      * @param {DimensionLocation} location The location to paste the contents of the clipboard.
      * @param {StructurePlaceOptions} [options] The options to paste the contents of the clipboard with.
-     * @param {Vector3} [sizes] The sizes of the chunks of the clipboard. Defaults to `{ x: 64, y: 128, z: 64 }`.
+     * @param {Vector3} [sizes] The sizes of the chunks of the clipboard. Defaults to {@link BlockClipboard.contentsSize}.
      *
      * @throws {ReferenceError} If the clipboard is empty.
      */
-    paste(location, options, sizes = { x: 64, y: 128, z: 64 }) {
+    paste(location, options, sizes = this.contentsSizeLimits) {
         if (this.isEmpty) {
             throw new ReferenceError(`Clipboard ${this.clipboardID} is empty.`);
         }
@@ -242,12 +307,37 @@ export class BlockClipboard {
             .forEach((v) => world.structureManager.place(v.id, location.dimension, Vector.add(v, location), options));
     }
     /**
+     * Gets the structure that contains the specified position in the clipboard contents.
+     *
+     * @param {Vector3} position The position to get the structure for.
+     * @returns {Structure | undefined} The structure that contains the specified position in the clipboard contents, or `undefined` if no structure is found containing the specified position.
+     */
+    getStructureForPosition(position) {
+        const sizeLimits = this.contentsSizeLimits;
+        const x = Math.floor(position.x / sizeLimits.x);
+        const y = Math.floor(position.y / sizeLimits.y);
+        const z = Math.floor(position.z / sizeLimits.z);
+        return this.getStructureAtIndices({ x, y, z });
+    }
+    /**
+     * Gets the structure at the specified indices in the clipboard contents.
+     *
+     * @param {Vector3} indices The indices to get the structure for.
+     * @returns {Structure | undefined} The structure at the specified indices in the clipboard contents, or `undefined` if no structure is found at the specified indices.
+     */
+    getStructureAtIndices(indices) {
+        return world.structureManager.get(`clipboard:${this.clipboardID},${indices.x},${indices.y},${indices.z}`);
+    }
+    /**
      * Gets all block clipboard IDs.
      *
      * @returns {string[]} An array of all of the block clipboard IDs.
      */
     static getAllClipboardIDs() {
-        return world.getDynamicPropertyIds().filter((v) => v.startsWith("clipboardSize:") && !v.includes(","));
+        return world
+            .getDynamicPropertyIds()
+            .filter((v) => v.startsWith("clipboardSize:") && !v.includes(","))
+            .map((v) => v.replace("clipboardSize:", ""));
     }
     /**
      * Gets all block clipboards.
@@ -260,10 +350,12 @@ export class BlockClipboard {
     /**
      * Gets block clipboards by their IDs.
      *
-     * @param {string[]} clipboardIDs The IDs of the block clipboards to get.
-     * @returns {BlockClipboard[]} An array of the block clipboards with the specified IDs.
+     * @template ClipboardIDs The IDs of the block clipboards to get.
+     * @param {ClipboardIDs} clipboardIDs The IDs of the block clipboards to get.
+     * @returns {{ [K in keyof ClipboardIDs]: BlockClipboard<ClipboardIDs[K]> }} An array of the block clipboards with the specified IDs.
      *
      * @throws {TypeError} If any of the block clipboard IDs contain a comma.
+     * @throws {TypeError} If any of the block clipboard IDs are `global`.
      */
     static getClipboards(clipboardIDs) {
         return clipboardIDs.map((v) => new BlockClipboard(v));
@@ -277,6 +369,7 @@ export class BlockClipboard {
      * @returns {BlockClipboard} The block clipboard.
      *
      * @throws {TypeError} If the block clipboard ID contains a comma.
+     * @throws {TypeError} If the block clipboard ID is `global`.
      */
     static getClipboard(clipboardID) {
         return new BlockClipboard(clipboardID);
@@ -287,6 +380,7 @@ export class BlockClipboard {
      * @param {string} clipboardID The ID of the block clipboard.
      *
      * @throws {TypeError} If the block clipboard ID contains a comma.
+     * @throws {TypeError} If the block clipboard ID is `global`.
      */
     static deleteClipboard(clipboardID) {
         new BlockClipboard(clipboardID).delete();
@@ -310,4 +404,5 @@ export class BlockClipboard {
      */
     static global = GlobalBlockClipboard;
 }
+Object.defineProperty(BlockClipboard, "global", { enumerable: true, writable: false, configurable: true });
 //# sourceMappingURL=BlockClipboard.js.map

@@ -32,6 +32,7 @@ export const registeredDeubgcustomcommandsCommand = CommandRegistry.registerComm
     command_version: "0.0.1",
     categories: ["system", "Entity Scale Add-On", "built-in"],
     ultraSecurityModeSecurityLevel: "admin",
+    syntax: "\\debugcustomcommands",
 });
 registeredDeubgcustomcommandsCommand.categories;
 //# sourceMappingURL=debugcustomcommands.command.js.map

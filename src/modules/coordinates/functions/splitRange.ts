@@ -1,6 +1,6 @@
-export function splitRange([min, max]: [number, number], size: number) {
-    const result = [] as [number, number][];
-    let start = min;
+export function splitRange([min, max]: [min: number, max: number], size: number): [min: number, max: number][] {
+    const result: [min: number, max: number][] = [];
+    let start: number = min;
 
     while (start <= max) {
         const end = Math.min(start + size - 1, max);

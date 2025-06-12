@@ -1,48 +1,43 @@
-import type { Vector3 } from "@minecraft/server";
+import type { Vector3, VectorXZ } from "@minecraft/server";
 import { splitRange } from "./splitRange";
 
 export function* splitArea(
-    area: { from: Vector3; to: Vector3; },
+    area: { from: Vector3; to: Vector3 },
     sizes: Vector3 = { x: 64, y: 128, z: 64 }
-) {
-    const indices = { x: 0, y: 0, z: 0 };
+): Generator<[from: Vector3, to: Vector3, indices: Vector3, offset: Vector3], void, unknown> {
+    const indices: Vector3 = { x: 0, y: 0, z: 0 };
 
-    const xRanges = splitRange([area.from.x, area.to.x], sizes.x);
+    const xRanges: [min: number, max: number][] = splitRange([area.from.x, area.to.x], sizes.x);
 
     for (const xRange of xRanges) {
-        const zRanges = splitRange([area.from.z, area.to.z], sizes.z);
+        const zRanges: [min: number, max: number][] = splitRange([area.from.z, area.to.z], sizes.z);
 
         for (const zRange of zRanges) {
-            const partialRanges = [
+            const partialRanges: [from: VectorXZ, to: VectorXZ] = [
                 { x: xRange[0], z: zRange[0] },
                 { x: xRange[1], z: zRange[1] },
             ];
             const yRanges = splitRange([area.from.y, area.to.y], sizes.y);
 
             for (const yRange of yRanges) {
-                const finalRange = [
+                const finalRange: [from: Vector3, to: Vector3, indices: Vector3, offset: Vector3] = [
                     {
-                        x: partialRanges[0].x,
+                        x: partialRanges[0]!.x,
                         y: yRange[0],
-                        z: partialRanges[0].z,
+                        z: partialRanges[0]!.z,
                     },
                     {
-                        x: partialRanges[1].x,
+                        x: partialRanges[1]!.x,
                         y: yRange[1],
-                        z: partialRanges[1].z,
+                        z: partialRanges[1]!.z,
                     },
-                    Object.assign({}, indices),
+                    { ...indices },
                     {
-                        x: partialRanges[0].x - area.from.x,
+                        x: partialRanges[0]!.x - area.from.x,
                         y: yRange[0] - area.from.y,
-                        z: partialRanges[0].z - area.from.z,
+                        z: partialRanges[0]!.z - area.from.z,
                     },
-                ] as [
-                        from: Vector3,
-                        to: Vector3,
-                        indices: Vector3,
-                        offset: Vector3
-                    ];
+                ];
                 indices.y++;
                 yield finalRange;
             }

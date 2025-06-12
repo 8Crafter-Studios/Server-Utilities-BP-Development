@@ -30,7 +30,7 @@ namespace exports {
          *
          * @public
          */
-        public zero: Vector3 = VECTOR3_ZERO;
+        public zero: {x: 0, y: 0, z: 0} & Vector3 = VECTOR3_ZERO as { x: 0; y: 0; z: 0 };
         /**
          * one
          *
@@ -38,7 +38,7 @@ namespace exports {
          *
          * @public
          */
-        public one: Vector3 = VECTOR3_ONE;
+        public one: {x: 1, y: 1, z: 1} & Vector3 = VECTOR3_ONE as { x: 1; y: 1; z: 1 };
         /**
          * up
          *
@@ -46,7 +46,7 @@ namespace exports {
          *
          * @public
          */
-        public up: Vector3 = VECTOR3_UP;
+        public up: {x: 0, y: 1, z: 0} & Vector3 = VECTOR3_UP as { x: 0; y: 1; z: 0 };
         /**
          * down
          *
@@ -54,34 +54,34 @@ namespace exports {
          *
          * @public
          */
-        public down: Vector3 = VECTOR3_DOWN;
+        public down: {x: 0, y: -1, z: 0} & Vector3 = VECTOR3_DOWN as { x: 0; y: -1; z: 0 };
         /**
          * north
          *
-         * A unit vector representing the world NORTH direction (-1,0,0)
+         * A unit vector representing the world NORTH direction (0,0,1)
          *   (same as FORWARD)
          *
          * @public
          */
-        public north: Vector3 = VECTOR3_NORTH;
+        public north: {x: 0, y: 0, z: 1} & Vector3 = VECTOR3_NORTH as { x: 0; y: 0; z: 1 };
         /**
          * south
          *
-         * A unit vector representing the world SOUTH direction (-1,0,0)
+         * A unit vector representing the world SOUTH direction (0,0,-1)
          *   (same as BACK)
          *
          * @public
          */
-        public south: Vector3 = VECTOR3_SOUTH;
+        public south: {x: 0, y: 0, z: -1} & Vector3 = VECTOR3_SOUTH as { x: 0; y: 0; z: -1 };
         /**
          * east
          *
-         * A unit vector representing the world EAST direction (-1,0,0)
+         * A unit vector representing the world EAST direction (1,0,0)
          *   (same as RIGHT)
          *
          * @public
          */
-        public east: Vector3 = VECTOR3_EAST;
+        public east: {x: 1, y: 0, z: 0} & Vector3 = VECTOR3_EAST as { x: 1; y: 0; z: 0 };
         /**
          * west
          *
@@ -90,7 +90,7 @@ namespace exports {
          *
          * @public
          */
-        public west: Vector3 = VECTOR3_WEST;
+        public west: {x: -1, y: 0, z: 0} & Vector3 = VECTOR3_WEST as { x: -1; y: 0; z: 0 };
         /**
          * right
          *
@@ -98,7 +98,7 @@ namespace exports {
          *
          * @public
          */
-        public right: Vector3 = VECTOR3_RIGHT;
+        public right: {x: 1, y: 0, z: 0} & Vector3 = VECTOR3_RIGHT as { x: 1; y: 0; z: 0 };
         /**
          * left
          *
@@ -106,7 +106,7 @@ namespace exports {
          *
          * @public
          */
-        public left: Vector3 = VECTOR3_LEFT;
+        public left: {x: -1, y: 0, z: 0} & Vector3 = VECTOR3_LEFT as { x: -1; y: 0; z: 0 };
         /**
          * back
          *
@@ -114,7 +114,7 @@ namespace exports {
          *
          * @public
          */
-        public back: Vector3 = VECTOR3_BACK;
+        public back: {x: 0, y: 0, z: -1} & Vector3 = VECTOR3_BACK as { x: 0; y: 0; z: -1 };
         /**
          * forward
          *
@@ -122,7 +122,7 @@ namespace exports {
          *
          * @public
          */
-        public forward: Vector3 = VECTOR3_FORWARD;
+        public forward: {x: 0, y: 0, z: 1} & Vector3 = VECTOR3_FORWARD as { x: 0; y: 0; z: 1 };
         /**
          * zero
          *
@@ -130,7 +130,7 @@ namespace exports {
          *
          * @public
          */
-        public static zero: Vector3 = VECTOR3_ZERO;
+        public static zero: {x: 0, y: 0, z: 0} & Vector3 = VECTOR3_ZERO as { x: 0; y: 0; z: 0 };
         /**
          * one
          *
@@ -138,7 +138,7 @@ namespace exports {
          *
          * @public
          */
-        public static one: Vector3 = VECTOR3_ONE;
+        public static one: {x: 1, y: 1, z: 1} & Vector3 = VECTOR3_ONE as { x: 1; y: 1; z: 1 };
         /**
          * up
          *
@@ -146,7 +146,7 @@ namespace exports {
          *
          * @public
          */
-        public static up: Vector3 = VECTOR3_UP;
+        public static up: {x: 0, y: 1, z: 0} & Vector3 = VECTOR3_UP as { x: 0; y: 1; z: 0 };
         /**
          * down
          *
@@ -154,34 +154,34 @@ namespace exports {
          *
          * @public
          */
-        public static down: Vector3 = VECTOR3_DOWN;
+        public static down: {x: 0, y: -1, z: 0} & Vector3 = VECTOR3_DOWN as { x: 0; y: -1; z: 0 };
         /**
          * north
          *
-         * A unit vector representing the world NORTH direction (-1,0,0)
+         * A unit vector representing the world NORTH direction (0,0,1)
          *   (same as FORWARD)
          *
          * @public
          */
-        public static north: Vector3 = VECTOR3_NORTH;
+        public static north: {x: 0, y: 0, z: 1} & Vector3 = VECTOR3_NORTH as { x: 0; y: 0; z: 1 };
         /**
          * south
          *
-         * A unit vector representing the world SOUTH direction (-1,0,0)
+         * A unit vector representing the world SOUTH direction (0,0,-1)
          *   (same as BACK)
          *
          * @public
          */
-        public static south: Vector3 = VECTOR3_SOUTH;
+        public static south: {x: 0, y: 0, z: -1} & Vector3 = VECTOR3_SOUTH as { x: 0; y: 0; z: -1 };
         /**
          * east
          *
-         * A unit vector representing the world EAST direction (-1,0,0)
+         * A unit vector representing the world EAST direction (1,0,0)
          *   (same as RIGHT)
          *
          * @public
          */
-        public static east: Vector3 = VECTOR3_EAST;
+        public static east: {x: 1, y: 0, z: 0} & Vector3 = VECTOR3_EAST as { x: 1; y: 0; z: 0 };
         /**
          * west
          *
@@ -190,7 +190,7 @@ namespace exports {
          *
          * @public
          */
-        public static west: Vector3 = VECTOR3_WEST;
+        public static west: {x: -1, y: 0, z: 0} & Vector3 = VECTOR3_WEST as { x: -1; y: 0; z: 0 };
         /**
          * right
          *
@@ -198,7 +198,7 @@ namespace exports {
          *
          * @public
          */
-        public static right: Vector3 = VECTOR3_RIGHT;
+        public static right: {x: 1, y: 0, z: 0} & Vector3 = VECTOR3_RIGHT as { x: 1; y: 0; z: 0 };
         /**
          * left
          *
@@ -206,7 +206,7 @@ namespace exports {
          *
          * @public
          */
-        public static left: Vector3 = VECTOR3_LEFT;
+        public static left: {x: -1, y: 0, z: 0} & Vector3 = VECTOR3_LEFT as { x: -1; y: 0; z: 0 };
         /**
          * back
          *
@@ -214,7 +214,7 @@ namespace exports {
          *
          * @public
          */
-        public static back: Vector3 = VECTOR3_BACK;
+        public static back: {x: 0, y: 0, z: -1} & Vector3 = VECTOR3_BACK as { x: 0; y: 0; z: -1 };
         /**
          * forward
          *
@@ -222,7 +222,7 @@ namespace exports {
          *
          * @public
          */
-        public static forward: Vector3 = VECTOR3_FORWARD;
+        public static forward: {x: 0, y: 0, z: 1} & Vector3 = VECTOR3_FORWARD as { x: 0; y: 0; z: 1 };
         public static add = Vector3Utils.add;
         public static clamp = Vector3Utils.clamp;
         public static cross = Vector3Utils.cross;
@@ -245,7 +245,7 @@ namespace exports {
          *
          * Create a string representation of a vector3
          */
-        public static toString = Vector3Utils.toString;
+        public static override toString = Vector3Utils.toString;
     }
 }
 

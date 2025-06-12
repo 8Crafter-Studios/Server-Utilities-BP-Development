@@ -1196,7 +1196,7 @@ if (ultraSecurityModeEnabled && !securityConfiguratorPackIsActive) {
                 await waitTick();
             }
             const r = await showMessage(
-                world.getPlayers({ name: owner })[0],
+                world.getPlayers({ name: owner })[0]!,
                 "§l§cWARNING! §rMissing Required Pack (424)",
                 "Ultra security mode is enabled, but the security configurator pack is not active, §cultra security mode is now disabled. §aPlease add back the security configurator pack to re-enable ultra security mode. Once you add it, you will have to go back into security settings and enable ultra security mode again.",
                 "I understand",
@@ -1222,13 +1222,13 @@ if (ultraSecurityModeEnabled && !securityConfiguratorPackIsActive) {
                 if (i == 100) {
                     return;
                 }
-                if (!!world.getPlayers({ name: owner })[0]) {
+                if (world.getPlayers({ name: owner })[0]) {
                     break;
                 }
                 await waitTick();
             }
             const r = await showMessage(
-                world.getPlayers({ name: owner })[0],
+                world.getPlayers({ name: owner })[0]!,
                 "§l§dINFO! §rEnable Ultra Security Mode",
                 "Security configurator pack has been detected, but you haven't enabled Ultra Security Mode yet. To enable ultra security mode, go to Main Menu > Security > Settings > Security Mode. Note: Only the owner defined in the security configurator pack can enable ultra security mode. If you are seeing this, then you are the defined owner, if you are not the owner, please let the owner know about this so that they can generate a new security configurator pack.",
                 "Open Main Menu",
@@ -1238,7 +1238,7 @@ if (ultraSecurityModeEnabled && !securityConfiguratorPackIsActive) {
                 return;
             }
             if (r.selection == 0) {
-                mainMenu(world.getPlayers({ name: owner })[0]);
+                mainMenu(world.getPlayers({ name: owner })[0]!);
             }
         }
     });
@@ -1654,7 +1654,7 @@ export async function editPermissionForPlayerUI(
             await resetPlayerPermissionsForPlayerUI(player, targetPlayerId, mode !== "player");
             return 1;
         default:
-            if ((await editPermissionForPlayerUI_permission(player, targetPlayerId, perms[r.selection!][1], mode)) == 1) {
+            if ((await editPermissionForPlayerUI_permission(player, targetPlayerId, perms[r.selection!]![1], mode)) == 1) {
                 return await editPermissionForPlayerUI(player, targetPlayerId, mode);
             } else {
                 return 0;
@@ -1748,22 +1748,22 @@ async function editPermissionForPlayerUI_permission(
                 for (let i = 0; i < perm.additionalPrompts.length; i++) {
                     const r = await showMessage(
                         player,
-                        perm.additionalPrompts[i].title,
-                        perm.additionalPrompts[i].prompt,
-                        perm.additionalPrompts[i].default ? "Yes" : "No",
-                        perm.additionalPrompts[i].default ? "No" : "Yes"
+                        perm.additionalPrompts[i]!.title,
+                        perm.additionalPrompts[i]!.prompt,
+                        perm.additionalPrompts[i]!.default ? "Yes" : "No",
+                        perm.additionalPrompts[i]!.default ? "No" : "Yes"
                     );
                     if (r.canceled) {
                         return 1;
                     }
                     if (r.selection == 0) {
-                        if ((perm.additionalPrompts[i].default as boolean) == true) {
+                        if ((perm.additionalPrompts[i]!.default as boolean) == true) {
                             continue;
                         } else {
                             return 1;
                         }
                     }
-                    if ((perm.additionalPrompts[i].default as boolean) == false) {
+                    if ((perm.additionalPrompts[i]!.default as boolean) == false) {
                         continue;
                     } else {
                         return 1;
@@ -1969,7 +1969,7 @@ form.button("Debug Screen", "textures/ui/ui_debug_glyph_color");*/
     if (r.canceled || r.selection == commandCategoriesDisplay.length) {
         return 1;
     }
-    if ((await selectCommandsUltraSecurityModeSecurityLevelOverrides_category(player, cmdslist.commandCategoryList[r.selection!])) == 1) {
+    if ((await selectCommandsUltraSecurityModeSecurityLevelOverrides_category(player, cmdslist.commandCategoryList[r.selection!]!)) == 1) {
         return await commandsUltraSecurityModeSecurityLevelOverridesEditor_categories(player);
     } else {
         return 0;
@@ -2104,7 +2104,7 @@ form.button("Debug Screen", "textures/ui/ui_debug_glyph_color");*/
     if (r.canceled || r.selection == commandCategoriesDisplay.length) {
         return 1;
     }
-    if ((await commandsUltraSecurityModeSecurityLevelOverridesEditor_commands_category(player, cmdslist.commandCategoryList[r.selection!])) == 1) {
+    if ((await commandsUltraSecurityModeSecurityLevelOverridesEditor_commands_category(player, cmdslist.commandCategoryList[r.selection!]!)) == 1) {
         return await commandsUltraSecurityModeSecurityLevelOverridesEditor_commands(player);
     } else {
         return 0;
@@ -2162,9 +2162,9 @@ form.button("Debug Screen", "textures/ui/ui_debug_glyph_color");*/
         return 1;
     }
     if (
-        (await (commands[r.selection!].type == "built-in"
-            ? selectCommandsUltraSecurityModeSecurityLevelOverrides_command_builtIn(player, commands[r.selection!] as command<"built-in">)
-            : selectCommandsUltraSecurityModeSecurityLevelOverrides_command_custom(player, commands[r.selection!] as command<"custom">))) == 1
+        (await (commands[r.selection!]!.type == "built-in"
+            ? selectCommandsUltraSecurityModeSecurityLevelOverrides_command_builtIn(player, commands[r.selection!]! as command<"built-in">)
+            : selectCommandsUltraSecurityModeSecurityLevelOverrides_command_custom(player, commands[r.selection!]! as command<"custom">))) == 1
     ) {
         return await commandsUltraSecurityModeSecurityLevelOverridesEditor_commands(player);
     } else {
@@ -2612,7 +2612,7 @@ export async function managePermissionsPresets(player: Player): Promise<0 | 1 | 
         case Object.values(permissionPresetMap).length + 1:
             return 0;
         default:
-            if ((await editPermissionForPlayerUI(player, Object.values(permissionPresetMap)[r.selection!], "preset")) == 1) {
+            if ((await editPermissionForPlayerUI(player, Object.values(permissionPresetMap)[r.selection!]!, "preset")) == 1) {
                 return await managePermissionsPresets(player);
             } else {
                 return 0;

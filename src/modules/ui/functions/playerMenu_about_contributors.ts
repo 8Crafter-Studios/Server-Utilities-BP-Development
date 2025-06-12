@@ -30,7 +30,7 @@ export async function playerMenu_about_contributors(sourceEntitya: Entity | exec
             let r = ra as ActionFormResponse;
             if (r.canceled) return 1;
 
-            switch ((["8Crafter", "StormStqr", "terpyFTP", "back", "close"] as const)[r.selection!]) {
+            switch ((["8Crafter", "StormStqr", "terpyFTP", "back", "close"] as const)[r.selection!]!) {
                 case "8Crafter":
                     if (
                         (

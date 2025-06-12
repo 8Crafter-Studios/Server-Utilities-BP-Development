@@ -82,7 +82,7 @@ export class AreaBackup {
                 world.structureManager
                     .getWorldStructureIds()
                     .filter((v) => v.startsWith(`${this.id};`))
-                    .map((v) => Number(v.split(";")[1].split(",")[0]))
+                    .map((v) => Number(v.split(";")[1]!.split(",")[0]))
             ),
         ]
             .sort()
@@ -215,7 +215,7 @@ export class AreaBackup {
      * @returns {1 | 0} `1` if successful, `0` if not.
      */
     public rollback(
-        saveTime: number = this.backups[0],
+        saveTime: number = this.backups[0]!,
         clearSave: boolean = false,
         options?: StructurePlaceOptions,
         sizes: Vector3 = { x: 64, y: 128, z: 64 }

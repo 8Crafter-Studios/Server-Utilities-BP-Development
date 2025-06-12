@@ -20,14 +20,14 @@ export function fillBlocks(
                 mainArray.push(
                     new BlockVolume(
                         {
-                            x: subArray.sort((a, b) => a.x - b.x)[0].x,
-                            y: subArray.sort((a, b) => a.y - b.y)[0].y,
-                            z: subArray.sort((a, b) => a.z - b.z)[0].z,
+                            x: subArray.sort((a, b) => a.x - b.x)[0]!.x,
+                            y: subArray.sort((a, b) => a.y - b.y)[0]!.y,
+                            z: subArray.sort((a, b) => a.z - b.z)[0]!.z,
                         },
                         {
-                            x: subArray.sort((a, b) => b.x - a.x)[0].x,
-                            y: subArray.sort((a, b) => b.y - a.y)[0].y,
-                            z: subArray.sort((a, b) => b.z - a.z)[0].z,
+                            x: subArray.sort((a, b) => b.x - a.x)[0]!.x,
+                            y: subArray.sort((a, b) => b.y - a.y)[0]!.y,
+                            z: subArray.sort((a, b) => b.z - a.z)[0]!.z,
                         }
                     )
                 );

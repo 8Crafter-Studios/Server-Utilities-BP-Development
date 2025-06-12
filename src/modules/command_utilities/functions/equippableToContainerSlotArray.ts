@@ -10,7 +10,7 @@ export function equippableToContainerSlotArray(
     for (let i = 0; i < 5 + Number(includeMainhand); i++) {
         itemList.push(
             equippable?.getEquipmentSlot(
-                includeMainhand ? EquipmentSlots[i] : OtherEquipmentSlots[i]
+                includeMainhand ? EquipmentSlots[i]! : OtherEquipmentSlots[i]!
             )
         );
     }

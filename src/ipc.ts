@@ -101,7 +101,7 @@ export namespace PROTO {
 
       let str = '(0x'
       for (let i = 0; i < uint8array.length; i++) {
-        const hex = uint8array[i].toString(16).padStart(2, '0').toUpperCase()
+        const hex = uint8array[i]!.toString(16).padStart(2, '0').toUpperCase()
         str += hex
         yield
       }
@@ -341,13 +341,13 @@ export namespace PROTO {
     return {
       *serialize(tuple, stream) {
         for (let i = 0; i < values.length; i++) {
-          yield* values[i].serialize(tuple[i], stream)
+          yield* values[i]!.serialize(tuple[i], stream)
         }
       },
       *deserialize(stream) {
         const result: any[] = []
         for (let i = 0; i < values.length; i++) {
-          result[i] = yield* values[i].deserialize(stream)
+          result[i] = yield* values[i]!.deserialize(stream)
         }
         return result as T
       }

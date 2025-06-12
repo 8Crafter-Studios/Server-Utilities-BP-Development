@@ -1,2 +1,11 @@
-export function objectify(object: Object | any[]) { let entries = Object.entries(object); entries.forEach((v, i) => { if (v[1] instanceof Array) { entries[i][1] = objectify(v[1]); } else if (v[1] instanceof Object) { entries[i][1] = objectify(v[1]); } }); return Object.fromEntries(entries); }
-;
+export function objectify(object: Object | any[]): { [k: string]: any; } {
+    let entries = Object.entries(object);
+    entries.forEach((v, i) => {
+        if (v[1] instanceof Array) {
+            entries[i]![1] = objectify(v[1]);
+        } else if (v[1] instanceof Object) {
+            entries[i]![1] = objectify(v[1]);
+        }
+    });
+    return Object.fromEntries(entries);
+}

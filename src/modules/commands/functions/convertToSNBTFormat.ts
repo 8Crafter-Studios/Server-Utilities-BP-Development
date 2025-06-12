@@ -1,14 +1,14 @@
 export function convertToSNBTFormat(parsedNBT: { structure: { block_indices: any[][]; palette: { default: { block_palette: any[]; }; }; }; size: number[]; }) {
     //var blocks = []
     var blocksb: { pos: number[]; state: any; }[] = [];
-    parsedNBT.structure.block_indices[0].forEach((b: number, i: number) => b != -1
+    parsedNBT.structure.block_indices[0]!.forEach((b: number, i: number) => b != -1
         ? blocksb.push({
             pos: [
-                i % parsedNBT.size[2],
-                Math.floor(i / (parsedNBT.size[0] * parsedNBT.size[2])),
+                i % parsedNBT.size[2]!,
+                Math.floor(i / (parsedNBT.size[0]! * parsedNBT.size[2]!)),
                 Math.floor(
-                    (i % (parsedNBT.size[0] * parsedNBT.size[2])) /
-                    parsedNBT.size[0]
+                    (i % (parsedNBT.size[0]! * parsedNBT.size[2]!)) /
+                    parsedNBT.size[0]!
                 ),
             ],
             state: b,

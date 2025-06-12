@@ -40,8 +40,8 @@ import { getTopSolidBlock } from "modules/main/functions/getTopSolidBlock";
 import { command } from "modules/commands/classes/command";
 import { disconnectingPlayers } from "modules/commands/constants/disconnectingPlayers";
 import { AreaBackups } from "modules/coordinates/classes/AreaBackups";
-import { BlockClipboard } from "modules/coordinates/classes/BlockClipboard";
-import { undoClipboard } from "modules/coordinates/classes/undoClipboard";
+import { BlockClipboard, GlobalBlockClipboard } from "modules/coordinates/classes/BlockClipboard";
+import { UndoClipboard } from "modules/coordinates/classes/UndoClipboard";
 import { WorldPosition } from "modules/coordinates/classes/WorldPosition";
 import { caretNotationC } from "modules/coordinates/functions/caretNotationC";
 import { chunkIndexToBoundingBox } from "modules/coordinates/functions/chunkIndexToBoundingBox";
@@ -148,6 +148,7 @@ import { protectedAreaCategories, ProtectedAreas } from "init/variables/protecte
 import { securityVariables } from "security/ultraSecurityModeUtils";
 import { TeleportRequest } from "modules/coordinates/classes/TeleportRequest";
 import { biomeToDefaultTerrainDetailsMap, generateTerrainV2 } from "modules/utilities/functions/generateTerrain";
+import { overlayArea } from "modules/block_generation_utilities/functions/overlayArea";
 export function chatCommands(params) {
     let returnBeforeChatSend = params.returnBeforeChatSend ?? false;
     let playerab = params.player ?? params.eventData?.sender ?? params.event?.sender;
@@ -364,7 +365,7 @@ export function chatCommands(params) {
                             .get(v.commandName, "custom")
                             .testCanPlayerUseCommand(player)));
     } /*
-        let commanda = commands.find(v=>(newMessage.startsWith(String(world.getDynamicProperty("andexdbSettings:chatCommandPrefix") ?? "\\"))&&(command.get(v.commandName, "built-in").settings.enabled&&(!!(switchTest.match((command.get(v.commandName, "built-in").regexp))))))&&(command.get(v.commandName, "built-in").testCanPlayerUseCommand(player)))??command.getCustomCommands().find(v=>(v.settings.enabled&&((v.customCommandPrefix==undefined||v.customCommandPrefix=="")&&(!!switchTest.match(v.regexp)))||((v.customCommandPrefix!=""&&!!v.customCommandPrefix)&&newMessage.split(" ")[0].startsWith(v.customCommandPrefix)&&(!!newMessage.split(" ")[0].slice(v.customCommandPrefix.length).match(v.regexp))&&(command.get(v.commandName, "custom").testCanPlayerUseCommand(player)))))*/
+        let commanda = commands.find(v=>(newMessage.startsWith(String(world.getDynamicProperty("andexdbSettings:chatCommandPrefix") ?? "\\"))&&(command.get(v.commandName, "built-in").settings.enabled&&(!!(switchTest.match((command.get(v.commandName, "built-in").regexp))))))&&(command.get(v.commandName, "built-in").testCanPlayerUseCommand(player)))??command.getCustomCommands().find(v=>(v.settings.enabled&&((v.customCommandPrefix==undefined||v.customCommandPrefix=="")&&(!!switchTest.match(v.regexp)))||((v.customCommandPrefix!=""&&!!v.customCommandPrefix)&&newMessage.split(" ")[0]!.startsWith(v.customCommandPrefix)&&(!!newMessage.split(" ")[0]!.slice(v.customCommandPrefix.length).match(v.regexp))&&(command.get(v.commandName, "custom").testCanPlayerUseCommand(player)))))*/
     if (commanda?.type == "server_shop") {
         eventData.cancel = true;
         if (config.shopSystem.server.enabled) {
@@ -521,7 +522,7 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventorye.container.swapItems(i,
             case !!switchTest.match(/^h\d*$/):
                 eventData.cancel = true;
                 try {
-                    /*player.sendMessageB([String(Number(switchTestB.split(" ")[1] ?? 0)+1), String(switchTestB.split(" ")[0].slice(1))]); */
+                    /*player.sendMessageB([String(Number(switchTestB.split(" ")[1] ?? 0)+1), String(switchTestB.split(" ")[0]!.slice(1))]); */
                     hotbarSwap(Number(switchTestB.split(" ")[1] ?? 0) + 1, Number(switchTestB.split(" ")[0].slice(1)));
                 }
                 catch (e) {
@@ -1608,9 +1609,9 @@ break; */
                 eventData.cancel = true;
                 system.run(() => {
                     /*
-                console.warn(switchTestB.split(" ")[1].trim(), switchTestB.split(" ").slice(2).join(" ").trim(), player.location, player.getViewDirection())
+                console.warn(switchTestB.split(" ")[1]!.trim(), switchTestB.split(" ").slice(2).join(" ").trim(), player.location, player.getViewDirection())
                 console.warn(JSONStringify(coordinatesB(switchTestB.split(" ").slice(2).join(" ").trim(), player.location, player.getViewDirection())))
-                console.warn(JSONStringify(world.getDimension(switchTestB.split(" ")[1].trim())))*/
+                console.warn(JSONStringify(world.getDimension(switchTestB.split(" ")[1]!.trim())))*/
                     let block = world
                         .getDimension(switchTestB
                         .split(" ")[1]
@@ -4983,8 +4984,8 @@ case !!switchTest.match(/^settings$/):
     srun(()=>{
         switch (Math.min(newMessage.split(" ").length, 3)){
             case 3:
-                try{player.runCommand("/scriptevent andexdb:setWorldDynamicPropertyB " + newMessage.slice(10).split(" ")[0] + "|" + newMessage.slice(newMessage.split(" ")[1].length+10))}catch(e){player.sendError("§c" + e + e.stack, true)}
-                try{eventData.sender.sendMessage("Set " + newMessage.split(" ")[1] + " to " + newMessage.slice(newMessage.split(" ")[1].length+10)); }catch(e){player.sendError("§c" + e + e.stack, true)}
+                try{player.runCommand("/scriptevent andexdb:setWorldDynamicPropertyB " + newMessage.slice(10).split(" ")[0] + "|" + newMessage.slice(newMessage.split(" ")[1]!.length+10))}catch(e){player.sendError("§c" + e + e.stack, true)}
+                try{eventData.sender.sendMessage("Set " + newMessage.split(" ")[1] + " to " + newMessage.slice(newMessage.split(" ")[1]!.length+10)); }catch(e){player.sendError("§c" + e + e.stack, true)}
             break;
             case 2:
                 try{eventData.sender.sendMessage("Setting " + newMessage.split(" ")[1] + ": " + world.getDynamicProperty(newMessage.split(" ")[1])); }catch(e){player.sendError("§c" + e + e.stack, true)}
@@ -9049,7 +9050,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstbl
                     catch (e) {
                         player.sendError("§c" + e + e.stack, true);
                     }
-                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2][0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1).split(" ")[0], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
+                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2]![0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1).split(" ")[0]!, extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
                 }
                 break;
             case !!switchTest.match(/^ifill$/):
@@ -10246,7 +10247,7 @@ ${command.dp}ifill <center: x y z> <radius: x y z> <offset: x y z> <length: floa
                             default:
                         }
                     }
-                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2][0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1).split(" ")[0], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
+                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2]![0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1).split(" ")[0]!, extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
                 }
                 break;
             case !!switchTest.match(/^itfill$/):
@@ -12046,7 +12047,7 @@ ${command.dp}itfill <center: x y z> <radius: x y z> <offset: x y z> <length: flo
                             default:
                         }
                     }
-                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2][0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1).split(" ")[0], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
+                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2]![0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1).split(" ")[0]!, extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
                 }
                 break;
             case !!switchTest.match(/^idtfill$/):
@@ -14034,7 +14035,7 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                             default:
                         }
                     }
-                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2][0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1).split(" ")[0], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
+                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2]![0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1).split(" ")[0]!, extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
                 }
                 break;
             case !!switchTest.match(/^ifillc$/):
@@ -14241,7 +14242,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstbl
                             player.sendError("§c" + e + e.stack, true);
                         }
                     });
-                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2][0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1).split(" ")[0], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
+                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2]![0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1).split(" ")[0]!, extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
                 }
                 break;
             case !!switchTest.match(/^ifilld$/):
@@ -14448,7 +14449,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstbl
                             player.sendError("§c" + e + e.stack, true);
                         }
                     });
-                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2][0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1).split(" ")[0], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
+                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2]![0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1).split(" ")[0]!, extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
                 }
                 break;
             case !!switchTest.match(/^itfillc$/):
@@ -14676,7 +14677,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstbl
                             player.sendError("§c" + e + e.stack, true);
                         }
                     });
-                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2][0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1).split(" ")[0], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
+                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2]![0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1).split(" ")[0]!, extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
                 }
                 break;
             case !!switchTest.match(/^iwalls$/):
@@ -14883,7 +14884,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstbl
                             player.sendError("§c" + e + e.stack, true);
                         }
                     });
-                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2][0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1).split(" ")[0], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
+                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2]![0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1).split(" ")[0]!, extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
                 }
                 break;
             case !!switchTest.match(/^itwalls$/):
@@ -14903,7 +14904,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstbl
                     let argsaextra = argsa.extra;
                     let coordinatesa = evaluateCoordinates(args[1], args[2], args[3], player.location, player.getRotation());
                     let coordinatesb = evaluateCoordinates(args[4], args[5], args[6], player.location, player.getRotation());
-                    //let firstblocknameindex = Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1
+                    //let firstblocknameindex = Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1
                     //let reststringaftercoordinates = switchTestB.split(" ").slice(1).join(" ").slice(firstblocknameindex)
                     let firstblockname = args[7];
                     let firstblockstates = argsa.extra
@@ -15025,7 +15026,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstbl
                             player.sendError("§c" + e + e.stack, true);
                         }
                     });
-                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2][0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1).split(" ")[0], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
+                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2]![0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1).split(" ")[0]!, extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
                 }
                 break;
             case !!switchTest.match(/^ihollow$/):
@@ -15232,7 +15233,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstbl
                             player.sendError("§c" + e + e.stack, true);
                         }
                     });
-                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2][0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1).split(" ")[0], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
+                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2]![0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1).split(" ")[0]!, extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
                 }
                 break;
             case !!switchTest.match(/^ithollow$/):
@@ -15252,7 +15253,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstbl
                     let argsaextra = argsa.extra;
                     let coordinatesa = evaluateCoordinates(args[1], args[2], args[3], player.location, player.getRotation());
                     let coordinatesb = evaluateCoordinates(args[4], args[5], args[6], player.location, player.getRotation());
-                    //let firstblocknameindex = Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1
+                    //let firstblocknameindex = Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1
                     //let reststringaftercoordinates = switchTestB.split(" ").slice(1).join(" ").slice(firstblocknameindex)
                     let firstblockname = args[7];
                     let firstblockstates = argsa.extra
@@ -15376,7 +15377,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstbl
                             player.sendError("§c" + e + e.stack, true);
                         }
                     });
-                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2][0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1).split(" ")[0], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
+                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2]![0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1).split(" ")[0]!, extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
                 }
                 break;
             case !!switchTest.match(/^ioutline$/):
@@ -15583,7 +15584,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstbl
                             player.sendError("§c" + e + e.stack, true);
                         }
                     });
-                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2][0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1).split(" ")[0], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
+                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2]![0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1).split(" ")[0]!, extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
                 }
                 break;
             case !!switchTest.match(/^itoutline$/):
@@ -15603,7 +15604,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstbl
                     let argsaextra = argsa.extra;
                     let coordinatesa = evaluateCoordinates(args[1], args[2], args[3], player.location, player.getRotation());
                     let coordinatesb = evaluateCoordinates(args[4], args[5], args[6], player.location, player.getRotation());
-                    //let firstblocknameindex = Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1
+                    //let firstblocknameindex = Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1
                     //let reststringaftercoordinates = switchTestB.split(" ").slice(1).join(" ").slice(firstblocknameindex)
                     let firstblockname = args[7];
                     let firstblockstates = argsa.extra
@@ -15725,7 +15726,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstbl
                             player.sendError("§c" + e + e.stack, true);
                         }
                     });
-                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2][0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1).split(" ")[0], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
+                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2]![0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1).split(" ")[0]!, extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
                 }
                 break;
             case !!switchTest.match(/^ipillars$/):
@@ -15932,7 +15933,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstbl
                             player.sendError("§c" + e + e.stack, true);
                         }
                     });
-                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2][0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1).split(" ")[0], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
+                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2]![0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1).split(" ")[0]!, extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
                 }
                 break;
             case !!switchTest.match(/^itpillars$/):
@@ -15952,7 +15953,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstbl
                     let argsaextra = argsa.extra;
                     let coordinatesa = evaluateCoordinates(args[1], args[2], args[3], player.location, player.getRotation());
                     let coordinatesb = evaluateCoordinates(args[4], args[5], args[6], player.location, player.getRotation());
-                    //let firstblocknameindex = Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1
+                    //let firstblocknameindex = Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1
                     //let reststringaftercoordinates = switchTestB.split(" ").slice(1).join(" ").slice(firstblocknameindex)
                     let firstblockname = args[7];
                     let firstblockstates = argsa.extra
@@ -16074,7 +16075,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstbl
                             player.sendError("§c" + e + e.stack, true);
                         }
                     });
-                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2][0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1).split(" ")[0], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
+                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2]![0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1).split(" ")[0]!, extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
                 }
                 break;
             case !!switchTest.match(/^igfill$/):
@@ -16280,7 +16281,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstbl
                     catch (e) {
                         player.sendError("§c" + e + e.stack, true);
                     }
-                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2][0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1).split(" ")[0], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
+                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2]![0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1).split(" ")[0]!, extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
                 }
                 break;
             case !!switchTest.match(/^iogfill$/):
@@ -16486,7 +16487,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstbl
                     catch (e) {
                         player.sendError("§c" + e + e.stack, true);
                     }
-                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2][0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1).split(" ")[0], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
+                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2]![0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1).split(" ")[0]!, extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
                 }
                 break;
             case !!switchTest.match(/^stopgen$/):
@@ -16499,7 +16500,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstbl
                     catch (e) {
                         player.sendError("§c" + e + e.stack, true);
                     }
-                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2][0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1).split(" ")[0], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
+                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2]![0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1).split(" ")[0]!, extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
                 }
                 break;
             case !!switchTest.match(/^ingfill$/):
@@ -16702,7 +16703,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstbl
                     catch (e) {
                         player.sendError("§c" + e + e.stack, true);
                     }
-                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2][0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1).split(" ")[0], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
+                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2]![0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1).split(" ")[0]!, extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
                 }
                 break;
             case !!switchTest.match(/^iongfill$/):
@@ -16904,7 +16905,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstbl
                     catch (e) {
                         player.sendError("§c" + e + e.stack, true);
                     }
-                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2][0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1).split(" ")[0], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
+                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2]![0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1).split(" ")[0]!, extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
                 }
                 break;
             case !!switchTest.match(/^ifillb$/):
@@ -17107,7 +17108,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstbl
                     catch (e) {
                         player.sendError("§c" + e + e.stack, true);
                     }
-                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2][0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1).split(" ")[0], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
+                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2]![0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1).split(" ")[0]!, extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
                 }
                 break;
             case !!switchTest.match(/^cloneitem$/):
@@ -17142,7 +17143,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstbl
             case !!switchTest.match(/^copyitemfrom$/):
                 {
                     //world.scoreboard.getObjective("MinsDisplay").getParticipants().filter(p=>!!!tryget(()=>p.getEntity())).forEach(p=>world.scoreboard.getObjective("balance").removeParticipant(p))
-                    //if((world.scoreboard.getObjective("balance").getScore(player)??0)>JSON.parse(world.getDynamicProperty("shop:costs"))[r.selection!]){world.scoreboard.getObjective("balance").addScore(player, -(JSON.parse(world.getDynamicProperty("shop:costs"))[r.selection!])); player.getComponent("inventory")!.container.addItem(cmds.overworld.getBlock({x: 823, y: 84, z: 1037}).getComponent("inventory")!.container.getItem(r.selection))}
+                    //if((world.scoreboard.getObjective("balance").getScore(player)??0)>JSON.parse(world.getDynamicProperty("shop:costs"))[r.selection!]!){world.scoreboard.getObjective("balance").addScore(player, -(JSON.parse(world.getDynamicProperty("shop:costs"))[r.selection!]!)); player.getComponent("inventory")!.container.addItem(cmds.overworld.getBlock({x: 823, y: 84, z: 1037}).getComponent("inventory")!.container.getItem(r.selection))}
                     //${se}swdp("shop:costs", "[20, 50, 70, 80]")
                     eventData.cancel = true;
                     let args = evaluateParameters(switchTestB, [
@@ -17204,7 +17205,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstbl
             case !!switchTest.match(/^copyitem$/):
                 {
                     //world.scoreboard.getObjective("MinsDisplay").getParticipants().filter(p=>!!!tryget(()=>p.getEntity())).forEach(p=>world.scoreboard.getObjective("balance").removeParticipant(p))
-                    //if((world.scoreboard.getObjective("balance").getScore(player)??0)>JSON.parse(world.getDynamicProperty("shop:costs"))[r.selection!]){world.scoreboard.getObjective("balance").addScore(player, -(JSON.parse(world.getDynamicProperty("shop:costs"))[r.selection!])); player.getComponent("inventory")!.container.addItem(cmds.overworld.getBlock({x: 823, y: 84, z: 1037}).getComponent("inventory")!.container.getItem(r.selection))}
+                    //if((world.scoreboard.getObjective("balance").getScore(player)??0)>JSON.parse(world.getDynamicProperty("shop:costs"))[r.selection!]!){world.scoreboard.getObjective("balance").addScore(player, -(JSON.parse(world.getDynamicProperty("shop:costs"))[r.selection!]!)); player.getComponent("inventory")!.container.addItem(cmds.overworld.getBlock({x: 823, y: 84, z: 1037}).getComponent("inventory")!.container.getItem(r.selection))}
                     //${se}swdp("shop:costs", "[20, 50, 70, 80]")
                     eventData.cancel = true;
                     system.run(() => {
@@ -17277,7 +17278,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstbl
                         }
                         player.sendMessageB(`Successfully duped item in slot ${String(args[1])}. `);
                     }); /*
-            system.run(()=>{let slot = [EquipmentSlot.Head, EquipmentSlot.Chest,  EquipmentSlot.Legs, EquipmentSlot.Feet, EquipmentSlot.Mainhand, EquipmentSlot.Offhand][["head", "chest", "legs", "feet", "mainhand", "offhand", "helmet", "chestplate", "leggings", "boots", "hand", "otherhand", "cap", "tunic", "pants", "shoes", "righthand", "lefthand"].findIndex(v=>v==switchTestB.split(" ")[1]?.trim()?.toLowerCase())%6]??Number((!!!switchTestB.split(" ")[1]?.trim()?"~":switchTestB.split(" ")[1].trim()).replaceAll("~", String(player.selectedSlotIndex))); let fromSlot = typeof slot == "string"?player.getComponent("equippable")!.getEquipmentSlot(slot):player.getComponent("inventory")!.container.getSlot(slot); player.getComponent("inventory")!.container.addItem(player.getComponent("inventory")!.container.getItem(event.sender.selectedSlotIndex).clone())})*/
+            system.run(()=>{let slot = [EquipmentSlot.Head, EquipmentSlot.Chest,  EquipmentSlot.Legs, EquipmentSlot.Feet, EquipmentSlot.Mainhand, EquipmentSlot.Offhand][["head", "chest", "legs", "feet", "mainhand", "offhand", "helmet", "chestplate", "leggings", "boots", "hand", "otherhand", "cap", "tunic", "pants", "shoes", "righthand", "lefthand"].findIndex(v=>v==switchTestB.split(" ")[1]?.trim()?.toLowerCase())%6]??Number((!!!switchTestB.split(" ")[1]?.trim()?"~":switchTestB.split(" ")[1]!.trim()).replaceAll("~", String(player.selectedSlotIndex))); let fromSlot = typeof slot == "string"?player.getComponent("equippable")!.getEquipmentSlot(slot):player.getComponent("inventory")!.container.getSlot(slot); player.getComponent("inventory")!.container.addItem(player.getComponent("inventory")!.container.getItem(event.sender.selectedSlotIndex).clone())})*/
                 }
                 break;
             case !!switchTest.match(/^transferitem$/):
@@ -19319,7 +19320,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstbl
                                     })(), dimensiona).then(async (tac) => {
                                         ta = tac;
                                         try {
-                                            undoClipboard.save(dimensiona, { from: ca, to: cb }, Date.now(), {
+                                            UndoClipboard.getClipboard(`player_${player.id}`).save(dimensiona, { from: ca, to: cb }, Date.now(), {
                                                 includeBlocks: true,
                                                 includeEntities: false,
                                                 saveMode: config.undoClipboardMode,
@@ -19472,7 +19473,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstbl
                             nameIsCaseSensitive: false,
                         },
                     ]).args;
-                    console.log(JSONB.stringify(args));
+                    // console.log(JSONB.stringify(args));
                     const ca = player.worldEditSelection.minPos;
                     const cb = player.worldEditSelection.maxPos;
                     const dimensiona = player.worldEditSelection.dimension;
@@ -19504,7 +19505,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstbl
                                 })(), dimensiona).then(async (tac) => {
                                     ta = tac;
                                     try {
-                                        undoClipboard.save(dimensiona, { from: ca, to: cb }, Date.now(), {
+                                        UndoClipboard.getClipboard(`player_${player.id}`).save(dimensiona, { from: ca, to: cb }, Date.now(), {
                                             includeBlocks: true,
                                             includeEntities: false,
                                             saveMode: config.undoClipboardMode,
@@ -19620,7 +19621,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     })(), dimensiona).then((tac) => {
                                         ta = tac;
                                         try {
-                                            undoClipboard.save(dimensiona, { from: ca, to: cb }, Date.now(), {
+                                            UndoClipboard.getClipboard(`player_${player.id}`).save(dimensiona, { from: ca, to: cb }, Date.now(), {
                                                 includeBlocks: true,
                                                 includeEntities: false,
                                                 saveMode: config.undoClipboardMode,
@@ -19631,6 +19632,114 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                         }
                                         try {
                                             mazeGenerator(ca, cb, dimensiona, { wallBlockType: tryget(() => BlockPermutation.resolve(wallBlock.id, wallBlock.states)) ?? BlockPermutation.resolve("stone"), airBlockType: tryget(() => BlockPermutation.resolve(airBlock.id, airBlock.states)) ?? BlockPermutation.resolve("air"), complexity, entranceDirection, exitDirection });
+                                        }
+                                        catch (e) {
+                                            player.sendError("§c" + e + e.stack, true);
+                                        }
+                                        finally {
+                                            tac.forEach((tab) => tab?.remove());
+                                        }
+                                    });
+                                }
+                                catch (e) {
+                                    player.sendError("§c" + e + e.stack, true);
+                                }
+                            });
+                        }
+                    }
+                }
+                break;
+            case !!switchTest.match(/^\\overlay$/):
+                {
+                    eventData.cancel = true;
+                    const args = evaluateParameters(switchTestB, [
+                        "presetText",
+                        "f-sp",
+                        {
+                            name: "layers",
+                            type: "ignorableNamedParameter",
+                            key: "layers",
+                            valueType: "number",
+                        },
+                        "blockPattern",
+                        "blockMask",
+                    ]).args;
+                    const firstblockpattern = args[2];
+                    const mask = args[3];
+                    const coordinatesa = player.getDynamicProperty("pos1");
+                    const coordinatesb = player.getDynamicProperty("pos2");
+                    const ca = {
+                        x: Math.min(coordinatesa?.x, coordinatesb?.x),
+                        y: Math.min(coordinatesa?.y, coordinatesb?.y),
+                        z: Math.min(coordinatesa?.z, coordinatesb?.z),
+                    };
+                    const cb = {
+                        x: Math.max(coordinatesa?.x, coordinatesb?.x),
+                        y: Math.max(coordinatesa?.y, coordinatesb?.y),
+                        z: Math.max(coordinatesa?.z, coordinatesb?.z),
+                    };
+                    const dimensiona = world.getDimension((player.getDynamicProperty("posD") ??
+                        player.dimension.id));
+                    if (!!!coordinatesa) {
+                        player.sendError("§cError: pos1 is not set.", true);
+                    }
+                    else {
+                        if (!!!coordinatesb) {
+                            player.sendError("§cError: pos2 is not set.", true);
+                        }
+                        else {
+                            system.run(() => {
+                                let ta;
+                                try {
+                                    generateTickingAreaFillCoordinatesC(player.location, (() => {
+                                        let a = new CompoundBlockVolume();
+                                        a.pushVolume({
+                                            volume: new BlockVolume(ca, cb),
+                                        });
+                                        return a;
+                                    })(), dimensiona).then((tac) => {
+                                        ta = tac;
+                                        try {
+                                            UndoClipboard.getClipboard(`player_${player.id}`).save(dimensiona, { from: ca, to: cb }, Date.now(), {
+                                                includeBlocks: true,
+                                                includeEntities: false,
+                                                saveMode: config.undoClipboardMode,
+                                            });
+                                        }
+                                        catch (e) {
+                                            player.sendMessageB("§c" + e + " " + e.stack);
+                                        }
+                                        const blocktypes = BlockTypes.getAll();
+                                        try {
+                                            overlayArea(ca, cb, dimensiona, (l, i) => {
+                                                const b = firstblockpattern.generateBlock(i);
+                                                return b.type == "random"
+                                                    ? BlockPermutation.resolve(blocktypes[Math.floor(blocktypes.length *
+                                                        Math.random())].id)
+                                                    : BlockPermutation.resolve(b.type, b.states);
+                                            }, {
+                                                blockMask: mask,
+                                                minMSBetweenTickWaits: config.system.defaultMinMSBetweenTickWaits,
+                                                integrity: 100,
+                                                liteMode: false,
+                                                layers: args.layers ?? undefined,
+                                                onlySolid: args[1].s,
+                                                pillarSequencePatternMode: args[1].p,
+                                            }).then((a) => {
+                                                player.sendMessageB(`${a.counter == 0n
+                                                    ? "§c"
+                                                    : ""}${a.counter} blocks overlayed in ${a.endTime -
+                                                    a.startTime} ms over ${a.endTick -
+                                                    a.startTick} tick${a.endTick -
+                                                    a.startTick ==
+                                                    1
+                                                    ? ""
+                                                    : "s"}${a.containsUnloadedChunks
+                                                    ? "; Some blocks were not generated because they were in unloaded chunks."
+                                                    : ""}`);
+                                            }, (e) => {
+                                                player.sendError("§c" + e + e.stack, true);
+                                            });
                                         }
                                         catch (e) {
                                             player.sendError("§c" + e + e.stack, true);
@@ -19693,7 +19802,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     })(), dimensiona).then((tac) => {
                                         ta = tac;
                                         try {
-                                            undoClipboard.save(dimensiona, { from: ca, to: cb }, Date.now(), {
+                                            UndoClipboard.getClipboard(`player_${player.id}`).save(dimensiona, { from: ca, to: cb }, Date.now(), {
                                                 includeBlocks: true,
                                                 includeEntities: false,
                                                 saveMode: config.undoClipboardMode,
@@ -19793,7 +19902,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     })(), dimensiona).then((tac) => {
                                         ta = tac;
                                         try {
-                                            undoClipboard.save(dimensiona, { from: ca, to: cb }, Date.now(), {
+                                            UndoClipboard.getClipboard(`player_${player.id}`).save(dimensiona, { from: ca, to: cb }, Date.now(), {
                                                 includeBlocks: true,
                                                 includeEntities: false,
                                                 saveMode: config.undoClipboardMode,
@@ -19893,7 +20002,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     })(), dimensiona).then((tac) => {
                                         ta = tac;
                                         try {
-                                            undoClipboard.save(dimensiona, { from: ca, to: cb }, Date.now(), {
+                                            UndoClipboard.getClipboard(`player_${player.id}`).save(dimensiona, { from: ca, to: cb }, Date.now(), {
                                                 includeBlocks: true,
                                                 includeEntities: false,
                                                 saveMode: config.undoClipboardMode,
@@ -19993,7 +20102,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     })(), dimensiona).then((tac) => {
                                         ta = tac;
                                         try {
-                                            undoClipboard.save(dimensiona, { from: ca, to: cb }, Date.now(), {
+                                            UndoClipboard.getClipboard(`player_${player.id}`).save(dimensiona, { from: ca, to: cb }, Date.now(), {
                                                 includeBlocks: true,
                                                 includeEntities: false,
                                                 saveMode: config.undoClipboardMode,
@@ -20093,7 +20202,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     })(), dimensiona).then((tac) => {
                                         ta = tac;
                                         try {
-                                            undoClipboard.save(dimensiona, { from: ca, to: cb }, Date.now(), {
+                                            UndoClipboard.getClipboard(`player_${player.id}`).save(dimensiona, { from: ca, to: cb }, Date.now(), {
                                                 includeBlocks: true,
                                                 includeEntities: false,
                                                 saveMode: config.undoClipboardMode,
@@ -20199,7 +20308,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     })(), dimensiona).then((tac) => {
                                         ta = tac;
                                         try {
-                                            undoClipboard.save(dimensiona, { from: ca, to: cb }, Date.now(), {
+                                            UndoClipboard.getClipboard(`player_${player.id}`).save(dimensiona, { from: ca, to: cb }, Date.now(), {
                                                 includeBlocks: true,
                                                 includeEntities: false,
                                                 saveMode: config.undoClipboardMode,
@@ -20325,7 +20434,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     })(), dimensiona).then((tac) => {
                                         ta = tac;
                                         try {
-                                            undoClipboard.save(dimensiona, { from: ca, to: cb }, Date.now(), {
+                                            UndoClipboard.getClipboard(`player_${player.id}`).save(dimensiona, { from: ca, to: cb }, Date.now(), {
                                                 includeBlocks: true,
                                                 includeEntities: false,
                                                 saveMode: config.undoClipboardMode,
@@ -20451,7 +20560,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     })(), dimensiona).then((tac) => {
                                         ta = tac;
                                         try {
-                                            undoClipboard.save(dimensiona, { from: ca, to: cb }, Date.now(), {
+                                            UndoClipboard.getClipboard(`player_${player.id}`).save(dimensiona, { from: ca, to: cb }, Date.now(), {
                                                 includeBlocks: true,
                                                 includeEntities: false,
                                                 saveMode: config.undoClipboardMode,
@@ -20611,7 +20720,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     })(), dimensiona).then((tac) => {
                                         ta = tac;
                                         try {
-                                            undoClipboard.save(dimensiona, { from: ca, to: cb }, Date.now(), {
+                                            UndoClipboard.getClipboard(`player_${player.id}`).save(dimensiona, { from: ca, to: cb }, Date.now(), {
                                                 includeBlocks: true,
                                                 includeEntities: false,
                                                 saveMode: config.undoClipboardMode,
@@ -20712,7 +20821,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     })(), dimensiona).then((tac) => {
                                         ta = tac;
                                         try {
-                                            undoClipboard.save(dimensiona, { from: ca, to: cb }, Date.now(), {
+                                            UndoClipboard.getClipboard(`player_${player.id}`).save(dimensiona, { from: ca, to: cb }, Date.now(), {
                                                 includeBlocks: true,
                                                 includeEntities: false,
                                                 saveMode: config.undoClipboardMode,
@@ -20810,7 +20919,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     })(), dimensiona).then((tac) => {
                                         ta = tac;
                                         try {
-                                            undoClipboard.save(dimensiona, { from: ca, to: cb }, Date.now(), {
+                                            UndoClipboard.getClipboard(`player_${player.id}`).save(dimensiona, { from: ca, to: cb }, Date.now(), {
                                                 includeBlocks: true,
                                                 includeEntities: false,
                                                 saveMode: config.undoClipboardMode,
@@ -20900,7 +21009,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     })(), dimensiona).then((tac) => {
                                         ta = tac;
                                         try {
-                                            undoClipboard.save(dimensiona, { from: ca, to: cb }, Date.now(), {
+                                            UndoClipboard.getClipboard(`player_${player.id}`).save(dimensiona, { from: ca, to: cb }, Date.now(), {
                                                 includeBlocks: true,
                                                 includeEntities: false,
                                                 saveMode: config.undoClipboardMode,
@@ -21001,7 +21110,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     })(), dimensiona).then((tac) => {
                                         ta = tac;
                                         try {
-                                            undoClipboard.save(dimensiona, { from: ca, to: cb }, Date.now(), {
+                                            UndoClipboard.getClipboard(`player_${player.id}`).save(dimensiona, { from: ca, to: cb }, Date.now(), {
                                                 includeBlocks: true,
                                                 includeEntities: false,
                                                 saveMode: config.undoClipboardMode,
@@ -21111,7 +21220,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     })(), dimensiona).then((tac) => {
                                         ta = tac;
                                         try {
-                                            undoClipboard.save(dimensiona, { from: ca, to: cb }, Date.now(), {
+                                            UndoClipboard.getClipboard(`player_${player.id}`).save(dimensiona, { from: ca, to: cb }, Date.now(), {
                                                 includeBlocks: true,
                                                 includeEntities: false,
                                                 saveMode: config.undoClipboardMode,
@@ -21204,7 +21313,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     })(), dimensiona).then((tac) => {
                                         ta = tac;
                                         try {
-                                            undoClipboard.save(dimensiona, {
+                                            UndoClipboard.getClipboard(`player_${player.id}`).save(dimensiona, {
                                                 from: Vector.subtract(center, Vector.scale(Vector.one, Math.abs(radius))),
                                                 to: Vector.add(center, Vector.scale(Vector.one, Math.abs(radius))),
                                             }, Date.now(), {
@@ -21301,7 +21410,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     })(), dimensiona).then((tac) => {
                                         ta = tac;
                                         try {
-                                            undoClipboard.save(dimensiona, {
+                                            UndoClipboard.getClipboard(`player_${player.id}`).save(dimensiona, {
                                                 from: Vector.subtract(center, Vector.scale(stretch, Math.abs(radius))),
                                                 to: Vector.add(center, Vector.scale(stretch, Math.abs(radius))),
                                             }, Date.now(), {
@@ -21400,7 +21509,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     })(), dimensiona).then((tac) => {
                                         ta = tac;
                                         try {
-                                            undoClipboard.save(dimensiona, {
+                                            UndoClipboard.getClipboard(`player_${player.id}`).save(dimensiona, {
                                                 from: Vector.subtract(center, Vector.scale(Vector.one, Math.abs(radius))),
                                                 to: Vector.add(center, Vector.scale(Vector.one, Math.abs(radius))),
                                             }, Date.now(), {
@@ -21505,7 +21614,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     })(), dimensiona).then((tac) => {
                                         ta = tac;
                                         try {
-                                            undoClipboard.save(dimensiona, {
+                                            UndoClipboard.getClipboard(`player_${player.id}`).save(dimensiona, {
                                                 from: Vector.subtract(coordinatesa, {
                                                     x: Math.abs(radius),
                                                     y: 0,
@@ -21830,7 +21939,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                             ta = tac;
                                             try {
                                                 try {
-                                                    undoClipboard.save(dimensiona, {
+                                                    UndoClipboard.getClipboard(`player_${player.id}`).save(dimensiona, {
                                                         from: ca,
                                                         to: Vector.add(cb, {
                                                             x: 0,
@@ -21885,8 +21994,15 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                         const args = evaluateParameters(switchTestB, [
                             "presetText",
                             "-meb",
+                            {
+                                type: "ignorableNamedParameter",
+                                name: "clipboard",
+                                valueType: "string",
+                                key: "clipboard",
+                            }
                         ]).args;
                         args[1] ??= "";
+                        const clipboard = args.clipboard === "global" ? BlockClipboard.global : BlockClipboard.getClipboard(!args.clipboard ? `player_${player.id}` : args.clipboard);
                         const coordinatesa = player.getDynamicProperty("pos1");
                         const coordinatesb = player.getDynamicProperty("pos2");
                         const ca = {
@@ -21911,7 +22027,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                             else {
                                 system.run(() => {
                                     try {
-                                        undoClipboard.save(dimensiona, { from: ca, to: cb }, Date.now(), {
+                                        UndoClipboard.getClipboard(`player_${player.id}`).save(dimensiona, { from: ca, to: cb }, Date.now(), {
                                             includeBlocks: true,
                                             includeEntities: false,
                                             saveMode: config.undoClipboardMode,
@@ -21920,16 +22036,16 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     catch (e) {
                                         player.sendMessageB("§c" + e + " " + e.stack);
                                     }
-                                    tryrun(() => BlockClipboard.global.clear());
+                                    tryrun(() => clipboard.clear());
                                     try {
-                                        BlockClipboard.global.copy(dimensiona, { from: ca, to: cb }, {
+                                        clipboard.copy(dimensiona, { from: ca, to: cb }, {
                                             includeBlocks: !args[1].includes("b"),
                                             includeEntities: !args[1].includes("e"),
                                             saveMode: args[1].includes("m")
                                                 ? StructureSaveMode.Memory
                                                 : StructureSaveMode.World,
                                         });
-                                        player.sendMessageB("The selected area has been cut to the clipboard.");
+                                        player.sendMessageB(`The selected area has been cut to the ${args.clipboard || `player_${player.id}`} clipboard.`);
                                     }
                                     catch (e) {
                                         player.sendMessageB("§c" + e + " " + e.stack);
@@ -21982,8 +22098,15 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                         const args = evaluateParameters(switchTestB, [
                             "presetText",
                             "-meb",
+                            {
+                                type: "ignorableNamedParameter",
+                                name: "clipboard",
+                                valueType: "string",
+                                key: "clipboard",
+                            }
                         ]).args;
                         args[1] ??= "";
+                        const clipboard = args.clipboard === "global" ? BlockClipboard.global : BlockClipboard.getClipboard(!args.clipboard ? `player_${player.id}` : args.clipboard);
                         const coordinatesa = player.getDynamicProperty("pos1");
                         const coordinatesb = player.getDynamicProperty("pos2");
                         const ca = {
@@ -22007,16 +22130,16 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                             }
                             else {
                                 system.run(() => {
-                                    tryrun(() => BlockClipboard.global.clear());
+                                    tryrun(() => clipboard.clear());
                                     try {
-                                        BlockClipboard.global.copy(dimensiona, { from: ca, to: cb }, {
+                                        clipboard.copy(dimensiona, { from: ca, to: cb }, {
                                             includeBlocks: !args[1].includes("b"),
                                             includeEntities: !args[1].includes("e"),
                                             saveMode: args[1].includes("m")
                                                 ? StructureSaveMode.Memory
                                                 : StructureSaveMode.World,
                                         });
-                                        player.sendMessageB("The selected area has been copied to the clipboard.");
+                                        player.sendMessageB(`The selected area has been copied to the ${args.clipboard || `player_${player.id}`} clipboard.`);
                                     }
                                     catch (e) {
                                         player.sendMessageB("§c" + e + " " + e.stack);
@@ -22039,12 +22162,19 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                 const args = evaluateParameters(switchTestB, [
                                     "presetText",
                                     "-webxzh",
+                                    {
+                                        type: "ignorableNamedParameter",
+                                        name: "clipboard",
+                                        valueType: "string",
+                                        key: "clipboard",
+                                    },
                                     "number",
                                     "string",
                                     "number",
                                     "string",
                                     "number",
                                 ]).args;
+                                const clipboard = args.clipboard === "global" ? BlockClipboard.global : BlockClipboard.getClipboard(!args.clipboard ? `player_${player.id}` : args.clipboard);
                                 //console.warn(JSON.stringify(args[1]))
                                 args[1] ??= "";
                                 args[2] ??= 1;
@@ -22077,15 +22207,15 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                 else if (!!!coordinatesb) {
                                     player.sendMessageB("§cError: pos2 is not set.");
                                 }
-                                else if (BlockClipboard.global.isEmpty) {
+                                else if (clipboard.isEmpty) {
                                     player.sendMessageB("§cError: The clipboard is currently empty.");
                                 }
                                 else {
                                     try {
                                         try {
-                                            undoClipboard.save(dimensiona, {
+                                            UndoClipboard.getClipboard(`player_${player.id}`).save(dimensiona, {
                                                 from: ca,
-                                                to: Vector.add(ca, BlockClipboard.global.contentsSize),
+                                                to: Vector.add(ca, clipboard.contentsSize),
                                             }, Date.now(), {
                                                 includeBlocks: true,
                                                 includeEntities: false,
@@ -22095,7 +22225,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                         catch (e) {
                                             player.sendMessageB("§c" + e + " " + e.stack);
                                         }
-                                        BlockClipboard.global.paste(Object.assign({ dimension: dimensiona }, ca), {
+                                        clipboard.paste(Object.assign({ dimension: dimensiona }, ca), {
                                             includeBlocks: !args[1].includes("b"),
                                             includeEntities: !args[1].includes("e"),
                                             waterlogged: args[1].includes("w"),
@@ -22127,7 +22257,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                             integrity: args[2],
                                             integritySeed: args[3],
                                         });
-                                        player.sendMessageB("The clipboard has been pasted to the selected area.");
+                                        player.sendMessageB(`The ${args.clipboard || `player_${player.id}`} clipboard has been pasted to the selected area.`);
                                     }
                                     catch (e) {
                                         player.sendError(e + " " + e.stack, true);
@@ -22150,56 +22280,116 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                         eventData.cancel = true;
                         const args = evaluateParameters(switchTestB, [
                             "presetText",
-                            "f-kt",
+                            "f-ktg",
+                            {
+                                type: "ignorableNamedParameter",
+                                name: "undoClipboard",
+                                key: "undoClipboard",
+                                valueType: "string",
+                                nameIsCaseSensitive: false,
+                            }
                         ]).args;
-                        system.run(() => {
+                        system.run(async () => {
                             try {
-                                if (undoClipboard.ids.length == 0) {
-                                    player.sendMessageB("§cNothing to undo.");
-                                }
-                                else if (!(args[1]?.t ?? false)) {
-                                    try {
-                                        if (undoClipboard.undo(undefined, undefined, !(args[1]?.k ?? false)) == 0) {
-                                            player.sendMessageB("§cNothing to undo.");
+                                if (args[1].g) {
+                                    if (UndoClipboard.getSaveTimesFromAllClipboards().length === 0) {
+                                        player.sendMessageB("§cNothing to undo.");
+                                    }
+                                    else if (!(args[1]?.t ?? false)) {
+                                        try {
+                                            if (UndoClipboard.undoLastAction(undefined, !(args[1]?.k ?? false)) === 0) {
+                                                player.sendMessageB("§cNothing to undo.");
+                                            }
+                                            else {
+                                                player.sendMessageB("Successfully reverted the area.");
+                                            }
                                         }
-                                        else {
-                                            player.sendMessageB("Successfully reverted the area.");
+                                        catch (e) {
+                                            player.sendError(e + " " + e.stack, true);
                                         }
                                     }
-                                    catch (e) {
-                                        player.sendError(e + " " + e.stack, true);
-                                    }
-                                }
-                                else {
-                                    let ta;
-                                    try {
-                                        generateTickingAreaFillCoordinatesC(player.location, (() => {
-                                            let a = new CompoundBlockVolume();
-                                            a.pushVolume({
-                                                volume: new BlockVolume(world.getDynamicProperty(`andexdb:undoclipboard;${undoClipboard.newestSaveTime}`), Vector.add(world.getDynamicProperty(`andexdb:undoclipboard;${undoClipboard.newestSaveTime}`), undoClipboard.saveSize(undoClipboard.newestSaveTime))),
-                                            });
-                                            return a;
-                                        })(), dimensionsb[String(world.getDynamicProperty(`andexdb:undoclipboardd;${undoClipboard.newestSaveTime}`))] ??
-                                            dimensionsb["minecraft:overworld"]).then((tac) => {
-                                            ta = tac;
+                                    else {
+                                        let ta;
+                                        try {
+                                            const saveTime = UndoClipboard.getSaveTimesFromAllClipboards()[0];
+                                            const clipboard = UndoClipboard.getClipboard(saveTime.clipboardID);
+                                            const saveLocation = clipboard.getSaveLocation(saveTime.saveTime);
+                                            const saveSize = clipboard.getSaveSize(saveTime.saveTime);
+                                            ta = await generateTickingAreaFillCoordinatesC(player.location, (() => {
+                                                let a = new CompoundBlockVolume();
+                                                a.pushVolume({
+                                                    volume: new BlockVolume(saveLocation, Vector.add(saveLocation, saveSize)),
+                                                });
+                                                return a;
+                                            })(), saveLocation.dimension);
                                             try {
-                                                if (undoClipboard.undo(undefined, undefined, !(args[1]?.k ?? false)) == 0) {
-                                                    player.sendMessageB("§cNothing to undo. ");
+                                                if (clipboard.undo(undefined, undefined, !(args[1]?.k ?? false)) === 0) {
+                                                    player.sendMessageB("§cNothing to undo.");
                                                 }
                                                 else {
-                                                    player.sendMessageB("Successfully reverted the area. ");
+                                                    player.sendMessageB("Successfully reverted the area.");
                                                 }
                                             }
                                             catch (e) {
                                                 player.sendError(e + " " + e.stack, true);
                                             }
                                             finally {
-                                                tac.forEach((tab) => tab?.remove());
+                                                ta.forEach((tab) => tab?.remove());
                                             }
-                                        });
+                                        }
+                                        catch (e) {
+                                            player.sendError("§c" + e + e.stack, true);
+                                        }
                                     }
-                                    catch (e) {
-                                        player.sendError("§c" + e + e.stack, true);
+                                }
+                                else {
+                                    const clipboard = UndoClipboard.getClipboard(args.undoClipboard ?? `player_${player.id}`);
+                                    if (clipboard.ids.length == 0) {
+                                        player.sendMessageB("§cNothing to undo.");
+                                    }
+                                    else if (!(args[1]?.t ?? false)) {
+                                        try {
+                                            if (clipboard.undo(undefined, undefined, !(args[1]?.k ?? false)) == 0) {
+                                                player.sendMessageB("§cNothing to undo.");
+                                            }
+                                            else {
+                                                player.sendMessageB("Successfully reverted the area.");
+                                            }
+                                        }
+                                        catch (e) {
+                                            player.sendError(e + " " + e.stack, true);
+                                        }
+                                    }
+                                    else {
+                                        let ta;
+                                        try {
+                                            const saveLocation = clipboard.getSaveLocation(clipboard.newestSaveTime);
+                                            const saveSize = clipboard.getSaveSize(clipboard.newestSaveTime);
+                                            ta = await generateTickingAreaFillCoordinatesC(player.location, (() => {
+                                                let a = new CompoundBlockVolume();
+                                                a.pushVolume({
+                                                    volume: new BlockVolume(saveLocation, Vector.add(saveLocation, saveSize)),
+                                                });
+                                                return a;
+                                            })(), saveLocation.dimension);
+                                            try {
+                                                if (clipboard.undo(undefined, undefined, !(args[1]?.k ?? false)) == 0) {
+                                                    player.sendMessageB("§cNothing to undo.");
+                                                }
+                                                else {
+                                                    player.sendMessageB("Successfully reverted the area.");
+                                                }
+                                            }
+                                            catch (e) {
+                                                player.sendError(e + " " + e.stack, true);
+                                            }
+                                            finally {
+                                                ta.forEach((tab) => tab?.remove());
+                                            }
+                                        }
+                                        catch (e) {
+                                            player.sendError("§c" + e + e.stack, true);
+                                        }
                                     }
                                 }
                             }
@@ -24113,7 +24303,7 @@ console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstbl
                             default:
                         }
                     }
-                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2][0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1).split(" ")[0], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
+                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2]![0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1).split(" ")[0]!, extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
                 }
                 break;
             case !!switchTest.match(/^\\idtfill$/):
@@ -26070,7 +26260,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                             default:
                         }
                     }
-                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2][0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4][0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1).split(" ")[0], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5].index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5][0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
+                    //            try{system.run(()=>{player.dimension.fillBlocks(evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[0]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[1]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[2]![0], player.location, player.getRotation()), evaluateCoordinates(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[3]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[4]![0], Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0], player.location, player.getRotation()), BlockPermutation.resolve(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1).split(" ")[0]!, extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[0]), {matchingBlock: BlockPermutation.resolve(getParametersFromString(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1)).results[2], extractJSONStrings(switchTestB.split(" ").slice(1).join(" ").slice(Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")).split(" ").slice(1).join(" "), false)[1])}); }); }catch(e){player.sendError("§c" + e + e.stack, true)}
                 }
                 break;
             case !!switchTest.match(/^brush$/) ||
@@ -26122,7 +26312,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                     player
                                         .getComponent("inventory")
                                         .container.getSlot(player.selectedSlotIndex)
-                                        .setDynamicProperty("radius", isNaN(Number(args[3]))
+                                        .setDynamicProperty("radius", isNaN(Number(args[3] ?? undefined))
                                         ? 10
                                         : args[3]);
                                     if (!args[1].l) {
@@ -26135,12 +26325,12 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                 .container.getSlot(player.selectedSlotIndex)
                                                 .getDynamicProperty("selectmode")}`,
                                             `§r§bBrush Type: §aExtinguish`,
-                                            `§r§bBrush Radius: ${isNaN(Number(args[3]))
+                                            `§r§bBrush Radius: ${isNaN(Number(args[3] ?? undefined))
                                                 ? 10
                                                 : args[3]}`,
                                         ]));
                                     }
-                                    player.sendMessageB(`Successfully set brush type of the held item to extinguish with a radius of ${isNaN(Number(args[3]))
+                                    player.sendMessageB(`Successfully set brush type of the held item to extinguish with a radius of ${isNaN(Number(args[3] ?? undefined))
                                         ? 10
                                         : args[3]}.`);
                                 }
@@ -26160,7 +26350,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                     player
                                         .getComponent("inventory")
                                         .container.getSlot(player.selectedSlotIndex)
-                                        .setDynamicProperty("radius", isNaN(Number(args[3]))
+                                        .setDynamicProperty("radius", isNaN(Number(args[3] ?? undefined))
                                         ? 10
                                         : args[3]);
                                     if (!args[1].l) {
@@ -26169,12 +26359,12 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                             .container.getSlot(player.selectedSlotIndex)
                                             .setLore([
                                             `§r§bBrush Type: §aExtinguish`,
-                                            `§r§bBrush Radius: ${isNaN(Number(args[3]))
+                                            `§r§bBrush Radius: ${isNaN(Number(args[3] ?? undefined))
                                                 ? 10
                                                 : args[3]}`,
                                         ]));
                                     }
-                                    player.sendMessageB(`Successfully set brush type of the held item to extinguish with a radius of ${isNaN(Number(args[3]))
+                                    player.sendMessageB(`Successfully set brush type of the held item to extinguish with a radius of ${isNaN(Number(args[3] ?? undefined))
                                         ? 10
                                         : args[3]}.`);
                                 }
@@ -26194,7 +26384,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                     player
                                         .getComponent("inventory")
                                         .container.getSlot(player.selectedSlotIndex)
-                                        .setDynamicProperty("radius", isNaN(Number(args[3]))
+                                        .setDynamicProperty("radius", isNaN(Number(args[3] ?? undefined))
                                         ? 10
                                         : args[3]);
                                     if (!args[1].l) {
@@ -26203,12 +26393,12 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                             .container.getSlot(player.selectedSlotIndex)
                                             .setLore([
                                             `§r§bBrush Type: §aRemExp`,
-                                            `§r§bBrush Radius: ${isNaN(Number(args[3]))
+                                            `§r§bBrush Radius: ${isNaN(Number(args[3] ?? undefined))
                                                 ? 10
                                                 : args[3]}`,
                                         ]));
                                     }
-                                    player.sendMessageB(`Successfully set brush type of the held item to remexp with a radius of ${isNaN(Number(args[3]))
+                                    player.sendMessageB(`Successfully set brush type of the held item to remexp with a radius of ${isNaN(Number(args[3] ?? undefined))
                                         ? 10
                                         : args[3]}.`);
                                 }
@@ -26228,7 +26418,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                     player
                                         .getComponent("inventory")
                                         .container.getSlot(player.selectedSlotIndex)
-                                        .setDynamicProperty("radius", isNaN(Number(args[3]))
+                                        .setDynamicProperty("radius", isNaN(Number(args[3] ?? undefined))
                                         ? 10
                                         : args[3]);
                                     if (!args[1].l) {
@@ -26237,12 +26427,12 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                             .container.getSlot(player.selectedSlotIndex)
                                             .setLore([
                                             `§r§bBrush Type: §aRemExpE`,
-                                            `§r§bBrush Radius: ${isNaN(Number(args[3]))
+                                            `§r§bBrush Radius: ${isNaN(Number(args[3] ?? undefined))
                                                 ? 10
                                                 : args[3]}`,
                                         ]));
                                     }
-                                    player.sendMessageB(`Successfully set brush type of the held item to remexp with a radius of ${isNaN(Number(args[3]))
+                                    player.sendMessageB(`Successfully set brush type of the held item to remexp with a radius of ${isNaN(Number(args[3] ?? undefined))
                                         ? 10
                                         : args[3]}.`);
                                 }
@@ -26262,7 +26452,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                     player
                                         .getComponent("inventory")
                                         .container.getSlot(player.selectedSlotIndex)
-                                        .setDynamicProperty("radius", isNaN(Number(args[3]))
+                                        .setDynamicProperty("radius", isNaN(Number(args[3] ?? undefined))
                                         ? 10
                                         : args[3]);
                                     if (!args[1].l) {
@@ -26271,12 +26461,12 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                             .container.getSlot(player.selectedSlotIndex)
                                             .setLore([
                                             `§r§bBrush Type: §aRemExpNE`,
-                                            `§r§bBrush Radius: ${isNaN(Number(args[3]))
+                                            `§r§bBrush Radius: ${isNaN(Number(args[3] ?? undefined))
                                                 ? 10
                                                 : args[3]}`,
                                         ]));
                                     }
-                                    player.sendMessageB(`Successfully set brush type of the held item to remexp with a radius of ${isNaN(Number(args[3]))
+                                    player.sendMessageB(`Successfully set brush type of the held item to remexp with a radius of ${isNaN(Number(args[3] ?? undefined))
                                         ? 10
                                         : args[3]}.`);
                                 }
@@ -26307,7 +26497,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                     player
                                         .getComponent("inventory")
                                         .container.getSlot(player.selectedSlotIndex)
-                                        .setDynamicProperty("radius", isNaN(Number(args[5])) ? 3 : args[5]);
+                                        .setDynamicProperty("radius", isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]);
                                     if (args[6] != undefined) {
                                         player
                                             .getComponent("inventory")
@@ -26334,7 +26524,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                             .container.getSlot(player.selectedSlotIndex)
                                             .setLore([
                                             `§r§bBrush Type: §aSphere`,
-                                            `§r§bBrush Radius: §c${isNaN(Number(args[5]))
+                                            `§r§bBrush Radius: §c${isNaN(Number(args[5] ?? undefined))
                                                 ? 3
                                                 : args[5]}`,
                                             ...[
@@ -26362,7 +26552,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                             ...(args[6] != undefined ? [`§r§bBrush Mask Type: §a${args[6].type}`] : []),
                                         ]));
                                     }
-                                    player.sendMessageB(`Successfully set brush type of the held item to sphere with a radius of ${isNaN(Number(args[5])) ? 3 : args[5]}.`);
+                                    player.sendMessageB(`Successfully set brush type of the held item to sphere with a radius of ${isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]}.`);
                                 }
                                 break;
                             case "cube":
@@ -26391,7 +26581,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                     player
                                         .getComponent("inventory")
                                         .container.getSlot(player.selectedSlotIndex)
-                                        .setDynamicProperty("radius", isNaN(Number(args[5])) ? 3 : args[5]);
+                                        .setDynamicProperty("radius", isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]);
                                     if (args[6] != undefined) {
                                         player
                                             .getComponent("inventory")
@@ -26418,7 +26608,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                             .container.getSlot(player.selectedSlotIndex)
                                             .setLore([
                                             `§r§bBrush Type: §aCube`,
-                                            `§r§bBrush Radius: §c${isNaN(Number(args[5]))
+                                            `§r§bBrush Radius: §c${isNaN(Number(args[5] ?? undefined))
                                                 ? 3
                                                 : args[5]}`,
                                             ...[
@@ -26446,7 +26636,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                             ...(args[6] != undefined ? [`§r§bBrush Mask Type: §a${args[6].type}`] : []),
                                         ]));
                                     }
-                                    player.sendMessageB(`Successfully set brush type of the held item to cube with a radius of ${isNaN(Number(args[5])) ? 3 : args[5]}.`);
+                                    player.sendMessageB(`Successfully set brush type of the held item to cube with a radius of ${isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]}.`);
                                 }
                                 break;
                             case "square":
@@ -26475,7 +26665,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                     player
                                         .getComponent("inventory")
                                         .container.getSlot(player.selectedSlotIndex)
-                                        .setDynamicProperty("radius", isNaN(Number(args[5])) ? 3 : args[5]);
+                                        .setDynamicProperty("radius", isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]);
                                     if (args[6] != undefined) {
                                         player
                                             .getComponent("inventory")
@@ -26502,7 +26692,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                             .container.getSlot(player.selectedSlotIndex)
                                             .setLore([
                                             `§r§bBrush Type: §aSquare`,
-                                            `§r§bBrush Radius: §c${isNaN(Number(args[5]))
+                                            `§r§bBrush Radius: §c${isNaN(Number(args[5] ?? undefined))
                                                 ? 3
                                                 : args[5]}`,
                                             ...[
@@ -26530,7 +26720,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                             ...(args[6] != undefined ? [`§r§bBrush Mask Type: §a${args[6].type}`] : []),
                                         ]));
                                     }
-                                    player.sendMessageB(`Successfully set brush type of the held item to square with a radius of ${isNaN(Number(args[5])) ? 3 : args[5]}.`);
+                                    player.sendMessageB(`Successfully set brush type of the held item to square with a radius of ${isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]}.`);
                                 }
                                 break;
                             case "splatter":
@@ -26560,11 +26750,11 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                     player
                                         .getComponent("inventory")
                                         .container.getSlot(player.selectedSlotIndex)
-                                        .setDynamicProperty("decay", isNaN(Number(args[6])) ? 0 : args[6]);
+                                        .setDynamicProperty("decay", isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]);
                                     player
                                         .getComponent("inventory")
                                         .container.getSlot(player.selectedSlotIndex)
-                                        .setDynamicProperty("radius", isNaN(Number(args[5])) ? 3 : args[5]);
+                                        .setDynamicProperty("radius", isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]);
                                     if (args[7] != undefined) {
                                         player
                                             .getComponent("inventory")
@@ -26592,10 +26782,10 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                             .container.getSlot(player.selectedSlotIndex)
                                             .setLore([
                                             `§r§bBrush Type: §aSplatter`,
-                                            `§r§bBrush Radius: §c${isNaN(Number(args[5]))
+                                            `§r§bBrush Radius: §c${isNaN(Number(args[5] ?? undefined))
                                                 ? 3
                                                 : args[5]}`,
-                                            `§r§bBrush Decay: §c${isNaN(Number(args[6]))
+                                            `§r§bBrush Decay: §c${isNaN(Number(args[6] ?? undefined))
                                                 ? 0
                                                 : args[6]}`,
                                             `§r§bBrush Pattern: `,
@@ -26624,7 +26814,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                             ...(args[7] != undefined ? [`§r§bBrush Mask Type: §a${args[7].type}`] : []),
                                         ]));
                                     }
-                                    player.sendMessageB(`Successfully set brush type of the held item to splatter with a radius of ${isNaN(Number(args[5])) ? 3 : args[5]} and a decay level of ${isNaN(Number(args[6])) ? 0 : args[6]}.`);
+                                    player.sendMessageB(`Successfully set brush type of the held item to splatter with a radius of ${isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]} and a decay level of ${isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]}.`);
                                 }
                                 break;
                             case "splattercube":
@@ -26654,11 +26844,11 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                     player
                                         .getComponent("inventory")
                                         .container.getSlot(player.selectedSlotIndex)
-                                        .setDynamicProperty("decay", isNaN(Number(args[6])) ? 0 : args[6]);
+                                        .setDynamicProperty("decay", isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]);
                                     player
                                         .getComponent("inventory")
                                         .container.getSlot(player.selectedSlotIndex)
-                                        .setDynamicProperty("radius", isNaN(Number(args[5])) ? 3 : args[5]);
+                                        .setDynamicProperty("radius", isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]);
                                     if (args[7] != undefined) {
                                         player
                                             .getComponent("inventory")
@@ -26685,10 +26875,10 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                             .container.getSlot(player.selectedSlotIndex)
                                             .setLore([
                                             `§r§bBrush Type: §aSplatterCube`,
-                                            `§r§bBrush Radius: §c${isNaN(Number(args[5]))
+                                            `§r§bBrush Radius: §c${isNaN(Number(args[5] ?? undefined))
                                                 ? 3
                                                 : args[5]}`,
-                                            `§r§bBrush Decay: §c${isNaN(Number(args[6]))
+                                            `§r§bBrush Decay: §c${isNaN(Number(args[6] ?? undefined))
                                                 ? 0
                                                 : args[6]}`,
                                             ...[
@@ -26716,7 +26906,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                             ...(args[7] != undefined ? [`§r§bBrush Mask Type: §a${args[7].type}`] : []),
                                         ]));
                                     }
-                                    player.sendMessageB(`Successfully set brush type of the held item to splatter with a radius of ${isNaN(Number(args[5])) ? 3 : args[5]} and a decay level of ${isNaN(Number(args[6])) ? 0 : args[6]}.`);
+                                    player.sendMessageB(`Successfully set brush type of the held item to splatter with a radius of ${isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]} and a decay level of ${isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]}.`);
                                 }
                                 break;
                             case "splattersquare":
@@ -26746,11 +26936,11 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                     player
                                         .getComponent("inventory")
                                         .container.getSlot(player.selectedSlotIndex)
-                                        .setDynamicProperty("decay", isNaN(Number(args[6])) ? 0 : args[6]);
+                                        .setDynamicProperty("decay", isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]);
                                     player
                                         .getComponent("inventory")
                                         .container.getSlot(player.selectedSlotIndex)
-                                        .setDynamicProperty("radius", isNaN(Number(args[5])) ? 3 : args[5]);
+                                        .setDynamicProperty("radius", isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]);
                                     if (args[7] != undefined) {
                                         player
                                             .getComponent("inventory")
@@ -26777,10 +26967,10 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                             .container.getSlot(player.selectedSlotIndex)
                                             .setLore([
                                             `§r§bBrush Type: §aSplatterSquare`,
-                                            `§r§bBrush Radius: §c${isNaN(Number(args[5]))
+                                            `§r§bBrush Radius: §c${isNaN(Number(args[5] ?? undefined))
                                                 ? 3
                                                 : args[5]}`,
-                                            `§r§bBrush Decay: §c${isNaN(Number(args[6]))
+                                            `§r§bBrush Decay: §c${isNaN(Number(args[6] ?? undefined))
                                                 ? 0
                                                 : args[6]}`,
                                             ...[
@@ -26808,7 +26998,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                             ...(args[7] != undefined ? [`§r§bBrush Mask Type: §a${args[7].type}`] : []),
                                         ]));
                                     }
-                                    player.sendMessageB(`Successfully set brush type of the held item to splatter with a radius of ${isNaN(Number(args[5])) ? 3 : args[5]} and a decay level of ${isNaN(Number(args[6])) ? 0 : args[6]}.`);
+                                    player.sendMessageB(`Successfully set brush type of the held item to splatter with a radius of ${isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]} and a decay level of ${isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]}.`);
                                 }
                                 break;
                             case "splattersurface":
@@ -26838,11 +27028,11 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                     player
                                         .getComponent("inventory")
                                         .container.getSlot(player.selectedSlotIndex)
-                                        .setDynamicProperty("decay", isNaN(Number(args[6])) ? 0 : args[6]);
+                                        .setDynamicProperty("decay", isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]);
                                     player
                                         .getComponent("inventory")
                                         .container.getSlot(player.selectedSlotIndex)
-                                        .setDynamicProperty("radius", isNaN(Number(args[5])) ? 3 : args[5]);
+                                        .setDynamicProperty("radius", isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]);
                                     if (args[7] != undefined) {
                                         player
                                             .getComponent("inventory")
@@ -26869,10 +27059,10 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                             .container.getSlot(player.selectedSlotIndex)
                                             .setLore([
                                             `§r§bBrush Type: §aSplatterSurface`,
-                                            `§r§bBrush Radius: §c${isNaN(Number(args[5]))
+                                            `§r§bBrush Radius: §c${isNaN(Number(args[5] ?? undefined))
                                                 ? 3
                                                 : args[5]}`,
-                                            `§r§bBrush Decay: §c${isNaN(Number(args[6]))
+                                            `§r§bBrush Decay: §c${isNaN(Number(args[6] ?? undefined))
                                                 ? 0
                                                 : args[6]}`,
                                             ...[
@@ -26900,7 +27090,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                             ...(args[7] != undefined ? [`§r§bBrush Mask Type: §a${args[7].type}`] : []),
                                         ]));
                                     }
-                                    player.sendMessageB(`Successfully set brush type of the held item to splatter surface with a radius of ${isNaN(Number(args[5])) ? 3 : args[5]} and a decay level of ${isNaN(Number(args[6])) ? 0 : args[6]}.`);
+                                    player.sendMessageB(`Successfully set brush type of the held item to splatter surface with a radius of ${isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]} and a decay level of ${isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]}.`);
                                 }
                                 break;
                             case "splattercubesurface":
@@ -26930,11 +27120,11 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                     player
                                         .getComponent("inventory")
                                         .container.getSlot(player.selectedSlotIndex)
-                                        .setDynamicProperty("decay", isNaN(Number(args[6])) ? 0 : args[6]);
+                                        .setDynamicProperty("decay", isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]);
                                     player
                                         .getComponent("inventory")
                                         .container.getSlot(player.selectedSlotIndex)
-                                        .setDynamicProperty("radius", isNaN(Number(args[5])) ? 3 : args[5]);
+                                        .setDynamicProperty("radius", isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]);
                                     if (args[7] != undefined) {
                                         player
                                             .getComponent("inventory")
@@ -26961,10 +27151,10 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                             .container.getSlot(player.selectedSlotIndex)
                                             .setLore([
                                             `§r§bBrush Type: §aSplatterCubeSurface`,
-                                            `§r§bBrush Radius: §c${isNaN(Number(args[5]))
+                                            `§r§bBrush Radius: §c${isNaN(Number(args[5] ?? undefined))
                                                 ? 3
                                                 : args[5]}`,
-                                            `§r§bBrush Decay: §c${isNaN(Number(args[6]))
+                                            `§r§bBrush Decay: §c${isNaN(Number(args[6] ?? undefined))
                                                 ? 0
                                                 : args[6]}`,
                                             ...[
@@ -26992,7 +27182,7 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                             ...(args[7] != undefined ? [`§r§bBrush Mask Type: §a${args[7].type}`] : []),
                                         ]));
                                     }
-                                    player.sendMessageB(`Successfully set brush type of the held item to splatter cube surface with a radius of ${isNaN(Number(args[5])) ? 3 : args[5]} and a decay level of ${isNaN(Number(args[6])) ? 0 : args[6]}.`);
+                                    player.sendMessageB(`Successfully set brush type of the held item to splatter cube surface with a radius of ${isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]} and a decay level of ${isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]}.`);
                                 }
                                 break;
                             case "splattersquaresurface":
@@ -27022,11 +27212,11 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                     player
                                         .getComponent("inventory")
                                         .container.getSlot(player.selectedSlotIndex)
-                                        .setDynamicProperty("decay", isNaN(Number(args[6])) ? 0 : args[6]);
+                                        .setDynamicProperty("decay", isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]);
                                     player
                                         .getComponent("inventory")
                                         .container.getSlot(player.selectedSlotIndex)
-                                        .setDynamicProperty("radius", isNaN(Number(args[5])) ? 3 : args[5]);
+                                        .setDynamicProperty("radius", isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]);
                                     if (args[7] != undefined) {
                                         player
                                             .getComponent("inventory")
@@ -27053,10 +27243,10 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                             .container.getSlot(player.selectedSlotIndex)
                                             .setLore([
                                             `§r§bBrush Type: §aSplatterSquareSurface`,
-                                            `§r§bBrush Radius: §c${isNaN(Number(args[5]))
+                                            `§r§bBrush Radius: §c${isNaN(Number(args[5] ?? undefined))
                                                 ? 3
                                                 : args[5]}`,
-                                            `§r§bBrush Decay: §c${isNaN(Number(args[6]))
+                                            `§r§bBrush Decay: §c${isNaN(Number(args[6] ?? undefined))
                                                 ? 0
                                                 : args[6]}`,
                                             ...[
@@ -27084,7 +27274,966 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                             ...(args[7] != undefined ? [`§r§bBrush Mask Type: §a${args[7].type}`] : []),
                                         ]));
                                     }
-                                    player.sendMessageB(`Successfully set brush type of the held item to splatter square surface with a radius of ${isNaN(Number(args[5])) ? 3 : args[5]} and a decay level of ${isNaN(Number(args[6])) ? 0 : args[6]}.`);
+                                    player.sendMessageB(`Successfully set brush type of the held item to splatter square surface with a radius of ${isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]} and a decay level of ${isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]}.`);
+                                }
+                                break;
+                            case "overlaysurface":
+                                {
+                                    let args = evaluateParameters(switchTestB, [
+                                        "presetText",
+                                        "f-l",
+                                        "string",
+                                        "f-h",
+                                        "blockPattern",
+                                        "number",
+                                        "number",
+                                        "blockMask",
+                                    ]).args;
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("brushtype", "overlaysurface");
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("pattern", JSON.stringify(args[4].blocks));
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("patterntype", args[4].type);
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("decay", isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]);
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("radius", isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]);
+                                    if (args[7] != undefined) {
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(player.selectedSlotIndex)
+                                            .setDynamicProperty("mask", JSON.stringify(args[7].blocks));
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(player.selectedSlotIndex)
+                                            .setDynamicProperty("masktype", args[7].type);
+                                    }
+                                    else {
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(player.selectedSlotIndex)
+                                            .setDynamicProperty("mask");
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(player.selectedSlotIndex)
+                                            .setDynamicProperty("masktype");
+                                    }
+                                    if (!args[1].l) {
+                                        srun(() => player
+                                            .getComponent("inventory")
+                                            .container.getSlot(player.selectedSlotIndex)
+                                            .setLore([
+                                            `§r§bBrush Type: §aOverlaySurface`,
+                                            `§r§bBrush Radius: §c${isNaN(Number(args[5] ?? undefined))
+                                                ? 3
+                                                : args[5]}`,
+                                            `§r§bBrush Decay: §c${isNaN(Number(args[6] ?? undefined))
+                                                ? 0
+                                                : args[6]}`,
+                                            ...[
+                                                ...args[4].blocks
+                                                    .map((v) => v.rawns)
+                                                    .slice(0, 15)
+                                                    .map((v) => `§r§d${v}`),
+                                                "§r§d...",
+                                            ].slice(0, args[4].blocks.length <= 15
+                                                ? -1
+                                                : undefined),
+                                            `§r§bBrush Pattern Type: §a${args[4].type}`,
+                                            ...(args[7] != undefined ?
+                                                [
+                                                    "§r§bBrush Mask: §d",
+                                                    ...args[7].blocks
+                                                        .map((v) => v.rawns)
+                                                        .slice(0, 15)
+                                                        .map((v) => `§r§d${v}`),
+                                                    "§r§d..."
+                                                ].slice(0, args[7].blocks.length <= 15
+                                                    ? -1
+                                                    : undefined)
+                                                : []),
+                                            ...(args[7] != undefined ? [`§r§bBrush Mask Type: §a${args[7].type}`] : []),
+                                        ]));
+                                    }
+                                    player.sendMessageB(`Successfully set brush type of the held item to overlay surface with a radius of ${isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]} and a decay level of ${isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]}.`);
+                                }
+                                break;
+                            case "overlaysquaresurface":
+                                {
+                                    let args = evaluateParameters(switchTestB, [
+                                        "presetText",
+                                        "f-l",
+                                        "string",
+                                        "f-h",
+                                        "blockPattern",
+                                        "number",
+                                        "number",
+                                        "blockMask",
+                                    ]).args;
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("brushtype", "overlaysquaresurface");
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("pattern", JSON.stringify(args[4].blocks));
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("patterntype", args[4].type);
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("decay", isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]);
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("radius", isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]);
+                                    if (args[7] != undefined) {
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(player.selectedSlotIndex)
+                                            .setDynamicProperty("mask", JSON.stringify(args[7].blocks));
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(player.selectedSlotIndex)
+                                            .setDynamicProperty("masktype", args[7].type);
+                                    }
+                                    else {
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(player.selectedSlotIndex)
+                                            .setDynamicProperty("mask");
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(player.selectedSlotIndex)
+                                            .setDynamicProperty("masktype");
+                                    }
+                                    if (!args[1].l) {
+                                        srun(() => player
+                                            .getComponent("inventory")
+                                            .container.getSlot(player.selectedSlotIndex)
+                                            .setLore([
+                                            `§r§bBrush Type: §aOverlaySquareSurface`,
+                                            `§r§bBrush Radius: §c${isNaN(Number(args[5] ?? undefined))
+                                                ? 3
+                                                : args[5]}`,
+                                            `§r§bBrush Decay: §c${isNaN(Number(args[6] ?? undefined))
+                                                ? 0
+                                                : args[6]}`,
+                                            ...[
+                                                ...args[4].blocks
+                                                    .map((v) => v.rawns)
+                                                    .slice(0, 15)
+                                                    .map((v) => `§r§d${v}`),
+                                                "§r§d...",
+                                            ].slice(0, args[4].blocks.length <= 15
+                                                ? -1
+                                                : undefined),
+                                            `§r§bBrush Pattern Type: §a${args[4].type}`,
+                                            ...(args[7] != undefined ?
+                                                [
+                                                    "§r§bBrush Mask: §d",
+                                                    ...args[7].blocks
+                                                        .map((v) => v.rawns)
+                                                        .slice(0, 15)
+                                                        .map((v) => `§r§d${v}`),
+                                                    "§r§d..."
+                                                ].slice(0, args[7].blocks.length <= 15
+                                                    ? -1
+                                                    : undefined)
+                                                : []),
+                                            ...(args[7] != undefined ? [`§r§bBrush Mask Type: §a${args[7].type}`] : []),
+                                        ]));
+                                    }
+                                    player.sendMessageB(`Successfully set brush type of the held item to overlay square surface with a radius of ${isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]} and a decay level of ${isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]}.`);
+                                }
+                                break;
+                            case "overlaycubesurface":
+                                {
+                                    let args = evaluateParameters(switchTestB, [
+                                        "presetText",
+                                        "f-l",
+                                        "string",
+                                        "f-h",
+                                        "blockPattern",
+                                        "number",
+                                        "number",
+                                        "blockMask",
+                                    ]).args;
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("brushtype", "overlaycubesurface");
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("pattern", JSON.stringify(args[4].blocks));
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("patterntype", args[4].type);
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("decay", isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]);
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("radius", isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]);
+                                    if (args[7] != undefined) {
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(player.selectedSlotIndex)
+                                            .setDynamicProperty("mask", JSON.stringify(args[7].blocks));
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(player.selectedSlotIndex)
+                                            .setDynamicProperty("masktype", args[7].type);
+                                    }
+                                    else {
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(player.selectedSlotIndex)
+                                            .setDynamicProperty("mask");
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(player.selectedSlotIndex)
+                                            .setDynamicProperty("masktype");
+                                    }
+                                    if (!args[1].l) {
+                                        srun(() => player
+                                            .getComponent("inventory")
+                                            .container.getSlot(player.selectedSlotIndex)
+                                            .setLore([
+                                            `§r§bBrush Type: §aOverlayCubeSurface`,
+                                            `§r§bBrush Radius: §c${isNaN(Number(args[5] ?? undefined))
+                                                ? 3
+                                                : args[5]}`,
+                                            `§r§bBrush Decay: §c${isNaN(Number(args[6] ?? undefined))
+                                                ? 0
+                                                : args[6]}`,
+                                            ...[
+                                                ...args[4].blocks
+                                                    .map((v) => v.rawns)
+                                                    .slice(0, 15)
+                                                    .map((v) => `§r§d${v}`),
+                                                "§r§d...",
+                                            ].slice(0, args[4].blocks.length <= 15
+                                                ? -1
+                                                : undefined),
+                                            `§r§bBrush Pattern Type: §a${args[4].type}`,
+                                            ...(args[7] != undefined ?
+                                                [
+                                                    "§r§bBrush Mask: §d",
+                                                    ...args[7].blocks
+                                                        .map((v) => v.rawns)
+                                                        .slice(0, 15)
+                                                        .map((v) => `§r§d${v}`),
+                                                    "§r§d..."
+                                                ].slice(0, args[7].blocks.length <= 15
+                                                    ? -1
+                                                    : undefined)
+                                                : []),
+                                            ...(args[7] != undefined ? [`§r§bBrush Mask Type: §a${args[7].type}`] : []),
+                                        ]));
+                                    }
+                                    player.sendMessageB(`Successfully set brush type of the held item to overlay cube surface with a radius of ${isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]} and a decay level of ${isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]}.`);
+                                }
+                                break;
+                            case "flatten":
+                                {
+                                    let args = evaluateParameters(switchTestB, [
+                                        "presetText",
+                                        "f-l",
+                                        "string",
+                                        "f-rw",
+                                        "string",
+                                        "number",
+                                        "number",
+                                        "blockMask",
+                                    ]).args;
+                                    if (!["up", "down", "north", "east", "south", "west", "auto", "autor"].includes(args[4]?.toLowerCase())) {
+                                        player.sendError(`§cError: Unknown direction "${args[4]?.toLowerCase()}".`, true);
+                                    }
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("brushtype", "flatten");
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("flattendirection", args[4].toLowerCase());
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("decay", isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]);
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("radius", isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]);
+                                    if (args[7] != undefined) {
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(player.selectedSlotIndex)
+                                            .setDynamicProperty("mask", JSON.stringify(args[7].blocks));
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(player.selectedSlotIndex)
+                                            .setDynamicProperty("masktype", args[7].type);
+                                    }
+                                    else {
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(player.selectedSlotIndex)
+                                            .setDynamicProperty("mask");
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(player.selectedSlotIndex)
+                                            .setDynamicProperty("masktype");
+                                    }
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("usereverseoffset", args[3].r);
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("wholemode", args[3].w);
+                                    if (!args[1].l) {
+                                        srun(() => player
+                                            .getComponent("inventory")
+                                            .container.getSlot(player.selectedSlotIndex)
+                                            .setLore([
+                                            `§r§bBrush Type: §aFlatten`,
+                                            `§r§bBrush Radius: §c${isNaN(Number(args[5] ?? undefined))
+                                                ? 3
+                                                : args[5]}`,
+                                            `§r§bBrush Decay: §c${isNaN(Number(args[6] ?? undefined))
+                                                ? 0
+                                                : args[6]}`,
+                                            `§r§bFlatten Direction: §a${args[4].toLowerCase()}`,
+                                            `§r§bUse Reverse Offset: ${args[3].r.toFormattedString()}`,
+                                            `§r§bWhole Mode: §c${args[3].w.toFormattedString()}`,
+                                            ...(args[7] != undefined ?
+                                                [
+                                                    "§r§bBrush Mask: §d",
+                                                    ...args[7].blocks
+                                                        .map((v) => v.rawns)
+                                                        .slice(0, 15)
+                                                        .map((v) => `§r§d${v}`),
+                                                    "§r§d..."
+                                                ].slice(0, args[7].blocks.length <= 15
+                                                    ? -1
+                                                    : undefined)
+                                                : []),
+                                            ...(args[7] != undefined ? [`§r§bBrush Mask Type: §a${args[7].type}`] : []),
+                                        ]));
+                                    }
+                                    player.sendMessageB(`Successfully set brush type of the held item to flatten with a direction of ${args[4]?.toLowerCase()}, a radius of ${isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]}, and a decay level of ${isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]}.`);
+                                }
+                                break;
+                            case "flattensquare":
+                                {
+                                    let args = evaluateParameters(switchTestB, [
+                                        "presetText",
+                                        "f-l",
+                                        "string",
+                                        "f-rw",
+                                        "string",
+                                        "number",
+                                        "number",
+                                        "blockMask",
+                                    ]).args;
+                                    if (!["up", "down", "north", "east", "south", "west", "auto", "autor"].includes(args[4]?.toLowerCase())) {
+                                        player.sendError(`§cError: Unknown direction "${args[4]?.toLowerCase()}".`, true);
+                                    }
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("brushtype", "flattensquare");
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("flattendirection", args[4].toLowerCase());
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("decay", isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]);
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("radius", isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]);
+                                    if (args[7] != undefined) {
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(player.selectedSlotIndex)
+                                            .setDynamicProperty("mask", JSON.stringify(args[7].blocks));
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(player.selectedSlotIndex)
+                                            .setDynamicProperty("masktype", args[7].type);
+                                    }
+                                    else {
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(player.selectedSlotIndex)
+                                            .setDynamicProperty("mask");
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(player.selectedSlotIndex)
+                                            .setDynamicProperty("masktype");
+                                    }
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("usereverseoffset", args[3].r);
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("wholemode", args[3].w);
+                                    if (!args[1].l) {
+                                        srun(() => player
+                                            .getComponent("inventory")
+                                            .container.getSlot(player.selectedSlotIndex)
+                                            .setLore([
+                                            `§r§bBrush Type: §aFlattenSquare`,
+                                            `§r§bBrush Radius: §c${isNaN(Number(args[5] ?? undefined))
+                                                ? 3
+                                                : args[5]}`,
+                                            `§r§bBrush Decay: §c${isNaN(Number(args[6] ?? undefined))
+                                                ? 0
+                                                : args[6]}`,
+                                            `§r§bFlatten Direction: §a${args[4].toLowerCase()}`,
+                                            `§r§bUse Reverse Offset: ${args[3].r.toFormattedString()}`,
+                                            `§r§bWhole Mode: ${args[3].w.toFormattedString()}`,
+                                            ...(args[7] != undefined ?
+                                                [
+                                                    "§r§bBrush Mask: §d",
+                                                    ...args[7].blocks
+                                                        .map((v) => v.rawns)
+                                                        .slice(0, 15)
+                                                        .map((v) => `§r§d${v}`),
+                                                    "§r§d..."
+                                                ].slice(0, args[7].blocks.length <= 15
+                                                    ? -1
+                                                    : undefined)
+                                                : []),
+                                            ...(args[7] != undefined ? [`§r§bBrush Mask Type: §a${args[7].type}`] : []),
+                                        ]));
+                                    }
+                                    player.sendMessageB(`Successfully set brush type of the held item to flatten square with a direction of ${args[4]?.toLowerCase()}, a radius of ${isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]}, and a decay level of ${isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]}.`);
+                                }
+                                break;
+                            case "flattenfill":
+                                {
+                                    let args = evaluateParameters(switchTestB, [
+                                        "presetText",
+                                        "f-l",
+                                        "string",
+                                        "f-r",
+                                        "string",
+                                        "blockPattern",
+                                        "number",
+                                        "number",
+                                        "blockMask",
+                                    ]).args;
+                                    if (!["up", "down", "north", "east", "south", "west", "auto", "autor"].includes(args[4]?.toLowerCase())) {
+                                        player.sendError(`§cError: Unknown direction "${args[4]?.toLowerCase()}".`, true);
+                                    }
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("brushtype", "flattenfill");
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("flattendirection", args[4].toLowerCase());
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("pattern", JSON.stringify(args[5].blocks));
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("patterntype", args[5].type);
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("decay", isNaN(Number(args[7] ?? undefined)) ? 0 : args[7]);
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("radius", isNaN(Number(args[6] ?? undefined)) ? 3 : args[6]);
+                                    if (args[7] != undefined) {
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(player.selectedSlotIndex)
+                                            .setDynamicProperty("mask", JSON.stringify(args[8].blocks));
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(player.selectedSlotIndex)
+                                            .setDynamicProperty("masktype", args[8].type);
+                                    }
+                                    else {
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(player.selectedSlotIndex)
+                                            .setDynamicProperty("mask");
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(player.selectedSlotIndex)
+                                            .setDynamicProperty("masktype");
+                                    }
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("usereverseoffset", args[3].r);
+                                    if (!args[1].l) {
+                                        srun(() => player
+                                            .getComponent("inventory")
+                                            .container.getSlot(player.selectedSlotIndex)
+                                            .setLore([
+                                            `§r§bBrush Type: §aFlattenFill`,
+                                            `§r§bBrush Radius: §c${isNaN(Number(args[6] ?? undefined))
+                                                ? 3
+                                                : args[6]}`,
+                                            `§r§bBrush Decay: §c${isNaN(Number(args[7] ?? undefined))
+                                                ? 0
+                                                : args[7]}`,
+                                            `§r§bFlatten Direction: §a${args[4].toLowerCase()}`,
+                                            `§r§bUse Reverse Offset: ${args[3].r.toFormattedString()}`,
+                                            ...[
+                                                ...args[5].blocks
+                                                    .map((v) => v.rawns)
+                                                    .slice(0, 15)
+                                                    .map((v) => `§r§d${v}`),
+                                                "§r§d...",
+                                            ].slice(0, args[5].blocks.length <= 15
+                                                ? -1
+                                                : undefined),
+                                            `§r§bBrush Pattern Type: §a${args[5].type}`,
+                                            ...(args[8] != undefined ?
+                                                [
+                                                    "§r§bBrush Mask: §d",
+                                                    ...args[8].blocks
+                                                        .map((v) => v.rawns)
+                                                        .slice(0, 15)
+                                                        .map((v) => `§r§d${v}`),
+                                                    "§r§d..."
+                                                ].slice(0, args[8].blocks.length <= 15
+                                                    ? -1
+                                                    : undefined)
+                                                : []),
+                                            ...(args[8] != undefined ? [`§r§bBrush Mask Type: §a${args[8].type}`] : []),
+                                        ]));
+                                    }
+                                    player.sendMessageB(`Successfully set brush type of the held item to flatten fill with a direction of ${args[4]?.toLowerCase()}, a radius of ${isNaN(Number(args[6] ?? undefined)) ? 3 : args[6]}, and a decay level of ${isNaN(Number(args[7] ?? undefined)) ? 0 : args[7]}.`);
+                                }
+                                break;
+                            case "flattensquarefill":
+                                {
+                                    let args = evaluateParameters(switchTestB, [
+                                        "presetText",
+                                        "f-l",
+                                        "string",
+                                        "f-r",
+                                        "string",
+                                        "blockPattern",
+                                        "number",
+                                        "number",
+                                        "blockMask",
+                                    ]).args;
+                                    if (!["up", "down", "north", "east", "south", "west", "auto", "autor"].includes(args[4]?.toLowerCase())) {
+                                        player.sendError(`§cError: Unknown direction "${args[4]?.toLowerCase()}".`, true);
+                                    }
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("brushtype", "flattensquarefill");
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("flattendirection", args[4].toLowerCase());
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("pattern", JSON.stringify(args[5].blocks));
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("patterntype", args[5].type);
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("decay", isNaN(Number(args[7] ?? undefined)) ? 0 : args[7]);
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("radius", isNaN(Number(args[6] ?? undefined)) ? 3 : args[6]);
+                                    if (args[7] != undefined) {
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(player.selectedSlotIndex)
+                                            .setDynamicProperty("mask", JSON.stringify(args[8].blocks));
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(player.selectedSlotIndex)
+                                            .setDynamicProperty("masktype", args[8].type);
+                                    }
+                                    else {
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(player.selectedSlotIndex)
+                                            .setDynamicProperty("mask");
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(player.selectedSlotIndex)
+                                            .setDynamicProperty("masktype");
+                                    }
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("usereverseoffset", args[3].r);
+                                    if (!args[1].l) {
+                                        srun(() => player
+                                            .getComponent("inventory")
+                                            .container.getSlot(player.selectedSlotIndex)
+                                            .setLore([
+                                            `§r§bBrush Type: §aFlattenSquareFill`,
+                                            `§r§bBrush Radius: §c${isNaN(Number(args[6] ?? undefined))
+                                                ? 3
+                                                : args[6]}`,
+                                            `§r§bBrush Decay: §c${isNaN(Number(args[7] ?? undefined))
+                                                ? 0
+                                                : args[7]}`,
+                                            `§r§bFlatten Direction: §a${args[4].toLowerCase()}`,
+                                            `§r§bUse Reverse Offset: ${args[3].r.toFormattedString()}`,
+                                            ...[
+                                                ...args[5].blocks
+                                                    .map((v) => v.rawns)
+                                                    .slice(0, 15)
+                                                    .map((v) => `§r§d${v}`),
+                                                "§r§d...",
+                                            ].slice(0, args[5].blocks.length <= 15
+                                                ? -1
+                                                : undefined),
+                                            `§r§bBrush Pattern Type: §a${args[5].type}`,
+                                            ...(args[8] != undefined ?
+                                                [
+                                                    "§r§bBrush Mask: §d",
+                                                    ...args[8].blocks
+                                                        .map((v) => v.rawns)
+                                                        .slice(0, 15)
+                                                        .map((v) => `§r§d${v}`),
+                                                    "§r§d..."
+                                                ].slice(0, args[8].blocks.length <= 15
+                                                    ? -1
+                                                    : undefined)
+                                                : []),
+                                            ...(args[8] != undefined ? [`§r§bBrush Mask Type: §a${args[8].type}`] : []),
+                                        ]));
+                                    }
+                                    player.sendMessageB(`Successfully set brush type of the held item to flatten square fill with a direction of ${args[4]?.toLowerCase()}, a radius of ${isNaN(Number(args[6] ?? undefined)) ? 3 : args[6]}, and a decay level of ${isNaN(Number(args[7] ?? undefined)) ? 0 : args[7]}.`);
+                                }
+                                break;
+                            case "nudge":
+                            case "nudgecube":
+                                {
+                                    let args = evaluateParameters(switchTestB, [
+                                        "presetText",
+                                        "f-l",
+                                        "string",
+                                        "f-t",
+                                        "string",
+                                        "number",
+                                        "number",
+                                        "blockMask",
+                                    ]).args;
+                                    if (!["up", "down", "north", "east", "south", "west", "auto", "autor"].includes(args[4]?.toLowerCase())) {
+                                        player.sendError(`§cError: Unknown direction "${args[4]?.toLowerCase()}".`, true);
+                                    }
+                                    const shape = args[2].toLowerCase().slice(5) || "sphere";
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("brushtype", "nudge");
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("shape", shape);
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("trailmode", args[3].t);
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("nudgedirection", args[4].toLowerCase());
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("decay", isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]);
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("radius", isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]);
+                                    if (args[7] != undefined) {
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(player.selectedSlotIndex)
+                                            .setDynamicProperty("mask", JSON.stringify(args[7].blocks));
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(player.selectedSlotIndex)
+                                            .setDynamicProperty("masktype", args[7].type);
+                                    }
+                                    else {
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(player.selectedSlotIndex)
+                                            .setDynamicProperty("mask");
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(player.selectedSlotIndex)
+                                            .setDynamicProperty("masktype");
+                                    }
+                                    if (!args[1].l) {
+                                        srun(() => player
+                                            .getComponent("inventory")
+                                            .container.getSlot(player.selectedSlotIndex)
+                                            .setLore([
+                                            `§r§bBrush Type: §aNudge`,
+                                            `§r§bShape: §a${shape}`,
+                                            `§r§bBrush Radius: §c${isNaN(Number(args[5] ?? undefined))
+                                                ? 3
+                                                : args[5]}`,
+                                            `§r§bBrush Decay: §c${isNaN(Number(args[6] ?? undefined))
+                                                ? 0
+                                                : args[6]}`,
+                                            `§r§bNudge Direction: §a${args[4].toLowerCase()}`,
+                                            `§r§bTrail Mode: §a${args[3].t}`,
+                                            ...(args[7] != undefined ?
+                                                [
+                                                    "§r§bBrush Mask: §d",
+                                                    ...args[7].blocks
+                                                        .map((v) => v.rawns)
+                                                        .slice(0, 15)
+                                                        .map((v) => `§r§d${v}`),
+                                                    "§r§d..."
+                                                ].slice(0, args[7].blocks.length <= 15
+                                                    ? -1
+                                                    : undefined)
+                                                : []),
+                                            ...(args[7] != undefined ? [`§r§bBrush Mask Type: §a${args[7].type}`] : []),
+                                        ]));
+                                    }
+                                    player.sendMessageB(`Successfully set brush type of the held item to nudge with a shape of ${shape}, a direction of ${args[4]?.toLowerCase()}, a radius of ${isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]}, and a decay level of ${isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]}.`);
+                                }
+                                break;
+                            case "copy":
+                            case "copycube":
+                                {
+                                    let args = evaluateParameters(switchTestB, [
+                                        "presetText",
+                                        "f-la",
+                                        "string",
+                                        "f-a",
+                                        {
+                                            type: "ignorableNamedParameter",
+                                            name: "clipboard",
+                                            valueType: "string",
+                                            key: "clipboard",
+                                        },
+                                        "placeholder",
+                                        "number",
+                                        "number",
+                                        "blockMask",
+                                    ]).args;
+                                    const shape = args[2].toLowerCase().slice(5) || "sphere";
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("brushtype", "copy");
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("decay", isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]);
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("radius", isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]);
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("copyair", args[3].a);
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("clipboard", args.clipboard ?? `player_WorldEdit_brush_${player.id}`);
+                                    if (args[7] != undefined) {
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(player.selectedSlotIndex)
+                                            .setDynamicProperty("mask", JSON.stringify(args[7].blocks));
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(player.selectedSlotIndex)
+                                            .setDynamicProperty("masktype", args[7].type);
+                                    }
+                                    else {
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(player.selectedSlotIndex)
+                                            .setDynamicProperty("mask");
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(player.selectedSlotIndex)
+                                            .setDynamicProperty("masktype");
+                                    }
+                                    if (!args[1].l) {
+                                        srun(() => player
+                                            .getComponent("inventory")
+                                            .container.getSlot(player.selectedSlotIndex)
+                                            .setLore([
+                                            `§r§bBrush Type: §aCopy`,
+                                            `§r§bClipboard: §a${args.clipboard ?? `player_WorldEdit_brush_${player.id}`}`,
+                                            `§r§bShape: §a${shape}`,
+                                            `§r§bBrush Radius: §c${isNaN(Number(args[5] ?? undefined))
+                                                ? 3
+                                                : args[5]}`,
+                                            `§r§bBrush Decay: §c${isNaN(Number(args[6] ?? undefined))
+                                                ? 0
+                                                : args[6]}`,
+                                            ...(args[7] != undefined ?
+                                                [
+                                                    "§r§bBrush Mask: §d",
+                                                    ...args[7].blocks
+                                                        .map((v) => v.rawns)
+                                                        .slice(0, 15)
+                                                        .map((v) => `§r§d${v}`),
+                                                    "§r§d..."
+                                                ].slice(0, args[7].blocks.length <= 15
+                                                    ? -1
+                                                    : undefined)
+                                                : []),
+                                            ...(args[7] != undefined ? [`§r§bBrush Mask Type: §a${args[7].type}`] : []),
+                                        ]));
+                                    }
+                                    player.sendMessageB(`Successfully set brush type of the held item to copy with a shape of ${shape}, a radius of ${isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]}, and a decay level of ${isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]}.`);
+                                }
+                                break;
+                            case "paste":
+                                {
+                                    let args = evaluateParameters(switchTestB, [
+                                        "presetText",
+                                        "f-l",
+                                        "string",
+                                        {
+                                            type: "ignorableNamedParameter",
+                                            name: "clipboard",
+                                            valueType: "string",
+                                            key: "clipboard",
+                                        },
+                                        "placeholder",
+                                        "placeholder",
+                                        "number",
+                                        "number",
+                                        "blockMask",
+                                    ]).args;
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("brushtype", "paste");
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("decay", isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]);
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("radius", isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]);
+                                    player
+                                        .getComponent("inventory")
+                                        .container.getSlot(player.selectedSlotIndex)
+                                        .setDynamicProperty("clipboard", args.clipboard ?? `player_WorldEdit_brush_${player.id}`);
+                                    if (args[7] != undefined) {
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(player.selectedSlotIndex)
+                                            .setDynamicProperty("mask", JSON.stringify(args[7].blocks));
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(player.selectedSlotIndex)
+                                            .setDynamicProperty("masktype", args[7].type);
+                                    }
+                                    else {
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(player.selectedSlotIndex)
+                                            .setDynamicProperty("mask");
+                                        player
+                                            .getComponent("inventory")
+                                            .container.getSlot(player.selectedSlotIndex)
+                                            .setDynamicProperty("masktype");
+                                    }
+                                    if (!args[1].l) {
+                                        srun(() => player
+                                            .getComponent("inventory")
+                                            .container.getSlot(player.selectedSlotIndex)
+                                            .setLore([
+                                            `§r§bBrush Type: §aPaste`,
+                                            `§r§bClipboard: §a${args.clipboard ?? `player_WorldEdit_brush_${player.id}`}` /*
+                                            `§r§bBrush Radius: §c${
+                                                isNaN(Number(args[5] ?? undefined))
+                                                    ? 3
+                                                    : args[5]
+                                            }`,
+                                            `§r§bBrush Decay: §c${
+                                                isNaN(Number(args[6] ?? undefined))
+                                                    ? 0
+                                                    : args[6]
+                                            }`,
+                                            ...(args[7] != undefined ?
+                                                [
+                                                    "§r§bBrush Mask: §d",
+                                                    ...args[7]!.blocks
+                                                    .map((v) => v.rawns)
+                                                    .slice(0, 15)
+                                                    .map(
+                                                        (v) =>
+                                                            `§r§d${v}`
+                                                    ),
+                                                    "§r§d..."
+                                                ].slice(
+                                                    0,
+                                                    args[7]!.blocks.length <= 15
+                                                        ? -1
+                                                        : undefined
+                                                )
+                                            : []),
+                                            ...(args[7] != undefined ? [`§r§bBrush Mask Type: §a${
+                                                args[7]!.type
+                                            }`] : []), */
+                                        ]));
+                                    }
+                                    player.sendMessageB(`Successfully set brush type of the held item to paste.` /* with a radius of ${
+                                        isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]
+                                    } and a decay level of ${
+                                        isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]
+                                    }.`*/);
                                 }
                                 break;
                             default:
@@ -27163,6 +28312,10 @@ ${command.dp}snapshot list`);
                                             return;
                                         }
                                         let backup = AreaBackups.get("areabackup:" + args[2]).backups[args[3] ?? 0];
+                                        if (!backup) {
+                                            player.sendError(`§cError: No backup at index ${args[3]} found with for area ${JSON.stringify(args[2])}.`, true);
+                                            return;
+                                        }
                                         AreaBackups.get("areabackup:" + args[2]).rollback(backup);
                                         player.sendMessageB(`Restored the area ${JSON.stringify(args[2])} from the backup at ${new Date(backup).formatDateTime(Number(player.getDynamicProperty("andexdbPersonalSettings:timeZone") ??
                                             world.getDynamicProperty("andexdbSettings:timeZone") ??
@@ -27341,7 +28494,26 @@ ${command.dp}snapshot list`);
                             });
                             return a;
                         })(), dimension);
-                        try {
+                        try { /*
+                            const begin = Vector.add(player.location, {x: -100, z: -100});
+                            const end = Vector.add(player.location, {x: 100, z: 100});
+                            const molangVariables = new modules.mcServer.MolangVariableMap();
+                            molangVariables.setFloat("variable.max_lifetime", 100);
+                            for (let x = Math.min(begin.x, end.x); x <= Math.max(begin.x, end.x); x++) {
+                                for (
+                                    let z = Math.min(begin.z, end.z);
+                                    z <= Math.max(begin.z, end.z);
+                                    z++
+                                ) {
+                                    try {
+                                        player.dimension.spawnParticle(
+                                                "andexdb:xz_axis_particle_pos1",
+                                            Vector.add({x, y: player.location.y, z}, { x: 0.5, y: 1.005, z: 0.5 }),
+                                            molangVariables
+                                        );
+                                    } catch {}
+                                }
+                            } */
                             for (let x = Math.min(begin.x, end.x); x <= Math.max(begin.x, end.x); x++) {
                                 for (let y = Math.min(begin.y, end.y); y <= Math.max(begin.y, end.y); y++) {
                                     for (let z = Math.min(begin.z, end.z); z <= Math.max(begin.z, end.z); z++) {
@@ -27615,7 +28787,7 @@ ${command.dp}snapshot list`);
                             })(), player.dimension).then((tac) => {
                                 ta = tac;
                                 try {
-                                    undoClipboard.save(player.dimension, { from: coordinatesa, to: coordinatesb }, Date.now(), {
+                                    UndoClipboard.getClipboard(`player_${player.id}`).save(player.dimension, { from: coordinatesa, to: coordinatesb }, Date.now(), {
                                         includeBlocks: true,
                                         includeEntities: false,
                                         saveMode: config.undoClipboardMode,
@@ -28148,7 +29320,7 @@ ${command.dp}snapshot list`);
                             })(), player.dimension).then((tac) => {
                                 ta = tac;
                                 try {
-                                    undoClipboard.save(player.dimension, { from: from, to: to }, Date.now(), {
+                                    UndoClipboard.getClipboard(`player_${player.id}`).save(player.dimension, { from: from, to: to }, Date.now(), {
                                         includeBlocks: true,
                                         includeEntities: false,
                                         saveMode: config.undoClipboardMode,

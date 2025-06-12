@@ -10,7 +10,7 @@ export function equippableToItemStackArray(
     for (let i = 0; i < 5 + Number(includeMainhand); i++) {
         itemList.push(
             equippable.getEquipment(
-                includeMainhand ? EquipmentSlots[i] : OtherEquipmentSlots[i]
+                includeMainhand ? EquipmentSlots[i]! : OtherEquipmentSlots[i]!
             )
         );
     }

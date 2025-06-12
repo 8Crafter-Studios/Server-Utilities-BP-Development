@@ -100,7 +100,7 @@ if (Number(index) != 0) {*/ /*
     form.toggle("setProperty Enabled", { defaultValue: false }); /*
     try {console.warn(block.block.permutation.getAllStates()) } catch(e){console.error(e, e.stack);}
     try {console.warn(block.block.permutation.getAllStates()[0]) } catch(e){console.error(e, e.stack);}
-    try {console.warn(block.block.permutation.getAllStates()[0][0]) } catch(e){console.error(e, e.stack);}*/
+    try {console.warn(block.block.permutation.getAllStates()[0]![0]) } catch(e){console.error(e, e.stack);}*/
     /*form.dropdown("Block Permutation To Set", block.getTags())*/ /*
     form.slider("Selected Slot", 0, 56, 1)*/
     form.toggle("isWaterlogged", { defaultValue: block2.isWaterlogged }); /*

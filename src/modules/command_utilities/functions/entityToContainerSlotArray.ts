@@ -13,7 +13,7 @@ export function entityToContainerSlotArray(
         itemList.push(container!.getSlot(i));
     }
     for (let i = 0; i < 5 && getEquipment && !!equipment; i++) {
-        itemList.push(equipment?.getEquipmentSlot(OtherEquipmentSlots[i]));
+        itemList.push(equipment?.getEquipmentSlot(OtherEquipmentSlots[i]!));
     }
     return !!container || !!equipment ? itemList : undefined;
 }

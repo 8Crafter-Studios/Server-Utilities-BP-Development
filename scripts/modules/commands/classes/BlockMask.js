@@ -1,3 +1,4 @@
+import { Player } from "@minecraft/server";
 import { Block, BlockPermutation, BlockType, BlockTypes } from "@minecraft/server";
 export const knownContainerTypes = [
     "minecraft:yellow_shulker_box",
@@ -89,14 +90,24 @@ export const customMaskGroupPresets = {
             "tag:plant",
             "short_grass",
             "tall_grass",
+            "fern",
+            "large_fern",
+            "dead_bush",
             "vine",
             "dandelion",
             "allium",
+            "poppy",
+            "cactus",
+            "cactus_flower",
+            "short_dry_grass",
+            "tall_dry_grass",
             "brown_mushroom_block",
             "red_mushroom_block",
             "mushroom_stem",
             "crimson_roots",
             "warped_roots",
+            "melon_block",
+            "pumpkin",
             "bee_nest", // TO-DO
         ]),
     ],

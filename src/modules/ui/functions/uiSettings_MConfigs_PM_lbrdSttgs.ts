@@ -145,7 +145,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
                     : (["addLeaderboard", "back", "close", "reset"] as const)[r.selection! - leaderboards.length]
             ) {
                 case "button": {
-                    const leaderboardID = leaderboards[r.selection!];
+                    const leaderboardID = leaderboards[r.selection!]!;
                     leaderboardID;
                     const leaderboard = statistics.find((s) => s.id === leaderboardID)!;
                     const rb = await new ActionFormData()
@@ -346,8 +346,8 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
         if (r.selection === buttons.length + 1) {
             return 0;
         }
-        const buttonID = buttons[r.selection!].id;
-        const button = buttons[r.selection!];
+        const buttonID = buttons[r.selection!]!.id;
+        const button = buttons[r.selection!]!;
         const rb = await new ActionFormData()
             .title(customFormUICodes.action.titles.formStyles.medium + "Edit Button")
             .body(
@@ -438,7 +438,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
                     : (["addLeaderboard", "back", "close", "reset"] as const)[r.selection! - trackedStats.length]
             ) {
                 case "button": {
-                    const leaderboardID = trackedStats[r.selection!];
+                    const leaderboardID = trackedStats[r.selection!]!;
                     leaderboardID;
                     const leaderboard = statistics.find((s) => s.id === leaderboardID)!;
                     const rb = await new ActionFormData()
@@ -636,8 +636,8 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
         if (r.selection === buttons.length + 1) {
             return 0;
         }
-        const buttonID = buttons[r.selection!].id;
-        const button = buttons[r.selection!];
+        const buttonID = buttons[r.selection!]!.id;
+        const button = buttons[r.selection!]!;
         const rb = await new ActionFormData()
             .title(customFormUICodes.action.titles.formStyles.medium + "Edit Button")
             .body(
@@ -769,7 +769,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
                     if (
                         (await uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics_builtIn_statistic(
                             sourceEntity,
-                            statistics[r.selection!]
+                            statistics[r.selection!]!
                         )) == 1
                     ) {
                         return await uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics_builtIn(sourceEntity);
@@ -1040,7 +1040,7 @@ export async function uiSettings_menuConfigurations_playerMenu_leaderboardsSetti
                     if (
                         (await uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics_custom_statistic(
                             sourceEntity,
-                            statistics[r.selection!]
+                            statistics[r.selection!]!
                         )) === 1
                     ) {
                         return await uiSettings_menuConfigurations_playerMenu_leaderboardsSettings_manageStatistics_custom(sourceEntity);

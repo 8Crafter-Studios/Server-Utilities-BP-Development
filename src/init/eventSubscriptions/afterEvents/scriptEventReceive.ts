@@ -126,7 +126,7 @@ subscribedEvents.afterScriptEventReceive = system.afterEvents.scriptEventReceive
         diamondAwesomeSword.setLore(["§c§lDiamond Sword of Awesome§r", "+10 coolness", "§p+4 shiny§r"]);
 
         // hover over/select the item in your inventory to see the lore.
-        const inventory = players[0].getComponent("inventory") as EntityInventoryComponent;
+        const inventory = players[0]!.getComponent("inventory") as EntityInventoryComponent;
         inventory.container.setItem(0, diamondAwesomeSword);
 
         let item = inventory.container.getItem(0)!;
@@ -158,7 +158,7 @@ subscribedEvents.afterScriptEventReceive = system.afterEvents.scriptEventReceive
             return -1;
         }
 
-        const inventory2 = players[0].getComponent("inventory") as EntityInventoryComponent;
+        const inventory2 = players[0]!.getComponent("inventory") as EntityInventoryComponent;
         let itemb = inventory.container.getItem(0);
         console.warn(String(Array(item.getComponent("enchantable")!.getEnchantments()[0])));
         console.warn(item.getComponent("enchantable")!.isValid);
@@ -403,7 +403,7 @@ subscribedEvents.afterScriptEventReceive = system.afterEvents.scriptEventReceive
         let allowUnderwater = explosionOptions[5];
         let breaksBlocks = explosionOptions[6];
         let causesFire = explosionOptions[7];
-        let sources = targetSelectorAllListE(explosionOptions[8], "0, 0, 0");
+        let sources = targetSelectorAllListE(explosionOptions[8]!, "0, 0, 0");
         overworld.createExplosion({ x: posx, y: posy, z: posz }, radius, {
             allowUnderwater: Boolean(allowUnderwater?.toLowerCase().replaceAll("0", "").replaceAll("0.0", "").replaceAll("no", "").replaceAll("false", "")),
             breaksBlocks: Boolean(breaksBlocks?.toLowerCase().replaceAll("0", "").replaceAll("0.0", "").replaceAll("no", "").replaceAll("false", "")),
@@ -422,12 +422,12 @@ subscribedEvents.afterScriptEventReceive = system.afterEvents.scriptEventReceive
         entityViewedEntityType = "None";
         entityViewedEntityName = "None";
         entityViewedEntityDistance = "None";
-        let player = players[0]; /*
+        let player = players[0]!; /*
         player.getComponent("minecraft:inventory").container.addItem(player.getBlockFromViewDirection({includePassableBlocks: true, includeLiquidBlocks: true}).block.getItemStack())*/
 
         blockViewedBlockType = "None";
         spawnPointAllCoordinates = "None";
-        let targetList = [players[0].nameTag];
+        let targetList = [players[0]!.nameTag];
         let scoreboardIdentity = "§4None§a";
         let scoreboardIdentityDisplayName = "§4None§a";
         let scoreboardIdentityType = "§4None§a";
@@ -435,7 +435,7 @@ subscribedEvents.afterScriptEventReceive = system.afterEvents.scriptEventReceive
             /*
             console.warn(index);*/
             if (Number(index) != 0) {
-                targetList = String([String(targetList), players[index].nameTag]).split(",");
+                targetList = String([String(targetList), players[index]!.nameTag]).split(",");
             } /*
             console.warn(targetList);*/
         }
@@ -466,7 +466,7 @@ subscribedEvents.afterScriptEventReceive = system.afterEvents.scriptEventReceive
                     blockProperties = "";
                     componentList = [];
                     try {
-                        componentList = [players[playerTargetB].getComponents()[0].typeId];
+                        componentList = [players[playerTargetB]!.getComponents()[0]!.typeId];
                     } catch (e) {
                         componentList = "§4None§a";
                     }
@@ -474,62 +474,62 @@ subscribedEvents.afterScriptEventReceive = system.afterEvents.scriptEventReceive
                     try {
                         effectsList = [
                             "§9{ §stypeId§a: §u" +
-                                players[playerTargetB].getEffects()[0].typeId +
+                                players[playerTargetB]!.getEffects()[0]!.typeId +
                                 "§a, §sdisplayName§a: §u" +
-                                players[playerTargetB].getEffects()[0].displayName +
+                                players[playerTargetB]!.getEffects()[0]!.displayName +
                                 "§a, §sduration§a: §c" +
-                                players[playerTargetB].getEffects()[0].duration +
+                                players[playerTargetB]!.getEffects()[0]!.duration +
                                 "§a, §samplifier§a: §c" +
-                                players[playerTargetB].getEffects()[0].amplifier +
+                                players[playerTargetB]!.getEffects()[0]!.amplifier +
                                 "§9 }§a",
                         ];
                     } catch (e) {
                         effectsList = "§4None§a";
                     }
                     try {
-                        blockProperties = [players[playerTargetB].getBlockFromViewDirection()!.block.permutation.getAllStates()[0]];
+                        blockProperties = [players[playerTargetB]!.getBlockFromViewDirection()!.block.permutation.getAllStates()[0]];
                     } catch (e) {
                         blockProperties = "§4None§a";
                     } /*
-            let effectsList = [players[playerTargetB].getComponents[0]]*/
+            let effectsList = [players[playerTargetB]!.getComponents[0]]*/
 
-                    let distance = Vector3Utils.distance(players[playerViewerB].location, players[playerTargetB].location);
+                    let distance = Vector3Utils.distance(players[playerViewerB]!.location, players[playerTargetB]!.location);
                     try {
-                        entityViewedEntityType = players[playerTargetB].getEntitiesFromViewDirection()[0].entity.typeId;
+                        entityViewedEntityType = players[playerTargetB]!.getEntitiesFromViewDirection()[0]!.entity.typeId;
                     } catch (e) {
                         entityViewedEntityType = "§4None§a";
                     }
                     try {
-                        entityViewedEntityName = players[playerTargetB].getEntitiesFromViewDirection()[0].entity.typeId;
+                        entityViewedEntityName = players[playerTargetB]!.getEntitiesFromViewDirection()[0]!.entity.typeId;
                     } catch (e) {
                         entityViewedEntityName = "§4None§a";
                     }
                     try {
-                        entityViewedEntityDistance = players[playerTargetB].getEntitiesFromViewDirection()[0].distance;
+                        entityViewedEntityDistance = players[playerTargetB]!.getEntitiesFromViewDirection()[0]!.distance;
                     } catch (e) {
                         entityViewedEntityDistance = "§4None§a";
                     }
                     try {
-                        scoreboardIdentity = String(players[playerTargetB].scoreboardIdentity!.id);
+                        scoreboardIdentity = String(players[playerTargetB]!.scoreboardIdentity!.id);
                     } catch (e) {
                         scoreboardIdentity = "§4None§a";
                     }
                     try {
-                        scoreboardIdentityDisplayName = players[playerTargetB].scoreboardIdentity!.displayName;
+                        scoreboardIdentityDisplayName = players[playerTargetB]!.scoreboardIdentity!.displayName;
                     } catch (e) {
                         scoreboardIdentityDisplayName = "§4None§a";
                     }
                     try {
-                        scoreboardIdentityType = players[playerTargetB].scoreboardIdentity!.type;
+                        scoreboardIdentityType = players[playerTargetB]!.scoreboardIdentity!.type;
                     } catch (e) {
                         scoreboardIdentityType = "§4None§a";
                     }
                     try {
                         blockViewedBlockType =
                             "§9{ §btypeId§a: §u" +
-                            players[playerTargetB].getBlockFromViewDirection()!.block.typeId +
+                            players[playerTargetB]!.getBlockFromViewDirection()!.block.typeId +
                             "§a, §bcanBeWaterlogged§a: §u" +
-                            players[playerTargetB].getBlockFromViewDirection()!.block.canContainLiquid(modules.mcServer.LiquidType.Water) +
+                            players[playerTargetB]!.getBlockFromViewDirection()!.block.canContainLiquid(modules.mcServer.LiquidType.Water) +
                             "§9 }§a";
                     } catch (e) {
                         blockViewedBlockType = "§4None§a";
@@ -537,26 +537,26 @@ subscribedEvents.afterScriptEventReceive = system.afterEvents.scriptEventReceive
                     try {
                         spawnPointAllCoordinates =
                             "§a, §bgetSpawnPoint§a: §9{ §sdimension§a: §u" +
-                            players[playerTargetB].getSpawnPoint()!.dimension +
+                            players[playerTargetB]!.getSpawnPoint()!.dimension +
                             "§a, §sx§a: §c" +
-                            players[playerTargetB].getSpawnPoint()!.x +
+                            players[playerTargetB]!.getSpawnPoint()!.x +
                             "§a, §sy§a: §c" +
-                            players[playerTargetB].getSpawnPoint()!.y +
+                            players[playerTargetB]!.getSpawnPoint()!.y +
                             "§a, §sz§a: §c" +
-                            players[playerTargetB].getSpawnPoint()!.z +
+                            players[playerTargetB]!.getSpawnPoint()!.z +
                             "§9 }§a";
                     } catch (e) {
                         spawnPointAllCoordinates = "§4None§a";
                     }
-                    for (const index in players[playerTargetB].getComponents()) {
+                    for (const index in players[playerTargetB]!.getComponents()) {
                         /*
                     console.warn(index);*/
                         if (Number(index) != 0) {
-                            componentList = String([String(componentList), players[playerTargetB].getComponents()[index].typeId]).split(",");
+                            componentList = String([String(componentList), players[playerTargetB]!.getComponents()[index]!.typeId]).split(",");
                         } /*
                 console.warn(targetList);*/
                     }
-                    for (const index in players[playerTargetB].getEffects()) {
+                    for (const index in players[playerTargetB]!.getEffects()) {
                         /*
                     console.warn(index);*/
                         if (Number(index) != 0) {
@@ -564,13 +564,13 @@ subscribedEvents.afterScriptEventReceive = system.afterEvents.scriptEventReceive
                                 effectsList = String([
                                     String(effectsList),
                                     "§9{ §stypeId§a: §u" +
-                                        players[playerTargetB].getEffects()[index].typeId +
+                                        players[playerTargetB]!.getEffects()[index]!.typeId +
                                         "§a, §sdisplayName§a: §u" +
-                                        players[playerTargetB].getEffects()[index].displayName +
+                                        players[playerTargetB]!.getEffects()[index]!.displayName +
                                         ", §sduration§a: §c" +
-                                        players[playerTargetB].getEffects()[index].duration +
+                                        players[playerTargetB]!.getEffects()[index]!.duration +
                                         "§a, §samplifier§a: §c" +
-                                        players[playerTargetB].getEffects()[index].amplifier +
+                                        players[playerTargetB]!.getEffects()[index]!.amplifier +
                                         "§9 }§a",
                                 ]).split(",");
                             } catch (e) {
@@ -579,23 +579,23 @@ subscribedEvents.afterScriptEventReceive = system.afterEvents.scriptEventReceive
                         } /*
                 console.warn(targetList);*/
                     }
-                    players[playerViewerB].sendMessage(
+                    players[playerViewerB]!.sendMessage(
                         "§bname§a: §u" +
-                            players[playerTargetB].name +
+                            players[playerTargetB]!.name +
                             "§a, §bnameTag§a: §u" +
-                            players[playerTargetB].nameTag +
+                            players[playerTargetB]!.nameTag +
                             "§a, §bUUID§a: §u" +
-                            players[playerTargetB].id +
+                            players[playerTargetB]!.id +
                             "§a, §bdistance§a: §u" +
                             distance +
                             "§a, §bLocation§a: §9{ §c" +
-                            players[playerTargetB].location.x +
+                            players[playerTargetB]!.location.x +
                             "§a, §c" +
-                            players[playerTargetB].location.y +
+                            players[playerTargetB]!.location.y +
                             "§a, §c" +
-                            players[playerTargetB].location.z +
+                            players[playerTargetB]!.location.z +
                             "§9 }§a, §bisSneaking§a: §g" +
-                            players[playerTargetB].isSneaking +
+                            players[playerTargetB]!.isSneaking +
                             "§a, §bscoreboardIdentity§a: §u" +
                             scoreboardIdentity +
                             "§a, §bscoreboardIdentityDisplayName§a: §u" +
@@ -603,15 +603,15 @@ subscribedEvents.afterScriptEventReceive = system.afterEvents.scriptEventReceive
                             "§a, §bscoreboardIdentityType§a: §u" +
                             scoreboardIdentityType +
                             "§a, §bgetTotalXP§a: §c" +
-                            players[playerTargetB].getTotalXp() +
+                            players[playerTargetB]!.getTotalXp() +
                             "§a, §bxpEarnedAtCurrentLevel§a: §c" +
-                            players[playerTargetB].xpEarnedAtCurrentLevel +
+                            players[playerTargetB]!.xpEarnedAtCurrentLevel +
                             "§a, §blevel§a: §c" +
-                            players[playerTargetB].level +
+                            players[playerTargetB]!.level +
                             "§a, §btotalXpNeededForNextLevel§a: §c" +
-                            players[playerTargetB].totalXpNeededForNextLevel +
+                            players[playerTargetB]!.totalXpNeededForNextLevel +
                             "§a, §bisOp§a: §g" +
-                            players[playerTargetB].isOp() +
+                            players[playerTargetB]!.isOp() +
                             "§a, §bgetBlockFromViewDirection§a: " +
                             blockViewedBlockType +
                             ", §bgetEntitiesFromViewDirection§a: §9{ §sEntity§a: " +
@@ -623,19 +623,19 @@ subscribedEvents.afterScriptEventReceive = system.afterEvents.scriptEventReceive
                             "§n]§a, §bgetEffects§a: §n[§a" +
                             effectsList +
                             "§n]§a, §bgetTags§a: [" +
-                            players[playerTargetB].getTags() +
+                            players[playerTargetB]!.getTags() +
                             "], §bgetVelocity§a: §9{ §c" +
-                            (players[playerTargetB].getVelocity().x +
+                            (players[playerTargetB]!.getVelocity().x +
                                 "§a, §c" +
-                                players[playerTargetB].getVelocity().y +
+                                players[playerTargetB]!.getVelocity().y +
                                 "§a, §c" +
-                                players[playerTargetB].getVelocity().z) +
+                                players[playerTargetB]!.getVelocity().z) +
                             "§9 }§a, §bgetViewDirection§a: §9{ §bx: §c" +
-                            (players[playerTargetB].getViewDirection().x +
+                            (players[playerTargetB]!.getViewDirection().x +
                                 "§a, §by: §c" +
-                                players[playerTargetB].getViewDirection().y +
+                                players[playerTargetB]!.getViewDirection().y +
                                 "§a, §bz: §c" +
-                                players[playerTargetB].getViewDirection().z) +
+                                players[playerTargetB]!.getViewDirection().z) +
                             "§9 }§a, §bselectedSlotIndex§a: " +
                             (players[playerTargetB] as Player).selectedSlotIndex +
                             "§a, §bspawnPoint§a: " +
@@ -660,7 +660,7 @@ subscribedEvents.afterScriptEventReceive = system.afterEvents.scriptEventReceive
         entityViewedEntityDistance = "None";
         blockViewedBlockType = "None";
         spawnPointAllCoordinates = "None";
-        let targetList = [players[0].nameTag];
+        let targetList = [players[0]!.nameTag];
         let scoreboardIdentity = undefined;
         let scoreboardIdentityDisplayName = undefined;
         let scoreboardIdentityType = undefined;
@@ -668,7 +668,7 @@ subscribedEvents.afterScriptEventReceive = system.afterEvents.scriptEventReceive
             /*
             console.warn(index);*/
             if (Number(index) != 0) {
-                targetList = String([String(targetList), players[index].nameTag]).split(",");
+                targetList = String([String(targetList), players[index]!.nameTag]).split(",");
             } /*
             console.warn(targetList);*/
         }
@@ -704,7 +704,7 @@ subscribedEvents.afterScriptEventReceive = system.afterEvents.scriptEventReceive
                     let playerTargetB: Entity = undefined!;
                     let blockLocation = String(blockLocationCoordinates).split(", ");
                     if (selectionType == 0) {
-                        playerTargetB = players[playerViewerB].getEntitiesFromViewDirection()[0].entity;
+                        playerTargetB = players[playerViewerB]!.getEntitiesFromViewDirection()[0]!.entity;
                     }
                     if (selectionType == 1) {
                         playerTargetB = world
@@ -714,32 +714,32 @@ subscribedEvents.afterScriptEventReceive = system.afterEvents.scriptEventReceive
                             .find((entityValue) => entityValue.id == entityUUID)!;
                     }
                     if (selectionType == 4) {
-                        playerTargetB = world.getDimension(blockLocation[0]).getEntitiesAtBlockLocation({
+                        playerTargetB = world.getDimension(blockLocation[0]!).getEntitiesAtBlockLocation({
                             x: Number(blockLocation[1]),
                             y: Number(blockLocation[2]),
                             z: Number(blockLocation[3]),
-                        })[Number(blockLocationIndex)];
+                        })[Number(blockLocationIndex)]!;
                     }
-                    let distance = Vector3Utils.distance(players[playerViewerB].location, playerTargetB.location);
+                    let distance = Vector3Utils.distance(players[playerViewerB]!.location, playerTargetB.location);
                     try {
-                        entityViewedEntityType = playerTargetB.getEntitiesFromViewDirection()[0].entity.typeId;
+                        entityViewedEntityType = playerTargetB.getEntitiesFromViewDirection()[0]!.entity.typeId;
                     } catch (e) {
                         entityViewedEntityType = "§4None§a";
                     }
                     try {
-                        entityViewedEntityName = playerTargetB.getEntitiesFromViewDirection()[0].entity.typeId;
+                        entityViewedEntityName = playerTargetB.getEntitiesFromViewDirection()[0]!.entity.typeId;
                     } catch (e) {
                         entityViewedEntityName = "§4None§a";
                     }
                     try {
-                        entityViewedEntityDistance = playerTargetB.getEntitiesFromViewDirection()[0].distance;
+                        entityViewedEntityDistance = playerTargetB.getEntitiesFromViewDirection()[0]!.distance;
                     } catch (e) {
                         entityViewedEntityDistance = "§4None§a";
                     }
                     let componentList: any;
                     componentList = [];
                     try {
-                        componentList = [playerTargetB.getComponents()[0].typeId];
+                        componentList = [playerTargetB.getComponents()[0]!.typeId];
                     } catch (e) {
                         console.error(e, e.stack);
                         componentList = "§4None§a";
@@ -748,13 +748,13 @@ subscribedEvents.afterScriptEventReceive = system.afterEvents.scriptEventReceive
                     try {
                         effectsList = [
                             "§9{ §stypeId§a: §u" +
-                                playerTargetB.getEffects()[0].typeId +
+                                playerTargetB.getEffects()[0]!.typeId +
                                 "§a, §sdisplayName§a: §u" +
-                                playerTargetB.getEffects()[0].displayName +
+                                playerTargetB.getEffects()[0]!.displayName +
                                 "§a, §sduration§a: §c" +
-                                playerTargetB.getEffects()[0].duration +
+                                playerTargetB.getEffects()[0]!.duration +
                                 "§a, §samplifier§a: §c" +
-                                playerTargetB.getEffects()[0].amplifier +
+                                playerTargetB.getEffects()[0]!.amplifier +
                                 "§9 }§a",
                         ];
                     } catch (e) {
@@ -766,7 +766,7 @@ subscribedEvents.afterScriptEventReceive = system.afterEvents.scriptEventReceive
                     } catch (e) {
                         console.error(e, e.stack);
                     } /*
-            let effectsList = [players[playerTargetB].getComponents[0]]*/
+            let effectsList = [players[playerTargetB]!.getComponents[0]]*/
 
                     try {
                         scoreboardIdentity = playerTargetB.scoreboardIdentity!.id;
@@ -797,7 +797,7 @@ subscribedEvents.afterScriptEventReceive = system.afterEvents.scriptEventReceive
                         /*
                     console.warn(index);*/
                         if (Number(index) != 0) {
-                            componentList = String([String(componentList), playerTargetB.getComponents()[index].typeId]).split(",");
+                            componentList = String([String(componentList), playerTargetB.getComponents()[index]!.typeId]).split(",");
                         } /*
                 console.warn(targetList);*/
                     }
@@ -808,19 +808,19 @@ subscribedEvents.afterScriptEventReceive = system.afterEvents.scriptEventReceive
                             effectsList = String([
                                 String(effectsList),
                                 "§9{ §stypeId§a: §u" +
-                                    playerTargetB.getEffects()[index].typeId +
+                                    playerTargetB.getEffects()[index]!.typeId +
                                     "§a, §sdisplayName§a: §u" +
-                                    playerTargetB.getEffects()[index].displayName +
+                                    playerTargetB.getEffects()[index]!.displayName +
                                     ", §sduration§a: §c" +
-                                    playerTargetB.getEffects()[index].duration +
+                                    playerTargetB.getEffects()[index]!.duration +
                                     "§a, §samplifier§a: §c" +
-                                    playerTargetB.getEffects()[index].amplifier +
+                                    playerTargetB.getEffects()[index]!.amplifier +
                                     "§9 }§a",
                             ]).split(",");
                         } /*
                 console.warn(targetList);*/
                     }
-                    players[playerViewerB].sendMessage(
+                    players[playerViewerB]!.sendMessage(
                         "§btypeId§a: §u" +
                             playerTargetB.typeId +
                             "§a, §bUUID§a: §u" +
@@ -1122,10 +1122,10 @@ break;*/ /*
     if (id == "andexdb:itemLoreInventoryModifier" || id == "andexdb:inventoryController" || id == "andexdb:itemModifier") {
         let form2 = new ModalFormData();
         let players = world.getAllPlayers();
-        let targetList = [players[0].nameTag];
+        let targetList = [players[0]!.nameTag];
         for (const index in players) {
             if (Number(index) != 0) {
-                targetList = String([String(targetList), players[index].nameTag]).split(",");
+                targetList = String([String(targetList), players[index]!.nameTag]).split(",");
             }
         }
         form2.textField("Slot Number", "Slot Number", { defaultValue: "0" });
@@ -1140,8 +1140,8 @@ break;*/ /*
                 let [slotNumber, slotType, playerTarget, playerViewer, debug2] = t.formValues!;
                 let playerTargetB = Number(playerTarget);
                 let playerViewerB = Number(playerViewer);
-                let inventory: EntityInventoryComponent = players[playerTargetB].getComponent("inventory") as EntityInventoryComponent; /*
-    try{inventory = players[playerTargetB].getComponent("equipment_inventory") as EntityEquipmentInventoryComponent;} catch(e){if (Boolean(debug2) == true) { console.error(e, e.stack); }};*/
+                let inventory: EntityInventoryComponent = players[playerTargetB]!.getComponent("inventory") as EntityInventoryComponent; /*
+    try{inventory = players[playerTargetB]!.getComponent("equipment_inventory") as EntityEquipmentInventoryComponent;} catch(e){if (Boolean(debug2) == true) { console.error(e, e.stack); }};*/
 
                 let item: any = inventory.container.getItem(Number(slotNumber))!;
                 let equipmentPlayerSlotsList = [
@@ -1154,8 +1154,8 @@ break;*/ /*
                 ];
                 if (Number(slotType) == 1) {
                     try {
-                        let a = players[playerTargetB].getComponent("equippable") as EntityEquippableComponent;
-                        item = a.getEquipmentSlot(equipmentPlayerSlotsList[Number(slotNumber)])!;
+                        let a = players[playerTargetB]!.getComponent("equippable") as EntityEquippableComponent;
+                        item = a.getEquipmentSlot(equipmentPlayerSlotsList[Number(slotNumber)]!)!;
                     } catch (e) {
                         if (Boolean(debug2) == true) {
                             console.error(e, e.stack);
@@ -1323,13 +1323,13 @@ break;*/ /*
                 form.dropdown("From Contriner Player", String(targetList).split(","), { defaultValueIndex: 0 });
                 form.textField("From Container Block", "overworld, 500, 60, 500", {
                     defaultValue:
-                        players[playerTargetB].dimension.id +
+                        players[playerTargetB]!.dimension.id +
                         ", " +
-                        players[playerTargetB].location.x +
+                        players[playerTargetB]!.location.x +
                         ", " +
-                        players[playerTargetB].location.y +
+                        players[playerTargetB]!.location.y +
                         ", " +
-                        players[playerTargetB].location.z,
+                        players[playerTargetB]!.location.z,
                 });
                 form.dropdown("To Container Type", ["Player", "§4Facing Entity", "§4Entity At Block Location", "§4Facing Block", "Block At Block Location"], {
                     defaultValueIndex: 0,
@@ -1337,13 +1337,13 @@ break;*/ /*
                 form.dropdown("To Container Player", String(targetList).split(","), { defaultValueIndex: 0 });
                 form.textField("To Container Block", "overworld, 500, 60, 500", {
                     defaultValue:
-                        players[playerTargetB].dimension.id +
+                        players[playerTargetB]!.dimension.id +
                         ", " +
-                        players[playerTargetB].location.x +
+                        players[playerTargetB]!.location.x +
                         ", " +
-                        players[playerTargetB].location.y +
+                        players[playerTargetB]!.location.y +
                         ", " +
-                        players[playerTargetB].location.z,
+                        players[playerTargetB]!.location.z,
                 });
                 form.toggle("Swap Items", { defaultValue: false });
                 form.textField("Slot", "Slot", { defaultValue: "0" });
@@ -1354,13 +1354,13 @@ break;*/ /*
                 form.dropdown("Container Player", String(targetList).split(","), { defaultValueIndex: 0 });
                 form.textField("Container Block", "overworld, 500, 60, 500", {
                     defaultValue:
-                        players[playerTargetB].dimension.id +
+                        players[playerTargetB]!.dimension.id +
                         ", " +
-                        players[playerTargetB].location.x +
+                        players[playerTargetB]!.location.x +
                         ", " +
-                        players[playerTargetB].location.y +
+                        players[playerTargetB]!.location.y +
                         ", " +
-                        players[playerTargetB].location.z,
+                        players[playerTargetB]!.location.z,
                 });
                 form.dropdown(
                     "Other Container Type",
@@ -1370,13 +1370,13 @@ break;*/ /*
                 form.dropdown("Other Container Player", String(targetList).split(","), { defaultValueIndex: 0 });
                 form.textField("Other Container Block", "overworld, 500, 60, 500", {
                     defaultValue:
-                        players[playerTargetB].dimension.id +
+                        players[playerTargetB]!.dimension.id +
                         ", " +
-                        players[playerTargetB].location.x +
+                        players[playerTargetB]!.location.x +
                         ", " +
-                        players[playerTargetB].location.y +
+                        players[playerTargetB]!.location.y +
                         ", " +
-                        players[playerTargetB].location.z,
+                        players[playerTargetB]!.location.z,
                 });
                 form.toggle("Transfer Item", { defaultValue: false });
                 form.textField("From Slot", "From Slot", { defaultValue: "0" });
@@ -1386,13 +1386,13 @@ break;*/ /*
                 form.dropdown("From Container Player", String(targetList).split(","), { defaultValueIndex: 0 });
                 form.textField("From Container Block", "overworld, 500, 60, 500", {
                     defaultValue:
-                        players[playerTargetB].dimension.id +
+                        players[playerTargetB]!.dimension.id +
                         ", " +
-                        players[playerTargetB].location.x +
+                        players[playerTargetB]!.location.x +
                         ", " +
-                        players[playerTargetB].location.y +
+                        players[playerTargetB]!.location.y +
                         ", " +
-                        players[playerTargetB].location.z,
+                        players[playerTargetB]!.location.z,
                 });
                 form.dropdown("To Container Type", ["Player", "§4Facing Entity", "§4Entity At Block Location", "§4Facing Block", "Block At Block Location"], {
                     defaultValueIndex: 0,
@@ -1400,13 +1400,13 @@ break;*/ /*
                 form.dropdown("To Container Player", String(targetList).split(","), { defaultValueIndex: 0 });
                 form.textField("To Container Block", "overworld, 500, 60, 500", {
                     defaultValue:
-                        players[playerTargetB].dimension.id +
+                        players[playerTargetB]!.dimension.id +
                         ", " +
-                        players[playerTargetB].location.x +
+                        players[playerTargetB]!.location.x +
                         ", " +
-                        players[playerTargetB].location.y +
+                        players[playerTargetB]!.location.y +
                         ", " +
-                        players[playerTargetB].location.z,
+                        players[playerTargetB]!.location.z,
                 });
                 form.toggle("Debug", { defaultValue: false });
 
@@ -1462,33 +1462,33 @@ break;*/ /*
     console.warn(r.formValues);*/
 
                         /*let item = inventory.container.getItem(Number(slotNumber));
-            if (Number(slotType) == 1) { try{let a = players[playerTargetB].getComponent("equipment_inventory") as EntityEquipmentInventoryComponent; item = a.getEquipmentSlot(equipmentPlayerSlotsList[Number(slotNumber)])} catch(e){if (Boolean(debug2) == true) { console.error(e, e.stack); }};};*/
-                        let transferFromContainerBlockB = world.getDimension(String(transferFromContainerBlock).split(", ")[0]).getBlock({
+            if (Number(slotType) == 1) { try{let a = players[playerTargetB]!.getComponent("equipment_inventory") as EntityEquipmentInventoryComponent; item = a.getEquipmentSlot(equipmentPlayerSlotsList[Number(slotNumber)])} catch(e){if (Boolean(debug2) == true) { console.error(e, e.stack); }};};*/
+                        let transferFromContainerBlockB = world.getDimension(String(transferFromContainerBlock).split(", ")[0]!).getBlock({
                             x: Number(String(transferFromContainerBlock).split(", ")[1]),
                             y: Number(String(transferFromContainerBlock).split(", ")[2]),
                             z: Number(String(transferFromContainerBlock).split(", ")[3]),
                         })!;
-                        let transferToContainerBlockB = world.getDimension(String(transferToContainerBlock).split(", ")[0]).getBlock({
+                        let transferToContainerBlockB = world.getDimension(String(transferToContainerBlock).split(", ")[0]!).getBlock({
                             x: Number(String(transferToContainerBlock).split(", ")[1]),
                             y: Number(String(transferToContainerBlock).split(", ")[2]),
                             z: Number(String(transferToContainerBlock).split(", ")[3]),
                         })!;
-                        let moveFromContainerBlockB = world.getDimension(String(moveFromContainerBlock).split(", ")[0]).getBlock({
+                        let moveFromContainerBlockB = world.getDimension(String(moveFromContainerBlock).split(", ")[0]!).getBlock({
                             x: Number(String(moveFromContainerBlock).split(", ")[1]),
                             y: Number(String(moveFromContainerBlock).split(", ")[2]),
                             z: Number(String(moveFromContainerBlock).split(", ")[3]),
                         })!;
-                        let moveToContainerBlockB = world.getDimension(String(moveToContainerBlock).split(", ")[0]).getBlock({
+                        let moveToContainerBlockB = world.getDimension(String(moveToContainerBlock).split(", ")[0]!).getBlock({
                             x: Number(String(moveToContainerBlock).split(", ")[1]),
                             y: Number(String(moveToContainerBlock).split(", ")[2]),
                             z: Number(String(moveToContainerBlock).split(", ")[3]),
                         })!;
-                        let swapContainerBlockB = world.getDimension(String(swapContainerBlock).split(", ")[0]).getBlock({
+                        let swapContainerBlockB = world.getDimension(String(swapContainerBlock).split(", ")[0]!).getBlock({
                             x: Number(String(swapContainerBlock).split(", ")[1]),
                             y: Number(String(swapContainerBlock).split(", ")[2]),
                             z: Number(String(swapContainerBlock).split(", ")[3]),
                         })!;
-                        let swapOtherContainerBlockB = world.getDimension(String(swapOtherContainerBlock).split(", ")[0]).getBlock({
+                        let swapOtherContainerBlockB = world.getDimension(String(swapOtherContainerBlock).split(", ")[0]!).getBlock({
                             x: Number(String(swapOtherContainerBlock).split(", ")[1]),
                             y: Number(String(swapOtherContainerBlock).split(", ")[2]),
                             z: Number(String(swapOtherContainerBlock).split(", ")[3]),
@@ -1497,7 +1497,7 @@ break;*/ /*
                         let enchantments2 = getEnchantments(); /*
     for (const index in inventory.) {
         if (Number(index) != 0) {
-        targetList = String([String(targetList), players[index].nameTag]).split(",");
+        targetList = String([String(targetList), players[index]!.nameTag]).split(",");
         }
     }*/
 
@@ -1587,8 +1587,8 @@ break;*/ /*
                         }
                         if (Number(slotType) == 1) {
                             try {
-                                let a = players[playerTargetB].getComponent("equippable") as EntityEquippableComponent;
-                                a.setEquipment(equipmentPlayerSlotsList[Number(slotNumber)], item.clone());
+                                let a = players[playerTargetB]!.getComponent("equippable") as EntityEquippableComponent;
+                                a.setEquipment(equipmentPlayerSlotsList[Number(slotNumber)]!, item.clone());
                             } catch (e) {
                                 if (Boolean(debug2) == true) {
                                     console.error(e, e.stack);
@@ -1608,14 +1608,14 @@ break;*/ /*
                 let moveFromSlotB: any
                 moveFromSlotB = undefined*/
                             let moveFromContainerB: any;
-                            moveFromContainerB = players[Number(moveFromContainer)].getComponent("inventory") as EntityInventoryComponent;
+                            moveFromContainerB = players[Number(moveFromContainer)]!.getComponent("inventory") as EntityInventoryComponent;
                             switch (moveFromContainerType) {
                                 case 4:
                                     moveFromContainerB = moveFromContainerBlockB.getComponent("inventory") as BlockInventoryComponent;
                                     break;
                             }
                             let moveToContainerB: any;
-                            moveToContainerB = players[Number(moveToContainer)].getComponent("inventory") as EntityInventoryComponent;
+                            moveToContainerB = players[Number(moveToContainer)]!.getComponent("inventory") as EntityInventoryComponent;
                             switch (moveToContainerType) {
                                 case 4:
                                     moveToContainerB = moveToContainerBlockB.getComponent("inventory") as BlockInventoryComponent;
@@ -1633,12 +1633,12 @@ break;*/ /*
                 moveFromSlotB = undefined*/
                             let swapContainerB: any;
                             let mode = 0;
-                            swapContainerB = players[Number(swapContainer)].getComponent("inventory") as EntityInventoryComponent;
+                            swapContainerB = players[Number(swapContainer)]!.getComponent("inventory") as EntityInventoryComponent;
                             let itemA: any;
                             itemA = undefined;
                             if (Number(swapSlot) > 35 && Number(swapContainerType) == 0) {
                                 try {
-                                    swapContainerB = players[playerTargetB].getComponent("equippable") as EntityEquippableComponent;
+                                    swapContainerB = players[playerTargetB]!.getComponent("equippable") as EntityEquippableComponent;
                                     swapSlot = Number(swapSlot) - 36;
                                     mode = 1;
                                     itemA = swapContainerB.getEquipment(equipmentPlayerSlotsList[Number(swapSlot)]).clone();
@@ -1654,12 +1654,12 @@ break;*/ /*
                                     break;
                             }
                             let swapOtherContainerB: any;
-                            swapOtherContainerB = players[Number(swapOtherContainer)].getComponent("inventory") as EntityInventoryComponent;
+                            swapOtherContainerB = players[Number(swapOtherContainer)]!.getComponent("inventory") as EntityInventoryComponent;
                             let itemB: any;
                             itemB = undefined;
                             if (Number(swapOtherSlot) > 35) {
                                 try {
-                                    swapOtherContainerB = players[playerTargetB].getComponent("equippable") as EntityEquippableComponent;
+                                    swapOtherContainerB = players[playerTargetB]!.getComponent("equippable") as EntityEquippableComponent;
                                     swapOtherSlot = Number(swapOtherSlot) - 36;
                                     if (mode == 1) {
                                         mode = 2;
@@ -1747,14 +1747,14 @@ break;*/ /*
                 let moveFromSlotB: any
                 moveFromSlotB = undefined*/
                             let transferFromContainerB: any;
-                            transferFromContainerB = players[Number(transferFromContainer)].getComponent("inventory") as EntityInventoryComponent;
+                            transferFromContainerB = players[Number(transferFromContainer)]!.getComponent("inventory") as EntityInventoryComponent;
                             switch (transferFromContainerType) {
                                 case 4:
                                     transferFromContainerB = transferFromContainerBlockB.getComponent("inventory") as BlockInventoryComponent;
                                     break;
                             }
                             let transferToContainerB: any;
-                            transferToContainerB = players[Number(transferToContainer)].getComponent("inventory") as EntityInventoryComponent;
+                            transferToContainerB = players[Number(transferToContainer)]!.getComponent("inventory") as EntityInventoryComponent;
                             switch (transferToContainerType) {
                                 case 4:
                                     transferToContainerB = transferToContainerBlockB.getComponent("inventory") as BlockInventoryComponent;
@@ -1804,10 +1804,10 @@ break;*/ /*
                             } catch (e) {
                                 console.error(e, e.stack);
                             }
-                            let componentList = [item.getComponents()[0].typeId];
+                            let componentList = [item.getComponents()[0]!.typeId];
                             for (const index in players) {
                                 if (Number(index) != 0) {
-                                    componentList = String([String(componentList), item.getComponents()[index].typeId]).split(",");
+                                    componentList = String([String(componentList), item.getComponents()[index]!.typeId]).split(",");
                                 }
                             }
                             console.warn(String(["Item Components: " + String(componentList)]));
@@ -1895,10 +1895,10 @@ break;*/ /*
                             // Don't forget "break" for every case
                             break;*/:
                                         let form3 = new ModalFormData(); /*Z
-            let targetList = [players[0].nameTag]
+            let targetList = [players[0]!.nameTag]
             for (const index in players) {
                 if (Number(index) != 0) {
-                targetList = String([String(targetList), players[index].nameTag]).split(",");
+                targetList = String([String(targetList), players[index]!.nameTag]).split(",");
                 }
             }*/
 
@@ -1932,12 +1932,12 @@ break;*/ /*
                                                 if (t.canceled) return;
                                                 let [transferType, fromBlockSelectionMode, fromBlockPosition, toBlockSelectionMode, toBlockPosition, debug2] =
                                                     t.formValues!;
-                                                let fromBlockPositionB = world.getDimension(String(fromBlockPosition).split(", ")[0]).getBlock({
+                                                let fromBlockPositionB = world.getDimension(String(fromBlockPosition).split(", ")[0]!).getBlock({
                                                     x: Number(String(fromBlockPosition).split(", ")[1]),
                                                     y: Number(String(fromBlockPosition).split(", ")[2]),
                                                     z: Number(String(fromBlockPosition).split(", ")[3]),
                                                 })!;
-                                                let toBlockPositionB = world.getDimension(String(toBlockPosition).split(", ")[0]).getBlock({
+                                                let toBlockPositionB = world.getDimension(String(toBlockPosition).split(", ")[0]!).getBlock({
                                                     x: Number(String(toBlockPosition).split(", ")[1]),
                                                     y: Number(String(toBlockPosition).split(", ")[2]),
                                                     z: Number(String(toBlockPosition).split(", ")[3]),
@@ -1955,7 +1955,7 @@ break;*/ /*
                                                     }
                                                     try {
                                                         fromBlockPositionC = world
-                                                            .getDimension(String(fromPresetValues).split(", ")[0])
+                                                            .getDimension(String(fromPresetValues).split(", ")[0]!)
                                                             .getBlock({
                                                                 x: Number(String(fromPresetValues).split(", ")[1]),
                                                                 y: Number(String(fromPresetValues).split(", ")[2]),
@@ -1977,7 +1977,7 @@ break;*/ /*
                                                     }
                                                     try {
                                                         toBlockPositionC = world
-                                                            .getDimension(String(toPresetValues).split(", ")[0])
+                                                            .getDimension(String(toPresetValues).split(", ")[0]!)
                                                             .getBlock({
                                                                 x: Number(String(toPresetValues).split(", ")[1]),
                                                                 y: Number(String(toPresetValues).split(", ")[2]),
@@ -2045,10 +2045,10 @@ break;*/ /*
 
                                     case 1:
                                         let form2 = new ModalFormData();
-                                        let targetList = [players[0].nameTag];
+                                        let targetList = [players[0]!.nameTag];
                                         for (const index in players) {
                                             if (Number(index) != 0) {
-                                                targetList = String([String(targetList), players[index].nameTag]).split(",");
+                                                targetList = String([String(targetList), players[index]!.nameTag]).split(",");
                                             }
                                         }
                                         form2.dropdown("Transfer Type", ["Swap", "Transfer", "Move"], { defaultValueIndex: 0 });
@@ -2062,8 +2062,8 @@ break;*/ /*
                                                 let [transferType, playerTarget, playerViewer, debug2] = t.formValues!;
                                                 let playerTargetB = Number(playerTarget);
                                                 let playerViewerB = Number(playerViewer);
-                                                const fromInventory = players[playerTargetB].getComponent("inventory") as EntityInventoryComponent;
-                                                const toInventory = players[playerViewerB].getComponent("inventory") as EntityInventoryComponent;
+                                                const fromInventory = players[playerTargetB]!.getComponent("inventory") as EntityInventoryComponent;
+                                                const toInventory = players[playerViewerB]!.getComponent("inventory") as EntityInventoryComponent;
                                                 switch (transferType) {
                                                     case 0:
                                                         for (let index = 0; index < 27; index++) {
@@ -2149,10 +2149,10 @@ break;*/ /*
                             // Don't forget "break" for every case
                             break;*/:
                                         let form4 = new ModalFormData();
-                                        let targetList2 = [players[0].nameTag];
+                                        let targetList2 = [players[0]!.nameTag];
                                         for (const index in players) {
                                             if (Number(index) != 0) {
-                                                targetList2 = String([String(targetList2), players[index].nameTag]).split(",");
+                                                targetList2 = String([String(targetList2), players[index]!.nameTag]).split(",");
                                             }
                                         }
                                         form4.dropdown(
@@ -2181,14 +2181,14 @@ break;*/ /*
                                             .then((t) => {
                                                 if (t.canceled) return;
                                                 let [transferType, blockSelectionMode, fromBlockPosition, playerTarget, debug2] = t.formValues!;
-                                                let blockPositionB = world.getDimension(String(fromBlockPosition).split(", ")[0]).getBlock({
+                                                let blockPositionB = world.getDimension(String(fromBlockPosition).split(", ")[0]!).getBlock({
                                                     x: Number(String(fromBlockPosition).split(", ")[1]),
                                                     y: Number(String(fromBlockPosition).split(", ")[2]),
                                                     z: Number(String(fromBlockPosition).split(", ")[3]),
                                                 })!;
                                                 let blockPositionC = blockPositionB.getComponent("inventory") as BlockInventoryComponent;
                                                 let playerTargetB = Number(playerTarget);
-                                                const toInventory = players[playerTargetB].getComponent("inventory") as EntityInventoryComponent;
+                                                const toInventory = players[playerTargetB]!.getComponent("inventory") as EntityInventoryComponent;
                                                 if (Number(blockSelectionMode) > 0) {
                                                     let presetValues = undefined;
                                                     try {
@@ -2200,7 +2200,7 @@ break;*/ /*
                                                     }
                                                     try {
                                                         blockPositionC = world
-                                                            .getDimension(String(presetValues).split(", ")[0])
+                                                            .getDimension(String(presetValues).split(", ")[0]!)
                                                             .getBlock({
                                                                 x: Number(String(presetValues).split(", ")[1]),
                                                                 y: Number(String(presetValues).split(", ")[2]),
@@ -2304,10 +2304,10 @@ break;*/ /*
                                 switch (response) {
                                     case 0:
                                         let form2 = new ModalFormData();
-                                        let targetList = [players[0].nameTag];
+                                        let targetList = [players[0]!.nameTag];
                                         for (const index in players) {
                                             if (Number(index) != 0) {
-                                                targetList = String([String(targetList), players[index].nameTag]).split(",");
+                                                targetList = String([String(targetList), players[index]!.nameTag]).split(",");
                                             }
                                         }
                                         form2.dropdown("Transfer Type", ["Swap", "Transfer", "Move"], { defaultValueIndex: 0 });
@@ -2321,8 +2321,8 @@ break;*/ /*
                                                 let [transferType, playerTarget, playerViewer, debug2] = t.formValues!;
                                                 let playerTargetB = Number(playerTarget);
                                                 let playerViewerB = Number(playerViewer);
-                                                const fromInventory = players[playerTargetB].getComponent("inventory") as EntityInventoryComponent;
-                                                const toInventory = players[playerViewerB].getComponent("inventory") as EntityInventoryComponent;
+                                                const fromInventory = players[playerTargetB]!.getComponent("inventory") as EntityInventoryComponent;
+                                                const toInventory = players[playerViewerB]!.getComponent("inventory") as EntityInventoryComponent;
                                                 switch (transferType) {
                                                     case 0:
                                                         for (let index = 0; index < 9; index++) {
@@ -2393,10 +2393,10 @@ break;*/ /*
                                 switch (response) {
                                     case 0:
                                         let form2 = new ModalFormData();
-                                        let targetList = [players[0].nameTag];
+                                        let targetList = [players[0]!.nameTag];
                                         for (const index in players) {
                                             if (Number(index) != 0) {
-                                                targetList = String([String(targetList), players[index].nameTag]).split(",");
+                                                targetList = String([String(targetList), players[index]!.nameTag]).split(",");
                                             }
                                         }
                                         form2.dropdown("Transfer Type", ["Swap", "Transfer", "Move"], { defaultValueIndex: 0 });
@@ -2410,8 +2410,8 @@ break;*/ /*
                                                 let [transferType, playerTarget, playerViewer, debug2] = t.formValues!;
                                                 let playerTargetB = Number(playerTarget);
                                                 let playerViewerB = Number(playerViewer);
-                                                const fromInventory = players[playerTargetB].getComponent("inventory") as EntityInventoryComponent;
-                                                const toInventory = players[playerViewerB].getComponent("inventory") as EntityInventoryComponent;
+                                                const fromInventory = players[playerTargetB]!.getComponent("inventory") as EntityInventoryComponent;
+                                                const toInventory = players[playerViewerB]!.getComponent("inventory") as EntityInventoryComponent;
                                                 switch (transferType) {
                                                     case 0:
                                                         for (let index = 0; index < 36; index++) {
@@ -2486,10 +2486,10 @@ break;*/ /*
                                 switch (response) {
                                     case 0:
                                         let form3 = new ModalFormData(); /*Z
-            let targetList = [players[0].nameTag]
+            let targetList = [players[0]!.nameTag]
             for (const index in players) {
                 if (Number(index) != 0) {
-                targetList = String([String(targetList), players[index].nameTag]).split(",");
+                targetList = String([String(targetList), players[index]!.nameTag]).split(",");
                 }
             }*/
 
@@ -2531,12 +2531,12 @@ break;*/ /*
                                                     toBlockPosition,
                                                     debug2,
                                                 ] = t.formValues!;
-                                                let fromBlockPositionB = world.getDimension(String(fromBlockPosition).split(", ")[0]).getBlock({
+                                                let fromBlockPositionB = world.getDimension(String(fromBlockPosition).split(", ")[0]!).getBlock({
                                                     x: Number(String(fromBlockPosition).split(", ")[1]),
                                                     y: Number(String(fromBlockPosition).split(", ")[2]),
                                                     z: Number(String(fromBlockPosition).split(", ")[3]),
                                                 })!;
-                                                let toBlockPositionB = world.getDimension(String(toBlockPosition).split(", ")[0]).getBlock({
+                                                let toBlockPositionB = world.getDimension(String(toBlockPosition).split(", ")[0]!).getBlock({
                                                     x: Number(String(toBlockPosition).split(", ")[1]),
                                                     y: Number(String(toBlockPosition).split(", ")[2]),
                                                     z: Number(String(toBlockPosition).split(", ")[3]),
@@ -2554,7 +2554,7 @@ break;*/ /*
                                                     }
                                                     try {
                                                         fromBlockPositionC = world
-                                                            .getDimension(String(fromPresetValues).split(", ")[0])
+                                                            .getDimension(String(fromPresetValues).split(", ")[0]!)
                                                             .getBlock({
                                                                 x: Number(String(fromPresetValues).split(", ")[1]),
                                                                 y: Number(String(fromPresetValues).split(", ")[2]),
@@ -2576,7 +2576,7 @@ break;*/ /*
                                                     }
                                                     try {
                                                         toBlockPositionC = world
-                                                            .getDimension(String(toPresetValues).split(", ")[0])
+                                                            .getDimension(String(toPresetValues).split(", ")[0]!)
                                                             .getBlock({
                                                                 x: Number(String(toPresetValues).split(", ")[1]),
                                                                 y: Number(String(toPresetValues).split(", ")[2]),
@@ -2647,10 +2647,10 @@ break;*/ /*
 
                                     case 1:
                                         let form2 = new ModalFormData();
-                                        let targetList = [players[0].nameTag];
+                                        let targetList = [players[0]!.nameTag];
                                         for (const index in players) {
                                             if (Number(index) != 0) {
-                                                targetList = String([String(targetList), players[index].nameTag]).split(",");
+                                                targetList = String([String(targetList), players[index]!.nameTag]).split(",");
                                             }
                                         }
                                         form2.dropdown("Transfer Type", ["Swap", "Transfer", "Move"], { defaultValueIndex: 0 });
@@ -2665,8 +2665,8 @@ break;*/ /*
                                                 let [transferType, inventoryRow, playerTarget, playerViewer, debug2] = t.formValues!;
                                                 let playerTargetB = Number(playerTarget);
                                                 let playerViewerB = Number(playerViewer);
-                                                const fromInventory = players[playerTargetB].getComponent("inventory") as EntityInventoryComponent;
-                                                const toInventory = players[playerViewerB].getComponent("inventory") as EntityInventoryComponent;
+                                                const fromInventory = players[playerTargetB]!.getComponent("inventory") as EntityInventoryComponent;
+                                                const toInventory = players[playerViewerB]!.getComponent("inventory") as EntityInventoryComponent;
                                                 switch (transferType) {
                                                     case 0:
                                                         for (let index = 0; index < 9; index++) {
@@ -2811,10 +2811,10 @@ break;*/ /*
     if (id == "andexdb:inventoryTransferB") {
         let form2 = new ModalFormData();
         let players = world.getAllPlayers();
-        let targetList = [players[0].nameTag];
+        let targetList = [players[0]!.nameTag];
         for (const index in players) {
             if (Number(index) != 0) {
-                targetList = String([String(targetList), players[index].nameTag]).split(",");
+                targetList = String([String(targetList), players[index]!.nameTag]).split(",");
             }
         }
         form2.textField("Slot Number", "Slot Number", { defaultValue: "0" });
@@ -2828,7 +2828,7 @@ break;*/ /*
                 let [slotNumber, playerTarget, playerViewer, debug2] = t.formValues!;
                 let playerTargetB = Number(playerTarget);
                 let playerViewerB = Number(playerViewer);
-                const inventory = players[playerTargetB].getComponent("inventory") as EntityInventoryComponent;
+                const inventory = players[playerTargetB]!.getComponent("inventory") as EntityInventoryComponent;
                 let item = inventory.container.getItem(Number(slotNumber))!;
                 function getDurability() {
                     try {
@@ -2980,13 +2980,13 @@ break;*/ /*
                 form.dropdown("From Contriner Player", String(targetList).split(","), { defaultValueIndex: 0 });
                 form.textField("From Container Block", "overworld, 500, 60, 500", {
                     defaultValue:
-                        players[playerTargetB].dimension.id +
+                        players[playerTargetB]!.dimension.id +
                         ", " +
-                        players[playerTargetB].location.x +
+                        players[playerTargetB]!.location.x +
                         ", " +
-                        players[playerTargetB].location.y +
+                        players[playerTargetB]!.location.y +
                         ", " +
-                        players[playerTargetB].location.z,
+                        players[playerTargetB]!.location.z,
                 });
                 form.dropdown("To Container Type", ["Player", "§4Facing Entity", "§4Entity At Block Location", "§4Facing Block", "Block At Block Location"], {
                     defaultValueIndex: 0,
@@ -2994,13 +2994,13 @@ break;*/ /*
                 form.dropdown("To Container Player", String(targetList).split(","), { defaultValueIndex: 0 });
                 form.textField("To Container Block", "overworld, 500, 60, 500", {
                     defaultValue:
-                        players[playerTargetB].dimension.id +
+                        players[playerTargetB]!.dimension.id +
                         ", " +
-                        players[playerTargetB].location.x +
+                        players[playerTargetB]!.location.x +
                         ", " +
-                        players[playerTargetB].location.y +
+                        players[playerTargetB]!.location.y +
                         ", " +
-                        players[playerTargetB].location.z,
+                        players[playerTargetB]!.location.z,
                 });
                 form.toggle("Swap Items", { defaultValue: false });
                 form.textField("Slot", "Slot", { defaultValue: "0" });
@@ -3011,13 +3011,13 @@ break;*/ /*
                 form.dropdown("Container Player", String(targetList).split(","), { defaultValueIndex: 0 });
                 form.textField("Container Block", "overworld, 500, 60, 500", {
                     defaultValue:
-                        players[playerTargetB].dimension.id +
+                        players[playerTargetB]!.dimension.id +
                         ", " +
-                        players[playerTargetB].location.x +
+                        players[playerTargetB]!.location.x +
                         ", " +
-                        players[playerTargetB].location.y +
+                        players[playerTargetB]!.location.y +
                         ", " +
-                        players[playerTargetB].location.z,
+                        players[playerTargetB]!.location.z,
                 });
                 form.dropdown(
                     "Other Container Type",
@@ -3027,13 +3027,13 @@ break;*/ /*
                 form.dropdown("Other Container Player", String(targetList).split(","), { defaultValueIndex: 0 });
                 form.textField("Other Container Block", "overworld, 500, 60, 500", {
                     defaultValue:
-                        players[playerTargetB].dimension.id +
+                        players[playerTargetB]!.dimension.id +
                         ", " +
-                        players[playerTargetB].location.x +
+                        players[playerTargetB]!.location.x +
                         ", " +
-                        players[playerTargetB].location.y +
+                        players[playerTargetB]!.location.y +
                         ", " +
-                        players[playerTargetB].location.z,
+                        players[playerTargetB]!.location.z,
                 });
                 form.toggle("Transfer Item", { defaultValue: false });
                 form.textField("From Slot", "From Slot", { defaultValue: "0" });
@@ -3043,13 +3043,13 @@ break;*/ /*
                 form.dropdown("From Container Player", String(targetList).split(","), { defaultValueIndex: 0 });
                 form.textField("From Container Block", "overworld, 500, 60, 500", {
                     defaultValue:
-                        players[playerTargetB].dimension.id +
+                        players[playerTargetB]!.dimension.id +
                         ", " +
-                        players[playerTargetB].location.x +
+                        players[playerTargetB]!.location.x +
                         ", " +
-                        players[playerTargetB].location.y +
+                        players[playerTargetB]!.location.y +
                         ", " +
-                        players[playerTargetB].location.z,
+                        players[playerTargetB]!.location.z,
                 });
                 form.dropdown("To Container Type", ["Player", "§4Facing Entity", "§4Entity At Block Location", "§4Facing Block", "Block At Block Location"], {
                     defaultValueIndex: 0,
@@ -3057,13 +3057,13 @@ break;*/ /*
                 form.dropdown("To Container Player", String(targetList).split(","), { defaultValueIndex: 0 });
                 form.textField("To Container Block", "overworld, 500, 60, 500", {
                     defaultValue:
-                        players[playerTargetB].dimension.id +
+                        players[playerTargetB]!.dimension.id +
                         ", " +
-                        players[playerTargetB].location.x +
+                        players[playerTargetB]!.location.x +
                         ", " +
-                        players[playerTargetB].location.y +
+                        players[playerTargetB]!.location.y +
                         ", " +
-                        players[playerTargetB].location.z,
+                        players[playerTargetB]!.location.z,
                 });
                 form.toggle("Debug", { defaultValue: false });
 
@@ -3118,32 +3118,32 @@ break;*/ /*
     console.warn(r.formValues);*/
 
                         let item = inventory.container.getItem(Number(slotNumber))!;
-                        let transferFromContainerBlockB = world.getDimension(String(transferFromContainerBlock).split(", ")[0]).getBlock({
+                        let transferFromContainerBlockB = world.getDimension(String(transferFromContainerBlock).split(", ")[0]!).getBlock({
                             x: Number(String(transferFromContainerBlock).split(", ")[1]),
                             y: Number(String(transferFromContainerBlock).split(", ")[2]),
                             z: Number(String(transferFromContainerBlock).split(", ")[3]),
                         })!;
-                        let transferToContainerBlockB = world.getDimension(String(transferToContainerBlock).split(", ")[0]).getBlock({
+                        let transferToContainerBlockB = world.getDimension(String(transferToContainerBlock).split(", ")[0]!).getBlock({
                             x: Number(String(transferToContainerBlock).split(", ")[1]),
                             y: Number(String(transferToContainerBlock).split(", ")[2]),
                             z: Number(String(transferToContainerBlock).split(", ")[3]),
                         })!;
-                        let moveFromContainerBlockB = world.getDimension(String(moveFromContainerBlock).split(", ")[0]).getBlock({
+                        let moveFromContainerBlockB = world.getDimension(String(moveFromContainerBlock).split(", ")[0]!).getBlock({
                             x: Number(String(moveFromContainerBlock).split(", ")[1]),
                             y: Number(String(moveFromContainerBlock).split(", ")[2]),
                             z: Number(String(moveFromContainerBlock).split(", ")[3]),
                         })!;
-                        let moveToContainerBlockB = world.getDimension(String(moveToContainerBlock).split(", ")[0]).getBlock({
+                        let moveToContainerBlockB = world.getDimension(String(moveToContainerBlock).split(", ")[0]!).getBlock({
                             x: Number(String(moveToContainerBlock).split(", ")[1]),
                             y: Number(String(moveToContainerBlock).split(", ")[2]),
                             z: Number(String(moveToContainerBlock).split(", ")[3]),
                         })!;
-                        let swapContainerBlockB = world.getDimension(String(swapContainerBlock).split(", ")[0]).getBlock({
+                        let swapContainerBlockB = world.getDimension(String(swapContainerBlock).split(", ")[0]!).getBlock({
                             x: Number(String(swapContainerBlock).split(", ")[1]),
                             y: Number(String(swapContainerBlock).split(", ")[2]),
                             z: Number(String(swapContainerBlock).split(", ")[3]),
                         })!;
-                        let swapOtherContainerBlockB = world.getDimension(String(swapOtherContainerBlock).split(", ")[0]).getBlock({
+                        let swapOtherContainerBlockB = world.getDimension(String(swapOtherContainerBlock).split(", ")[0]!).getBlock({
                             x: Number(String(swapOtherContainerBlock).split(", ")[1]),
                             y: Number(String(swapOtherContainerBlock).split(", ")[2]),
                             z: Number(String(swapOtherContainerBlock).split(", ")[3]),
@@ -3151,7 +3151,7 @@ break;*/ /*
                         let durability2 = getDurability()!; /*
     for (const index in inventory.) {
         if (Number(index) != 0) {
-        targetList = String([String(targetList), players[index].nameTag]).split(",");
+        targetList = String([String(targetList), players[index]!.nameTag]).split(",");
         }
     }*/
 
@@ -3241,14 +3241,14 @@ break;*/ /*
                 let moveFromSlotB: any
                 moveFromSlotB = undefined*/
                             let moveFromContainerB: any;
-                            moveFromContainerB = players[Number(moveFromContainer)].getComponent("inventory") as EntityInventoryComponent;
+                            moveFromContainerB = players[Number(moveFromContainer)]!.getComponent("inventory") as EntityInventoryComponent;
                             switch (moveFromContainerType) {
                                 case 4:
                                     moveFromContainerB = moveFromContainerBlockB.getComponent("inventory") as BlockInventoryComponent;
                                     break;
                             }
                             let moveToContainerB: any;
-                            moveToContainerB = players[Number(moveToContainer)].getComponent("inventory") as EntityInventoryComponent;
+                            moveToContainerB = players[Number(moveToContainer)]!.getComponent("inventory") as EntityInventoryComponent;
                             switch (moveToContainerType) {
                                 case 4:
                                     moveToContainerB = moveToContainerBlockB.getComponent("inventory") as BlockInventoryComponent;
@@ -3265,14 +3265,14 @@ break;*/ /*
                 let moveFromSlotB: any
                 moveFromSlotB = undefined*/
                             let swapContainerB: any;
-                            swapContainerB = players[Number(swapContainer)].getComponent("inventory") as EntityInventoryComponent;
+                            swapContainerB = players[Number(swapContainer)]!.getComponent("inventory") as EntityInventoryComponent;
                             switch (swapContainerType) {
                                 case 4:
                                     swapContainerB = swapContainerBlockB.getComponent("inventory") as BlockInventoryComponent;
                                     break;
                             }
                             let swapOtherContainerB: any;
-                            swapOtherContainerB = players[Number(swapOtherContainer)].getComponent("inventory") as EntityInventoryComponent;
+                            swapOtherContainerB = players[Number(swapOtherContainer)]!.getComponent("inventory") as EntityInventoryComponent;
                             switch (swapOtherContainerType) {
                                 case 4:
                                     swapOtherContainerB = swapOtherContainerBlockB.getComponent("inventory") as BlockInventoryComponent;
@@ -3289,14 +3289,14 @@ break;*/ /*
                 let moveFromSlotB: any
                 moveFromSlotB = undefined*/
                             let transferFromContainerB: any;
-                            transferFromContainerB = players[Number(transferFromContainer)].getComponent("inventory") as EntityInventoryComponent;
+                            transferFromContainerB = players[Number(transferFromContainer)]!.getComponent("inventory") as EntityInventoryComponent;
                             switch (transferFromContainerType) {
                                 case 4:
                                     transferFromContainerB = transferFromContainerBlockB.getComponent("inventory") as BlockInventoryComponent;
                                     break;
                             }
                             let transferToContainerB: any;
-                            transferToContainerB = players[Number(transferToContainer)].getComponent("inventory") as EntityInventoryComponent;
+                            transferToContainerB = players[Number(transferToContainer)]!.getComponent("inventory") as EntityInventoryComponent;
                             switch (transferToContainerType) {
                                 case 4:
                                     transferToContainerB = transferToContainerBlockB.getComponent("inventory") as BlockInventoryComponent;
@@ -3346,10 +3346,10 @@ break;*/ /*
                             } catch (e) {
                                 console.error(e, e.stack);
                             }
-                            let componentList = [item.getComponents()[0].typeId];
+                            let componentList = [item.getComponents()[0]!.typeId];
                             for (const index in players) {
                                 if (Number(index) != 0) {
-                                    componentList = String([String(componentList), item.getComponents()[index].typeId]).split(",");
+                                    componentList = String([String(componentList), item.getComponents()[index]!.typeId]).split(",");
                                 }
                             }
                             console.warn(String(["Item Components: " + String(componentList)]));
@@ -3368,8 +3368,8 @@ break;*/ /*
     if (id == "andexdb:playerController") {
         let form2 = new ModalFormData();
         let playerList = world.getPlayers();
-        let targetList = [playerList[0].nameTag];
-        let componentList = [playerList[0].getComponents()[0]];
+        let targetList = [playerList[0]!.nameTag];
+        let componentList = [playerList[0]!.getComponents()[0]];
         let dimension = "";
         let spawnXPosition = "";
         let spawnYPosition = "";
@@ -3378,8 +3378,8 @@ break;*/ /*
             /*
             console.warn(index);*/
             if (Number(index) != 0) {
-                targetList = String([String(targetList), playerList[index].nameTag]).split(","); /*
-            targetList = String([String(targetList), playerList[index].nameTag]).split(",");*/
+                targetList = String([String(targetList), playerList[index]!.nameTag]).split(","); /*
+            targetList = String([String(targetList), playerList[index]!.nameTag]).split(",");*/
             } /*
             console.warn(targetList);*/
         } /*
@@ -3391,28 +3391,28 @@ break;*/ /*
         function playerControllerFormPopup(playerTargetB: number, playerViewerB: number) {
             let form = new ModalFormData();
             try {
-                dimension = String(playerList[playerTargetB].getSpawnPoint()?.dimension.id);
+                dimension = String(playerList[playerTargetB]!.getSpawnPoint()?.dimension.id);
             } catch (e) {
                 dimension = "";
             }
             try {
-                spawnXPosition = String(playerList[playerTargetB].getSpawnPoint()?.x);
+                spawnXPosition = String(playerList[playerTargetB]!.getSpawnPoint()?.x);
             } catch (e) {
                 spawnXPosition = "";
             }
             try {
-                spawnYPosition = String(playerList[playerTargetB].getSpawnPoint()?.y);
+                spawnYPosition = String(playerList[playerTargetB]!.getSpawnPoint()?.y);
             } catch (e) {
                 spawnYPosition = "";
             }
             try {
-                spawnZPosition = String(playerList[playerTargetB].getSpawnPoint()?.z);
+                spawnZPosition = String(playerList[playerTargetB]!.getSpawnPoint()?.z);
             } catch (e) {
                 spawnZPosition = "";
             }
             let playerCurrentNameTag = "";
             try {
-                playerCurrentNameTag = String(playerList[playerTargetB].nameTag);
+                playerCurrentNameTag = String(playerList[playerTargetB]!.nameTag);
             } catch (e) {
                 playerCurrentNameTag = "";
             }
@@ -3423,9 +3423,9 @@ break;*/ /*
             form.textField("Trigger Event", "Trigger Event");
             form.textField("addExperience", "Experience Amount");
             form.textField("addLevels", "Level Amount");
-            form.slider("Selected Slot", 0, 56, { valueStep: 1, defaultValue: playerList[playerTargetB].selectedSlotIndex });
+            form.slider("Selected Slot", 0, 56, { valueStep: 1, defaultValue: playerList[playerTargetB]!.selectedSlotIndex });
             form.slider("§4Scale", 0, 10, { valueStep: 0.5 });
-            form.toggle("Is Sneaking", { defaultValue: playerList[playerTargetB].isSneaking });
+            form.toggle("Is Sneaking", { defaultValue: playerList[playerTargetB]!.isSneaking });
             form.toggle("Clear Velocity", { defaultValue: false });
             form.toggle("Extinguish Fire", { defaultValue: false });
             form.toggle("Kill", { defaultValue: false });
@@ -3448,35 +3448,35 @@ break;*/ /*
             form2.dropdown("damageCause", ["anvil", "none"], 0)*/
 
             form.toggle("§eapplyImpulse", { defaultValue: false });
-            form.textField("§eX Velocity", "§eX Velocity" /*, String(playerList[playerTargetB].getVelocity().x)*/);
-            form.textField("§eY Velocity", "§eY Velocity" /*, String(playerList[playerTargetB].getVelocity().y)*/);
-            form.textField("§eZ Velocity", "§eZ Velocity" /*, String(playerList[playerTargetB].getVelocity().z)*/);
+            form.textField("§eX Velocity", "§eX Velocity" /*, String(playerList[playerTargetB]!.getVelocity().x)*/);
+            form.textField("§eY Velocity", "§eY Velocity" /*, String(playerList[playerTargetB]!.getVelocity().y)*/);
+            form.textField("§eZ Velocity", "§eZ Velocity" /*, String(playerList[playerTargetB]!.getVelocity().z)*/);
             form.toggle("applyKnockback", { defaultValue: false });
             form.textField("directionX", "directionX");
             form.textField("directionZ", "directionZ");
             form.textField("horizontalStrength", "horizontalStrength");
             form.textField("verticalStrength", "verticalStrength");
             form.toggle("Set Rotation", { defaultValue: false });
-            form.textField("X Rotation", "X Rotation", { defaultValue: String(playerList[playerTargetB].getRotation().x) });
-            form.textField("Y Rotation", "Y Rotation", { defaultValue: String(playerList[playerTargetB].getRotation().y) });
+            form.textField("X Rotation", "X Rotation", { defaultValue: String(playerList[playerTargetB]!.getRotation().x) });
+            form.textField("Y Rotation", "Y Rotation", { defaultValue: String(playerList[playerTargetB]!.getRotation().y) });
             form.toggle("Teleport", { defaultValue: false });
-            form.textField("Teleport Dimension", "Dimension", { defaultValue: playerList[playerTargetB].dimension.id });
-            form.textField("Teleport X Coordinate", "X Coordinate", { defaultValue: String(playerList[playerTargetB].location.x) });
-            form.textField("Teleport Y Coordinate", "Y Coordinate", { defaultValue: String(playerList[playerTargetB].location.y) });
-            form.textField("Teleport Z Coordinate", "Z Coordinate", { defaultValue: String(playerList[playerTargetB].location.z) });
-            form.textField("Teleport X Rotation", "X Rotation", { defaultValue: String(playerList[playerTargetB].getRotation().x) });
-            form.textField("Teleport Y Rotation", "Y Rotation", { defaultValue: String(playerList[playerTargetB].getRotation().y) });
+            form.textField("Teleport Dimension", "Dimension", { defaultValue: playerList[playerTargetB]!.dimension.id });
+            form.textField("Teleport X Coordinate", "X Coordinate", { defaultValue: String(playerList[playerTargetB]!.location.x) });
+            form.textField("Teleport Y Coordinate", "Y Coordinate", { defaultValue: String(playerList[playerTargetB]!.location.y) });
+            form.textField("Teleport Z Coordinate", "Z Coordinate", { defaultValue: String(playerList[playerTargetB]!.location.z) });
+            form.textField("Teleport X Rotation", "X Rotation", { defaultValue: String(playerList[playerTargetB]!.getRotation().x) });
+            form.textField("Teleport Y Rotation", "Y Rotation", { defaultValue: String(playerList[playerTargetB]!.getRotation().y) });
             form.dropdown("§eTeleport Rotation Type Mode", ["Rotation", "§4Facing"], { defaultValueIndex: 0 });
             form.toggle("Teleport - checkForBlocks", { defaultValue: false });
             form.toggle("Teleport - keepVelocity", { defaultValue: false });
             form.toggle("Try Teleport", { defaultValue: false });
-            form.textField("Try Teleport Dimension", "§4Dimension", { defaultValue: playerList[playerTargetB].dimension.id });
-            form.textField("Try Teleport X Coordinate", "§4X Coordinate", { defaultValue: String(playerList[playerTargetB].location.x) });
-            form.textField("Try Teleport Y Coordinate", "§4Y Coordinate", { defaultValue: String(playerList[playerTargetB].location.y) });
-            form.textField("Try Teleport Z Coordinate", "§4Z Coordinate", { defaultValue: String(playerList[playerTargetB].location.z) });
+            form.textField("Try Teleport Dimension", "§4Dimension", { defaultValue: playerList[playerTargetB]!.dimension.id });
+            form.textField("Try Teleport X Coordinate", "§4X Coordinate", { defaultValue: String(playerList[playerTargetB]!.location.x) });
+            form.textField("Try Teleport Y Coordinate", "§4Y Coordinate", { defaultValue: String(playerList[playerTargetB]!.location.y) });
+            form.textField("Try Teleport Z Coordinate", "§4Z Coordinate", { defaultValue: String(playerList[playerTargetB]!.location.z) });
             form.toggle("Try Teleport - checkForBlocks", { defaultValue: false });
             form.toggle("Try Teleport - keepVelocity", { defaultValue: false });
-            form.toggle("Set Operator", { defaultValue: playerList[playerTargetB].isOp() });
+            form.toggle("Set Operator", { defaultValue: playerList[playerTargetB]!.isOp() });
             form.toggle("Set Spawn Point", { defaultValue: false });
             form.textField("Spawn Dimension", "Spawn Dimension", { defaultValue: dimension });
             form.textField("Spawn X Coordinate", "Spawn X Coordinate", { defaultValue: spawnXPosition });
@@ -3572,27 +3572,27 @@ break;*/ /*
                         newNameTag = String(nameTag).split("\\\\newline").join("\n");
                     }
                     /*
-                let scale = playerList[0].getComponent("scale") as EntityScaleComponent;
+                let scale = playerList[0]!.getComponent("scale") as EntityScaleComponent;
                 scale.value = Number(scaleValue);*/ /**/
                     if (Boolean(changeNameTag) == true) {
                         try {
-                            playerList[playerTargetB].setOp(Boolean(setOp));
+                            playerList[playerTargetB]!.setOp(Boolean(setOp));
                         } catch (e) {
                             console.error(e, e.stack);
                         }
                     } /**/
                     if (Boolean(changeNameTag) == true) {
                         try {
-                            playerList[playerTargetB].nameTag = String(newNameTag);
+                            playerList[playerTargetB]!.nameTag = String(newNameTag);
                         } catch (e) {
                             console.error(e, e.stack);
                         }
                     }
-                    playerList[playerTargetB].isSneaking = Boolean(isSneaking);
-                    playerList[playerTargetB].selectedSlotIndex = Number(selectedSlotIndex);
+                    playerList[playerTargetB]!.isSneaking = Boolean(isSneaking);
+                    playerList[playerTargetB]!.selectedSlotIndex = Number(selectedSlotIndex);
                     if (Boolean(addEffect) == true) {
                         try {
-                            playerList[playerTargetB].addEffect(String(effectToAdd), Number(secondsOfEffect), {
+                            playerList[playerTargetB]!.addEffect(String(effectToAdd), Number(secondsOfEffect), {
                                 amplifier: Number(effectAmplifier),
                                 showParticles: Boolean(effectShowEffectParticles),
                             });
@@ -3602,7 +3602,7 @@ break;*/ /*
                     }
                     if (Boolean(applyImpulse) == true) {
                         try {
-                            playerList[playerTargetB].applyImpulse({
+                            playerList[playerTargetB]!.applyImpulse({
                                 x: Number(velocityX),
                                 y: Number(velocityY),
                                 z: Number(velocityZ),
@@ -3613,7 +3613,7 @@ break;*/ /*
                     }
                     if (Boolean(applyKnockback) == true) {
                         try {
-                            playerList[playerTargetB].applyKnockback(
+                            playerList[playerTargetB]!.applyKnockback(
                                 {
                                     x: Number(kockbackDirectionX) * Number(knockbackHorizontalStrength),
                                     z: Number(knockbackDirectionZ) * Number(knockbackHorizontalStrength),
@@ -3626,28 +3626,28 @@ break;*/ /*
                     }
                     if (Boolean(addTag) == true) {
                         try {
-                            playerList[playerTargetB].addTag(String(tagToAdd));
+                            playerList[playerTargetB]!.addTag(String(tagToAdd));
                         } catch (e) {
                             console.error(e, e.stack);
                         }
                     }
                     if (Boolean(removeTag) == true) {
                         try {
-                            playerList[playerTargetB].removeTag(String(tagToRemove));
+                            playerList[playerTargetB]!.removeTag(String(tagToRemove));
                         } catch (e) {
                             console.error(e, e.stack);
                         }
                     }
                     if (Boolean(removeEffect) == true) {
                         try {
-                            playerList[playerTargetB].removeEffect(String(effectToRemove));
+                            playerList[playerTargetB]!.removeEffect(String(effectToRemove));
                         } catch (e) {
                             console.error(e, e.stack);
                         }
                     }
                     if (Boolean(setSpawnPoint) == true) {
                         try {
-                            playerList[playerTargetB].setSpawnPoint({
+                            playerList[playerTargetB]!.setSpawnPoint({
                                 dimension: world.getDimension(String(spawnDimension)),
                                 x: Number(spawnX),
                                 y: Number(spawnY),
@@ -3659,7 +3659,7 @@ break;*/ /*
                     }
                     if (Boolean(teleport) == true) {
                         try {
-                            playerList[playerTargetB].teleport(
+                            playerList[playerTargetB]!.teleport(
                                 {
                                     x: Number(teleportX),
                                     y: Number(teleportY),
@@ -3681,7 +3681,7 @@ break;*/ /*
                     }
                     if (Boolean(tryTeleport) == true) {
                         try {
-                            playerList[playerTargetB].tryTeleport(
+                            playerList[playerTargetB]!.tryTeleport(
                                 {
                                     x: Number(tryTeleportX),
                                     y: Number(tryTeleportY),
@@ -3699,14 +3699,14 @@ break;*/ /*
                     }
                     if (Boolean(setOnFire) == true) {
                         try {
-                            playerList[playerTargetB].setOnFire(Number(setOnFireSeconds), Boolean(setOnFireRemoveEffects));
+                            playerList[playerTargetB]!.setOnFire(Number(setOnFireSeconds), Boolean(setOnFireRemoveEffects));
                         } catch (e) {
                             console.error(e, e.stack);
                         }
                     }
                     if (Boolean(setRot) == true) {
                         try {
-                            playerList[playerTargetB].setRotation({
+                            playerList[playerTargetB]!.setRotation({
                                 x: Number(rotX),
                                 y: Number(rotY),
                             });
@@ -3716,93 +3716,93 @@ break;*/ /*
                     }
                     if (Boolean(resetLevel) == true) {
                         try {
-                            playerList[playerTargetB].resetLevel();
+                            playerList[playerTargetB]!.resetLevel();
                         } catch (e) {
                             console.error(e, e.stack);
                         }
                     }
                     if (Boolean(kill) == true) {
                         try {
-                            playerList[playerTargetB].kill();
+                            playerList[playerTargetB]!.kill();
                         } catch (e) {
                             console.error(e, e.stack);
                         }
                     }
                     if (Boolean(remove) == true) {
                         try {
-                            playerList[playerTargetB].remove();
+                            playerList[playerTargetB]!.remove();
                         } catch (e) {
                             console.error(e, e.stack);
                         }
                     }
                     if (Boolean(clearVelocity) == true) {
                         try {
-                            playerList[playerTargetB].clearVelocity();
+                            playerList[playerTargetB]!.clearVelocity();
                         } catch (e) {
                             console.error(e, e.stack);
                         }
                     }
                     if (Boolean(extinguishFire) == true) {
                         try {
-                            playerList[playerTargetB].extinguishFire();
+                            playerList[playerTargetB]!.extinguishFire();
                         } catch (e) {
                             console.error(e, e.stack);
                         }
                     }
                     if (triggerEvent !== undefined) {
                         try {
-                            playerList[playerTargetB].triggerEvent(String(triggerEvent));
+                            playerList[playerTargetB]!.triggerEvent(String(triggerEvent));
                         } catch (e) {
                             console.error(e, e.stack);
                         }
                     }
                     if (addExperience !== undefined) {
                         try {
-                            playerList[playerTargetB].addExperience(Number(addExperience));
+                            playerList[playerTargetB]!.addExperience(Number(addExperience));
                         } catch (e) {
                             console.error(e, e.stack);
                         }
                     }
                     if (setItemCooldown !== undefined) {
                         try {
-                            playerList[playerTargetB].startItemCooldown(String(itemCategory), Number(tickDuration));
+                            playerList[playerTargetB]!.startItemCooldown(String(itemCategory), Number(tickDuration));
                         } catch (e) {
                             console.error(e, e.stack);
                         }
                     }
                     if (addLevels !== undefined) {
                         try {
-                            playerList[playerTargetB].addExperience(Number(addLevels));
+                            playerList[playerTargetB]!.addExperience(Number(addLevels));
                         } catch (e) {
                             console.error(e, e.stack);
                         }
                     }
                     if (Boolean(sendMessage) == true) {
                         try {
-                            playerList[playerTargetB].sendMessage(String(messageToSend));
+                            playerList[playerTargetB]!.sendMessage(String(messageToSend));
                         } catch (e) {
                             console.error(e, e.stack);
                         }
                     }
                     if (Boolean(isSneaking) == true) {
-                        playerList[playerTargetB].isSneaking = true;
+                        playerList[playerTargetB]!.isSneaking = true;
                         try {
-                            playerList[playerTargetB].addTag("isSneaking");
+                            playerList[playerTargetB]!.addTag("isSneaking");
                         } catch (e) {
                             console.error(e, e.stack);
                         } /*
-                if (playerList[playerTargetB].hasTag("isSneaking")) {
+                if (playerList[playerTargetB]!.hasTag("isSneaking")) {
                   system.runInterval( () => {
-                  playerList[playerTargetB].isSneaking == true
-                  if (playerList[playerTargetB].hasTag("isSneaking") == false) {
+                  playerList[playerTargetB]!.isSneaking == true
+                  if (playerList[playerTargetB]!.hasTag("isSneaking") == false) {
                   return
                   }
                   }, 2)
                 }*/
                     } else {
                         try {
-                            playerList[playerTargetB].removeTag("isSneaking");
-                            playerList[playerTargetB].isSneaking = false;
+                            playerList[playerTargetB]!.removeTag("isSneaking");
+                            playerList[playerTargetB]!.isSneaking = false;
                         } catch (e) {
                             console.error(e, e.stack);
                         }
@@ -3846,8 +3846,8 @@ break;*/ /*
     if (id == "andexdb:playerControllerForAdnexter8AdminsOnlyDoNotUseThisUnlessYouAreAndexter8") {
         let form2 = new ModalFormData();
         let playerList = world.getPlayers();
-        let targetList = [playerList[0].nameTag];
-        let componentList = [playerList[0].getComponents()[0]];
+        let targetList = [playerList[0]!.nameTag];
+        let componentList = [playerList[0]!.getComponents()[0]];
         let dimension = "";
         let spawnXPosition = "";
         let spawnYPosition = "";
@@ -3856,8 +3856,8 @@ break;*/ /*
             /*
         console.warn(index);*/
             if (Number(index) != 0) {
-                targetList = String([String(targetList), playerList[index].nameTag]).split(","); /*
-        targetList = String([String(targetList), playerList[index].nameTag]).split(",");*/
+                targetList = String([String(targetList), playerList[index]!.nameTag]).split(","); /*
+        targetList = String([String(targetList), playerList[index]!.nameTag]).split(",");*/
             } /*
         console.warn(targetList);*/
         } /*
@@ -3869,28 +3869,28 @@ break;*/ /*
         function playerControllerFormPopup(playerTargetB: number, playerViewerB: number) {
             let form = new ModalFormData();
             try {
-                dimension = String(playerList[playerTargetB].getSpawnPoint()?.dimension);
+                dimension = String(playerList[playerTargetB]!.getSpawnPoint()?.dimension);
             } catch (e) {
                 dimension = "";
             }
             try {
-                spawnXPosition = String(playerList[playerTargetB].getSpawnPoint()?.x);
+                spawnXPosition = String(playerList[playerTargetB]!.getSpawnPoint()?.x);
             } catch (e) {
                 spawnXPosition = "";
             }
             try {
-                spawnYPosition = String(playerList[playerTargetB].getSpawnPoint()?.y);
+                spawnYPosition = String(playerList[playerTargetB]!.getSpawnPoint()?.y);
             } catch (e) {
                 spawnYPosition = "";
             }
             try {
-                spawnZPosition = String(playerList[playerTargetB].getSpawnPoint()?.z);
+                spawnZPosition = String(playerList[playerTargetB]!.getSpawnPoint()?.z);
             } catch (e) {
                 spawnZPosition = "";
             }
             let playerCurrentNameTag = "";
             try {
-                playerCurrentNameTag = String(playerList[playerTargetB].nameTag);
+                playerCurrentNameTag = String(playerList[playerTargetB]!.nameTag);
             } catch (e) {
                 playerCurrentNameTag = "";
             }
@@ -3901,9 +3901,9 @@ break;*/ /*
             form.textField("Trigger Event", "Trigger Event");
             form.textField("addExperience", "Experience Amount");
             form.textField("addLevels", "Level Amount");
-            form.slider("Selected Slot", 0, 56, { valueStep: 1, defaultValue: playerList[playerTargetB].selectedSlotIndex });
+            form.slider("Selected Slot", 0, 56, { valueStep: 1, defaultValue: playerList[playerTargetB]!.selectedSlotIndex });
             form.slider("§4Scale", 0, 10, { valueStep: 0.5 });
-            form.toggle("Is Sneaking", { defaultValue: playerList[playerTargetB].isSneaking });
+            form.toggle("Is Sneaking", { defaultValue: playerList[playerTargetB]!.isSneaking });
             form.toggle("Clear Velocity", { defaultValue: false });
             form.toggle("Extinguish Fire", { defaultValue: false });
             form.toggle("Kill", { defaultValue: false });
@@ -3926,35 +3926,35 @@ break;*/ /*
         form2.dropdown("damageCause", ["anvil", "none"], 0)*/
 
             form.toggle("§eapplyImpulse", { defaultValue: false });
-            form.textField("§eX Velocity", "§eX Velocity" /*, String(playerList[playerTargetB].getVelocity().x)*/);
-            form.textField("§eY Velocity", "§eY Velocity" /*, String(playerList[playerTargetB].getVelocity().y)*/);
-            form.textField("§eZ Velocity", "§eZ Velocity" /*, String(playerList[playerTargetB].getVelocity().z)*/);
+            form.textField("§eX Velocity", "§eX Velocity" /*, String(playerList[playerTargetB]!.getVelocity().x)*/);
+            form.textField("§eY Velocity", "§eY Velocity" /*, String(playerList[playerTargetB]!.getVelocity().y)*/);
+            form.textField("§eZ Velocity", "§eZ Velocity" /*, String(playerList[playerTargetB]!.getVelocity().z)*/);
             form.toggle("applyKnockback", { defaultValue: false });
             form.textField("directionX", "directionX");
             form.textField("directionZ", "directionZ");
             form.textField("horizontalStrength", "horizontalStrength");
             form.textField("verticalStrength", "verticalStrength");
             form.toggle("Set Rotation", { defaultValue: false });
-            form.textField("X Rotation", "X Rotation", { defaultValue: String(playerList[playerTargetB].getRotation().x) });
-            form.textField("Y Rotation", "Y Rotation", { defaultValue: String(playerList[playerTargetB].getRotation().y) });
+            form.textField("X Rotation", "X Rotation", { defaultValue: String(playerList[playerTargetB]!.getRotation().x) });
+            form.textField("Y Rotation", "Y Rotation", { defaultValue: String(playerList[playerTargetB]!.getRotation().y) });
             form.toggle("Teleport", { defaultValue: false });
-            form.textField("Teleport Dimension", "Dimension", { defaultValue: playerList[playerTargetB].dimension.id });
-            form.textField("Teleport X Coordinate", "X Coordinate", { defaultValue: String(playerList[playerTargetB].location.x) });
-            form.textField("Teleport Y Coordinate", "Y Coordinate", { defaultValue: String(playerList[playerTargetB].location.y) });
-            form.textField("Teleport Z Coordinate", "Z Coordinate", { defaultValue: String(playerList[playerTargetB].location.z) });
-            form.textField("Teleport X Rotation", "X Rotation", { defaultValue: String(playerList[playerTargetB].getRotation().x) });
-            form.textField("Teleport Y Rotation", "Y Rotation", { defaultValue: String(playerList[playerTargetB].getRotation().y) });
+            form.textField("Teleport Dimension", "Dimension", { defaultValue: playerList[playerTargetB]!.dimension.id });
+            form.textField("Teleport X Coordinate", "X Coordinate", { defaultValue: String(playerList[playerTargetB]!.location.x) });
+            form.textField("Teleport Y Coordinate", "Y Coordinate", { defaultValue: String(playerList[playerTargetB]!.location.y) });
+            form.textField("Teleport Z Coordinate", "Z Coordinate", { defaultValue: String(playerList[playerTargetB]!.location.z) });
+            form.textField("Teleport X Rotation", "X Rotation", { defaultValue: String(playerList[playerTargetB]!.getRotation().x) });
+            form.textField("Teleport Y Rotation", "Y Rotation", { defaultValue: String(playerList[playerTargetB]!.getRotation().y) });
             form.dropdown("§eTeleport Rotation Type Mode", ["Rotation", "§4Facing"], { defaultValueIndex: 0 });
             form.toggle("Teleport - checkForBlocks", { defaultValue: false });
             form.toggle("Teleport - keepVelocity", { defaultValue: false });
             form.toggle("Try Teleport", { defaultValue: false });
-            form.textField("Try Teleport Dimension", "§4Dimension", { defaultValue: playerList[playerTargetB].dimension.id });
-            form.textField("Try Teleport X Coordinate", "§4X Coordinate", { defaultValue: String(playerList[playerTargetB].location.x) });
-            form.textField("Try Teleport Y Coordinate", "§4Y Coordinate", { defaultValue: String(playerList[playerTargetB].location.y) });
-            form.textField("Try Teleport Z Coordinate", "§4Z Coordinate", { defaultValue: String(playerList[playerTargetB].location.z) });
+            form.textField("Try Teleport Dimension", "§4Dimension", { defaultValue: playerList[playerTargetB]!.dimension.id });
+            form.textField("Try Teleport X Coordinate", "§4X Coordinate", { defaultValue: String(playerList[playerTargetB]!.location.x) });
+            form.textField("Try Teleport Y Coordinate", "§4Y Coordinate", { defaultValue: String(playerList[playerTargetB]!.location.y) });
+            form.textField("Try Teleport Z Coordinate", "§4Z Coordinate", { defaultValue: String(playerList[playerTargetB]!.location.z) });
             form.toggle("Try Teleport - checkForBlocks", { defaultValue: false });
             form.toggle("Try Teleport - keepVelocity", { defaultValue: false });
-            form.toggle("Set Operator", { defaultValue: playerList[playerTargetB].isOp() });
+            form.toggle("Set Operator", { defaultValue: playerList[playerTargetB]!.isOp() });
             form.toggle("Set Spawn Point", { defaultValue: false });
             form.textField("Spawn Dimension", "Spawn Dimension", { defaultValue: dimension });
             form.textField("Spawn X Coordinate", "Spawn X Coordinate", { defaultValue: spawnXPosition });
@@ -4050,21 +4050,21 @@ break;*/ /*
                         newNameTag = String(nameTag).split("\\\\newline").join("\n");
                     }
                     /*
-            let scale = playerList[0].getComponent("scale") as EntityScaleComponent;
+            let scale = playerList[0]!.getComponent("scale") as EntityScaleComponent;
             scale.value = Number(scaleValue);*/
-                    playerList[playerTargetB].setOp(Boolean(setOp));
+                    playerList[playerTargetB]!.setOp(Boolean(setOp));
                     if (Boolean(changeNameTag) == true) {
                         try {
-                            playerList[playerTargetB].nameTag = String(newNameTag);
+                            playerList[playerTargetB]!.nameTag = String(newNameTag);
                         } catch (e) {
                             console.error(e, e.stack);
                         }
                     }
-                    playerList[playerTargetB].isSneaking = Boolean(isSneaking);
-                    playerList[playerTargetB].selectedSlotIndex = Number(selectedSlotIndex);
+                    playerList[playerTargetB]!.isSneaking = Boolean(isSneaking);
+                    playerList[playerTargetB]!.selectedSlotIndex = Number(selectedSlotIndex);
                     if (Boolean(addEffect) == true) {
                         try {
-                            playerList[playerTargetB].addEffect(String(effectToAdd), Number(secondsOfEffect), {
+                            playerList[playerTargetB]!.addEffect(String(effectToAdd), Number(secondsOfEffect), {
                                 amplifier: Number(effectAmplifier),
                                 showParticles: Boolean(effectShowEffectParticles),
                             });
@@ -4074,7 +4074,7 @@ break;*/ /*
                     }
                     if (Boolean(applyImpulse) == true) {
                         try {
-                            playerList[playerTargetB].applyImpulse({
+                            playerList[playerTargetB]!.applyImpulse({
                                 x: Number(velocityX),
                                 y: Number(velocityY),
                                 z: Number(velocityZ),
@@ -4085,7 +4085,7 @@ break;*/ /*
                     }
                     if (Boolean(applyKnockback) == true) {
                         try {
-                            playerList[playerTargetB].applyKnockback(
+                            playerList[playerTargetB]!.applyKnockback(
                                 {
                                     x: Number(kockbackDirectionX) * Number(knockbackHorizontalStrength),
                                     z: Number(knockbackDirectionZ) * Number(knockbackHorizontalStrength),
@@ -4098,28 +4098,28 @@ break;*/ /*
                     }
                     if (Boolean(addTag) == true) {
                         try {
-                            playerList[playerTargetB].addTag(String(tagToAdd));
+                            playerList[playerTargetB]!.addTag(String(tagToAdd));
                         } catch (e) {
                             console.error(e, e.stack);
                         }
                     }
                     if (Boolean(removeTag) == true) {
                         try {
-                            playerList[playerTargetB].removeTag(String(tagToRemove));
+                            playerList[playerTargetB]!.removeTag(String(tagToRemove));
                         } catch (e) {
                             console.error(e, e.stack);
                         }
                     }
                     if (Boolean(removeEffect) == true) {
                         try {
-                            playerList[playerTargetB].removeEffect(String(effectToRemove));
+                            playerList[playerTargetB]!.removeEffect(String(effectToRemove));
                         } catch (e) {
                             console.error(e, e.stack);
                         }
                     }
                     if (Boolean(setSpawnPoint) == true) {
                         try {
-                            playerList[playerTargetB].setSpawnPoint({
+                            playerList[playerTargetB]!.setSpawnPoint({
                                 dimension: world.getDimension(String(spawnDimension)),
                                 x: Number(spawnX),
                                 y: Number(spawnY),
@@ -4131,7 +4131,7 @@ break;*/ /*
                     }
                     if (Boolean(teleport) == true) {
                         try {
-                            playerList[playerTargetB].teleport(
+                            playerList[playerTargetB]!.teleport(
                                 {
                                     x: Number(teleportX),
                                     y: Number(teleportY),
@@ -4153,7 +4153,7 @@ break;*/ /*
                     }
                     if (Boolean(tryTeleport) == true) {
                         try {
-                            playerList[playerTargetB].tryTeleport(
+                            playerList[playerTargetB]!.tryTeleport(
                                 {
                                     x: Number(tryTeleportX),
                                     y: Number(tryTeleportY),
@@ -4171,14 +4171,14 @@ break;*/ /*
                     }
                     if (Boolean(setOnFire) == true) {
                         try {
-                            playerList[playerTargetB].setOnFire(Number(setOnFireSeconds), Boolean(setOnFireRemoveEffects));
+                            playerList[playerTargetB]!.setOnFire(Number(setOnFireSeconds), Boolean(setOnFireRemoveEffects));
                         } catch (e) {
                             console.error(e, e.stack);
                         }
                     }
                     if (Boolean(setRot) == true) {
                         try {
-                            playerList[playerTargetB].setRotation({
+                            playerList[playerTargetB]!.setRotation({
                                 x: Number(rotX),
                                 y: Number(rotY),
                             });
@@ -4188,93 +4188,93 @@ break;*/ /*
                     }
                     if (Boolean(resetLevel) == true) {
                         try {
-                            playerList[playerTargetB].resetLevel();
+                            playerList[playerTargetB]!.resetLevel();
                         } catch (e) {
                             console.error(e, e.stack);
                         }
                     }
                     if (Boolean(kill) == true) {
                         try {
-                            playerList[playerTargetB].kill();
+                            playerList[playerTargetB]!.kill();
                         } catch (e) {
                             console.error(e, e.stack);
                         }
                     }
                     if (Boolean(remove) == true) {
                         try {
-                            playerList[playerTargetB].remove();
+                            playerList[playerTargetB]!.remove();
                         } catch (e) {
                             console.error(e, e.stack);
                         }
                     }
                     if (Boolean(clearVelocity) == true) {
                         try {
-                            playerList[playerTargetB].clearVelocity();
+                            playerList[playerTargetB]!.clearVelocity();
                         } catch (e) {
                             console.error(e, e.stack);
                         }
                     }
                     if (Boolean(extinguishFire) == true) {
                         try {
-                            playerList[playerTargetB].extinguishFire();
+                            playerList[playerTargetB]!.extinguishFire();
                         } catch (e) {
                             console.error(e, e.stack);
                         }
                     }
                     if (triggerEvent !== undefined) {
                         try {
-                            playerList[playerTargetB].triggerEvent(String(triggerEvent));
+                            playerList[playerTargetB]!.triggerEvent(String(triggerEvent));
                         } catch (e) {
                             console.error(e, e.stack);
                         }
                     }
                     if (addExperience !== undefined) {
                         try {
-                            playerList[playerTargetB].addExperience(Number(addExperience));
+                            playerList[playerTargetB]!.addExperience(Number(addExperience));
                         } catch (e) {
                             console.error(e, e.stack);
                         }
                     }
                     if (setItemCooldown !== undefined) {
                         try {
-                            playerList[playerTargetB].startItemCooldown(String(itemCategory), Number(tickDuration));
+                            playerList[playerTargetB]!.startItemCooldown(String(itemCategory), Number(tickDuration));
                         } catch (e) {
                             console.error(e, e.stack);
                         }
                     }
                     if (addLevels !== undefined) {
                         try {
-                            playerList[playerTargetB].addLevels(Number(addLevels));
+                            playerList[playerTargetB]!.addLevels(Number(addLevels));
                         } catch (e) {
                             console.error(e, e.stack);
                         }
                     }
                     if (Boolean(sendMessage) == true) {
                         try {
-                            playerList[playerTargetB].sendMessage(String(messageToSend));
+                            playerList[playerTargetB]!.sendMessage(String(messageToSend));
                         } catch (e) {
                             console.error(e, e.stack);
                         }
                     }
                     if (Boolean(isSneaking) == true) {
-                        playerList[playerTargetB].isSneaking = true;
+                        playerList[playerTargetB]!.isSneaking = true;
                         try {
-                            playerList[playerTargetB].addTag("isSneaking");
+                            playerList[playerTargetB]!.addTag("isSneaking");
                         } catch (e) {
                             console.error(e, e.stack);
                         } /*
-            if (playerList[playerTargetB].hasTag("isSneaking")) {
+            if (playerList[playerTargetB]!.hasTag("isSneaking")) {
               system.runInterval( () => {
-              playerList[playerTargetB].isSneaking == true
-              if (playerList[playerTargetB].hasTag("isSneaking") == false) {
+              playerList[playerTargetB]!.isSneaking == true
+              if (playerList[playerTargetB]!.hasTag("isSneaking") == false) {
               return
               }
               }, 2)
             }*/
                     } else {
                         try {
-                            playerList[playerTargetB].isSneaking = false;
-                            playerList[playerTargetB].removeTag("isSneaking");
+                            playerList[playerTargetB]!.isSneaking = false;
+                            playerList[playerTargetB]!.removeTag("isSneaking");
                         } catch (e) {
                             console.error(e, e.stack);
                         }
@@ -4362,10 +4362,10 @@ break;*/ /*
                         targetSelectorB(
                             String(ts),
                             "",
-                            Number(world.getAllPlayers()[0].id) ??
-                                Number(world.getDimension("overworld").getEntities()[0].id) ??
-                                Number(world.getDimension("nether").getEntities()[0].id) ??
-                                Number(world.getDimension("the_end").getEntities()[0].id)
+                            Number(world.getAllPlayers()[0]!.id) ??
+                                Number(world.getDimension("overworld").getEntities()[0]!.id) ??
+                                Number(world.getDimension("nether").getEntities()[0]!.id) ??
+                                Number(world.getDimension("the_end").getEntities()[0]!.id)
                         )?.getDynamicProperty(String(dpi))
                     ),
                 });
@@ -4379,10 +4379,10 @@ break;*/ /*
                             targetSelectorB(
                                 String(ts),
                                 "",
-                                Number(world.getAllPlayers()[0].id) ??
-                                    Number(world.getDimension("overworld").getEntities()[0].id) ??
-                                    Number(world.getDimension("nether").getEntities()[0].id) ??
-                                    Number(world.getDimension("the_end").getEntities()[0].id)
+                                Number(world.getAllPlayers()[0]!.id) ??
+                                    Number(world.getDimension("overworld").getEntities()[0]!.id) ??
+                                    Number(world.getDimension("nether").getEntities()[0]!.id) ??
+                                    Number(world.getDimension("the_end").getEntities()[0]!.id)
                             )?.setDynamicProperty(String(dpi), String(newValue))
                         );
                     })
@@ -4449,10 +4449,10 @@ break;*/ /*
     if (id == "andexdb:customFormUIEditor") {
         let form2 = new ModalFormData();
         let players = world.getAllPlayers();
-        let targetList = [players[0].nameTag];
+        let targetList = [players[0]!.nameTag];
         for (const index in players) {
             if (Number(index) != 0) {
-                targetList = String([String(targetList), players[index].nameTag]).split(",");
+                targetList = String([String(targetList), players[index]!.nameTag]).split(",");
             }
         }
         let formId = event.message ?? "test1234";
@@ -4587,7 +4587,7 @@ break;*/ /*
             form.toggle("setProperty Enabled", false)*/ /*
             try {console.warn(block.block.permutation.getAllStates()) } catch(e){console.error(e, e.stack);}
             try {console.warn(block.block.permutation.getAllStates()[0]) } catch(e){console.error(e, e.stack);}
-            try {console.warn(block.block.permutation.getAllStates()[0][0]) } catch(e){console.error(e, e.stack);}*/
+            try {console.warn(block.block.permutation.getAllStates()[0]![0]) } catch(e){console.error(e, e.stack);}*/
         /*form.dropdown("Block Permutation To Set", block.getTags())*/ /*
         form.slider("Selected Slot", 0, 56, 1)*/ /*
                 form.toggle("isWaterlogged", block2.isWaterlogged)*/ /*
@@ -4615,7 +4615,7 @@ break;*/ /*
             if(block2.getComponent("sign") != undefined){form.textField(`Sign Back Text Color\Text: §g${block2.getComponent("sign")?.getTextDyeColor(SignSide.Back)}`, `dye color`, block2.getComponent("sign")?.getTextDyeColor(SignSide.Back))}else{form.textField(`§4Sign Back Text Color`, `§r§4Unavailable`)}
             form.toggle("setSignIsWaxed", block2.getComponent("sign")?.isWaxed)
       
-        form.show(playerList[playerList.findIndex((x) => x == sourceEntity)]).then(r => {
+        form.show(playerList[playerList.findIndex((x) => x == sourceEntity)]!).then(r => {
             if (r.canceled) return;
         
             let [ setType, setTypeEnabled, blockPropertyIdentifier, blockPropertyValue, setPropertyEnabled*/ /*, selectedSlotIndex*/ /*, isWaterlogged/*, clearVelocity*/ //, debug, waterContainerEnabled, waterContainer, snowContainerEnabled, snowContainer, lavaContainerEnabled, lavaContainer, potionContainerEnabled, potionContainer, signFrontRawTextEnabled, signFrontRawText, signBackRawTextEnabled, signBackRawText, signFrontTextEnabled, signFrontText, signBackTextEnabled, signBackText, signFrontTextColorEnabled, signFrontTextColor, signBackTextColorEnabled, signBackTextColor, setSignIsWaxed ] = r.formValues!;
@@ -4652,34 +4652,34 @@ break;*/ /*
         if (setTypeEnabled == true) { try { block2.setType(BlockTypes.get(String(setType))/*String(setType)*/ //) } catch(e){console.error(e, e.stack)} };
         /*if (setPropertyEnabled == true) { switch(blockPropertyValueLength) {
             case 1:
-                try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0] })/*block2.permutation.clone().withState(String(blockPropertyIdentifier), blockPropertyValue2).clone().getAllStates()*/ // ) } catch ( e ) { console.error(e, e.stack) }
+                try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(blockPropertyIdentifier).split(", ")[0]!]: blockPropertyValueArray[0] })/*block2.permutation.clone().withState(String(blockPropertyIdentifier), blockPropertyValue2).clone().getAllStates()*/ // ) } catch ( e ) { console.error(e, e.stack) }
         /*break;
             case 2:
-                try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0], [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1] }) ) } catch ( e ) { console.error(e, e.stack) }
+                try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(blockPropertyIdentifier).split(", ")[0]!]: blockPropertyValueArray[0], [String(blockPropertyIdentifier).split(", ")[1]!]: blockPropertyValueArray[1] }) ) } catch ( e ) { console.error(e, e.stack) }
             break;
             case 3:
-                try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0], [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1], [String(blockPropertyIdentifier).split(", ")[2]]: blockPropertyValueArray[2] }) ) } catch ( e ) { console.error(e, e.stack) }
+                try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(blockPropertyIdentifier).split(", ")[0]!]: blockPropertyValueArray[0], [String(blockPropertyIdentifier).split(", ")[1]!]: blockPropertyValueArray[1], [String(blockPropertyIdentifier).split(", ")[2]!]: blockPropertyValueArray[2] }) ) } catch ( e ) { console.error(e, e.stack) }
             break;
             case 4:
-                try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0], [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1], [String(blockPropertyIdentifier).split(", ")[2]]: blockPropertyValueArray[2], [String(blockPropertyIdentifier).split(", ")[3]]: blockPropertyValueArray[3] }) ) } catch ( e ) { console.error(e, e.stack) }
+                try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(blockPropertyIdentifier).split(", ")[0]!]: blockPropertyValueArray[0], [String(blockPropertyIdentifier).split(", ")[1]!]: blockPropertyValueArray[1], [String(blockPropertyIdentifier).split(", ")[2]!]: blockPropertyValueArray[2], [String(blockPropertyIdentifier).split(", ")[3]!]: blockPropertyValueArray[3] }) ) } catch ( e ) { console.error(e, e.stack) }
             break;
             case 5:
-                try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0], [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1], [String(blockPropertyIdentifier).split(", ")[2]]: blockPropertyValueArray[2], [String(blockPropertyIdentifier).split(", ")[3]]: blockPropertyValueArray[3], [String(blockPropertyIdentifier).split(", ")[4]]: blockPropertyValueArray[4] }) ) } catch ( e ) { console.error(e, e.stack) }
+                try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(blockPropertyIdentifier).split(", ")[0]!]: blockPropertyValueArray[0], [String(blockPropertyIdentifier).split(", ")[1]!]: blockPropertyValueArray[1], [String(blockPropertyIdentifier).split(", ")[2]!]: blockPropertyValueArray[2], [String(blockPropertyIdentifier).split(", ")[3]!]: blockPropertyValueArray[3], [String(blockPropertyIdentifier).split(", ")[4]!]: blockPropertyValueArray[4] }) ) } catch ( e ) { console.error(e, e.stack) }
             break;
             case 6:
-                try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0], [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1], [String(blockPropertyIdentifier).split(", ")[2]]: blockPropertyValueArray[2], [String(blockPropertyIdentifier).split(", ")[3]]: blockPropertyValueArray[3], [String(blockPropertyIdentifier).split(", ")[4]]: blockPropertyValueArray[4], [String(blockPropertyIdentifier).split(", ")[5]]: blockPropertyValueArray[5] }) ) } catch ( e ) { console.error(e, e.stack) }
+                try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(blockPropertyIdentifier).split(", ")[0]!]: blockPropertyValueArray[0], [String(blockPropertyIdentifier).split(", ")[1]!]: blockPropertyValueArray[1], [String(blockPropertyIdentifier).split(", ")[2]!]: blockPropertyValueArray[2], [String(blockPropertyIdentifier).split(", ")[3]!]: blockPropertyValueArray[3], [String(blockPropertyIdentifier).split(", ")[4]!]: blockPropertyValueArray[4], [String(blockPropertyIdentifier).split(", ")[5]!]: blockPropertyValueArray[5] }) ) } catch ( e ) { console.error(e, e.stack) }
             break;
             case 7:
-                try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0], [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1], [String(blockPropertyIdentifier).split(", ")[2]]: blockPropertyValueArray[2], [String(blockPropertyIdentifier).split(", ")[3]]: blockPropertyValueArray[3], [String(blockPropertyIdentifier).split(", ")[4]]: blockPropertyValueArray[4], [String(blockPropertyIdentifier).split(", ")[5]]: blockPropertyValueArray[5], [String(blockPropertyIdentifier).split(", ")[6]]: blockPropertyValueArray[6] }) ) } catch ( e ) { console.error(e, e.stack) }
+                try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(blockPropertyIdentifier).split(", ")[0]!]: blockPropertyValueArray[0], [String(blockPropertyIdentifier).split(", ")[1]!]: blockPropertyValueArray[1], [String(blockPropertyIdentifier).split(", ")[2]!]: blockPropertyValueArray[2], [String(blockPropertyIdentifier).split(", ")[3]!]: blockPropertyValueArray[3], [String(blockPropertyIdentifier).split(", ")[4]!]: blockPropertyValueArray[4], [String(blockPropertyIdentifier).split(", ")[5]!]: blockPropertyValueArray[5], [String(blockPropertyIdentifier).split(", ")[6]!]: blockPropertyValueArray[6] }) ) } catch ( e ) { console.error(e, e.stack) }
             break;
             case 8:
-                try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0], [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1], [String(blockPropertyIdentifier).split(", ")[2]]: blockPropertyValueArray[2], [String(blockPropertyIdentifier).split(", ")[3]]: blockPropertyValueArray[3], [String(blockPropertyIdentifier).split(", ")[4]]: blockPropertyValueArray[4], [String(blockPropertyIdentifier).split(", ")[5]]: blockPropertyValueArray[5], [String(blockPropertyIdentifier).split(", ")[6]]: blockPropertyValueArray[6], [String(blockPropertyIdentifier).split(", ")[7]]: blockPropertyValueArray[7] }) ) } catch ( e ) { console.error(e, e.stack) }
+                try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(blockPropertyIdentifier).split(", ")[0]!]: blockPropertyValueArray[0], [String(blockPropertyIdentifier).split(", ")[1]!]: blockPropertyValueArray[1], [String(blockPropertyIdentifier).split(", ")[2]!]: blockPropertyValueArray[2], [String(blockPropertyIdentifier).split(", ")[3]!]: blockPropertyValueArray[3], [String(blockPropertyIdentifier).split(", ")[4]!]: blockPropertyValueArray[4], [String(blockPropertyIdentifier).split(", ")[5]!]: blockPropertyValueArray[5], [String(blockPropertyIdentifier).split(", ")[6]!]: blockPropertyValueArray[6], [String(blockPropertyIdentifier).split(", ")[7]!]: blockPropertyValueArray[7] }) ) } catch ( e ) { console.error(e, e.stack) }
             break;
             case 9:
-                try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0], [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1], [String(blockPropertyIdentifier).split(", ")[2]]: blockPropertyValueArray[2], [String(blockPropertyIdentifier).split(", ")[3]]: blockPropertyValueArray[3], [String(blockPropertyIdentifier).split(", ")[4]]: blockPropertyValueArray[4], [String(blockPropertyIdentifier).split(", ")[5]]: blockPropertyValueArray[5], [String(blockPropertyIdentifier).split(", ")[6]]: blockPropertyValueArray[6], [String(blockPropertyIdentifier).split(", ")[7]]: blockPropertyValueArray[7], [String(blockPropertyIdentifier).split(", ")[8]]: blockPropertyValueArray[8] }) ) } catch ( e ) { console.error(e, e.stack) }
+                try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(blockPropertyIdentifier).split(", ")[0]!]: blockPropertyValueArray[0], [String(blockPropertyIdentifier).split(", ")[1]!]: blockPropertyValueArray[1], [String(blockPropertyIdentifier).split(", ")[2]!]: blockPropertyValueArray[2], [String(blockPropertyIdentifier).split(", ")[3]!]: blockPropertyValueArray[3], [String(blockPropertyIdentifier).split(", ")[4]!]: blockPropertyValueArray[4], [String(blockPropertyIdentifier).split(", ")[5]!]: blockPropertyValueArray[5], [String(blockPropertyIdentifier).split(", ")[6]!]: blockPropertyValueArray[6], [String(blockPropertyIdentifier).split(", ")[7]!]: blockPropertyValueArray[7], [String(blockPropertyIdentifier).split(", ")[8]!]: blockPropertyValueArray[8] }) ) } catch ( e ) { console.error(e, e.stack) }
             break;
             case 10:
-                try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0], [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1], [String(blockPropertyIdentifier).split(", ")[2]]: blockPropertyValueArray[2], [String(blockPropertyIdentifier).split(", ")[3]]: blockPropertyValueArray[3], [String(blockPropertyIdentifier).split(", ")[4]]: blockPropertyValueArray[4], [String(blockPropertyIdentifier).split(", ")[5]]: blockPropertyValueArray[5], [String(blockPropertyIdentifier).split(", ")[6]]: blockPropertyValueArray[6], [String(blockPropertyIdentifier).split(", ")[7]]: blockPropertyValueArray[7], [String(blockPropertyIdentifier).split(", ")[8]]: blockPropertyValueArray[8], [String(blockPropertyIdentifier).split(", ")[9]]: blockPropertyValueArray[9] }) ) } catch ( e ) { console.error(e, e.stack) }
+                try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(blockPropertyIdentifier).split(", ")[0]!]: blockPropertyValueArray[0], [String(blockPropertyIdentifier).split(", ")[1]!]: blockPropertyValueArray[1], [String(blockPropertyIdentifier).split(", ")[2]!]: blockPropertyValueArray[2], [String(blockPropertyIdentifier).split(", ")[3]!]: blockPropertyValueArray[3], [String(blockPropertyIdentifier).split(", ")[4]!]: blockPropertyValueArray[4], [String(blockPropertyIdentifier).split(", ")[5]!]: blockPropertyValueArray[5], [String(blockPropertyIdentifier).split(", ")[6]!]: blockPropertyValueArray[6], [String(blockPropertyIdentifier).split(", ")[7]!]: blockPropertyValueArray[7], [String(blockPropertyIdentifier).split(", ")[8]!]: blockPropertyValueArray[8], [String(blockPropertyIdentifier).split(", ")[9]!]: blockPropertyValueArray[9] }) ) } catch ( e ) { console.error(e, e.stack) }
             break;
             default:
             break;/*
@@ -4829,7 +4829,7 @@ break;*/ /*
         form.toggle("setProperty Enabled", { defaultValue: false }); /*
         try {console.warn(block.block.permutation.getAllStates()) } catch(e){console.error(e, e.stack);}
         try {console.warn(block.block.permutation.getAllStates()[0]) } catch(e){console.error(e, e.stack);}
-        try {console.warn(block.block.permutation.getAllStates()[0][0]) } catch(e){console.error(e, e.stack);}*/
+        try {console.warn(block.block.permutation.getAllStates()[0]![0]) } catch(e){console.error(e, e.stack);}*/
 
         /*form.dropdown("Block Permutation To Set", block.getTags())*/ /*
         form.slider("Selected Slot", 0, 56, 1)*/
@@ -4998,10 +4998,10 @@ break;*/ /*
                             .join()
                     ) {
                         block2.getComponent("fluid_container")!.fluidColor = {
-                            red: fluidContainerColor.split(",")[0].toNumber()!,
-                            green: fluidContainerColor.split(",")[1].toNumber()!,
-                            blue: fluidContainerColor.split(",")[2].toNumber()!,
-                            alpha: fluidContainerColor.split(",")[3].toNumber()!,
+                            red: fluidContainerColor.split(",")[0]!.toNumber()!,
+                            green: fluidContainerColor.split(",")[1]!.toNumber()!,
+                            blue: fluidContainerColor.split(",")[2]!.toNumber()!,
+                            alpha: fluidContainerColor.split(",")[3]!.toNumber()!,
                         };
                     }
                     if (fluidContainerFillLevel != block2.getComponent("fluid_container")!.fillLevel) {
@@ -5140,7 +5140,7 @@ break;*/ /*
                             try {
                                 block2.setPermutation(
                                     BlockPermutation.resolve(block2.typeId, {
-                                        [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0],
+                                        [String(blockPropertyIdentifier).split(", ")[0]!]: blockPropertyValueArray[0],
                                     }) /*block2.permutation.clone().withState(String(blockPropertyIdentifier), blockPropertyValue2).clone().getAllStates()*/
                                 );
                             } catch (e) {
@@ -5151,8 +5151,8 @@ break;*/ /*
                             try {
                                 block2.setPermutation(
                                     BlockPermutation.resolve(block2.typeId, {
-                                        [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0],
-                                        [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1],
+                                        [String(blockPropertyIdentifier).split(", ")[0]!]: blockPropertyValueArray[0],
+                                        [String(blockPropertyIdentifier).split(", ")[1]!]: blockPropertyValueArray[1],
                                     })
                                 );
                             } catch (e) {
@@ -5163,9 +5163,9 @@ break;*/ /*
                             try {
                                 block2.setPermutation(
                                     BlockPermutation.resolve(block2.typeId, {
-                                        [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0],
-                                        [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1],
-                                        [String(blockPropertyIdentifier).split(", ")[2]]: blockPropertyValueArray[2],
+                                        [String(blockPropertyIdentifier).split(", ")[0]!]: blockPropertyValueArray[0],
+                                        [String(blockPropertyIdentifier).split(", ")[1]!]: blockPropertyValueArray[1],
+                                        [String(blockPropertyIdentifier).split(", ")[2]!]: blockPropertyValueArray[2],
                                     })
                                 );
                             } catch (e) {
@@ -5176,10 +5176,10 @@ break;*/ /*
                             try {
                                 block2.setPermutation(
                                     BlockPermutation.resolve(block2.typeId, {
-                                        [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0],
-                                        [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1],
-                                        [String(blockPropertyIdentifier).split(", ")[2]]: blockPropertyValueArray[2],
-                                        [String(blockPropertyIdentifier).split(", ")[3]]: blockPropertyValueArray[3],
+                                        [String(blockPropertyIdentifier).split(", ")[0]!]: blockPropertyValueArray[0],
+                                        [String(blockPropertyIdentifier).split(", ")[1]!]: blockPropertyValueArray[1],
+                                        [String(blockPropertyIdentifier).split(", ")[2]!]: blockPropertyValueArray[2],
+                                        [String(blockPropertyIdentifier).split(", ")[3]!]: blockPropertyValueArray[3],
                                     })
                                 );
                             } catch (e) {
@@ -5190,11 +5190,11 @@ break;*/ /*
                             try {
                                 block2.setPermutation(
                                     BlockPermutation.resolve(block2.typeId, {
-                                        [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0],
-                                        [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1],
-                                        [String(blockPropertyIdentifier).split(", ")[2]]: blockPropertyValueArray[2],
-                                        [String(blockPropertyIdentifier).split(", ")[3]]: blockPropertyValueArray[3],
-                                        [String(blockPropertyIdentifier).split(", ")[4]]: blockPropertyValueArray[4],
+                                        [String(blockPropertyIdentifier).split(", ")[0]!]: blockPropertyValueArray[0],
+                                        [String(blockPropertyIdentifier).split(", ")[1]!]: blockPropertyValueArray[1],
+                                        [String(blockPropertyIdentifier).split(", ")[2]!]: blockPropertyValueArray[2],
+                                        [String(blockPropertyIdentifier).split(", ")[3]!]: blockPropertyValueArray[3],
+                                        [String(blockPropertyIdentifier).split(", ")[4]!]: blockPropertyValueArray[4],
                                     })
                                 );
                             } catch (e) {
@@ -5205,12 +5205,12 @@ break;*/ /*
                             try {
                                 block2.setPermutation(
                                     BlockPermutation.resolve(block2.typeId, {
-                                        [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0],
-                                        [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1],
-                                        [String(blockPropertyIdentifier).split(", ")[2]]: blockPropertyValueArray[2],
-                                        [String(blockPropertyIdentifier).split(", ")[3]]: blockPropertyValueArray[3],
-                                        [String(blockPropertyIdentifier).split(", ")[4]]: blockPropertyValueArray[4],
-                                        [String(blockPropertyIdentifier).split(", ")[5]]: blockPropertyValueArray[5],
+                                        [String(blockPropertyIdentifier).split(", ")[0]!]: blockPropertyValueArray[0],
+                                        [String(blockPropertyIdentifier).split(", ")[1]!]: blockPropertyValueArray[1],
+                                        [String(blockPropertyIdentifier).split(", ")[2]!]: blockPropertyValueArray[2],
+                                        [String(blockPropertyIdentifier).split(", ")[3]!]: blockPropertyValueArray[3],
+                                        [String(blockPropertyIdentifier).split(", ")[4]!]: blockPropertyValueArray[4],
+                                        [String(blockPropertyIdentifier).split(", ")[5]!]: blockPropertyValueArray[5],
                                     })
                                 );
                             } catch (e) {
@@ -5221,13 +5221,13 @@ break;*/ /*
                             try {
                                 block2.setPermutation(
                                     BlockPermutation.resolve(block2.typeId, {
-                                        [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0],
-                                        [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1],
-                                        [String(blockPropertyIdentifier).split(", ")[2]]: blockPropertyValueArray[2],
-                                        [String(blockPropertyIdentifier).split(", ")[3]]: blockPropertyValueArray[3],
-                                        [String(blockPropertyIdentifier).split(", ")[4]]: blockPropertyValueArray[4],
-                                        [String(blockPropertyIdentifier).split(", ")[5]]: blockPropertyValueArray[5],
-                                        [String(blockPropertyIdentifier).split(", ")[6]]: blockPropertyValueArray[6],
+                                        [String(blockPropertyIdentifier).split(", ")[0]!]: blockPropertyValueArray[0],
+                                        [String(blockPropertyIdentifier).split(", ")[1]!]: blockPropertyValueArray[1],
+                                        [String(blockPropertyIdentifier).split(", ")[2]!]: blockPropertyValueArray[2],
+                                        [String(blockPropertyIdentifier).split(", ")[3]!]: blockPropertyValueArray[3],
+                                        [String(blockPropertyIdentifier).split(", ")[4]!]: blockPropertyValueArray[4],
+                                        [String(blockPropertyIdentifier).split(", ")[5]!]: blockPropertyValueArray[5],
+                                        [String(blockPropertyIdentifier).split(", ")[6]!]: blockPropertyValueArray[6],
                                     })
                                 );
                             } catch (e) {
@@ -5238,14 +5238,14 @@ break;*/ /*
                             try {
                                 block2.setPermutation(
                                     BlockPermutation.resolve(block2.typeId, {
-                                        [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0],
-                                        [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1],
-                                        [String(blockPropertyIdentifier).split(", ")[2]]: blockPropertyValueArray[2],
-                                        [String(blockPropertyIdentifier).split(", ")[3]]: blockPropertyValueArray[3],
-                                        [String(blockPropertyIdentifier).split(", ")[4]]: blockPropertyValueArray[4],
-                                        [String(blockPropertyIdentifier).split(", ")[5]]: blockPropertyValueArray[5],
-                                        [String(blockPropertyIdentifier).split(", ")[6]]: blockPropertyValueArray[6],
-                                        [String(blockPropertyIdentifier).split(", ")[7]]: blockPropertyValueArray[7],
+                                        [String(blockPropertyIdentifier).split(", ")[0]!]: blockPropertyValueArray[0],
+                                        [String(blockPropertyIdentifier).split(", ")[1]!]: blockPropertyValueArray[1],
+                                        [String(blockPropertyIdentifier).split(", ")[2]!]: blockPropertyValueArray[2],
+                                        [String(blockPropertyIdentifier).split(", ")[3]!]: blockPropertyValueArray[3],
+                                        [String(blockPropertyIdentifier).split(", ")[4]!]: blockPropertyValueArray[4],
+                                        [String(blockPropertyIdentifier).split(", ")[5]!]: blockPropertyValueArray[5],
+                                        [String(blockPropertyIdentifier).split(", ")[6]!]: blockPropertyValueArray[6],
+                                        [String(blockPropertyIdentifier).split(", ")[7]!]: blockPropertyValueArray[7],
                                     })
                                 );
                             } catch (e) {
@@ -5256,15 +5256,15 @@ break;*/ /*
                             try {
                                 block2.setPermutation(
                                     BlockPermutation.resolve(block2.typeId, {
-                                        [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0],
-                                        [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1],
-                                        [String(blockPropertyIdentifier).split(", ")[2]]: blockPropertyValueArray[2],
-                                        [String(blockPropertyIdentifier).split(", ")[3]]: blockPropertyValueArray[3],
-                                        [String(blockPropertyIdentifier).split(", ")[4]]: blockPropertyValueArray[4],
-                                        [String(blockPropertyIdentifier).split(", ")[5]]: blockPropertyValueArray[5],
-                                        [String(blockPropertyIdentifier).split(", ")[6]]: blockPropertyValueArray[6],
-                                        [String(blockPropertyIdentifier).split(", ")[7]]: blockPropertyValueArray[7],
-                                        [String(blockPropertyIdentifier).split(", ")[8]]: blockPropertyValueArray[8],
+                                        [String(blockPropertyIdentifier).split(", ")[0]!]: blockPropertyValueArray[0],
+                                        [String(blockPropertyIdentifier).split(", ")[1]!]: blockPropertyValueArray[1],
+                                        [String(blockPropertyIdentifier).split(", ")[2]!]: blockPropertyValueArray[2],
+                                        [String(blockPropertyIdentifier).split(", ")[3]!]: blockPropertyValueArray[3],
+                                        [String(blockPropertyIdentifier).split(", ")[4]!]: blockPropertyValueArray[4],
+                                        [String(blockPropertyIdentifier).split(", ")[5]!]: blockPropertyValueArray[5],
+                                        [String(blockPropertyIdentifier).split(", ")[6]!]: blockPropertyValueArray[6],
+                                        [String(blockPropertyIdentifier).split(", ")[7]!]: blockPropertyValueArray[7],
+                                        [String(blockPropertyIdentifier).split(", ")[8]!]: blockPropertyValueArray[8],
                                     })
                                 );
                             } catch (e) {
@@ -5275,16 +5275,16 @@ break;*/ /*
                             try {
                                 block2.setPermutation(
                                     BlockPermutation.resolve(block2.typeId, {
-                                        [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0],
-                                        [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1],
-                                        [String(blockPropertyIdentifier).split(", ")[2]]: blockPropertyValueArray[2],
-                                        [String(blockPropertyIdentifier).split(", ")[3]]: blockPropertyValueArray[3],
-                                        [String(blockPropertyIdentifier).split(", ")[4]]: blockPropertyValueArray[4],
-                                        [String(blockPropertyIdentifier).split(", ")[5]]: blockPropertyValueArray[5],
-                                        [String(blockPropertyIdentifier).split(", ")[6]]: blockPropertyValueArray[6],
-                                        [String(blockPropertyIdentifier).split(", ")[7]]: blockPropertyValueArray[7],
-                                        [String(blockPropertyIdentifier).split(", ")[8]]: blockPropertyValueArray[8],
-                                        [String(blockPropertyIdentifier).split(", ")[9]]: blockPropertyValueArray[9],
+                                        [String(blockPropertyIdentifier).split(", ")[0]!]: blockPropertyValueArray[0],
+                                        [String(blockPropertyIdentifier).split(", ")[1]!]: blockPropertyValueArray[1],
+                                        [String(blockPropertyIdentifier).split(", ")[2]!]: blockPropertyValueArray[2],
+                                        [String(blockPropertyIdentifier).split(", ")[3]!]: blockPropertyValueArray[3],
+                                        [String(blockPropertyIdentifier).split(", ")[4]!]: blockPropertyValueArray[4],
+                                        [String(blockPropertyIdentifier).split(", ")[5]!]: blockPropertyValueArray[5],
+                                        [String(blockPropertyIdentifier).split(", ")[6]!]: blockPropertyValueArray[6],
+                                        [String(blockPropertyIdentifier).split(", ")[7]!]: blockPropertyValueArray[7],
+                                        [String(blockPropertyIdentifier).split(", ")[8]!]: blockPropertyValueArray[8],
+                                        [String(blockPropertyIdentifier).split(", ")[9]!]: blockPropertyValueArray[9],
                                     })
                                 );
                             } catch (e) {
@@ -5348,11 +5348,11 @@ break;*/ /*
     if (id == "andexdb:entityController") {
         let form2 = new ModalFormData();
         let playerList = world.getPlayers();
-        let targetList = [playerList[0].nameTag];
-        let componentList = [playerList[0].getComponents()[0]];
+        let targetList = [playerList[0]!.nameTag];
+        let componentList = [playerList[0]!.getComponents()[0]];
         let entity2: any;
         try {
-            entity2 = playerList[0].getEntitiesFromViewDirection();
+            entity2 = playerList[0]!.getEntitiesFromViewDirection();
         } catch (e) {}
         let dimension = "";
         let spawnXPosition = "";
@@ -5362,8 +5362,8 @@ break;*/ /*
             /*
             console.warn(index);*/
             if (Number(index) != 0) {
-                targetList = String([String(targetList), playerList[index].nameTag]).split(","); /*
-            targetList = String([String(targetList), playerList[index].nameTag]).split(",");*/
+                targetList = String([String(targetList), playerList[index]!.nameTag]).split(","); /*
+            targetList = String([String(targetList), playerList[index]!.nameTag]).split(",");*/
             } /*
             console.warn(targetList);*/
         } /*
@@ -5543,7 +5543,7 @@ break;*/ /*
                         debug,
                     ] = r.formValues!;
                     /*
-                let scale = playerList[0].getComponent("scale") as EntityScaleComponent;
+                let scale = playerList[0]!.getComponent("scale") as EntityScaleComponent;
                 scale.value = Number(scaleValue);*/
                     if (Boolean(changeNameTag) == true) {
                         try {
@@ -5777,12 +5777,12 @@ break;*/ /*
                     let [playerViewer, selectionType, entityUUID] = t.formValues!;
                     let entity3: Entity;
                     if (Number(selectionType) == 1) {
-                        entity3 = playerList[Number(playerViewer)].dimension.getEntities({
+                        entity3 = playerList[Number(playerViewer)]!.dimension.getEntities({
                             excludeTypes: ["minecraft:player"],
                             closest: 1,
-                            location: playerList[0].location,
-                        })[0];
-                        entity2 = playerList[Number(playerViewer)].dimension.getEntitiesFromRay(
+                            location: playerList[0]!.location,
+                        })[0]!;
+                        entity2 = playerList[Number(playerViewer)]!.dimension.getEntitiesFromRay(
                             {
                                 x: entity3.location.x,
                                 y: entity3.location.y + 1.0,
@@ -5792,8 +5792,8 @@ break;*/ /*
                         );
                     } else {
                         try {
-                            entity2 = playerList[Number(playerViewer)].getEntitiesFromViewDirection();
-                            entity3 = playerList[Number(playerViewer)].getEntitiesFromViewDirection()[0].entity;
+                            entity2 = playerList[Number(playerViewer)]!.getEntitiesFromViewDirection();
+                            entity3 = playerList[Number(playerViewer)]!.getEntitiesFromViewDirection()[0]!.entity;
                         } catch (e) {}
                     }
                     let playerTargetB: Entity;
@@ -5814,7 +5814,7 @@ break;*/ /*
       let form = new ModalFormData();
       let players = world.getPlayers()
       let block = sourceEntity.getBlockFromViewDirection()
-      let entity = players[0].getEntitiesFromViewDirection()
+      let entity = players[0]!.getEntitiesFromViewDirection()
       form.title("Entity Controller");
       form.textField("Name Tag", "Name Tag", entity[0].entity.nameTag)
       form.textField("Trigger Event", "Trigger Event")*/ /*
@@ -5880,7 +5880,7 @@ break;*/ /*
         
         if (players[players.findIndex((x) => x == sourceEntity)] as any.hasTag("showDebug")) {
           system.runInterval( () => {
-          players[0].onScreenDisplay.setActionBar("dimension: " + entity[0].entity.dimension + "\nfallDistance: " + entity[0].entity.fallDistance + "\nid: entity[0].entity.id: " + entity[0].entity.id + "\nisClimbing: " + entity[0].entity.isClimbing + "\nisFalling: " + entity[0].entity.isFalling + "\nisInWater: " + entity[0].entity.isInWater + "\nisOnGround: " + entity[0].entity.isOnGround + "\nisSleeping: " + entity[0].entity.isSleeping + "\nisSneaking: " + entity[0].entity.isSneaking + "\nisSprinting: " + entity[0].entity.isSprinting + "\nisSwimming: " + entity[0].entity.isSwimming + "\nlifetimeState: " + entity[0].entity.lifetimeState + "\nlocation: " + entity[0].entity.location + "\nnameTag: " + entity[0].entity.nameTag + "\nscoreboardIdentity(or_the_actor_id_very_long_complicated_number): " + entity[0].entity.scoreboardIdentity + "\ntarget: " + entity[0].entity.target + "\ntypeId: " + entity[0].entity.typeId + "\ngetBlockFromViewDirection(): " + entity[0].entity.getBlockFromViewDirection() + "\ngetComponents(): " + entity[0].entity.getComponents() + "\ngetEffects(): " + entity[0].entity.getEffects() + "\ngetEntitiesFromViewDirection(): " + entity[0].entity.getEntitiesFromViewDirection() + "\ngetHeadLocation(): " + entity[0].entity.getHeadLocation() + "\ngetRotation(): " + entity[0].entity.getRotation() + "\ngetTags(): " + entity[0].entity.getTags() + "\ngetVelocity(): " + entity[0].entity.getVelocity() + "\ngetViewDirection(): " + entity[0].entity.getViewDirection + "\nisValid(): " + entity[0].entity.isValid);
+          players[0]!.onScreenDisplay.setActionBar("dimension: " + entity[0].entity.dimension + "\nfallDistance: " + entity[0].entity.fallDistance + "\nid: entity[0].entity.id: " + entity[0].entity.id + "\nisClimbing: " + entity[0].entity.isClimbing + "\nisFalling: " + entity[0].entity.isFalling + "\nisInWater: " + entity[0].entity.isInWater + "\nisOnGround: " + entity[0].entity.isOnGround + "\nisSleeping: " + entity[0].entity.isSleeping + "\nisSneaking: " + entity[0].entity.isSneaking + "\nisSprinting: " + entity[0].entity.isSprinting + "\nisSwimming: " + entity[0].entity.isSwimming + "\nlifetimeState: " + entity[0].entity.lifetimeState + "\nlocation: " + entity[0].entity.location + "\nnameTag: " + entity[0].entity.nameTag + "\nscoreboardIdentity(or_the_actor_id_very_long_complicated_number): " + entity[0].entity.scoreboardIdentity + "\ntarget: " + entity[0].entity.target + "\ntypeId: " + entity[0].entity.typeId + "\ngetBlockFromViewDirection(): " + entity[0].entity.getBlockFromViewDirection() + "\ngetComponents(): " + entity[0].entity.getComponents() + "\ngetEffects(): " + entity[0].entity.getEffects() + "\ngetEntitiesFromViewDirection(): " + entity[0].entity.getEntitiesFromViewDirection() + "\ngetHeadLocation(): " + entity[0].entity.getHeadLocation() + "\ngetRotation(): " + entity[0].entity.getRotation() + "\ngetTags(): " + entity[0].entity.getTags() + "\ngetVelocity(): " + entity[0].entity.getVelocity() + "\ngetViewDirection(): " + entity[0].entity.getViewDirection + "\nisValid(): " + entity[0].entity.isValid);
           if (players[players.findIndex((x) => x == sourceEntity)] as any.hasTag("showDebug") == false) {
           return
           }
@@ -5893,12 +5893,12 @@ break;*/ /*
     if (id == "andexdb:worldOptions") {
         let form2 = new ModalFormData();
         let playerList = world.getPlayers();
-        let targetList = [playerList[0].nameTag];
-        let componentList = [playerList[0].getComponents()[0]];
-        let entity2 = playerList[0].getEntitiesFromViewDirection();
+        let targetList = [playerList[0]!.nameTag];
+        let componentList = [playerList[0]!.getComponents()[0]];
+        let entity2 = playerList[0]!.getEntitiesFromViewDirection();
         let entity3 = undefined;
         try {
-            entity3 = entity2[0].entity.id;
+            entity3 = entity2[0]!.entity.id;
         } catch (e) {
             /*console.error(e, e.stack);*/
         }
@@ -5907,13 +5907,13 @@ break;*/ /*
         let spawnYPosition = "";
         let spawnZPosition = "";
         let playerTargetB = undefined;
-        let playerViewer = playerList[playerList.findIndex((x) => x == sourceEntity)];
+        let playerViewer = playerList[playerList.findIndex((x) => x == sourceEntity)]!;
         for (const index in playerList) {
             /*
             console.warn(index);*/
             if (Number(index) != 0) {
-                targetList = String([String(targetList), playerList[index].nameTag]).split(","); /*
-            targetList = String([String(targetList), playerList[index].nameTag]).split(",");*/
+                targetList = String([String(targetList), playerList[index]!.nameTag]).split(","); /*
+            targetList = String([String(targetList), playerList[index]!.nameTag]).split(",");*/
             } /*
             console.warn(targetList);*/
         } /*
@@ -6021,11 +6021,11 @@ break;*/ /*
                     debug,
                 ] = r.formValues!;
                 /*
-                let scale = playerList[0].getComponent("scale") as EntityScaleComponent;
+                let scale = playerList[0]!.getComponent("scale") as EntityScaleComponent;
                 scale.value = Number(scaleValue);*/
                 if (Boolean(setWeather) == true && weatherDuration == "") {
                     try {
-                        world.getDimension(String(weatherDimension)).setWeather(weatherList3[weatherList2.indexOf(String(weatherType))]);
+                        world.getDimension(String(weatherDimension)).setWeather(weatherList3[weatherList2.indexOf(String(weatherType))]!);
                     } catch (e) {
                         console.error(e, e.stack);
                     }
@@ -6035,7 +6035,7 @@ break;*/ /*
                             world
                                 .getDimension(String(weatherDimension))
                                 .setWeather(
-                                    weatherList3[weatherList2.indexOf(String(weatherType))],
+                                    weatherList3[weatherList2.indexOf(String(weatherType))]!,
                                     Number(1) /* This one comes in a later update lols. // BUGBUG */
                                 );
                         } catch (e) {
@@ -6104,7 +6104,7 @@ break;*/ /*
 
                 if (Boolean(spawnEntity) == true) {
                     try {
-                        world.getDimension(dimensionList2[Number(entityDimension)]).spawnEntity(String(entityIdentifier) as any, {
+                        world.getDimension(dimensionList2[Number(entityDimension)]!).spawnEntity(String(entityIdentifier) as any, {
                             x: Number(entityX),
                             y: Number(entityY),
                             z: Number(entityZ),
@@ -6273,7 +6273,7 @@ break;*/ /*
     if (id == "andexdb:setWorldDynamicProperty") {
         let dynamicProperty = message.split("|");
         try {
-            world.setDynamicProperty(String(dynamicProperty[0]), dynamicProperty[1].replaceAll("\\s", "|"));
+            world.setDynamicProperty(String(dynamicProperty[0]), dynamicProperty[1]!.replaceAll("\\s", "|"));
         } catch (e) {
             console.error(e, e.stack);
         }
@@ -6281,9 +6281,9 @@ break;*/ /*
     if (id == "andexdb:setEntityDynamicProperty") {
         let playerName = message.split("|");
         for (let i in playerName) {
-            playerName[i] = playerName[i].replaceAll("\\l", "|").replaceAll("\\n", "\n").replaceAll("\\x", "");
+            playerName[i] = playerName[i]!.replaceAll("\\l", "|").replaceAll("\\n", "\n").replaceAll("\\x", "");
         }
-        if (playerName.length == 1) {
+        if (playerName.length < 2) {
             try {
                 (sourceEntity as Player).sendMessage(
                     /*"§r§fplayerControllerCommandForm Command Format: <playerName: string>|<setPlayerNameTag: boolean>|<multilineNameTag: boolean>|<newPlayerNameTag: string>|<triggerEvent: boolean>|<eventId: string>|<addExperience: boolean>|<experienceAmount: int>|<>|<>"*/ "§r§fplayerControllerCommandForm Command Format: <targets: quotedTargetSelector>|<option: optionName>:<optionValue: optionValue>{list: list; listObject: |[<option: optionName>:<optionValue: optionValue>]}\nOptions: triggerEvent, setProperty, setPropertyInt, setPropertyBool, setDynamicProperty, setDynamicPropertyInt, setDynamicPropertyBool, setDynamicPropertyVector3"
@@ -6291,10 +6291,10 @@ break;*/ /*
             } catch (e) {}
         } else {
             let playerList = world.getPlayers();
-            if (playerName[0].startsWith('"') && playerName[0].endsWith('"')) {
-                playerName[0] = playerName[0].slice(1, playerName[0].length - 1);
+            if (playerName[0]!.startsWith('"') && playerName[0]!.endsWith('"')) {
+                playerName[0] = playerName[0]!.slice(1, playerName[0]!.length - 1);
             }
-            let targetList = [playerList[0].name];
+            let targetList = [playerList[0]!.name];
             let position: string;
             let entity = undefined; /*
         console.warn(playerName[0])*/
@@ -6307,33 +6307,33 @@ break;*/ /*
                 assertIsDefined(sourceBlock);
                 position = String(sourceBlock.location.x) + " " + sourceBlock.location.y + " " + sourceBlock.location.z;
             }
-            let targets = targetSelectorAllListC(playerName[0], "", position, entity); /*
+            let targets = targetSelectorAllListC(playerName[0]!, "", position, entity); /*
         console.warn(targets[0].nameTag)*/
 
             for (const index in playerList) {
                 /*
             console.warn(index);*/
                 if (Number(index) != 0) {
-                    targetList = String([String(targetList), playerList[index].name]).split(","); /*
-            targetList = String([String(targetList), playerList[index].name]).split(",");*/
+                    targetList = String([String(targetList), playerList[index]!.name]).split(","); /*
+            targetList = String([String(targetList), playerList[index]!.name]).split(",");*/
                 } /*
             console.warn(targetList);*/
             }
             for (let i in playerName.slice(1)) {
                 for (let l in targets) {
-                    switch (playerName.slice(1)[i].split(":")[0]) {
+                    switch (playerName.slice(1)[i]!.split(":")[0]) {
                         case "triggerEvent":
                             try {
-                                targets[l].triggerEvent(playerName.slice(1)[i].split(":").slice(1).join(":").replaceAll("\\c", ":"));
+                                targets[l]!.triggerEvent(playerName.slice(1)[i]!.split(":").slice(1).join(":").replaceAll("\\c", ":"));
                             } catch (e) {
                                 console.error(e, e.stack);
                             }
                             break;
                         case "setProperty":
                             try {
-                                targets[l].setProperty(
-                                    playerName.slice(1)[i].split(":")[1].replaceAll("\\c", ":"),
-                                    playerName.slice(1)[i].split(":").slice(2).join(":").replaceAll("\\c", ":")
+                                targets[l]!.setProperty(
+                                    playerName.slice(1)[i]!.split(":")[1]!.replaceAll("\\c", ":"),
+                                    playerName.slice(1)[i]!.split(":").slice(2).join(":").replaceAll("\\c", ":")
                                 );
                             } catch (e) {
                                 console.error(e, e.stack);
@@ -6341,9 +6341,9 @@ break;*/ /*
                             break;
                         case "setPropertyInt":
                             try {
-                                targets[l].setProperty(
-                                    playerName.slice(1)[i].split(":")[1].replaceAll("\\c", ":"),
-                                    Number(playerName.slice(1)[i].split(":").slice(2).join(":").replaceAll("\\c", ":"))
+                                targets[l]!.setProperty(
+                                    playerName.slice(1)[i]!.split(":")[1]!.replaceAll("\\c", ":"),
+                                    Number(playerName.slice(1)[i]!.split(":").slice(2).join(":").replaceAll("\\c", ":"))
                                 );
                             } catch (e) {
                                 console.error(e, e.stack);
@@ -6351,23 +6351,23 @@ break;*/ /*
                             break;
                         case "setPropertyBool":
                             try {
-                                targets[l].setProperty(
-                                    playerName.slice(1)[i].split(":")[1].replaceAll("\\c", ":"),
-                                    Boolean(playerName.slice(1)[i].split(":").slice(2).join(":").replaceAll("\\c", ":"))
+                                targets[l]!.setProperty(
+                                    playerName.slice(1)[i]!.split(":")[1]!.replaceAll("\\c", ":"),
+                                    Boolean(playerName.slice(1)[i]!.split(":").slice(2).join(":").replaceAll("\\c", ":"))
                                 );
                             } catch (e) {
                                 console.error(e, e.stack);
                             }
                             break; /*
         case "setPropertyVector3":
-        try {targets[l].setProperty(playerName.slice(1)[i].split(":")[1].replaceAll("\\c", ":"), Boolean(playerName.slice(1)[i].split(":").slice(2).join(":").replaceAll("\\c", ":")));} catch(e){console.error(e, e.stack);}
+        try {targets[l]!.setProperty(playerName.slice(1)[i]!.split(":")[1]!.replaceAll("\\c", ":"), Boolean(playerName.slice(1)[i]!.split(":").slice(2).join(":").replaceAll("\\c", ":")));} catch(e){console.error(e, e.stack);}
         break; */
 
                         case "setDynamicProperty":
                             try {
-                                targets[l].setDynamicProperty(
-                                    playerName.slice(1)[i].split(":")[1].replaceAll("\\c", ":"),
-                                    playerName.slice(1)[i].split(":").slice(2).join(":").replaceAll("\\c", ":")
+                                targets[l]!.setDynamicProperty(
+                                    playerName.slice(1)[i]!.split(":")[1]!.replaceAll("\\c", ":"),
+                                    playerName.slice(1)[i]!.split(":").slice(2).join(":").replaceAll("\\c", ":")
                                 );
                             } catch (e) {
                                 console.error(e, e.stack);
@@ -6375,9 +6375,9 @@ break;*/ /*
                             break;
                         case "setDynamicPropertyInt":
                             try {
-                                targets[l].setDynamicProperty(
-                                    playerName.slice(1)[i].split(":")[1].replaceAll("\\c", ":"),
-                                    Number(playerName.slice(1)[i].split(":").slice(2).join(":").replaceAll("\\c", ":"))
+                                targets[l]!.setDynamicProperty(
+                                    playerName.slice(1)[i]!.split(":")[1]!.replaceAll("\\c", ":"),
+                                    Number(playerName.slice(1)[i]!.split(":").slice(2).join(":").replaceAll("\\c", ":"))
                                 );
                             } catch (e) {
                                 console.error(e, e.stack);
@@ -6385,9 +6385,9 @@ break;*/ /*
                             break;
                         case "setDynamicPropertyBool":
                             try {
-                                targets[l].setDynamicProperty(
-                                    playerName.slice(1)[i].split(":")[1].replaceAll("\\c", ":"),
-                                    Boolean(playerName.slice(1)[i].split(":").slice(2).join(":").replaceAll("\\c", ":"))
+                                targets[l]!.setDynamicProperty(
+                                    playerName.slice(1)[i]!.split(":")[1]!.replaceAll("\\c", ":"),
+                                    Boolean(playerName.slice(1)[i]!.split(":").slice(2).join(":").replaceAll("\\c", ":"))
                                 );
                             } catch (e) {
                                 console.error(e, e.stack);
@@ -6395,23 +6395,23 @@ break;*/ /*
                             break;
                         case "setDynamicPropertyVector3":
                             try {
-                                targets[l].setDynamicProperty(playerName.slice(1)[i].split(":")[1].replaceAll("\\c", ":"), {
-                                    x: Number(playerName.slice(1)[i].split(":")[2]),
-                                    y: Number(playerName.slice(1)[i].split(":")[3]),
-                                    z: Number(playerName.slice(1)[i].split(":")[4]),
+                                targets[l]!.setDynamicProperty(playerName.slice(1)[i]!.split(":")[1]!.replaceAll("\\c", ":"), {
+                                    x: Number(playerName.slice(1)[i]!.split(":")[2]),
+                                    y: Number(playerName.slice(1)[i]!.split(":")[3]),
+                                    z: Number(playerName.slice(1)[i]!.split(":")[4]),
                                 });
                             } catch (e) {
                                 console.error(e, e.stack);
                             }
                             break; /*
         case "setVariant":
-        try {(targets[l].getComponent("minecraft:variant") as EntityVariantComponent).value = Number(playerName.slice(1)[i].split(":")[1]);} catch(e){console.error(e, e.stack);}
+        try {(targets[l]!.getComponent("minecraft:variant") as EntityVariantComponent).value = Number(playerName.slice(1)[i]!.split(":")[1]!);} catch(e){console.error(e, e.stack);}
         break; */
 
                         // case "setMarkVariant": // Broke in 1.21.80, switch to use entiiy scale.
                         //     try {
-                        //         (targets[l].getComponent("minecraft:mark_variant") as EntityMarkVariantComponent).value = Number(
-                        //             playerName.slice(1)[i].split(":")[1]
+                        //         (targets[l]!.getComponent("minecraft:mark_variant") as EntityMarkVariantComponent).value = Number(
+                        //             playerName.slice(1)[i]!.split(":")[1]
                         //         );
                         //     } catch (e) {
                         //         console.error(e, e.stack);
@@ -6419,8 +6419,8 @@ break;*/ /*
                         //     break;
                         // case "setPushThrough": // Broke in 1.21.80, switch to use entiiy scale.
                         //     try {
-                        //         (targets[l].getComponent("minecraft:push_through") as EntityPushThroughComponent).value = Number(
-                        //             playerName.slice(1)[i].split(":")[1]
+                        //         (targets[l]!.getComponent("minecraft:push_through") as EntityPushThroughComponent).value = Number(
+                        //             playerName.slice(1)[i]!.split(":")[1]
                         //         );
                         //     } catch (e) {
                         //         console.error(e, e.stack);
@@ -6431,29 +6431,29 @@ break;*/ /*
                                 throw new Error("8Crafter's Entity Scale Add-On v1.18.0 or newer is required to use setScale.");
                             }
                             try {
-                                targets[l].runCommand("/scriptevent andexsa:setScale " + playerName.slice(1)[i].split(":")[1]);
+                                targets[l]!.runCommand("/scriptevent andexsa:setScale " + playerName.slice(1)[i]!.split(":")[1]);
                             } catch (e) {
                                 console.error(e, e.stack);
                             }
                             break;
                         // case "setSkinId": // Broke in 1.21.80, switch to use entiiy scale.
                         //     try {
-                        //         (targets[l].getComponent("minecraft:skin_id") as EntitySkinIdComponent).value = Number(playerName.slice(1)[i].split(":")[1]);
+                        //         (targets[l]!.getComponent("minecraft:skin_id") as EntitySkinIdComponent).value = Number(playerName.slice(1)[i]!.split(":")[1]!);
                         //     } catch (e) {
                         //         console.error(e, e.stack);
                         //     }
                         //     break;
                         case "setTame":
                             try {
-                                (targets[l].getComponent("minecraft:tameable") as EntityTameableComponent).tame(sourceEntity as Player);
+                                (targets[l]!.getComponent("minecraft:tameable") as EntityTameableComponent).tame(sourceEntity as Player);
                             } catch (e) {
                                 console.error(e, e.stack);
                             }
                             break;
                         case "setAirSupply":
                             try {
-                                (targets[l].getComponent("minecraft:breathable") as EntityBreathableComponent).airSupply = Number(
-                                    playerName.slice(1)[i].split(":")[1]
+                                (targets[l]!.getComponent("minecraft:breathable") as EntityBreathableComponent).airSupply = Number(
+                                    playerName.slice(1)[i]!.split(":")[1]
                                 );
                             } catch (e) {
                                 console.error(e, e.stack);
@@ -6461,15 +6461,15 @@ break;*/ /*
                             break;
                         case "setColor":
                             try {
-                                (targets[l].getComponent("minecraft:color") as EntityColorComponent).value = Number(playerName.slice(1)[i].split(":")[1]);
+                                (targets[l]!.getComponent("minecraft:color") as EntityColorComponent).value = Number(playerName.slice(1)[i]!.split(":")[1]!);
                             } catch (e) {
                                 console.error(e, e.stack);
                             }
                             break;
                         case "setFlyingSpeed":
                             try {
-                                (targets[l].getComponent("minecraft:flying_speed") as EntityFlyingSpeedComponent).value = Number(
-                                    playerName.slice(1)[i].split(":")[1]
+                                (targets[l]!.getComponent("minecraft:flying_speed") as EntityFlyingSpeedComponent).value = Number(
+                                    playerName.slice(1)[i]!.split(":")[1]
                                 );
                             } catch (e) {
                                 console.error(e, e.stack);
@@ -6477,8 +6477,8 @@ break;*/ /*
                             break;
                         // case "setFrictionModifier": // Broke in 1.21.80, switch to use entiiy scale.
                         //     try {
-                        //         (targets[l].getComponent("minecraft:friction_modifier") as EntityFrictionModifierComponent).value = Number(
-                        //             playerName.slice(1)[i].split(":")[1]
+                        //         (targets[l]!.getComponent("minecraft:friction_modifier") as EntityFrictionModifierComponent).value = Number(
+                        //             playerName.slice(1)[i]!.split(":")[1]
                         //         );
                         //     } catch (e) {
                         //         console.error(e, e.stack);
@@ -6486,8 +6486,8 @@ break;*/ /*
                         //     break;
                         // case "setGroundOffset": // Broke in 1.21.80, switch to use entiiy scale.
                         //     try {
-                        //         (targets[l].getComponent("minecraft:ground_offset") as EntityGroundOffsetComponent).value = Number(
-                        //             playerName.slice(1)[i].split(":")[1]
+                        //         (targets[l]!.getComponent("minecraft:ground_offset") as EntityGroundOffsetComponent).value = Number(
+                        //             playerName.slice(1)[i]!.split(":")[1]
                         //         );
                         //     } catch (e) {
                         //         console.error(e, e.stack);
@@ -6495,8 +6495,8 @@ break;*/ /*
                         //     break;
                         case "setHealth":
                             try {
-                                (targets[l].getComponent("minecraft:health") as EntityHealthComponent).setCurrentValue(
-                                    Number(playerName.slice(1)[i].split(":")[1])
+                                (targets[l]!.getComponent("minecraft:health") as EntityHealthComponent).setCurrentValue(
+                                    Number(playerName.slice(1)[i]!.split(":")[1])
                                 );
                             } catch (e) {
                                 console.error(e, e.stack);
@@ -6504,8 +6504,8 @@ break;*/ /*
                             break;
                         case "setMovement":
                             try {
-                                (targets[l].getComponent("minecraft:health") as EntityHealthComponent).setCurrentValue(
-                                    Number(playerName.slice(1)[i].split(":")[1])
+                                (targets[l]!.getComponent("minecraft:health") as EntityHealthComponent).setCurrentValue(
+                                    Number(playerName.slice(1)[i]!.split(":")[1])
                                 );
                             } catch (e) {
                                 console.error(e, e.stack);
@@ -6513,8 +6513,8 @@ break;*/ /*
                             break;
                         case "setUnderwaterMovement":
                             try {
-                                (targets[l].getComponent("minecraft:health") as EntityHealthComponent).setCurrentValue(
-                                    Number(playerName.slice(1)[i].split(":")[1])
+                                (targets[l]!.getComponent("minecraft:health") as EntityHealthComponent).setCurrentValue(
+                                    Number(playerName.slice(1)[i]!.split(":")[1])
                                 );
                             } catch (e) {
                                 console.error(e, e.stack);
@@ -6522,8 +6522,8 @@ break;*/ /*
                             break;
                         case "setLavaMovement":
                             try {
-                                (targets[l].getComponent("minecraft:health") as EntityHealthComponent).setCurrentValue(
-                                    Number(playerName.slice(1)[i].split(":")[1])
+                                (targets[l]!.getComponent("minecraft:health") as EntityHealthComponent).setCurrentValue(
+                                    Number(playerName.slice(1)[i]!.split(":")[1])
                                 );
                             } catch (e) {
                                 console.error(e, e.stack);
@@ -6537,9 +6537,9 @@ break;*/ /*
     if (id == "andexdb:getEntityDynamicProperty") {
         let playerName = message.split("|");
         for (let i in playerName) {
-            playerName[i] = playerName[i].replaceAll("\\l", "|").replaceAll("\\n", "\n").replaceAll("\\x", "");
+            playerName[i] = playerName[i]!.replaceAll("\\l", "|").replaceAll("\\n", "\n").replaceAll("\\x", "");
         }
-        if (playerName.length == 1) {
+        if (playerName.length < 2) {
             try {
                 (sourceEntity as Player).sendMessage(
                     /*"§r§fplayerControllerCommandForm Command Format: <playerName: string>|<setPlayerNameTag: boolean>|<multilineNameTag: boolean>|<newPlayerNameTag: string>|<triggerEvent: boolean>|<eventId: string>|<addExperience: boolean>|<experienceAmount: int>|<>|<>"*/ "§r§fplayerControllerCommandForm Command Format: <targets: quotedTargetSelector>|<option: optionName>:<optionValue: optionValue>{list: list; listObject: |[<option: optionName>:<optionValue: optionValue>]}\nOptions: triggerEvent, setProperty, setPropertyInt, setPropertyBool, setDynamicProperty, setDynamicPropertyInt, setDynamicPropertyBool, setDynamicPropertyVector3"
@@ -6547,10 +6547,10 @@ break;*/ /*
             } catch (e) {}
         } else {
             let playerList = world.getPlayers();
-            if (playerName[0].startsWith('"') && playerName[0].endsWith('"')) {
-                playerName[0] = playerName[0].slice(1, playerName[0].length - 1);
+            if (playerName[0]!.startsWith('"') && playerName[0]!.endsWith('"')) {
+                playerName[0] = playerName[0]!.slice(1, playerName[0]!.length - 1);
             }
-            let targetList = [playerList[0].name];
+            let targetList = [playerList[0]!.name];
             let position: string;
             let entity = undefined; /*
         console.warn(playerName[0])*/
@@ -6563,15 +6563,15 @@ break;*/ /*
                 assertIsDefined(sourceBlock);
                 position = String(sourceBlock.location.x) + " " + sourceBlock.location.y + " " + sourceBlock.location.z;
             }
-            let targets = targetSelectorAllListC(playerName[0], "", position, entity); /*
+            let targets = targetSelectorAllListC(playerName[0]!, "", position, entity); /*
         console.warn(targets[0].nameTag)*/
 
             for (const index in playerList) {
                 /*
             console.warn(index);*/
                 if (Number(index) != 0) {
-                    targetList = String([String(targetList), playerList[index].name]).split(","); /*
-            targetList = String([String(targetList), playerList[index].name]).split(",");*/
+                    targetList = String([String(targetList), playerList[index]!.name]).split(","); /*
+            targetList = String([String(targetList), playerList[index]!.name]).split(",");*/
                 } /*
             console.warn(targetList);*/
             }
@@ -6579,7 +6579,7 @@ break;*/ /*
                 for (let l in targets) {
                     try {
                         (sourceEntity as Player).sendMessage(
-                            "" + targets[l].id + ": " + targets[l].getDynamicProperty(playerName.slice(1)[i].replaceAll("\\c", ":"))
+                            "" + targets[l]!.id + ": " + targets[l]!.getDynamicProperty(playerName.slice(1)[i]!.replaceAll("\\c", ":"))
                         );
                     } catch (e) {
                         console.error(e, e.stack);
@@ -6615,7 +6615,7 @@ break;*/ /*
     if (id == "andexdb:setWorldDynamicPropertyB") {
         let dynamicProperty = message.split("|");
         try {
-            world.setDynamicProperty(String(dynamicProperty[0]), dynamicProperty[1].replaceAll("\\s", "|"));
+            world.setDynamicProperty(String(dynamicProperty[0]), dynamicProperty[1]!.replaceAll("\\s", "|"));
         } catch (e) {
             (sourceEntity as Player).sendMessage("§c" + e + e.stack);
         }
@@ -6623,31 +6623,31 @@ break;*/ /*
     if (id == "andexdb:setPlayerNameTag") {
         let playerName = message.split("|");
         for (let i in playerName) {
-            playerName[i] = playerName[i].replaceAll("\\l", "|").replaceAll("\\n", "\n").replaceAll("\\x", "");
+            playerName[i] = playerName[i]!.replaceAll("\\l", "|").replaceAll("\\n", "\n").replaceAll("\\x", "");
         }
-        if (playerName.length == 1) {
+        if (playerName.length < 2) {
             try {
                 (sourceEntity as Player).sendMessage("§r§fsetPlayerNameTag Command Format: playerName|newPlayerNameTag");
             } catch (e) {}
         } else {
             let playerList = world.getPlayers();
-            if (playerName[0].startsWith('"') && playerName[0].endsWith('"')) {
-                playerName[0] = playerName[0].slice(1, playerName[0].length - 1);
+            if (playerName[0]!.startsWith('"') && playerName[0]!.endsWith('"')) {
+                playerName[0] = playerName[0]!.slice(1, playerName[0]!.length - 1);
             }
-            let targetList = [playerList[0].name];
+            let targetList = [playerList[0]!.name];
 
             for (const index in playerList) {
                 /*
             console.warn(index);*/
                 if (Number(index) != 0) {
-                    targetList = String([String(targetList), playerList[index].name]).split(","); /*
-            targetList = String([String(targetList), playerList[index].name]).split(",");*/
+                    targetList = String([String(targetList), playerList[index]!.name]).split(","); /*
+            targetList = String([String(targetList), playerList[index]!.name]).split(",");*/
                 } /*
             console.warn(targetList);*/
             }
 
             try {
-                playerList[targetList.indexOf(String(playerName[0]))].nameTag = playerName[1];
+                playerList[targetList.indexOf(String(playerName[0]))]!.nameTag = playerName[1]!;
             } catch (e) {
                 console.error(e, e.stack);
             }
@@ -6655,7 +6655,7 @@ break;*/ /*
     }
     if (id == "andexdb:playerControllerCommandForm") {
         let playerName = message.split("|");
-        if (playerName.length == 1) {
+        if (playerName.length < 2) {
             try {
                 (sourceEntity as Player).sendMessage(
                     /*"§r§fplayerControllerCommandForm Command Format: <playerName: string>|<setPlayerNameTag: boolean>|<multilineNameTag: boolean>|<newPlayerNameTag: string>|<triggerEvent: boolean>|<eventId: string>|<addExperience: boolean>|<experienceAmount: int>|<>|<>"*/ "§r§fplayerControllerCommandForm Command Format: <playerName: string>|<option: optionName>:<optionValue: optionValue>{list: list; listObject: |[<option: optionName>:<optionValue: optionValue>]}"
@@ -6663,50 +6663,50 @@ break;*/ /*
             } catch (e) {}
         } else {
             let playerList = world.getPlayers();
-            let targetList = [playerList[0].name];
+            let targetList = [playerList[0]!.name];
 
             for (const index in playerList) {
                 /*
             console.warn(index);*/
                 if (Number(index) != 0) {
-                    targetList = String([String(targetList), playerList[index].name]).split(","); /*
-            targetList = String([String(targetList), playerList[index].name]).split(",");*/
+                    targetList = String([String(targetList), playerList[index]!.name]).split(","); /*
+            targetList = String([String(targetList), playerList[index]!.name]).split(",");*/
                 } /*
             console.warn(targetList);*/
             }
             for (let i in playerName.slice(1)) {
-                switch (playerName[i].split(":")[0]) {
+                switch (playerName[i]!.split(":")[0]) {
                     case "nameTag":
                         try {
-                            playerList[targetList.indexOf(String(playerName[0]))].nameTag = playerName[i].split(":").slice(1).join(":");
+                            playerList[targetList.indexOf(String(playerName[0]))]!.nameTag = playerName[i]!.split(":").slice(1).join(":");
                         } catch (e) {
                             console.error(e, e.stack);
                         }
                         break;
                     case "nameTagMultiline":
                         try {
-                            playerList[targetList.indexOf(String(playerName[0]))].nameTag = playerName[i].split(":").slice(1).join(":").replaceAll("\\n", "\n");
+                            playerList[targetList.indexOf(String(playerName[0]))]!.nameTag = playerName[i]!.split(":").slice(1).join(":").replaceAll("\\n", "\n");
                         } catch (e) {
                             console.error(e, e.stack);
                         }
                         break;
                     case "triggerEvent":
                         try {
-                            playerList[targetList.indexOf(String(playerName[0]))].triggerEvent(playerName[i].split(":").slice(1).join(":"));
+                            playerList[targetList.indexOf(String(playerName[0]))]!.triggerEvent(playerName[i]!.split(":").slice(1).join(":"));
                         } catch (e) {
                             console.error(e, e.stack);
                         }
                         break;
                     case "setProperty":
                         try {
-                            playerList[targetList.indexOf(String(playerName[0]))].triggerEvent(playerName[i].split(":").slice(1).join(":"));
+                            playerList[targetList.indexOf(String(playerName[0]))]!.triggerEvent(playerName[i]!.split(":").slice(1).join(":"));
                         } catch (e) {
                             console.error(e, e.stack);
                         }
                         break;
                     case "setProperty":
                         try {
-                            playerList[targetList.indexOf(String(playerName[0]))].triggerEvent(playerName[i].split(":").slice(1).join(":"));
+                            playerList[targetList.indexOf(String(playerName[0]))]!.triggerEvent(playerName[i]!.split(":").slice(1).join(":"));
                         } catch (e) {
                             console.error(e, e.stack);
                         }
@@ -6715,7 +6715,7 @@ break;*/ /*
             }
 
             try {
-                playerList[targetList.indexOf(String(playerName[0]))].nameTag = playerName[3];
+                playerList[targetList.indexOf(String(playerName[0]))]!.nameTag = playerName[3]!;
             } catch (e) {
                 console.error(e, e.stack);
             }
@@ -6723,7 +6723,7 @@ break;*/ /*
     }
     if (id == "andexdb:playerControllerCommandForm") {
         let playerName = message.split("|");
-        if (playerName.length == 1) {
+        if (playerName.length < 2) {
             try {
                 (sourceEntity as Player).sendMessage(
                     /*"§r§fplayerControllerCommandForm Command Format: <playerName: string>|<setPlayerNameTag: boolean>|<multilineNameTag: boolean>|<newPlayerNameTag: string>|<triggerEvent: boolean>|<eventId: string>|<addExperience: boolean>|<experienceAmount: int>|<>|<>"*/ "§r§fplayerControllerCommandForm Command Format: <playerName: string>|<option: optionName>:<optionValue: optionValue>{list: list; listObject: |[<option: optionName>:<optionValue: optionValue>]}"
@@ -6731,58 +6731,58 @@ break;*/ /*
             } catch (e) {}
         } else {
             let playerList = world.getPlayers();
-            let targetList = [playerList[0].name];
+            let targetList = [playerList[0]!.name];
 
             for (const index in playerList) {
                 /*
             console.warn(index);*/
                 if (Number(index) != 0) {
-                    targetList = String([String(targetList), playerList[index].name]).split(","); /*
-            targetList = String([String(targetList), playerList[index].name]).split(",");*/
+                    targetList = String([String(targetList), playerList[index]!.name]).split(","); /*
+            targetList = String([String(targetList), playerList[index]!.name]).split(",");*/
                 } /*
             console.warn(targetList);*/
             }
             for (let i in playerName.slice(1)) {
-                switch (playerName[i].split(":")[0]) {
+                switch (playerName[i]!.split(":")[0]) {
                     case "nameTag":
                         try {
-                            playerList[targetList.indexOf(String(playerName[0]))].nameTag = playerName[i].split(":").slice(1).join(":");
+                            playerList[targetList.indexOf(String(playerName[0]))]!.nameTag = playerName[i]!.split(":").slice(1).join(":");
                         } catch (e) {
                             console.error(e, e.stack);
                         }
                         break;
                     case "nameTagMultiline":
                         try {
-                            playerList[targetList.indexOf(String(playerName[0]))].nameTag = playerName[i].split(":").slice(1).join(":").replaceAll("\\n", "\n");
+                            playerList[targetList.indexOf(String(playerName[0]))]!.nameTag = playerName[i]!.split(":").slice(1).join(":").replaceAll("\\n", "\n");
                         } catch (e) {
                             console.error(e, e.stack);
                         }
                         break;
                     case "triggerEvent":
                         try {
-                            playerList[targetList.indexOf(String(playerName[0]))].triggerEvent(playerName[i].split(":").slice(1).join(":"));
+                            playerList[targetList.indexOf(String(playerName[0]))]!.triggerEvent(playerName[i]!.split(":").slice(1).join(":"));
                         } catch (e) {
                             console.error(e, e.stack);
                         }
                         break;
                     case "setProperty":
                         try {
-                            playerList[targetList.indexOf(String(playerName[0]))].triggerEvent(playerName[i].split(":").slice(1).join(":"));
+                            playerList[targetList.indexOf(String(playerName[0]))]!.triggerEvent(playerName[i]!.split(":").slice(1).join(":"));
                         } catch (e) {
                             console.error(e, e.stack);
                         }
                         break;
                     case "setProperty":
                         try {
-                            playerList[targetList.indexOf(String(playerName[0]))].triggerEvent(playerName[i].split(":").slice(1).join(":"));
+                            playerList[targetList.indexOf(String(playerName[0]))]!.triggerEvent(playerName[i]!.split(":").slice(1).join(":"));
                         } catch (e) {
                             console.error(e, e.stack);
                         }
                         break;
                     case "clearVelocity":
-                        if (playerName[i].split(":")[1]?.toLowerCase() == "true")
+                        if (playerName[i]!.split(":")[1]?.toLowerCase() == "true")
                             try {
-                                playerList[targetList.indexOf(String(playerName[0]))].triggerEvent(playerName[i].split(":").slice(1).join(":"));
+                                playerList[targetList.indexOf(String(playerName[0]))]!.triggerEvent(playerName[i]!.split(":").slice(1).join(":"));
                             } catch (e) {
                                 console.error(e, e.stack);
                             }
@@ -6791,7 +6791,7 @@ break;*/ /*
             }
 
             try {
-                playerList[targetList.indexOf(String(playerName[0]))].nameTag = playerName[3];
+                playerList[targetList.indexOf(String(playerName[0]))]!.nameTag = playerName[3]!;
             } catch (e) {
                 console.error(e, e.stack);
             }
@@ -6800,9 +6800,9 @@ break;*/ /*
     if (id == "andexdb:entityControllerCommandForm") {
         let playerName = message.split("|");
         for (let i in playerName) {
-            playerName[i] = playerName[i].replaceAll("\\l", "|").replaceAll("\\n", "\n").replaceAll("\\x", "");
+            playerName[i] = playerName[i]!.replaceAll("\\l", "|").replaceAll("\\n", "\n").replaceAll("\\x", "");
         }
-        if (playerName.length == 1) {
+        if (playerName.length < 2) {
             try {
                 (sourceEntity as Player).sendMessage(
                     /*"§r§fplayerControllerCommandForm Command Format: <playerName: string>|<setPlayerNameTag: boolean>|<multilineNameTag: boolean>|<newPlayerNameTag: string>|<triggerEvent: boolean>|<eventId: string>|<addExperience: boolean>|<experienceAmount: int>|<>|<>"*/ "§r§fplayerControllerCommandForm Command Format: <targets: quotedTargetSelector>|<option: optionName>:<optionValue: optionValue>{list: list; listObject: |[<option: optionName>:<optionValue: optionValue>]}"
@@ -6810,10 +6810,10 @@ break;*/ /*
             } catch (e) {}
         } else {
             let playerList = world.getPlayers();
-            if (playerName[0].startsWith('"') && playerName[0].endsWith('"')) {
-                playerName[0] = playerName[0].slice(1, playerName[0].length - 1);
+            if (playerName[0]!.startsWith('"') && playerName[0]!.endsWith('"')) {
+                playerName[0] = playerName[0]!.slice(1, playerName[0]!.length - 1);
             }
-            let targetList = [playerList[0].name];
+            let targetList = [playerList[0]!.name];
             let position: string;
             let entity = undefined; /*
         console.warn(playerName[0])*/
@@ -6826,79 +6826,79 @@ break;*/ /*
                 assertIsDefined(sourceBlock);
                 position = String(sourceBlock.location.x) + " " + sourceBlock.location.y + " " + sourceBlock.location.z;
             }
-            let targets = targetSelectorAllListE(playerName[0], position); /*
+            let targets = targetSelectorAllListE(playerName[0]!, position); /*
         console.warn(targets[0].nameTag)*/
 
             for (const index in playerList) {
                 /*
             console.warn(index);*/
                 if (Number(index) != 0) {
-                    targetList = String([String(targetList), playerList[index].name]).split(","); /*
-            targetList = String([String(targetList), playerList[index].name]).split(",");*/
+                    targetList = String([String(targetList), playerList[index]!.name]).split(","); /*
+            targetList = String([String(targetList), playerList[index]!.name]).split(",");*/
                 } /*
             console.warn(targetList);*/
             }
             for (let i in playerName.slice(1)) {
                 for (let l in targets) {
-                    switch (playerName.slice(1)[i].split(":")[0]) {
+                    switch (playerName.slice(1)[i]!.split(":")[0]) {
                         case "nameTag":
                             try {
-                                targets[l].nameTag = playerName.slice(1)[i].split(":").slice(1).join(":");
+                                targets[l]!.nameTag = playerName.slice(1)[i]!.split(":").slice(1).join(":");
                             } catch (e) {
                                 console.error(e, e.stack);
                             }
                             break;
                         case "nameTagMultiline":
                             try {
-                                targets[l].nameTag = playerName.slice(1)[i].split(":").slice(1).join(":").replaceAll("\\n", "\n");
+                                targets[l]!.nameTag = playerName.slice(1)[i]!.split(":").slice(1).join(":").replaceAll("\\n", "\n");
                             } catch (e) {
                                 console.error(e, e.stack);
                             }
                             break;
                         case "triggerEvent":
                             try {
-                                targets[l].triggerEvent(playerName.slice(1)[i].split(":").slice(1).join(":"));
+                                targets[l]!.triggerEvent(playerName.slice(1)[i]!.split(":").slice(1).join(":"));
                             } catch (e) {
                                 console.error(e, e.stack);
                             }
                             break;
                         case "setProperty":
                             try {
-                                targets[l].setProperty(playerName.slice(1)[i].split(":")[1], playerName.slice(1)[i].split(":").slice(2).join(":"));
+                                targets[l]!.setProperty(playerName.slice(1)[i]!.split(":")[1]!, playerName.slice(1)[i]!.split(":").slice(2).join(":"));
                             } catch (e) {
                                 console.error(e, e.stack);
                             }
                             break;
                         case "setPropertyInt":
                             try {
-                                targets[l].setProperty(playerName.slice(1)[i].split(":")[1], Number(playerName.slice(1)[i].split(":").slice(2).join(":")));
+                                targets[l]!.setProperty(playerName.slice(1)[i]!.split(":")[1]!, Number(playerName.slice(1)[i]!.split(":").slice(2).join(":")));
                             } catch (e) {
                                 console.error(e, e.stack);
                             }
                             break;
                         case "setPropertyBool":
                             try {
-                                targets[l].setProperty(playerName.slice(1)[i].split(":")[1], Boolean(playerName.slice(1)[i].split(":").slice(2).join(":")));
+                                targets[l]!.setProperty(playerName.slice(1)[i]!.split(":")[1]!, Boolean(playerName.slice(1)[i]!.split(":").slice(2).join(":")));
                             } catch (e) {
                                 console.error(e, e.stack);
                             }
                             break; /*
         case "setPropertyVector3":
-        try {targets[l].setProperty(playerName.slice(1)[i].split(":")[1], Boolean(playerName.slice(1)[i].split(":").slice(2).join(":")));} catch(e){console.error(e, e.stack);}
+        try {targets[l]!.setProperty(playerName.slice(1)[i]!.split(":")[1]!, Boolean(playerName.slice(1)[i]!.split(":").slice(2).join(":")));} catch(e){console.error(e, e.stack);}
         break; */
 
                         case "setDynamicProperty":
                             try {
-                                targets[l].setDynamicProperty(playerName.slice(1)[i].split(":")[1], playerName.slice(1)[i].split(":").slice(2).join(":"));
+                                targets[l]!.setDynamicProperty(playerName.slice(1)[i]!.split(":")[1]!, playerName.slice(1)[i]!.split(":").slice(2).join(":"));
                             } catch (e) {
                                 console.error(e, e.stack);
                             }
                             break;
                         case "setDynamicPropertyInt":
                             try {
-                                targets[l].setDynamicProperty(
-                                    playerName.slice(1)[i].split(":")[1],
-                                    Number(playerName.slice(1)[i].split(":").slice(2).join(":"))
+                                targets[l]!.setDynamicProperty(
+                                    playerName.slice(1)[i]!.split(":")[1]!,
+                                    Number(playerName.slice(1)[i]!.split(":").slice(2).join(":"))
                                 );
                             } catch (e) {
                                 console.error(e, e.stack);
@@ -6906,9 +6906,9 @@ break;*/ /*
                             break;
                         case "setDynamicPropertyBool":
                             try {
-                                targets[l].setDynamicProperty(
-                                    playerName.slice(1)[i].split(":")[1],
-                                    Boolean(playerName.slice(1)[i].split(":").slice(2).join(":"))
+                                targets[l]!.setDynamicProperty(
+                                    playerName.slice(1)[i]!.split(":")[1]!,
+                                    Boolean(playerName.slice(1)[i]!.split(":").slice(2).join(":"))
                                 );
                             } catch (e) {
                                 console.error(e, e.stack);
@@ -6916,19 +6916,19 @@ break;*/ /*
                             break;
                         case "setDynamicPropertyVector3":
                             try {
-                                targets[l].setDynamicProperty(playerName.slice(1)[i].split(":")[1], {
-                                    x: Number(playerName.slice(1)[i].split(":")[2]),
-                                    y: Number(playerName.slice(1)[i].split(":")[3]),
-                                    z: Number(playerName.slice(1)[i].split(":")[4]),
+                                targets[l]!.setDynamicProperty(playerName.slice(1)[i]!.split(":")[1]!, {
+                                    x: Number(playerName.slice(1)[i]!.split(":")[2]),
+                                    y: Number(playerName.slice(1)[i]!.split(":")[3]),
+                                    z: Number(playerName.slice(1)[i]!.split(":")[4]),
                                 });
                             } catch (e) {
                                 console.error(e, e.stack);
                             }
                             break;
                         case "clearVelocity" /*
-            if(playerName.slice(1)[i].split(":")[1].toLowerCase() == "true"){*/:
+            if(playerName.slice(1)[i]!.split(":")[1]!.toLowerCase() == "true"){*/:
                             try {
-                                targets[l].clearVelocity();
+                                targets[l]!.clearVelocity();
                             } catch (e) {
                                 console.error(e, e.stack);
                             } /*
@@ -6937,16 +6937,16 @@ break;*/ /*
                             break;
                         case "isSneaking":
                             try {
-                                targets[l].isSneaking = Boolean(playerName.slice(1)[i].split(":")[1]?.toLowerCase());
+                                targets[l]!.isSneaking = Boolean(playerName.slice(1)[i]!.split(":")[1]?.toLowerCase());
                             } catch (e) {
                                 console.error(e, e.stack);
                             }
                             break;
                         case "addEffect":
                             try {
-                                targets[l].addEffect(playerName.slice(1)[i].split(":")[1], Number(playerName.slice(1)[i].split(":")[2]), {
-                                    amplifier: Number(playerName.slice(1)[i].split(":")[3]),
-                                    showParticles: Boolean(playerName.slice(1)[i].split(":")[4]?.toLowerCase()),
+                                targets[l]!.addEffect(playerName.slice(1)[i]!.split(":")[1]!, Number(playerName.slice(1)[i]!.split(":")[2]), {
+                                    amplifier: Number(playerName.slice(1)[i]!.split(":")[3]),
+                                    showParticles: Boolean(playerName.slice(1)[i]!.split(":")[4]?.toLowerCase()),
                                 });
                             } catch (e) {
                                 console.error(e, e.stack);
@@ -6954,10 +6954,10 @@ break;*/ /*
                             break;
                         case "applyImpulse":
                             try {
-                                targets[l].applyImpulse({
-                                    x: Number(playerName.slice(1)[i].split(":")[1]),
-                                    y: Number(playerName.slice(1)[i].split(":")[2]),
-                                    z: Number(playerName.slice(1)[i].split(":")[3]),
+                                targets[l]!.applyImpulse({
+                                    x: Number(playerName.slice(1)[i]!.split(":")[1]),
+                                    y: Number(playerName.slice(1)[i]!.split(":")[2]),
+                                    z: Number(playerName.slice(1)[i]!.split(":")[3]),
                                 });
                             } catch (e) {
                                 console.error(e, e.stack);
@@ -6965,12 +6965,12 @@ break;*/ /*
                             break;
                         case "applyKnockback":
                             try {
-                                targets[l].applyKnockback(
+                                targets[l]!.applyKnockback(
                                     {
-                                        x: Number(playerName.slice(1)[i].split(":")[1]) * Number(playerName.slice(1)[i].split(":")[3]),
-                                        z: Number(playerName.slice(1)[i].split(":")[2]) * Number(playerName.slice(1)[i].split(":")[3]),
+                                        x: Number(playerName.slice(1)[i]!.split(":")[1]) * Number(playerName.slice(1)[i]!.split(":")[3]),
+                                        z: Number(playerName.slice(1)[i]!.split(":")[2]) * Number(playerName.slice(1)[i]!.split(":")[3]),
                                     },
-                                    Number(playerName.slice(1)[i].split(":")[4])
+                                    Number(playerName.slice(1)[i]!.split(":")[4])
                                 );
                             } catch (e) {
                                 console.error(e, e.stack);
@@ -6978,55 +6978,55 @@ break;*/ /*
                             break;
                         case "addTag":
                             try {
-                                targets[l].addTag(playerName.slice(1)[i].split(":")[1]);
+                                targets[l]!.addTag(playerName.slice(1)[i]!.split(":")[1]!);
                             } catch (e) {
                                 console.error(e, e.stack);
                             }
                             break;
                         case "removeTag":
                             try {
-                                targets[l].removeTag(playerName.slice(1)[i].split(":")[1]);
+                                targets[l]!.removeTag(playerName.slice(1)[i]!.split(":")[1]!);
                             } catch (e) {
                                 console.error(e, e.stack);
                             }
                             break;
                         case "removeEffect":
                             try {
-                                targets[l].removeEffect(playerName.slice(1)[i].split(":")[1]);
+                                targets[l]!.removeEffect(playerName.slice(1)[i]!.split(":")[1]!);
                             } catch (e) {
                                 console.error(e, e.stack);
                             }
                             break;
                         case "kill":
                             try {
-                                targets[l].kill();
+                                targets[l]!.kill();
                             } catch (e) {
                                 console.error(e, e.stack);
                             }
                             break;
                         case "remove":
                             try {
-                                targets[l].remove();
+                                targets[l]!.remove();
                             } catch (e) {
                                 console.error(e, e.stack);
                             }
                             break;
                         case "teleport":
                             try {
-                                targets[l].teleport(
+                                targets[l]!.teleport(
                                     {
-                                        x: Number(playerName.slice(1)[i].split(":")[1]),
-                                        y: Number(playerName.slice(1)[i].split(":")[2]),
-                                        z: Number(playerName.slice(1)[i].split(":")[3]),
+                                        x: Number(playerName.slice(1)[i]!.split(":")[1]),
+                                        y: Number(playerName.slice(1)[i]!.split(":")[2]),
+                                        z: Number(playerName.slice(1)[i]!.split(":")[3]),
                                     },
                                     {
-                                        checkForBlocks: Boolean(playerName.slice(1)[i].split(":")[7]),
+                                        checkForBlocks: Boolean(playerName.slice(1)[i]!.split(":")[7]),
                                         rotation: {
-                                            x: Number(playerName.slice(1)[i].split(":")[5]),
-                                            y: Number(playerName.slice(1)[i].split(":")[6]),
+                                            x: Number(playerName.slice(1)[i]!.split(":")[5]),
+                                            y: Number(playerName.slice(1)[i]!.split(":")[6]),
                                         },
-                                        dimension: world.getDimension(playerName.slice(1)[i].split(":")[4]),
-                                        keepVelocity: Boolean(playerName.slice(1)[i].split(":")[8]),
+                                        dimension: world.getDimension(playerName.slice(1)[i]!.split(":")[4]!),
+                                        keepVelocity: Boolean(playerName.slice(1)[i]!.split(":")[8]),
                                     }
                                 );
                             } catch (e) {
@@ -7035,21 +7035,21 @@ break;*/ /*
                             break;
                         case "teleportFacingLocation":
                             try {
-                                targets[l].teleport(
+                                targets[l]!.teleport(
                                     {
-                                        x: Number(playerName.slice(1)[i].split(":")[1]),
-                                        y: Number(playerName.slice(1)[i].split(":")[2]),
-                                        z: Number(playerName.slice(1)[i].split(":")[3]),
+                                        x: Number(playerName.slice(1)[i]!.split(":")[1]),
+                                        y: Number(playerName.slice(1)[i]!.split(":")[2]),
+                                        z: Number(playerName.slice(1)[i]!.split(":")[3]),
                                     },
                                     {
-                                        checkForBlocks: Boolean(playerName.slice(1)[i].split(":")[8]),
+                                        checkForBlocks: Boolean(playerName.slice(1)[i]!.split(":")[8]),
                                         facingLocation: {
-                                            x: Number(playerName.slice(1)[i].split(":")[5]),
-                                            y: Number(playerName.slice(1)[i].split(":")[6]),
-                                            z: Number(playerName.slice(1)[i].split(":")[7]),
+                                            x: Number(playerName.slice(1)[i]!.split(":")[5]),
+                                            y: Number(playerName.slice(1)[i]!.split(":")[6]),
+                                            z: Number(playerName.slice(1)[i]!.split(":")[7]),
                                         },
-                                        dimension: world.getDimension(playerName.slice(1)[i].split(":")[4]),
-                                        keepVelocity: Boolean(playerName.slice(1)[i].split(":")[9]),
+                                        dimension: world.getDimension(playerName.slice(1)[i]!.split(":")[4]!),
+                                        keepVelocity: Boolean(playerName.slice(1)[i]!.split(":")[9]),
                                     }
                                 );
                             } catch (e) {
@@ -7058,20 +7058,20 @@ break;*/ /*
                             break;
                         case "tryTeleport":
                             try {
-                                targets[l].tryTeleport(
+                                targets[l]!.tryTeleport(
                                     {
-                                        x: Number(playerName.slice(1)[i].split(":")[1]),
-                                        y: Number(playerName.slice(1)[i].split(":")[2]),
-                                        z: Number(playerName.slice(1)[i].split(":")[3]),
+                                        x: Number(playerName.slice(1)[i]!.split(":")[1]),
+                                        y: Number(playerName.slice(1)[i]!.split(":")[2]),
+                                        z: Number(playerName.slice(1)[i]!.split(":")[3]),
                                     },
                                     {
-                                        checkForBlocks: Boolean(playerName.slice(1)[i].split(":")[7]),
+                                        checkForBlocks: Boolean(playerName.slice(1)[i]!.split(":")[7]),
                                         rotation: {
-                                            x: Number(playerName.slice(1)[i].split(":")[5]),
-                                            y: Number(playerName.slice(1)[i].split(":")[6]),
+                                            x: Number(playerName.slice(1)[i]!.split(":")[5]),
+                                            y: Number(playerName.slice(1)[i]!.split(":")[6]),
                                         },
-                                        dimension: world.getDimension(playerName.slice(1)[i].split(":")[4]),
-                                        keepVelocity: Boolean(playerName.slice(1)[i].split(":")[8]),
+                                        dimension: world.getDimension(playerName.slice(1)[i]!.split(":")[4]!),
+                                        keepVelocity: Boolean(playerName.slice(1)[i]!.split(":")[8]),
                                     }
                                 );
                             } catch (e) {
@@ -7080,21 +7080,21 @@ break;*/ /*
                             break;
                         case "tryTeleportFacingLocation":
                             try {
-                                targets[l].tryTeleport(
+                                targets[l]!.tryTeleport(
                                     {
-                                        x: Number(playerName.slice(1)[i].split(":")[1]),
-                                        y: Number(playerName.slice(1)[i].split(":")[2]),
-                                        z: Number(playerName.slice(1)[i].split(":")[3]),
+                                        x: Number(playerName.slice(1)[i]!.split(":")[1]),
+                                        y: Number(playerName.slice(1)[i]!.split(":")[2]),
+                                        z: Number(playerName.slice(1)[i]!.split(":")[3]),
                                     },
                                     {
-                                        checkForBlocks: Boolean(playerName.slice(1)[i].split(":")[8]),
+                                        checkForBlocks: Boolean(playerName.slice(1)[i]!.split(":")[8]),
                                         facingLocation: {
-                                            x: Number(playerName.slice(1)[i].split(":")[5]),
-                                            y: Number(playerName.slice(1)[i].split(":")[6]),
-                                            z: Number(playerName.slice(1)[i].split(":")[7]),
+                                            x: Number(playerName.slice(1)[i]!.split(":")[5]),
+                                            y: Number(playerName.slice(1)[i]!.split(":")[6]),
+                                            z: Number(playerName.slice(1)[i]!.split(":")[7]),
                                         },
-                                        dimension: world.getDimension(playerName.slice(1)[i].split(":")[4]),
-                                        keepVelocity: Boolean(playerName.slice(1)[i].split(":")[9]),
+                                        dimension: world.getDimension(playerName.slice(1)[i]!.split(":")[4]!),
+                                        keepVelocity: Boolean(playerName.slice(1)[i]!.split(":")[9]),
                                     }
                                 );
                             } catch (e) {
@@ -7103,16 +7103,16 @@ break;*/ /*
                             break;
                         case "setOnFire":
                             try {
-                                targets[l].setOnFire(Number(playerName.slice(1)[i].split(":")[1]), Boolean(playerName.slice(1)[i].split(":")[2]));
+                                targets[l]!.setOnFire(Number(playerName.slice(1)[i]!.split(":")[1]), Boolean(playerName.slice(1)[i]!.split(":")[2]));
                             } catch (e) {
                                 console.error(e, e.stack);
                             }
                             break;
                         case "setRot":
                             try {
-                                targets[l].setRotation({
-                                    x: Number(playerName.slice(1)[i].split(":")[1]),
-                                    y: Number(playerName.slice(1)[i].split(":")[2]),
+                                targets[l]!.setRotation({
+                                    x: Number(playerName.slice(1)[i]!.split(":")[1]),
+                                    y: Number(playerName.slice(1)[i]!.split(":")[2]),
                                 });
                             } catch (e) {
                                 console.error(e, e.stack);
@@ -7120,28 +7120,28 @@ break;*/ /*
                             break;
                         case "extinguishFire":
                             try {
-                                targets[l].extinguishFire(Boolean(playerName.slice(1)[i].split(":")[1]?.toLowerCase()));
+                                targets[l]!.extinguishFire(Boolean(playerName.slice(1)[i]!.split(":")[1]?.toLowerCase()));
                             } catch (e) {
                                 console.error(e, e.stack);
                             }
                             break;
                         case "addLevels":
                             try {
-                                (targets[l] as Player).addLevels(Number(playerName.slice(1)[i].split(":")[1]));
+                                (targets[l] as Player).addLevels(Number(playerName.slice(1)[i]!.split(":")[1]));
                             } catch (e) {
                                 console.error(e, e.stack);
                             }
                             break;
                         case "addExperience":
                             try {
-                                (targets[l] as Player).addExperience(Number(playerName.slice(1)[i].split(":")[1]));
+                                (targets[l] as Player).addExperience(Number(playerName.slice(1)[i]!.split(":")[1]));
                             } catch (e) {
                                 console.error(e, e.stack);
                             }
                             break;
                         case "sendMessage":
                             try {
-                                (targets[l] as Player).sendMessage(String(playerName.slice(1)[i].split(":")[1]));
+                                (targets[l] as Player).sendMessage(String(playerName.slice(1)[i]!.split(":")[1]));
                             } catch (e) {
                                 console.error(e, e.stack);
                             }
@@ -7149,8 +7149,8 @@ break;*/ /*
                         case "startItemcooldown":
                             try {
                                 (targets[l] as Player).startItemCooldown(
-                                    String(playerName.slice(1)[i].split(":")[1]),
-                                    Number(playerName.slice(1)[i].split(":")[1])
+                                    String(playerName.slice(1)[i]!.split(":")[1]),
+                                    Number(playerName.slice(1)[i]!.split(":")[1])
                                 );
                             } catch (e) {
                                 console.error(e, e.stack);
@@ -7158,15 +7158,15 @@ break;*/ /*
                             break;
                         case "slectedSlot":
                             try {
-                                ((targets[l] as Player).selectedSlotIndex = Number(playerName.slice(1)[i].split(":")[1])),
-                                    Number(playerName.slice(1)[i].split(":")[1]);
+                                ((targets[l] as Player).selectedSlotIndex = Number(playerName.slice(1)[i]!.split(":")[1])),
+                                    Number(playerName.slice(1)[i]!.split(":")[1]!);
                             } catch (e) {
                                 console.error(e, e.stack);
                             }
                             break;
                         case "resetLevel":
                             try {
-                                (targets[l] as Player).resetLevel(), Number(playerName.slice(1)[i].split(":")[1]);
+                                (targets[l] as Player).resetLevel(), Number(playerName.slice(1)[i]!.split(":")[1]!);
                             } catch (e) {
                                 console.error(e, e.stack);
                             }
@@ -7174,10 +7174,10 @@ break;*/ /*
                         case "setSpawnPoint":
                             try {
                                 (targets[l] as Player).setSpawnPoint({
-                                    x: Number(playerName.slice(1)[i].split(":")[1]),
-                                    y: Number(playerName.slice(1)[i].split(":")[2]),
-                                    z: Number(playerName.slice(1)[i].split(":")[3]),
-                                    dimension: world.getDimension(playerName.slice(1)[i].split(":")[4]),
+                                    x: Number(playerName.slice(1)[i]!.split(":")[1]),
+                                    y: Number(playerName.slice(1)[i]!.split(":")[2]),
+                                    z: Number(playerName.slice(1)[i]!.split(":")[3]),
+                                    dimension: world.getDimension(playerName.slice(1)[i]!.split(":")[4]!),
                                 });
                             } catch (e) {
                                 console.error(e, e.stack);
@@ -7324,7 +7324,7 @@ break;*/ /*
         } catch {}
         try {
             location = evaluateCoordinates(
-                parameters[1]
+                parameters[1]!
                     .split("~")
                     .join(" ~")
                     .split("^")
@@ -7333,9 +7333,9 @@ break;*/ /*
                     .join(" *")
                     .replaceAll("  ", " ")
                     .trimStart()
-                    .split(" ")[0]
+                    .split(" ")[0]!
                     .replaceAll(" ", ""),
-                parameters[1]
+                parameters[1]!
                     .split("~")
                     .join(" ~")
                     .split("^")
@@ -7344,9 +7344,9 @@ break;*/ /*
                     .join(" *")
                     .replaceAll("  ", " ")
                     .trimStart()
-                    .split(" ")[1]
+                    .split(" ")[1]!
                     .replaceAll(" ", ""),
-                parameters[1]
+                parameters[1]!
                     .split("~")
                     .join(" ~")
                     .split("^")
@@ -7355,7 +7355,7 @@ break;*/ /*
                     .join(" *")
                     .replaceAll("  ", " ")
                     .trimStart()
-                    .split(" ")[2]
+                    .split(" ")[2]!
                     .replaceAll(" ", ""),
                 (initiator ?? sourceEntity ?? sourceBlock)?.location ?? {
                     x: 0,
@@ -7371,7 +7371,7 @@ break;*/ /*
             try {
                 location2 = Object.values(
                     evaluateCoordinates(
-                        parameters[3]
+                        parameters[3]!
                             .split("~")
                             .join(" ~")
                             .split("^")
@@ -7380,9 +7380,9 @@ break;*/ /*
                             .join(" *")
                             .replaceAll("  ", " ")
                             .trimStart()
-                            .split(" ")[0]
+                            .split(" ")[0]!
                             .replaceAll(" ", ""),
-                        parameters[3]
+                        parameters[3]!
                             .split("~")
                             .join(" ~")
                             .split("^")
@@ -7391,9 +7391,9 @@ break;*/ /*
                             .join(" *")
                             .replaceAll("  ", " ")
                             .trimStart()
-                            .split(" ")[1]
+                            .split(" ")[1]!
                             .replaceAll(" ", ""),
-                        parameters[3]
+                        parameters[3]!
                             .split("~")
                             .join(" ~")
                             .split("^")
@@ -7402,7 +7402,7 @@ break;*/ /*
                             .join(" *")
                             .replaceAll("  ", " ")
                             .trimStart()
-                            .split(" ")[2]
+                            .split(" ")[2]!
                             .replaceAll(" ", ""),
                         (initiator ?? sourceEntity ?? sourceBlock)?.location ?? { x: 0, y: 0, z: 0 },
                         (initiator ?? sourceEntity)?.getRotation() ?? {
@@ -7477,7 +7477,7 @@ break;*/ /*
         } catch {}
         try {
             location = evaluateCoordinates(
-                parameters[1]
+                parameters[1]!
                     .split("~")
                     .join(" ~")
                     .split("^")
@@ -7486,9 +7486,9 @@ break;*/ /*
                     .join(" *")
                     .replaceAll("  ", " ")
                     .trimStart()
-                    .split(" ")[0]
+                    .split(" ")[0]!
                     .replaceAll(" ", ""),
-                parameters[1]
+                parameters[1]!
                     .split("~")
                     .join(" ~")
                     .split("^")
@@ -7497,9 +7497,9 @@ break;*/ /*
                     .join(" *")
                     .replaceAll("  ", " ")
                     .trimStart()
-                    .split(" ")[1]
+                    .split(" ")[1]!
                     .replaceAll(" ", ""),
-                parameters[1]
+                parameters[1]!
                     .split("~")
                     .join(" ~")
                     .split("^")
@@ -7508,7 +7508,7 @@ break;*/ /*
                     .join(" *")
                     .replaceAll("  ", " ")
                     .trimStart()
-                    .split(" ")[2]
+                    .split(" ")[2]!
                     .replaceAll(" ", ""),
                 (initiator ?? sourceEntity ?? sourceBlock)?.location ?? {
                     x: 0,
@@ -7524,7 +7524,7 @@ break;*/ /*
             try {
                 location2 = Object.values(
                     evaluateCoordinates(
-                        parameters[3]
+                        parameters[3]!
                             .split("~")
                             .join(" ~")
                             .split("^")
@@ -7533,9 +7533,9 @@ break;*/ /*
                             .join(" *")
                             .replaceAll("  ", " ")
                             .trimStart()
-                            .split(" ")[0]
+                            .split(" ")[0]!
                             .replaceAll(" ", ""),
-                        parameters[3]
+                        parameters[3]!
                             .split("~")
                             .join(" ~")
                             .split("^")
@@ -7544,9 +7544,9 @@ break;*/ /*
                             .join(" *")
                             .replaceAll("  ", " ")
                             .trimStart()
-                            .split(" ")[1]
+                            .split(" ")[1]!
                             .replaceAll(" ", ""),
-                        parameters[3]
+                        parameters[3]!
                             .split("~")
                             .join(" ~")
                             .split("^")
@@ -7555,7 +7555,7 @@ break;*/ /*
                             .join(" *")
                             .replaceAll("  ", " ")
                             .trimStart()
-                            .split(" ")[2]
+                            .split(" ")[2]!
                             .replaceAll(" ", ""),
                         (initiator ?? sourceEntity ?? sourceBlock)?.location ?? { x: 0, y: 0, z: 0 },
                         (initiator ?? sourceEntity)?.getRotation() ?? {
@@ -7640,7 +7640,7 @@ break;*/ /*
                             .join(" *")
                             .replaceAll("  ", " ")
                             .trimStart()
-                            .split(" ")[0]
+                            .split(" ")[0]!
                             .replaceAll(" ", ""),
                         parameters[1]
                             .split("~")
@@ -7651,7 +7651,7 @@ break;*/ /*
                             .join(" *")
                             .replaceAll("  ", " ")
                             .trimStart()
-                            .split(" ")[1]
+                            .split(" ")[1]!
                             .replaceAll(" ", ""),
                         parameters[1]
                             .split("~")
@@ -7662,7 +7662,7 @@ break;*/ /*
                             .join(" *")
                             .replaceAll("  ", " ")
                             .trimStart()
-                            .split(" ")[2]
+                            .split(" ")[2]!
                             .replaceAll(" ", ""),
                         (initiator ?? sourceEntity ?? sourceBlock)?.location ?? { x: 0, y: 0, z: 0 },
                         (initiator ?? sourceEntity)?.getRotation() ?? {
@@ -7675,7 +7675,7 @@ break;*/ /*
                 console.error(e, e.stack);
             }
         }
-        world.setDynamicProperty("andexdbGametest:scriptEvalInternalCode", parameters[0].replaceAll("\\vl", "|"));
+        world.setDynamicProperty("andexdbGametest:scriptEvalInternalCode", parameters[0]!.replaceAll("\\vl", "|"));
         // console.warn(location2!);
         try {
             world
@@ -7691,22 +7691,22 @@ break;*/ /*
         if (sourceType == "Entity") {
             assertIsDefined(sourceEntity);
             message3 = coordinates(
-                message2[1].split(";")[0].replaceAll(", ", " "),
+                message2[1]!.split(";")[0]!.replaceAll(", ", " "),
                 {
                     x: Number(
-                        message2[1]
+                        message2[1]!
                             .split(";")
                             .find((v) => v.startsWith("pos:"))
                             ?.split(":")[1] ?? sourceEntity.location.x
                     ),
                     y: Number(
-                        message2[1]
+                        message2[1]!
                             .split(";")
                             .find((v) => v.startsWith("pos:"))
                             ?.split(":")[2] ?? sourceEntity.location.y
                     ),
                     z: Number(
-                        message2[1]
+                        message2[1]!
                             .split(";")
                             .find((v) => v.startsWith("pos:"))
                             ?.split(":")[3] ?? sourceEntity.location.z
@@ -7714,13 +7714,13 @@ break;*/ /*
                 },
                 {
                     x: Number(
-                        message2[1]
+                        message2[1]!
                             .split(";")
                             .find((v) => v.startsWith("rot:"))
                             ?.split(":")[1] ?? sourceEntity.getRotation().x
                     ),
                     y: Number(
-                        message2[1]
+                        message2[1]!
                             .split(";")
                             .find((v) => v.startsWith("rot:"))
                             ?.split(":")[2] ?? sourceEntity.getRotation().y
@@ -7731,22 +7731,22 @@ break;*/ /*
         if (sourceType == "NPCDialogue") {
             assertIsDefined(sourceEntity);
             message3 = coordinates(
-                message2[1].split(";")[0].replaceAll(", ", " "),
+                message2[1]!.split(";")[0]!.replaceAll(", ", " "),
                 {
                     x: Number(
-                        message2[1]
+                        message2[1]!
                             .split(";")
                             .find((v) => v.startsWith("pos:"))
                             ?.split(":")[1] ?? sourceEntity.location.x
                     ),
                     y: Number(
-                        message2[1]
+                        message2[1]!
                             .split(";")
                             .find((v) => v.startsWith("pos:"))
                             ?.split(":")[2] ?? sourceEntity.location.y
                     ),
                     z: Number(
-                        message2[1]
+                        message2[1]!
                             .split(";")
                             .find((v) => v.startsWith("pos:"))
                             ?.split(":")[3] ?? sourceEntity.location.z
@@ -7754,13 +7754,13 @@ break;*/ /*
                 },
                 {
                     x: Number(
-                        message2[1]
+                        message2[1]!
                             .split(";")
                             .find((v) => v.startsWith("rot:"))
                             ?.split(":")[1] ?? sourceEntity.getRotation().x
                     ),
                     y: Number(
-                        message2[1]
+                        message2[1]!
                             .split(";")
                             .find((v) => v.startsWith("rot:"))
                             ?.split(":")[2] ?? sourceEntity.getRotation().y
@@ -7770,22 +7770,22 @@ break;*/ /*
         }
         if (sourceType == "Server") {
             message3 = coordinates(
-                message2[1].split(";")[0].replaceAll(", ", " "),
+                message2[1]!.split(";")[0]!.replaceAll(", ", " "),
                 {
                     x: Number(
-                        message2[1]
+                        message2[1]!
                             .split(";")
                             .find((v) => v.startsWith("pos:"))
                             ?.split(":")[1] ?? 0
                     ),
                     y: Number(
-                        message2[1]
+                        message2[1]!
                             .split(";")
                             .find((v) => v.startsWith("pos:"))
                             ?.split(":")[2] ?? 0
                     ),
                     z: Number(
-                        message2[1]
+                        message2[1]!
                             .split(";")
                             .find((v) => v.startsWith("pos:"))
                             ?.split(":")[3] ?? 0
@@ -7793,13 +7793,13 @@ break;*/ /*
                 },
                 {
                     x: Number(
-                        message2[1]
+                        message2[1]!
                             .split(";")
                             .find((v) => v.startsWith("rot:"))
                             ?.split(":")[1] ?? 0
                     ),
                     y: Number(
-                        message2[1]
+                        message2[1]!
                             .split(";")
                             .find((v) => v.startsWith("rot:"))
                             ?.split(":")[2] ?? 0
@@ -7810,22 +7810,22 @@ break;*/ /*
         if (sourceType == "Block") {
             assertIsDefined(sourceBlock);
             message3 = coordinates(
-                message2[1].split(";")[0].replaceAll(", ", " "),
+                message2[1]!.split(";")[0]!.replaceAll(", ", " "),
                 {
                     x: Number(
-                        message2[1]
+                        message2[1]!
                             .split(";")
                             .find((v) => v.startsWith("pos:"))
                             ?.split(":")[1] ?? sourceBlock.location.x
                     ),
                     y: Number(
-                        message2[1]
+                        message2[1]!
                             .split(";")
                             .find((v) => v.startsWith("pos:"))
                             ?.split(":")[2] ?? sourceBlock.location.y
                     ),
                     z: Number(
-                        message2[1]
+                        message2[1]!
                             .split(";")
                             .find((v) => v.startsWith("pos:"))
                             ?.split(":")[3] ?? sourceBlock.location.z
@@ -7833,13 +7833,13 @@ break;*/ /*
                 },
                 {
                     x: Number(
-                        message2[1]
+                        message2[1]!
                             .split(";")
                             .find((v) => v.startsWith("rot:"))
                             ?.split(":")[1] ?? 0
                     ),
                     y: Number(
-                        message2[1]
+                        message2[1]!
                             .split(";")
                             .find((v) => v.startsWith("rot:"))
                             ?.split(":")[2] ?? 0
@@ -7859,7 +7859,7 @@ break;*/ /*
                     /*
             console.warn("Float")*/
                     try {
-                        currentMolangVariableMap.setFloat(message2[index].slice(9).split(":")[0], Number(message2[index].slice(9).split(":")[1]));
+                        currentMolangVariableMap.setFloat(message2[index]!.slice(9).split(":")[0]!, Number(message2[index]!.slice(9).split(":")[1]));
                     } catch (e) {
                         console.error(e, e.stack);
                     }
@@ -7868,10 +7868,10 @@ break;*/ /*
                         /*
             console.warn("RGB")*/
                         try {
-                            currentMolangVariableMap.setColorRGB(message2[index].slice(12).split(":")[0], {
-                                blue: Number(message2[index].slice(12).split(":")[3]),
-                                green: Number(message2[index].slice(12).split(":")[2]),
-                                red: Number(message2[index].slice(12).split(":")[1]),
+                            currentMolangVariableMap.setColorRGB(message2[index]!.slice(12).split(":")[0]!, {
+                                blue: Number(message2[index]!.slice(12).split(":")[3]),
+                                green: Number(message2[index]!.slice(12).split(":")[2]),
+                                red: Number(message2[index]!.slice(12).split(":")[1]),
                             });
                         } catch (e) {
                             console.error(e, e.stack);
@@ -7881,26 +7881,26 @@ break;*/ /*
                             /*
             console.warn("RGBA")*/
                             try {
-                                currentMolangVariableMap.setColorRGBA(message2[index].slice(13).split(":")[0], {
-                                    alpha: Number(message2[index].slice(13).split(":")[4]),
-                                    blue: Number(message2[index].slice(13).split(":")[3]),
-                                    green: Number(message2[index].slice(13).split(":")[2]),
-                                    red: Number(message2[index].slice(13).split(":")[1]),
+                                currentMolangVariableMap.setColorRGBA(message2[index]!.slice(13).split(":")[0]!, {
+                                    alpha: Number(message2[index]!.slice(13).split(":")[4]),
+                                    blue: Number(message2[index]!.slice(13).split(":")[3]),
+                                    green: Number(message2[index]!.slice(13).split(":")[2]),
+                                    red: Number(message2[index]!.slice(13).split(":")[1]),
                                 });
                             } catch (e) {
                                 console.error(e, e.stack);
                             } /*
-            console.warn(message2[index].slice(13).split(":")[0], {alpha: Number(message2[index].slice(13).split(":")[4]), blue: Number(message2[index].slice(13).split(":")[3]), green: Number(message2[index].slice(13).split(":")[2]), red: Number(message2[index].slice(13).split(":")[1])})
-            console.warn(message2[index].slice(13).split(":")[0] + "," + Number(message2[index].slice(13).split(":")[4]) + "," + Number(message2[index].slice(13).split(":")[3]) + "," + Number(message2[index].slice(13).split(":")[2]) + "," + Number(message2[index].slice(13).split(":")[1]))*/
+            console.warn(message2[index]!.slice(13).split(":")[0], {alpha: Number(message2[index]!.slice(13).split(":")[4]), blue: Number(message2[index]!.slice(13).split(":")[3]), green: Number(message2[index]!.slice(13).split(":")[2]), red: Number(message2[index]!.slice(13).split(":")[1])})
+            console.warn(message2[index]!.slice(13).split(":")[0] + "," + Number(message2[index]!.slice(13).split(":")[4]) + "," + Number(message2[index]!.slice(13).split(":")[3]) + "," + Number(message2[index]!.slice(13).split(":")[2]) + "," + Number(message2[index]!.slice(13).split(":")[1]))*/
                         } else {
                             if (String(message2[index]).startsWith("setVector3:")) {
                                 /*
                 console.warn("Vector3")*/
                                 try {
-                                    currentMolangVariableMap.setVector3(message2[index].slice(11).split(":")[0], {
-                                        z: Number(message2[index].slice(11).split(":")[3]),
-                                        y: Number(message2[index].slice(11).split(":")[2]),
-                                        x: Number(message2[index].slice(11).split(":")[1]),
+                                    currentMolangVariableMap.setVector3(message2[index]!.slice(11).split(":")[0]!, {
+                                        z: Number(message2[index]!.slice(11).split(":")[3]),
+                                        y: Number(message2[index]!.slice(11).split(":")[2]),
+                                        x: Number(message2[index]!.slice(11).split(":")[1]),
                                     });
                                 } catch (e) {
                                     console.error(e, e.stack);
@@ -7912,8 +7912,8 @@ break;*/ /*
                 console.warn("Float")*/
                                     try {
                                         currentMolangVariableMap.setFloat(
-                                            message2[index].slice(2).split(":")[0],
-                                            Number(message2[index].slice(2).split(":")[1])
+                                            message2[index]!.slice(2).split(":")[0]!,
+                                            Number(message2[index]!.slice(2).split(":")[1])
                                         );
                                     } catch (e) {
                                         console.error(e, e.stack);
@@ -7923,10 +7923,10 @@ break;*/ /*
                                         /*
                 console.warn("RGB")*/
                                         try {
-                                            currentMolangVariableMap.setColorRGB(message2[index].slice(4).split(":")[0], {
-                                                blue: Number(message2[index].slice(4).split(":")[3]),
-                                                green: Number(message2[index].slice(4).split(":")[2]),
-                                                red: Number(message2[index].slice(4).split(":")[1]),
+                                            currentMolangVariableMap.setColorRGB(message2[index]!.slice(4).split(":")[0]!, {
+                                                blue: Number(message2[index]!.slice(4).split(":")[3]),
+                                                green: Number(message2[index]!.slice(4).split(":")[2]),
+                                                red: Number(message2[index]!.slice(4).split(":")[1]),
                                             });
                                         } catch (e) {
                                             console.error(e, e.stack);
@@ -7936,26 +7936,26 @@ break;*/ /*
                                             /*
                 console.warn("RGBA")*/
                                             try {
-                                                currentMolangVariableMap.setColorRGBA(message2[index].slice(5).split(":")[0], {
-                                                    alpha: Number(message2[index].slice(5).split(":")[4]),
-                                                    blue: Number(message2[index].slice(5).split(":")[3]),
-                                                    green: Number(message2[index].slice(5).split(":")[2]),
-                                                    red: Number(message2[index].slice(13).split(":")[1]),
+                                                currentMolangVariableMap.setColorRGBA(message2[index]!.slice(5).split(":")[0]!, {
+                                                    alpha: Number(message2[index]!.slice(5).split(":")[4]),
+                                                    blue: Number(message2[index]!.slice(5).split(":")[3]),
+                                                    green: Number(message2[index]!.slice(5).split(":")[2]),
+                                                    red: Number(message2[index]!.slice(13).split(":")[1]),
                                                 });
                                             } catch (e) {
                                                 console.error(e, e.stack);
                                             } /*
-                console.warn(message2[index].slice(13).split(":")[0], {alpha: Number(message2[index].slice(13).split(":")[4]), blue: Number(message2[index].slice(13).split(":")[3]), green: Number(message2[index].slice(13).split(":")[2]), red: Number(message2[index].slice(13).split(":")[1])})
-                console.warn(message2[index].slice(13).split(":")[0] + "," + Number(message2[index].slice(13).split(":")[4]) + "," + Number(message2[index].slice(13).split(":")[3]) + "," + Number(message2[index].slice(13).split(":")[2]) + "," + Number(message2[index].slice(13).split(":")[1]))*/
+                console.warn(message2[index]!.slice(13).split(":")[0], {alpha: Number(message2[index]!.slice(13).split(":")[4]), blue: Number(message2[index]!.slice(13).split(":")[3]), green: Number(message2[index]!.slice(13).split(":")[2]), red: Number(message2[index]!.slice(13).split(":")[1])})
+                console.warn(message2[index]!.slice(13).split(":")[0] + "," + Number(message2[index]!.slice(13).split(":")[4]) + "," + Number(message2[index]!.slice(13).split(":")[3]) + "," + Number(message2[index]!.slice(13).split(":")[2]) + "," + Number(message2[index]!.slice(13).split(":")[1]))*/
                                         } else {
                                             if (String(message2[index]).startsWith("v3:")) {
                                                 /*
                     console.warn("Vector3")*/
                                                 try {
-                                                    currentMolangVariableMap.setVector3(message2[index].slice(3).split(":")[0], {
-                                                        z: Number(message2[index].slice(3).split(":")[3]),
-                                                        y: Number(message2[index].slice(3).split(":")[2]),
-                                                        x: Number(message2[index].slice(3).split(":")[1]),
+                                                    currentMolangVariableMap.setVector3(message2[index]!.slice(3).split(":")[0]!, {
+                                                        z: Number(message2[index]!.slice(3).split(":")[3]),
+                                                        y: Number(message2[index]!.slice(3).split(":")[2]),
+                                                        x: Number(message2[index]!.slice(3).split(":")[1]),
                                                     });
                                                 } catch (e) {
                                                     console.error(e, e.stack);
@@ -7976,7 +7976,7 @@ break;*/ /*
         try {blockStatesFullList = String([String(blockStatesFullList), block.block.permutation.getAllStates()]).split(","); } catch(e){console.error(e, e.stack);}*/
 
         try {
-            world.getDimension(message2[2]).spawnParticle(message2[0], message3!, currentMolangVariableMap);
+            world.getDimension(message2[2]!).spawnParticle(message2[0]!, message3!, currentMolangVariableMap);
         } catch (e) {
             console.error(e, e.stack);
         }

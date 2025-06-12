@@ -58,10 +58,10 @@ Object.defineProperties(BigInt.prototype, {
                  */
                 const absNum: bigint = num < 0n ? -num : num;
                 for (var i = 0; i < romanMatrix.length; i++) {
-                    if (absNum >= romanMatrix[i][0]) {
+                    if (absNum >= romanMatrix[i]![0]) {
                         return (
-                            romanMatrix[i][1] +
-                            convertToRoman(num - romanMatrix[i][0])
+                            romanMatrix[i]![1] +
+                            convertToRoman(num - romanMatrix[i]![0])
                         );
                     }
                 }

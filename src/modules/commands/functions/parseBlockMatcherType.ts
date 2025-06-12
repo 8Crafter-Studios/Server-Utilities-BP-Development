@@ -10,7 +10,7 @@ export function parseBlockMatcherType(matcher: string) {
     const statesMatch = type.match(/[\[\{]([^\]\}]*)[\]\}]/);
     let states: { [id: string]: string | number | boolean; } | undefined = undefined;
     if (!!statesMatch) {
-        const statesStr = statesMatch[1];
+        const statesStr = statesMatch[1]!;
         try {
             states = JSON.parse(statesMatch[0].replace(/'/g, '"'));
         } catch (error) {
@@ -19,8 +19,8 @@ export function parseBlockMatcherType(matcher: string) {
             const keyValuePairs = statesStr.split(",");
             keyValuePairs.forEach((pair) => {
                 const keyValue = pair.trim().split("=");
-                const key = keyValue[0].trim();
-                let value = keyValue[1].trim() as any;
+                const key = keyValue[0]!.trim();
+                let value = keyValue[1]!.trim() as any;
                 // Convert value to number or boolean if possible
                 if (!isNaN(value)) {
                     value = parseFloat(value);
@@ -39,7 +39,7 @@ export function parseBlockMatcherType(matcher: string) {
     // Extract chance if present
     const stringMatch = type.match(/^["']([^"]+)["']$/);
     if (!!stringMatch) {
-        type = stringMatch[1].trim() /*.escapeCharactersB()*/;
+        type = stringMatch[1]!.trim() /*.escapeCharactersB()*/;
     }
     return {
         raw: raw,

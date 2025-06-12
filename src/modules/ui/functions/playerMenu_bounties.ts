@@ -49,7 +49,7 @@ export async function playerMenu_bounties(sourceEntitya: Entity | executeCommand
             // This will stop the code when the player closes the form
             if (r.canceled) return 1;
 
-            switch ((["new", "viewAll", "viewFrom", "viewOn", "back", "close"] as const)[r.selection!]) {
+            switch ((["new", "viewAll", "viewFrom", "viewOn", "back", "close"] as const)[r.selection!]!) {
                 case "new":
                     if ((await playerMenu_bounty_new(sourceEntity)) === 1) {
                         return await playerMenu_bounties(sourceEntity);

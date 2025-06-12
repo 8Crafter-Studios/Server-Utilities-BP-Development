@@ -99,9 +99,9 @@ export function* generateMinecraftOvoidCG(
         generatorProgress[generatorProgressId].done = true;
         return;
     } catch (e) {
-        generatorProgress[generatorProgressId].endTick = system.currentTick;
-        generatorProgress[generatorProgressId].endTime = Date.now();
-        generatorProgress[generatorProgressId].done = true;
+        generatorProgress[generatorProgressId]!.endTick = system.currentTick;
+        generatorProgress[generatorProgressId]!.endTime = Date.now();
+        generatorProgress[generatorProgressId]!.done = true;
         throw e;
     }
 }

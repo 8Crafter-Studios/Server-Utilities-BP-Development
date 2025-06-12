@@ -234,7 +234,7 @@ Shop Owner: ${this.playerName}${!!this?.mainPageBodyText ? "\n§r" + this.mainPa
                     return 0;
                 }
                 assertIsDefined(r.selection);
-                const item = data[r.selection!];
+                const item = data[r.selection!]!;
                 if (item.type == "player_shop_item") {
                     if (
                         (await this.sellItem(player, item, [mode], r.selection)) /*.then(v=>{
@@ -283,7 +283,7 @@ Shop Owner: ${this.playerName}${!!this?.mainPageBodyText ? "\n§r" + this.mainPa
                     return 0;
                 }
                 assertIsDefined(r.selection);
-                const item = data[r.selection!];
+                const item = data[r.selection!]!;
                 if (item.type == "player_shop_item") {
                     if (
                         (await this.buyItem(player, item, [mode], r.selection)) /*.then(v=>{
@@ -372,7 +372,7 @@ Shop Owner: ${this.playerName}${!!this?.mainPageBodyText ? "\n§r" + this.mainPa
                     return 0 as const;
                 }
                 assertIsDefined(r.selection);
-                const item = newData[r.selection!];
+                const item = newData[r.selection!]!;
                 if (item.type == "player_shop_item") {
                     if (
                         (await this.sellItem(player, item, path, r.selection)) /*.then(v=>{
@@ -441,7 +441,7 @@ Shop Owner: ${this.playerName}${!!this?.mainPageBodyText ? "\n§r" + this.mainPa
                     return 0 as const;
                 }
                 assertIsDefined(r.selection);
-                const item = newData[r.selection!];
+                const item = newData[r.selection!]!;
                 if (item.type == "player_shop_item") {
                     if (
                         (await this.buyItem(player, item, path, r.selection)) /*.then(v=>{
@@ -725,7 +725,7 @@ ${
                         ).toNumber();
                     } finally {
                         try {
-                            otherEntities.forEach((v, i) => tryrun(() => v.teleport(locs[i], { keepVelocity: false })));
+                            otherEntities.forEach((v, i) => tryrun(() => v.teleport(locs[i]!, { keepVelocity: false })));
                         } catch {}
                         try {
                             entity.remove();
@@ -1060,15 +1060,15 @@ ${
                     try {
                         for (let i = 0; amountToRemove > 0 && i < items.length; i++) {
                             try {
-                                const recievingItem = items[i].getItem() as ItemStack; // This is fine because the try...catch statement will deal with when it is undefined.
-                                const iamount = items[i].amount;
+                                const recievingItem = items[i]!.getItem() as ItemStack; // This is fine because the try...catch statement will deal with when it is undefined.
+                                const iamount = items[i]!.amount;
                                 let amount = Math.min(amountToRemove, iamount);
                                 recievingItem.amount = amount;
                                 entity.getComponent("inventory")?.container?.addItem(recievingItem);
                                 if (amount == iamount) {
-                                    items[i].setItem();
+                                    items[i]!.setItem();
                                 } else {
-                                    items[i].amount -= amount;
+                                    items[i]!.amount -= amount;
                                 }
                                 amountToRemove -= amount;
                                 item.amountWanted -= amount;
@@ -1127,7 +1127,7 @@ ${
                         }
                     } finally {
                         try {
-                            otherEntities!?.forEach((v, i) => tryrun(() => v.teleport(locs[i], { keepVelocity: false })));
+                            otherEntities!?.forEach((v, i) => tryrun(() => v.teleport(locs[i]!, { keepVelocity: false })));
                         } catch {}
                         try {
                             entity.remove();
@@ -1231,7 +1231,7 @@ ${
             }
         } finally {
             try {
-                otherEntities!?.forEach((v, i) => tryrun(() => v.teleport(locs[i], { keepVelocity: false })));
+                otherEntities!?.forEach((v, i) => tryrun(() => v.teleport(locs[i]!, { keepVelocity: false })));
             } catch {}
             try {
                 entity.remove();
@@ -1301,7 +1301,7 @@ ${
                 assertIsDefined(r.selection);
                 let response = r.selection!;
                 switch (
-                    (!!shopsList[r.selection!] ? "shop" : undefined) ??
+                    (!!shopsList[r.selection!]! ? "shop" : undefined) ??
                     cullUndefined([
                         "manageMyShops",
                         showBackButton ? "back" : undefined,
@@ -1335,7 +1335,7 @@ ${
                     case "refresh":
                         return await PlayerShop.openPublicShopsSelector(player, showBackButton);
                     default:
-                        if ((await shopsList[response].openShop(player as Player)) != 0) {
+                        if ((await shopsList[response]!.openShop(player as Player)) != 0) {
                             return await PlayerShop.openPublicShopsSelector(player, showBackButton);
                         }
                         return 0;
@@ -1353,13 +1353,13 @@ export class PlayerShopManager {
         "textures/blocks/gravel",
         "textures/items/diamond_pickaxe",
         "textures/blocks/reactor_core_stage_0",
-    ];
-    static playerShopPageTextureHints = ["textures/ui/arrowRight"];
-    static get playerShopItemTextureHint() {
-        return this.playerShopItemTextureHints[Math.floor(Math.random() * this.playerShopItemTextureHints.length)];
+    ] as const satisfies string[];
+    static playerShopPageTextureHints = ["textures/ui/arrowRight"] as const satisfies string[];
+    static get playerShopItemTextureHint(): typeof this.playerShopItemTextureHints[number] {
+        return this.playerShopItemTextureHints[Math.floor(Math.random() * this.playerShopItemTextureHints.length)]!;
     }
-    static get playerShopPageTextureHint() {
-        return this.playerShopPageTextureHints[Math.floor(Math.random() * this.playerShopPageTextureHints.length)];
+    static get playerShopPageTextureHint(): typeof this.playerShopPageTextureHints[number] {
+        return this.playerShopPageTextureHints[Math.floor(Math.random() * this.playerShopPageTextureHints.length)]!;
     }
     /**
      * @todo Add the "Shop Item Settings" section.
@@ -1403,7 +1403,7 @@ export class PlayerShopManager {
             .then(async (r) => {
                 if (r.canceled) return 1;
 
-                switch ((["manageShops", "manageAllShops", "mainSettings", "shopItemSettings", "back", "close"] as const)[r.selection!]) {
+                switch ((["manageShops", "manageAllShops", "mainSettings", "shopItemSettings", "back", "close"] as const)[r.selection!]!) {
                     case "manageShops":
                         if ((await PlayerShopManager.managePlayerShops(sourceEntity, false)) !== 0) {
                             return (await PlayerShopManager.playerShopSystemSettings(sourceEntity)) as 0 | 1;
@@ -1542,7 +1542,7 @@ export class PlayerShopManager {
 
                 assertIsDefined(r.selection);
                 switch (
-                    (!!shopsList[r.selection!] ? "shop" : undefined) ??
+                    (!!shopsList[r.selection!]! ? "shop" : undefined) ??
                     cullUndefined([
                         "newShop",
                         config.system.debugMode && sourceEntity.hasTag("admin") ? "newShopAsPlayer" : undefined,
@@ -1644,7 +1644,7 @@ export class PlayerShopManager {
                     case "refresh":
                         return await PlayerShopManager.managePlayerShops(sourceEntity, all);
                     default:
-                        if (((await PlayerShopManager.managePlayerShop(sourceEntity, shopsList[r.selection!])) as 0 | 1) !== 0) {
+                        if (((await PlayerShopManager.managePlayerShop(sourceEntity, shopsList[r.selection!]!)) as 0 | 1) !== 0) {
                             return await PlayerShopManager.managePlayerShops(sourceEntity, all);
                         } else {
                             return 0;
@@ -1955,7 +1955,7 @@ Is Buy Shop: ${shop.buyShop ? "§aTrue" : "§cFalse"}
                                 saveMode: StructureSaveMode.World,
                             }
                         );
-                        otherEntities.forEach((v, i) => tryrun(() => v.teleport(locs[i], { keepVelocity: false })));
+                        otherEntities.forEach((v, i) => tryrun(() => v.teleport(locs[i]!, { keepVelocity: false })));
                         entity.remove();
                         return await PlayerShopManager.managePlayerShop(sourceEntity, shop);
                     case 3:
@@ -2380,7 +2380,7 @@ Is Buy Shop: ${shop.buyShop ? "§aTrue" : "§cFalse"}
                         return 0;
                     default:
                         if (
-                            (shopData[response].type == "player_shop_item"
+                            (shopData[response]!.type == "player_shop_item"
                                 ? await PlayerShopManager.managePlayerShop_manageItem(
                                       sourceEntity,
                                       shop,
@@ -2481,7 +2481,7 @@ ${mode == "buy" ? "Price" : "Value"}: ${mode == "buy" ? (item as PlayerSavedShop
                     ...(debugMode ? (["rawData", "editRaw", "editJSON", mode == "buy" ? "loadStructure" : undefined] as const) : ([] as const)),
                     "back",
                     "close",
-                ] as const)[r.selection!]
+                ] as const)[r.selection!]!
             ) {
                 case "move": {
                     const form = new ModalFormData();
@@ -2725,7 +2725,7 @@ ${mode == "buy" ? "Price" : "Value"}: ${mode == "buy" ? (item as PlayerSavedShop
                                 ).toNumber();
                             } finally {
                                 try {
-                                    otherEntities.forEach((v, i) => tryrun(() => v.teleport(locs[i], { keepVelocity: false })));
+                                    otherEntities.forEach((v, i) => tryrun(() => v.teleport(locs[i]!, { keepVelocity: false })));
                                 } catch {}
                                 try {
                                     entity.remove();
@@ -2799,7 +2799,7 @@ ${mode == "buy" ? "Price" : "Value"}: ${mode == "buy" ? (item as PlayerSavedShop
                                 ).toNumber();
                             } finally {
                                 try {
-                                    otherEntities.forEach((v, i) => tryrun(() => v.teleport(locs[i], { keepVelocity: false })));
+                                    otherEntities.forEach((v, i) => tryrun(() => v.teleport(locs[i]!, { keepVelocity: false })));
                                 } catch {}
                                 try {
                                     entity.remove();
@@ -3260,7 +3260,7 @@ Texture: ${page.texture}`
                     ...(debugMode ? (["rawData", "editRaw", "editJSON"] as const) : ([] as const)),
                     "back",
                     "close",
-                ] as const)[r.selection!]
+                ] as const)[r.selection!]!
             ) {
                 case "contents":
                     if ((await PlayerShopManager.managePlayerShopPage_contents(sourceEntity, shop, [mode, String(pageIndex)])) === 1) {
@@ -3674,7 +3674,7 @@ Texture: ${page.texture}`
                 return 0;
             default:
                 if (
-                    (shopData[response].type == "player_shop_item"
+                    (shopData[response]!.type == "player_shop_item"
                         ? await PlayerShopManager.managePlayerShopPage_manageItem(
                               sourceEntity,
                               shop,
@@ -3767,7 +3767,7 @@ Texture: ${page.texture}`
                     ...(debugMode ? (["rawData", "editRaw", "editJSON", mode == "buy" ? "loadStructure" : undefined] as const) : ([] as const)),
                     "back",
                     "close",
-                ] as const)[r.selection!]
+                ] as const)[r.selection!]!
             ) {
                 case "move": {
                     const form = new ModalFormData();
@@ -4015,7 +4015,7 @@ Texture: ${page.texture}`
                                 ).toNumber();
                             } finally {
                                 try {
-                                    otherEntities.forEach((v, i) => tryrun(() => v.teleport(locs[i], { keepVelocity: false })));
+                                    otherEntities.forEach((v, i) => tryrun(() => v.teleport(locs[i]!, { keepVelocity: false })));
                                 } catch {}
                                 try {
                                     entity.remove();
@@ -4090,7 +4090,7 @@ Texture: ${page.texture}`
                                 ).toNumber();
                             } finally {
                                 try {
-                                    otherEntities.forEach((v, i) => tryrun(() => v.teleport(locs[i], { keepVelocity: false })));
+                                    otherEntities.forEach((v, i) => tryrun(() => v.teleport(locs[i]!, { keepVelocity: false })));
                                 } catch {}
                                 try {
                                     entity.remove();
@@ -4421,7 +4421,7 @@ Texture: ${page.texture}`
                     ...(debugMode ? (["rawData", "editRaw", "editJSON"] as const) : ([] as const)),
                     "back",
                     "close",
-                ] as const)[r.selection!]
+                ] as const)[r.selection!]!
             ) {
                 case "contents":
                     if ((await PlayerShopManager.managePlayerShopPage_contents(sourceEntity, shop, path)) === 1) {

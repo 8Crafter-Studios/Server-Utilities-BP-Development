@@ -31,7 +31,7 @@ export async function selectTexturePreset(sourceEntitya: Entity | executeCommand
     const r = await forceShow(form, sourceEntitya as Player);
     if (r.canceled || r.selection === keys.length) return 1;
     if (r.selection === keys.length + 1) return 0;
-    const rb = await selectTexturePresetInCategory(sourceEntity, keys[r.selection!]);
+    const rb = await selectTexturePresetInCategory(sourceEntity, keys[r.selection!]!);
     if (rb === 1) return await selectTexturePreset(sourceEntity);
     if (rb === 0) return 0;
     return rb;
@@ -211,7 +211,7 @@ export async function selectTexturePresetInCategory<C extends keyof typeof textu
                 case "next":
                     return await selectTexturePresetInCategory(sourceEntity, category, Math.min(numpages - 1, page + 1), search, textures);
                 case "texture":
-                    return texturesB[r.selection! - 6][1];
+                    return texturesB[r.selection! - 6]![1];
                 case "back":
                     return 1;
                 case "close":

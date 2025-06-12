@@ -14,7 +14,7 @@ export function drawMinecraftCircleB(
         const zPos = radius * Math.sin(angle);
         const newPos = rotate(rotation.x, 0, rotation.y, [
             { x: Math.floor(xPos), y: 0, z: Math.floor(zPos) },
-        ])[0];
+        ])[0]!;
         const value = {
             x: center.x + newPos.x,
             y: center.y + newPos.y,

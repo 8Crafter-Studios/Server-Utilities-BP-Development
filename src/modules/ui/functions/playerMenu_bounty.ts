@@ -66,7 +66,7 @@ export async function playerMenu_bounty(
             // This will stop the code when the player closes the form
             if (r.canceled) return 1;
 
-            switch ((["individualBounties", "back", "close"] as const)[r.selection!]) {
+            switch ((["individualBounties", "back", "close"] as const)[r.selection!]!) {
                 case "individualBounties":
                     if ((await playerMenu_bounty_individuals(sourceEntity, totalBounty, target)) == 1) {
                         return await playerMenu_bounty(sourceEntity, totalBounty, target);

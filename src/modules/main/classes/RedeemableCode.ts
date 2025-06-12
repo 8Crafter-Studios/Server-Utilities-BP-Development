@@ -195,7 +195,7 @@ export class RedeemableCode {
         } catch (e) {
             console.error(e, e.stack);
         }
-        otherEntities.forEach((v, i) => tryrun(() => v.teleport(locs[i], { keepVelocity: false })));
+        otherEntities.forEach((v, i) => tryrun(() => v.teleport(locs[i]!, { keepVelocity: false })));
     }
     /**
      * Redeems a code for the given player. This method checks if the code has reached its maximum number of uses

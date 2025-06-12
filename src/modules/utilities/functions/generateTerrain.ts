@@ -81,7 +81,7 @@ export interface GenerateTerrainOptions {
      * biomeToDefaultTerrainDetailsMap[biome]["heightVariation"] ?? 10
      * ```
      */
-    heightVariation?: BiomeToDefaultTerrainDetailsMapType[keyof BiomeToDefaultTerrainDetailsMapType]["heightVariation"];
+    heightVariation?: BiomeToDefaultTerrainDetailsMapType[keyof BiomeToDefaultTerrainDetailsMapType]["heightVariation"] | undefined;
     /**
      * The height variation to use for the terrain.
      *
@@ -92,7 +92,7 @@ export interface GenerateTerrainOptions {
      * biomeToDefaultTerrainDetailsMap[biome]["baseHeight"] ?? 63
      * ```
      */
-    baseHeight?: BiomeToDefaultTerrainDetailsMapType[keyof BiomeToDefaultTerrainDetailsMapType]["baseHeight"];
+    baseHeight?: BiomeToDefaultTerrainDetailsMapType[keyof BiomeToDefaultTerrainDetailsMapType]["baseHeight"] | undefined;
     /**
      * The water level to use for the terrain.
      *
@@ -105,7 +105,7 @@ export interface GenerateTerrainOptions {
      * biomeToDefaultTerrainDetailsMap[biome]["waterLevel"] ?? false
      * ```
      */
-    waterLevel?: BiomeToDefaultTerrainDetailsMapType[keyof BiomeToDefaultTerrainDetailsMapType]["waterLevel"];
+    waterLevel?: BiomeToDefaultTerrainDetailsMapType[keyof BiomeToDefaultTerrainDetailsMapType]["waterLevel"] | undefined;
     /**
      * The lava level to use for the terrain.
      *
@@ -118,7 +118,7 @@ export interface GenerateTerrainOptions {
      * biomeToDefaultTerrainDetailsMap[biome]["lavaLevel"] ?? false
      * ```
      */
-    lavaLevel?: BiomeToDefaultTerrainDetailsMapType[keyof BiomeToDefaultTerrainDetailsMapType]["lavaLevel"];
+    lavaLevel?: BiomeToDefaultTerrainDetailsMapType[keyof BiomeToDefaultTerrainDetailsMapType]["lavaLevel"] | undefined;
     /**
      * The generator type to use for the terrain of the biome type.
      *
@@ -134,7 +134,7 @@ export interface GenerateTerrainOptions {
      * biomeToDefaultTerrainDetailsMap[biome]["generatorType"] ?? "normal"
      * ```
      */
-    generatorType?: BiomeToDefaultTerrainDetailsMapType[keyof BiomeToDefaultTerrainDetailsMapType]["generatorType"];
+    generatorType?: BiomeToDefaultTerrainDetailsMapType[keyof BiomeToDefaultTerrainDetailsMapType]["generatorType"] | undefined;
     /**
      * The nether air threshold function to use for the terrain of the biome type.
      *
@@ -152,7 +152,7 @@ export interface GenerateTerrainOptions {
      * (value: number) => value > 0
      * ```
      */
-    netherAirThresholdFunc?: (value: number, pos: Vector3, noise: ReturnType<typeof getNoise>, offset: Vector3, scale: Vector3) => boolean;
+    netherAirThresholdFunc?: ((value: number, pos: Vector3, noise: ReturnType<typeof getNoise>, offset: Vector3, scale: Vector3) => boolean) | undefined;
     /**
      * The offset to use for the noise functions.
      *
@@ -163,7 +163,7 @@ export interface GenerateTerrainOptions {
      * {x: 0, y: 0, z: 0}
      * ```
      */
-    offset?: Partial<Vector3>;
+    offset?: Partial<Vector3> | undefined;
     /**
      * The scale to use for the noise functions.
      *
@@ -174,7 +174,7 @@ export interface GenerateTerrainOptions {
      * {x: 0, y: 0, z: 0}
      * ```
      */
-    scale?: Partial<Vector3>;
+    scale?: Partial<Vector3> | undefined;
     /**
      * The noise functions to use.
      *
@@ -184,7 +184,7 @@ export interface GenerateTerrainOptions {
      *
      * @default getNoise(seed)
      */
-    noise?: ReturnType<typeof getNoise>;
+    noise?: ReturnType<typeof getNoise> | undefined;
     /**
      * Whether or not to generate ores.
      *
@@ -192,7 +192,7 @@ export interface GenerateTerrainOptions {
      *
      * @default false
      */
-    generateOres?: boolean;
+    generateOres?: boolean | undefined;
     /**
      * Whether or not to generate blobs.
      *
@@ -200,7 +200,7 @@ export interface GenerateTerrainOptions {
      *
      * @default false
      */
-    generateBlobs?: boolean;
+    generateBlobs?: boolean | undefined;
     /**
      * The types of ores and blobs to generate.
      *
@@ -208,7 +208,7 @@ export interface GenerateTerrainOptions {
      *
      * To presere these settings use {@link orePalette} instead.
      */
-    oreTypes?: OreTypes;
+    oreTypes?: OreTypes | undefined;
     /**
      * The types of ores and blobs to generate.
      *
@@ -225,7 +225,7 @@ export interface GenerateTerrainOptions {
      * )
      * ```
      */
-    orePalette?: OreTypes;
+    orePalette?: OreTypes | undefined;
     /**
      * The ore generation mode to use.
      *
@@ -237,7 +237,7 @@ export interface GenerateTerrainOptions {
      *
      * @default "v2"
      */
-    oreGenerationMode?: OreGenerationOptions["oreGenerationMode"];
+    oreGenerationMode?: OreGenerationOptions["oreGenerationMode"] | undefined;
     /**
      * Minimum amount of time in milliseconds to spend regenrating the blocks each tick.
      *
@@ -260,7 +260,7 @@ export interface GenerateTerrainOptions {
      *
      * @default getBlockTypeV2
      */
-    getBlockTypeFunction?: GenerateTerrainGetBlockTypeFunction;
+    getBlockTypeFunction?: GenerateTerrainGetBlockTypeFunction | undefined;
 }
 
 export interface BiomeToDefaultTerrainDetailsValue {
@@ -851,18 +851,18 @@ export async function generateTerrainV2(
                 }
                 if (
                     opts.waterLevel !== false &&
-                    height < opts.waterLevel &&
-                    (opts.lavaLevel === false || opts.lavaLevel > opts.waterLevel || opts.lavaLevel < height)
+                    height < opts.waterLevel! &&
+                    (opts.lavaLevel === false || opts.lavaLevel! > opts.waterLevel! || opts.lavaLevel! < height)
                 ) {
-                    for (let y = height + 1; y <= Math.min(opts.waterLevel, maxY); y++) {
+                    for (let y = height + 1; y <= Math.min(opts.waterLevel!, maxY); y++) {
                         dimension.setBlockType({ x, y, z }, "minecraft:water");
                     }
                 } else if (
                     opts.lavaLevel !== false &&
-                    height < opts.lavaLevel &&
-                    (opts.waterLevel === false || opts.waterLevel > opts.lavaLevel || opts.waterLevel < height)
+                    height < opts.lavaLevel! &&
+                    (opts.waterLevel === false || opts.waterLevel! > opts.lavaLevel! || opts.waterLevel! < height)
                 ) {
-                    for (let y = height + 1; y <= Math.min(opts.lavaLevel, maxY); y++) {
+                    for (let y = height + 1; y <= Math.min(opts.lavaLevel!, maxY); y++) {
                         dimension.setBlockType({ x, y, z }, "minecraft:lava");
                     }
                 }
@@ -1001,7 +1001,7 @@ export interface OreGenerationOptions {
      * {x: 0, y: 0, z: 0}
      * ```
      */
-    offset?: Partial<Vector3>;
+    offset?: Partial<Vector3> | undefined;
     /**
      * The scale to use for the noise functions.
      *
@@ -1012,7 +1012,7 @@ export interface OreGenerationOptions {
      * {x: 0, y: 0, z: 0}
      * ```
      */
-    scale?: Partial<Vector3>;
+    scale?: Partial<Vector3> | undefined;
     /**
      * The categories of ores to generate.
      *
@@ -1026,7 +1026,7 @@ export interface OreGenerationOptions {
      * }
      * ```
      */
-    includedCategories?: { [key in OreFeatureCategory]?: boolean };
+    includedCategories?: { [key in OreFeatureCategory]?: boolean } | undefined;
     /**
      * The types of ores and blobs to generate.
      *
@@ -1034,7 +1034,7 @@ export interface OreGenerationOptions {
      *
      * To presere these settings use {@link orePalette} instead.
      */
-    oreTypes?: OreTypes;
+    oreTypes?: OreTypes | undefined;
     /**
      * The types of ores and blobs to generate.
      *
@@ -1051,13 +1051,13 @@ export interface OreGenerationOptions {
      * )
      * ```
      */
-    orePalette?: OreTypes;
+    orePalette?: OreTypes | undefined;
     /**
      * Minimum amount of time in milliseconds to spend generating the ores each tick.
      *
      * @default config.system.defaultMinMSBetweenTickWaits
      */
-    minMSBetweenTickWaits?: number;
+    minMSBetweenTickWaits?: number | undefined;
 }
 
 /**
@@ -1190,19 +1190,19 @@ export interface BlockTypeData {
      *
      * @default undefined
      */
-    canReplace?: TerrainGeneratorBlock[];
+    canReplace?: TerrainGeneratorBlock[] | undefined;
     /**
      * The chance for this blob type to successfully spawn.
      *
      * @default 1
      */
-    threshold?: number;
+    threshold?: number | undefined;
     /**
      * The type ID of the block to use when replacing deepslate.
      *
      * @default id
      */
-    deepslateVariant?: TerrainGeneratorBlock;
+    deepslateVariant?: TerrainGeneratorBlock | undefined;
     /**
      * The category of an ore feature.
      *
@@ -1879,7 +1879,7 @@ export async function placeOres(options: OreGenerationOptions): Promise<{
 
     const noise = options.noise ?? getNoise(options.seed);
 
-    const biomeBlockTypes: OreTypes =
+    const biomeBlockTypes: OreTypes | undefined =
         options.oreTypes ??
         (options.orePalette ?? (oreTypes as OreTypesType)).filter(
             (blockTypeData) =>
@@ -2277,7 +2277,7 @@ export function getBlockType(y: number, baseHeight: number, biome: string, noise
     } else if (y < baseHeight - 1) {
         return "dirt";
     } else {
-        return biomePresets[biome](y, baseHeight);
+        return biomePresets[biome]?.(y, baseHeight) ?? "andexdb:invalid_block_placeholder";
     }
 }
 

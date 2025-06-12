@@ -84,8 +84,8 @@ function createAscendingTest(wallSide: string, entityType: string) {
 }
 
 for (var bigmobIndex = 0; bigmobIndex < MOBTOTEST.length; bigmobIndex++) {
-  createDescendingTest("RIGHT", MOBTOTEST[bigmobIndex]);
-  createDescendingTest("LEFT", MOBTOTEST[bigmobIndex]);
-  createAscendingTest("RIGHT", MOBTOTEST[bigmobIndex]);
-  createAscendingTest("LEFT", MOBTOTEST[bigmobIndex]);
+  createDescendingTest("RIGHT", MOBTOTEST[bigmobIndex]!);
+  createDescendingTest("LEFT", MOBTOTEST[bigmobIndex]!);
+  createAscendingTest("RIGHT", MOBTOTEST[bigmobIndex]!);
+  createAscendingTest("LEFT", MOBTOTEST[bigmobIndex]!);
 }

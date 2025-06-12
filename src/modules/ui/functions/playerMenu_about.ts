@@ -32,7 +32,7 @@ export async function playerMenu_about(sourceEntitya: Entity | executeCommandPla
             // This will stop the code when the player closes the form
             if (r.canceled) return 1;
 
-            switch ((["links", "contributors", "back", "close"] as const)[r.selection!]) {
+            switch ((["links", "contributors", "back", "close"] as const)[r.selection!]!) {
                 case "links":
                     if (
                         (

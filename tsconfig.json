@@ -31,7 +31,12 @@
     "generateCpuProfile": "profile.cpuprofile",
     // "traceResolution": true,
     "extendedDiagnostics": true,
-    "skipLibCheck": true
+    // "exactOptionalPropertyTypes": true,
+    "noImplicitOverride": true,
+    "noUncheckedIndexedAccess": true,
+    // "diagnostics": true,
+    "skipLibCheck": true,
+    "pretty": true
   },
   "exclude": [ "node_modules" ],
   "include": [ "src" ]

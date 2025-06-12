@@ -412,9 +412,6 @@ namespace exports {
                         public static get useShadersCompatibleBorderParticles(): boolean {
                             return Boolean(world.getDynamicProperty("andexdbWorldBorderSettings:overworld.useShadersCompatibleBorderParticles") ?? false);
                         }
-                        /**
-                         * @deprecated
-                         */
                         public static set useShadersCompatibleBorderParticles(useShadersCompatibleBorderParticles: boolean | undefined) {
                             world.setDynamicProperty(
                                 "andexdbWorldBorderSettings:overworld.useShadersCompatibleBorderParticles",
@@ -662,9 +659,6 @@ namespace exports {
                         public static get useShadersCompatibleBorderParticles(): boolean {
                             return Boolean(world.getDynamicProperty("andexdbWorldBorderSettings:nether.useShadersCompatibleBorderParticles") ?? false);
                         }
-                        /**
-                         * @deprecated
-                         */
                         public static set useShadersCompatibleBorderParticles(useShadersCompatibleBorderParticles: boolean | undefined) {
                             world.setDynamicProperty(
                                 "andexdbWorldBorderSettings:nether.useShadersCompatibleBorderParticles",
@@ -912,9 +906,6 @@ namespace exports {
                         public static get useShadersCompatibleBorderParticles(): boolean {
                             return Boolean(world.getDynamicProperty("andexdbWorldBorderSettings:the_end.useShadersCompatibleBorderParticles") ?? false);
                         }
-                        /**
-                         * @deprecated
-                         */
                         public static set useShadersCompatibleBorderParticles(useShadersCompatibleBorderParticles: boolean | undefined) {
                             world.setDynamicProperty(
                                 "andexdbWorldBorderSettings:the_end.useShadersCompatibleBorderParticles",
@@ -3038,24 +3029,27 @@ namespace exports {
         }
         /**
          * Converts the config object to a JSON-serializable object.
-         * @returns {FilterKey<typeof config, ["prototype", "reset", "applySettings", "toJSON"]>} An object that can be serialized to JSON, containing all the properties of the config object except for the ones with the names "prototype", "reset", "applySettings", and "toJSON", and the ones that are not enumerable.
+         *
+         * @template {object} T The type of the settings category to convert to JSON.
+         * @param {T} [subconfig=this] The subconfig to convert to JSON. If not specified, the entire config will be converted to JSON.
+         * @returns {FilterKey<T, ["prototype", "reset", "applySettings", "toJSON"]>} An object that can be serialized to JSON, containing all the properties of the config object except for the ones with the names "prototype", "reset", "applySettings", and "toJSON", and the ones that are not enumerable.
          */
-        public static toJSON(): FilterKey<typeof config, ["prototype", "reset", "applySettings", "toJSON"]> {
+        public static toJSON<T extends object = typeof config>(subconfig: T = this as T): FilterKey<T, ["prototype", "reset", "applySettings", "toJSON"]> {
             // modules.utils.filterProperties(modules.utils.filterProperties(config, ["addCommaSeparators", "spawnCommandAllowCrossDimensionalTeleport", "allowWatchdogTerminationCrash", "spawnCommandLocation", "allowChatEscapeCodes"], {}), ["toJSON"], {}).antiSpamSystem.antispamEnabled;
             return Object.fromEntries(
                 cullUndefined(
-                    Object.getOwnPropertyNames(this).map((key) => {
-                        const descriptor = Object.getOwnPropertyDescriptor(this, key);
+                    Object.getOwnPropertyNames(subconfig).map((key: string) => {
+                        const descriptor = Object.getOwnPropertyDescriptor(subconfig, key);
                         if (descriptor?.get && descriptor.set) {
                             return [key, descriptor.get()];
                         } else if (descriptor?.get && typeof descriptor.get() === "function" && descriptor.get()?.name?.startsWith("config")) {
-                            return [key, config.toJSON.call(descriptor.get())];
+                            return [key, config.toJSON(descriptor.get())];
                         }
                         // return [key, this[key as keyof typeof config]];
                         return undefined;
                     })
                 )
-            ) as ReturnType<typeof modules.utils.filterProperties<typeof config, ["prototype", "reset", "applySettings", "toJSON"]>>; /* 
+            ); /* 
                 Object.getOwnPropertyNames(config)
                     .filter(
                         (n) =>

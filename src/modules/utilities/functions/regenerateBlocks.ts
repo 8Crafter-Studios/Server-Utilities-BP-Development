@@ -42,9 +42,9 @@ export function regenerateBlocks(
                             blockPattern[key]++;
                         }
                         const mostCommonPattern = Object.keys(blockPattern).reduce((a, b) =>
-                            blockPattern[a] > blockPattern[b] ? a : b
+                            blockPattern[a]! > blockPattern[b]! ? a : b
                         );
-                        const [dx, dy, dz] = mostCommonPattern.split(',').map(Number);
+                        const [dx, dy, dz]: [x: number, y: number, z: number] = mostCommonPattern.split(',').map(Number) as [x: number, y: number, z: number];
                         const patternBlock = dimension.getBlock({x: x + dx, y: y + dy, z: z + dz});
                         if (!patternBlock) continue;
                         dimension.setBlockType({x, y, z}, patternBlock.typeId);

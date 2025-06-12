@@ -468,7 +468,7 @@ export function playerController(sourceEntitya: Entity | executeCommandPlayerW |
         form2.title("Player Controller");
         form2.dropdown("Player Target", String(targetList).split(","), { defaultValueIndex: 0 });
         form2.dropdown("Player Viewer", String(targetList).split(","), { defaultValueIndex: 0 });
-        forceShow(form2, playerList[playerList.findIndex((x) => x == sourceEntity)])
+        forceShow(form2, playerList[playerList.findIndex((x) => x == sourceEntity)]!)
             .then((t) => {
                 if ((t as ModalFormResponse).canceled) return;
                 let [playerTarget, playerViewer] = (t as ModalFormResponse).formValues!;

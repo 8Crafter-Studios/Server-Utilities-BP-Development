@@ -210,7 +210,7 @@ export async function manageEventSubscriptions_event<EventTypeID extends Subscri
                         return 0;
                     }
                 case "entry":
-                    if ((await manageEventSubscriptions_event_subscription(player, displayEntriesB[r.selection! - 6])) === 1) {
+                    if ((await manageEventSubscriptions_event_subscription(player, displayEntriesB[r.selection! - 6]!)) === 1) {
                         currentParameters = { player, pagen: page, maxentriesperpage, search, cachedEntries: displayEntries };
                         continue;
                     } else {
@@ -359,7 +359,7 @@ export async function manageEventSubscriptions_event_subscription<EventTypeID ex
             form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Raw Data", "textures/ui/debug_glyph_color");
             const r = await form.forceShow(player);
             if (r.canceled) return 1 as const;
-            switch ((["move", "settings", "editCode", "toggle", "delete", "back", "close", "refresh", "rawData"] as const)[r.selection!]) {
+            switch ((["move", "settings", "editCode", "toggle", "delete", "back", "close", "refresh", "rawData"] as const)[r.selection!]!) {
                 case "move": {
                     const r = await showActions(
                         player,
@@ -701,11 +701,11 @@ export async function manageEventSubscriptions(sourceEntity: loosePlayerType): P
                                 ] as SubscribedEvent<SubscribedEventTypeID>[]
                             ).length
                     ),
-                    Object.keys(Events.loadedEvents[e]["beforeEvents"]).map(
+                    Object.keys(Events.loadedEvents[e]["afterEvents"]).map(
                         (eB) =>
                             (
-                                (Events.loadedEvents[e]["beforeEvents"] as (typeof Events.loadedEvents)[typeof e]["beforeEvents"])[
-                                    eB as keyof (typeof Events.loadedEvents)[typeof e]["beforeEvents"]
+                                (Events.loadedEvents[e]["afterEvents"] as (typeof Events.loadedEvents)[typeof e]["afterEvents"])[
+                                    eB as keyof (typeof Events.loadedEvents)[typeof e]["afterEvents"]
                                 ] as SubscribedEvent<SubscribedEventTypeID>[]
                             ).length
                     ),
@@ -734,11 +734,11 @@ export async function manageEventSubscriptions(sourceEntity: loosePlayerType): P
             const r = await form.forceShow(player);
             if (r.canceled) return 1 as const;
             switch (
-                (!!eventCategories[r.selection!] ? "category" : undefined) ??
+                (!!eventCategories[r.selection!]! ? "category" : undefined) ??
                 (["back", "close", "refresh", "reloadSubscriptions", "reinitializeSubscriptions", "statistics"] as const)[r.selection! - eventCategories.length]
             ) {
                 case "category":
-                    if ((await manageEventSubscriptions_category_selectBeforeOrAfterEvents(player, eventCategories[r.selection!])) === 1) {
+                    if ((await manageEventSubscriptions_category_selectBeforeOrAfterEvents(player, eventCategories[r.selection!]!)) === 1) {
                         continue;
                     } else {
                         return 0;
@@ -880,7 +880,7 @@ export async function manageEventSubscriptions_category_selectBeforeOrAfterEvent
             form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Refresh", "textures/ui/refresh");
             const r = await form.forceShow(player);
             if (r.canceled) return 1 as const;
-            switch ((["beforeEvents", "afterEvents", "back", "close", "refresh"] as const)[r.selection!]) {
+            switch ((["beforeEvents", "afterEvents", "back", "close", "refresh"] as const)[r.selection!]!) {
                 case "beforeEvents":
                     if ((await manageEventSubscriptions_category(player, category, "beforeEvents")) === 1) {
                         continue;
@@ -964,9 +964,9 @@ export async function manageEventSubscriptions_category<
             form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Refresh", "textures/ui/refresh");
             const r = await form.forceShow(player);
             if (r.canceled) return 1 as const;
-            switch ((!!events[r.selection!] ? "event" : undefined) ?? (["back", "close", "refresh"] as const)[r.selection! - events.length]) {
+            switch ((!!events[r.selection!]! ? "event" : undefined) ?? (["back", "close", "refresh"] as const)[r.selection! - events.length]) {
                 case "event":
-                    if ((await manageEventSubscriptions_event(player, `${category}.${beforeOrAfter}.${events[r.selection!]}` as SubscribedEventTypeID)) === 1) {
+                    if ((await manageEventSubscriptions_event(player, `${category}.${beforeOrAfter}.${events[r.selection!]!}` as SubscribedEventTypeID)) === 1) {
                         continue;
                     } else {
                         return 0;

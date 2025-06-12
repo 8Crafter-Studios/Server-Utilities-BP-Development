@@ -14,10 +14,10 @@ try {
                 for (let index in playerList2) {
                     try {
                         if (
-                            playerList2[index].hasTag("showBlockActionBarDebugInfo") ||
-                            (playerList2[index].isSneaking && playerList2[index].heldItem?.typeId == "andexdb:editor_stick")
+                            playerList2[index]!.hasTag("showBlockActionBarDebugInfo") ||
+                            (playerList2[index]!.isSneaking && playerList2[index]!.heldItem?.typeId == "andexdb:editor_stick")
                         ) {
-                            let block = playerList2[index].getBlockFromViewDirection({
+                            let block = playerList2[index]!.getBlockFromViewDirection({
                                 includeLiquidBlocks: true,
                                 includePassableBlocks: true,
                             })?.block;
@@ -85,15 +85,15 @@ try {
                                           ?.getFluidType()}, §eCustom Color: §r§c${JSON.stringify(block.getComponent("fluid_container")?.fluidColor)}§9}`
                                     : ""
                             }`;
-                            playerList2[index].onScreenDisplay.setActionBar(
+                            playerList2[index]!.onScreenDisplay.setActionBar(
                                 newActionBarText + "\n".repeat(Math.max(0, newActionBarText.split("\n").length - 12))
                             );
                         }
                     } catch (e) {}
                     if (config.chatRanks.showRanksOnPlayerNameTags) {
                         try {
-                            if (!playerList2[index].hasTag("doNotSetNameTag")) {
-                                const player = playerList2[index];
+                            if (!playerList2[index]!.hasTag("doNotSetNameTag")) {
+                                const player = playerList2[index]!;
                                 const playerPersonalSettings = rankNameTagEvaluator_getPlayerPersonalSettings(player);
                                 const msgFormatFromTags = rankNameTagEvaluator_getChatMessageFormatFromPlayerTags(player);
 
@@ -128,7 +128,7 @@ try {
                                 .forEach((p) =>
                                     p.sendMessage(
                                         "§cError while setting " +
-                                            tryget(() => playerList2[index].name) +
+                                            tryget(() => playerList2[index]!.name) +
                                             "'s name tag in rankNameTags_editorStickActionbar_artificialLagMS: " +
                                             e +
                                             e.stack
@@ -137,20 +137,20 @@ try {
                         }
                     }
                     try {
-                        if (playerList2[index].hasTag("isSneaking")) {
+                        if (playerList2[index]!.hasTag("isSneaking")) {
                             try {
-                                playerList2[index].isSneaking = true;
-                                if (playerList2[index].hasTag("scriptDebugger2")) {
-                                    console.warn(playerList2[index].nameTag, playerList2[index].isSneaking);
+                                playerList2[index]!.isSneaking = true;
+                                if (playerList2[index]!.hasTag("scriptDebugger2")) {
+                                    console.warn(playerList2[index]!.nameTag, playerList2[index]!.isSneaking);
                                 }
                             } catch (e) {
-                                if (playerList2[index].hasTag("scriptDebugger")) {
+                                if (playerList2[index]!.hasTag("scriptDebugger")) {
                                     console.error(e, e.stack);
                                 }
                             }
                         }
                     } catch (e) {
-                        if (playerList2[index].hasTag("scriptDebugger")) {
+                        if (playerList2[index]!.hasTag("scriptDebugger")) {
                             console.error(e, e.stack);
                         }
                     }

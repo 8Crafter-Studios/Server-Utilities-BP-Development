@@ -19,7 +19,7 @@ export function coordinatesD(
                 .join(" *")
                 .replaceAll("  ", " ")
                 .trimStart()
-                .split(" ")[0]
+                .split(" ")[0]!
                 .replaceAll(" ", ""),
             coordinateText
                 .split("~")
@@ -30,7 +30,7 @@ export function coordinatesD(
                 .join(" *")
                 .replaceAll("  ", " ")
                 .trimStart()
-                .split(" ")[1]
+                .split(" ")[1]!
                 .replaceAll(" ", ""),
             coordinateText
                 .split("~")
@@ -41,7 +41,7 @@ export function coordinatesD(
                 .join(" *")
                 .replaceAll("  ", " ")
                 .trimStart()
-                .split(" ")[2]
+                .split(" ")[2]!
                 .replaceAll(" ", ""),
             startingPosition,
             rotation

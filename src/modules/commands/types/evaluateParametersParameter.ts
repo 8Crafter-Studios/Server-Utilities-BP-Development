@@ -1,4 +1,4 @@
-import type { evaluateParameters } from "../functions/evaluateParameters";
+import type { evaluateParameters, FlagsParamterFlagKeys as FlagsParameterFlagKeys, flagsParameterFlagKeysList } from "../functions/evaluateParameters";
 
 /**
  * A paramter for the {@link evaluateParameters} function.
@@ -18,6 +18,7 @@ export type objectEvaluateParametersParameter =
            * The type of the parameter.
            */
           type:
+              | "placeholder"
               | "presetText"
               | "number"
               | "boolean"
@@ -165,6 +166,7 @@ export type objectEvaluateParametersParameter =
  * This is for paramter types that are specified by just a string.
  */
 export type stringEvaluateParametersParameter =
+    | "placeholder"
     | "presetText"
     | "number"
     | "boolean"
@@ -189,3 +191,10 @@ export type stringEvaluateParametersParameter =
     | "dimension"
     | `-${string}`
     | `f-${string}`;
+
+/* type FlagsParameterFlagSequence<T extends any[] | readonly any[]> = 
+  T extends readonly [infer Head extends string, ...infer Tail] ? 
+    `${Head}${FlagsParameterFlagSequence<Tail>}` | `${FlagsParameterFlagSequence<Tail>}${Head}` : 
+    '';
+
+type fFlagsParameterFlagSequence = `f-${FlagsParameterFlagSequence<typeof flagsParameterFlagKeysList>}` */

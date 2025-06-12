@@ -30,9 +30,9 @@ export async function moderationMenu_quickMute(sourceEntity: loosePlayerType): P
             form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Refresh", "textures/ui/refresh");
             const r = await form.forceShow(player);
             if (r.canceled) return 1 as const;
-            switch ((!!playerslist[r.selection!] ? "player" : undefined) ?? (["back", "close", "refresh"] as const)[r.selection! - playerslist.length]) {
+            switch ((!!playerslist[r.selection!]! ? "player" : undefined) ?? (["back", "close", "refresh"] as const)[r.selection! - playerslist.length]) {
                 case "player":
-                    return await addMuteOnPlayer(player, playerslist[r.selection!].name);
+                    return await addMuteOnPlayer(player, playerslist[r.selection!]!.name);
                 case "back":
                     return 1;
                 case "close":

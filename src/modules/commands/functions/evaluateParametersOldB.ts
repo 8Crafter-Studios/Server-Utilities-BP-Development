@@ -249,7 +249,7 @@ export function evaluateParametersOldB<
                                         JSON.parse(
                                             paramEval
                                                 .trimStart()
-                                                .split(" ")[0]
+                                                .split(" ")[0]!
                                                 .replace(/^t$/i, "true")
                                                 .replace(/^f$/i, "false")
                                                 .replace(/^true$/i, "true")
@@ -275,7 +275,7 @@ export function evaluateParametersOldB<
                                                 JSON.parse(
                                                     paramEval
                                                         .trimStart()
-                                                        .split(" ")[0]
+                                                        .split(" ")[0]!
                                                         .replace(
                                                             /^t$/i,
                                                             "true"
@@ -312,7 +312,7 @@ export function evaluateParametersOldB<
                                         paramEval =
                                             paramEval
                                                 .trimStart()
-                                                .slice(value?.s?.length + 1) ??
+                                                .slice(value?.s?.length! + 1) ??
                                             "";
                                         try {
                                             argumentsa.push(value?.v);
@@ -342,7 +342,7 @@ export function evaluateParametersOldB<
                                         ].includes(
                                             paramEval
                                                 .trimStart()
-                                                .split(" ")[0]
+                                                .split(" ")[0]!
                                                 .toLowerCase()
                                         )) {
                                             argumentsa.push(undefined);
@@ -356,7 +356,7 @@ export function evaluateParametersOldB<
                                                 paramEval
                                                     .trimStart()
                                                     .slice(
-                                                        value?.s?.length + 1
+                                                        value?.s?.length! + 1
                                                     ) ?? "";
                                             try {
                                                 argumentsa.push(value?.v);
@@ -530,7 +530,7 @@ export function evaluateParametersOldB<
                                                             .trimStart()
                                                             .slice(
                                                                 value?.s
-                                                                    ?.length + 1
+                                                                    ?.length! + 1
                                                             ) ?? "";
                                                     try {
                                                         argumentsa.push(
@@ -589,7 +589,7 @@ export function evaluateParametersOldB<
                                                             paramEval =
                                                                 paramEval.slice(
                                                                     value?.s
-                                                                        ?.length +
+                                                                        ?.length! +
                                                                     1
                                                                 ) ?? "";
                                                             try {
@@ -618,7 +618,7 @@ export function evaluateParametersOldB<
                                                             paramEval =
                                                                 paramEval.slice(
                                                                     value?.s
-                                                                        ?.length +
+                                                                        ?.length! +
                                                                     1
                                                                 ) ?? "";
                                                             try {
@@ -741,9 +741,9 @@ export function evaluateParametersOldB<
                                                                     paramEval =
                                                                         paramEval.slice(
                                                                             paramEval.indexOf(
-                                                                                value
+                                                                                value!
                                                                             ) +
-                                                                            value?.length
+                                                                            value?.length!
                                                                         ) ?? "";
                                                                     try {
                                                                         argumentsa.push(

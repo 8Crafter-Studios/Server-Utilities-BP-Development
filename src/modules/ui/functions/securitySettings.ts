@@ -210,7 +210,7 @@ export async function securitySettings_settingsSelection(sourceEntity: loosePlay
                     ...(securityVariables.ultraSecurityModeEnabled ? (["ultraSecurityModeSettings", "ultraSecurityModeDebug"] as const) : ([] as const)),
                     "back",
                     "close",
-                ] as const)[r.selection!]
+                ] as const)[r.selection!]!
             ) {
                 case "securityMode":
                     if ((await selectSecurityMode(player as Player)) !== 0) {
@@ -320,7 +320,7 @@ export async function securitySettings_playersWithPermissions(sourceEntity: loos
                         "back",
                         "close",
                     ] as const
-                )[r.selection!]
+                )[r.selection!]!
             ) {
                 case "canUseChatCommands":
                     if ((await securitySettings_playersWithPermissions_permission(player, ["canUseChatCommands", true])) === 1) {

@@ -1110,7 +1110,7 @@ else if (!ultraSecurityModeEnabled && securityConfiguratorPackIsActive) {
                 if (i == 100) {
                     return;
                 }
-                if (!!world.getPlayers({ name: owner })[0]) {
+                if (world.getPlayers({ name: owner })[0]) {
                     break;
                 }
                 await waitTick();

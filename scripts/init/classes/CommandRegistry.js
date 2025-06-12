@@ -288,6 +288,10 @@ var exports;
          */
         syntax;
         /**
+         * The documentation on the flags parameters of the command.
+         */
+        flagsDocs;
+        /**
          * The version of the command.
          *
          * @default "1.0.0"
@@ -406,6 +410,7 @@ var exports;
             this.enabled = commandData.enabled ?? true;
             this.aliases = commandData.aliases ?? [];
             this.syntax = commandData.syntax ?? "Syntax Missing";
+            this.flagsDocs = commandData.flagsDocs;
             this.command_version = commandData.command_version ?? "1.0.0";
             this.description = commandData.description ?? "Description Missing";
             Object.defineProperties(this, {
@@ -445,7 +450,7 @@ var exports;
         get settings() {
             return this.type === "unknown" && this.commandSettingsId !== undefined
                 ? undefined
-                : new commandSettings(this.commandSettingsId);
+                : (new RegisteredCommandSettings(this));
         }
         /**
          * The tags required to execute the command.
@@ -766,6 +771,10 @@ var exports;
          */
         static getCommand(commandName, options = {}) {
             /**
+             * The text matched when finding the command.
+             */
+            let currentCommandName = commandName;
+            /**
              * The direct match for the command, if it exists.
              *
              * @type {RegisteredCommand<CommandTypeBase> | undefined}
@@ -799,7 +808,16 @@ var exports;
                     throw new TypeError(`Invalid type filter, the valid type filters are built-in and custom.`);
             }
             if (directMatch) {
-                return directMatch;
+                currentCommandName =
+                    directMatch.accessType === "named"
+                        ? directMatch.customPrefix !== undefined || commandName.startsWith(config.chatCommandPrefix)
+                            ? commandName
+                            : config.chatCommandPrefix + commandName
+                        : commandName;
+                return {
+                    command: directMatch,
+                    currentCommandName: currentCommandName,
+                };
             }
             /**
              * The command name without the prefix.
@@ -813,12 +831,18 @@ var exports;
             if (options.includeAliases !== false) {
                 for (const commandAlias of this[`namedAccess${options.typeFilter === "built-in" ? "BuiltIn" : options.typeFilter === "custom" ? "Custom" : ""}CommandAliases`].get(commandNameWithoutPrefix) ?? []) {
                     if (commandAlias.command.enabled) {
-                        return commandAlias.command;
+                        return {
+                            command: commandAlias.command,
+                            currentCommandName: config.chatCommandPrefix + commandAlias.alias.commandName,
+                        };
                     }
                 }
                 for (const commandAlias of this[`prefixedAccess${options.typeFilter === "built-in" ? "BuiltIn" : options.typeFilter === "custom" ? "Custom" : ""}CommandAliases`].get(commandName) ?? []) {
                     if (commandAlias.command.enabled) {
-                        return commandAlias.command;
+                        return {
+                            command: commandAlias.command,
+                            currentCommandName: commandAlias.alias.prefix + commandAlias.alias.commandName
+                        };
                     }
                 }
             }
@@ -837,7 +861,10 @@ var exports;
                 if (commands[0].regexp.test(commandNameWithoutPrefix)) {
                     const match = commands?.find((command) => command.enabled);
                     if (match) {
-                        return match;
+                        return {
+                            command: match,
+                            currentCommandName: config.chatCommandPrefix + commandNameWithoutPrefix,
+                        };
                     }
                 }
             }
@@ -847,7 +874,10 @@ var exports;
                     if (commandAliases[0].alias.regexp.test(commandNameWithoutPrefix)) {
                         const match = commandAliases?.find((commandAlias) => commandAlias.command.enabled);
                         if (match) {
-                            return match.command;
+                            return {
+                                command: match.command,
+                                currentCommandName: config.chatCommandPrefix + commandNameWithoutPrefix,
+                            };
                         }
                     }
                 }

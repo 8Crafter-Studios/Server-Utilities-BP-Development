@@ -100,9 +100,9 @@ export function* generateMinecraftSemiSphereBG(
         generateMinecraftSphereBGProgress[generateMinecraftSphereBGProgressId].done = true;
         return;
     } catch (e) {
-        generateMinecraftSphereBGProgress[generateMinecraftSphereBGProgressId].endTick = system.currentTick;
-        generateMinecraftSphereBGProgress[generateMinecraftSphereBGProgressId].endTime = Date.now();
-        generateMinecraftSphereBGProgress[generateMinecraftSphereBGProgressId].done = true;
+        generateMinecraftSphereBGProgress[generateMinecraftSphereBGProgressId]!.endTick = system.currentTick;
+        generateMinecraftSphereBGProgress[generateMinecraftSphereBGProgressId]!.endTime = Date.now();
+        generateMinecraftSphereBGProgress[generateMinecraftSphereBGProgressId]!.done = true;
         throw e;
     }
 }

@@ -17,10 +17,10 @@ export async function editorStick(sourceEntitya: Entity | executeCommandPlayerW 
     let allCoordinates = [];
     if (message.startsWith("coordinates:") && message.includes("|") && message.slice(12).split("|").length == 4) {
         allCoordinates = message.slice(12).split("|");
-        block2 = world.getDimension(allCoordinates[0]).getBlock({
-            x: allCoordinates[1].toNumber()!,
-            y: allCoordinates[2].toNumber()!,
-            z: allCoordinates[3].toNumber()!,
+        block2 = world.getDimension(allCoordinates[0]!).getBlock({
+            x: allCoordinates[1]!.toNumber()!,
+            y: allCoordinates[2]!.toNumber()!,
+            z: allCoordinates[3]!.toNumber()!,
         });
     }
     if (!block2) {
@@ -106,7 +106,7 @@ export async function editorStick(sourceEntitya: Entity | executeCommandPlayerW 
     form.toggle("setProperty Enabled", { defaultValue: false }); /*
     try {console.warn(block.block.permutation.getAllStates()) } catch(e){console.error(e, e.stack);}
     try {console.warn(block.block.permutation.getAllStates()[0]) } catch(e){console.error(e, e.stack);}
-    try {console.warn(block.block.permutation.getAllStates()[0][0]) } catch(e){console.error(e, e.stack);}*/
+    try {console.warn(block.block.permutation.getAllStates()[0]![0]) } catch(e){console.error(e, e.stack);}*/
 
     /*form.dropdown("Block Permutation To Set", block.getTags())*/ /*
     form.slider("Selected Slot", 0, 56, 1)*/
@@ -253,7 +253,7 @@ export async function editorStick(sourceEntitya: Entity | executeCommandPlayerW 
     }
     form.toggle("setSignIsWaxed", { defaultValue: block2.getComponent("sign")?.isWaxed });
 
-    forceShow(form, playerList[playerList.findIndex((x) => x == sourceEntity)])
+    forceShow(form, playerList[playerList.findIndex((x) => x == sourceEntity)]!)
         .then((ro) => {
             let r = ro as ModalFormResponse;
             if (r.canceled) return;
@@ -327,10 +327,10 @@ clearVelocity*/,
                         .join()
                 ) {
                     block2.getComponent("fluid_container")!.fluidColor = {
-                        red: fluidContainerColor.split(",")[0].toNumber()!,
-                        green: fluidContainerColor.split(",")[1].toNumber()!,
-                        blue: fluidContainerColor.split(",")[2].toNumber()!,
-                        alpha: fluidContainerColor.split(",")[3].toNumber()!,
+                        red: fluidContainerColor.split(",")[0]!.toNumber()!,
+                        green: fluidContainerColor.split(",")[1]!.toNumber()!,
+                        blue: fluidContainerColor.split(",")[2]!.toNumber()!,
+                        alpha: fluidContainerColor.split(",")[3]!.toNumber()!,
                     };
                 }
                 if (fluidContainerFillLevel != block2.getComponent("fluid_container")!.fillLevel) {
@@ -454,7 +454,7 @@ try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(bl
                         try {
                             block2.setPermutation(
                                 BlockPermutation.resolve(block2.typeId, {
-                                    [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0],
+                                    [String(blockPropertyIdentifier).split(", ")[0]!]: blockPropertyValueArray[0],
                                 }) /*block2.permutation.clone().withState(String(blockPropertyIdentifier), blockPropertyValue2).clone().getAllStates()*/
                             );
                         } catch (e) {
@@ -465,8 +465,8 @@ try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(bl
                         try {
                             block2.setPermutation(
                                 BlockPermutation.resolve(block2.typeId, {
-                                    [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0],
-                                    [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1],
+                                    [String(blockPropertyIdentifier).split(", ")[0]!]: blockPropertyValueArray[0],
+                                    [String(blockPropertyIdentifier).split(", ")[1]!]: blockPropertyValueArray[1],
                                 })
                             );
                         } catch (e) {
@@ -477,9 +477,9 @@ try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(bl
                         try {
                             block2.setPermutation(
                                 BlockPermutation.resolve(block2.typeId, {
-                                    [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0],
-                                    [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1],
-                                    [String(blockPropertyIdentifier).split(", ")[2]]: blockPropertyValueArray[2],
+                                    [String(blockPropertyIdentifier).split(", ")[0]!]: blockPropertyValueArray[0],
+                                    [String(blockPropertyIdentifier).split(", ")[1]!]: blockPropertyValueArray[1],
+                                    [String(blockPropertyIdentifier).split(", ")[2]!]: blockPropertyValueArray[2],
                                 })
                             );
                         } catch (e) {
@@ -490,10 +490,10 @@ try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(bl
                         try {
                             block2.setPermutation(
                                 BlockPermutation.resolve(block2.typeId, {
-                                    [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0],
-                                    [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1],
-                                    [String(blockPropertyIdentifier).split(", ")[2]]: blockPropertyValueArray[2],
-                                    [String(blockPropertyIdentifier).split(", ")[3]]: blockPropertyValueArray[3],
+                                    [String(blockPropertyIdentifier).split(", ")[0]!]: blockPropertyValueArray[0],
+                                    [String(blockPropertyIdentifier).split(", ")[1]!]: blockPropertyValueArray[1],
+                                    [String(blockPropertyIdentifier).split(", ")[2]!]: blockPropertyValueArray[2],
+                                    [String(blockPropertyIdentifier).split(", ")[3]!]: blockPropertyValueArray[3],
                                 })
                             );
                         } catch (e) {
@@ -504,11 +504,11 @@ try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(bl
                         try {
                             block2.setPermutation(
                                 BlockPermutation.resolve(block2.typeId, {
-                                    [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0],
-                                    [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1],
-                                    [String(blockPropertyIdentifier).split(", ")[2]]: blockPropertyValueArray[2],
-                                    [String(blockPropertyIdentifier).split(", ")[3]]: blockPropertyValueArray[3],
-                                    [String(blockPropertyIdentifier).split(", ")[4]]: blockPropertyValueArray[4],
+                                    [String(blockPropertyIdentifier).split(", ")[0]!]: blockPropertyValueArray[0],
+                                    [String(blockPropertyIdentifier).split(", ")[1]!]: blockPropertyValueArray[1],
+                                    [String(blockPropertyIdentifier).split(", ")[2]!]: blockPropertyValueArray[2],
+                                    [String(blockPropertyIdentifier).split(", ")[3]!]: blockPropertyValueArray[3],
+                                    [String(blockPropertyIdentifier).split(", ")[4]!]: blockPropertyValueArray[4],
                                 })
                             );
                         } catch (e) {
@@ -519,12 +519,12 @@ try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(bl
                         try {
                             block2.setPermutation(
                                 BlockPermutation.resolve(block2.typeId, {
-                                    [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0],
-                                    [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1],
-                                    [String(blockPropertyIdentifier).split(", ")[2]]: blockPropertyValueArray[2],
-                                    [String(blockPropertyIdentifier).split(", ")[3]]: blockPropertyValueArray[3],
-                                    [String(blockPropertyIdentifier).split(", ")[4]]: blockPropertyValueArray[4],
-                                    [String(blockPropertyIdentifier).split(", ")[5]]: blockPropertyValueArray[5],
+                                    [String(blockPropertyIdentifier).split(", ")[0]!]: blockPropertyValueArray[0],
+                                    [String(blockPropertyIdentifier).split(", ")[1]!]: blockPropertyValueArray[1],
+                                    [String(blockPropertyIdentifier).split(", ")[2]!]: blockPropertyValueArray[2],
+                                    [String(blockPropertyIdentifier).split(", ")[3]!]: blockPropertyValueArray[3],
+                                    [String(blockPropertyIdentifier).split(", ")[4]!]: blockPropertyValueArray[4],
+                                    [String(blockPropertyIdentifier).split(", ")[5]!]: blockPropertyValueArray[5],
                                 })
                             );
                         } catch (e) {
@@ -535,13 +535,13 @@ try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(bl
                         try {
                             block2.setPermutation(
                                 BlockPermutation.resolve(block2.typeId, {
-                                    [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0],
-                                    [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1],
-                                    [String(blockPropertyIdentifier).split(", ")[2]]: blockPropertyValueArray[2],
-                                    [String(blockPropertyIdentifier).split(", ")[3]]: blockPropertyValueArray[3],
-                                    [String(blockPropertyIdentifier).split(", ")[4]]: blockPropertyValueArray[4],
-                                    [String(blockPropertyIdentifier).split(", ")[5]]: blockPropertyValueArray[5],
-                                    [String(blockPropertyIdentifier).split(", ")[6]]: blockPropertyValueArray[6],
+                                    [String(blockPropertyIdentifier).split(", ")[0]!]: blockPropertyValueArray[0],
+                                    [String(blockPropertyIdentifier).split(", ")[1]!]: blockPropertyValueArray[1],
+                                    [String(blockPropertyIdentifier).split(", ")[2]!]: blockPropertyValueArray[2],
+                                    [String(blockPropertyIdentifier).split(", ")[3]!]: blockPropertyValueArray[3],
+                                    [String(blockPropertyIdentifier).split(", ")[4]!]: blockPropertyValueArray[4],
+                                    [String(blockPropertyIdentifier).split(", ")[5]!]: blockPropertyValueArray[5],
+                                    [String(blockPropertyIdentifier).split(", ")[6]!]: blockPropertyValueArray[6],
                                 })
                             );
                         } catch (e) {
@@ -552,14 +552,14 @@ try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(bl
                         try {
                             block2.setPermutation(
                                 BlockPermutation.resolve(block2.typeId, {
-                                    [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0],
-                                    [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1],
-                                    [String(blockPropertyIdentifier).split(", ")[2]]: blockPropertyValueArray[2],
-                                    [String(blockPropertyIdentifier).split(", ")[3]]: blockPropertyValueArray[3],
-                                    [String(blockPropertyIdentifier).split(", ")[4]]: blockPropertyValueArray[4],
-                                    [String(blockPropertyIdentifier).split(", ")[5]]: blockPropertyValueArray[5],
-                                    [String(blockPropertyIdentifier).split(", ")[6]]: blockPropertyValueArray[6],
-                                    [String(blockPropertyIdentifier).split(", ")[7]]: blockPropertyValueArray[7],
+                                    [String(blockPropertyIdentifier).split(", ")[0]!]: blockPropertyValueArray[0],
+                                    [String(blockPropertyIdentifier).split(", ")[1]!]: blockPropertyValueArray[1],
+                                    [String(blockPropertyIdentifier).split(", ")[2]!]: blockPropertyValueArray[2],
+                                    [String(blockPropertyIdentifier).split(", ")[3]!]: blockPropertyValueArray[3],
+                                    [String(blockPropertyIdentifier).split(", ")[4]!]: blockPropertyValueArray[4],
+                                    [String(blockPropertyIdentifier).split(", ")[5]!]: blockPropertyValueArray[5],
+                                    [String(blockPropertyIdentifier).split(", ")[6]!]: blockPropertyValueArray[6],
+                                    [String(blockPropertyIdentifier).split(", ")[7]!]: blockPropertyValueArray[7],
                                 })
                             );
                         } catch (e) {
@@ -570,15 +570,15 @@ try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(bl
                         try {
                             block2.setPermutation(
                                 BlockPermutation.resolve(block2.typeId, {
-                                    [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0],
-                                    [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1],
-                                    [String(blockPropertyIdentifier).split(", ")[2]]: blockPropertyValueArray[2],
-                                    [String(blockPropertyIdentifier).split(", ")[3]]: blockPropertyValueArray[3],
-                                    [String(blockPropertyIdentifier).split(", ")[4]]: blockPropertyValueArray[4],
-                                    [String(blockPropertyIdentifier).split(", ")[5]]: blockPropertyValueArray[5],
-                                    [String(blockPropertyIdentifier).split(", ")[6]]: blockPropertyValueArray[6],
-                                    [String(blockPropertyIdentifier).split(", ")[7]]: blockPropertyValueArray[7],
-                                    [String(blockPropertyIdentifier).split(", ")[8]]: blockPropertyValueArray[8],
+                                    [String(blockPropertyIdentifier).split(", ")[0]!]: blockPropertyValueArray[0],
+                                    [String(blockPropertyIdentifier).split(", ")[1]!]: blockPropertyValueArray[1],
+                                    [String(blockPropertyIdentifier).split(", ")[2]!]: blockPropertyValueArray[2],
+                                    [String(blockPropertyIdentifier).split(", ")[3]!]: blockPropertyValueArray[3],
+                                    [String(blockPropertyIdentifier).split(", ")[4]!]: blockPropertyValueArray[4],
+                                    [String(blockPropertyIdentifier).split(", ")[5]!]: blockPropertyValueArray[5],
+                                    [String(blockPropertyIdentifier).split(", ")[6]!]: blockPropertyValueArray[6],
+                                    [String(blockPropertyIdentifier).split(", ")[7]!]: blockPropertyValueArray[7],
+                                    [String(blockPropertyIdentifier).split(", ")[8]!]: blockPropertyValueArray[8],
                                 })
                             );
                         } catch (e) {
@@ -589,16 +589,16 @@ try { block2.setPermutation(BlockPermutation.resolve(block2.typeId, { [String(bl
                         try {
                             block2.setPermutation(
                                 BlockPermutation.resolve(block2.typeId, {
-                                    [String(blockPropertyIdentifier).split(", ")[0]]: blockPropertyValueArray[0],
-                                    [String(blockPropertyIdentifier).split(", ")[1]]: blockPropertyValueArray[1],
-                                    [String(blockPropertyIdentifier).split(", ")[2]]: blockPropertyValueArray[2],
-                                    [String(blockPropertyIdentifier).split(", ")[3]]: blockPropertyValueArray[3],
-                                    [String(blockPropertyIdentifier).split(", ")[4]]: blockPropertyValueArray[4],
-                                    [String(blockPropertyIdentifier).split(", ")[5]]: blockPropertyValueArray[5],
-                                    [String(blockPropertyIdentifier).split(", ")[6]]: blockPropertyValueArray[6],
-                                    [String(blockPropertyIdentifier).split(", ")[7]]: blockPropertyValueArray[7],
-                                    [String(blockPropertyIdentifier).split(", ")[8]]: blockPropertyValueArray[8],
-                                    [String(blockPropertyIdentifier).split(", ")[9]]: blockPropertyValueArray[9],
+                                    [String(blockPropertyIdentifier).split(", ")[0]!]: blockPropertyValueArray[0],
+                                    [String(blockPropertyIdentifier).split(", ")[1]!]: blockPropertyValueArray[1],
+                                    [String(blockPropertyIdentifier).split(", ")[2]!]: blockPropertyValueArray[2],
+                                    [String(blockPropertyIdentifier).split(", ")[3]!]: blockPropertyValueArray[3],
+                                    [String(blockPropertyIdentifier).split(", ")[4]!]: blockPropertyValueArray[4],
+                                    [String(blockPropertyIdentifier).split(", ")[5]!]: blockPropertyValueArray[5],
+                                    [String(blockPropertyIdentifier).split(", ")[6]!]: blockPropertyValueArray[6],
+                                    [String(blockPropertyIdentifier).split(", ")[7]!]: blockPropertyValueArray[7],
+                                    [String(blockPropertyIdentifier).split(", ")[8]!]: blockPropertyValueArray[8],
+                                    [String(blockPropertyIdentifier).split(", ")[9]!]: blockPropertyValueArray[9],
                                 })
                             );
                         } catch (e) {

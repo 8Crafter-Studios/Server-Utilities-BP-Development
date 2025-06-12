@@ -1,3 +1,4 @@
+import { Player } from "@minecraft/server";
 import { Block, BlockPermutation, BlockType, BlockTypes } from "@minecraft/server";
 
 export const knownContainerTypes = [
@@ -58,9 +59,9 @@ export const customMaskGroupPresets = {
      * Plant blocks.
      *
      * It gets all block types that include `leaves` or `sapling` anywhere in their ID.
-     * 
+     *
      * It also includes the following preset values:
-     * 
+     *
      * - `tag:log`
      * - `tag:plant`
      * - `short_grass`
@@ -91,22 +92,32 @@ export const customMaskGroupPresets = {
             "tag:plant",
             "short_grass",
             "tall_grass",
+            "fern",
+            "large_fern",
+            "dead_bush",
             "vine",
             "dandelion",
             "allium",
+            "poppy",
+            "cactus",
+            "cactus_flower",
+            "short_dry_grass",
+            "tall_dry_grass",
             "brown_mushroom_block",
             "red_mushroom_block",
             "mushroom_stem",
             "crimson_roots",
             "warped_roots",
+            "melon_block",
+            "pumpkin",
             "bee_nest", // TO-DO
         ]),
     ],
     /**
      * All types of ores.
-     * 
+     *
      * It gets all block types that include `ore` anywhere in their ID.
-     * 
+     *
      * It also includes `ancient_debris`.
      */
     "preset:ores": [
@@ -119,7 +130,7 @@ export const customMaskGroupPresets = {
     ],
     /**
      * All types of ore blocks.
-     * 
+     *
      * It includes the following preset values:
      * - `coal_block`
      * - `copper_block`
@@ -199,7 +210,7 @@ export const customMaskGroupPresets = {
 export interface BlockMaskFilter {
     /**
      * The {@link Block.prototype.typeId block ID} or filter type.
-     * 
+     *
      * Filter type examples:
      * - `minecraft:example_block` - A block ID ({@link Block.prototype.typeId}).
      * - `isAir` - Air ({@link Block.prototype.isAir}).
@@ -219,7 +230,7 @@ export interface BlockMaskFilter {
     states?: { [id: string]: string | number | boolean };
     /**
      * The raw string representation of the block mask filter, with the block states formatted as JSON.
-     * 
+     *
      * @example
      * ```mccmd
      * minecraft:example_block{"facing":"west","fill_level":5,"top_slot_bit":true}
@@ -228,7 +239,7 @@ export interface BlockMaskFilter {
     get raw(): string;
     /**
      * The raw string representation of the block mask filter, with the blocks states formatted like vanilla block states.
-     * 
+     *
      * @example
      * ```mccmd
      * minecraft:example_block["facing"="west","fill_level"=5,"top_slot_bit"=true]
@@ -237,9 +248,9 @@ export interface BlockMaskFilter {
     get rawsb(): string;
     /**
      * The raw string representation of the block mask filter, without the block states.
-     * 
+     *
      * It basically just returns the block ID or filter type.
-     * 
+     *
      * @example
      * ```mccmd
      * minecraft:example_block
@@ -250,9 +261,9 @@ export interface BlockMaskFilter {
 
 /**
  * A class that represents a block mask.
- * 
+ *
  * Block masks are used to filter blocks in a world.
- * 
+ *
  * Many things use them, such as the spawn protection system, and many WorldEdit commands.
  */
 export class BlockMask {
@@ -286,9 +297,7 @@ export class BlockMask {
     get blocks(): BlockMaskFilter[] {
         return this.#blocksList;
     }
-    set blocks(
-        blocks: Omit<BlockMaskFilter, "raw" | "rawsb" | "rawns">[]
-    ) {
+    set blocks(blocks: Omit<BlockMaskFilter, "raw" | "rawsb" | "rawns">[]) {
         this.#blocksList = blocks.map((v) => ({
             type: v.type,
             states: v.states,
@@ -326,8 +335,8 @@ export class BlockMask {
         return this.#blockTypeIds;
     }
     /**
-     * The raw string representation of the block mask. 
-     * 
+     * The raw string representation of the block mask.
+     *
      * @example
      * ```mccmd
      * e:preset:liquid,minecraft:example_block["facing"="west","fill_level"=5,"top_slot_bit"=true],tag:minecraft:example_tag
@@ -338,9 +347,9 @@ export class BlockMask {
     }
     /**
      * Converts the block mask to a string.
-     * 
+     *
      * It returns the same value as {@link BlockMask.prototype.raw}.
-     * 
+     *
      * @returns {string} The raw string representation of the block mask.
      */
     toString(): string {
@@ -348,9 +357,9 @@ export class BlockMask {
     }
     /**
      * Evaluates the block IDs and filters types in the block mask.
-     * 
+     *
      * This method does the following things:
-     * 
+     *
      * - Removes any filters that have a block ID of "none" or "any".
      * - Converts any filter that is missing its `raw`, `rawsb`, or `rawns` getter to a {@link BlockMaskFilter} that does have the getters.
      */
@@ -392,10 +401,7 @@ export class BlockMask {
      * @param {"include" | "exclude"} [type = "include"] The type of the block mask.
      * @returns A new block mask.
      */
-    constructor(
-        blocks: Omit<BlockMaskFilter, "raw" | "rawsb" | "rawns">[] = [],
-        type: "include" | "exclude" = "include",
-    ) {
+    constructor(blocks: Omit<BlockMaskFilter, "raw" | "rawsb" | "rawns">[] = [], type: "include" | "exclude" = "include") {
         this.#blocksList = blocks.map((v) => ({
             type: v.type,
             states: v.states,
@@ -426,9 +432,7 @@ export class BlockMask {
      * @param {...Omit<BlockMaskFilter, "raw" | "rawsb" | "rawns">[]} blocks The filters to push to the block mask.
      * @returns {number} The new amount of filters in the block mask.
      */
-    push(
-        ...blocks: Omit<BlockMaskFilter, "raw" | "rawsb" | "rawns">[]
-    ): number {
+    push(...blocks: Omit<BlockMaskFilter, "raw" | "rawsb" | "rawns">[]): number {
         this.#hasStates = this.#hasStates || !!blocks.find((v) => !!v.states);
         [...new Set((this.#blockTypeIds = [...this.#blocksList, ...blocks].map((v) => v.type)))];
         return this.#blocksList.push(
@@ -954,11 +958,11 @@ export class BlockMask {
      * @param {Record<string, boolean | number | string>} states The states to test.
      * @param {Record<string, boolean | number | string>} statesMask The states to test against.
      * @returns {boolean} True if the states in the first parameter extend the states in the second parameter, false otherwise.
-     * 
+     *
      * @example
      * ```typescript
      * const BlockMask = modules.cmds.BlockMask;
-     * 
+     *
      * const states = {
      *   "foo": true,
      *   "bar": false,
@@ -970,11 +974,11 @@ export class BlockMask {
      * const result = BlockMask.testForStatesMatch(states, statesMask);
      * console.log(result); // false
      * ```
-     * 
-     * @example 
+     *
+     * @example
      * ```typescript
      * const BlockMask = modules.cmds.BlockMask;
-     * 
+     *
      * const states = {
      *   "foo": true,
      *   "bar": false,
@@ -985,11 +989,11 @@ export class BlockMask {
      * const result = BlockMask.testForStatesMatch(states, statesMask);
      * console.log(result); // true
      * ```
-     * 
+     *
      * @example
      * ```typescript
      * const BlockMask = modules.cmds.BlockMask;
-     * 
+     *
      * const states = {
      *   "foo": true,
      *   "bar": false,
@@ -1130,7 +1134,7 @@ export class BlockMask {
                               )
                           )
                         : v,
-                        modeOverride ?? v.mode
+                    modeOverride ?? v.mode
                 )
         );
     }
@@ -1142,7 +1146,11 @@ export class BlockMask {
      * @param {"include" | "exclude"} [modeOverride] Override the mode of the block mask. If not provided, the mode will be determined based on the string. Only applies to the block masks, the raw strings are not affected.
      * @returns {{ raw: string[] | null; parsed: BlockMask[] }} An object containing the raw strings and the block masks extracted from the string.
      */
-    static extractAllWRaw(str: string, extraIdParsingEnabled: boolean = true, modeOverride?: "include" | "exclude"): { raw: string[] | null; parsed: BlockMask[] } {
+    static extractAllWRaw(
+        str: string,
+        extraIdParsingEnabled: boolean = true,
+        modeOverride?: "include" | "exclude"
+    ): { raw: string[] | null; parsed: BlockMask[] } {
         return {
             raw: str.match(
                 /(?<=\s|^)([ie]:)?((?:[\"\'])?(?:[a-zA-Z0-9_\-\.]+:(?:[a-zA-Z0-9_\-\.]+:)?)?[a-zA-Z0-9_\-\.]+(?:[\"\'])?(?:[\[\{](?:[^\]\}]*)[\]\}])?(?=[,\s]|$))(,(?:[\"\'])?(?:[a-zA-Z0-9_\-\.]+:(?:[a-zA-Z0-9_\-\.]+:)?)?[a-zA-Z0-9_\-\.]+(?:[\"\'])?(?:[\[\{](?:[^\]\}]*)[\]\}])?)*/g
@@ -1164,14 +1172,14 @@ export class BlockMask {
                                   )
                               )
                             : v,
-                            modeOverride ?? v.mode
+                        modeOverride ?? v.mode
                     )
             ),
         };
     }
 }
 
-function extractCustomMaskType(str: string): Omit<BlockMaskFilter, "raw" | "rawsb" | "rawns">[] & { mode: "include" | "exclude"; rawMatch: string; } {
+function extractCustomMaskType(str: string): Omit<BlockMaskFilter, "raw" | "rawsb" | "rawns">[] & { mode: "include" | "exclude"; rawMatch: string } {
     const maskTypes = [] as unknown as {
         type: string;
         states?: Record<string, string | number | boolean>;
@@ -1196,7 +1204,7 @@ function extractCustomMaskType(str: string): Omit<BlockMaskFilter, "raw" | "raws
             // Extract states if present
             const statesMatch = type.match(/[\[\{]([^\]\}]*)[\]\}]/);
             if (!!statesMatch) {
-                const statesStr = statesMatch[1];
+                const statesStr = statesMatch[1]!;
                 try {
                     states = JSON.parse(statesMatch[0].replace(/'/g, '"'));
                 } catch (error) {
@@ -1205,8 +1213,8 @@ function extractCustomMaskType(str: string): Omit<BlockMaskFilter, "raw" | "raws
                     const keyValuePairs = statesStr.split(",");
                     keyValuePairs.forEach((pair) => {
                         const keyValue = pair.trim().split("=");
-                        const key = keyValue[0].trim().slice(1, -1);
-                        let value = keyValue[1].trim() as any;
+                        const key = keyValue[0]!.trim().slice(1, -1);
+                        let value = keyValue[1]!.trim() as any;
                         // Convert value to number or boolean if possible
                         if (!isNaN(value)) {
                             value = parseFloat(value);
@@ -1225,7 +1233,7 @@ function extractCustomMaskType(str: string): Omit<BlockMaskFilter, "raw" | "raws
             // Extract chance if present
             const stringMatch = type.match(/^["']([^"]+)["']$/);
             if (!!stringMatch) {
-                type = stringMatch[1].trim() /*.escapeCharactersB()*/;
+                type = stringMatch[1]!.trim() /*.escapeCharactersB()*/;
             }
 
             maskTypes.push({
@@ -1240,7 +1248,7 @@ function extractCustomMaskType(str: string): Omit<BlockMaskFilter, "raw" | "raws
     }[] & { mode: "include" | "exclude"; rawMatch: string };
 }
 
-function extractCustomMaskTypes(str: string): (Omit<BlockMaskFilter, "raw" | "rawsb" | "rawns">[] & { mode: "include" | "exclude"; rawMatch: string; })[] {
+function extractCustomMaskTypes(str: string): (Omit<BlockMaskFilter, "raw" | "rawsb" | "rawns">[] & { mode: "include" | "exclude"; rawMatch: string })[] {
     const masks = [] as ({
         type: string;
         states?: Record<string, string | number | boolean>;
@@ -1270,7 +1278,7 @@ function extractCustomMaskTypes(str: string): (Omit<BlockMaskFilter, "raw" | "ra
                 // Extract states if present
                 const statesMatch = type.match(/[\[\{]([^\]\}]*)[\]\}]/);
                 if (!!statesMatch) {
-                    const statesStr = statesMatch[1];
+                    const statesStr = statesMatch[1]!;
                     try {
                         states = JSON.parse(statesMatch[0].replace(/'/g, '"'));
                     } catch (error) {
@@ -1279,8 +1287,8 @@ function extractCustomMaskTypes(str: string): (Omit<BlockMaskFilter, "raw" | "ra
                         const keyValuePairs = statesStr.split(",");
                         keyValuePairs.forEach((pair) => {
                             const keyValue = pair.trim().split("=");
-                            const key = keyValue[0].trim().slice(1, -1);
-                            let value = keyValue[1].trim() as any;
+                            const key = keyValue[0]!.trim().slice(1, -1);
+                            let value = keyValue[1]!.trim() as any;
                             // Convert value to number or boolean if possible
                             if (!isNaN(value)) {
                                 value = parseFloat(value);
@@ -1299,7 +1307,7 @@ function extractCustomMaskTypes(str: string): (Omit<BlockMaskFilter, "raw" | "ra
                 // Extract chance if present
                 const stringMatch = type.match(/^["']([^"]+)["']$/);
                 if (!!stringMatch) {
-                    type = stringMatch[1].trim() /*.escapeCharactersB()*/;
+                    type = stringMatch[1]!.trim() /*.escapeCharactersB()*/;
                 }
 
                 maskTypes.push({

@@ -185,8 +185,8 @@ export async function manageMutes(
                 case "entry":
                     if (
                         (await manageMute(player, [
-                            displayEntriesB[r.selection! - 6][0],
-                            ModerationActions.getMuteData(displayEntriesB[r.selection! - 6][0])!,
+                            displayEntriesB[r.selection! - 6]![0],
+                            ModerationActions.getMuteData(displayEntriesB[r.selection! - 6]![0])!,
                         ])) === 1
                     ) {
                         currentParameters = { player, pagen: page, maxentriesperpage, search, cachedEntries: undefined };
@@ -263,7 +263,7 @@ export async function manageMute(sourceEntity: loosePlayerType, mute: [playerNam
             form.button(customFormUICodes.action.buttons.positions.title_bar_only + "Close", "textures/ui/crossout");
             const r = await form.forceShow(player);
             if (r.canceled) return 1 as const;
-            switch ((["unmute", "back", "close"] as const)[r.selection!]) {
+            switch ((["unmute", "back", "close"] as const)[r.selection!]!) {
                 case "unmute":
                     switch (await unmutePlayer(player, mute[0])) {
                         case 0:
@@ -316,7 +316,7 @@ export async function unmutePlayer(sourceEntity: loosePlayerType, playerName: st
         }
         const r = await showMessage(player, "Are you sure?", `Are you sure you want to unmute ${playerName}?`, "Cancel", "Unmute");
         if (r.canceled) return 1 as const;
-        switch ((["cancel", "unmute"] as const)[r.selection!]) {
+        switch ((["cancel", "unmute"] as const)[r.selection!]!) {
             case "cancel": {
                 return (
                     (await showMessage(player, "Unmute Canceled", `The unmute of ${playerName} has been sucessfully canceled.`, "Back", "Close")).selection !==

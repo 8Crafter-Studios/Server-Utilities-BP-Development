@@ -78,14 +78,12 @@ subscribedEvents.beforePlayerPlaceBlock =
                     ) ?? false) == false)) */) {
             event.cancel = true;
         } else {
-            const borderSettings = Object.fromEntries(
-                Object.entries(
+            const borderSettings = config.toJSON(
                     config.worldBorder[dimensionse[dimensionsd.indexOf(
                         event.dimension.id as "minecraft:overworld" |
                         "minecraft:nether" |
                         "minecraft:the_end"
-                    )]]
-                )
+                    )]!]
             ) as typeof config.worldBorder.overworld;
             if (borderSettings.enabled &&
                 borderSettings.preventWorldInteractionOutsideBorder) {

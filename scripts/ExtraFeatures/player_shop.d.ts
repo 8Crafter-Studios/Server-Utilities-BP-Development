@@ -153,10 +153,10 @@ export declare class PlayerShop {
     static openPublicShopsSelector(sourceEntity: loosePlayerType, showBackButton?: boolean): Promise<0 | 1>;
 }
 export declare class PlayerShopManager {
-    static playerShopItemTextureHints: string[];
-    static playerShopPageTextureHints: string[];
-    static get playerShopItemTextureHint(): string;
-    static get playerShopPageTextureHint(): string;
+    static playerShopItemTextureHints: ["textures/items/stick", "textures/blocks/gravel", "textures/items/diamond_pickaxe", "textures/blocks/reactor_core_stage_0"];
+    static playerShopPageTextureHints: ["textures/ui/arrowRight"];
+    static get playerShopItemTextureHint(): typeof this.playerShopItemTextureHints[number];
+    static get playerShopPageTextureHint(): typeof this.playerShopPageTextureHints[number];
     /**
      * @todo Add the "Shop Item Settings" section.
      * @see {@link ServerShopManager.serverShopSystemSettings}

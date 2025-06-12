@@ -1491,7 +1491,7 @@ export function getBlockType(y, baseHeight, biome, noiseValue) {
         return "dirt";
     }
     else {
-        return biomePresets[biome](y, baseHeight);
+        return biomePresets[biome]?.(y, baseHeight) ?? "andexdb:invalid_block_placeholder";
     }
 }
 /* type BiomeUndergroundBlockDistributionBiomes = "normal" | "badlands";

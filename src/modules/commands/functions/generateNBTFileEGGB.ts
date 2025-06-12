@@ -18,7 +18,7 @@ export function* generateNBTFileEGGB(
     var successCount = 0;
     var b = undefined! as number;
     for (let i = 0; i < nbt.block_indices.length; i++) {
-        b = nbt.block_indices[i];
+        b = nbt.block_indices[i]!;
         (b ?? -1) != -1
             ? tryrun(() => {
                 try {
@@ -32,11 +32,11 @@ export function* generateNBTFileEGGB(
                                 i % nbt.size[2],
                             ])
                         ),
-                        nbt.block_palette[b].name
+                        nbt.block_palette[b]!.name
                     );
                     !!nbt.block_palette[b]?.states
                         ? Object.entries(
-                            nbt.block_palette[b].states!
+                            nbt.block_palette[b]!.states!
                         ).forEach((p) => tryrun(() => location.dimension.setBlockPermutation(
                             Vector3Utils.add(
                                 location,
@@ -52,7 +52,7 @@ export function* generateNBTFileEGGB(
                                 ])
                             ),
                             BlockPermutation.resolve(
-                                nbt.block_palette[b].name.replace(
+                                nbt.block_palette[b]!.name.replace(
                                     "minecraft:active - lit_redstone_lamp",
                                     "minecraft:lit_redstone_lamp"
                                 ),

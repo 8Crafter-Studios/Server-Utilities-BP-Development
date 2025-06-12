@@ -37,7 +37,7 @@ export async function onlinePlayerSelector(
                     );
                     break;
                 default:
-                    return playerslist[r.selection!];
+                    return playerslist[r.selection!]!;
             }
         })
         .catch((e) => {

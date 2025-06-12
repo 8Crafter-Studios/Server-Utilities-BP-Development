@@ -14,7 +14,7 @@ export function entityToContainerSlotListObject(
     }
     for (let i = 0; i < 5 && getEquipment && !!equipment; i++) {
         itemList[String(OtherEquipmentSlots[i])] = equipment?.getEquipmentSlot(
-            OtherEquipmentSlots[i]
+            OtherEquipmentSlots[i]!
         );
     }
     return !!container || !!equipment ? itemList : undefined;

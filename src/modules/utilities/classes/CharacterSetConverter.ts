@@ -87,7 +87,7 @@ export class CharacterSetConverter {
          *
          * @type {string[]}
          */
-        const parts: string[] = input.split(this.customCharset[0]).filter(Boolean);
+        const parts: string[] = input.split(this.customCharset[0]!).filter(Boolean);
         /**
          * The decoded string.
          *
