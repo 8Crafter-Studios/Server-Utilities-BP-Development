@@ -155,7 +155,7 @@ export async function playerMenu_moneyTransfer(
                     return await playerMenu_moneyTransfer(sourceEntity, Math.min(numpages - 1, page + 1), maxplayersperpage, search);
                     break;
                 case "player": {
-                    const player = displayPlayersB[r.selection! - 6];
+                    const player = displayPlayersB[r.selection! - 6]!;
                     const ra = await new ModalFormData()
                         .title("Transfer Money")
                         .textField(

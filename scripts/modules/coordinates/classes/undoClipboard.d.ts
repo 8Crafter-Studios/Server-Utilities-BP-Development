@@ -159,4 +159,8 @@ export declare class UndoClipboard<ClipboardID extends string = string> {
      * @returns {1 | 0} `1` if the action was undone, `0` if the action was not found.
      */
     static undoLastAction(options?: StructurePlaceOptions, clearSave?: boolean, sizes?: Vector3): 1 | 0;
+    /**
+     * Removes all items from all undo clipboards that do not have a corresponding structure.
+     */
+    static cullItemsMissingStructure(): void;
 }

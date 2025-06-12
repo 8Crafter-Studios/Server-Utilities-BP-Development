@@ -54,13 +54,13 @@ export async function fillBlocksHDG(
                                     ?.setType(
                                         types[Math.floor(
                                             types.length * Math.random()
-                                        )]
+                                        )]!
                                     );
                                 counter++;
                             } catch (e) {
                                 if (e instanceof TypeError ||
                                     e instanceof UnloadedChunksError) {
-                                    generatorProgress[id].containsUnloadedChunks = true;
+                                    generatorProgress[id]!.containsUnloadedChunks = true;
                                 }
                             }
                         },
@@ -84,13 +84,13 @@ export async function fillBlocksHDG(
                                     ?.setType(
                                         types[Math.floor(
                                             types.length * Math.random()
-                                        )]
+                                        )]!
                                     );
                                 counter++;
                             } catch (e) {
                                 if (e instanceof TypeError ||
                                     e instanceof UnloadedChunksError) {
-                                    generatorProgress[id].containsUnloadedChunks = true;
+                                    generatorProgress[id]!.containsUnloadedChunks = true;
                                 }
                             }
                         },
@@ -116,7 +116,7 @@ export async function fillBlocksHDG(
                         options?.minMSBetweenYields ?? 2000,
                         (v) => {
                             currentBlock =
-                                types[Math.floor(types.length * Math.random())];
+                                types[Math.floor(types.length * Math.random())]!;
                             if (!!options?.matchingBlockStates
                                 ? BlockTypes.get(options?.matchingBlock!) ==
                                 v.dimension.getBlock(v)?.type &&
@@ -147,13 +147,13 @@ export async function fillBlocksHDG(
                                         ?.setType(
                                             types[Math.floor(
                                                 types.length * Math.random()
-                                            )]
+                                            )]!
                                         );
                                     counter++;
                                 } catch (e) {
                                     if (e instanceof TypeError ||
                                         e instanceof UnloadedChunksError) {
-                                        generatorProgress[id].containsUnloadedChunks = true;
+                                        generatorProgress[id]!.containsUnloadedChunks = true;
                                     }
                                 }
                             }
@@ -173,7 +173,7 @@ export async function fillBlocksHDG(
                         options?.minMSBetweenYields ?? 2000,
                         (v) => {
                             currentBlock =
-                                types[Math.floor(types.length * Math.random())];
+                                types[Math.floor(types.length * Math.random())]!;
                             if (!!v.dimension
                                 .getBlock(v)
                                 ?.getComponent("inventory")) {
@@ -213,13 +213,13 @@ export async function fillBlocksHDG(
                                         ?.setType(
                                             types[Math.floor(
                                                 types.length * Math.random()
-                                            )]
+                                            )]!
                                         );
                                     counter++;
                                 } catch (e) {
                                     if (e instanceof TypeError ||
                                         e instanceof UnloadedChunksError) {
-                                        generatorProgress[id].containsUnloadedChunks = true;
+                                        generatorProgress[id]!.containsUnloadedChunks = true;
                                     }
                                 }
                             }
@@ -258,7 +258,7 @@ export async function fillBlocksHDG(
                             } catch (e) {
                                 if (e instanceof TypeError ||
                                     e instanceof UnloadedChunksError) {
-                                    generatorProgress[id].containsUnloadedChunks = true;
+                                    generatorProgress[id]!.containsUnloadedChunks = true;
                                 }
                             }
                         },
@@ -282,7 +282,7 @@ export async function fillBlocksHDG(
                             } catch (e) {
                                 if (e instanceof TypeError ||
                                     e instanceof UnloadedChunksError) {
-                                    generatorProgress[id].containsUnloadedChunks = true;
+                                    generatorProgress[id]!.containsUnloadedChunks = true;
                                 }
                             }
                         },
@@ -336,7 +336,7 @@ export async function fillBlocksHDG(
                                 } catch (e) {
                                     if (e instanceof TypeError ||
                                         e instanceof UnloadedChunksError) {
-                                        generatorProgress[id].containsUnloadedChunks = true;
+                                        generatorProgress[id]!.containsUnloadedChunks = true;
                                     }
                                 }
                             }
@@ -394,7 +394,7 @@ export async function fillBlocksHDG(
                                 } catch (e) {
                                     if (e instanceof TypeError ||
                                         e instanceof UnloadedChunksError) {
-                                        generatorProgress[id].containsUnloadedChunks = true;
+                                        generatorProgress[id]!.containsUnloadedChunks = true;
                                     }
                                 }
                             }

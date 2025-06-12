@@ -113,7 +113,7 @@ export async function editAreas(player: Player, prefix: (typeof protectedAreaCat
                 ProtectedAreas.load();
                 return await editAreas(player, prefix);
             case "area":
-                const currentArea = areas[t.selection!];
+                const currentArea = areas[t.selection!]!;
                 form1234567.title(customFormUICodes.action.titles.formStyles.medium + currentArea.id);
                 form1234567.body(currentArea.id);
                 form1234567.button(customFormUICodes.action.buttons.positions.main_only + "Edit", "textures/ui/book_edit_default");
@@ -129,7 +129,7 @@ export async function editAreas(player: Player, prefix: (typeof protectedAreaCat
                     }
                     switch ((w as ActionFormResponse).selection) {
                         case 0: {
-                            const defaults = areas[Number((t as ActionFormResponse).selection)];
+                            const defaults = areas[Number((t as ActionFormResponse).selection)]!;
                             form12345.title("Edit Protected Area");
                             form123456.textField("From", "x1, y1, z1", { defaultValue: `${defaults.from.x}, ${defaults.from.y}, ${defaults.from.z}` });
                             form123456.textField("To", "x2, y2, z2", { defaultValue: `${defaults.to.x}, ${defaults.to.y}, ${defaults.to.z}` });
@@ -167,7 +167,7 @@ export async function editAreas(player: Player, prefix: (typeof protectedAreaCat
                                     );
                                 } else {
                                     ProtectedAreas.areas[prefix][dimensionse[defaults.dimension]].splice(
-                                        ProtectedAreas.areas[prefix][dimensionse[defaults.dimension as number]].findIndex((a) => a.id === defaults.id),
+                                        ProtectedAreas.areas[prefix][dimensionse[defaults.dimension]].findIndex((a) => a.id === defaults.id),
                                         1
                                     );
                                     ProtectedAreas.areas[prefix][dimensionse[dimension as number]!].push({
@@ -180,10 +180,10 @@ export async function editAreas(player: Player, prefix: (typeof protectedAreaCat
                             });
                         }
                         case 1:
-                            world.setDynamicProperty(areas[t.selection!].id, undefined);
-                            ProtectedAreas.areas[prefix][dimensionse[areas[t.selection!].dimension]].splice(
-                                ProtectedAreas.areas[prefix][dimensionse[areas[t.selection!].dimension as number]].findIndex(
-                                    (a) => a.id === areas[t.selection!].id
+                            world.setDynamicProperty(areas[t.selection!]!.id, undefined);
+                            ProtectedAreas.areas[prefix][dimensionse[areas[t.selection!]!.dimension as 0 | 1 | 2]].splice(
+                                ProtectedAreas.areas[prefix][dimensionse[areas[t.selection!]!.dimension as 0 | 1 | 2]].findIndex(
+                                    (a) => a.id === areas[t.selection!]!.id
                                 ),
                                 1
                             );

@@ -181,7 +181,7 @@ export async function playerMenu_bounty_individuals(
                     currentParameters = { player, pagen: Math.min(numpages - 1, page + 1), maxentriesperpage, search, cachedEntries: displayEntries };
                     continue;
                 case "entry":
-                    if ((await playerMenu_bounty_individual(sourceEntity, displayEntries[r.selection!-6][0], target, displayEntries[r.selection!-6][1])) === 1) {
+                    if ((await playerMenu_bounty_individual(sourceEntity, displayEntries[r.selection!-6]![0], target, displayEntries[r.selection!-6]![1])) === 1) {
                         currentParameters = { player, pagen: page, maxentriesperpage, search, cachedEntries: displayEntries };
                         continue;
                     } else {

@@ -93,10 +93,10 @@ debugAction(event.source.getBlockFromViewDirection().block, event.source, 0)
         system.run(() => {
         let form2 = new ModalFormData();
         let players = world.getAllPlayers();
-        let targetList = [players[0].nameTag]
+        let targetList = [players[0]!.nameTag]
         for (const index in players) {
             if (Number(index) != 0) {
-            targetList = String([String(targetList), players[index].nameTag]).split(",");
+            targetList = String([String(targetList), players[index]!.nameTag]).split(",");
             }
         }
         form2.textField("Slot Number", "Slot Number", {defaultValue: "0"});
@@ -108,7 +108,7 @@ debugAction(event.source.getBlockFromViewDirection().block, event.source, 0)
                 let [slotNumber, playerTarget, playerViewer] = t.formValues!;
                 let playerTargetB = Number(playerTarget)
                 let playerViewerB = Number(playerViewer)
-        const inventory = players[playerTargetB].getComponent("inventory") as EntityInventoryComponent;
+        const inventory = players[playerTargetB]!.getComponent("inventory") as EntityInventoryComponent;
         let item = inventory.container.getItem(Number(slotNumber));
         function getDurability() { try {return item.getComponent("minecraft:durability") as ItemDurabilityComponent;} catch(e){console.error(e, e.stack); return undefined};}
         const durability = getDurability()
@@ -233,10 +233,10 @@ console.error(e, e.stack);
         system.run(() => {
         let form2 = new ModalFormData();
         let players = world.getAllPlayers();
-        let targetList = [players[0].nameTag]
+        let targetList = [players[0]!.nameTag]
         for (const index in players) {
             if (Number(index) != 0) {
-            targetList = String([String(targetList), players[index].nameTag]).split(",");
+            targetList = String([String(targetList), players[index]!.nameTag]).split(",");
             }
         }
         form2.textField("Slot Number", "Slot Number", {defaultValue: "0"});
@@ -248,7 +248,7 @@ console.error(e, e.stack);
                 let [slotNumber, playerTarget, playerViewer] = t.formValues!;
                 let playerTargetB = Number(playerTarget)
                 let playerViewerB = Number(playerViewer)
-        const inventory = players[playerTargetB].getComponent("inventory") as EntityInventoryComponent;
+        const inventory = players[playerTargetB]!.getComponent("inventory") as EntityInventoryComponent;
         let item = inventory.container.getItem(Number(slotNumber));
         function getDurability() { try {return item.getComponent("minecraft:durability") as ItemDurabilityComponent;} catch(e){console.error(e, e.stack); return undefined};}
         const durability = getDurability()

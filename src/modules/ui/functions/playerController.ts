@@ -7,8 +7,8 @@ export function playerController(sourceEntitya: Entity | executeCommandPlayerW |
     const sourceEntity = sourceEntitya instanceof executeCommandPlayerW ? sourceEntitya.player! : sourceEntitya;
     let form2 = new ModalFormData();
     let playerList = world.getPlayers();
-    let targetList = [playerList[0].nameTag];
-    let componentList = [playerList[0].getComponents()[0]];
+    let targetList = [playerList[0]!.nameTag];
+    let componentList = [playerList[0]!.getComponents()[0]];
     let dimension = "";
     let spawnXPosition = "";
     let spawnYPosition = "";
@@ -17,7 +17,7 @@ export function playerController(sourceEntitya: Entity | executeCommandPlayerW |
         /*
         console.warn(index);*/
         if (Number(index) != 0) {
-            targetList = String([String(targetList), playerList[index].nameTag]).split(","); /*
+            targetList = String([String(targetList), playerList[index]!.nameTag]).split(","); /*
         targetList = String([String(targetList), playerList[index].nameTag]).split(",");*/
         } /*
         console.warn(targetList);*/
@@ -30,28 +30,28 @@ export function playerController(sourceEntitya: Entity | executeCommandPlayerW |
     function playerControllerFormPopup(playerTargetB: number, playerViewerB: number) {
         let form = new ModalFormData();
         try {
-            dimension = String(playerList[playerTargetB].getSpawnPoint()?.dimension.id);
+            dimension = String(playerList[playerTargetB]!.getSpawnPoint()?.dimension.id);
         } catch (e) {
             dimension = "";
         }
         try {
-            spawnXPosition = String(playerList[playerTargetB].getSpawnPoint()?.x);
+            spawnXPosition = String(playerList[playerTargetB]!.getSpawnPoint()?.x);
         } catch (e) {
             spawnXPosition = "";
         }
         try {
-            spawnYPosition = String(playerList[playerTargetB].getSpawnPoint()?.y);
+            spawnYPosition = String(playerList[playerTargetB]!.getSpawnPoint()?.y);
         } catch (e) {
             spawnYPosition = "";
         }
         try {
-            spawnZPosition = String(playerList[playerTargetB].getSpawnPoint()?.z);
+            spawnZPosition = String(playerList[playerTargetB]!.getSpawnPoint()?.z);
         } catch (e) {
             spawnZPosition = "";
         }
         let playerCurrentNameTag = "";
         try {
-            playerCurrentNameTag = String(playerList[playerTargetB].nameTag);
+            playerCurrentNameTag = String(playerList[playerTargetB]!.nameTag);
         } catch (e) {
             playerCurrentNameTag = "";
         }
@@ -62,9 +62,9 @@ export function playerController(sourceEntitya: Entity | executeCommandPlayerW |
         form.textField("Trigger Event", "Trigger Event");
         form.textField("addExperience", "Experience Amount");
         form.textField("addLevels", "Level Amount");
-        form.slider("Selected Slot", 0, 56, { valueStep: 1, defaultValue: playerList[playerTargetB].selectedSlotIndex });
+        form.slider("Selected Slot", 0, 56, { valueStep: 1, defaultValue: playerList[playerTargetB]!.selectedSlotIndex });
         form.slider("§4Scale", 0, 10, { valueStep: 0.5 });
-        form.toggle("Is Sneaking", { defaultValue: playerList[playerTargetB].isSneaking });
+        form.toggle("Is Sneaking", { defaultValue: playerList[playerTargetB]!.isSneaking });
         form.toggle("Clear Velocity", { defaultValue: false });
         form.toggle("Extinguish Fire", { defaultValue: false });
         form.toggle("Kill", { defaultValue: false });
@@ -87,35 +87,35 @@ export function playerController(sourceEntitya: Entity | executeCommandPlayerW |
         form2.dropdown("damageCause", ["anvil", "none"], 0)*/
 
         form.toggle("§eapplyImpulse", { defaultValue: false });
-        form.textField("§eX Velocity", "§eX Velocity" /*, String(playerList[playerTargetB].getVelocity().x)*/);
-        form.textField("§eY Velocity", "§eY Velocity" /*, String(playerList[playerTargetB].getVelocity().y)*/);
-        form.textField("§eZ Velocity", "§eZ Velocity" /*, String(playerList[playerTargetB].getVelocity().z)*/);
+        form.textField("§eX Velocity", "§eX Velocity" /*, String(playerList[playerTargetB]!.getVelocity().x)*/);
+        form.textField("§eY Velocity", "§eY Velocity" /*, String(playerList[playerTargetB]!.getVelocity().y)*/);
+        form.textField("§eZ Velocity", "§eZ Velocity" /*, String(playerList[playerTargetB]!.getVelocity().z)*/);
         form.toggle("applyKnockback", { defaultValue: false });
         form.textField("directionX", "directionX");
         form.textField("directionZ", "directionZ");
         form.textField("horizontalStrength", "horizontalStrength");
         form.textField("verticalStrength", "verticalStrength");
         form.toggle("Set Rotation", { defaultValue: false });
-        form.textField("X Rotation", "X Rotation", {defaultValue: String(playerList[playerTargetB].getRotation().x)});
-        form.textField("Y Rotation", "Y Rotation", {defaultValue: String(playerList[playerTargetB].getRotation().y)});
+        form.textField("X Rotation", "X Rotation", {defaultValue: String(playerList[playerTargetB]!.getRotation().x)});
+        form.textField("Y Rotation", "Y Rotation", {defaultValue: String(playerList[playerTargetB]!.getRotation().y)});
         form.toggle("Teleport", { defaultValue: false });
-        form.textField("Teleport Dimension", "Dimension", {defaultValue: playerList[playerTargetB].dimension.id});
-        form.textField("Teleport X Coordinate", "X Coordinate", {defaultValue: String(playerList[playerTargetB].location.x)});
-        form.textField("Teleport Y Coordinate", "Y Coordinate", {defaultValue: String(playerList[playerTargetB].location.y)});
-        form.textField("Teleport Z Coordinate", "Z Coordinate", {defaultValue: String(playerList[playerTargetB].location.z)});
-        form.textField("Teleport X Rotation", "X Rotation", {defaultValue: String(playerList[playerTargetB].getRotation().x)});
-        form.textField("Teleport Y Rotation", "Y Rotation", {defaultValue: String(playerList[playerTargetB].getRotation().y)});
+        form.textField("Teleport Dimension", "Dimension", {defaultValue: playerList[playerTargetB]!.dimension.id});
+        form.textField("Teleport X Coordinate", "X Coordinate", {defaultValue: String(playerList[playerTargetB]!.location.x)});
+        form.textField("Teleport Y Coordinate", "Y Coordinate", {defaultValue: String(playerList[playerTargetB]!.location.y)});
+        form.textField("Teleport Z Coordinate", "Z Coordinate", {defaultValue: String(playerList[playerTargetB]!.location.z)});
+        form.textField("Teleport X Rotation", "X Rotation", {defaultValue: String(playerList[playerTargetB]!.getRotation().x)});
+        form.textField("Teleport Y Rotation", "Y Rotation", {defaultValue: String(playerList[playerTargetB]!.getRotation().y)});
         form.dropdown("§eTeleport Rotation Type Mode", ["Rotation", "§4Facing"], {defaultValueIndex: 0});
         form.toggle("Teleport - checkForBlocks", { defaultValue: false });
         form.toggle("Teleport - keepVelocity", { defaultValue: false });
         form.toggle("Try Teleport", { defaultValue: false });
-        form.textField("Try Teleport Dimension", "§4Dimension", {defaultValue: playerList[playerTargetB].dimension.id});
-        form.textField("Try Teleport X Coordinate", "§4X Coordinate", {defaultValue: String(playerList[playerTargetB].location.x)});
-        form.textField("Try Teleport Y Coordinate", "§4Y Coordinate", {defaultValue: String(playerList[playerTargetB].location.y)});
-        form.textField("Try Teleport Z Coordinate", "§4Z Coordinate", {defaultValue: String(playerList[playerTargetB].location.z)});
+        form.textField("Try Teleport Dimension", "§4Dimension", {defaultValue: playerList[playerTargetB]!.dimension.id});
+        form.textField("Try Teleport X Coordinate", "§4X Coordinate", {defaultValue: String(playerList[playerTargetB]!.location.x)});
+        form.textField("Try Teleport Y Coordinate", "§4Y Coordinate", {defaultValue: String(playerList[playerTargetB]!.location.y)});
+        form.textField("Try Teleport Z Coordinate", "§4Z Coordinate", {defaultValue: String(playerList[playerTargetB]!.location.z)});
         form.toggle("Try Teleport - checkForBlocks", { defaultValue: false });
         form.toggle("Try Teleport - keepVelocity", { defaultValue: false });
-        form.toggle("Set Operator", { defaultValue: playerList[playerTargetB].isOp() });
+        form.toggle("Set Operator", { defaultValue: playerList[playerTargetB]!.isOp() });
         form.toggle("Set Spawn Point", { defaultValue: false });
         form.textField("Spawn Dimension", "Spawn Dimension", { defaultValue: dimension });
         form.textField("Spawn X Coordinate", "Spawn X Coordinate", {defaultValue: spawnXPosition});
@@ -130,7 +130,7 @@ export function playerController(sourceEntitya: Entity | executeCommandPlayerW |
         form.toggle("resetLevel", { defaultValue: false });
         form.toggle("§4Debug", { defaultValue: false });
 
-        forceShow(form, playerList[playerViewerB])
+        forceShow(form, playerList[playerViewerB]!)
             .then((r) => {
                 if (r.canceled) return;
 
@@ -215,23 +215,23 @@ export function playerController(sourceEntitya: Entity | executeCommandPlayerW |
             scale.value = Number(scaleValue);*/ /**/
                 if (Boolean(changeNameTag) == true) {
                     try {
-                        playerList[playerTargetB].setOp(Boolean(setOp));
+                        playerList[playerTargetB]!.setOp(Boolean(setOp));
                     } catch (e) {
                         console.error(e, e.stack);
                     }
                 } /**/
                 if (Boolean(changeNameTag) == true) {
                     try {
-                        playerList[playerTargetB].nameTag = String(newNameTag);
+                        playerList[playerTargetB]!.nameTag = String(newNameTag);
                     } catch (e) {
                         console.error(e, e.stack);
                     }
                 }
-                playerList[playerTargetB].isSneaking = Boolean(isSneaking);
-                playerList[playerTargetB].selectedSlotIndex = Number(selectedSlotIndex);
+                playerList[playerTargetB]!.isSneaking = Boolean(isSneaking);
+                playerList[playerTargetB]!.selectedSlotIndex = Number(selectedSlotIndex);
                 if (Boolean(addEffect) == true) {
                     try {
-                        playerList[playerTargetB].addEffect(String(effectToAdd), Number(secondsOfEffect), {
+                        playerList[playerTargetB]!.addEffect(String(effectToAdd), Number(secondsOfEffect), {
                             amplifier: Number(effectAmplifier),
                             showParticles: Boolean(effectShowEffectParticles),
                         });
@@ -241,7 +241,7 @@ export function playerController(sourceEntitya: Entity | executeCommandPlayerW |
                 }
                 if (Boolean(applyImpulse) == true) {
                     try {
-                        playerList[playerTargetB].applyImpulse({
+                        playerList[playerTargetB]!.applyImpulse({
                             x: Number(velocityX),
                             y: Number(velocityY),
                             z: Number(velocityZ),
@@ -252,7 +252,7 @@ export function playerController(sourceEntitya: Entity | executeCommandPlayerW |
                 }
                 if (Boolean(applyKnockback) == true) {
                     try {
-                        playerList[playerTargetB].applyKnockback(
+                        playerList[playerTargetB]!.applyKnockback(
                             {
                                 x: Number(kockbackDirectionX) * Number(knockbackHorizontalStrength),
                                 z: Number(knockbackDirectionZ) * Number(knockbackHorizontalStrength),
@@ -265,28 +265,28 @@ export function playerController(sourceEntitya: Entity | executeCommandPlayerW |
                 }
                 if (Boolean(addTag) == true) {
                     try {
-                        playerList[playerTargetB].addTag(String(tagToAdd));
+                        playerList[playerTargetB]!.addTag(String(tagToAdd));
                     } catch (e) {
                         console.error(e, e.stack);
                     }
                 }
                 if (Boolean(removeTag) == true) {
                     try {
-                        playerList[playerTargetB].removeTag(String(tagToRemove));
+                        playerList[playerTargetB]!.removeTag(String(tagToRemove));
                     } catch (e) {
                         console.error(e, e.stack);
                     }
                 }
                 if (Boolean(removeEffect) == true) {
                     try {
-                        playerList[playerTargetB].removeEffect(String(effectToRemove));
+                        playerList[playerTargetB]!.removeEffect(String(effectToRemove));
                     } catch (e) {
                         console.error(e, e.stack);
                     }
                 }
                 if (Boolean(setSpawnPoint) == true) {
                     try {
-                        playerList[playerTargetB].setSpawnPoint({
+                        playerList[playerTargetB]!.setSpawnPoint({
                             dimension: world.getDimension(String(spawnDimension)),
                             x: Number(spawnX),
                             y: Number(spawnY),
@@ -298,7 +298,7 @@ export function playerController(sourceEntitya: Entity | executeCommandPlayerW |
                 }
                 if (Boolean(teleport) == true) {
                     try {
-                        playerList[playerTargetB].teleport(
+                        playerList[playerTargetB]!.teleport(
                             {
                                 x: Number(teleportX),
                                 y: Number(teleportY),
@@ -320,7 +320,7 @@ export function playerController(sourceEntitya: Entity | executeCommandPlayerW |
                 }
                 if (Boolean(tryTeleport) == true) {
                     try {
-                        playerList[playerTargetB].tryTeleport(
+                        playerList[playerTargetB]!.tryTeleport(
                             {
                                 x: Number(tryTeleportX),
                                 y: Number(tryTeleportY),
@@ -338,14 +338,14 @@ export function playerController(sourceEntitya: Entity | executeCommandPlayerW |
                 }
                 if (Boolean(setOnFire) == true) {
                     try {
-                        playerList[playerTargetB].setOnFire(Number(setOnFireSeconds), Boolean(setOnFireRemoveEffects));
+                        playerList[playerTargetB]!.setOnFire(Number(setOnFireSeconds), Boolean(setOnFireRemoveEffects));
                     } catch (e) {
                         console.error(e, e.stack);
                     }
                 }
                 if (Boolean(setRot) == true) {
                     try {
-                        playerList[playerTargetB].setRotation({
+                        playerList[playerTargetB]!.setRotation({
                             x: Number(rotX),
                             y: Number(rotY),
                         });
@@ -355,93 +355,93 @@ export function playerController(sourceEntitya: Entity | executeCommandPlayerW |
                 }
                 if (Boolean(resetLevel) == true) {
                     try {
-                        playerList[playerTargetB].resetLevel();
+                        playerList[playerTargetB]!.resetLevel();
                     } catch (e) {
                         console.error(e, e.stack);
                     }
                 }
                 if (Boolean(kill) == true) {
                     try {
-                        playerList[playerTargetB].kill();
+                        playerList[playerTargetB]!.kill();
                     } catch (e) {
                         console.error(e, e.stack);
                     }
                 }
                 if (Boolean(remove) == true) {
                     try {
-                        playerList[playerTargetB].remove();
+                        playerList[playerTargetB]!.remove();
                     } catch (e) {
                         console.error(e, e.stack);
                     }
                 }
                 if (Boolean(clearVelocity) == true) {
                     try {
-                        playerList[playerTargetB].clearVelocity();
+                        playerList[playerTargetB]!.clearVelocity();
                     } catch (e) {
                         console.error(e, e.stack);
                     }
                 }
                 if (Boolean(extinguishFire) == true) {
                     try {
-                        playerList[playerTargetB].extinguishFire();
+                        playerList[playerTargetB]!.extinguishFire();
                     } catch (e) {
                         console.error(e, e.stack);
                     }
                 }
                 if (triggerEvent !== undefined) {
                     try {
-                        playerList[playerTargetB].triggerEvent(String(triggerEvent));
+                        playerList[playerTargetB]!.triggerEvent(String(triggerEvent));
                     } catch (e) {
                         console.error(e, e.stack);
                     }
                 }
                 if (addExperience !== undefined) {
                     try {
-                        playerList[playerTargetB].addExperience(Number(addExperience));
+                        playerList[playerTargetB]!.addExperience(Number(addExperience));
                     } catch (e) {
                         console.error(e, e.stack);
                     }
                 }
                 if (setItemCooldown !== undefined) {
                     try {
-                        playerList[playerTargetB].startItemCooldown(String(itemCategory), Number(tickDuration));
+                        playerList[playerTargetB]!.startItemCooldown(String(itemCategory), Number(tickDuration));
                     } catch (e) {
                         console.error(e, e.stack);
                     }
                 }
                 if (addLevels !== undefined) {
                     try {
-                        playerList[playerTargetB].addExperience(Number(addLevels));
+                        playerList[playerTargetB]!.addExperience(Number(addLevels));
                     } catch (e) {
                         console.error(e, e.stack);
                     }
                 }
                 if (Boolean(sendMessage) == true) {
                     try {
-                        playerList[playerTargetB].sendMessage(String(messageToSend));
+                        playerList[playerTargetB]!.sendMessage(String(messageToSend));
                     } catch (e) {
                         console.error(e, e.stack);
                     }
                 }
                 if (Boolean(isSneaking) == true) {
-                    playerList[playerTargetB].isSneaking = true;
+                    playerList[playerTargetB]!.isSneaking = true;
                     try {
-                        playerList[playerTargetB].addTag("isSneaking");
+                        playerList[playerTargetB]!.addTag("isSneaking");
                     } catch (e) {
                         console.error(e, e.stack);
                     } /*
-            if (playerList[playerTargetB].hasTag("isSneaking")) {
+            if (playerList[playerTargetB]!.hasTag("isSneaking")) {
               system.runInterval( () => {
-              playerList[playerTargetB].isSneaking == true
-              if (playerList[playerTargetB].hasTag("isSneaking") == false) {
+              playerList[playerTargetB]!.isSneaking == true
+              if (playerList[playerTargetB]!.hasTag("isSneaking") == false) {
               return
               }
               }, 2)
             }*/
                 } else {
                     try {
-                        playerList[playerTargetB].removeTag("isSneaking");
-                        playerList[playerTargetB].isSneaking = false;
+                        playerList[playerTargetB]!.removeTag("isSneaking");
+                        playerList[playerTargetB]!.isSneaking = false;
                     } catch (e) {
                         console.error(e, e.stack);
                     }
@@ -463,7 +463,7 @@ export function playerController(sourceEntitya: Entity | executeCommandPlayerW |
         let playerTargetB = Number(message3[0]);
         let playerViewerB = Number(message3[1]);
         playerControllerFormPopup(playerTargetB, playerViewerB);
-        showMenuForm2 = playerList[playerViewerB];
+        showMenuForm2 = playerList[playerViewerB]!;
     } else {
         form2.title("Player Controller");
         form2.dropdown("Player Target", String(targetList).split(","), { defaultValueIndex: 0 });

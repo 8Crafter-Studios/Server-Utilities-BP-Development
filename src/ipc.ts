@@ -113,7 +113,7 @@ export namespace PROTO {
         const result = []
         const hex_str = str.slice(3, str.length - 1)
         for (let i = 0; i < hex_str.length; i++) {
-          const hex = hex_str[i] + hex_str[++i]
+          const hex = hex_str[i]! + hex_str[++i]
           result.push(parseInt(hex, 16))
           yield
         }
@@ -225,10 +225,10 @@ export namespace PROTO {
       let byte
       do {
         byte = stream.read()[0]
-        value |= (byte & 0x7f) << (size * 7)
+        value |= (byte! & 0x7f) << (size * 7)
         size += 1
         yield
-      } while ((byte & 0x80) !== 0 && size < 10)
+      } while ((byte! & 0x80) !== 0 && size < 10)
       return value
     }
   }
@@ -443,7 +443,7 @@ export namespace NET {
     let acc_str: string = ''
     let acc_size: number = 0
     for (let i = 0; i < uint8array.length; i++) {
-      const char_code = uint8array[i] | (uint8array[++i] << 8)
+      const char_code = uint8array[i]! | (uint8array[++i]! << 8)
       const utf16_size = char_code <= 0x7f ? 1 : char_code <= 0x7ff ? 2 : char_code <= 0xffff ? 3 : 4
       const char_size = char_code > 0xff ? utf16_size : 3
       if (acc_size + char_size > max_size) {
@@ -468,11 +468,11 @@ export namespace NET {
   export function* deserialize(strings: string[]): Generator<void, PROTO.ByteQueue, void> {
     const result: number[] = []
     for (let i = 0; i < strings.length; i++) {
-      const str = strings[i]
+      const str = strings[i]!
       for (let j = 0; j < str.length; j++) {
         const char_code = str.charCodeAt(j)
         if (char_code <= 0xff) {
-          const hex = str[j] + str[++j]
+          const hex = str[j]! + str[++j]
           const hex_code = parseInt(hex, 16)
           result.push(hex_code & 0xff)
           result.push(hex_code >> 8)
@@ -492,17 +492,17 @@ export namespace NET {
       (function* () {
         const [serialized_endpoint, serialized_header] = event.id.split(':')
 
-        const endpoint_stream: PROTO.ByteQueue = yield* PROTO.MIPS.deserialize(serialized_endpoint)
+        const endpoint_stream: PROTO.ByteQueue = yield* PROTO.MIPS.deserialize(serialized_endpoint!)
 
         const endpoint: PROTO.Endpoint = yield* PROTO.Endpoint.deserialize(endpoint_stream)
 
         const listeners = ENDPOINTS.get(endpoint)
         if (event.sourceType === ScriptEventSource.Server && listeners) {
-          const header_stream: PROTO.ByteQueue = yield* PROTO.MIPS.deserialize(serialized_header)
+          const header_stream: PROTO.ByteQueue = yield* PROTO.MIPS.deserialize(serialized_header!)
 
           const header: PROTO.Header = yield* PROTO.Header.deserialize(header_stream)
           for (let i = 0; i < listeners.length; i++) {
-            yield* listeners[i](header, event.message)
+            yield* listeners[i]!(header, event.message)
           }
         }
       })()
@@ -563,7 +563,7 @@ export namespace NET {
     for (let i = 0; i < serialized_packets.length; i++) {
       const serialized_packet = serialized_packets[i]
 
-      yield* RUN({ guid, encoding: ENCODING, index: i, final: i === serialized_packets.length - 1 }, serialized_packet)
+      yield* RUN({ guid, encoding: ENCODING, index: i, final: i === serialized_packets.length - 1 }, serialized_packet!)
     }
   }
   export function listen<T, S extends PROTO.Serializable<T>>(

@@ -44,7 +44,7 @@ export async function itemSelector<
                 EquipmentSlot.Chest,
                 EquipmentSlot.Legs,
                 EquipmentSlot.Feet,
-            ][i],
+            ][i]!,
             item: targetPlayer
                 .getComponent("equippable")!
                 ?.getEquipmentSlot(
@@ -55,7 +55,7 @@ export async function itemSelector<
                         EquipmentSlot.Chest,
                         EquipmentSlot.Legs,
                         EquipmentSlot.Feet,
-                    ][i]
+                    ][i]!
                 ),
         });
     }

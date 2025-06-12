@@ -319,7 +319,7 @@ export async function managePlayers_managePlayer(sourceEntity: loosePlayerType, 
                         bc2.setItem(i - 27, items[i as keyof typeof items]);
                     }
                     for (let i = 0; i < 6; i++) {
-                        bc2.setItem(i + 9, items[EquipmentSlots[i]]);
+                        bc2.setItem(i + 9, items[EquipmentSlots[i]!]);
                     }
                     bc2.setItem(15, items.Cursor);
                     continue;

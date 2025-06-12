@@ -62,6 +62,8 @@ export async function playerMenu_TPA_outgoing(sourceEntity: loosePlayerType): Pr
                             continue;
                         case "close":
                             return 0;
+                        default:
+                            throw new Error("Invalid selection: " + r.selection);
                     }
                 case "refresh":
                     continue;

@@ -6,7 +6,7 @@ export function arrayToElementList(ids: String[], array: String[]) {
     a = [];
     array.forEach((ax, az) => {
         a[az] = strToCustomFormUIElement(
-            Number(ids[az].split("|")[1]) + "|" + ax
+            Number(ids[az]!.split("|")[1]) + "|" + ax
         );
     });
     return a.sort((a, b) => a.index - b.index);

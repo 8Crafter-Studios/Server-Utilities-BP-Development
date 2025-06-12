@@ -75,9 +75,7 @@ export async function manageRedeemableCodes(sourceEntitya: Entity | executeComma
                                 await showActions(
                                     sourceEntity,
                                     customFormUICodes.action.titles.formStyles.medium + "Redeemable Code Details",
-                                    `${code.code}\nItem Type: ${
-                                        item.typeId
-                                    }`,
+                                    `${code.code}\nItem Type: ${item.typeId}`,
                                     [customFormUICodes.action.buttons.positions.main_only + "Load Item", "textures/ui/structure_block_load"],
                                     [customFormUICodes.action.buttons.positions.main_only + "Delete", "textures/ui/trash_default"],
                                     [customFormUICodes.action.buttons.positions.title_bar_only + "Back", "textures/ui/arrow_left"],
@@ -110,6 +108,8 @@ export async function manageRedeemableCodes(sourceEntitya: Entity | executeComma
                             return await manageRedeemableCodes(sourceEntity);
                         case "close":
                             return 0;
+                        default:
+                            throw new Error("Invalid selection: " + r.selection);
                     }
                 case "newCode": {
                     if (!sourceEntity.hasTag("admin")) {
@@ -122,8 +122,8 @@ export async function manageRedeemableCodes(sourceEntitya: Entity | executeComma
                             return 0;
                         }
                     }
-                    const item = await itemSelector(sourceEntity, sourceEntity, ()=>undefined as undefined);
-                    if(item === undefined){
+                    const item = await itemSelector(sourceEntity, sourceEntity, () => undefined as undefined);
+                    if (item === undefined) {
                         return await manageRedeemableCodes(sourceEntity);
                     }
                     const r = await new ModalFormData()

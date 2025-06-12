@@ -45,7 +45,7 @@ export async function fillBlocksHFFGB(
                 } catch (e) {
                     if (e instanceof TypeError ||
                         e instanceof LocationInUnloadedChunkError) {
-                        generatorProgress[id].containsUnloadedChunks = true;
+                        generatorProgress[id]!.containsUnloadedChunks = true;
                     }
                 }
             },

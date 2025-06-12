@@ -72,6 +72,8 @@ export async function manageRedeemableCodes(sourceEntitya) {
                         return await manageRedeemableCodes(sourceEntity);
                     case "close":
                         return 0;
+                    default:
+                        throw new Error("Invalid selection: " + r.selection);
                 }
             case "newCode": {
                 if (!sourceEntity.hasTag("admin")) {

@@ -12,7 +12,7 @@ export function findClosestColorMatch(rgb: [number, number, number], obj: { [key
     let closestDistance: number = Infinity;
 
     Object.keys(obj).forEach((key: string) => {
-        const color: string = obj[key];
+        const color: string = obj[key]!;
         if (typeof color === "string" && color.startsWith("#")) {
             const hexColor: string = color.substring(1);
             const hexRgb: [number, number, number] = [

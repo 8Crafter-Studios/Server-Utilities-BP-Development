@@ -66,7 +66,7 @@ export async function editAreasMainMenu(sourceEntitya: executeCommandPlayerW | E
             return await editAreasMainMenu(sourceEntity);
         };
         try {
-            if ((await editAreas(sourceEntity as Player, spawnProtectionTypeList[l.selection!].slice(0, -1) as typeof protectedAreaCategories[number])) === 1) {
+            if ((await editAreas(sourceEntity as Player, spawnProtectionTypeList[l.selection!]!.slice(0, -1) as typeof protectedAreaCategories[number])) === 1) {
                 return await editAreasMainMenu(sourceEntity);
             } else {
                 return 0;

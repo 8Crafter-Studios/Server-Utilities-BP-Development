@@ -68,7 +68,7 @@ export async function fillBlocksHCGB(
                             counter++;
                         } catch (e) {
                             if (e instanceof TypeError) {
-                                generatorProgress[id].containsUnloadedChunks =
+                                generatorProgress[id]!.containsUnloadedChunks =
                                     true;
                             }
                         }
@@ -94,7 +94,7 @@ export async function fillBlocksHCGB(
                             counter++;
                         } catch (e) {
                             if (e instanceof TypeError) {
-                                generatorProgress[id].containsUnloadedChunks =
+                                generatorProgress[id]!.containsUnloadedChunks =
                                     true;
                             }
                         }
@@ -146,7 +146,7 @@ export async function fillBlocksHCGB(
                             }
                         } catch (e) {
                             if (e instanceof TypeError) {
-                                generatorProgress[id].containsUnloadedChunks =
+                                generatorProgress[id]!.containsUnloadedChunks =
                                     true;
                             }
                         }
@@ -192,7 +192,7 @@ export async function fillBlocksHCGB(
                             }
                         } catch (e) {
                             if (e instanceof TypeError) {
-                                generatorProgress[id].containsUnloadedChunks =
+                                generatorProgress[id]!.containsUnloadedChunks =
                                     true;
                             }
                         }

@@ -10,12 +10,12 @@ export function customFormUIEditorCode(
     goBackToMenu: boolean = false
 ) {
     let players = world.getAllPlayers();
-    let targetList = [players[0].nameTag];
+    let targetList = [players[0]!.nameTag];
     for (const index in players) {
         if (Number(index) != 0) {
             targetList = String([
                 String(targetList),
-                players[index].nameTag,
+                players[index]!.nameTag,
             ]).split(",");
         }
     }

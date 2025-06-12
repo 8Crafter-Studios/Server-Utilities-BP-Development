@@ -112,7 +112,7 @@ export class UndoClipboard<ClipboardID extends string = string> {
      * Removes all items from this undo clipboard that do not have a corresponding structure.
      */
     public cullItemsMissingStructure(): void {
-        this.saveTimes.filter((v) => !!!world.structureManager.get(`undoclipboard:${this.clipboardID};${v},0,0,0`)).forEach((v) => this.clearTime(v));
+        this.saveTimes.filter((v) => !world.structureManager.get(`undoclipboard:${this.clipboardID};${v},0,0,0`)).forEach((v) => this.clearTime(v));
     }
     /**
      * Removes all items from this undo clipboard.
@@ -303,5 +303,15 @@ export class UndoClipboard<ClipboardID extends string = string> {
         return this.getAllClipboards()
             .reduce((a, b) => ((b.newestSaveTime ?? 0) > (a.newestSaveTime ?? 0) ? b : a))
             .undo(undefined, options, clearSave, sizes);
+    }
+    /**
+     * Removes all items from all undo clipboards that do not have a corresponding structure.
+     */
+    public static cullItemsMissingStructure(): void {
+        this.getAllClipboards().forEach((clipboard) =>
+            clipboard.saveTimes
+                .filter((v) => !world.structureManager.get(`undoclipboard:${clipboard.clipboardID};${v},0,0,0`))
+                .forEach((v) => clipboard.clearTime(v))
+        );
     }
 }

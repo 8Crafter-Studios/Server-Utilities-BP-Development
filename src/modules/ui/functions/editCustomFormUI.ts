@@ -50,15 +50,15 @@ export function editCustomFormUI(UIId: String | string) {
         if (index == 0) {
             form1234.textField(
                 'The response variable is "r", if ActionFormData or MessageFormData was chosen then r.selection can be used to see which button was chosen, and if ModalFormData was chosen then r.formValues can be used to get an array containing the values of the form. \nCode Line ' +
-                    Number(customUI.codeIds[index].split("|")[1]),
+                    Number(customUI.codeIds[index]!.split("|")[1]),
                 "JavaScript Code",
                 { defaultValue: element }
             );
         } else {
-            form1234.textField("Code Line " + Number(customUI.codeIds[index].split("|")[1]), "JavaScript Code", { defaultValue: element });
+            form1234.textField("Code Line " + Number(customUI.codeIds[index]!.split("|")[1]), "JavaScript Code", { defaultValue: element });
         }
-        form1234.toggle("Remove Code Line " + Number(customUI.codeIds[index].split("|")[1]));
-        indexListB.push(Number(customUI.codeIds[index].split("|")[1]));
+        form1234.toggle("Remove Code Line " + Number(customUI.codeIds[index]!.split("|")[1]));
+        indexListB.push(Number(customUI.codeIds[index]!.split("|")[1]));
     });
     form1234.toggle("New Code Line");
     form1234.textField("New Code Line Index", "Number", { defaultValue: String((indexListB[indexListB.length - 1] ?? 0) + 1) });

@@ -34,7 +34,7 @@ export async function worldBorderSettings(
         }
     }
     let form2 = new ModalFormData();
-    const configobj = config.worldBorder[dimensionse[dimension]];
+    const configobj = config.worldBorder[dimensionse[dimension]!];
     form2.title(
         `${["Overworld", "Nether", "The End"][dimension]} World Border Settings`
     );

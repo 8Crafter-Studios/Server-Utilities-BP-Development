@@ -303,9 +303,9 @@ Icon Path: ${category.icon_path ?? "None"}`
                     ) {
                         ProtectedAreas.loadAreasForAdvancedCategory(categoryID);
                         [
-                            ...ProtectedAreas.areas.advancedArea[categoryID].overworld,
-                            ...ProtectedAreas.areas.advancedArea[categoryID].nether,
-                            ...ProtectedAreas.areas.advancedArea[categoryID].the_end,
+                            ...ProtectedAreas.areas.advancedArea[categoryID]!.overworld,
+                            ...ProtectedAreas.areas.advancedArea[categoryID]!.nether,
+                            ...ProtectedAreas.areas.advancedArea[categoryID]!.the_end,
                         ].forEach((area) => {
                             world.setDynamicProperty("advancedProtectedArea:" + categoryID + ":" + area.id);
                         });

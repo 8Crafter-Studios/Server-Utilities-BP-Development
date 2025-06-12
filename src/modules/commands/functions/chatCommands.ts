@@ -21645,7 +21645,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     const data = {
                                         from: ca,
                                         to: cb,
-                                        dimension: dimensions.indexOf(dimensiona!),
+                                        dimension: dimensions.indexOf(dimensiona!) as 0 | 1 | 2,
                                         mode: args[4] ?? 0,
                                         icon_path: args[5]!,
                                     };

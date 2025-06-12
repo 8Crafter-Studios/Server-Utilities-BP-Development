@@ -842,7 +842,7 @@ export declare function convertAdvancedPropertedAreaCategoryToJSON(category: Adv
  */
 export interface ProtectedArea {
     id: string;
-    dimension: number;
+    dimension: 0 | 1 | 2;
     from: Vector3;
     to: Vector3;
     mode: 0 | 1;

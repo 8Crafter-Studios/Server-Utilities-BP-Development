@@ -5755,7 +5755,7 @@ break;*/ /*
         let showMenuForm2 = sourceEntity;
         if (message.startsWith("players:") && "0123456789".includes(message.charAt(8))) {
             let message2 = message.slice(8, message.length);
-            let playerTargetB = undefined;
+            let playerTargetB: any = undefined;
             try {
                 entity2[0] /*.entity*/;
             } catch (e) {

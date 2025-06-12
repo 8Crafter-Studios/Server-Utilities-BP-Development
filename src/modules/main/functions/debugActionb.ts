@@ -63,7 +63,7 @@ export function debugActionb(
                                 player.getDynamicProperty(
                                     "debugStickPropertyIndex"
                                 )
-                            )][0]
+                            )]![0]
                         );
                     }
                 } else {
@@ -96,7 +96,7 @@ export function debugActionb(
                                 player.getDynamicProperty(
                                     "debugStickPropertyIndex"
                                 )
-                            )][0]
+                            )]![0]
                         );
                     }
                 }
@@ -133,7 +133,7 @@ export function debugActionb(
                                                     player.getDynamicProperty(
                                                         "debugStickPropertyIndex"
                                                     )
-                                                )][1]
+                                                )]![1]
                                         ) - 1,
                                     0,
                                     BlockStates.getAll().find(
@@ -171,7 +171,7 @@ export function debugActionb(
                                                     player.getDynamicProperty(
                                                         "debugStickPropertyIndex"
                                                     )
-                                                )][1]
+                                                )]![1]
                                         ) + 1,
                                     0,
                                     BlockStates.getAll().find(
@@ -210,7 +210,7 @@ export function debugActionb(
                 let permutation = Object.entries(
                     block.permutation.getAllStates()
                 );
-                permutation[Number(player.getDynamicProperty("debugStickPropertyIndex"))][1] = BlockStates.getAll().find(
+                permutation[Number(player.getDynamicProperty("debugStickPropertyIndex"))]![1] = BlockStates.getAll().find(
                     (state) => state.id ==
                         Object.keys(block.permutation.getAllStates())[Number(
                             player.getDynamicProperty(
@@ -221,7 +221,7 @@ export function debugActionb(
                     player.getDynamicProperty(
                         "debugStickPropertyIndexIndex"
                     )
-                )];
+                )]!;
                 system.run(() => {
                     player.onScreenDisplay.setActionBar(
                         `"${Object.keys(block.permutation.getAllStates())[Number(
@@ -232,7 +232,7 @@ export function debugActionb(
                             player.getDynamicProperty(
                                 "debugStickPropertyIndex"
                             )
-                        )][1]}`
+                        )]![1]}`
                     );
                     block.setPermutation(
                         BlockPermutation.resolve(
@@ -263,7 +263,7 @@ export function debugActionb(
                                     player.getDynamicProperty(
                                         "debugStickPropertyIndex"
                                     )
-                                )][0]}" (${Object.values(
+                                )]![0]}" (${Object.values(
                                     block.permutation.getAllStates()
                                 )[Number(
                                     player.getDynamicProperty(
@@ -280,7 +280,7 @@ export function debugActionb(
                                 player.getDynamicProperty(
                                     "debugStickPropertyIndex"
                                 )
-                            )][0]}" ${Object.values(block.permutation.getAllStates())[Number(
+                            )]![0]}" ${Object.values(block.permutation.getAllStates())[Number(
                                 player.getDynamicProperty(
                                     "debugStickPropertyIndex"
                                 )

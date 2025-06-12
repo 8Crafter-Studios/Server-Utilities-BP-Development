@@ -256,7 +256,7 @@ export async function managePlayers(
                 case numplayersonpage + 9:
                     return await managePlayers(player, page, maxplayersperpage, search, undefined);
                 default:
-                    if ((await managePlayers_managePlayer(player, players[r.selection! - 6])) === 1) {
+                    if ((await managePlayers_managePlayer(player, players[r.selection! - 6]!)) === 1) {
                         return await managePlayers(player, page, maxplayersperpage, search, displayPlayers);
                     } else {
                         return 0;

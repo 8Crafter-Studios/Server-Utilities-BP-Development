@@ -71,7 +71,7 @@ export async function itemEditor(sourceEntitya: Entity | executeCommandPlayerW |
             }
             try {
                 if ([ItemLockMode.none, ItemLockMode.slot, ItemLockMode.inventory][Number(lockMode)] != item.lockMode) {
-                    item.lockMode = [ItemLockMode.none, ItemLockMode.slot, ItemLockMode.inventory][Number(lockMode)];
+                    item.lockMode = [ItemLockMode.none, ItemLockMode.slot, ItemLockMode.inventory][Number(lockMode)]!;
                 }
             } catch (e) {
                 console.error(e, e.stack);

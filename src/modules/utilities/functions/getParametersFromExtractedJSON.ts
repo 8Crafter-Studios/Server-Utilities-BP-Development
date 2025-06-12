@@ -16,7 +16,7 @@ export function getParametersFromExtractedJSON(rawdata: RegExpMatchArray[]) {
     };
     const getStringsFromString = (ce: string) => {
         let cd = Array.from(ce.matchAll(/(?<!(?:(?:[^\\]\\)(?:\\\\)*))".*?(?<!(?:(?:[^\\]\\)(?:\\\\)*))"/gis));
-        cd.forEach((v, i) => cd[i] = Object.assign(cd[i], { indices: [[v?.index, v?.index + v[0]?.length]] }));
+        cd.forEach((v, i) => cd[i] = Object.assign(cd[i]!, { indices: [[v?.index, v?.index + v[0]?.length]] }));
         let cc = [] as { t: "json" | "non-json"; v: string; }[];
         cc.push({
             t: "non-json",
@@ -35,7 +35,7 @@ export function getParametersFromExtractedJSON(rawdata: RegExpMatchArray[]) {
         return cc;
     };
     let a = rawdata;
-    let b = rawdata[0].input;
+    let b = rawdata[0]!.input;
     let c: {
         t: "json" | "non-json";
         v: any;

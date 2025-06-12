@@ -574,7 +574,7 @@ export async function securitySettings_playersWithPermissions_permission(
                     return 0;
                     break;
                 default:
-                    if ((await managePlayers_managePlayer(sourceEntity, players[r.selection! - 3])) == 1) {
+                    if ((await managePlayers_managePlayer(sourceEntity, players[r.selection! - 3]!)) == 1) {
                         return await securitySettings_playersWithPermissions_permission(sourceEntity, permission, page, maxplayersperpage, search);
                     } else {
                         return 0;
@@ -905,7 +905,7 @@ export async function securitySettings_playersWithPermissions_permission_UltraSe
                     return 0;
                     break;
                 default:
-                    if ((await managePlayers_managePlayer(sourceEntity, players[r.selection! - 3])) == 1) {
+                    if ((await managePlayers_managePlayer(sourceEntity, players[r.selection! - 3]!)) == 1) {
                         return await securitySettings_playersWithPermissions_permission_UltraSecurityMode(
                             sourceEntity,
                             permission,
@@ -967,7 +967,7 @@ export async function securitySettings_playersWithPermissions_permission_any_Ult
     const page = Math.max(0, pagen);
     const savedPlayers = savedPlayer
         .getSavedPlayers()
-        .filter((p) => securityVariables.playerPermissions[p.id]?.length > 0)
+        .filter((p) => securityVariables.playerPermissions[p.id]?.length! > 0)
         .filter((p) =>
             !!search
                 ? search.caseSensitive == true
@@ -1036,7 +1036,7 @@ export async function securitySettings_playersWithPermissions_permission_any_Ult
             .filter((_) => !_.isOnline && !_.isBanned)
             .sort((a: savedPlayer, b: savedPlayer) => b.lastOnline - a.lastOnline),
     ]
-        .filter((p) => securityVariables.playerPermissions[p.id]?.length > 0)
+        .filter((p) => securityVariables.playerPermissions[p.id]?.length! > 0)
         .filter((p) =>
             !!search
                 ? search.caseSensitive == true
@@ -1149,7 +1149,7 @@ export async function securitySettings_playersWithPermissions_permission_any_Ult
                     return 0;
                     break;
                 default:
-                    if ((await managePlayers_managePlayer(sourceEntity, players[r.selection! - 3])) == 1) {
+                    if ((await managePlayers_managePlayer(sourceEntity, players[r.selection! - 3]!)) == 1) {
                         return await securitySettings_playersWithPermissions_permission_any_UltraSecurityMode(sourceEntity, page, maxplayersperpage, search);
                     } else {
                         return 0;

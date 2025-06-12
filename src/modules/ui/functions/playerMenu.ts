@@ -138,7 +138,7 @@ form.button("Entity Debugger", "textures/ui/debug_glyph_color");*/ /*
             const r = await form.forceShow(player);
             if (r.canceled) return 0;
 
-            switch (([...buttons, undefined] as const)[r.selection!]!?.[0] ?? (["close"] as const)[r.selection! - buttons.length]) {
+            switch (buttons[r.selection!]?.[0] ?? (["close"] as const)[r.selection! - buttons.length]) {
                 case "leaderboards":
                     if ((await playerMenu_leaderboards(player)) === 1) {
                         continue;

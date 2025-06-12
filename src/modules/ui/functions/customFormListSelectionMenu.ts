@@ -44,7 +44,7 @@ export function customFormListSelectionMenu(player: Player) {
         switch (true) {
             case t.selection == a.length:
                 addNewCustomFormUI(player, true);
-                showCustomFormUI(a[t.selection!].slice(9), player);
+                showCustomFormUI(a[t.selection!]!.slice(9), player);
                 break;
             case t.selection == a.length + 1:
                 mainMenu(player);
@@ -57,17 +57,17 @@ export function customFormListSelectionMenu(player: Player) {
                     }
                     switch (v.selection) {
                         case 0:
-                            customFormUIEditor(a[t.selection!], player, true);
+                            customFormUIEditor(a[t.selection!]!, player, true);
                             break;
                         case 1:
                             customFormUIEditorCode(
-                                a[t.selection!],
+                                a[t.selection!]!,
                                 player,
                                 true
                             );
                             break;
                         case 2:
-                            showCustomFormUI(a[t.selection!].slice(9), player);
+                            showCustomFormUI(a[t.selection!]!.slice(9), player);
                             break;
                         case 3:
                             let form12345678 = new MessageFormData();
@@ -89,13 +89,13 @@ export function customFormListSelectionMenu(player: Player) {
                                         break;
                                     case 1:
                                         world.setDynamicProperty(
-                                            a[t.selection!]
+                                            a[t.selection!]!
                                         );
                                         world
                                             .getDynamicPropertyIds()
                                             .filter((dpi) => dpi.startsWith(
                                                 "customUIElement:" +
-                                                a[t.selection!].slice(
+                                                a[t.selection!]!.slice(
                                                     9
                                                 ) +
                                                 "|"
@@ -108,7 +108,7 @@ export function customFormListSelectionMenu(player: Player) {
                                             .getDynamicPropertyIds()
                                             .filter((dpi) => dpi.startsWith(
                                                 "customUICode:" +
-                                                a[t.selection!].slice(
+                                                a[t.selection!]!.slice(
                                                     9
                                                 ) +
                                                 "|"

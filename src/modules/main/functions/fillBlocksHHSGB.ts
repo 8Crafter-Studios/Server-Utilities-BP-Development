@@ -77,7 +77,7 @@ export async function fillBlocksHHSGB(
                             } catch (e) {
                                 if (e instanceof TypeError ||
                                     e instanceof UnloadedChunksError) {
-                                    generatorProgress[id].containsUnloadedChunks = true;
+                                    generatorProgress[id]!.containsUnloadedChunks = true;
                                 }
                             }
                         },
@@ -107,7 +107,7 @@ export async function fillBlocksHHSGB(
                             } catch (e) {
                                 if (e instanceof TypeError ||
                                     e instanceof UnloadedChunksError) {
-                                    generatorProgress[id].containsUnloadedChunks = true;
+                                    generatorProgress[id]!.containsUnloadedChunks = true;
                                 }
                             }
                         },
@@ -156,7 +156,7 @@ export async function fillBlocksHHSGB(
                             } catch (e) {
                                 if (e instanceof TypeError ||
                                     e instanceof UnloadedChunksError) {
-                                    generatorProgress[id].containsUnloadedChunks = true;
+                                    generatorProgress[id]!.containsUnloadedChunks = true;
                                 }
                             }
                         },
@@ -193,7 +193,7 @@ export async function fillBlocksHHSGB(
                             } catch (e) {
                                 if (e instanceof TypeError ||
                                     e instanceof UnloadedChunksError) {
-                                    generatorProgress[id].containsUnloadedChunks = true;
+                                    generatorProgress[id]!.containsUnloadedChunks = true;
                                 }
                             }
                         },
@@ -232,7 +232,7 @@ export async function fillBlocksHHSGB(
                             } catch (e) {
                                 if (e instanceof TypeError ||
                                     e instanceof UnloadedChunksError) {
-                                    generatorProgress[id].containsUnloadedChunks = true;
+                                    generatorProgress[id]!.containsUnloadedChunks = true;
                                 }
                             }
                         },
@@ -258,7 +258,7 @@ export async function fillBlocksHHSGB(
                             } catch (e) {
                                 if (e instanceof TypeError ||
                                     e instanceof UnloadedChunksError) {
-                                    generatorProgress[id].containsUnloadedChunks = true;
+                                    generatorProgress[id]!.containsUnloadedChunks = true;
                                 }
                             }
                         },
@@ -307,7 +307,7 @@ export async function fillBlocksHHSGB(
                             } catch (e) {
                                 if (e instanceof TypeError ||
                                     e instanceof UnloadedChunksError) {
-                                    generatorProgress[id].containsUnloadedChunks = true;
+                                    generatorProgress[id]!.containsUnloadedChunks = true;
                                 }
                             }
                         },
@@ -344,7 +344,7 @@ export async function fillBlocksHHSGB(
                             } catch (e) {
                                 if (e instanceof TypeError ||
                                     e instanceof UnloadedChunksError) {
-                                    generatorProgress[id].containsUnloadedChunks = true;
+                                    generatorProgress[id]!.containsUnloadedChunks = true;
                                 }
                             }
                         },

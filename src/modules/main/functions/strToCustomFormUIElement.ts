@@ -7,7 +7,7 @@ export function strToCustomFormUIElement(string: string) {
     });
     return new customFormUIElement(
         Number(string.split("|")[0]),
-        string.split("|")[1],
+        string.split("|")[1]!,
         x
     );
 }

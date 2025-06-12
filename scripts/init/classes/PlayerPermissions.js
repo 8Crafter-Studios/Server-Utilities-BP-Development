@@ -211,10 +211,10 @@ Object.defineProperties(Entity.prototype, {
 export function customFormUIEditor(sourceEntity: Entity|Player){
     let form2 = new ModalFormData();
     let players = world.getAllPlayers();
-    let targetList = [players[0].nameTag]
+    let targetList = [players[0]!.nameTag]
     for (const index in players) {
         if (Number(index) != 0) {
-        targetList = String([String(targetList), players[index].nameTag]).split(",");
+        targetList = String([String(targetList), players[index]!.nameTag]).split(",");
         }
     }
     let formId = event.message ?? "test1234"

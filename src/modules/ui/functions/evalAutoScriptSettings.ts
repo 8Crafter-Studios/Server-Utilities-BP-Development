@@ -48,10 +48,10 @@ export async function evalAutoScriptSettings(sourceEntitya: Entity | executeComm
     }
     let form2 = new ModalFormData();
     let players = world.getAllPlayers();
-    let targetList = [players[0].nameTag];
+    let targetList = [players[0]!.nameTag];
     for (const index in players) {
         if (Number(index) != 0) {
-            targetList = String([String(targetList), players[index].nameTag]).split(",");
+            targetList = String([String(targetList), players[index]!.nameTag]).split(",");
         }
     }
     form2.title(customFormUICodes.modal.titles.formStyles.fullscreen + "§r§0Eval Auto Script Settings (§nDEPRECATED§r§0)");

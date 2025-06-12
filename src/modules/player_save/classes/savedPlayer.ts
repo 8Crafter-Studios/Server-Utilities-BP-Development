@@ -458,7 +458,7 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
                         t = Date.now();
                     }
                     try {
-                        ei.setItem(36 + i, pe.getEquipment(EquipmentSlots[i]));
+                        ei.setItem(36 + i, pe.getEquipment(EquipmentSlots[i]!));
                     } catch (e) {}
                 }
             }
@@ -580,7 +580,7 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
             }
             for (let i = 0; i < 6; i++) {
                 try {
-                    ei.setItem(36 + i, pe.getEquipment(EquipmentSlots[i]));
+                    ei.setItem(36 + i, pe.getEquipment(EquipmentSlots[i]!));
                 } catch (e) {}
             }
             try {
@@ -821,7 +821,7 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
             }
             for (let i = 0; i < 6; i++) {
                 try {
-                    items[EquipmentSlots[i]] = ei.getItem(36 + i);
+                    items[EquipmentSlots[i]!] = ei.getItem(36 + i);
                 } catch (e) {}
             }
             try {

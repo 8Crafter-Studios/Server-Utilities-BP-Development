@@ -100,7 +100,7 @@ subscribedEvents.beforePlayerInteractWithEntity = world.beforeEvents.playerInter
         } catch (e) {
             console.error(e, e.stack);
         } /*
-                let effectsList = [players[playerTargetB].getComponents[0]]*/
+                let effectsList = [players[playerTargetB]!.getComponents[0]]*/
         try {
             scoreboardIdentity = playerTargetB.scoreboardIdentity?.id;
         } catch (e) {

@@ -13,7 +13,7 @@ export function showCustomFormUI(UIId: String, player: Player) {
     );
     let form12345678 = new customFormDataTypes[Number(
         String(world.getDynamicProperty("customUI:" + UIId)).split("|")[0]
-    )]();
+    )]!();
     eval(
         `form12345678.title(${String(
             world.getDynamicProperty("customUI:" + UIId)

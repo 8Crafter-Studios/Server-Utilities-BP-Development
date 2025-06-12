@@ -95,10 +95,10 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe((event) =>
         system.run(() => {
         let form2 = new ModalFormData();
         let players = world.getAllPlayers();
-        let targetList = [players[0].nameTag]
+        let targetList = [players[0]!.nameTag]
         for (const index in players) {
             if (Number(index) != 0) {
-            targetList = String([String(targetList), players[index].nameTag]).split(",");
+            targetList = String([String(targetList), players[index]!.nameTag]).split(",");
             }
         }
         form2.textField("Slot Number", "Slot Number", {defaultValue: "0"});
@@ -110,7 +110,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe((event) =>
                 let [slotNumber, playerTarget, playerViewer] = t.formValues!;
                 let playerTargetB = Number(playerTarget)
                 let playerViewerB = Number(playerViewer)
-        const inventory = players[playerTargetB].getComponent("inventory") as EntityInventoryComponent;
+        const inventory = players[playerTargetB]!.getComponent("inventory") as EntityInventoryComponent;
         let item = inventory.container.getItem(Number(slotNumber));
         function getDurability() { try {return item.getComponent("minecraft:durability") as ItemDurabilityComponent;} catch(e){console.error(e, e.stack); return undefined};}
         const durability = getDurability()
@@ -238,10 +238,10 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe((event) =>
         system.run(() => {
         let form2 = new ModalFormData();
         let players = world.getAllPlayers();
-        let targetList = [players[0].nameTag]
+        let targetList = [players[0]!.nameTag]
         for (const index in players) {
             if (Number(index) != 0) {
-            targetList = String([String(targetList), players[index].nameTag]).split(",");
+            targetList = String([String(targetList), players[index]!.nameTag]).split(",");
             }
         }
         form2.textField("Slot Number", "Slot Number", {defaultValue: "0"});
@@ -253,7 +253,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe((event) =>
                 let [slotNumber, playerTarget, playerViewer] = t.formValues!;
                 let playerTargetB = Number(playerTarget)
                 let playerViewerB = Number(playerViewer)
-        const inventory = players[playerTargetB].getComponent("inventory") as EntityInventoryComponent;
+        const inventory = players[playerTargetB]!.getComponent("inventory") as EntityInventoryComponent;
         let item = inventory.container.getItem(Number(slotNumber));
         function getDurability() { try {return item.getComponent("minecraft:durability") as ItemDurabilityComponent;} catch(e){console.error(e, e.stack); return undefined};}
         const durability = getDurability()
