@@ -128,6 +128,35 @@ export class GlobalBlockClipboard {
             .forEach((v) => world.structureManager.place(v.id, location.dimension, Vector.add(v, location), options));
     }
     /**
+     * Pastes the contents of this block clipboard.
+     *
+     * @param {DimensionLocation} location The location to paste the contents of the clipboard.
+     * @param {StructurePlaceOptions} [options] The options to paste the contents of the clipboard with.
+     * @param {Vector3} [sizes] The sizes of the chunks of the clipboard. Defaults to {@link GlobalBlockClipboard.contentsSizeLimits}.
+     * @param {number} [minMSBetweenTickWaits] The minimum number of milliseconds between tick waits. Defaults to {@link config.system.defaultMinMSBetweenTickWaits}.
+     * @returns {Promise<void>} A promise that resolves when the contents of the clipboard have been pasted.
+     *
+     * @throws {ReferenceError} If the clipboard is empty.
+     */
+    static async pasteAsync(location, options, sizes = this.contentsSizeLimits, minMSBetweenTickWaits = config.system.defaultMinMSBetweenTickWaits) {
+        if (this.isEmpty) {
+            throw new ReferenceError(`The global clipboard is empty.`);
+        }
+        let msSinceLastTickWait = Date.now();
+        for (const structure of this.ids.map((v) => ({
+            id: v,
+            x: Number(v.split(",")[1] ?? 0) * sizes.x,
+            y: Number(v.split(",")[2] ?? 0) * sizes.y,
+            z: Number(v.split(",")[3] ?? 0) * sizes.z,
+        }))) {
+            world.structureManager.place(structure.id, location.dimension, Vector.add(structure, location), options);
+            if (Date.now() - msSinceLastTickWait >= minMSBetweenTickWaits) {
+                await waitTick();
+                msSinceLastTickWait = Date.now();
+            }
+        }
+    }
+    /**
      * Gets the structure that contains the specified position in the clipboard contents.
      *
      * @param {Vector3} position The position to get the structure for.
@@ -305,6 +334,35 @@ export class BlockClipboard {
             z: Number(v.split(",")[3] ?? 0) * sizes.z,
         }))
             .forEach((v) => world.structureManager.place(v.id, location.dimension, Vector.add(v, location), options));
+    }
+    /**
+     * Pastes the contents of this block clipboard asynchronously.
+     *
+     * @param {DimensionLocation} location The location to paste the contents of the clipboard.
+     * @param {StructurePlaceOptions} [options] The options to paste the contents of the clipboard with.
+     * @param {Vector3} [sizes] The sizes of the chunks of the clipboard. Defaults to {@link BlockClipboard.contentsSize}.
+     * @param {number} [minMSBetweenTickWaits] The minimum number of milliseconds between tick waits. Defaults to {@link config.system.defaultMinMSBetweenTickWaits}.
+     * @returns {Promise<void>} A promise that resolves when the contents of the clipboard have been pasted.
+     *
+     * @throws {ReferenceError} If the clipboard is empty.
+     */
+    async pasteAsync(location, options, sizes = this.contentsSizeLimits, minMSBetweenTickWaits = config.system.defaultMinMSBetweenTickWaits) {
+        if (this.isEmpty) {
+            throw new ReferenceError(`Clipboard ${this.clipboardID} is empty.`);
+        }
+        let msSinceLastTickWait = Date.now();
+        for (const structure of this.ids.map((v) => ({
+            id: v,
+            x: Number(v.split(",")[1] ?? 0) * sizes.x,
+            y: Number(v.split(",")[2] ?? 0) * sizes.y,
+            z: Number(v.split(",")[3] ?? 0) * sizes.z,
+        }))) {
+            world.structureManager.place(structure.id, location.dimension, Vector.add(structure, location), options);
+            if (Date.now() - msSinceLastTickWait >= minMSBetweenTickWaits) {
+                await waitTick();
+                msSinceLastTickWait = Date.now();
+            }
+        }
     }
     /**
      * Gets the structure that contains the specified position in the clipboard contents.

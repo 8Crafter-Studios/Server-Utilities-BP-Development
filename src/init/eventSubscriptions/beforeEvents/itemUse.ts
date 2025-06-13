@@ -1892,12 +1892,7 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe((event) =>
                                                     );
                                                     world.structureManager.delete(structure);
                                                     if (
-                                                        !trailMode &&
-                                                        (shape !== "sphere" ||
-                                                            Math.pow((axis === "x" ? x - sign : x) - pos.x, 2) +
-                                                                Math.pow((axis === "y" ? y - sign : y) - pos.y, 2) +
-                                                                Math.pow((axis === "z" ? z - sign : z) - pos.z, 2) >
-                                                                Math.pow(radius, 2))
+                                                        !trailMode
                                                     ) {
                                                         block.getComponent("inventory")?.container?.clearAll();
                                                         block.setType("minecraft:air");
@@ -1956,7 +1951,8 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe((event) =>
                                     try {
                                         let msSinceLastTickWait = Date.now();
                                         const minMSBetweenTickWaits = config.system.defaultMinMSBetweenTickWaits;
-                                        const clipboard: typeof GlobalBlockClipboard | BlockClipboard<string> = !clipboardID || clipboardID === "global" ? BlockClipboard.global : BlockClipboard.getClipboard(clipboardID);
+                                        const clipboard: typeof GlobalBlockClipboard | BlockClipboard<string> =
+                                            !clipboardID || clipboardID === "global" ? BlockClipboard.global : BlockClipboard.getClipboard(clipboardID);
                                         clipboard.clear();
                                         clipboard.copy(event.source.dimension, {
                                             from: Vector.clamp(
@@ -2073,7 +2069,8 @@ subscribedEvents.beforeItemUse = world.beforeEvents.itemUse.subscribe((event) =>
                                 } else {
                                     const pos = roundVector3ToMiddleOfBlock(loc);
                                     try {
-                                        const clipboard: typeof GlobalBlockClipboard | BlockClipboard<string> = !clipboardID || clipboardID === "global" ? BlockClipboard.global : BlockClipboard.getClipboard(clipboardID);
+                                        const clipboard: typeof GlobalBlockClipboard | BlockClipboard<string> =
+                                            !clipboardID || clipboardID === "global" ? BlockClipboard.global : BlockClipboard.getClipboard(clipboardID);
                                         clipboard.paste({
                                             ...Vector.subtract(pos, Vector.scale(clipboard.contentsSize, 0.5)),
                                             dimension: event.source.dimension,

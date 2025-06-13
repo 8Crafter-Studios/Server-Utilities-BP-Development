@@ -1571,12 +1571,7 @@ console.error(e, e.stack);
                                                         max: { y: event.source.dimension.heightRange.max - 1 },
                                                     }));
                                                     world.structureManager.delete(structure);
-                                                    if (!trailMode &&
-                                                        (shape !== "sphere" ||
-                                                            Math.pow((axis === "x" ? x - sign : x) - pos.x, 2) +
-                                                                Math.pow((axis === "y" ? y - sign : y) - pos.y, 2) +
-                                                                Math.pow((axis === "z" ? z - sign : z) - pos.z, 2) >
-                                                                Math.pow(radius, 2))) {
+                                                    if (!trailMode) {
                                                         block.getComponent("inventory")?.container?.clearAll();
                                                         block.setType("minecraft:air");
                                                     }

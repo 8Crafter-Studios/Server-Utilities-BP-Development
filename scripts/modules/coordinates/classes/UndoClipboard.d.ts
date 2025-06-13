@@ -97,6 +97,17 @@ export declare class UndoClipboard<ClipboardID extends string = string> {
      */
     undo(saveTime?: number, options?: StructurePlaceOptions, clearSave?: boolean, sizes?: Vector3): 1 | 0;
     /**
+     * Undoes the action saved at the specified time asynchronously.
+     *
+     * @param {number} [saveTime=this.newestSaveTime] The time that the action this undo is for took place. Defaults to the newest save.
+     * @param {StructurePlaceOptions} [options] The options to undo the action with.
+     * @param {boolean} [clearSave] Whether to clear the save after undoing it. Defaults to `true`.
+     * @param {Vector3} [sizes] The sizes of the chunks of the clipboard. Defaults to `{ x: 64, y: 128, z: 64 }`.
+     * @param {number} [minMSBetweenTickWaits] The minimum number of milliseconds between tick waits. Defaults to {@link config.system.defaultMinMSBetweenTickWaits}.
+     * @returns {Promise<1 | 0>} A promise that resolves to `1` if the action was undone or `0` if the action was not found.
+     */
+    undoAsync(saveTime?: number, options?: StructurePlaceOptions, clearSave?: boolean, sizes?: Vector3, minMSBetweenTickWaits?: number): Promise<1 | 0>;
+    /**
      * Gets all undo clipboard IDs.
      *
      * @returns {string[]} An array of all of this undo clipboard IDs.
@@ -148,11 +159,21 @@ export declare class UndoClipboard<ClipboardID extends string = string> {
      * Undoes the last action on all undo clipboards.
      *
      * @param {StructurePlaceOptions} [options] The options to undo the action with.
-     * @param {boolean} [clearSave=true] Whether to clear the save after undoing it. Defaults to `true`.
-     * @param {Vector3} [sizes={ x: 64, y: 128, z: 64 }] The sizes of the chunks of the clipboard. Defaults to `{ x: 64, y: 128, z: 64 }`.
+     * @param {boolean} [clearSave] Whether to clear the save after undoing it. Defaults to `true`.
+     * @param {Vector3} [sizes] The sizes of the chunks of the clipboard. Defaults to `{ x: 64, y: 128, z: 64 }`.
      * @returns {1 | 0} `1` if the action was undone, `0` if the action was not found.
      */
     static undoLastAction(options?: StructurePlaceOptions, clearSave?: boolean, sizes?: Vector3): 1 | 0;
+    /**
+     * Undoes the last action from any of the undo clipboards asynchronously.
+     *
+     * @param {StructurePlaceOptions} [options] The options to undo the action with.
+     * @param {boolean} [clearSave] Whether to clear the save after undoing it. Defaults to `true`.
+     * @param {Vector3} [sizes] The sizes of the chunks of the clipboard. Defaults to `{ x: 64, y: 128, z: 64 }`.
+     * @param {number} [minMSBetweenTickWaits] The minimum number of milliseconds between tick waits. Defaults to {@link config.system.defaultMinMSBetweenTickWaits}.
+     * @returns {Promise<1 | 0>} A promise that resolves to `1` if the action was undone or `0` if the action was not found.
+     */
+    static undoLastActionAsync(options?: StructurePlaceOptions, clearSave?: boolean, sizes?: Vector3, minMSBetweenTickWaits?: number): Promise<1 | 0>;
     /**
      * Removes all items from all undo clipboards that do not have a corresponding structure.
      */

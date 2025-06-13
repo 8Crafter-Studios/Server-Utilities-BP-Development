@@ -1,4 +1,4 @@
-import { EquipmentSlot, Dimension, GameMode, MemoryTier, PlatformType, PlayerInputPermissions, world, Player, StructureSaveMode, ItemStack, InputPermissionCategory, PlayerCursorInventoryComponent, ContainerSlot, } from "@minecraft/server";
+import { EquipmentSlot, Dimension, GameMode, MemoryTier, PlatformType, PlayerInputPermissions, world, Player, StructureSaveMode, ItemStack, InputPermissionCategory, PlayerCursorInventoryComponent, ContainerSlot, Entity, LocationInUnloadedChunkError, } from "@minecraft/server";
 import "init/classes/config";
 import { ban } from "modules/ban/classes/ban";
 import { getSlotFromParsedSlot } from "modules/command_utilities/functions/getSlotFromParsedSlot";
@@ -248,11 +248,25 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
             console.warn(`Async player inventory save canceled for ${player.id} because the player is no longer valid, likely because they left during the save process.`);
             return;
         }
-        const entity = player.dimension.spawnEntity("andexdb:player_inventory_save_storage", {
-            x: player.x.floor() + 0.5,
-            y: player.dimension.heightRange.max - 1.5,
-            z: player.z.floor() + 0.5,
-        });
+        let entity;
+        try {
+            entity = player.dimension.spawnEntity("andexdb:player_inventory_save_storage", {
+                x: player.x.floor() + 0.5,
+                y: player.dimension.heightRange.max - 1.5,
+                z: player.z.floor() + 0.5,
+            });
+        }
+        catch (e) {
+            if (e instanceof LocationInUnloadedChunkError) {
+                /* console.warn(
+                    `Async player inventory save canceled for ${player.id} because the player is in an unloaded chunk.`
+                ); */
+                return;
+            }
+            else {
+                throw e;
+            }
+        }
         entity.setDynamicProperty("andexdb:playerInventorySaveStoragePlayerID", player.id);
         try {
             var t = Date.now();

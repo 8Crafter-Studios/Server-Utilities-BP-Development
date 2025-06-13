@@ -87,6 +87,18 @@ export declare class GlobalBlockClipboard {
      */
     static paste(location: DimensionLocation, options?: StructurePlaceOptions, sizes?: Vector3): void;
     /**
+     * Pastes the contents of this block clipboard.
+     *
+     * @param {DimensionLocation} location The location to paste the contents of the clipboard.
+     * @param {StructurePlaceOptions} [options] The options to paste the contents of the clipboard with.
+     * @param {Vector3} [sizes] The sizes of the chunks of the clipboard. Defaults to {@link GlobalBlockClipboard.contentsSizeLimits}.
+     * @param {number} [minMSBetweenTickWaits] The minimum number of milliseconds between tick waits. Defaults to {@link config.system.defaultMinMSBetweenTickWaits}.
+     * @returns {Promise<void>} A promise that resolves when the contents of the clipboard have been pasted.
+     *
+     * @throws {ReferenceError} If the clipboard is empty.
+     */
+    static pasteAsync(location: DimensionLocation, options?: StructurePlaceOptions, sizes?: Vector3, minMSBetweenTickWaits?: number): Promise<void>;
+    /**
      * Gets the structure that contains the specified position in the clipboard contents.
      *
      * @param {Vector3} position The position to get the structure for.
@@ -198,6 +210,18 @@ export declare class BlockClipboard<ClipboardID extends string = string> {
      * @throws {ReferenceError} If the clipboard is empty.
      */
     paste(location: DimensionLocation, options?: StructurePlaceOptions, sizes?: Vector3): void;
+    /**
+     * Pastes the contents of this block clipboard asynchronously.
+     *
+     * @param {DimensionLocation} location The location to paste the contents of the clipboard.
+     * @param {StructurePlaceOptions} [options] The options to paste the contents of the clipboard with.
+     * @param {Vector3} [sizes] The sizes of the chunks of the clipboard. Defaults to {@link BlockClipboard.contentsSize}.
+     * @param {number} [minMSBetweenTickWaits] The minimum number of milliseconds between tick waits. Defaults to {@link config.system.defaultMinMSBetweenTickWaits}.
+     * @returns {Promise<void>} A promise that resolves when the contents of the clipboard have been pasted.
+     *
+     * @throws {ReferenceError} If the clipboard is empty.
+     */
+    pasteAsync(location: DimensionLocation, options?: StructurePlaceOptions, sizes?: Vector3, minMSBetweenTickWaits?: number): Promise<void>;
     /**
      * Gets the structure that contains the specified position in the clipboard contents.
      *

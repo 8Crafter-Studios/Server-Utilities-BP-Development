@@ -17698,7 +17698,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                 {
                     try {
                         eventData.cancel = true;
-                        system.run(() => {
+                        system.run(async () => {
                             try {
                                 const args = evaluateParameters(switchTestB, [
                                     "presetText",
@@ -17759,7 +17759,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                         catch (e) {
                                             player.sendMessageB("§c" + e + " " + e.stack);
                                         }
-                                        clipboard.paste(Object.assign({ dimension: dimensiona }, ca), {
+                                        await clipboard.pasteAsync(Object.assign({ dimension: dimensiona }, ca), {
                                             includeBlocks: !args[1].includes("b"),
                                             includeEntities: !args[1].includes("e"),
                                             waterlogged: args[1].includes("w"),
@@ -17830,7 +17830,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     }
                                     else if (!(args[1]?.t ?? false)) {
                                         try {
-                                            if (UndoClipboard.undoLastAction(undefined, !(args[1]?.k ?? false)) === 0) {
+                                            if (await UndoClipboard.undoLastActionAsync(undefined, !(args[1]?.k ?? false)) === 0) {
                                                 player.sendMessageB("§cNothing to undo.");
                                             }
                                             else {
@@ -17856,7 +17856,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                 return a;
                                             })(), saveLocation.dimension);
                                             try {
-                                                if (clipboard.undo(undefined, undefined, !(args[1]?.k ?? false)) === 0) {
+                                                if (await clipboard.undoAsync(undefined, undefined, !(args[1]?.k ?? false)) === 0) {
                                                     player.sendMessageB("§cNothing to undo.");
                                                 }
                                                 else {
@@ -17882,7 +17882,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     }
                                     else if (!(args[1]?.t ?? false)) {
                                         try {
-                                            if (clipboard.undo(undefined, undefined, !(args[1]?.k ?? false)) == 0) {
+                                            if (await clipboard.undoAsync(undefined, undefined, !(args[1]?.k ?? false)) == 0) {
                                                 player.sendMessageB("§cNothing to undo.");
                                             }
                                             else {
@@ -17906,7 +17906,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                 return a;
                                             })(), saveLocation.dimension);
                                             try {
-                                                if (clipboard.undo(undefined, undefined, !(args[1]?.k ?? false)) == 0) {
+                                                if (await clipboard.undoAsync(undefined, undefined, !(args[1]?.k ?? false)) == 0) {
                                                     player.sendMessageB("§cNothing to undo.");
                                                 }
                                                 else {

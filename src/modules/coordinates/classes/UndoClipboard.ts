@@ -90,7 +90,7 @@ export class UndoClipboard<ClipboardID extends string = string> {
                 world
                     .getDynamicPropertyIds()
                     .filter((v) => v.startsWith(`undoclipboard:${this.clipboardID};`))
-                    .map((v) => Number(v.slice(22)))
+                    .map((v) => Number(v.replace(`undoclipboard:${this.clipboardID};`, "")))
             ),
         ]
             .sort()
@@ -226,15 +226,71 @@ export class UndoClipboard<ClipboardID extends string = string> {
         return 1;
     }
     /**
+     * Undoes the action saved at the specified time asynchronously.
+     *
+     * @param {number} [saveTime=this.newestSaveTime] The time that the action this undo is for took place. Defaults to the newest save.
+     * @param {StructurePlaceOptions} [options] The options to undo the action with.
+     * @param {boolean} [clearSave] Whether to clear the save after undoing it. Defaults to `true`.
+     * @param {Vector3} [sizes] The sizes of the chunks of the clipboard. Defaults to `{ x: 64, y: 128, z: 64 }`.
+     * @param {number} [minMSBetweenTickWaits] The minimum number of milliseconds between tick waits. Defaults to {@link config.system.defaultMinMSBetweenTickWaits}.
+     * @returns {Promise<1 | 0>} A promise that resolves to `1` if the action was undone or `0` if the action was not found.
+     */
+    public async undoAsync(
+        saveTime: number = this.newestSaveTime!,
+        options?: StructurePlaceOptions,
+        clearSave: boolean = true,
+        sizes: Vector3 = { x: 64, y: 128, z: 64 },
+        minMSBetweenTickWaits: number = config.system.defaultMinMSBetweenTickWaits
+    ): Promise<1 | 0> {
+        if (this.ids.length == 0) {
+            return 0;
+        }
+        const saveIDs = this.saveIds(saveTime);
+        if (saveIDs.length == 0) {
+            return 0;
+        }
+        let msSinceLastTickWait = Date.now();
+        for (const structure of saveIDs.map((v) => ({
+            id: v,
+            x: Number(v.split(",")[1] ?? 0) * sizes.x,
+            y: Number(v.split(",")[2] ?? 0) * sizes.y,
+            z: Number(v.split(",")[3] ?? 0) * sizes.z,
+        }))) {
+            /*
+            main.clearAllContainerBlocks(main.scanForContainerBlocks(v, Vector.add(v, sizes), dimensionsb[String(world.getDynamicProperty(`undoclipboarddimension:${this.clipboardID};${saveTime}`))]??overworld, "Block") as Block[])*/
+            world.structureManager.place(
+                structure.id,
+                dimensionsb[String(world.getDynamicProperty(`undoclipboarddimension:${this.clipboardID};${saveTime}`)) as keyof typeof dimensionsb] ??
+                    dimensionsb["minecraft:overworld"],
+                Vector.add(structure, world.getDynamicProperty(`undoclipboard:${this.clipboardID};${saveTime}`) as Vector3),
+                options
+            );
+            if (Date.now() - msSinceLastTickWait >= minMSBetweenTickWaits) {
+                await waitTick();
+                msSinceLastTickWait = Date.now();
+            }
+        }
+        if (clearSave) {
+            this.saveIds(saveTime).forEach((v) => {
+                this.clearTime(saveTime);
+            });
+        }
+        return 1;
+    }
+    /**
      * Gets all undo clipboard IDs.
      *
      * @returns {string[]} An array of all of this undo clipboard IDs.
      */
     public static getAllClipboardIDs(): string[] {
-        return world
-            .getDynamicPropertyIds()
-            .filter((v) => v.startsWith("undoclipboardsize:") && !v.includes(","))
-            .map((v) => v.replace("undoclipboardsize:", "").split(";").slice(0, -1).join(";"));
+        return [
+            ...new Set(
+                world
+                    .getDynamicPropertyIds()
+                    .filter((v) => v.startsWith("undoclipboardsize:") && !v.includes(","))
+                    .map((v) => v.replace("undoclipboardsize:", "").split(";").slice(0, -1).join(";"))
+            ),
+        ];
     }
     /**
      * Gets all undo clipboards.
@@ -289,14 +345,28 @@ export class UndoClipboard<ClipboardID extends string = string> {
      * Undoes the last action on all undo clipboards.
      *
      * @param {StructurePlaceOptions} [options] The options to undo the action with.
-     * @param {boolean} [clearSave=true] Whether to clear the save after undoing it. Defaults to `true`.
-     * @param {Vector3} [sizes={ x: 64, y: 128, z: 64 }] The sizes of the chunks of the clipboard. Defaults to `{ x: 64, y: 128, z: 64 }`.
+     * @param {boolean} [clearSave] Whether to clear the save after undoing it. Defaults to `true`.
+     * @param {Vector3} [sizes] The sizes of the chunks of the clipboard. Defaults to `{ x: 64, y: 128, z: 64 }`.
      * @returns {1 | 0} `1` if the action was undone, `0` if the action was not found.
      */
     public static undoLastAction(options?: StructurePlaceOptions, clearSave: boolean = true, sizes: Vector3 = { x: 64, y: 128, z: 64 }): 1 | 0 {
         return this.getAllClipboards()
             .reduce((a, b) => ((b.newestSaveTime ?? 0) > (a.newestSaveTime ?? 0) ? b : a))
             .undo(undefined, options, clearSave, sizes);
+    }
+    /**
+     * Undoes the last action from any of the undo clipboards asynchronously.
+     *
+     * @param {StructurePlaceOptions} [options] The options to undo the action with.
+     * @param {boolean} [clearSave] Whether to clear the save after undoing it. Defaults to `true`.
+     * @param {Vector3} [sizes] The sizes of the chunks of the clipboard. Defaults to `{ x: 64, y: 128, z: 64 }`.
+     * @param {number} [minMSBetweenTickWaits] The minimum number of milliseconds between tick waits. Defaults to {@link config.system.defaultMinMSBetweenTickWaits}.
+     * @returns {Promise<1 | 0>} A promise that resolves to `1` if the action was undone or `0` if the action was not found.
+     */
+    public static async undoLastActionAsync(options?: StructurePlaceOptions, clearSave: boolean = true, sizes: Vector3 = { x: 64, y: 128, z: 64 }, minMSBetweenTickWaits: number = config.system.defaultMinMSBetweenTickWaits): Promise<1 | 0> {
+        return await this.getAllClipboards()
+            .reduce((a, b) => ((b.newestSaveTime ?? 0) > (a.newestSaveTime ?? 0) ? b : a))
+            .undoAsync(undefined, options, clearSave, sizes, minMSBetweenTickWaits);
     }
     /**
      * Removes all items from all undo clipboards that do not have a corresponding structure.
