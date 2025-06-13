@@ -4,12 +4,6 @@ import "init/classes/config";
  * Stores WorldEdit undo history for the `\\undo` command.
  *
  * @template ClipboardID The ID of this undo clipboard.
- *
- * @todo Add documentation.
- *
- * @todo Make this be able to have multiple sub-clipboards like the {@link modules.coords.BlockClipboard} class, but also allow a universal clipboard that can undo actions from any clipboard.
- *
- * @hideconstructor
  */
 export declare class UndoClipboard<ClipboardID extends string = string> {
     /**
