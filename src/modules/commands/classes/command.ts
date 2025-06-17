@@ -1,4 +1,4 @@
-import { world, Player, Dimension, type CommandError } from "@minecraft/server";
+import { world, Player, Dimension, type CommandError, PlayerPermissionLevel } from "@minecraft/server";
 import { tfsb } from "init/functions/tfsb";
 import { SemVerString } from "modules/main/classes/SemVerString";
 import { commands_format_version } from "modules/commands/constants/commands_format_version";
@@ -680,7 +680,7 @@ namespace exports {
                 }
 
                 if (this.settings.requiresOp) {
-                    if (!(tryget(() => (player as Player).isOp()) ?? true)) {
+                    if ((player as Player).playerPermissionLevel !== PlayerPermissionLevel.Operator) {
                         return false;
                     }
                 }

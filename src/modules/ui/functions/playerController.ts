@@ -115,7 +115,7 @@ export function playerController(sourceEntitya: Entity | executeCommandPlayerW |
         form.textField("Try Teleport Z Coordinate", "§4Z Coordinate", {defaultValue: String(playerList[playerTargetB]!.location.z)});
         form.toggle("Try Teleport - checkForBlocks", { defaultValue: false });
         form.toggle("Try Teleport - keepVelocity", { defaultValue: false });
-        form.toggle("Set Operator", { defaultValue: playerList[playerTargetB]!.isOp() });
+        // form.toggle("Set Operator", { defaultValue: playerList[playerTargetB]!.isOp() });
         form.toggle("Set Spawn Point", { defaultValue: false });
         form.textField("Spawn Dimension", "Spawn Dimension", { defaultValue: dimension });
         form.textField("Spawn X Coordinate", "Spawn X Coordinate", {defaultValue: spawnXPosition});
@@ -191,7 +191,7 @@ export function playerController(sourceEntitya: Entity | executeCommandPlayerW |
                     tryTeleportZ,
                     tryTeleportCheckForBlocks,
                     tryTeleportKeepVelocity,
-                    setOp,
+                    // setOp,
                     setSpawnPoint,
                     spawnDimension,
                     spawnX,
@@ -215,7 +215,7 @@ export function playerController(sourceEntitya: Entity | executeCommandPlayerW |
             scale.value = Number(scaleValue);*/ /**/
                 if (Boolean(changeNameTag) == true) {
                     try {
-                        playerList[playerTargetB]!.setOp(Boolean(setOp));
+                        // playerList[playerTargetB]!.setOp(Boolean(setOp));
                     } catch (e) {
                         console.error(e, e.stack);
                     }

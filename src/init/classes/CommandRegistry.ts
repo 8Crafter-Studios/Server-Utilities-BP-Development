@@ -5,7 +5,7 @@
  * @todo Finish the command registry system.
  */
 
-import { ChatSendBeforeEvent, Player, type Vector3 } from "@minecraft/server";
+import { ChatSendBeforeEvent, Player, PlayerPermissionLevel, type Vector3 } from "@minecraft/server";
 import { tfsb } from "init/functions/tfsb";
 import { commandSettings } from "modules/commands/classes/commandSettings";
 import { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
@@ -980,7 +980,7 @@ namespace exports {
                 }
 
                 if (this.settings?.requiresOp ?? false) {
-                    if (!(tryget(() => playerToTest.isOp()) ?? true)) {
+                    if (playerToTest.playerPermissionLevel !== PlayerPermissionLevel.Operator) {
                         return false;
                     }
                 }

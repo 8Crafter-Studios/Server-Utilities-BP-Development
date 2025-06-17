@@ -954,7 +954,7 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
                 // ms for 1000 runs: 0
                 id: player.id,
                 // ms for 1000 runs: 1
-                isOp: player.isOp(),
+                // isOp: player.isOp(),
                 // ms for 1000 runs: 4
                 tags: player.getTags(),
                 // ms for 1000 runs: 1
@@ -1033,7 +1033,7 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
                 // ms for 1000 runs: 0
                 id: player.id,
                 // ms for 1000 runs: 1
-                isOp: player.isOp(),
+                // isOp: player.isOp(),
                 // ms for 1000 runs: 4
                 tags: player.getTags(),
                 // ms for 1000 runs: 1
@@ -1237,7 +1237,7 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
                 // ms for 1000 runs: 0
                 id: player.id,
                 // ms for 1000 runs: 1
-                isOp: player.isOp(),
+                // isOp: player.isOp(),
                 // ms for 1000 runs: 4
                 tags: player.getTags(),
                 // ms for 1000 runs: 1
@@ -1316,7 +1316,7 @@ saveBan(ban: ban){if(ban.type=="name"){world.setDynamicProperty(`ban:${ban.playe
                 // ms for 1000 runs: 0
                 id: player.id,
                 // ms for 1000 runs: 1
-                isOp: player.isOp(),
+                // isOp: player.isOp(),
                 // ms for 1000 runs: 4
                 tags: player.getTags(),
                 // ms for 1000 runs: 1

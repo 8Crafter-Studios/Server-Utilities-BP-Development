@@ -610,8 +610,10 @@ subscribedEvents.afterScriptEventReceive = system.afterEvents.scriptEventReceive
                             players[playerTargetB]!.level +
                             "§a, §btotalXpNeededForNextLevel§a: §c" +
                             players[playerTargetB]!.totalXpNeededForNextLevel +
-                            "§a, §bisOp§a: §g" +
-                            players[playerTargetB]!.isOp() +
+                            "§a, §bplayerPermissionLevel§a: §g" +
+                            players[playerTargetB]!.playerPermissionLevel +
+                            "§a, §bcommandPermissionLevel§a: §g" +
+                            players[playerTargetB]!.commandPermissionLevel +
                             "§a, §bgetBlockFromViewDirection§a: " +
                             blockViewedBlockType +
                             ", §bgetEntitiesFromViewDirection§a: §9{ §sEntity§a: " +
@@ -3476,7 +3478,7 @@ break;*/ /*
             form.textField("Try Teleport Z Coordinate", "§4Z Coordinate", { defaultValue: String(playerList[playerTargetB]!.location.z) });
             form.toggle("Try Teleport - checkForBlocks", { defaultValue: false });
             form.toggle("Try Teleport - keepVelocity", { defaultValue: false });
-            form.toggle("Set Operator", { defaultValue: playerList[playerTargetB]!.isOp() });
+            // form.toggle("Set Operator", { defaultValue: playerList[playerTargetB]!.isOp() });
             form.toggle("Set Spawn Point", { defaultValue: false });
             form.textField("Spawn Dimension", "Spawn Dimension", { defaultValue: dimension });
             form.textField("Spawn X Coordinate", "Spawn X Coordinate", { defaultValue: spawnXPosition });
@@ -3552,7 +3554,7 @@ break;*/ /*
                         tryTeleportZ,
                         tryTeleportCheckForBlocks,
                         tryTeleportKeepVelocity,
-                        setOp,
+                        // setOp,
                         setSpawnPoint,
                         spawnDimension,
                         spawnX,
@@ -3576,7 +3578,7 @@ break;*/ /*
                 scale.value = Number(scaleValue);*/ /**/
                     if (Boolean(changeNameTag) == true) {
                         try {
-                            playerList[playerTargetB]!.setOp(Boolean(setOp));
+                            // playerList[playerTargetB]!.setOp(Boolean(setOp));
                         } catch (e) {
                             console.error(e, e.stack);
                         }
@@ -3954,7 +3956,7 @@ break;*/ /*
             form.textField("Try Teleport Z Coordinate", "§4Z Coordinate", { defaultValue: String(playerList[playerTargetB]!.location.z) });
             form.toggle("Try Teleport - checkForBlocks", { defaultValue: false });
             form.toggle("Try Teleport - keepVelocity", { defaultValue: false });
-            form.toggle("Set Operator", { defaultValue: playerList[playerTargetB]!.isOp() });
+            // form.toggle("Set Operator", { defaultValue: playerList[playerTargetB]!.isOp() });
             form.toggle("Set Spawn Point", { defaultValue: false });
             form.textField("Spawn Dimension", "Spawn Dimension", { defaultValue: dimension });
             form.textField("Spawn X Coordinate", "Spawn X Coordinate", { defaultValue: spawnXPosition });
@@ -4030,7 +4032,7 @@ break;*/ /*
                         tryTeleportZ,
                         tryTeleportCheckForBlocks,
                         tryTeleportKeepVelocity,
-                        setOp,
+                        // setOp,
                         setSpawnPoint,
                         spawnDimension,
                         spawnX,
@@ -4052,7 +4054,7 @@ break;*/ /*
                     /*
             let scale = playerList[0]!.getComponent("scale") as EntityScaleComponent;
             scale.value = Number(scaleValue);*/
-                    playerList[playerTargetB]!.setOp(Boolean(setOp));
+                    // playerList[playerTargetB]!.setOp(Boolean(setOp));
                     if (Boolean(changeNameTag) == true) {
                         try {
                             playerList[playerTargetB]!.nameTag = String(newNameTag);

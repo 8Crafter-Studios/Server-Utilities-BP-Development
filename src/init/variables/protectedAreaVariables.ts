@@ -1443,7 +1443,7 @@ export class ProtectedAreaTester<
                                                         (item) => data.player.heldItem?.typeId === (ItemTypes.get(item)?.id ?? item)
                                                     )
                                               : true) &&
-                                          prop!.mask.testIfMatches(data.permutationBeingPlaced, prop!.mode);
+                                          prop!.mask.testIfMatches(data.permutationToPlace, prop!.mode);
                                       break;
                                   }
                                   case "playerBreakBlock": {
