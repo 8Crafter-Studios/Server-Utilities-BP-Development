@@ -30,7 +30,7 @@ subscribedEvents.afterItemStartUse = world.afterEvents.itemStartUse.subscribe(
                         event.itemStack.getDynamicProperty("selectmode")
                     ).includes("nopassable"),
                 })?.block?.location;
-                if (!!!loc) {
+                if (!loc) {
                     event.source.sendMessage(
                         "§cError: You must be facing a block."
                     );
