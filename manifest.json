@@ -31,7 +31,7 @@
         },
         {
             "module_name": "@minecraft/server",
-            "version": "2.0.0-beta"
+            "version": "2.1.0-beta"
         },
         {
             "module_name": "@minecraft/server-gametest",
@@ -39,7 +39,7 @@
         },
         {
             "module_name": "@minecraft/server-ui",
-            "version": "2.0.0-beta"
+            "version": "2.1.0-beta"
         },
         {
             "module_name": "@minecraft/debug-utilities", // DO NOT LEAVE THIS LINE OF CODE IN WHEN RELEASING IT, IF THIS IS ADDED TO A REALM WITH THIS, IT WILL BRICK THE ADD-ON'S UUID!
@@ -52,7 +52,7 @@
         {
             "module_name": "@minecraft/server-net",
             "version": "1.0.0-beta"
-        } */ /* ,
+        } *//* ,
         {
             "module_name": "@minecraft/server-editor",
             "version": "0.1.0-beta"

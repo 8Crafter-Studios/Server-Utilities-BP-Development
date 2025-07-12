@@ -155,7 +155,7 @@ export interface SubscribedEventSavedData<EventTypeID extends SubscribedEventTyp
          * Additional metadata for the event subscription.
          */
         [key: string]: string | number | boolean | undefined;
-    }
+    };
 }
 
 /**
@@ -3896,7 +3896,7 @@ export class Events_andexdbBeforeEvents implements ReplaceTypeOfKey<andexdbBefor
                     eventType: "andexdb.beforeEvents.modifiedChatMessageFormatFinalization",
                     saveID: `EventSubscription:${getSuperUniqueID()}`,
                 });
-                return subscription;                
+                return subscription;
             },
             /**
              * Deletes the provided event subscription.
@@ -4215,7 +4215,7 @@ export class andexdb_ModifiedChatMessageFormatBeforeEvent implements ChatSendBef
         /**
          * The type ID of the dimension that the player is in.
          */
-        dimension: "minecraft:overworld" | "overworld" | "minecraft:nether" | "nether" | "minecraft:the_end" | "the_end"
+        dimension: "minecraft:overworld" | "overworld" | "minecraft:nether" | "nether" | "minecraft:the_end" | "the_end";
         /**
          * The personal settings for the player.
          */
@@ -4358,7 +4358,7 @@ export class andexdb_ModifiedChatMessageFormatBeforeEvent implements ChatSendBef
          *
          * @type {number}
          */
-        time?: number
+        time?: number;
     };
     /**
      * @remarks
@@ -4391,7 +4391,7 @@ export class andexdb_ModifiedChatMessageFormatBeforeEvent implements ChatSendBef
          * @type {"hidden" | "sudo" | "nameTag" | "name"}
          */
         sourceType: "hidden" | "sudo" | "nameTag" | "name";
-    }
+    };
 }
 
 /**
@@ -4763,7 +4763,7 @@ export class andexdb_ModifiedChatMessageSendBeforeEvent implements ChatSendBefor
         /**
          * The type ID of the dimension that the player was in.
          */
-        readonly dimension: "minecraft:overworld" | "overworld" | "minecraft:nether" | "nether" | "minecraft:the_end" | "the_end"
+        readonly dimension: "minecraft:overworld" | "overworld" | "minecraft:nether" | "nether" | "minecraft:the_end" | "the_end";
         /**
          * The personal settings for the player that were used.
          */
@@ -4906,7 +4906,7 @@ export class andexdb_ModifiedChatMessageSendBeforeEvent implements ChatSendBefor
          *
          * @type {number}
          */
-        readonly time?: number
+        readonly time?: number;
     };
     /**
      * @remarks
@@ -4939,7 +4939,7 @@ export class andexdb_ModifiedChatMessageSendBeforeEvent implements ChatSendBefor
          * @type {"hidden" | "sudo" | "nameTag" | "name"}
          */
         readonly sourceType: "hidden" | "sudo" | "nameTag" | "name";
-    }
+    };
 }
 
 /**
@@ -5091,7 +5091,7 @@ export class andexdb_ModifiedChatMessageSendAfterEvent implements ChatSendAfterE
         /**
          * The type ID of the dimension that the player was in.
          */
-        readonly dimension: "minecraft:overworld" | "overworld" | "minecraft:nether" | "nether" | "minecraft:the_end" | "the_end"
+        readonly dimension: "minecraft:overworld" | "overworld" | "minecraft:nether" | "nether" | "minecraft:the_end" | "the_end";
         /**
          * The personal settings for the player that were used.
          */
@@ -5234,7 +5234,7 @@ export class andexdb_ModifiedChatMessageSendAfterEvent implements ChatSendAfterE
          *
          * @type {number}
          */
-        readonly time?: number
+        readonly time?: number;
     };
     /**
      * @remarks
@@ -5267,7 +5267,7 @@ export class andexdb_ModifiedChatMessageSendAfterEvent implements ChatSendAfterE
          * @type {"hidden" | "sudo" | "nameTag" | "name"}
          */
         readonly sourceType: "hidden" | "sudo" | "nameTag" | "name";
-    }
+    };
 }
 
 /**
@@ -5358,7 +5358,8 @@ export class andexdbBeforeEvents {
      *   };`);
      * }
      */
-    readonly modifiedChatMessageFormatFinalization: andexdb_ModifiedChatMessageFormatFinalizationBeforeEventSignal = new andexdb_ModifiedChatMessageFormatFinalizationBeforeEventSignal();
+    readonly modifiedChatMessageFormatFinalization: andexdb_ModifiedChatMessageFormatFinalizationBeforeEventSignal =
+        new andexdb_ModifiedChatMessageFormatFinalizationBeforeEventSignal();
     /**
      * This event is triggered before a modified chat message is sent.
      *
@@ -6095,8 +6096,11 @@ namespace exports {
 
 export import SubscribedEvent = exports.SubscribedEvent;
 export import Events = exports.Events;
-import type { chatSendMessageEvaluator_prePlayers, chatSendMessageEvaluator_prePlayersOutput, TagChatMessageFormat } from "modules/chat/functions/chatSendMessageEvaluator";
-import type { ActionFormData } from "@minecraft/server-ui";
+import type {
+    chatSendMessageEvaluator_prePlayers,
+    chatSendMessageEvaluator_prePlayersOutput,
+    TagChatMessageFormat,
+} from "modules/chat/functions/chatSendMessageEvaluator";
 
 Object.defineProperties(globalThis, {
     Events: {
