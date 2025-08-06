@@ -332,4 +332,4 @@ export class UndoClipboard {
             .forEach((v) => clipboard.clearTime(v)));
     }
 }
-//# sourceMappingURL=UndoClipboard.js.map
+//# sourceMappingURL=undoClipboard.js.map

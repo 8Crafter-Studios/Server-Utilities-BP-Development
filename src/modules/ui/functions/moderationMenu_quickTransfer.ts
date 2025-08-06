@@ -16,7 +16,7 @@ import { securityVariables } from "security/ultraSecurityModeUtils";
 export async function moderationMenu_quickTransfer(sourceEntity: loosePlayerType): Promise<0 | 1> {
     const player = extractPlayerFromLooseEntityType(sourceEntity);
     while (true) {
-        try{
+        try {
             if (securityVariables.ultraSecurityModeEnabled) {
                 if (securityVariables.testPlayerForPermission(player, "andexdb.transferPlayers") == false) {
                     const r = await showMessage(
@@ -65,7 +65,10 @@ export async function moderationMenu_quickTransfer(sourceEntity: loosePlayerType
                     if (rb.formValues![1]?.toNumber()! < 0 || rb.formValues![1]?.toNumber()! > 65535) {
                         throw new TypeError("Port must be between 0 and 65535 (inclusive).");
                     }
-                    transferPlayer(target, rb.formValues![0] as string, rb.formValues![1]!.toNumber()!);
+                    transferPlayer(target, {
+                        hostname: rb.formValues![0] as string,
+                        port: rb.formValues![1]!.toNumber()!,
+                    });
                     return 1;
                 }
                 case "back":
@@ -75,7 +78,7 @@ export async function moderationMenu_quickTransfer(sourceEntity: loosePlayerType
                 case "refresh":
                     continue;
             }
-        }catch(e){
+        } catch (e) {
             console.error(e, e.stack);
             // Present the error to the user, and return 1 if they select "Back", and 0 if they select "Close".
             return ((await showMessage(player, "An Error occurred", `An error occurred: ${e}${e?.stack}`, "Back", "Close")).selection !== 1).toNumber();

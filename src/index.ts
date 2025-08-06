@@ -544,7 +544,7 @@ declare global {
 // export const gt = globalThis;
 
 // import "Main";
-import { UndoClipboard } from "modules/coordinates/classes/UndoClipboard";
+import { UndoClipboard } from "modules/coordinates/classes/undoClipboard";
 import type { moduleOptionalImportPathMap, optionalModuleObjectImportFilePathsImportMap } from "directoryTree";
 globalThis.scriptStartTick = system.currentTick;
 world.setDynamicProperty("format_version", format_version);

@@ -155,6 +155,21 @@ declare global {
 
 (function () {
     "use strict";
+    
+    /**
+     * Asserts that a value is not `undefined` or `null`.
+     *
+     * @template T The type of the value to check.
+     * @param {T} value The value to check.
+     * @returns {asserts value is NonNullable<T>} Asserts that the value is not `undefined` or `null`.
+     *
+     * @throws {Error} If the value is `undefined` or `null`.
+     */
+    function assertIsDefined<T>(value: T): asserts value is NonNullable<T> {
+        if (value === undefined || value === null) {
+            throw new Error(`${value} is not defined`);
+        }
+    }
 
     var rx_one = /^[\],:{}\s]*$/;
     var rx_two = /\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g;
@@ -168,7 +183,7 @@ declare global {
         return n < 10 ? "0" + n : n;
     }
 
-    function this_value() {
+    function this_value(this: any) {
         return this.valueOf();
     }
 

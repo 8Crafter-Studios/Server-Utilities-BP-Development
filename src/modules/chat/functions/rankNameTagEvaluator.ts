@@ -42,8 +42,10 @@ export function rankNameTagEvaluator_prePlayers(
     let nameFormatting = options?.nameFormatting ?? "";
     let nameGradientMode = options?.nameGradientMode ?? undefined;
     let showHealth = options?.showHealth || config.chatRanks.showHealthOnPlayerNameTags;
-    let currentHealth = (options?.currentHealth ?? player?.getComponent("health")?.currentValue)?.toFixed(config.chatRanks.playerNameTagHealthPrecision)?.toNumber();
-    let maxHealth =( options?.maxHealth ?? player?.getComponent("health")?.effectiveMax)?.toFixed(config.chatRanks.playerNameTagHealthPrecision)?.toNumber();
+    let currentHealth = (options?.currentHealth ?? player?.getComponent("health")?.currentValue)
+        ?.toFixed(config.chatRanks.playerNameTagHealthPrecision)
+        ?.toNumber();
+    let maxHealth = (options?.maxHealth ?? player?.getComponent("health")?.effectiveMax)?.toFixed(config.chatRanks.playerNameTagHealthPrecision)?.toNumber();
     if (nameFormatting == "") {
         nameFormatting = options?.playerPersonalSettings?.defaultNameFormatting ?? config.chatRanks.defaultNameFormatting;
     }
@@ -111,6 +113,7 @@ export function rankNameTagEvaluator_players(
                 fade: () => undefined as any,
                 setCamera: () => undefined as any,
                 setDefaultCamera: () => undefined as any,
+                setFov: () => undefined as any,
                 isValid: false,
             },
             chunkIndex: undefined,

@@ -248,7 +248,8 @@ export function chatSendMessageEvaluator_prePlayers(
     if (separatorFormatting == "") {
         separatorFormatting = options?.playerPersonalSettings?.defaultSeparatorFormatting ?? config.chatRanks.defaultSeparatorFormatting;
     }
-    const ranksListWithDefault = (options?.ranks ?? []).length > 0 ? options?.ranks! : config.chatRanks.defaultRank !== "" ? [config.chatRanks.defaultRank] : [];
+    const ranksListWithDefault =
+        (options?.ranks ?? []).length > 0 ? options?.ranks! : config.chatRanks.defaultRank !== "" ? [config.chatRanks.defaultRank] : [];
     let rank: string = "";
     switch (config.chatRanks.rankEvaluatorMode_chat) {
         case "default":
@@ -275,7 +276,11 @@ export function chatSendMessageEvaluator_prePlayers(
           nameFormatting +
           (!!nameGradientMode ? evaluateChatColorType(displayName.value ?? "", nameGradientMode) : displayName.value ?? "") +
           (options?.playerPersonalSettings?.nameDisplaySuffix ?? config.chatRanks.nameDisplaySuffix);
-    let nameb: string = displayName.hidden ? "" : !!nameGradientMode ? evaluateChatColorType(displayName.value ?? "", nameGradientMode) : displayName.value ?? "";
+    let nameb: string = displayName.hidden
+        ? ""
+        : !!nameGradientMode
+        ? evaluateChatColorType(displayName.value ?? "", nameGradientMode)
+        : displayName.value ?? "";
     name.length != 0 ? (name += options?.playerPersonalSettings?.chatNameAndMessageSeparator ?? config.chatRanks.chatNameAndMessageSeparator) : undefined; /*
         let rankMode = 0
         for (let index in player.getTags()) {
@@ -371,6 +376,7 @@ export function chatSendMessageEvaluator_players(
                 fade: () => undefined as any,
                 setCamera: () => undefined as any,
                 setDefaultCamera: () => undefined as any,
+                setFov: () => undefined as any,
                 isValid: false,
             },
             chunkIndex: undefined,
@@ -608,6 +614,7 @@ export function chatSendMessageEvaluator_players(
                 fade: () => undefined as any,
                 setCamera: () => undefined as any,
                 setDefaultCamera: () => undefined as any,
+                setFov: () => undefined as any,
                 isValid: false,
             },
             chunkIndex: undefined,
@@ -984,7 +991,9 @@ export interface TagChatMessageFormat {
     //    showHealth: boolean;
 }
 
-export function chatSend_getChatMessageFormatFromPlayerTags(player: Player | { hasTag: (tag: string) => boolean; getTags: () => string[] }): TagChatMessageFormat {
+export function chatSend_getChatMessageFormatFromPlayerTags(
+    player: Player | { hasTag: (tag: string) => boolean; getTags: () => string[] }
+): TagChatMessageFormat {
     let messageFormatting: string = "";
     let messageGradientMode: keyof typeof patternFunctionList | undefined = undefined;
     let nameFormatting: string = "";
