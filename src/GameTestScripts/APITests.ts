@@ -18,6 +18,7 @@ import {
   ItemTypes,
   Player,
   PotionEffectType,
+  Potions,
   world,
   type BlockRaycastHit,
   type EntityEventOptions,
@@ -25,6 +26,7 @@ import {
   type Vector3,
 } from "@minecraft/server";
 import * as mcMath from "@minecraft/math.js";
+import { MinecraftPotionDeliveryTypes, MinecraftPotionEffectTypes } from "@minecraft/vanilla-data.js";
 
 GameTest.register("APITests", "on_entity_created", (test) => {
   const entitySpawnCallback = world.afterEvents.entitySpawn.subscribe((entity) => {
@@ -1149,7 +1151,7 @@ GameTest.register("APITests", "cauldron_nocrash", (test) => {
   let cauldron = block.getComponent("fluid_container") as BlockFluidContainerComponent;
   cauldron.fillLevel = 2;
 
-  const poisonPotion = ItemStack.createPotion({effect: "poison", liquid: "splash"});
+  const poisonPotion = Potions.resolve(MinecraftPotionEffectTypes.Poison, MinecraftPotionDeliveryTypes.ThrownSplash);
   cauldron.setPotion(poisonPotion); //this line crashes the title
 
   test.succeed();

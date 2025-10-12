@@ -741,7 +741,7 @@ export type * as "@minecraft/common" from "@minecraft/common";
  * @see {@link https://www.npmjs.com/package/@minecraft/vanilla-data}
  * @kindOverride Module
  */
-export type * as "@minecraft/vanilla-data" from "@minecraft/vanilla-data";
+export type * as "@minecraft/vanilla-data" from "@minecraft/vanilla-data.js";
 /**
  * The `@minecraft/math` module.
  *
@@ -750,4 +750,4 @@ export type * as "@minecraft/vanilla-data" from "@minecraft/vanilla-data";
  * @kindOverride Module
  * @external
  */
-export type * as "@minecraft/math" from "@minecraft/math";
+export type * as "@minecraft/math" from "@minecraft/math.js";

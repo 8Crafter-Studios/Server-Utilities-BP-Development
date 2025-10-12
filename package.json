@@ -1,6 +1,6 @@
 {
   "name": "8crafters-server-utilities-bp",
-  "version": "1.39.0+BUILD.1",
+  "version": "1.40.0+BUILD.1",
   "description": "8Crafter's Server Utilities & Debug Sticks BP",
   "hintConfig": {
     "hints": {
@@ -33,16 +33,16 @@
     "compile": "tsc"
   },
   "dependencies": {
-    "@minecraft/common": "^1.1.0",
-    "@minecraft/debug-utilities": "^1.0.0-beta.1.21.62-stable",
-    "@minecraft/math": "^2.2.1",
-    "@minecraft/server": "^2.2.0-beta.1.21.100-stable",
-    "@minecraft/server-admin": "^1.0.0-beta.1.21.100-stable",
-    "@minecraft/server-editor": "^0.1.0-beta.1.21.62-stable",
-    "@minecraft/server-gametest": "^1.0.0-beta.1.21.90-stable",
-    "@minecraft/server-net": "^1.0.0-beta.1.21.62-stable",
-    "@minecraft/server-ui": "^2.1.0-beta.1.21.100-stable",
-    "@minecraft/vanilla-data": "^1.21.70",
+    "@minecraft/common": "^1.2.0",
+    "@minecraft/debug-utilities": "^1.0.0-beta.1.21.111-stable",
+    "@minecraft/math.js": "npm:@minecraft/math@^2.2.1",
+    "@minecraft/server": "^2.3.0-beta.1.21.111-stable",
+    "@minecraft/server-admin": "^1.0.0-beta.1.21.111-stable",
+    "@minecraft/server-editor": "^0.1.0-beta.1.21.111-stable",
+    "@minecraft/server-gametest": "^1.0.0-beta.1.21.111-stable",
+    "@minecraft/server-net": "^1.0.0-beta.1.21.111-stable",
+    "@minecraft/server-ui": "^2.1.0-beta.1.21.111-stable",
+    "@minecraft/vanilla-data.js": "npm:@minecraft/vanilla-data@^1.21.111",
     "alea": "^1.0.1",
     "color-core": "^1.4.0",
     "decimal.js": "^10.4.3",

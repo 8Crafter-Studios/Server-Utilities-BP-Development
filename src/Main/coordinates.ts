@@ -1,6 +1,4 @@
-import {
-    type Vector3,
-} from "@minecraft/server";
+import { type Vector3 } from "@minecraft/server";
 
 // LocalTeleport (Caret Notation ^^^)
 export interface ILocalTeleport {
@@ -9,8 +7,9 @@ export interface ILocalTeleport {
     surge_3: number;
 }
 export const LocalTeleportFunctions = {
-    norm: ({ x, y, z }: Vector3, s: number) => {
-        const l = Math.hypot(x, y, z);
+    norm: ({ x, y, z }: Vector3, s: number): Vector3 => {
+        const l: number = Math.hypot(x, y, z);
+        if (l === 0) return { x: 0, y: 0, z: 0 }; // or throw an error
         return {
             x: s * (x / l),
             y: s * (y / l),
@@ -18,8 +17,8 @@ export const LocalTeleportFunctions = {
         };
     },
 
-    xa: ({ x, y, z }: Vector3, s: number) => {
-        const m = Math.hypot(x, z);
+    xa: ({ x, y, z }: Vector3, s: number): Vector3 => {
+        const m: number = Math.hypot(x, z);
         const a = {
             x: z,
             y: 0,
@@ -29,8 +28,13 @@ export const LocalTeleportFunctions = {
         return LocalTeleportFunctions.norm(a, s);
     },
 
-    ya: ({ x, y, z }: Vector3, s: number) => {
-        const m = Math.hypot(x, z);
+    ya: ({ x, y, z }: Vector3, s: number): Vector3 => {
+        const m: number = Math.hypot(x, z);
+
+        if (m === 0) {
+            // Direction is vertical; choose a default horizontal axis
+            return { x: 0, y: 0, z: 0 }; // or maybe { x: 1, y: 0, z: 0 } normalized to s
+        }
 
         const a = {
             x: (x / m) * -y,
@@ -41,7 +45,7 @@ export const LocalTeleportFunctions = {
         return LocalTeleportFunctions.norm(a, s);
     },
 
-    za: (a: Vector3, s: number) => {
+    za: (a: Vector3, s: number): Vector3 => {
         return LocalTeleportFunctions.norm(a, s);
     },
 };
@@ -64,7 +68,7 @@ export const LocalTeleportFunctions = {
         this.teleport(newPosition);
     },
 }); */
- /*
+/*
 
 Entity.prototype.localTeleport = function (localTeleport: ILocalTeleport) { 
     const { sway_1, heave_2, surge_3 } = localTeleport 

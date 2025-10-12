@@ -1,4 +1,4 @@
-import type { PlayerPermissionLevel } from "@minecraft/server";
+import type { GetBlocksStandingOnOptions, PlayerPermissionLevel } from "@minecraft/server";
 import {
     Player,
     type Vector3,
@@ -262,7 +262,7 @@ export class executeCommandPlayerW implements Omit<Player, "name" | "id"> {
         if (!this.player)
             throw new ReferenceError(
                 "[[executeCommandPlayerW.prototype.moneySystem::get]] This getter cannot be used when the executeCommandPlayerW instance does not have a linked player."
-        )
+            );
         return MoneySystem.get(this.player.id);
     }
     /**
@@ -501,9 +501,9 @@ export class executeCommandPlayerW implements Omit<Player, "name" | "id"> {
     }
     get commandPermissionLevel(): CommandPermissionLevel {
         return this.player?.commandPermissionLevel!;
-    };
+    }
     get playerPermissionLevel(): PlayerPermissionLevel {
-        return this.player?.playerPermissionLevel!
+        return this.player?.playerPermissionLevel!;
     }
     get target(): Entity | undefined {
         return this.player?.target;
@@ -537,7 +537,7 @@ export class executeCommandPlayerW implements Omit<Player, "name" | "id"> {
     }
     getTotalXp() {
         return this.player?.getTotalXp()!;
-    }/* 
+    } /* 
     isOp() {
         return this.player?.isOp()!;
     } */
@@ -564,7 +564,7 @@ export class executeCommandPlayerW implements Omit<Player, "name" | "id"> {
     }
     setGameMode(gameMode?: GameMode | number) {
         return this.player?.setGameMode(gameMode);
-    }/* 
+    } /* 
     setOp(isOp: boolean) {
         return this.player?.setOp(isOp);
     } */
@@ -725,6 +725,12 @@ export class executeCommandPlayerW implements Omit<Player, "name" | "id"> {
     }
     stopAllSounds(): void {
         return this.player?.stopAllSounds()!;
+    }
+    getAllBlocksStandingOn(options?: GetBlocksStandingOnOptions): Block[] {
+        return this.player?.getAllBlocksStandingOn(options)!;
+    }
+    getBlockStandingOn(options?: GetBlocksStandingOnOptions): Block | undefined {
+        return this.player?.getBlockStandingOn(options);
     }
     saveStringToDynamicProperties(string: string, propertyName: string, clearOldProperties: boolean = true, chunkSize: number | bigint = 32760): void {
         saveStringToEntityDynamicProperties(this.player as Entity, string, propertyName, clearOldProperties, chunkSize);
