@@ -79,7 +79,7 @@ export interface EventsSavedData {
  *
  * @template {SubscribedEventSignalUnion} Event The event signal type.
  */
-export type SubscribableEventParameterTypeMap<Event extends SubscribedEventSignalUnion> = Parameters<Event["subscribe"]>[0];
+export type SubscribableEventParameterTypeMap<Event extends SubscribedEventSignalUnion> = Parameters<Parameters<Event["subscribe"]>[0]>[0];
 
 /**
  * The data for an event subscription.
@@ -2536,7 +2536,7 @@ export class Events_WorldAfterEvents implements ReplaceTypeOfKey<WorldAfterEvent
             getAll(): SubscribedEvent<"world.afterEvents.packSettingChange">[] {
                 return Events.loadedEvents.world.afterEvents.packSettingChange.filter(() => true);
             },
-        }
+        };
     }
     public get playerSwingStart() {
         return {
@@ -2590,7 +2590,7 @@ export class Events_WorldAfterEvents implements ReplaceTypeOfKey<WorldAfterEvent
             getAll(): SubscribedEvent<"world.afterEvents.playerSwingStart">[] {
                 return Events.loadedEvents.world.afterEvents.playerSwingStart.filter(() => true);
             },
-        }
+        };
     }
     public get pistonActivate() {
         return {
@@ -6061,6 +6061,14 @@ namespace exports {
             this.#eventTypeLoadedEventsReference = loadedEventsOfTypeRef;
         }
         /**
+         * The initialized callback function for the event subscription.
+         *
+         * @type {((arg0: SubscribableEventParameterTypeMap<EventSignal>) => void) | undefined}
+         */
+        public get initializedCallback(): ((arg0: SubscribableEventParameterTypeMap<EventSignal>) => void) | undefined {
+            return this.#initializedCallback;
+        }
+        /**
          * Initializes the event subscription.
          *
          * This method subscribes the subscription to the actual event.
@@ -6234,3 +6242,24 @@ declare global {
 
 // Load and initialize the saved events.
 exports.Events.load(true, false);
+
+// Trigger the worldLoad after even if it was registered too late.
+if (
+    globalThis.initializeTick !== -1 &&
+    exports.Events?.loadedEvents?.world?.afterEvents?.worldLoad &&
+    exports.Events.loadedEvents.world.afterEvents.worldLoad.length > 0
+) {
+    exports.Events.loadedEvents.world.afterEvents.worldLoad.forEach((event: SubscribedEvent<"world.afterEvents.worldLoad">): void => {
+        event.initializedCallback?.({});
+    });
+}
+
+// world.setDynamicProperty(
+//     "evalAfterEvents:worldLoad",
+//     `system.runTimeout(() => {
+//     if (globalThis.modules.semver.gt(globalThis.format_version, "1.40.2")) return world.setDynamicProperty("evalAfterEvents:worldLoad");
+//     globalThis.Events.loadedEvents.world.afterEvents.worldLoad.forEach((event) => {
+//         event.initializedCallback?.({});
+//     });
+// }, 5);`
+// );

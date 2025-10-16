@@ -2,7 +2,7 @@ import { world } from "@minecraft/server";
 // import { command } from "modules/commands/classes/command";
 
 const command = {
-    get dp() {
+    get dp(): string {
         return String(world.getDynamicProperty("andexdbSettings:chatCommandPrefix") ?? "\\");
     }
 }

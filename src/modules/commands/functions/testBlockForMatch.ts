@@ -91,16 +91,18 @@ export function testBlockForMatch(block?: Block, masks?: TestForBlockMatchMasks)
         }
         return (
             masks.map((v) => v.id).includes(block.typeId) &&
-            !!masks.filter(v=>v.id !== "false" && v.id !== undefined).find((matches) =>
-                testForObjectExtension(
-                    block.permutation.getAllStates() ?? {},
-                    Object.fromEntries(
-                        Object.entries(matches.states ?? {}).filter(
-                            (v) => !!Object.entries(BlockPermutation.resolve(block.typeId).getAllStates()).find((s) => v[0] == s[0])
+            !!masks
+                .filter((v) => v.id !== "false" && v.id !== undefined)
+                .find((matches) =>
+                    testForObjectExtension(
+                        block.permutation.getAllStates() ?? {},
+                        Object.fromEntries(
+                            Object.entries(matches.states ?? {}).filter(
+                                (v) => !!Object.entries(BlockPermutation.resolve(block.typeId).getAllStates()).find((s) => v[0] == s[0])
+                            )
                         )
                     )
                 )
-            )
         );
     } else {
         if (masks.id == "isAir") {
@@ -124,7 +126,7 @@ export function testBlockForMatch(block?: Block, masks?: TestForBlockMatchMasks)
         if (masks.id == "false") {
             return false;
         }
-        if(masks.id === undefined) return false;
+        if (masks.id === undefined) return false;
         return (
             block.typeId == masks.id &&
             testForObjectExtension(
@@ -138,4 +140,3 @@ export function testBlockForMatch(block?: Block, masks?: TestForBlockMatchMasks)
         );
     }
 }
-
