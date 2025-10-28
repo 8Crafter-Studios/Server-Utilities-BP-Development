@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync } from "fs";
+import { existsSync, readFileSync, writeFileSync } from "fs";
 import JSON5 from "json5";
 import promptSync from "prompt-sync";
 
@@ -243,6 +243,7 @@ if (newVersion !== "") {
         packageJSONEditorEditionRaw = packageJSONEditorEditionRaw.replace('"version": "' + originalVersion + '"', '"version": "' + newVersion + '"');
     if (packageLockEditorEditionJSONRaw !== undefined)
         packageLockEditorEditionJSONRaw = packageLockEditorEditionJSONRaw.replace('"version": "' + originalVersion + '"', '"version": "' + newVersion + '"');
+    if (manifestEditorEditionRaw !== undefined) manifestEditorEditionRaw = manifestEditorEditionRaw.replaceAll(originalVersion, newVersion);
     packageLockJSONNodeModulesRaw = packageLockJSONNodeModulesRaw.replace('"version": "' + originalVersion + '"', '"version": "' + newVersion + '"');
     rawInitializeMainGlobalVariablesFileTS = rawInitializeMainGlobalVariablesFileTS.replace(
         'export const current_format_version = "' + originalVersion + '";',
@@ -314,9 +315,9 @@ writeFileSync("./node_modules/.package-lock.json", packageLockJSONNodeModulesRaw
 writeFileSync("./src/initializeMainGlobalVariables.ts", rawInitializeMainGlobalVariablesFileTS);
 writeFileSync("./scripts/initializeMainGlobalVariables.js", rawInitializeMainGlobalVariablesFileJS);
 writeFileSync("./scripts/initializeMainGlobalVariables.d.ts", rawInitializeMainGlobalVariablesFileDTS);
-if (packageJSONEditorEditionRaw !== undefined) writeFileSync("../BP Editor Edition/package-editor-edition.json", packageJSONEditorEditionRaw);
+if (packageJSONEditorEditionRaw !== undefined) writeFileSync("../BP Editor Edition/package.json", packageJSONEditorEditionRaw);
 if (packageLockEditorEditionJSONRaw !== undefined) writeFileSync("../BP Editor Edition/package-lock.json", packageLockEditorEditionJSONRaw);
-if (manifestEditorEditionRaw !== undefined) writeFileSync("../BP Editor Edition/manifest-editor-edition.json", manifestEditorEditionRaw);
+if (manifestEditorEditionRaw !== undefined) writeFileSync("../BP Editor Edition/manifest.json", manifestEditorEditionRaw);
 
 console.log(
     `\u001B[38;2;0;255;0m${

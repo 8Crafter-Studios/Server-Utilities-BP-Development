@@ -18,7 +18,11 @@ import "GameTestScripts/ItemEnchantmentsTests.js";
 import "@minecraft/math.js";
 import "GlobalDecorators";
 import * as mcMath from "@minecraft/math.js";
+import colorCore from "color-core";
+import Decimal from "decimal.js";
+import * as semver from "semver";
 import * as ipc from "ipc";
+import moment from "moment";
 import "intl";
 import "intl.locales";
 import alea from "alea";
@@ -195,25 +199,25 @@ declare const modulesMap: {
      * @see {@link https://www.npmjs.com/package/color-core}
      * @namespace
      */
-    colorCore: typeof import("color-core");
+    colorCore: typeof colorCore;
     /**
      * The Color class of the `color-core` module.
      * @see {@link modules.colorCore.Color}
      * @kindOverride Namespace
      */
-    Color: typeof import("color-core").Color;
+    Color: typeof colorCore.Color;
     /**
      * The `decimal.js` module.
      * @see {@link https://www.npmjs.com/package/decimal.js}
      * @namespace
      */
-    Decimal: typeof import("decimal.js").default;
+    Decimal: typeof Decimal;
     /**
      * The `semver` module.
      * @see {@link https://www.npmjs.com/package/semver}
      * @namespace
      */
-    semver: typeof import("semver");
+    semver: typeof semver;
     /**
      * The `mcbe-ipc` module.
      * @see {@link https://www.npmjs.com/package/mcbe-ipc}
@@ -226,7 +230,7 @@ declare const modulesMap: {
      * @see {@link https://www.npmjs.com/package/moment}
      * @namespace
      */
-    moment: typeof import("moment");
+    moment: typeof moment;
     /**
      * The `alea` module.
      * @see {@link https://www.npmjs.com/package/alea}

@@ -2193,6 +2193,39 @@ export declare class Events_WorldAfterEvents implements ReplaceTypeOfKey<WorldAf
          */
         getAll(): SubscribedEvent<"world.afterEvents.playerSpawn">[];
     };
+    get playerUseNameTag(): {
+        /**
+         * Creates a new event subscription.
+         *
+         * @remarks
+         * This function can't be called in read-only mode.
+         *
+         * This function can be called in early-execution mode.
+         *
+         * @throws {TypeError} If the event callback is an empty string.
+         * @throws {TypeError} If the event callback is not a string.
+         * @throws {TypeError} If the event callback is not a valid stringified JavaScript function.
+         */
+        subscribe(callback: string): SubscribedEvent<"world.afterEvents.playerUseNameTag">;
+        /**
+         * Deletes the provided event subscription.
+         *
+         * @remarks
+         * This function can't be called in read-only mode.
+         *
+         * This function can be called in early-execution mode.
+         *
+         * @throws {TypeError} If the subscription is not an instance of SubscribedEvent.
+         * @throws {ReferenceError} If the subscription is not for the `world.afterEvents.playerUseNameTag` event.
+         */
+        unsubscribe(subscription: SubscribedEvent<"world.afterEvents.playerUseNameTag">): void;
+        /**
+         * Gets all event subscriptions to this event type.
+         *
+         * @returns {SubscribedEvent<"world.afterEvents.playerUseNameTag">[]} The event subscriptions.
+         */
+        getAll(): SubscribedEvent<"world.afterEvents.playerUseNameTag">[];
+    };
     get pressurePlatePop(): {
         /**
          * Creates a new event subscription.

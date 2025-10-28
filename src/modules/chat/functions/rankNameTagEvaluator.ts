@@ -111,6 +111,7 @@ export function rankNameTagEvaluator_players(
             camera: {
                 clear: () => undefined as any,
                 fade: () => undefined as any,
+                playAnimation: () => undefined as any,
                 setCamera: () => undefined as any,
                 setCameraWithEase: () => undefined as any,
                 setDefaultCamera: () => undefined as any,
@@ -346,6 +347,9 @@ export function rankNameTagEvaluator_players(
                 z: 0,
             },
             z: 0,
+            getAABB: () => undefined as any,
+            getControlScheme: () => undefined as any,
+            setControlScheme: () => undefined as any,
         } as Partial<Player>);
     let nameTagOutput = "";
     const ranks = rank;

@@ -100,6 +100,9 @@ registerEditorExtension("8CrafterServerUtilities", function SUEditorExtensionAct
     // IDEA: Add menu to allow controlling which segments are selected (for things like the line tool).
     // IDEA: Add flip selection x/z option.
     // IDEA: Add a rotate selection option (maybe onto the point movement widgets?).
+    // IDEA: Add an outline selection tool, or add an option to keep only the outline of the current selection.
+    // IDEA: Add a walls selection tool, or add an option to keep only the walls of the current selection.
+    // IDEA: Add a saved selection system.
     const action_ScriptEval = uiSession.actionManager.createAction({
         actionType: ActionTypes.NoArgsAction,
         async onExecute() {

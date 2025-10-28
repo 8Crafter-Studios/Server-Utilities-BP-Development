@@ -1,4 +1,3 @@
-import type { GetBlocksStandingOnOptions, PlayerPermissionLevel } from "@minecraft/server";
 import {
     Player,
     type Vector3,
@@ -31,10 +30,13 @@ import {
     type EntityQueryOptions,
     type PlayAnimationOptions,
     type TeleportOptions,
-    InputInfo,
     type EntityComponentReturnType,
     GraphicsMode,
     CommandPermissionLevel,
+    type ControlScheme,
+    type AABB,
+    type GetBlocksStandingOnOptions,
+    type PlayerPermissionLevel,
 } from "@minecraft/server";
 import { MoneySystem } from "ExtraFeatures/money";
 import { PlayerNotifications } from "init/classes/PlayerNotifications";
@@ -740,5 +742,14 @@ export class executeCommandPlayerW implements Omit<Player, "name" | "id"> {
     }
     deleteStringFromDynamicProperties(propertyName: string): void {
         deleteStringFromEntityDynamicProperties(this.player as Entity, propertyName);
+    }
+    getAABB(): AABB {
+        return this.player?.getAABB()!;
+    }
+    getControlScheme(): ControlScheme {
+        return this.player?.getControlScheme()!;
+    }
+    setControlScheme(controlScheme?: ControlScheme): void {
+        this.player?.setControlScheme(controlScheme);
     }
 }
