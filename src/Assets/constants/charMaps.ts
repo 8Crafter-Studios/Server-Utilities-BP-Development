@@ -43,8 +43,8 @@ export const default8 = Object.freeze(
             "ȇ",
             "§",
             "©",
-            "",
-            "",
+            "™",
+            "®",
             "",
             "",
             ""
@@ -116,6 +116,7 @@ export const default8 = Object.freeze(
             "Y",
             "Z",
             "[",
+            "\\",
             "]",
             "^",
             "_"
@@ -707,6 +708,7 @@ export const default8Codes = Object.freeze({
     "Y": "0059",
     "Z": "005a",
     "[": "005b",
+    "\\": "005c",
     "]": "005d",
     "^": "005e",
     "_": "005f",

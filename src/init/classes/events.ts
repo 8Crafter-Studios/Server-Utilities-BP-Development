@@ -504,7 +504,8 @@ export class Events_WorldBeforeEvents implements ReplaceTypeOfKey<WorldBeforeEve
      *
      * This property can be read in early-execution mode.
      *
-     * @example customCommand.ts
+     * @example
+     * customCommand.ts
      * ```typescript
      * import { world, DimensionLocation } from "@minecraft/server";
      *
@@ -4157,7 +4158,8 @@ export class Events_andexdbAfterEvents implements ReplaceTypeOfKey<andexdbAfterE
  *
  * These callbacks are triggered by the chat ranks system of the add-on, if the chat ranks system is disabled these callbacks will never fire.
  *
- * @example preventMessagesContainingHerobrine.ts
+ * @example
+ * preventMessagesContainingHerobrine.ts
  * ```typescript
  * function preventMessagesContainingHerobrine() {
  *   const chatCallback = Events.andexdb.beforeEvents.modifiedChatMessageFormat.subscribe(`(eventData) => {
@@ -4168,7 +4170,8 @@ export class Events_andexdbAfterEvents implements ReplaceTypeOfKey<andexdbAfterE
  * }
  * ```
  *
- * @example replaceEveryAInMessagesWithB.ts
+ * @example
+ * replaceEveryAInMessagesWithB.ts
  * ```typescript
  * function replaceEveryAInMessagesWithB() {
  *   const chatCallback = Events.andexdb.beforeEvents.modifiedChatMessageFormat.subscribe(`(eventData) => {
@@ -4510,7 +4513,8 @@ export class andexdb_ModifiedChatMessageFormatBeforeEvent implements ChatSendBef
  *
  * These callbacks are triggered by the chat ranks system of the add-on, if the chat ranks system is disabled these callbacks will never fire.
  *
- * @example changeDisplayNamesOfPlayersSendingMessagesContainingHerobrine.ts
+ * @example
+ * changeDisplayNamesOfPlayersSendingMessagesContainingHerobrine.ts
  * ```typescript
  * function changeDisplayNamesOfPlayersSendingMessagesContainingHerobrine() {
  *   const chatCallback = Events.andexdb.beforeEvents.modifiedChatMessageFormatFinalization.subscribe(`(eventData) => {
@@ -4522,7 +4526,8 @@ export class andexdb_ModifiedChatMessageFormatBeforeEvent implements ChatSendBef
  * }
  * ```
  *
- * @example addAAAARankToAllMessages.ts
+ * @example
+ * addAAAARankToAllMessages.ts
  * ```typescript
  * function addAAAARankToAllMessages() {
  *   const chatCallback = Events.andexdb.beforeEvents.modifiedChatMessageFormatFinalization.subscribe(`(eventData) => {
@@ -4531,7 +4536,8 @@ export class andexdb_ModifiedChatMessageFormatBeforeEvent implements ChatSendBef
  * }
  * ```
  *
- * @example messUpPlayersMessagesIfTheySetMessUpMyMessages.ts
+ * @example
+ * messUpPlayersMessagesIfTheySetMessUpMyMessages.ts
  * ```typescript
  * function messUpPlayersMessagesIfTheySetMessUpMyMessages() {
  *   Events.andexdb.beforeEvents.modifiedChatMessageFormat.subscribe(`(event) => {
@@ -4697,7 +4703,8 @@ export class andexdb_ModifiedChatMessageFormatFinalizationBeforeEvent implements
  *
  * These callbacks are triggered by the chat ranks system of the add-on, if the chat ranks system is disabled these callbacks will never fire.
  *
- * @example preventMessagesContainingHerobrine.ts
+ * @example
+ * preventMessagesContainingHerobrine.ts
  * ```typescript
  * function preventMessagesContainingHerobrine() {
  *   const chatCallback = Events.andexdb.beforeEvents.modifiedChatMessageSend.subscribe(`(eventData) => {
@@ -4708,7 +4715,8 @@ export class andexdb_ModifiedChatMessageFormatFinalizationBeforeEvent implements
  * }
  * ```
  *
- * @example replaceEveryAInMessagesIncludingNameTagsAndRanksWithB.ts
+ * @example
+ * replaceEveryAInMessagesIncludingNameTagsAndRanksWithB.ts
  * ```typescript
  * function replaceEveryAInMessagesIncludingNameTagsAndRanksWithB() {
  *   const chatCallback = Events.andexdb.beforeEvents.modifiedChatMessageSend.subscribe(`(eventData) => {
@@ -5402,7 +5410,8 @@ export class andexdbBeforeEvents {
      *
      * This property can be read in early-execution mode.
      *
-     * @example preventMessagesContainingHerobrine.ts
+     * @example
+     * preventMessagesContainingHerobrine.ts
      * ```typescript
      * function preventMessagesContainingHerobrine() {
      *   const chatCallback = Events.andexdb.beforeEvents.modifiedChatMessageFormat.subscribe(`(eventData) => {
@@ -5413,7 +5422,8 @@ export class andexdbBeforeEvents {
      * }
      * ```
      *
-     * @example replaceEveryAInMessagesWithB.ts
+     * @example
+     * replaceEveryAInMessagesWithB.ts
      * ```typescript
      * function replaceEveryAInMessagesWithB() {
      *   const chatCallback = Events.andexdb.beforeEvents.modifiedChatMessageFormat.subscribe(`(eventData) => {
@@ -5432,7 +5442,8 @@ export class andexdbBeforeEvents {
      *
      * This property can be read in early-execution mode.
      *
-     * @example changeDisplayNamesOfPlayersSendingMessagesContainingHerobrine.ts
+     * @example
+     * changeDisplayNamesOfPlayersSendingMessagesContainingHerobrine.ts
      * ```typescript
      * function changeDisplayNamesOfPlayersSendingMessagesContainingHerobrine() {
      *   const chatCallback = Events.andexdb.beforeEvents.modifiedChatMessageFormatFinalization.subscribe(`(eventData) => {
@@ -5444,7 +5455,8 @@ export class andexdbBeforeEvents {
      * }
      * ```
      *
-     * @example addAAAARankToAllMessages.ts
+     * @example
+     * addAAAARankToAllMessages.ts
      * ```typescript
      * function addAAAARankToAllMessages() {
      *   const chatCallback = Events.andexdb.beforeEvents.modifiedChatMessageFormatFinalization.subscribe(`(eventData) => {
@@ -5453,7 +5465,8 @@ export class andexdbBeforeEvents {
      * }
      * ```
      *
-     * @example messUpPlayersMessagesIfTheySetMessUpMyMessages.ts
+     * @example
+     * messUpPlayersMessagesIfTheySetMessUpMyMessages.ts
      * ```typescript
      * function messUpPlayersMessagesIfTheySetMessUpMyMessages() {
      *   Events.andexdb.beforeEvents.modifiedChatMessageFormat.subscribe(`(event) => {
@@ -5475,7 +5488,8 @@ export class andexdbBeforeEvents {
      *
      * This property can be read in early-execution mode.
      *
-     * @example preventMessagesContainingHerobrine.ts
+     * @example
+     * preventMessagesContainingHerobrine.ts
      * ```typescript
      * function preventMessagesContainingHerobrine() {
      *   const chatCallback = Events.andexdb.beforeEvents.modifiedChatMessageSend.subscribe(`(eventData) => {
@@ -5486,7 +5500,8 @@ export class andexdbBeforeEvents {
      * }
      * ```
      *
-     * @example replaceEveryAInMessagesIncludingNameTagsAndRanksWithB.ts
+     * @example
+     * replaceEveryAInMessagesIncludingNameTagsAndRanksWithB.ts
      * ```typescript
      * function replaceEveryAInMessagesIncludingNameTagsAndRanksWithB() {
      *   const chatCallback = Events.andexdb.beforeEvents.modifiedChatMessageSend.subscribe(`(eventData) => {

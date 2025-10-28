@@ -1,13 +1,13 @@
-import { world, system, WorldLoadAfterEvent } from "@minecraft/server";
+import { world, system, type WorldLoadAfterEvent, type Player } from "@minecraft/server";
 import { checkIfCompatibleBlueModsAnticheatIsActive } from "modules/main/functions/checkIfCompatibleBlueModsAnticheatIsActive";
 import { checkIfCompatibleEntityScaleIsActive } from "modules/main/functions/checkIfCompatibleEntityScaleIsActive";
 
-subscribedEvents.afterWorldLoad = world.afterEvents.worldLoad.subscribe(async (event) => {
+subscribedEvents.afterWorldLoad = world.afterEvents.worldLoad.subscribe(async (event: WorldLoadAfterEvent): Promise<void> => {
     try {
         eval(String(world.getDynamicProperty("evalAfterEvents:worldLoad")));
     } catch (e) {
         console.error(e, e.stack);
-        world.getAllPlayers().forEach((currentplayer) => {
+        world.getAllPlayers().forEach((currentplayer: Player): void => {
             if (currentplayer.hasTag("worldLoadAfterEventDebugErrors")) {
                 currentplayer.sendMessage(e + e.stack);
             }
@@ -17,7 +17,7 @@ subscribedEvents.afterWorldLoad = world.afterEvents.worldLoad.subscribe(async (e
         eval(String(world.getDynamicProperty("evalAfterEvents:worldInitialize")));
     } catch (e) {
         console.error(e, e.stack);
-        world.getAllPlayers().forEach((currentplayer) => {
+        world.getAllPlayers().forEach((currentplayer: Player): void => {
             if (currentplayer.hasTag("worldInitializeAfterEventDebugErrors")) {
                 currentplayer.sendMessage(e + e.stack);
             }
@@ -44,27 +44,35 @@ subscribedEvents.afterWorldLoad = world.afterEvents.worldLoad.subscribe(async (e
                 entity_scale_format_version = r.trim();
             }
             if (r == false && config.system.showEntityScaleNotFoundConsoleLog) {
-                system.waitTicks(100).then(() => {
+                system.waitTicks(100).then((): void => {
                     if (entity_scale_format_version == null)
                         console.warn(
-                            `§r<§b8Crafter's Server Utilities§r[§gv${format_version}§r]> No compatible version of entity scale was detected, some features may not be available.`
+                            `§r<§b8Crafter's Server Utilities§r[§gv${format_version}${
+                                isEditorEdition ? " §r(§eEditor Edition§r)" : "§r"
+                            }]> No compatible version of entity scale was detected, some features may not be available.`
                         );
                 });
             } else if (r != false && config.system.showEntityScaleFoundConsoleLog) {
                 console.warn(
-                    `§r<§b8Crafter's Server Utilities§r[§gv${format_version}§r]> A compatible version of entity scale was detected: ${entity_scale_format_version}.`
+                    `§r<§b8Crafter's Server Utilities§r[§gv${format_version}${
+                        isEditorEdition ? " §r(§eEditor Edition§r)" : "§r"
+                    }]> A compatible version of entity scale was detected: ${entity_scale_format_version}.`
                 );
             }
             if (r == false && config.system.showEntityScaleNotFoundChatLog) {
-                system.waitTicks(100).then(() => {
+                system.waitTicks(100).then((): void => {
                     if (entity_scale_format_version == null)
                         world.sendMessage(
-                            `§r<§b8Crafter's Server Utilities§r[§gv${format_version}§r]> No compatible version of entity scale was detected, some features may not be available.`
+                            `§r<§b8Crafter's Server Utilities§r[§gv${format_version}${
+                                isEditorEdition ? " §r(§eEditor Edition§r)" : "§r"
+                            }]> No compatible version of entity scale was detected, some features may not be available.`
                         );
                 });
             } else if (r != false && config.system.showEntityScaleFoundChatLog) {
                 world.sendMessage(
-                    `§r<§b8Crafter's Server Utilities§r[§gv${format_version}§r]> A compatible version of entity scale was detected: ${entity_scale_format_version}.`
+                    `§r<§b8Crafter's Server Utilities§r[§gv${format_version}${
+                        isEditorEdition ? " §r(§eEditor Edition§r)" : "§r"
+                    }]> A compatible version of entity scale was detected: ${entity_scale_format_version}.`
                 );
             }
         } catch (e) {
@@ -81,27 +89,35 @@ subscribedEvents.afterWorldLoad = world.afterEvents.worldLoad.subscribe(async (e
                 bluemods_anticheat_format_version = r.trim();
             }
             if (r == false && config.system.showBlueModsAnticheatNotFoundConsoleLog) {
-                system.waitTicks(100).then(() => {
+                system.waitTicks(100).then((): void => {
                     if (bluemods_anticheat_format_version == null)
                         console.warn(
-                            `§r<§b8Crafter's Server Utilities§r[§gv${format_version}§r]> No compatible version of BlueMods Anticheat was detected, some features may not be available.`
+                            `§r<§b8Crafter's Server Utilities§r[§gv${format_version}${
+                                isEditorEdition ? " §r(§eEditor Edition§r)" : "§r"
+                            }]> No compatible version of BlueMods Anticheat was detected, some features may not be available.`
                         );
                 });
             } else if (r != false && config.system.showBlueModsAnticheatFoundConsoleLog) {
                 console.warn(
-                    `§r<§b8Crafter's Server Utilities§r[§gv${format_version}§r]> A compatible version of BlueMods Anticheat was detected: ${bluemods_anticheat_format_version}.`
+                    `§r<§b8Crafter's Server Utilities§r[§gv${format_version}${
+                        isEditorEdition ? " §r(§eEditor Edition§r)" : "§r"
+                    }]> A compatible version of BlueMods Anticheat was detected: ${bluemods_anticheat_format_version}.`
                 );
             }
             if (r == false && config.system.showBlueModsAnticheatNotFoundChatLog) {
-                system.waitTicks(100).then(() => {
+                system.waitTicks(100).then((): void => {
                     if (bluemods_anticheat_format_version == null)
                         world.sendMessage(
-                            `§r<§b8Crafter's Server Utilities§r[§gv${format_version}§r]> No compatible version of BlueMods Anticheat was detected, some features may not be available.`
+                            `§r<§b8Crafter's Server Utilities§r[§gv${format_version}${
+                                isEditorEdition ? " §r(§eEditor Edition§r)" : "§r"
+                            }]> No compatible version of BlueMods Anticheat was detected, some features may not be available.`
                         );
                 });
             } else if (r != false && config.system.showBlueModsAnticheatFoundChatLog) {
                 world.sendMessage(
-                    `§r<§b8Crafter's Server Utilities§r[§gv${format_version}§r]> A compatible version of BlueMods Anticheat was detected: ${bluemods_anticheat_format_version}.`
+                    `§r<§b8Crafter's Server Utilities§r[§gv${format_version}${
+                        isEditorEdition ? " §r(§eEditor Edition§r)" : "§r"
+                    }]> A compatible version of BlueMods Anticheat was detected: ${bluemods_anticheat_format_version}.`
                 );
             }
         } catch (e) {

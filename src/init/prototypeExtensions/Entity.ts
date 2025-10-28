@@ -236,7 +236,8 @@ declare module "@minecraft/server" {
         /**
          * Provides access to a mob's equipment slots. This component
          * exists for all mob entities.
-         * @example givePlayerElytra.ts
+         * @example
+         * givePlayerElytra.ts
          * ```typescript
          * // Gives the player Elytra
          * import { EquipmentSlot, ItemStack, Player, EntityComponentTypes } from '@minecraft/server';
@@ -249,7 +250,8 @@ declare module "@minecraft/server" {
          *     }
          * }
          * ```
-         * @example givePlayerEquipment.ts
+         * @example
+         * givePlayerEquipment.ts
          * ```typescript
          * // Gives the player some equipment
          * import { EquipmentSlot, ItemStack, Player, EntityComponentTypes } from '@minecraft/server';

@@ -222,7 +222,7 @@ try {
             writable: false,
         },
         stack: {
-            get: function stack() {
+            get: function stack(): string | undefined {
                 return new Error().stack?.split("\n").slice(1).join("\n");
             },
             configurable: true,
@@ -232,6 +232,11 @@ try {
 } catch (e) {
     console.error(e, e.stack);
 }
+
+import("@minecraft/server-editor").then(
+    (): typeof import("./editorExtension/index") => import("./editorExtension/index"),
+    (): void => {}
+);
 /**
  * ```ts
 node -e "const fs=require('fs');

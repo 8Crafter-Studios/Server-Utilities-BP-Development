@@ -3,16 +3,15 @@ import { Player } from "@minecraft/server";
 Object.defineProperties(Player.prototype, {});
 declare module "@minecraft/server" {
     interface Player {
-        /*
-        id: `${number}`*/
+        // id: `${number}`
         /**
          * Defines this entity's inventory properties.
          */
         get inventory(): EntityInventoryComponent;
         /**
-         * Provides access to a mob's equipment slots. This component
-         * exists for all mob entities.
-         * @example givePlayerElytra.ts
+         * Provides access to a mob's equipment slots. This component exists on player entities.
+         * @example
+         * givePlayerElytra.ts
          * ```typescript
          * // Gives the player Elytra
          * import { EquipmentSlot, ItemStack, Player, EntityComponentTypes } from '@minecraft/server';
@@ -25,7 +24,8 @@ declare module "@minecraft/server" {
          *     }
          * }
          * ```
-         * @example givePlayerEquipment.ts
+         * @example
+         * givePlayerEquipment.ts
          * ```typescript
          * // Gives the player some equipment
          * import { EquipmentSlot, ItemStack, Player, EntityComponentTypes } from '@minecraft/server';
@@ -57,6 +57,13 @@ declare module "@minecraft/server" {
          * This returns the same value as `Player.prototype.getComponent("cursor_inventory")`.
          */
         get cursorInventory(): PlayerCursorInventoryComponent;
+        /**
+         * Represents the players active hotbar slot.
+         *
+         * Only works on players, on non-players it will return undefined.
+         *
+         * This returns the same value as `Player.prototype.getComponent("inventory")?.container.getSlot(Player.prototype.selectedSlotIndex)`.
+         */
         get activeSlot(): ContainerSlot;
         /**
          * @remarks

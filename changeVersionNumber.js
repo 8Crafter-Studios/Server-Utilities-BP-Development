@@ -167,6 +167,11 @@ let packageLockJSONNodeModulesRaw = readFileSync("./node_modules/.package-lock.j
 let rawInitializeMainGlobalVariablesFileTS = readFileSync("./src/initializeMainGlobalVariables.ts", "utf-8");
 let rawInitializeMainGlobalVariablesFileJS = readFileSync("./scripts/initializeMainGlobalVariables.js", "utf-8");
 let rawInitializeMainGlobalVariablesFileDTS = readFileSync("./scripts/initializeMainGlobalVariables.d.ts", "utf-8");
+let packageJSONEditorEditionRaw = existsSync("../BP Editor Edition/package.json") ? readFileSync("../BP Editor Edition/package.json", "utf-8") : undefined;
+let packageLockEditorEditionJSONRaw = existsSync("../BP Editor Edition/package-lock.json")
+    ? readFileSync("../BP Editor Edition/package-lock.json", "utf-8")
+    : undefined;
+let manifestEditorEditionRaw = existsSync("../BP Editor Edition/manifest.json") ? readFileSync("../BP Editor Edition/manifest.json", "utf-8") : undefined;
 
 if (newVersion !== "") {
     if (!packageJSONRaw.includes('"version": "' + originalVersion + '"')) {
@@ -177,6 +182,20 @@ if (newVersion !== "") {
         );
     }
     if (!packageLockJSONRaw.includes('"version": "' + originalVersion + '"')) {
+        console.warn(
+            `\u001B[38;2;255;255;0mWARNING: ./package-lock.json does not contain the original version number: \u001B[38;2;0;255;128mv${originalVersion}\u001B[38;2;255;255;0m. Detected Version: \u001B[38;2;0;255;128mv${
+                packageLockJSONRaw.match(/(?<="version": ")[0-9]+\.[0-9]+\.[0-9]+(-[^+]*?)?(\+.*?)?(?=")/)?.[0] ?? "\u001B[38;2;255;0;0mNot Found"
+            }\u001B[38;2;255;255;0m.`
+        );
+    }
+    if (packageJSONEditorEditionRaw !== undefined && !packageJSONRaw.includes('"version": "' + originalVersion + '"')) {
+        console.warn(
+            `\u001B[38;2;255;255;0mWARNING: ./package.json does not contain the original version number: \u001B[38;2;0;255;128mv${originalVersion}\u001B[38;2;255;255;0m. Detected Version: \u001B[38;2;0;255;128mv${
+                packageJSONRaw.match(/(?<="version": ")[0-9]+\.[0-9]+\.[0-9]+(-[^+]*?)?(\+.*?)?(?=")/)?.[0] ?? "\u001B[38;2;255;0;0mNot Found"
+            }\u001B[38;2;255;255;0m.`
+        );
+    }
+    if (packageLockEditorEditionJSONRaw !== undefined && !packageLockJSONRaw.includes('"version": "' + originalVersion + '"')) {
         console.warn(
             `\u001B[38;2;255;255;0mWARNING: ./package-lock.json does not contain the original version number: \u001B[38;2;0;255;128mv${originalVersion}\u001B[38;2;255;255;0m. Detected Version: \u001B[38;2;0;255;128mv${
                 packageLockJSONRaw.match(/(?<="version": ")[0-9]+\.[0-9]+\.[0-9]+(-[^+]*?)?(\+.*?)?(?=")/)?.[0] ?? "\u001B[38;2;255;0;0mNot Found"
@@ -220,6 +239,10 @@ if (newVersion !== "") {
     manifestRaw = manifestRaw.replaceAll(originalVersion, newVersion);
     packageJSONRaw = packageJSONRaw.replace('"version": "' + originalVersion + '"', '"version": "' + newVersion + '"');
     packageLockJSONRaw = packageLockJSONRaw.replace('"version": "' + originalVersion + '"', '"version": "' + newVersion + '"');
+    if (packageJSONEditorEditionRaw !== undefined)
+        packageJSONEditorEditionRaw = packageJSONEditorEditionRaw.replace('"version": "' + originalVersion + '"', '"version": "' + newVersion + '"');
+    if (packageLockEditorEditionJSONRaw !== undefined)
+        packageLockEditorEditionJSONRaw = packageLockEditorEditionJSONRaw.replace('"version": "' + originalVersion + '"', '"version": "' + newVersion + '"');
     packageLockJSONNodeModulesRaw = packageLockJSONNodeModulesRaw.replace('"version": "' + originalVersion + '"', '"version": "' + newVersion + '"');
     rawInitializeMainGlobalVariablesFileTS = rawInitializeMainGlobalVariablesFileTS.replace(
         'export const current_format_version = "' + originalVersion + '";',
@@ -265,6 +288,11 @@ if (newMCVersion !== "") {
     }
 
     manifestRaw = manifestRaw.replaceAll("(for minecraft bedrock edition " + originalMCVersion + ")", "(for minecraft bedrock edition " + newMCVersion + ")");
+    if (manifestEditorEditionRaw !== undefined)
+        manifestEditorEditionRaw = manifestEditorEditionRaw.replaceAll(
+            "(for minecraft bedrock edition " + originalMCVersion + ")",
+            "(for minecraft bedrock edition " + newMCVersion + ")"
+        );
     rawInitializeMainGlobalVariablesFileTS = rawInitializeMainGlobalVariablesFileTS.replace(
         'export const current_supported_minecraft_version = "' + originalMCVersion + '";',
         'export const current_supported_minecraft_version = "' + newMCVersion + '";'
@@ -286,6 +314,9 @@ writeFileSync("./node_modules/.package-lock.json", packageLockJSONNodeModulesRaw
 writeFileSync("./src/initializeMainGlobalVariables.ts", rawInitializeMainGlobalVariablesFileTS);
 writeFileSync("./scripts/initializeMainGlobalVariables.js", rawInitializeMainGlobalVariablesFileJS);
 writeFileSync("./scripts/initializeMainGlobalVariables.d.ts", rawInitializeMainGlobalVariablesFileDTS);
+if (packageJSONEditorEditionRaw !== undefined) writeFileSync("../BP Editor Edition/package-editor-edition.json", packageJSONEditorEditionRaw);
+if (packageLockEditorEditionJSONRaw !== undefined) writeFileSync("../BP Editor Edition/package-lock.json", packageLockEditorEditionJSONRaw);
+if (manifestEditorEditionRaw !== undefined) writeFileSync("../BP Editor Edition/manifest-editor-edition.json", manifestEditorEditionRaw);
 
 console.log(
     `\u001B[38;2;0;255;0m${
