@@ -13,7 +13,7 @@ export namespace mainGlobalVariables {
     /**
      * The version of the add-on.
      */
-    export const current_format_version = "1.41.0+BUILD.3";
+    export const current_format_version = "1.41.0+BUILD.4";
     /**
      * The version of Minecraft Bedrock Edition supported by the add-on.
      */
