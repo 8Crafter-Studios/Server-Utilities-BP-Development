@@ -4,24 +4,24 @@
         "categories": [
             {
                 "category_name": "items",
-                "groups": [/* 
-                    {
-                        "group_identifier": {
-                            // "icon": "minecraft:netherite_upgrade_smithing_template",
-                            "name": "minecraft:itemGroup.name.smithing_templates"
-                        },
-                        "items": [
-                            "andexdb:enchantment_transfer_smithing_template",
-                            "andexdb:diamond_downgrade_smithing_template"
-                        ]
-                    },
-                    {
-                        "group_identifier": {
-                            // "icon": "minecraft:board",
-                            "name": "minecraft:itemGroup.name.enchantedBook"
-                        },
-                        "items": ["andexdb:enchantment_transfer_smithing_template"]
-                    }, */
+                "groups": [
+                    // {
+                    //     "group_identifier": {
+                    //         // "icon": "minecraft:netherite_upgrade_smithing_template",
+                    //         "name": "minecraft:itemGroup.name.smithing_templates"
+                    //     },
+                    //     "items": [
+                    //         "andexdb:enchantment_transfer_smithing_template",
+                    //         "andexdb:diamond_downgrade_smithing_template"
+                    //     ]
+                    // },
+                    // {
+                    //     "group_identifier": {
+                    //         // "icon": "minecraft:board",
+                    //         "name": "minecraft:itemGroup.name.enchantedBook"
+                    //     },
+                    //     "items": ["andexdb:enchantment_transfer_smithing_template"]
+                    // },
                     {
                         "group_identifier": {
                             "icon": "minecraft:board",
@@ -47,7 +47,7 @@
                             "andexdb:inventory_controller",
                             "andexdb:command_runner",
                             "andexdb:script_runner",
-                            "andexdb:debug_screen",
+                            // "andexdb:debug_screen",
                             "andexdb:pick_block_stick",
                             "andexdb:liquid_clipped_pick_block_stick",
                             "andexdb:data_pick_block_stick",

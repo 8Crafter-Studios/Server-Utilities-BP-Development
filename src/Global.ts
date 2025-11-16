@@ -3,41 +3,29 @@
  * @module
  * @description This file declares global properties and methods, and declares additional symbols on many classes and modules.
  */
-import {
-    type RawMessage,
-    type Player,
-    type Dimension,
-    type EntityIdentifierType,
-} from "@minecraft/server";
+import { type RawMessage, type Player, type Dimension, type EntityIdentifierType } from "@minecraft/server";
 import type Decimal from "decimal.js";
 import type { executeCommandPlayerW } from "modules/commands/classes/executeCommandPlayerW";
 declare global {
     interface Object {
         hasOwnProperty(v: keyof this): boolean;
         propertyIsEnumerable(v: keyof this): boolean;
-        __defineGetter__<P extends keyof this | string>(
-            prop: P,
-            func: Function
-        ): undefined;
-        __defineSetter__<P extends keyof this | string>(
-            prop: P,
-            func: (val: any) => any
-        ): undefined;
+        __defineGetter__<P extends keyof this | string>(prop: P, func: Function): undefined;
+        __defineSetter__<P extends keyof this | string>(prop: P, func: (val: any) => any): undefined;
         __defineGetter__<P extends string>(prop: P, func: () => any): undefined;
-        __defineSetter__<P extends string>(
-            prop: P,
-            func: (val: any) => void
-        ): undefined;
-        __lookupGetter__<P extends keyof this>(
-            prop: P
-        ): (() => this[P]) | undefined;
-        __lookupSetter__<P extends keyof this>(
-            prop: P
-        ): ((val: this[P]) => this[P]) | undefined;
+        __defineSetter__<P extends string>(prop: P, func: (val: any) => void): undefined;
+        __lookupGetter__<P extends keyof this>(prop: P): (() => this[P]) | undefined;
+        __lookupSetter__<P extends keyof this>(prop: P): ((val: this[P]) => this[P]) | undefined;
         get __proto__(): Object;
         set __proto__(prototype: Object | null);
     }
     interface ObjectConstructor {
+        /**
+         * Get class name
+         *
+         * @param value
+         */
+        __getClass(value?: any): string;
         /**
          * Gets the own property descriptor of the specified object.
          * An own property descriptor is one that is defined directly on the object and is not inherited from the object's prototype.
@@ -61,11 +49,14 @@ declare global {
          * @param o Object on which to add or modify the properties. This can be a native JavaScript object or a DOM object.
          * @param properties JavaScript object that contains one or more descriptor objects. Each descriptor object describes a data property or an accessor property.
          */
-        defineProperties<T>(o: T, properties: {
-            [key in keyof T]: PropertyDescriptor;
-        } & {
-            [key: PropertyKey]: PropertyDescriptor;
-        } & ThisType<any>): T;
+        defineProperties<T>(
+            o: T,
+            properties: {
+                [key in keyof T]: PropertyDescriptor;
+            } & {
+                [key: PropertyKey]: PropertyDescriptor;
+            } & ThisType<any>
+        ): T;
         // defineProperties<T>(o: T, properties: PropertyDescriptorMap & ThisType<any>): T;
     }
     class TimeoutError extends Error {}
@@ -167,13 +158,13 @@ declare global {
         function send(message: (RawMessage | string)[] | RawMessage | string): void;
         /**
          * Sends a {@link String} stringified message in chat.
-         * 
+         *
          * @param {any} value The message to send, will be passed through the {@link String} function and then passed into {@link world.sendMessage}.
          */
         function asend(value: any): void;
         /**
          * Sends a {@link JSONStringify} stringified message in chat.
-         * 
+         *
          * @param {any} value The message to send, will be passed through the {@link JSONStringify} function (the `keepUndefined` paramter will be set to true) and then passed into {@link world.sendMessage}.
          * @param {string | number} [space] The spacing for the stringified JSON.
          */
@@ -206,14 +197,14 @@ declare global {
          * Sends a {@link JSONB.stringify} stringified message in chat, without including functions, getters, setters, or `undefined` values.
          *
          * This uses the following options: `{bigint: true, class: false, function: false, Infinity: true, get: false, NaN: true, NegativeInfinity: true, set: false, undefined: false}`.
-         * 
+         *
          * @param {any} value The message to send, will be passed through the {@link JSONB.stringify} function and then passed into {@link world.sendMessage}.
          * @param {string | number} [space] The spacing for the stringified JSON.
          */
         function fsend(value: any, space?: string | number): void;
         /**
          * Sends a {@link JSONStringify} stringified message in chat, with the message colorized.
-         * 
+         *
          * @param {any} value The message to send, will be passed through the {@link JSONStringify} function (the `keepUndefined` paramter will be set to true), colorized with the {@link colorizeJSONString} function, and then passed into {@link world.sendMessage}.
          * @param {string | number} [space] The spacing for the stringified JSON.
          * @param {Parameters<typeof colorizeJSONString>[1]} [options] The options for the {@link colorizeJSONString} function, if not specified, the default options will be used.
@@ -346,7 +337,7 @@ declare global {
         function pfcsend(player: Player | executeCommandPlayerW, value: any, space?: string | number, options?: Parameters<typeof colorizeJSONString>[1]): void;
         /**
          * Sends a player an error message.
-         * 
+         *
          * @param {Player | executeCommandPlayerW} player The player to send the message to.
          * @param {Error} error The error to send.
          * @param {string} [prefix="§c"] The prefix for the error message. Defaults to `§c`.
@@ -454,14 +445,14 @@ declare global {
         function waitTick(): Promise<void>;
         /**
          * Waits for a set number of ticks to pass.
-         * 
+         *
          * @param ticks The number of ticks to wait. Defaults to `1`.
          * @returns A promise that resolves when the specified number of ticks have passed.
          */
         function waitTicks(ticks?: number): Promise<void>;
         /**
          * Applies a modulo but forces the result to be positive.
-         * 
+         *
          * @param number The number to apply the modulo to.
          * @param modulo The modulo to apply.
          * @returns The result of the modulo.
@@ -666,11 +657,7 @@ declare global {
          * 2: "minecraft:the_end"
          * ```
          */
-        static readonly dimensionsd: [
-            "minecraft:overworld",
-            "minecraft:nether",
-            "minecraft:the_end"
-        ];
+        static readonly dimensionsd: ["minecraft:overworld", "minecraft:nether", "minecraft:the_end"];
         /**
          * @remarks An array containing all of the non-namespaced dimension IDs.
          * ```typescript
@@ -711,21 +698,21 @@ declare global {
         static readonly the_end: Dimension & { id: "minecraft:the_end" };
         /**
          * A global getter that returns object containing all of the online players.
-         * 
+         *
          * @example
          * ```typescript
          * const Andexter8 = players.Andexter8;
          * ```
-         * 
+         *
          * @kindOverride Variable
          * @group Getters
          */
         static get players(): { [name: string]: Player };
         /**
          * A global getter that returns the current stack.
-         * 
+         *
          * It is the equivalent of doing `new Error().stack`.
-         * 
+         *
          * @kindOverride Variable
          * @group Getters
          */
@@ -798,7 +785,7 @@ declare global {
         /**
          * A class containing configuration detailing which functions, classes, and constants from the modules to import into their respective properties on the global modules object.
          * @see {@link modules.main.moduleImportsConfig}
-         * 
+         *
          * @useDeclaredType
          */
         static readonly moduleImportsConfig: typeof import("./init/classes/moduleImportsConfig").moduleImportsConfig;
@@ -812,7 +799,7 @@ declare global {
          * The line number where the function was defined.
          *
          * Native JavaScript property in Minecraft Bedrock Edition.
-         * 
+         *
          * Note: This property is only available in Minecraft Bedrock Edition, it is not documented anywhere and was discovered by reverse engineering.
          *
          * This property was discovered by 8Crafter.
@@ -822,7 +809,7 @@ declare global {
          * The file name where the function was defined.
          *
          * Native JavaScript property in Minecraft Bedrock Edition.
-         * 
+         *
          * Note: This property is only available in Minecraft Bedrock Edition, it is not documented anywhere and was discovered by reverse engineering.
          *
          * This property was discovered by 8Crafter.
@@ -834,7 +821,7 @@ declare global {
          * The line number where the class was defined.
          *
          * Native JavaScript property in Minecraft Bedrock Edition.
-         * 
+         *
          * Note: This property is only available in Minecraft Bedrock Edition, it is not documented anywhere and was discovered by reverse engineering.
          *
          * This property was discovered by 8Crafter.
@@ -844,12 +831,20 @@ declare global {
          * The file name where the class was defined.
          *
          * Native JavaScript property in Minecraft Bedrock Edition.
-         * 
+         *
          * Note: This property is only available in Minecraft Bedrock Edition, it is not documented anywhere and was discovered by reverse engineering.
          *
          * This property was discovered by 8Crafter.
          */
         readonly fileName: string;
+    }
+    interface String {
+        /**
+         * Quotes the string
+         *
+         * @param value
+         */
+        __quote(): string;
     }
 }
 
@@ -862,11 +857,7 @@ declare module "@minecraft/server" {
         z: number;
     }
     interface Dimension {
-        spawnEntity(
-                identifier: string,
-                location: Vector3,
-                options?: SpawnEntityOptions,
-            ): Entity;
+        spawnEntity(identifier: string, location: Vector3, options?: SpawnEntityOptions): Entity;
     }
     /* type EntityIdentifierType<T> = [T] extends [never]
         ? VanillaEntityIdentifier
@@ -876,10 +867,3 @@ declare module "@minecraft/server" {
 }
 
 // §ess§gss§6ss§pss§ass§qss§2ss§4ss§5ss§dss§1ss§3ss§7ss§8ss§9ss§0ss§mss§nss§bss§sss§rss§fss§tss§uss§iss§hss§jss
-
-
-
-
-
-
-
