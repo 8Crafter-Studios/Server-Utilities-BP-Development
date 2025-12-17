@@ -9,7 +9,6 @@ import { system, world } from "@minecraft/server";
 import * as GameTest from "@minecraft/server-gametest";
 import * as mcServer from "@minecraft/server";
 import * as mcServerUi from "@minecraft/server-ui";
-import * as mcServerAdmin from "@minecraft/server-admin";
 import * as mcCommon from "@minecraft/common";
 import * as mcVanillaData from "@minecraft/vanilla-data.js";
 import "initializeMainGlobalVariables";
@@ -126,6 +125,10 @@ import * as playershop from "ExtraFeatures/player_shop";
 import * as moneysystem from "ExtraFeatures/money";
 import * as structuremappings from "Assets/constants/structure_mappings";
 import * as transformrecipes from "Assets/constants/transformrecipes";
+var mcServerAdmin: typeof import("@minecraft/server-admin") | undefined;
+try {
+    mcServerAdmin = await import("@minecraft/server-admin");
+} catch {}
 var mcDebugUtilities: typeof import("@minecraft/debug-utilities") | undefined;
 try {
     mcDebugUtilities = await import("@minecraft/debug-utilities");
@@ -145,6 +148,30 @@ try {
     mcServerEditor = await import("@minecraft/server-editor");
     mcServerEditorBindings = await import("@minecraft/server-editor-bindings");
     mcServerEditorPrivateBindings = await import("@minecraft/server-editor-private-bindings");
+} catch {}
+var mcServerGraphics: typeof import("@minecraft/server-graphics") | undefined;
+try {
+    mcServerGraphics = await import("@minecraft/server-graphics");
+} catch {}
+var mcServerBindings: typeof import("@minecraft/server-bindings") | undefined;
+try {
+    mcServerBindings = await import("@minecraft/server-bindings");
+} catch {}
+// @ts-ignore: Module not present yet.
+var mcServerPrivateBindings: typeof import("@minecraft/server-private-bindings") | undefined;
+try {
+    // @ts-ignore: Module not present yet.
+    mcServerPrivateBindings = await import("@minecraft/server-private-bindings");
+} catch {}
+var mcServerUiBindings: typeof import("@minecraft/server-ui-bindings") | undefined;
+try {
+    mcServerUiBindings = await import("@minecraft/server-ui-bindings");
+} catch {}
+// @ts-ignore: Module not present yet.
+var mcServerUiPrivateBindings: typeof import("@minecraft/server-ui-private-bindings") | undefined;
+try {
+    // @ts-ignore: Module not present yet.
+    mcServerUiPrivateBindings = await import("@minecraft/server-ui-private-bindings");
 } catch {}
 // import * as errors from "legacyModuleAliases/errors";
 const main = await moduleImportsConfig.import("main");
@@ -190,7 +217,25 @@ const modulesMap = {
      * @see {@link https://www.npmjs.com/package/@minecraft/server}
      * @namespace
      */
-    mcServer: mcServer,
+    mcServer,
+    /**
+     * The `@minecraft/server-bindings` module.
+     *
+     * NOTE: May not be present.
+     *
+     * @see {@link https://www.npmjs.com/package/@minecraft/server-bindings}
+     * @namespace
+     */
+    mcServerBindings,
+    /**
+     * The `@minecraft/server-bindings` module.
+     *
+     * NOTE: Does not actually exist yet.
+     *
+     * @see {@link https://www.npmjs.com/package/@minecraft/server-private-bindings}
+     * @namespace
+     */
+    mcServerPrivateBindings,
     /**
      * The `@minecraft/server-ui` module.
      *
@@ -198,6 +243,24 @@ const modulesMap = {
      * @namespace
      */
     mcServerUi,
+    /**
+     * The `@minecraft/server-ui-bindings` module.
+     *
+     * NOTE: May not be present.
+     *
+     * @see {@link https://www.npmjs.com/package/@minecraft/server-ui-bindings}
+     * @namespace
+     */
+    mcServerUiBindings,
+    /**
+     * The `@minecraft/server-ui-private-bindings` module.
+     *
+     * NOTE: May not be present.
+     *
+     * @see {@link https://www.npmjs.com/package/@minecraft/server-ui-private-bindings}
+     * @namespace
+     */
+    mcServerUiPrivateBindings,
     /**
      * The `@minecraft/server-gametest` module.
      *
@@ -221,6 +284,15 @@ const modulesMap = {
      * @namespace
      */
     mcServerNet,
+    /**
+     * The `@minecraft/server-graphics` module.
+     *
+     * Note: This is only available when `@minecraft/server-graphics` is added into the `manifest.json`.
+     *
+     * @see {@link https://www.npmjs.com/package/@minecraft/server-graphics}
+     * @namespace
+     */
+    mcServerGraphics,
     /**
      * The `@minecraft/debug-utilities` module.
      *
@@ -397,12 +469,48 @@ const modulesMap = {
      */
     ["@minecraft/server"]: mcServer,
     /**
+     * The `@minecraft/server-bindings` module.
+     *
+     * NOTE: May not be present.
+     *
+     * @see {@link https://www.npmjs.com/package/@minecraft/server-bindings}
+     * @namespace
+     */
+    ["@minecraft/server-bindings"]: mcServerBindings,
+    /**
+     * The `@minecraft/server-bindings` module.
+     *
+     * NOTE: Does not actually exist yet.
+     *
+     * @see {@link https://www.npmjs.com/package/@minecraft/server-private-bindings}
+     * @namespace
+     */
+    ["@minecraft/server-private-bindings"]: mcServerPrivateBindings,
+    /**
      * The `@minecraft/server-ui` module.
      *
      * @see {@link https://www.npmjs.com/package/@minecraft/server-ui}
      * @namespace
      */
     ["@minecraft/server-ui"]: mcServerUi,
+    /**
+     * The `@minecraft/server-ui-bindings` module.
+     *
+     * NOTE: May not be present.
+     *
+     * @see {@link https://www.npmjs.com/package/@minecraft/server-ui-bindings}
+     * @namespace
+     */
+    ["@minecraft/server-ui-bindings"]: mcServerUiBindings,
+    /**
+     * The `@minecraft/server-ui-private-bindings` module.
+     *
+     * NOTE: May not be present.
+     *
+     * @see {@link https://www.npmjs.com/package/@minecraft/server-ui-private-bindings}
+     * @namespace
+     */
+    ["@minecraft/server-ui-private-bindings"]: mcServerUiPrivateBindings,
     /**
      * The `@minecraft/server-gametest` module.
      *
@@ -433,6 +541,15 @@ const modulesMap = {
      * @namespace
      */
     ["@minecraft/server-net"]: mcServerNet,
+    /**
+     * The `@minecraft/server-graphics` module.
+     *
+     * Note: This is only available when `@minecraft/server-graphics` is added into the `manifest.json`.
+     *
+     * @see {@link https://www.npmjs.com/package/@minecraft/server-graphics}
+     * @namespace
+     */
+    ["@minecraft/server-graphics"]: mcServerGraphics,
     /**
      * The `@minecraft/debug-utilities` module.
      *

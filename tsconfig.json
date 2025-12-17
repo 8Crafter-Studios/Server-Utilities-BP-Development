@@ -14,6 +14,8 @@
         //   "semver": ["C:/Users/ander/github/Debug Sticks/BP/node_modules/semver/index.d.ts"]*/
         // },
         "paths": {
+            "@minecraft/server-bindings": ["./server-bindings@2.5.0-beta"],
+            "@minecraft/server-ui-bindings": ["./server-ui-bindings@2.1.0-beta"],
             "@minecraft/server-editor-bindings": ["./server-editor-bindings@0.1.0-beta"],
             "@minecraft/server-editor-private-bindings": ["./server-editor-private-bindings@0.1.0-internal"]
         },
@@ -40,7 +42,8 @@
         "noUncheckedIndexedAccess": true,
         // "diagnostics": true,
         "skipLibCheck": true,
-        "pretty": true
+        "pretty": true,
+        "typeRoots": ["./node_modules/@types"]
     },
     "exclude": ["node_modules"],
     "include": ["src"]

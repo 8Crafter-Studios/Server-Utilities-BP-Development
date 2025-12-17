@@ -1,7 +1,6 @@
 import * as GameTest from "@minecraft/server-gametest";
 import * as mcServer from "@minecraft/server";
 import * as mcServerUi from "@minecraft/server-ui";
-import * as mcServerAdmin from "@minecraft/server-admin";
 import * as mcCommon from "@minecraft/common";
 import * as mcVanillaData from "@minecraft/vanilla-data.js";
 import "initializeMainGlobalVariables";
@@ -42,12 +41,48 @@ declare const modulesMap: {
      */
     mcServer: typeof mcServer;
     /**
+     * The `@minecraft/server-bindings` module.
+     *
+     * NOTE: May not be present.
+     *
+     * @see {@link https://www.npmjs.com/package/@minecraft/server-bindings}
+     * @namespace
+     */
+    mcServerBindings: typeof import("@minecraft/server-bindings") | undefined;
+    /**
+     * The `@minecraft/server-bindings` module.
+     *
+     * NOTE: Does not actually exist yet.
+     *
+     * @see {@link https://www.npmjs.com/package/@minecraft/server-private-bindings}
+     * @namespace
+     */
+    mcServerPrivateBindings: any;
+    /**
      * The `@minecraft/server-ui` module.
      *
      * @see {@link https://www.npmjs.com/package/@minecraft/server-ui}
      * @namespace
      */
     mcServerUi: typeof mcServerUi;
+    /**
+     * The `@minecraft/server-ui-bindings` module.
+     *
+     * NOTE: May not be present.
+     *
+     * @see {@link https://www.npmjs.com/package/@minecraft/server-ui-bindings}
+     * @namespace
+     */
+    mcServerUiBindings: typeof import("@minecraft/server-ui-bindings") | undefined;
+    /**
+     * The `@minecraft/server-ui-private-bindings` module.
+     *
+     * NOTE: May not be present.
+     *
+     * @see {@link https://www.npmjs.com/package/@minecraft/server-ui-private-bindings}
+     * @namespace
+     */
+    mcServerUiPrivateBindings: any;
     /**
      * The `@minecraft/server-gametest` module.
      *
@@ -61,7 +96,7 @@ declare const modulesMap: {
      * @see {@link https://www.npmjs.com/package/@minecraft/server-admin}
      * @namespace
      */
-    mcServerAdmin: typeof mcServerAdmin;
+    mcServerAdmin: typeof import("@minecraft/server-admin") | undefined;
     /**
      * The `@minecraft/server-net` module.
      *
@@ -71,6 +106,15 @@ declare const modulesMap: {
      * @namespace
      */
     mcServerNet: typeof import("@minecraft/server-net") | undefined;
+    /**
+     * The `@minecraft/server-graphics` module.
+     *
+     * Note: This is only available when `@minecraft/server-graphics` is added into the `manifest.json`.
+     *
+     * @see {@link https://www.npmjs.com/package/@minecraft/server-graphics}
+     * @namespace
+     */
+    mcServerGraphics: typeof import("@minecraft/server-graphics") | undefined;
     /**
      * The `@minecraft/debug-utilities` module.
      *
@@ -247,12 +291,48 @@ declare const modulesMap: {
      */
     "@minecraft/server": typeof mcServer;
     /**
+     * The `@minecraft/server-bindings` module.
+     *
+     * NOTE: May not be present.
+     *
+     * @see {@link https://www.npmjs.com/package/@minecraft/server-bindings}
+     * @namespace
+     */
+    "@minecraft/server-bindings": typeof import("@minecraft/server-bindings") | undefined;
+    /**
+     * The `@minecraft/server-bindings` module.
+     *
+     * NOTE: Does not actually exist yet.
+     *
+     * @see {@link https://www.npmjs.com/package/@minecraft/server-private-bindings}
+     * @namespace
+     */
+    "@minecraft/server-private-bindings": any;
+    /**
      * The `@minecraft/server-ui` module.
      *
      * @see {@link https://www.npmjs.com/package/@minecraft/server-ui}
      * @namespace
      */
     "@minecraft/server-ui": typeof mcServerUi;
+    /**
+     * The `@minecraft/server-ui-bindings` module.
+     *
+     * NOTE: May not be present.
+     *
+     * @see {@link https://www.npmjs.com/package/@minecraft/server-ui-bindings}
+     * @namespace
+     */
+    "@minecraft/server-ui-bindings": typeof import("@minecraft/server-ui-bindings") | undefined;
+    /**
+     * The `@minecraft/server-ui-private-bindings` module.
+     *
+     * NOTE: May not be present.
+     *
+     * @see {@link https://www.npmjs.com/package/@minecraft/server-ui-private-bindings}
+     * @namespace
+     */
+    "@minecraft/server-ui-private-bindings": any;
     /**
      * The `@minecraft/server-gametest` module.
      *
@@ -273,7 +353,7 @@ declare const modulesMap: {
      * @see {@link https://www.npmjs.com/package/@minecraft/server-admin}
      * @namespace
      */
-    "@minecraft/server-admin": typeof mcServerAdmin;
+    "@minecraft/server-admin": typeof import("@minecraft/server-admin") | undefined;
     /**
      * The `@minecraft/server-net` module.
      *
@@ -283,6 +363,15 @@ declare const modulesMap: {
      * @namespace
      */
     "@minecraft/server-net": typeof import("@minecraft/server-net") | undefined;
+    /**
+     * The `@minecraft/server-graphics` module.
+     *
+     * Note: This is only available when `@minecraft/server-graphics` is added into the `manifest.json`.
+     *
+     * @see {@link https://www.npmjs.com/package/@minecraft/server-graphics}
+     * @namespace
+     */
+    "@minecraft/server-graphics": typeof import("@minecraft/server-graphics") | undefined;
     /**
      * The `@minecraft/debug-utilities` module.
      *

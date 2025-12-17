@@ -3,7 +3,6 @@ import { extractPlayerFromLooseEntityType } from "modules/utilities/functions/ex
 import { showMessage } from "modules/utilities/functions/showMessage";
 import type { loosePlayerType } from "modules/utilities/types/loosePlayerType";
 import { customFormUICodes } from "../constants/customFormUICodes";
-import { transferPlayer } from "@minecraft/server-admin";
 import { securityVariables } from "security/ultraSecurityModeUtils";
 
 /**
@@ -15,6 +14,48 @@ import { securityVariables } from "security/ultraSecurityModeUtils";
  */
 export async function moderationMenu_quickTransfer(sourceEntity: loosePlayerType): Promise<0 | 1> {
     const player = extractPlayerFromLooseEntityType(sourceEntity);
+    if (!globalThis.modules) {
+        const r = await showMessage(
+            player,
+            "Missing Modules (424)",
+            "The ability to transfer players to other servers is currently non-functional due to the global §bmodules§r variable being missing.",
+            "Back",
+            "Cancel"
+        );
+        if (r.canceled || r.selection == 0) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+    if (!modules.mcServerAdmin) {
+        const r = await showMessage(
+            player,
+            "Missing Dependency (424)",
+            "The ability to transfer players to other servers is currently non-functional due to the §b@minecraft/server-admin§r dependency being missing.",
+            "Back",
+            "Cancel"
+        );
+        if (r.canceled || r.selection == 0) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+    if (!modules.mcServerAdmin?.transferPlayer) {
+        const r = await showMessage(
+            player,
+            "Missing Function in Dependency (424)",
+            "The ability to transfer players to other servers is currently non-functional due to the §b@minecraft/server-admin§r dependency not containing the §btransferPlayer§r function.",
+            "Back",
+            "Cancel"
+        );
+        if (r.canceled || r.selection == 0) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
     while (true) {
         try {
             if (securityVariables.ultraSecurityModeEnabled) {
@@ -65,7 +106,7 @@ export async function moderationMenu_quickTransfer(sourceEntity: loosePlayerType
                     if (rb.formValues![1]?.toNumber()! < 0 || rb.formValues![1]?.toNumber()! > 65535) {
                         throw new TypeError("Port must be between 0 and 65535 (inclusive).");
                     }
-                    transferPlayer(target, {
+                    modules.mcServerAdmin.transferPlayer(target, {
                         hostname: rb.formValues![0] as string,
                         port: rb.formValues![1]!.toNumber()!,
                     });

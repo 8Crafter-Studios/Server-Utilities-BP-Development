@@ -1,2 +1,21 @@
 # Auto detect text files and perform LF normalization
-* text=auto
+*          text=auto
+
+*.java     linguist-detectable
+*.json     linguist-detectable
+*.jsonc    linguist-detectable
+*.jsonl    linguist-detectable
+*.material linguist-detectable linguist-language=jsonc
+*.bbmodel  linguist-detectable linguist-language=json
+
+/.VSCodeCounter/** -linguist-detectable
+/depricated/** -linguist-detectable
+/deprecated/** -linguist-detectable
+/scripts/** -linguist-detectable
+/src2/**   -linguist-detectable
+
+/app.js    -linguist-detectable
+/out.js    -linguist-detectable
+/package.json -linguist-detectable
+/package-lock.json -linguist-detectable
+/tsconfig.json -linguist-detectable
