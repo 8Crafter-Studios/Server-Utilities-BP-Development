@@ -641,6 +641,168 @@ export class Events_WorldBeforeEvents implements ReplaceTypeOfKey<WorldBeforeEve
             },
         };
     }
+    public get entityHeal() {
+        return {
+            /**
+             * Creates a new event subscription.
+             *
+             * @remarks
+             * This function can't be called in read-only mode.
+             *
+             * This function can be called in early-execution mode.
+             *
+             * @throws {TypeError} If the event callback is an empty string.
+             * @throws {TypeError} If the event callback is not a string.
+             * @throws {TypeError} If the event callback is not a valid stringified JavaScript function.
+             */
+            subscribe(callback: string): SubscribedEvent<"world.beforeEvents.entityHeal"> {
+                if (callback === "") throw new TypeError("Event subscription callback cannot be empty.");
+                if (typeof callback !== "string") throw new TypeError("Event subscription callback must be a string.");
+                if (eval("typeof (" + callback + ")") !== "function") {
+                    throw new TypeError("Event subscription callback is a string but is not a valid stringified JavaScript function.");
+                }
+                const subscription = Events.registerSubscription({
+                    code: callback,
+                    eventType: "world.beforeEvents.entityHeal",
+                    saveID: `EventSubscription:${getSuperUniqueID()}`,
+                });
+                return subscription;
+            },
+            /**
+             * Deletes the provided event subscription.
+             *
+             * @remarks
+             * This function can't be called in read-only mode.
+             *
+             * This function can be called in early-execution mode.
+             *
+             * @throws {TypeError} If the subscription is not an instance of SubscribedEvent.
+             * @throws {ReferenceError} If the subscription is not for the `world.beforeEvents.entityHeal` event.
+             */
+            unsubscribe(subscription: SubscribedEvent<"world.beforeEvents.entityHeal">): void {
+                if (!(subscription instanceof SubscribedEvent)) throw new TypeError("Subscription must be an instance of SubscribedEvent.");
+                if (subscription.eventType !== "world.beforeEvents.entityHeal")
+                    throw new ReferenceError("Subscription must be for the world.beforeEvents.entityHeal event.");
+                subscription.delete();
+            },
+            /**
+             * Gets all event subscriptions to this event type.
+             *
+             * @returns {SubscribedEvent<"world.beforeEvents.entityHeal">[]} The event subscriptions.
+             */
+            getAll(): SubscribedEvent<"world.beforeEvents.entityHeal">[] {
+                return Events.loadedEvents.world.beforeEvents.entityHeal.filter(() => true);
+            },
+        };
+    }
+    public get entityHurt() {
+        return {
+            /**
+             * Creates a new event subscription.
+             *
+             * @remarks
+             * This function can't be called in read-only mode.
+             *
+             * This function can be called in early-execution mode.
+             *
+             * @throws {TypeError} If the event callback is an empty string.
+             * @throws {TypeError} If the event callback is not a string.
+             * @throws {TypeError} If the event callback is not a valid stringified JavaScript function.
+             */
+            subscribe(callback: string): SubscribedEvent<"world.beforeEvents.entityHurt"> {
+                if (callback === "") throw new TypeError("Event subscription callback cannot be empty.");
+                if (typeof callback !== "string") throw new TypeError("Event subscription callback must be a string.");
+                if (eval("typeof (" + callback + ")") !== "function") {
+                    throw new TypeError("Event subscription callback is a string but is not a valid stringified JavaScript function.");
+                }
+                const subscription = Events.registerSubscription({
+                    code: callback,
+                    eventType: "world.beforeEvents.entityHurt",
+                    saveID: `EventSubscription:${getSuperUniqueID()}`,
+                });
+                return subscription;
+            },
+            /**
+             * Deletes the provided event subscription.
+             *
+             * @remarks
+             * This function can't be called in read-only mode.
+             *
+             * This function can be called in early-execution mode.
+             *
+             * @throws {TypeError} If the subscription is not an instance of SubscribedEvent.
+             * @throws {ReferenceError} If the subscription is not for the `world.beforeEvents.entityHurt` event.
+             */
+            unsubscribe(subscription: SubscribedEvent<"world.beforeEvents.entityHurt">): void {
+                if (!(subscription instanceof SubscribedEvent)) throw new TypeError("Subscription must be an instance of SubscribedEvent.");
+                if (subscription.eventType !== "world.beforeEvents.entityHurt")
+                    throw new ReferenceError("Subscription must be for the world.beforeEvents.entityHurt event.");
+                subscription.delete();
+            },
+            /**
+             * Gets all event subscriptions to this event type.
+             *
+             * @returns {SubscribedEvent<"world.beforeEvents.entityHurt">[]} The event subscriptions.
+             */
+            getAll(): SubscribedEvent<"world.beforeEvents.entityHurt">[] {
+                return Events.loadedEvents.world.beforeEvents.entityHurt.filter(() => true);
+            },
+        };
+    }
+    public get entityItemPickup() {
+        return {
+            /**
+             * Creates a new event subscription.
+             *
+             * @remarks
+             * This function can't be called in read-only mode.
+             *
+             * This function can be called in early-execution mode.
+             *
+             * @throws {TypeError} If the event callback is an empty string.
+             * @throws {TypeError} If the event callback is not a string.
+             * @throws {TypeError} If the event callback is not a valid stringified JavaScript function.
+             */
+            subscribe(callback: string): SubscribedEvent<"world.beforeEvents.entityItemPickup"> {
+                if (callback === "") throw new TypeError("Event subscription callback cannot be empty.");
+                if (typeof callback !== "string") throw new TypeError("Event subscription callback must be a string.");
+                if (eval("typeof (" + callback + ")") !== "function") {
+                    throw new TypeError("Event subscription callback is a string but is not a valid stringified JavaScript function.");
+                }
+                const subscription = Events.registerSubscription({
+                    code: callback,
+                    eventType: "world.beforeEvents.entityItemPickup",
+                    saveID: `EventSubscription:${getSuperUniqueID()}`,
+                });
+                return subscription;
+            },
+            /**
+             * Deletes the provided event subscription.
+             *
+             * @remarks
+             * This function can't be called in read-only mode.
+             *
+             * This function can be called in early-execution mode.
+             *
+             * @throws {TypeError} If the subscription is not an instance of SubscribedEvent.
+             * @throws {ReferenceError} If the subscription is not for the `world.beforeEvents.entityItemPickup` event.
+             */
+            unsubscribe(subscription: SubscribedEvent<"world.beforeEvents.entityItemPickup">): void {
+                if (!(subscription instanceof SubscribedEvent)) throw new TypeError("Subscription must be an instance of SubscribedEvent.");
+                if (subscription.eventType !== "world.beforeEvents.entityItemPickup")
+                    throw new ReferenceError("Subscription must be for the world.beforeEvents.entityItemPickup event.");
+                subscription.delete();
+            },
+            /**
+             * Gets all event subscriptions to this event type.
+             *
+             * @returns {SubscribedEvent<"world.beforeEvents.entityItemPickup">[]} The event subscriptions.
+             */
+            getAll(): SubscribedEvent<"world.beforeEvents.entityItemPickup">[] {
+                return Events.loadedEvents.world.beforeEvents.entityItemPickup.filter(() => true);
+            },
+        };
+    }
     public get entityRemove() {
         return {
             /**
@@ -1513,6 +1675,60 @@ export class Events_WorldAfterEvents implements ReplaceTypeOfKey<WorldAfterEvent
             },
         };
     }
+    public get entityHeal() {
+        return {
+            /**
+             * Creates a new event subscription.
+             *
+             * @remarks
+             * This function can't be called in read-only mode.
+             *
+             * This function can be called in early-execution mode.
+             *
+             * @throws {TypeError} If the event callback is an empty string.
+             * @throws {TypeError} If the event callback is not a string.
+             * @throws {TypeError} If the event callback is not a valid stringified JavaScript function.
+             */
+            subscribe(callback: string): SubscribedEvent<"world.afterEvents.entityHeal"> {
+                if (callback === "") throw new TypeError("Event subscription callback cannot be empty.");
+                if (typeof callback !== "string") throw new TypeError("Event subscription callback must be a string.");
+                if (eval("typeof (" + callback + ")") !== "function") {
+                    throw new TypeError("Event subscription callback is a string but is not a valid stringified JavaScript function.");
+                }
+                const subscription = Events.registerSubscription({
+                    code: callback,
+                    eventType: "world.afterEvents.entityHeal",
+                    saveID: `EventSubscription:${getSuperUniqueID()}`,
+                });
+                return subscription;
+            },
+            /**
+             * Deletes the provided event subscription.
+             *
+             * @remarks
+             * This function can't be called in read-only mode.
+             *
+             * This function can be called in early-execution mode.
+             *
+             * @throws {TypeError} If the subscription is not an instance of SubscribedEvent.
+             * @throws {ReferenceError} If the subscription is not for the `world.afterEvents.entityHeal` event.
+             */
+            unsubscribe(subscription: SubscribedEvent<"world.afterEvents.entityHeal">): void {
+                if (!(subscription instanceof SubscribedEvent)) throw new TypeError("Subscription must be an instance of SubscribedEvent.");
+                if (subscription.eventType !== "world.afterEvents.entityHeal")
+                    throw new ReferenceError("Subscription must be for the world.afterEvents.entityHeal event.");
+                subscription.delete();
+            },
+            /**
+             * Gets all event subscriptions to this event type.
+             *
+             * @returns {SubscribedEvent<"world.afterEvents.entityHeal">[]} The event subscriptions.
+             */
+            getAll(): SubscribedEvent<"world.afterEvents.entityHeal">[] {
+                return Events.loadedEvents.world.afterEvents.entityHeal.filter(() => true);
+            },
+        };
+    }
     public get entityHealthChanged() {
         return {
             /**
@@ -1726,6 +1942,114 @@ export class Events_WorldAfterEvents implements ReplaceTypeOfKey<WorldAfterEvent
              */
             getAll(): SubscribedEvent<"world.afterEvents.entityHurt">[] {
                 return Events.loadedEvents.world.afterEvents.entityHurt.filter(() => true);
+            },
+        };
+    }
+    public get entityItemDrop() {
+        return {
+            /**
+             * Creates a new event subscription.
+             *
+             * @remarks
+             * This function can't be called in read-only mode.
+             *
+             * This function can be called in early-execution mode.
+             *
+             * @throws {TypeError} If the event callback is an empty string.
+             * @throws {TypeError} If the event callback is not a string.
+             * @throws {TypeError} If the event callback is not a valid stringified JavaScript function.
+             */
+            subscribe(callback: string): SubscribedEvent<"world.afterEvents.entityItemDrop"> {
+                if (callback === "") throw new TypeError("Event subscription callback cannot be empty.");
+                if (typeof callback !== "string") throw new TypeError("Event subscription callback must be a string.");
+                if (eval("typeof (" + callback + ")") !== "function") {
+                    throw new TypeError("Event subscription callback is a string but is not a valid stringified JavaScript function.");
+                }
+                const subscription = Events.registerSubscription({
+                    code: callback,
+                    eventType: "world.afterEvents.entityItemDrop",
+                    saveID: `EventSubscription:${getSuperUniqueID()}`,
+                });
+                return subscription;
+            },
+            /**
+             * Deletes the provided event subscription.
+             *
+             * @remarks
+             * This function can't be called in read-only mode.
+             *
+             * This function can be called in early-execution mode.
+             *
+             * @throws {TypeError} If the subscription is not an instance of SubscribedEvent.
+             * @throws {ReferenceError} If the subscription is not for the `world.afterEvents.entityItemDrop` event.
+             */
+            unsubscribe(subscription: SubscribedEvent<"world.afterEvents.entityItemDrop">): void {
+                if (!(subscription instanceof SubscribedEvent)) throw new TypeError("Subscription must be an instance of SubscribedEvent.");
+                if (subscription.eventType !== "world.afterEvents.entityItemDrop")
+                    throw new ReferenceError("Subscription must be for the world.afterEvents.entityItemDrop event.");
+                subscription.delete();
+            },
+            /**
+             * Gets all event subscriptions to this event type.
+             *
+             * @returns {SubscribedEvent<"world.afterEvents.entityItemDrop">[]} The event subscriptions.
+             */
+            getAll(): SubscribedEvent<"world.afterEvents.entityItemDrop">[] {
+                return Events.loadedEvents.world.afterEvents.entityItemDrop.filter(() => true);
+            },
+        };
+    }
+    public get entityItemPickup() {
+        return {
+            /**
+             * Creates a new event subscription.
+             *
+             * @remarks
+             * This function can't be called in read-only mode.
+             *
+             * This function can be called in early-execution mode.
+             *
+             * @throws {TypeError} If the event callback is an empty string.
+             * @throws {TypeError} If the event callback is not a string.
+             * @throws {TypeError} If the event callback is not a valid stringified JavaScript function.
+             */
+            subscribe(callback: string): SubscribedEvent<"world.afterEvents.entityItemPickup"> {
+                if (callback === "") throw new TypeError("Event subscription callback cannot be empty.");
+                if (typeof callback !== "string") throw new TypeError("Event subscription callback must be a string.");
+                if (eval("typeof (" + callback + ")") !== "function") {
+                    throw new TypeError("Event subscription callback is a string but is not a valid stringified JavaScript function.");
+                }
+                const subscription = Events.registerSubscription({
+                    code: callback,
+                    eventType: "world.afterEvents.entityItemPickup",
+                    saveID: `EventSubscription:${getSuperUniqueID()}`,
+                });
+                return subscription;
+            },
+            /**
+             * Deletes the provided event subscription.
+             *
+             * @remarks
+             * This function can't be called in read-only mode.
+             *
+             * This function can be called in early-execution mode.
+             *
+             * @throws {TypeError} If the subscription is not an instance of SubscribedEvent.
+             * @throws {ReferenceError} If the subscription is not for the `world.afterEvents.entityItemPickup` event.
+             */
+            unsubscribe(subscription: SubscribedEvent<"world.afterEvents.entityItemPickup">): void {
+                if (!(subscription instanceof SubscribedEvent)) throw new TypeError("Subscription must be an instance of SubscribedEvent.");
+                if (subscription.eventType !== "world.afterEvents.entityItemPickup")
+                    throw new ReferenceError("Subscription must be for the world.afterEvents.entityItemPickup event.");
+                subscription.delete();
+            },
+            /**
+             * Gets all event subscriptions to this event type.
+             *
+             * @returns {SubscribedEvent<"world.afterEvents.entityItemPickup">[]} The event subscriptions.
+             */
+            getAll(): SubscribedEvent<"world.afterEvents.entityItemPickup">[] {
+                return Events.loadedEvents.world.afterEvents.entityItemPickup.filter(() => true);
             },
         };
     }
@@ -5673,18 +5997,18 @@ namespace exports {
             };
         } = {
             system: {
-                beforeEvents: Object.fromEntries(Object.keys(system.beforeEvents.__proto__).map((key) => [key, []])) as {
+                beforeEvents: Object.fromEntries(Object.keys(system.beforeEvents.__proto__!).map((key) => [key, []])) as {
                     [key in keyof System["beforeEvents"]]: [];
                 },
-                afterEvents: Object.fromEntries(Object.keys(system.afterEvents.__proto__).map((key) => [key, []])) as {
+                afterEvents: Object.fromEntries(Object.keys(system.afterEvents.__proto__!).map((key) => [key, []])) as {
                     [key in keyof System["afterEvents"]]: [];
                 },
             },
             world: {
-                beforeEvents: Object.fromEntries(Object.keys(world.beforeEvents.__proto__).map((key) => [key, []])) as {
+                beforeEvents: Object.fromEntries(Object.keys(world.beforeEvents.__proto__!).map((key) => [key, []])) as {
                     [key in keyof World["beforeEvents"]]: [];
                 },
-                afterEvents: Object.fromEntries(Object.keys(world.afterEvents.__proto__).map((key) => [key, []])) as {
+                afterEvents: Object.fromEntries(Object.keys(world.afterEvents.__proto__!).map((key) => [key, []])) as {
                     [key in keyof World["afterEvents"]]: [];
                 },
             },
@@ -5704,18 +6028,18 @@ namespace exports {
         public static unload(): void {
             this.deinitialize();
             this.loadedEvents.system = {
-                beforeEvents: Object.fromEntries(Object.keys(system.beforeEvents.__proto__).map((key) => [key, []])) as {
+                beforeEvents: Object.fromEntries(Object.keys(system.beforeEvents.__proto__!).map((key) => [key, []])) as {
                     [key in keyof System["beforeEvents"]]: [];
                 },
-                afterEvents: Object.fromEntries(Object.keys(system.afterEvents.__proto__).map((key) => [key, []])) as {
+                afterEvents: Object.fromEntries(Object.keys(system.afterEvents.__proto__!).map((key) => [key, []])) as {
                     [key in keyof System["afterEvents"]]: [];
                 },
             };
             this.loadedEvents.world = {
-                beforeEvents: Object.fromEntries(Object.keys(world.beforeEvents.__proto__).map((key) => [key, []])) as {
+                beforeEvents: Object.fromEntries(Object.keys(world.beforeEvents.__proto__!).map((key) => [key, []])) as {
                     [key in keyof World["beforeEvents"]]: [];
                 },
-                afterEvents: Object.fromEntries(Object.keys(world.afterEvents.__proto__).map((key) => [key, []])) as {
+                afterEvents: Object.fromEntries(Object.keys(world.afterEvents.__proto__!).map((key) => [key, []])) as {
                     [key in keyof World["afterEvents"]]: [];
                 },
             };
@@ -5964,13 +6288,13 @@ namespace exports {
      */
     export class SubscribedEvent<
         EventTypeID extends SubscribedEventTypeID,
-        EventSignal extends SubscribedEventSignalUnion = EventTypeID extends `${infer TA extends "system" | "world"}.${infer TB extends
-            | "beforeEvents"
-            | "afterEvents"}.${infer TC extends SubscribedEventKeyUnion}`
-            ? TC extends keyof (TA extends "system" ? System : World)[TB]
-                ? (TA extends "system" ? System : World)[TB][TC]
-                : never
-            : never
+        EventSignal extends SubscribedEventSignalUnion = EventTypeID extends (
+            `${infer TA extends "system" | "world"}.${infer TB extends "beforeEvents" | "afterEvents"}.${infer TC extends SubscribedEventKeyUnion}`
+        ) ?
+            TC extends keyof (TA extends "system" ? System : World)[TB] ?
+                (TA extends "system" ? System : World)[TB][TC]
+            :   never
+        :   never,
     > {
         /**
          * Whether or not the event subscription has been initialized.

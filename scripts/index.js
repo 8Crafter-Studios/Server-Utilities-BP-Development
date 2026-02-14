@@ -279,6 +279,8 @@ const modulesMap = {
     /**
      * The `@minecraft/server-admin` module.
      *
+     * Note: This is only available when on a world or dedicated server (not a realm) and `@minecraft/server-admin` is added into the `manifest.json`.
+     *
      * @see {@link https://www.npmjs.com/package/@minecraft/server-admin}
      * @namespace
      */
@@ -535,6 +537,8 @@ const modulesMap = {
     ["@minecraft/common"]: mcCommon,
     /**
      * The `@minecraft/server-admin` module.
+     *
+     * Note: This is only available when on a world or dedicated server (not a realm) and `@minecraft/server-admin` is added into the `manifest.json`.
      *
      * @see {@link https://www.npmjs.com/package/@minecraft/server-admin}
      * @namespace

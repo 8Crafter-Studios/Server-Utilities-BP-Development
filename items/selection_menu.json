@@ -15,6 +15,8 @@
                     "dyed": "stick_dyed"
                 }
             },
+            // TEMP: This disable comment is just until the molang parser is fixed.
+            // mc-disable-next-line molang.open
             "minecraft:interact_button": "Open Main Menu (Please replace this item with the andexdb:main_menu item)",
             "minecraft:rarity": "epic",
             "minecraft:glint": true /*

@@ -49,7 +49,10 @@ export function rankNameTagEvaluator_prePlayers(
     if (nameFormatting == "") {
         nameFormatting = options?.playerPersonalSettings?.defaultNameFormatting ?? config.chatRanks.defaultNameFormatting;
     }
-    const ranksListWithDefault = (options?.ranks ?? []).length > 0 ? options?.ranks : config.chatRanks.defaultRank !== "" ? [config.chatRanks.defaultRank] : [];
+    const ranksListWithDefault =
+        (options?.ranks ?? []).length > 0 ? options?.ranks
+        : config.chatRanks.defaultRank !== "" ? [config.chatRanks.defaultRank]
+        : [];
     let rank: string = "";
     switch (config.chatRanks.rankEvaluatorMode_nameTags) {
         case "default":
@@ -70,7 +73,10 @@ export function rankNameTagEvaluator_prePlayers(
                     (options?.playerPersonalSettings?.rankDisplaySuffix ?? config.chatRanks.rankDisplaySuffix));
             break;
     }
-    let name = displayName.hidden ? "" : !!nameGradientMode ? evaluateChatColorType(displayName.value ?? "", nameGradientMode) : displayName.value ?? ""; /*
+    let name =
+        displayName.hidden ? ""
+        : !!nameGradientMode ? evaluateChatColorType(displayName.value ?? "", nameGradientMode)
+        : (displayName.value ?? ""); /*
         let rankMode = 0
         for (let index in player.getTags()) {
                 if (player.getTags()[Number(index)].startsWith(String(player.getDynamicProperty("andexdbPersonalSettings:chatRankPrefix") ?? world.getDynamicProperty("andexdbSettings:chatRankPrefix") ?? "rank:"))) { rank = (rank + String(player.getDynamicProperty("andexdbPersonalSettings:rankDisplayPrefix") ?? world.getDynamicProperty("andexdbSettings:rankDisplayPrefix") ?? "[") + player.getTags()[Number(index)].slice(String(player.getDynamicProperty("andexdbPersonalSettings:chatRankPrefix") ?? world.getDynamicProperty("andexdbSettings:chatRankPrefix") ?? "rank:").length) + String(player.getDynamicProperty("andexdbPersonalSettings:rankDisplaySuffix") ?? world.getDynamicProperty("andexdbSettings:rankDisplaySuffix") ?? "]")) }
@@ -109,6 +115,7 @@ export function rankNameTagEvaluator_players(
             applyImpulse: () => undefined as any,
             applyKnockback: () => undefined as any,
             camera: {
+                attachToEntity: () => undefined as any,
                 clear: () => undefined as any,
                 fade: () => undefined as any,
                 playAnimation: () => undefined as any,
@@ -612,29 +619,29 @@ export function rankNameTagEvaluator_generatePartialPlayerTypeForRankNameTagEval
     hasTag(tag: string): boolean;
     getTags(): string[];
 } {
-    return player instanceof Player
-        ? {
-              name: player.name,
-              nameTag: player.nameTag,
-              tags: player.getTags(),
-              hasTag(tag: string): boolean {
-                  return this.tags.includes(tag);
-              },
-              getTags(): string[] {
-                  return this.tags;
-              },
-          }
-        : {
-              name: player.name,
-              nameTag: player.nameTag,
-              tags: player.tags ?? [],
-              hasTag(tag: string): boolean {
-                  return this.tags.includes(tag);
-              },
-              getTags(): string[] {
-                  return this.tags;
-              },
-          };
+    return player instanceof Player ?
+            {
+                name: player.name,
+                nameTag: player.nameTag,
+                tags: player.getTags(),
+                hasTag(tag: string): boolean {
+                    return this.tags.includes(tag);
+                },
+                getTags(): string[] {
+                    return this.tags;
+                },
+            }
+        :   {
+                name: player.name,
+                nameTag: player.nameTag,
+                tags: player.tags ?? [],
+                hasTag(tag: string): boolean {
+                    return this.tags.includes(tag);
+                },
+                getTags(): string[] {
+                    return this.tags;
+                },
+            };
 }
 
 export function rankNameTagEvaluator_getPlayerPersonalSettings(

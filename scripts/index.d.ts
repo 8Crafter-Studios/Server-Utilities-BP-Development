@@ -93,6 +93,8 @@ declare const modulesMap: {
     /**
      * The `@minecraft/server-admin` module.
      *
+     * Note: This is only available when on a world or dedicated server (not a realm) and `@minecraft/server-admin` is added into the `manifest.json`.
+     *
      * @see {@link https://www.npmjs.com/package/@minecraft/server-admin}
      * @namespace
      */
@@ -350,6 +352,8 @@ declare const modulesMap: {
     /**
      * The `@minecraft/server-admin` module.
      *
+     * Note: This is only available when on a world or dedicated server (not a realm) and `@minecraft/server-admin` is added into the `manifest.json`.
+     *
      * @see {@link https://www.npmjs.com/package/@minecraft/server-admin}
      * @namespace
      */
@@ -564,7 +568,7 @@ import type { moduleOptionalImportPathMap, optionalModuleObjectImportFilePathsIm
  * ```json
  * {
  *   "module_name": "@minecraft/server",
- *   "version": "1.18.0-beta"
+ *   "version": "2.6.0-beta"
  * }
  * ```
  *
@@ -592,7 +596,7 @@ export type * as "@minecraft/server" from "@minecraft/server";
  * ```json
  * {
  *   "module_name": "@minecraft/server-ui",
- *   "version": "1.4.0-beta"
+ *   "version": "2.1.0-beta"
  * }
  * ```
  *
@@ -611,7 +615,7 @@ export type * as "@minecraft/server-ui" from "@minecraft/server-ui";
  * ```json
  * {
  *   "module_name": "@minecraft/server-gametest",
- *   "version": "1.0.0-internal.1.20.80-stable"
+ *   "version": "1.0.0-beta"
  * }
  * ```
  *
@@ -621,6 +625,8 @@ export type * as "@minecraft/server-ui" from "@minecraft/server-ui";
 export type * as "@minecraft/server-gametest" from "@minecraft/server-gametest";
 /**
  * The `@minecraft/server-admin` module.
+ *
+ * Note: This module is not in the manifest.json so it cannot be accessed in-game unless manually added to the manifest.json.
  *
  * @beta
  * Contains types related to administering a Bedrock Dedicated
@@ -644,9 +650,7 @@ export type * as "@minecraft/server-admin" from "@minecraft/server-admin";
 /**
  * The `@minecraft/server-net` module.
  *
- * Note: This module is not in the manifest.json so it cannot be accessed in-game.
- *
- * It is only in the api docs for references for vanilla types.
+ * Note: This module is not in the manifest.json so it cannot be accessed in-game unless manually added to the manifest.json.
  *
  * @beta
  * The `@minecraft/server-net` module contains types for
@@ -665,12 +669,11 @@ export type * as "@minecraft/server-admin" from "@minecraft/server-admin";
  * @see {@link https://www.npmjs.com/package/@minecraft/server-net}
  * @kindOverride Module
  */
+export type * as "@minecraft/server-net" from "@minecraft/server-net";
 /**
  * The `@minecraft/debug-utilities` module.
  *
- * Note: This module is not in the manifest.json so it cannot be accessed in-game.
- *
- * It is only in the api docs for references for vanilla types.
+ * Note: This module is not in the manifest.json so it cannot be accessed in-game unless manually added to the manifest.json.
  *
  * @beta
  * Contains debug utility functions.
@@ -686,16 +689,16 @@ export type * as "@minecraft/server-admin" from "@minecraft/server-admin";
  * @see {@link https://www.npmjs.com/package/@minecraft/debug-utilities}
  * @kindOverride Module
  */
+export type * as "@minecraft/debug-utilities" from "@minecraft/debug-utilities";
 /**
  * The `@minecraft/diagnostics` module.
  *
- * Note: This module is not in the manifest.json so it cannot be accessed in-game.
- *
- * It is only in the api docs for references for vanilla types
+ * Note: This module is not in the manifest.json so it cannot be accessed in-game unless manually added to the manifest.json.
  *
  * @see {@link https://www.npmjs.com/package/@minecraft/diagnostics}
  * @kindOverride Module
  */
+export type * as "@minecraft/diagnostics" from "@minecraft/diagnostics";
 /**
  * The `@minecraft/common` module.
  *
@@ -703,7 +706,7 @@ export type * as "@minecraft/server-admin" from "@minecraft/server-admin";
  * ```json
  * {
  *   "module_name": "@minecraft/common",
- *   "version": "1.1.0"
+ *   "version": "1.2.0"
  * }
  * ```
  *

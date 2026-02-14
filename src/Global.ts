@@ -16,7 +16,7 @@ declare global {
         __defineSetter__<P extends string>(prop: P, func: (val: any) => void): undefined;
         __lookupGetter__<P extends keyof this>(prop: P): (() => this[P]) | undefined;
         __lookupSetter__<P extends keyof this>(prop: P): ((val: this[P]) => this[P]) | undefined;
-        get __proto__(): Object;
+        get __proto__(): Object | null;
         set __proto__(prototype: Object | null);
     }
     interface ObjectConstructor {

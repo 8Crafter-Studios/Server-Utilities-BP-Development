@@ -12,6 +12,15 @@ import { securityVariables } from "security/ultraSecurityModeUtils";
  */
 export async function moderationMenu_quickTransfer(sourceEntity) {
     const player = extractPlayerFromLooseEntityType(sourceEntity);
+    if (!globalThis.modules) {
+        const r = await showMessage(player, "Missing Modules (424)", "The ability to transfer players to other servers is currently non-functional due to the global §bmodules§r variable being missing.", "Back", "Cancel");
+        if (r.canceled || r.selection == 0) {
+            return 1;
+        }
+        else {
+            return 0;
+        }
+    }
     if (!modules.mcServerAdmin) {
         const r = await showMessage(player, "Missing Dependency (424)", "The ability to transfer players to other servers is currently non-functional due to the §b@minecraft/server-admin§r dependency being missing.", "Back", "Cancel");
         if (r.canceled || r.selection == 0) {
