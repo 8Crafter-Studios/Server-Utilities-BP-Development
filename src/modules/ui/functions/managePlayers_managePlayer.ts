@@ -114,7 +114,7 @@ export async function managePlayers_managePlayer(sourceEntity: loosePlayerType, 
                 cullUndefined([
                     "showData",
                     "checkInventory",
-                    copyInventoryToChestIsAvailable ? "copyInventoryToChest" : undefined,
+                    "copyInventoryToChest",
                     "manageBans",
                     "mute",
                     "editMoney",

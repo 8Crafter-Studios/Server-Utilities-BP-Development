@@ -663,7 +663,7 @@ export function chatSendMessageEvaluator_players(prePlayersOutput, options) {
     }
     else if (config.chatRanks.rankMode === "style_4") {
         rank = ranksListWithDefault.map((t) => "[§r" + t + "§r§7]").join(" ");
-        messageOutput = `§r§7${showDimension ? `[${dimension}§r] ` : ""}${timestamp != "" ? `[${timestamp}]` : ""}${rank != "" ? ` ${rank}` : ""}§r§7${name != "" ? ` ${nameFormatting}${nameb}§r§7` : ""}§l ${separatorFormatting}>§r§l §r${messageFormatting}${message}`;
+        messageOutput = `§r§7${showDimension ? `[${dimension}§r] ` : ""}${timestamp != "" ? `[${timestamp}] ` : ""}${rank != "" ? `${rank}` : ""}§r§7${name != "" ? ` ${nameFormatting}${nameb}§r§7` : ""}§l ${separatorFormatting}>§r§l §r${messageFormatting}${message}`;
     }
     else if (config.chatRanks.rankMode === "style_5") {
         rank = "[§r" + ranksListWithDefault.join("§r,") + "§r]";
