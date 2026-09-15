@@ -34,7 +34,6 @@ import {
     BlockTypes,
     Entity,
     Block,
-    CompoundBlockVolume,
     ItemTypes,
     Dimension,
     EntityComponentTypes,
@@ -193,6 +192,7 @@ import { TeleportRequest } from "modules/coordinates/classes/TeleportRequest";
 import { biomeToDefaultTerrainDetailsMap, generateTerrainV2, type TerrainGeneratorBiome } from "modules/utilities/functions/generateTerrain";
 import type { VerifyConstraint } from "modules/utilities/functions/filterProperties";
 import { overlayArea } from "modules/block_generation_utilities/functions/overlayArea";
+import { CompoundBlockVolume } from "CompoundBlockVolumePolyfill";
 
 export function chatCommands(params: {
     returnBeforeChatSend: boolean | undefined;
@@ -208,7 +208,9 @@ export function chatCommands(params: {
     let returnBeforeChatSend: boolean = params.returnBeforeChatSend ?? false;
     let playerab: Player | executeCommandPlayerW | undefined = params.player ?? params.eventData?.sender ?? params.event?.sender;
     let playera: executeCommandPlayerW | undefined =
-        playerab instanceof executeCommandPlayerW ? playerab : playerab ? new executeCommandPlayerW(playerab) : undefined;
+        playerab instanceof executeCommandPlayerW ? playerab
+        : playerab ? new executeCommandPlayerW(playerab)
+        : undefined;
     Object.defineProperties(playera, {
         id: {
             value: playera?.player?.id,
@@ -235,43 +237,44 @@ export function chatCommands(params: {
         readonly name: string;
     };
     //let player = Object.assign(((playera instanceof executeCommandPlayer)?playera:(playera instanceof executeCommandPlayerW)?playera:new executeCommandPlayer(playera)).player, (playera instanceof executeCommandPlayer)?Object.setPrototypeOf(playera, executeCommandPlayerW.prototype) as executeCommandPlayerW:(playera instanceof executeCommandPlayerW)?playera:new executeCommandPlayerW(playera));
-    let eventData = params.eventData
-        ? {
-              get sender() {
-                  return player;
-              },
-              get cancel() {
-                  return params.eventData!.cancel;
-              },
-              set cancel(cancel: boolean) {
-                  params.eventData!.cancel = cancel;
-              },
-              get targets() {
-                  return params.eventData!.targets;
-              },
-              get message() {
-                  return params.eventData!.message;
-              },
-          }
-        : params.event
-        ? {
-              get sender() {
-                  return player;
-              },
-              get cancel() {
-                  return params.event!.cancel;
-              },
-              set cancel(cancel: boolean) {
-                  params.event!.cancel = cancel;
-              },
-              get targets() {
-                  return params.event!.targets;
-              },
-              get message() {
-                  return params.event!.message;
-              },
-          }
-        : undefined;
+    let eventData =
+        params.eventData ?
+            {
+                get sender() {
+                    return player;
+                },
+                get cancel() {
+                    return params.eventData!.cancel;
+                },
+                set cancel(cancel: boolean) {
+                    params.eventData!.cancel = cancel;
+                },
+                get targets() {
+                    return params.eventData!.targets;
+                },
+                get message() {
+                    return params.eventData!.message;
+                },
+            }
+        : params.event ?
+            {
+                get sender() {
+                    return player;
+                },
+                get cancel() {
+                    return params.event!.cancel;
+                },
+                set cancel(cancel: boolean) {
+                    params.event!.cancel = cancel;
+                },
+                get targets() {
+                    return params.event!.targets;
+                },
+                get message() {
+                    return params.event!.message;
+                },
+            }
+        :   undefined;
     if (eventData === undefined) {
         throw new TypeError("Nether the eventData nor event properties were provided.");
     }
@@ -681,9 +684,9 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventorye.container.swapItems(i,
                                                 "§r§f, lore: " +
                                                 JSONStringify(contents[i]?.getLore() ?? [], true) +
                                                 "§r§f, enchantments: " +
-                                                (!!contents[i]?.getComponent("enchantable")
-                                                    ? JSON.stringify(contents[i]?.getComponent("enchantable")?.getEnchantments() ?? []) ?? "[]"
-                                                    : "N/A");
+                                                (!!contents[i]?.getComponent("enchantable") ?
+                                                    (JSON.stringify(contents[i]?.getComponent("enchantable")?.getEnchantments() ?? []) ?? "[]")
+                                                :   "N/A");
                                         } else {
                                             output += "§r§f\nslot: " + i + ", item: minecraft:air";
                                         }
@@ -766,13 +769,12 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                     eventData.cancel = true;
                     const args = evaluateParameters(switchTestB, ["presetText", "neboolean"]).args;
                     srun(() =>
-                        !!args[1]
-                            ? args[1]
-                                ? player.addTag("debugStickDyingMode")
-                                : player.removeTag("debugStickDyingMode")
-                            : player.hasTag("debugStickDyingMode")
-                            ? player.removeTag("debugStickDyingMode")
-                            : player.addTag("debugStickDyingMode")
+                        !!args[1] ?
+                            args[1] ?
+                                player.addTag("debugStickDyingMode")
+                            :   player.removeTag("debugStickDyingMode")
+                        : player.hasTag("debugStickDyingMode") ? player.removeTag("debugStickDyingMode")
+                        : player.addTag("debugStickDyingMode")
                     );
                 }
                 break;
@@ -824,12 +826,12 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                                             "§r§f, lore: " +
                                             (JSONStringify(inventoryd2.container.getItem(Number(i))?.getLore() ?? [], true) ?? "[]") +
                                             ", enchantments: " +
-                                            (!!inventoryd2.container.getItem(Number(i))?.getComponent("enchantable")
-                                                ? JSONStringify(
-                                                      inventoryd2.container.getItem(Number(i))?.getComponent("enchantable")?.getEnchantments() ?? [],
-                                                      true
-                                                  ) ?? "[]"
-                                                : "N/A")
+                                            (!!inventoryd2.container.getItem(Number(i))?.getComponent("enchantable") ?
+                                                (JSONStringify(
+                                                    inventoryd2.container.getItem(Number(i))?.getComponent("enchantable")?.getEnchantments() ?? [],
+                                                    true
+                                                ) ?? "[]")
+                                            :   "N/A")
                                     )
                                 );
                             } else {
@@ -869,9 +871,9 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                                                 "§r§f, lore: " +
                                                 JSONStringify(item.getLore() ?? [], true) +
                                                 "§r§f, enchantments: " +
-                                                (!!item.getComponent("enchantable")
-                                                    ? JSON.stringify(item?.getComponent("enchantable")?.getEnchantments() ?? []) ?? "[]"
-                                                    : "N/A")
+                                                (!!item.getComponent("enchantable") ?
+                                                    (JSON.stringify(item?.getComponent("enchantable")?.getEnchantments() ?? []) ?? "[]")
+                                                :   "N/A")
                                         )
                                     );
                                 } else {
@@ -904,9 +906,9 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                                             "§r§f, lore: " +
                                             JSONStringify(item.getLore() ?? [], true) +
                                             "§r§f, enchantments: " +
-                                            (!!item.getComponent("enchantable")
-                                                ? JSON.stringify(item?.getComponent("enchantable")?.getEnchantments() ?? []) ?? "[]"
-                                                : "N/A")
+                                            (!!item.getComponent("enchantable") ?
+                                                (JSON.stringify(item?.getComponent("enchantable")?.getEnchantments() ?? []) ?? "[]")
+                                            :   "N/A")
                                     )
                                 );
                             } else {
@@ -955,12 +957,12 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                                             "§r§f, lore: " +
                                             JSONStringify(inventoryd2.container.getItem(Number(i))?.getLore() ?? [], true) +
                                             ", enchantments: " +
-                                            (!!inventoryd2.container.getItem(Number(i))?.getComponent("enchantable")
-                                                ? JSONStringify(
-                                                      inventoryd2.container.getItem(Number(i))?.getComponent("enchantable")?.getEnchantments() ?? [],
-                                                      true
-                                                  )
-                                                : "N/A") +
+                                            (!!inventoryd2.container.getItem(Number(i))?.getComponent("enchantable") ?
+                                                JSONStringify(
+                                                    inventoryd2.container.getItem(Number(i))?.getComponent("enchantable")?.getEnchantments() ?? [],
+                                                    true
+                                                )
+                                            :   "N/A") +
                                             ", properties: " +
                                             JSONStringify(
                                                 ((i) => {
@@ -1016,9 +1018,9 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                                                 "§r§f, lore: " +
                                                 JSONStringify(item.getLore() ?? [], true) +
                                                 "§r§f, enchantments: " +
-                                                (!!item.getComponent("enchantable")
-                                                    ? JSON.stringify(item?.getComponent("enchantable")?.getEnchantments() ?? [])
-                                                    : "N/A") +
+                                                (!!item.getComponent("enchantable") ?
+                                                    JSON.stringify(item?.getComponent("enchantable")?.getEnchantments() ?? [])
+                                                :   "N/A") +
                                                 ", properties: " +
                                                 JSONStringify(
                                                     ((i) => {
@@ -1064,9 +1066,9 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                                             "§r§f, lore: " +
                                             JSONStringify(item.getLore() ?? [], true) +
                                             "§r§f, enchantments: " +
-                                            (!!item.getComponent("enchantable")
-                                                ? JSON.stringify(item?.getComponent("enchantable")?.getEnchantments() ?? []) ?? "[]"
-                                                : "N/A") +
+                                            (!!item.getComponent("enchantable") ?
+                                                (JSON.stringify(item?.getComponent("enchantable")?.getEnchantments() ?? []) ?? "[]")
+                                            :   "N/A") +
                                             ", properties: " +
                                             JSONStringify((i: any) => {
                                                 if ((item.getDynamicPropertyIds() ?? []).length == 0) {
@@ -1114,14 +1116,14 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                             eventData.sender.sendMessage(
                                 String(
                                     player.name +
-                                        (world.getAllPlayers().find((p) => p.id == player.id) != undefined
-                                            ? " (Online)"
-                                            : " (last seen: " +
-                                              new Date(
-                                                  Number(player.lastOnline) +
-                                                      Number(event.sender.getDynamicProperty("andexdbPersonalSettings:timeZone") ?? 0) * 3600000
-                                              ).toLocaleString(/*'en-US', {dateStyle: "full",timeStyle: 'full',timeZone: String(world.getDynamicProperty("andexdb:timeZone") ?? "UTC"),timeZoneName: "long"}*/) +
-                                              ")") +
+                                        (world.getAllPlayers().find((p) => p.id == player.id) != undefined ?
+                                            " (Online)"
+                                        :   " (last seen: " +
+                                            new Date(
+                                                Number(player.lastOnline) +
+                                                    Number(event.sender.getDynamicProperty("andexdbPersonalSettings:timeZone") ?? 0) * 3600000
+                                            ).toLocaleString(/*'en-US', {dateStyle: "full",timeStyle: 'full',timeZone: String(world.getDynamicProperty("andexdb:timeZone") ?? "UTC"),timeZoneName: "long"}*/) +
+                                            ")") +
                                         " Data: \n" +
                                         JSON.stringify(player).replaceAll(/(?<!\\)(?![},:](\"|{\"))\"/g, '§r§f"')
                                 )
@@ -1143,14 +1145,14 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                         eventData.sender.sendMessage(
                             String(
                                 player.name +
-                                    (world.getAllPlayers().find((p) => p.id == player.id) != undefined
-                                        ? " (Online) "
-                                        : " (last seen: " +
-                                          new Date(
-                                              Number(player.lastOnline) +
-                                                  Number(event.sender.getDynamicProperty("andexdbPersonalSettings:timeZone") ?? 0) * 3600000
-                                          ).toLocaleString() +
-                                          ")") +
+                                    (world.getAllPlayers().find((p) => p.id == player.id) != undefined ?
+                                        " (Online) "
+                                    :   " (last seen: " +
+                                        new Date(
+                                            Number(player.lastOnline) +
+                                                Number(event.sender.getDynamicProperty("andexdbPersonalSettings:timeZone") ?? 0) * 3600000
+                                        ).toLocaleString() +
+                                        ")") +
                                     " Data: \n" +
                                     JSON.stringify(player).replaceAll(/(?<!\\)(?![},:](\"|{\"))\"/g, '§r§f"')
                             )
@@ -1177,14 +1179,14 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                             eventData.sender.sendMessage(
                                 String(
                                     player.name +
-                                        (world.getAllPlayers().find((p) => p.id == player.id) != undefined
-                                            ? " (Online)"
-                                            : " (last seen: " +
-                                              new Date(
-                                                  Number(player.lastOnline) +
-                                                      Number(event.sender.getDynamicProperty("andexdbPersonalSettings:timeZone") ?? 0) * 3600000
-                                              ).toLocaleString(/*'en-US', {dateStyle: "full",timeStyle: 'full',timeZone: String(world.getDynamicProperty("andexdb:timeZone") ?? "UTC"),timeZoneName: "long"}*/) +
-                                              ")") +
+                                        (world.getAllPlayers().find((p) => p.id == player.id) != undefined ?
+                                            " (Online)"
+                                        :   " (last seen: " +
+                                            new Date(
+                                                Number(player.lastOnline) +
+                                                    Number(event.sender.getDynamicProperty("andexdbPersonalSettings:timeZone") ?? 0) * 3600000
+                                            ).toLocaleString(/*'en-US', {dateStyle: "full",timeStyle: 'full',timeZone: String(world.getDynamicProperty("andexdb:timeZone") ?? "UTC"),timeZoneName: "long"}*/) +
+                                            ")") +
                                         " Data: \n" +
                                         JSON.stringify(player).replaceAll("§", "§§")
                                 )
@@ -1206,14 +1208,14 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                         eventData.sender.sendMessage(
                             String(
                                 player.name +
-                                    (world.getAllPlayers().find((p) => p.id == player.id) != undefined
-                                        ? " (Online) "
-                                        : " (last seen: " +
-                                          new Date(
-                                              Number(player.lastOnline) +
-                                                  Number(event.sender.getDynamicProperty("andexdbPersonalSettings:timeZone") ?? 0) * 3600000
-                                          ).toLocaleString() +
-                                          ")") +
+                                    (world.getAllPlayers().find((p) => p.id == player.id) != undefined ?
+                                        " (Online) "
+                                    :   " (last seen: " +
+                                        new Date(
+                                            Number(player.lastOnline) +
+                                                Number(event.sender.getDynamicProperty("andexdbPersonalSettings:timeZone") ?? 0) * 3600000
+                                        ).toLocaleString() +
+                                        ")") +
                                     " Data: \n" +
                                     JSON.stringify(player).replaceAll("§", "§§")
                             )
@@ -1240,14 +1242,14 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                             eventData.sender.sendMessage(
                                 String(
                                     player.name +
-                                        (world.getAllPlayers().find((p) => p.id == player.id) != undefined
-                                            ? " (Online)"
-                                            : " (last seen: " +
-                                              new Date(
-                                                  Number(player.lastOnline) +
-                                                      Number(event.sender.getDynamicProperty("andexdbPersonalSettings:timeZone") ?? 0) * 3600000
-                                              ).toLocaleString(/*'en-US', {dateStyle: "full",timeStyle: 'full',timeZone: String(world.getDynamicProperty("andexdb:timeZone") ?? "UTC"),timeZoneName: "long"}*/) +
-                                              ")") +
+                                        (world.getAllPlayers().find((p) => p.id == player.id) != undefined ?
+                                            " (Online)"
+                                        :   " (last seen: " +
+                                            new Date(
+                                                Number(player.lastOnline) +
+                                                    Number(event.sender.getDynamicProperty("andexdbPersonalSettings:timeZone") ?? 0) * 3600000
+                                            ).toLocaleString(/*'en-US', {dateStyle: "full",timeStyle: 'full',timeZone: String(world.getDynamicProperty("andexdb:timeZone") ?? "UTC"),timeZoneName: "long"}*/) +
+                                            ")") +
                                         " Data: \n" +
                                         escape(JSON.stringify(player))
                                 )
@@ -1269,14 +1271,14 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                         eventData.sender.sendMessage(
                             String(
                                 player.name +
-                                    (world.getAllPlayers().find((p) => p.id == player.id) != undefined
-                                        ? " (Online) "
-                                        : " (last seen: " +
-                                          new Date(
-                                              Number(player.lastOnline) +
-                                                  Number(event.sender.getDynamicProperty("andexdbPersonalSettings:timeZone") ?? 0) * 3600000
-                                          ).toLocaleString() +
-                                          ")") +
+                                    (world.getAllPlayers().find((p) => p.id == player.id) != undefined ?
+                                        " (Online) "
+                                    :   " (last seen: " +
+                                        new Date(
+                                            Number(player.lastOnline) +
+                                                Number(event.sender.getDynamicProperty("andexdbPersonalSettings:timeZone") ?? 0) * 3600000
+                                        ).toLocaleString() +
+                                        ")") +
                                     " Data: \n" +
                                     escape(JSON.stringify(player))
                             )
@@ -1303,14 +1305,14 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                             eventData.sender.sendMessage(
                                 String(
                                     player.name +
-                                        (world.getAllPlayers().find((p) => p.id == player.id) != undefined
-                                            ? " (Online)"
-                                            : " (last seen: " +
-                                              new Date(
-                                                  Number(player.lastOnline) +
-                                                      Number(event.sender.getDynamicProperty("andexdbPersonalSettings:timeZone") ?? 0) * 3600000
-                                              ).toLocaleString(/*'en-US', {dateStyle: "full",timeStyle: 'full',timeZone: String(world.getDynamicProperty("andexdb:timeZone") ?? "UTC"),timeZoneName: "long"}*/) +
-                                              ")") +
+                                        (world.getAllPlayers().find((p) => p.id == player.id) != undefined ?
+                                            " (Online)"
+                                        :   " (last seen: " +
+                                            new Date(
+                                                Number(player.lastOnline) +
+                                                    Number(event.sender.getDynamicProperty("andexdbPersonalSettings:timeZone") ?? 0) * 3600000
+                                            ).toLocaleString(/*'en-US', {dateStyle: "full",timeStyle: 'full',timeZone: String(world.getDynamicProperty("andexdb:timeZone") ?? "UTC"),timeZoneName: "long"}*/) +
+                                            ")") +
                                         " Data: \n" +
                                         arrayModifier(JSON.stringify(player).split(""), (v) => (v as string).charCodeAt(0)).join()
                                 )
@@ -1332,14 +1334,14 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                         eventData.sender.sendMessage(
                             String(
                                 player.name +
-                                    (world.getAllPlayers().find((p) => p.id == player.id) != undefined
-                                        ? " (Online) "
-                                        : " (last seen: " +
-                                          new Date(
-                                              Number(player.lastOnline) +
-                                                  Number(event.sender.getDynamicProperty("andexdbPersonalSettings:timeZone") ?? 0) * 3600000
-                                          ).toLocaleString() +
-                                          ")") +
+                                    (world.getAllPlayers().find((p) => p.id == player.id) != undefined ?
+                                        " (Online) "
+                                    :   " (last seen: " +
+                                        new Date(
+                                            Number(player.lastOnline) +
+                                                Number(event.sender.getDynamicProperty("andexdbPersonalSettings:timeZone") ?? 0) * 3600000
+                                        ).toLocaleString() +
+                                        ")") +
                                     " Data: \n" +
                                     arrayModifier(JSON.stringify(player).split(""), (v) => (v as string).charCodeAt(0)).join()
                             )
@@ -1421,19 +1423,19 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                                             playerb.format_version +
                                             ") " +
                                             player.name +
-                                            (world.getAllPlayers().find((p) => p.id == player.id) != undefined
-                                                ? " (Online)"
-                                                : " (last seen: " +
-                                                  new Date(
-                                                      Number(playerb.lastOnline) +
-                                                          Number(
-                                                              (player.sendErrorsTo instanceof Player ? player.sendErrorsTo : player).getDynamicProperty(
-                                                                  "andexdbPersonalSettings:timeZone"
-                                                              ) ?? 0
-                                                          ) *
-                                                              3600000
-                                                  ).toLocaleString() +
-                                                  ")") +
+                                            (world.getAllPlayers().find((p) => p.id == player.id) != undefined ?
+                                                " (Online)"
+                                            :   " (last seen: " +
+                                                new Date(
+                                                    Number(playerb.lastOnline) +
+                                                        Number(
+                                                            (player.sendErrorsTo instanceof Player ? player.sendErrorsTo : player).getDynamicProperty(
+                                                                "andexdbPersonalSettings:timeZone"
+                                                            ) ?? 0
+                                                        ) *
+                                                            3600000
+                                                ).toLocaleString() +
+                                                ")") +
                                             " Items: \n" +
                                             slotsArray.join("§r§f\n")
                                     )
@@ -1511,19 +1513,19 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                                         playerb.format_version +
                                         ") " +
                                         playerb.name +
-                                        (world.getAllPlayers().find((p) => p.id == playerb.id) != undefined
-                                            ? " (Online) "
-                                            : " (last seen: " +
-                                              new Date(
-                                                  Number(playerb.lastOnline) +
-                                                      Number(
-                                                          (player.sendErrorsTo instanceof Player ? player.sendErrorsTo : player).getDynamicProperty(
-                                                              "andexdbPersonalSettings:timeZone"
-                                                          ) ?? 0
-                                                      ) *
-                                                          3600000
-                                              ).toLocaleString() +
-                                              ")") +
+                                        (world.getAllPlayers().find((p) => p.id == playerb.id) != undefined ?
+                                            " (Online) "
+                                        :   " (last seen: " +
+                                            new Date(
+                                                Number(playerb.lastOnline) +
+                                                    Number(
+                                                        (player.sendErrorsTo instanceof Player ? player.sendErrorsTo : player).getDynamicProperty(
+                                                            "andexdbPersonalSettings:timeZone"
+                                                        ) ?? 0
+                                                    ) *
+                                                        3600000
+                                            ).toLocaleString() +
+                                            ")") +
                                         " Items: \n" +
                                         slotsArray.join("§r§f\n")
                                 )
@@ -1550,9 +1552,9 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                         )
                         .getBlock(
                             coordinatesB(
-                                switchTestB.split(" ")[1]!.trim().startsWith("~") && switchTestB.split(" ")[1]!.trim().length != 1
-                                    ? switchTestB.split(" ").slice(1).join(" ").trim().slice(1)
-                                    : switchTestB.split(" ").slice(2).join(" ").trim(),
+                                switchTestB.split(" ")[1]!.trim().startsWith("~") && switchTestB.split(" ")[1]!.trim().length != 1 ?
+                                    switchTestB.split(" ").slice(1).join(" ").trim().slice(1)
+                                :   switchTestB.split(" ").slice(2).join(" ").trim(),
                                 player.location,
                                 player.getViewDirection()
                             )
@@ -1577,11 +1579,11 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                                             "§r§f, lore: " +
                                             JSONStringify(inventoryd2.container.getItem(Number(i))?.getLore() ?? [], true) +
                                             "§r§f, enchantments: " +
-                                            (!!inventoryd2.container.getItem(Number(i))?.getComponent("enchantable")
-                                                ? JSON.stringify(
-                                                      inventoryd2.container.getItem(Number(i))?.getComponent("enchantable")?.getEnchantments() ?? []
-                                                  ) ?? "[]"
-                                                : "N/A")
+                                            (!!inventoryd2.container.getItem(Number(i))?.getComponent("enchantable") ?
+                                                (JSON.stringify(
+                                                    inventoryd2.container.getItem(Number(i))?.getComponent("enchantable")?.getEnchantments() ?? []
+                                                ) ?? "[]")
+                                            :   "N/A")
                                     )
                                 );
                             } else {
@@ -1633,11 +1635,11 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                                             "§r§f, lore: " +
                                             JSONStringify(inventoryd2.container.getItem(Number(i))?.getLore() ?? [], true) +
                                             "§r§f, enchantments: " +
-                                            (!!inventoryd2.container.getItem(Number(i))?.getComponent("enchantable")
-                                                ? JSON.stringify(
-                                                      inventoryd2.container.getItem(Number(i))?.getComponent("enchantable")?.getEnchantments() ?? []
-                                                  ) ?? "[]"
-                                                : "N/A")
+                                            (!!inventoryd2.container.getItem(Number(i))?.getComponent("enchantable") ?
+                                                (JSON.stringify(
+                                                    inventoryd2.container.getItem(Number(i))?.getComponent("enchantable")?.getEnchantments() ?? []
+                                                ) ?? "[]")
+                                            :   "N/A")
                                     )
                                 );
                             } else {
@@ -1697,11 +1699,11 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                                                     "§r§f, lore: " +
                                                     JSONStringify(inventoryd2.container.getItem(Number(i))?.getLore() ?? [], true) +
                                                     "§r§f, enchantments: " +
-                                                    (!!inventoryd2.container.getItem(Number(i))?.getComponent("enchantable")
-                                                        ? JSON.stringify(
-                                                              inventoryd2.container.getItem(Number(i))?.getComponent("enchantable")?.getEnchantments() ?? []
-                                                          ) ?? "[]"
-                                                        : "N/A")
+                                                    (!!inventoryd2.container.getItem(Number(i))?.getComponent("enchantable") ?
+                                                        (JSON.stringify(
+                                                            inventoryd2.container.getItem(Number(i))?.getComponent("enchantable")?.getEnchantments() ?? []
+                                                        ) ?? "[]")
+                                                    :   "N/A")
                                             )
                                         );
                                     } else {
@@ -1744,9 +1746,9 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                                                     "§r§f, lore: " +
                                                     JSONStringify(item.getLore() ?? [], true) +
                                                     "§r§f, enchantments: " +
-                                                    (!!item.getComponent("enchantable")
-                                                        ? JSON.stringify(item?.getComponent("enchantable")?.getEnchantments() ?? []) ?? "[]"
-                                                        : "N/A")
+                                                    (!!item.getComponent("enchantable") ?
+                                                        (JSON.stringify(item?.getComponent("enchantable")?.getEnchantments() ?? []) ?? "[]")
+                                                    :   "N/A")
                                             )
                                         );
                                     } else {
@@ -1819,11 +1821,11 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                                                     "§r§f, lore: " +
                                                     JSONStringify(inventoryd.container.getItem(Number(i))?.getLore() ?? [], true) +
                                                     "§r§f, enchantments: " +
-                                                    (!!inventoryd.container.getItem(Number(i))?.getComponent("enchantable")
-                                                        ? JSON.stringify(
-                                                              inventoryd.container.getItem(Number(i))?.getComponent("enchantable")?.getEnchantments() ?? []
-                                                          ) ?? "[]"
-                                                        : "N/A")
+                                                    (!!inventoryd.container.getItem(Number(i))?.getComponent("enchantable") ?
+                                                        (JSON.stringify(
+                                                            inventoryd.container.getItem(Number(i))?.getComponent("enchantable")?.getEnchantments() ?? []
+                                                        ) ?? "[]")
+                                                    :   "N/A")
                                             )
                                         );
                                     } else {
@@ -1866,9 +1868,9 @@ system.run(()=>{try{for(let i = 0; i < 9; i++){inventoryg6.container.swapItems(i
                                                     "§r§f, lore: " +
                                                     JSONStringify(item.getLore() ?? [], true) +
                                                     "§r§f, enchantments: " +
-                                                    (!!item?.getComponent("enchantable")
-                                                        ? JSON.stringify(item?.getComponent("enchantable")?.getEnchantments() ?? []) ?? "[]"
-                                                        : "N/A")
+                                                    (!!item?.getComponent("enchantable") ?
+                                                        (JSON.stringify(item?.getComponent("enchantable")?.getEnchantments() ?? []) ?? "[]")
+                                                    :   "N/A")
                                             )
                                         );
                                     } else {
@@ -2090,16 +2092,16 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                             system.run(() => {
                                                 try {
                                                     inventoryc.container.setItem(
-                                                        (args[2] ?? "").trim() == "~" || (args[2] ?? "").trim() == ""
-                                                            ? player.selectedSlotIndex
-                                                            : Number(args[2]),
+                                                        (args[2] ?? "").trim() == "~" || (args[2] ?? "").trim() == "" ?
+                                                            player.selectedSlotIndex
+                                                        :   Number(args[2]),
                                                         item
                                                     );
                                                     eventData.sender.sendMessage(
                                                         String(
-                                                            "Set Slot " + ((args[2] ?? "").trim() == "~" || (args[2] ?? "").trim() == "")
-                                                                ? player.selectedSlotIndex
-                                                                : args[2] + " of " + player2.name + "'s inventory to " + item?.typeId + " * " + item?.amount
+                                                            "Set Slot " + ((args[2] ?? "").trim() == "~" || (args[2] ?? "").trim() == "") ?
+                                                                player.selectedSlotIndex
+                                                            :   args[2] + " of " + player2.name + "'s inventory to " + item?.typeId + " * " + item?.amount
                                                         )
                                                     );
                                                 } catch (e) {
@@ -2413,8 +2415,8 @@ ${command.dp}item slot <slot: int> enchantment <mode: {list}|{clear}>`);
 §rcanPlaceOn: ${JSONB.stringify(item.getCanPlaceOn())}
 §rdynamicPropertyTotalByteCount: ${item.getDynamicPropertyTotalByteCount()}
 §rdynamicPropertyIds: ${JSONB.stringify(item.getDynamicPropertyIds())}${
-                                                        item.hasComponent("durability")
-                                                            ? ((d) => `
+                                                        item.hasComponent("durability") ?
+                                                            ((d) => `
 §rdurability: ${d.maxDurability - d.damage}/${d.maxDurability}
 §rdamageChance: {
 §r    Unbreaking 0: ${d.getDamageChance(0)},
@@ -2423,34 +2425,34 @@ ${command.dp}item slot <slot: int> enchantment <mode: {list}|{clear}>`);
 §r    Unbreaking 3: ${d.getDamageChance(3)}
 §r}
 §rdamageChanceRange: ${JSONB.stringify(d.getDamageChanceRange())}`)(item.getComponent("durability")!)
-                                                            : ""
+                                                        :   ""
                                                     }${
-                                                        item.hasComponent("enchantable")
-                                                            ? ((d) => `
+                                                        item.hasComponent("enchantable") ?
+                                                            ((d) => `
 §renchantmentSlots: ${JSONB.stringify(d.slots)}
 §renchantments: ${JSONB.stringify(d.getEnchantments())}`)(item.getComponent("enchantable")!)
-                                                            : ""
+                                                        :   ""
                                                     }${
-                                                        item.hasComponent("cooldown")
-                                                            ? ((d) => `
+                                                        item.hasComponent("cooldown") ?
+                                                            ((d) => `
 §rcooldownCategory: ${d.cooldownCategory}
 §rcooldownTicks: ${d.cooldownTicks}
 §rcooldownTicksRemaining: ${d.getCooldownTicksRemaining(player)}`)(item.getComponent("cooldown")!)
-                                                            : ""
+                                                        :   ""
                                                     }${
-                                                        item.hasComponent("food")
-                                                            ? ((d) => `
+                                                        item.hasComponent("food") ?
+                                                            ((d) => `
 §rcanAlwaysEat: ${d.canAlwaysEat.toFormattedString()}
 §rnutrition: ${d.nutrition}
 §rsaturationModifier: ${d.saturationModifier}
 §rusingConvertsTo: ${d.usingConvertsTo}`)(item.getComponent("food")!)
-                                                            : ""
+                                                        :   ""
                                                     }${
-                                                        item.hasComponent("potion")
-                                                            ? ((d) => `
+                                                        item.hasComponent("potion") ?
+                                                            ((d) => `
 potionEffectType: ${d.potionEffectType.id}
 potionDeliveryType: ${d.potionDeliveryType.id}`)(item.getComponent("potion")!)
-                                                            : ""
+                                                        :   ""
                                                     }`
                                                 )
                                             );
@@ -2688,9 +2690,9 @@ potionDeliveryType: ${d.potionDeliveryType.id}`)(item.getComponent("potion")!)
                                         let slota = getSlotFromParsedSlot(
                                             parseSlot(
                                                 String(
-                                                    (argsb.args[0] ?? "") == "" || (argsb.args[0] ?? "") == "~"
-                                                        ? String(player.selectedSlotIndex)
-                                                        : String(argsb.args[0] ?? "")
+                                                    (argsb.args[0] ?? "") == "" || (argsb.args[0] ?? "") == "~" ?
+                                                        String(player.selectedSlotIndex)
+                                                    :   String(argsb.args[0] ?? "")
                                                 ),
                                                 player.selectedSlotIndex
                                             )!,
@@ -2911,8 +2913,8 @@ potionDeliveryType: ${d.potionDeliveryType.id}`)(item.getComponent("potion")!)
 §rcanPlaceOn: ${JSONB.stringify(item.getCanPlaceOn())}
 §rdynamicPropertyTotalByteCount: ${item.getDynamicPropertyTotalByteCount()}
 §rdynamicPropertyIds: ${JSONB.stringify(item.getDynamicPropertyIds())}${
-                                                                item.hasComponent("durability")
-                                                                    ? ((d) => `
+                                                                item.hasComponent("durability") ?
+                                                                    ((d) => `
 §rdurability: ${d.maxDurability - d.damage}/${d.maxDurability}
 §rdamageChance: {
 §r    Unbreaking 0: ${d.getDamageChance(0)},
@@ -2921,34 +2923,34 @@ potionDeliveryType: ${d.potionDeliveryType.id}`)(item.getComponent("potion")!)
 §r    Unbreaking 3: ${d.getDamageChance(3)}
 §r}
 §rdamageChanceRange: ${JSONB.stringify(d.getDamageChanceRange())}`)(item.getComponent("durability")!)
-                                                                    : ""
+                                                                :   ""
                                                             }${
-                                                                item.hasComponent("enchantable")
-                                                                    ? ((d) => `
+                                                                item.hasComponent("enchantable") ?
+                                                                    ((d) => `
 §renchantmentSlots: ${JSONB.stringify(d.slots)}
 §renchantments: ${JSONB.stringify(d.getEnchantments())}`)(item.getComponent("enchantable")!)
-                                                                    : ""
+                                                                :   ""
                                                             }${
-                                                                item.hasComponent("cooldown")
-                                                                    ? ((d) => `
+                                                                item.hasComponent("cooldown") ?
+                                                                    ((d) => `
 §rcooldownCategory: ${d.cooldownCategory}
 §rcooldownTicks: ${d.cooldownTicks}
 §rcooldownTicksRemaining: ${d.getCooldownTicksRemaining(player)}`)(item.getComponent("cooldown")!)
-                                                                    : ""
+                                                                :   ""
                                                             }${
-                                                                item.hasComponent("food")
-                                                                    ? ((d) => `
+                                                                item.hasComponent("food") ?
+                                                                    ((d) => `
 §rcanAlwaysEat: ${d.canAlwaysEat.toFormattedString()}
 §rnutrition: ${d.nutrition}
 §rsaturationModifier: ${d.saturationModifier}
 §rusingConvertsTo: ${d.usingConvertsTo}`)(item.getComponent("food")!)
-                                                                    : ""
+                                                                :   ""
                                                             }${
-                                                                item.hasComponent("potion")
-                                                                    ? ((d) => `
+                                                                item.hasComponent("potion") ?
+                                                                    ((d) => `
 potionEffectType: ${d.potionEffectType.id}
 potionDeliveryType: ${d.potionDeliveryType.id}`)(item.getComponent("potion")!)
-                                                                    : ""
+                                                                :   ""
                                                             }`
                                                         )
                                                     );
@@ -3660,21 +3662,21 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                                             if (![4, 8].includes(rgba.length)) {
                                                                                 player.sendError(
                                                                                     `§cSyntax error: ${rgba} is not a valid RGBA hex code. ${
-                                                                                        rgba.length == 3 || rgba.length == 6
-                                                                                            ? `If you do not want to specify the alpha channel use RGB mode instead, replace "${switchTestB.slice(
-                                                                                                  switchTestB.toLowerCase().indexOf("rgba"),
-                                                                                                  switchTestB.toLowerCase().indexOf("rgba") + 4
-                                                                                              )}" at "${switchTestB.slice(
-                                                                                                  switchTestB.toLowerCase().indexOf("rgba") - 10,
-                                                                                                  switchTestB.toLowerCase().indexOf("rgba")
-                                                                                              )}>>${switchTestB.slice(
-                                                                                                  switchTestB.toLowerCase().indexOf("rgba"),
-                                                                                                  switchTestB.toLowerCase().indexOf("rgba") + 4
-                                                                                              )}<<${switchTestB.slice(
-                                                                                                  switchTestB.toLowerCase().indexOf("rgba") + 4,
-                                                                                                  switchTestB.toLowerCase().indexOf("rgba") + 14
-                                                                                              )}" with rgb. `
-                                                                                            : ""
+                                                                                        rgba.length == 3 || rgba.length == 6 ?
+                                                                                            `If you do not want to specify the alpha channel use RGB mode instead, replace "${switchTestB.slice(
+                                                                                                switchTestB.toLowerCase().indexOf("rgba"),
+                                                                                                switchTestB.toLowerCase().indexOf("rgba") + 4
+                                                                                            )}" at "${switchTestB.slice(
+                                                                                                switchTestB.toLowerCase().indexOf("rgba") - 10,
+                                                                                                switchTestB.toLowerCase().indexOf("rgba")
+                                                                                            )}>>${switchTestB.slice(
+                                                                                                switchTestB.toLowerCase().indexOf("rgba"),
+                                                                                                switchTestB.toLowerCase().indexOf("rgba") + 4
+                                                                                            )}<<${switchTestB.slice(
+                                                                                                switchTestB.toLowerCase().indexOf("rgba") + 4,
+                                                                                                switchTestB.toLowerCase().indexOf("rgba") + 14
+                                                                                            )}" with rgb. `
+                                                                                        :   ""
                                                                                     }A valid RGBA hex code should be formatted either as "RGBA" or "RRGGBBAA". ex. 9AEF or 97A2EBFA.`,
                                                                                     true
                                                                                 );
@@ -3683,18 +3685,22 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                                             const denominator = rgba.length == 4 ? 15 : 255;
                                                                             const rangeScale = rgba.length == 4 ? 1 : 2;
                                                                             const currentColor = block?.block.getComponent("fluid_container")?.fluidColor!;
-                                                                            const red = rgba.slice(0 * rangeScale, 1 * rangeScale).includes("~")
-                                                                                ? currentColor.red
-                                                                                : parseInt(rgba.slice(0 * rangeScale, 1 * rangeScale), 16) / denominator;
-                                                                            const green = rgba.slice(1 * rangeScale, 2 * rangeScale).includes("~")
-                                                                                ? currentColor.green
-                                                                                : parseInt(rgba.slice(1 * rangeScale, 2 * rangeScale), 16) / denominator;
-                                                                            const blue = rgba.slice(2 * rangeScale, 3 * rangeScale).includes("~")
-                                                                                ? currentColor.blue
-                                                                                : parseInt(rgba.slice(2 * rangeScale, 3 * rangeScale), 16) / denominator;
-                                                                            const alpha = rgba.slice(3 * rangeScale, 4 * rangeScale).includes("~")
-                                                                                ? currentColor.alpha
-                                                                                : parseInt(rgba.slice(3 * rangeScale, 4 * rangeScale), 16) / denominator;
+                                                                            const red =
+                                                                                rgba.slice(0 * rangeScale, 1 * rangeScale).includes("~") ?
+                                                                                    currentColor.red
+                                                                                :   parseInt(rgba.slice(0 * rangeScale, 1 * rangeScale), 16) / denominator;
+                                                                            const green =
+                                                                                rgba.slice(1 * rangeScale, 2 * rangeScale).includes("~") ?
+                                                                                    currentColor.green
+                                                                                :   parseInt(rgba.slice(1 * rangeScale, 2 * rangeScale), 16) / denominator;
+                                                                            const blue =
+                                                                                rgba.slice(2 * rangeScale, 3 * rangeScale).includes("~") ?
+                                                                                    currentColor.blue
+                                                                                :   parseInt(rgba.slice(2 * rangeScale, 3 * rangeScale), 16) / denominator;
+                                                                            const alpha =
+                                                                                rgba.slice(3 * rangeScale, 4 * rangeScale).includes("~") ?
+                                                                                    currentColor.alpha
+                                                                                :   parseInt(rgba.slice(3 * rangeScale, 4 * rangeScale), 16) / denominator;
                                                                             block.block.getComponent("fluid_container")!.fluidColor = {
                                                                                 red,
                                                                                 green,
@@ -3813,15 +3819,15 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                                             const red =
                                                                                 rgba[0]!.trim() == "~" ? currentColor.red : rgba[0]!.toNumber()!.round() / 255;
                                                                             const green =
-                                                                                rgba[1]!.trim() == "~"
-                                                                                    ? currentColor.green
-                                                                                    : rgba[1]!.toNumber()!.round() / 255;
+                                                                                rgba[1]!.trim() == "~" ?
+                                                                                    currentColor.green
+                                                                                :   rgba[1]!.toNumber()!.round() / 255;
                                                                             const blue =
                                                                                 rgba[2]!.trim() == "~" ? currentColor.blue : rgba[2]!.toNumber()!.round() / 255;
                                                                             const alpha =
-                                                                                rgba[3]!.trim() == "~"
-                                                                                    ? currentColor.alpha
-                                                                                    : rgba[3]!.toNumber()!.round() / 255;
+                                                                                rgba[3]!.trim() == "~" ?
+                                                                                    currentColor.alpha
+                                                                                :   rgba[3]!.toNumber()!.round() / 255;
                                                                             block.block.getComponent("fluid_container")!.fluidColor = {
                                                                                 red,
                                                                                 green,
@@ -3914,21 +3920,21 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                                             if (![3, 6].includes(rgb!.length)) {
                                                                                 player.sendError(
                                                                                     `§cSyntax error: ${rgb} is not a valid RGBA hex code. ${
-                                                                                        rgb!.length == 4 || rgb!.length == 8
-                                                                                            ? `If you want to specify the alpha channel use RGBA mode instead, replace "${switchTestB.slice(
-                                                                                                  switchTestB.toLowerCase().indexOf("rgb"),
-                                                                                                  switchTestB.toLowerCase().indexOf("rgb") + 3
-                                                                                              )}" at "${switchTestB.slice(
-                                                                                                  switchTestB.toLowerCase().indexOf("rgb") - 10,
-                                                                                                  switchTestB.toLowerCase().indexOf("rgb")
-                                                                                              )}>>${switchTestB.slice(
-                                                                                                  switchTestB.toLowerCase().indexOf("rgb"),
-                                                                                                  switchTestB.toLowerCase().indexOf("rgb") + 3
-                                                                                              )}<<${switchTestB.slice(
-                                                                                                  switchTestB.toLowerCase().indexOf("rgb") + 3,
-                                                                                                  switchTestB.toLowerCase().indexOf("rgb") + 13
-                                                                                              )}" with rgba. `
-                                                                                            : ""
+                                                                                        rgb!.length == 4 || rgb!.length == 8 ?
+                                                                                            `If you want to specify the alpha channel use RGBA mode instead, replace "${switchTestB.slice(
+                                                                                                switchTestB.toLowerCase().indexOf("rgb"),
+                                                                                                switchTestB.toLowerCase().indexOf("rgb") + 3
+                                                                                            )}" at "${switchTestB.slice(
+                                                                                                switchTestB.toLowerCase().indexOf("rgb") - 10,
+                                                                                                switchTestB.toLowerCase().indexOf("rgb")
+                                                                                            )}>>${switchTestB.slice(
+                                                                                                switchTestB.toLowerCase().indexOf("rgb"),
+                                                                                                switchTestB.toLowerCase().indexOf("rgb") + 3
+                                                                                            )}<<${switchTestB.slice(
+                                                                                                switchTestB.toLowerCase().indexOf("rgb") + 3,
+                                                                                                switchTestB.toLowerCase().indexOf("rgb") + 13
+                                                                                            )}" with rgba. `
+                                                                                        :   ""
                                                                                     }A valid RGB hex code should be formatted either as "RGB" or "RRGGBB". ex. 9AE or 97A2EB.`,
                                                                                     true
                                                                                 );
@@ -3936,15 +3942,18 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                                             const denominator = rgb!.length == 3 ? 15 : 255;
                                                                             const rangeScale = rgb!.length == 3 ? 1 : 2;
                                                                             const currentColor = block?.block.getComponent("fluid_container")?.fluidColor!;
-                                                                            const red = rgb?.slice(0 * rangeScale, 1 * rangeScale).includes("~")
-                                                                                ? currentColor.red
-                                                                                : parseInt(rgb!?.slice(0 * rangeScale, 1 * rangeScale), 16) / denominator;
-                                                                            const green = rgb?.slice(1 * rangeScale, 2 * rangeScale).includes("~")
-                                                                                ? currentColor.green
-                                                                                : parseInt(rgb!?.slice(1 * rangeScale, 2 * rangeScale), 16) / denominator;
-                                                                            const blue = rgb?.slice(2 * rangeScale, 3 * rangeScale).includes("~")
-                                                                                ? currentColor.blue
-                                                                                : parseInt(rgb!?.slice(2 * rangeScale, 3 * rangeScale), 16) / denominator;
+                                                                            const red =
+                                                                                rgb?.slice(0 * rangeScale, 1 * rangeScale).includes("~") ?
+                                                                                    currentColor.red
+                                                                                :   parseInt(rgb!?.slice(0 * rangeScale, 1 * rangeScale), 16) / denominator;
+                                                                            const green =
+                                                                                rgb?.slice(1 * rangeScale, 2 * rangeScale).includes("~") ?
+                                                                                    currentColor.green
+                                                                                :   parseInt(rgb!?.slice(1 * rangeScale, 2 * rangeScale), 16) / denominator;
+                                                                            const blue =
+                                                                                rgb?.slice(2 * rangeScale, 3 * rangeScale).includes("~") ?
+                                                                                    currentColor.blue
+                                                                                :   parseInt(rgb!?.slice(2 * rangeScale, 3 * rangeScale), 16) / denominator;
                                                                             block.block.getComponent("fluid_container")!.fluidColor = {
                                                                                 red,
                                                                                 green,
@@ -4058,9 +4067,9 @@ ${command.dp}block facing set filllevel <fillLevel: int[min=0,max=6]>
                                                                             const red =
                                                                                 rgba[0]?.trim() == "~" ? currentColor.red : rgba[0]!.toNumber()!.round() / 255;
                                                                             const green =
-                                                                                rgba[1]?.trim() == "~"
-                                                                                    ? currentColor.green
-                                                                                    : rgba[1]!.toNumber()!.round() / 255;
+                                                                                rgba[1]?.trim() == "~" ?
+                                                                                    currentColor.green
+                                                                                :   rgba[1]!.toNumber()!.round() / 255;
                                                                             const blue =
                                                                                 rgba[2]?.trim() == "~" ? currentColor.blue : rgba[2]!.toNumber()!.round() / 255;
                                                                             block.block.getComponent("fluid_container")!.fluidColor = {
@@ -5375,35 +5384,38 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
             case !!switchTest.match(/^run$/):
                 eventData.cancel = true;
                 try {
-                    system.runTimeout(() => {
-                        let a = player.runCommand(
-                            (params.fromExecute == true
-                                ? `/execute positioned ${vTStr(player.location)} rotated ${player.getRotation().y} ${player.getRotation().x} in ${
-                                      dimensionTypeDisplayFormattingF[player.dimension.id as keyof typeof dimensionTypeDisplayFormattingF]
-                                  } run `
-                                : "") + newMessage.split(" ").slice(2).join(" ")
-                        );
-                        player.sendError(String(a.successCount), true);
-                        if (a.successCount != 0.0) {
-                            targetSelectorAllListE(
-                                "@a [tag=canSeeCustomChatCommandFeedbackFromMods]",
-                                player.location.x + " " + player.location.y + " " + player.location.z
-                            ).forEach((entity) => {
-                                (entity as Player).sendMessage(
-                                    String(
-                                        "{§l§dCMDFEED§r§f}[" +
-                                            player.name +
-                                            "§r§f]: " +
-                                            a +
-                                            " Successfully waited " +
-                                            Number(newMessage.split(" ")[1]) +
-                                            " ticks and executed the command: " +
-                                            newMessage.slice(Number(newMessage.split(" ")[1]) + 5)
-                                    )
-                                );
-                            });
-                        }
-                    }, Number(newMessage.split(" ")[1]));
+                    system.runTimeout(
+                        () => {
+                            let a = player.runCommand(
+                                (params.fromExecute == true ?
+                                    `/execute positioned ${vTStr(player.location)} rotated ${player.getRotation().y} ${player.getRotation().x} in ${
+                                        dimensionTypeDisplayFormattingF[player.dimension.id as keyof typeof dimensionTypeDisplayFormattingF]
+                                    } run `
+                                :   "") + newMessage.split(" ").slice(2).join(" ")
+                            );
+                            player.sendError(String(a.successCount), true);
+                            if (a.successCount != 0.0) {
+                                targetSelectorAllListE(
+                                    "@a [tag=canSeeCustomChatCommandFeedbackFromMods]",
+                                    player.location.x + " " + player.location.y + " " + player.location.z
+                                ).forEach((entity) => {
+                                    (entity as Player).sendMessage(
+                                        String(
+                                            "{§l§dCMDFEED§r§f}[" +
+                                                player.name +
+                                                "§r§f]: " +
+                                                a +
+                                                " Successfully waited " +
+                                                Number(newMessage.split(" ")[1]) +
+                                                " ticks and executed the command: " +
+                                                newMessage.slice(Number(newMessage.split(" ")[1]) + 5)
+                                        )
+                                    );
+                                });
+                            }
+                        },
+                        Number(newMessage.split(" ")[1])
+                    );
                 } catch (e) {
                     player.sendError("§c" + e + e.stack, true);
                 }
@@ -6217,31 +6229,31 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                         ) {
                             l = caretNotationC(l, VECTOR3_FORWARD, rot);
                         }
-                        l.y <= player.dimension.heightRange.min + 2
-                            ? player.sendMessageB(
-                                  "§cError: The other side of this obstruction is void, if you want to be able to go to the other side even if it is in the void then just use \\vthru. "
-                              )
-                            : player.dimension.getBlock(l)!.isAir && player.dimension.getBlock(l)!.below()!.isAir
-                            ? tryrun(() => {
-                                  try {
-                                      srun(() => {
-                                          player.teleport(roundVector3ToMiddleOfBlockFloorY(player.dimension.getBlock(l)!.below()!.location));
-                                      });
-                                  } catch (e) {
-                                      player.sendError("§c" + e + e.stack, true);
-                                  }
-                              })
-                            : player.dimension.getBlock(l)!.isAir && player.dimension.getBlock(l)!.above()!.isAir
-                            ? tryrun(() => {
-                                  try {
-                                      srun(() => {
-                                          player.teleport(roundVector3ToMiddleOfBlock(player.dimension.getBlock(l)!.location));
-                                      });
-                                  } catch (e) {
-                                      player.sendError("§c" + e + e.stack, true);
-                                  }
-                              })
-                            : player.sendMessageB("§cError: Unable to find other side of obstruction. ");
+                        l.y <= player.dimension.heightRange.min + 2 ?
+                            player.sendMessageB(
+                                "§cError: The other side of this obstruction is void, if you want to be able to go to the other side even if it is in the void then just use \\vthru. "
+                            )
+                        : player.dimension.getBlock(l)!.isAir && player.dimension.getBlock(l)!.below()!.isAir ?
+                            tryrun(() => {
+                                try {
+                                    srun(() => {
+                                        player.teleport(roundVector3ToMiddleOfBlockFloorY(player.dimension.getBlock(l)!.below()!.location));
+                                    });
+                                } catch (e) {
+                                    player.sendError("§c" + e + e.stack, true);
+                                }
+                            })
+                        : player.dimension.getBlock(l)!.isAir && player.dimension.getBlock(l)!.above()!.isAir ?
+                            tryrun(() => {
+                                try {
+                                    srun(() => {
+                                        player.teleport(roundVector3ToMiddleOfBlock(player.dimension.getBlock(l)!.location));
+                                    });
+                                } catch (e) {
+                                    player.sendError("§c" + e + e.stack, true);
+                                }
+                            })
+                        :   player.sendMessageB("§cError: Unable to find other side of obstruction. ");
                     }
                 }
                 break;
@@ -6269,21 +6281,21 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                         ) {
                             l = caretNotationC(l, VECTOR3_FORWARD, rot);
                         }
-                        l.y <= player.dimension.heightRange.min + 2
-                            ? player.sendMessageB(
-                                  "§cError: The other side of this obstruction is void, if you want to be able to go to the other side even if it is in the void then just use \\vthru. "
-                              )
-                            : ((b) => b!.isAir || (b!.isSolid && args.s) || (!b!.isSolid && args.p) || (b!.isLiquid && args.l))(player.dimension.getBlock(l))
-                            ? tryrun(() => {
-                                  try {
-                                      srun(() => {
-                                          player.teleport(roundVector3ToMiddleOfBlockFloorY(player.dimension.getBlock(l)!.location));
-                                      });
-                                  } catch (e) {
-                                      player.sendError("§c" + e + e.stack, true);
-                                  }
-                              })
-                            : player.sendMessageB("§cError: Unable to find other side of obstruction. ");
+                        l.y <= player.dimension.heightRange.min + 2 ?
+                            player.sendMessageB(
+                                "§cError: The other side of this obstruction is void, if you want to be able to go to the other side even if it is in the void then just use \\vthru. "
+                            )
+                        : ((b) => b!.isAir || (b!.isSolid && args.s) || (!b!.isSolid && args.p) || (b!.isLiquid && args.l))(player.dimension.getBlock(l)) ?
+                            tryrun(() => {
+                                try {
+                                    srun(() => {
+                                        player.teleport(roundVector3ToMiddleOfBlockFloorY(player.dimension.getBlock(l)!.location));
+                                    });
+                                } catch (e) {
+                                    player.sendError("§c" + e + e.stack, true);
+                                }
+                            })
+                        :   player.sendMessageB("§cError: Unable to find other side of obstruction. ");
                     }
                 }
                 break;
@@ -6308,39 +6320,43 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                         ) {
                             l = caretNotationC(l, VECTOR3_FORWARD, rot);
                         }
-                        tryget(() => player.dimension.getBlock(l)!.isAir && player.dimension.getBlock(l)!.below()!.isAir) ??
-                        l.y <= player.dimension.heightRange.min + 2
-                            ? tryrun(() => {
-                                  try {
-                                      srun(() => {
-                                          player.teleport(
-                                              roundVector3ToMiddleOfBlockFloorY(
-                                                  tryget(() => player.dimension.getBlock(l)!.below()!.location) ??
-                                                      (l.y <= player.dimension.heightRange.min + 2 ? Vector3Utils.add(l, VECTOR3_DOWN) : undefined)!
-                                              )
-                                          );
-                                      });
-                                  } catch (e) {
-                                      player.sendError("§c" + e + e.stack, true);
-                                  }
-                              })
-                            : tryget(() => player.dimension.getBlock(l)!.isAir && player.dimension.getBlock(l)!.above()!.isAir) ??
-                              l.y <= player.dimension.heightRange.min + 2
-                            ? tryrun(() => {
-                                  try {
-                                      srun(() => {
-                                          player.teleport(
-                                              roundVector3ToMiddleOfBlock(
-                                                  tryget(() => player.dimension.getBlock(l)!.location) ??
-                                                      (l.y <= player.dimension.heightRange.min + 2 ? l : undefined)!
-                                              )
-                                          );
-                                      });
-                                  } catch (e) {
-                                      player.sendError("§c" + e + e.stack, true);
-                                  }
-                              })
-                            : player.sendMessageB("§cError: Unable to find other side of obstruction. ");
+                        (
+                            (tryget(() => player.dimension.getBlock(l)!.isAir && player.dimension.getBlock(l)!.below()!.isAir) ??
+                            l.y <= player.dimension.heightRange.min + 2)
+                        ) ?
+                            tryrun(() => {
+                                try {
+                                    srun(() => {
+                                        player.teleport(
+                                            roundVector3ToMiddleOfBlockFloorY(
+                                                tryget(() => player.dimension.getBlock(l)!.below()!.location) ??
+                                                    (l.y <= player.dimension.heightRange.min + 2 ? Vector3Utils.add(l, VECTOR3_DOWN) : undefined)!
+                                            )
+                                        );
+                                    });
+                                } catch (e) {
+                                    player.sendError("§c" + e + e.stack, true);
+                                }
+                            })
+                        : (
+                            (tryget(() => player.dimension.getBlock(l)!.isAir && player.dimension.getBlock(l)!.above()!.isAir) ??
+                            l.y <= player.dimension.heightRange.min + 2)
+                        ) ?
+                            tryrun(() => {
+                                try {
+                                    srun(() => {
+                                        player.teleport(
+                                            roundVector3ToMiddleOfBlock(
+                                                tryget(() => player.dimension.getBlock(l)!.location) ??
+                                                    (l.y <= player.dimension.heightRange.min + 2 ? l : undefined)!
+                                            )
+                                        );
+                                    });
+                                } catch (e) {
+                                    player.sendError("§c" + e + e.stack, true);
+                                }
+                            })
+                        :   player.sendMessageB("§cError: Unable to find other side of obstruction. ");
                     }
                 }
                 break;
@@ -6471,9 +6487,9 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                     {
                                         let args = [...argsa.args, argsa.extra] as [...typeof argsa.args, typeof argsa.extra];
                                         if (!!world.structureManager.get(args[2])) {
-                                            world.structureManager.delete(args[2])
-                                                ? psend(player, `§aSuccessfully deleted the structure "§r${args[2]}§a".`)
-                                                : psend(player, `§cError: Failed to delete the structure "§r${args[2]}§c".`);
+                                            world.structureManager.delete(args[2]) ?
+                                                psend(player, `§aSuccessfully deleted the structure "§r${args[2]}§a".`)
+                                            :   psend(player, `§cError: Failed to delete the structure "§r${args[2]}§c".`);
                                         } else {
                                             psend(player, `§cError: Unable to find the structure "§r${args[2]}§r§c".`);
                                         }
@@ -6515,25 +6531,21 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                                 waterlogged: args[10] ?? false,
                                                 animationMode: StructureAnimationMode[args[13] as StructureAnimationMode] ?? StructureAnimationMode.None,
                                                 animationSeconds: args[14]!,
-                                                mirror: args[7]!.includes("x")
-                                                    ? args[7]!.includes("z")
-                                                        ? StructureMirrorAxis.XZ
-                                                        : StructureMirrorAxis.X
-                                                    : args[7]!.includes("z")
-                                                    ? StructureMirrorAxis.Z
+                                                mirror:
+                                                    args[7]!.includes("x") ?
+                                                        args[7]!.includes("z") ?
+                                                            StructureMirrorAxis.XZ
+                                                        :   StructureMirrorAxis.X
+                                                    : args[7]!.includes("z") ? StructureMirrorAxis.Z
                                                     : StructureMirrorAxis.None,
                                                 integrity: args[11]!,
                                                 integritySeed: args[12]!,
                                                 rotation:
-                                                    Math.round(args[6] / 90) == 0
-                                                        ? StructureRotation.None
-                                                        : Math.round(args[6] / 90) == 1
-                                                        ? StructureRotation.Rotate90
-                                                        : Math.round(args[6] / 90) == 2
-                                                        ? StructureRotation.Rotate180
-                                                        : Math.round(args[6] / 90) == 3
-                                                        ? StructureRotation.Rotate270
-                                                        : StructureRotation.None,
+                                                    Math.round(args[6] / 90) == 0 ? StructureRotation.None
+                                                    : Math.round(args[6] / 90) == 1 ? StructureRotation.Rotate90
+                                                    : Math.round(args[6] / 90) == 2 ? StructureRotation.Rotate180
+                                                    : Math.round(args[6] / 90) == 3 ? StructureRotation.Rotate270
+                                                    : StructureRotation.None,
                                             });
                                             psend(player, `§aSuccessfully loaded the structure "§r${args[2]}§a".`);
                                         } else {
@@ -6715,9 +6727,10 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                             case "go":
                             case "warp":
                             case "teleport": {
-                                const canBypassTeleportCooldowns = securityVariables.ultraSecurityModeEnabled
-                                    ? securityVariables.testPlayerForPermission(player, "andexdb.bypassTeleportCooldowns")
-                                    : player.hasTag("admin");
+                                const canBypassTeleportCooldowns =
+                                    securityVariables.ultraSecurityModeEnabled ?
+                                        securityVariables.testPlayerForPermission(player, "andexdb.bypassTeleportCooldowns")
+                                    :   player.hasTag("admin");
                                 if (
                                     !canBypassTeleportCooldowns &&
                                     Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 >
@@ -6948,9 +6961,10 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
             case !!switchTest.match(/^spawn$/):
                 {
                     eventData.cancel = true;
-                    const canBypassTeleportCooldowns = securityVariables.ultraSecurityModeEnabled
-                        ? securityVariables.testPlayerForPermission(player, "andexdb.bypassTeleportCooldowns")
-                        : player.hasTag("admin");
+                    const canBypassTeleportCooldowns =
+                        securityVariables.ultraSecurityModeEnabled ?
+                            securityVariables.testPlayerForPermission(player, "andexdb.bypassTeleportCooldowns")
+                        :   player.hasTag("admin");
                     if (config.spawnCommandLocation.x == undefined) {
                         player.sendMessageB(
                             '§cError: This command cannot be used becuase no spawn teleport location has been set. It can be configured at "Main Menu>Settings>General Settings>spawnCommandLocation"'
@@ -7054,9 +7068,10 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                     eventData.cancel = true;
                     // /scriptevent andexdb:spawnSimulatedPlayer t§ee§as§ft §4P§dl§layer|~~~|overworld|~~~
                     if (config.tpaSystem.tpaSystemEnabled) {
-                        const canBypassTeleportCooldowns = securityVariables.ultraSecurityModeEnabled
-                            ? securityVariables.testPlayerForPermission(player, "andexdb.bypassTeleportCooldowns")
-                            : player.hasTag("admin");
+                        const canBypassTeleportCooldowns =
+                            securityVariables.ultraSecurityModeEnabled ?
+                                securityVariables.testPlayerForPermission(player, "andexdb.bypassTeleportCooldowns")
+                            :   player.hasTag("admin");
                         if (
                             !canBypassTeleportCooldowns &&
                             Number(player.getDynamicProperty("lastHurtByPlayerTime") ?? 0) + config.teleportSystems.pvpCooldownToTeleport * 1000 > Date.now()
@@ -7505,13 +7520,15 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                                 ) *
                                                     3600000
                                         ).toLocaleString() +
-                                        (Number(
-                                            player.getDynamicProperty("andexdbPersonalSettings:timeZone") ??
-                                                world.getDynamicProperty("andexdbSettings:timeZone") ??
-                                                0
-                                        ) < 0
-                                            ? " UTC"
-                                            : " UTC+") +
+                                        ((
+                                            Number(
+                                                player.getDynamicProperty("andexdbPersonalSettings:timeZone") ??
+                                                    world.getDynamicProperty("andexdbSettings:timeZone") ??
+                                                    0
+                                            ) < 0
+                                        ) ?
+                                            " UTC"
+                                        :   " UTC+") +
                                         Number(
                                             player.getDynamicProperty("andexdbPersonalSettings:timeZone") ??
                                                 world.getDynamicProperty("andexdbSettings:timeZone") ??
@@ -7543,13 +7560,15 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                                 ) *
                                                     3600000
                                         ).toLocaleString() +
-                                        (Number(
-                                            player.getDynamicProperty("andexdbPersonalSettings:timeZone") ??
-                                                world.getDynamicProperty("andexdbSettings:timeZone") ??
-                                                0
-                                        ) < 0
-                                            ? " UTC"
-                                            : " UTC+") +
+                                        ((
+                                            Number(
+                                                player.getDynamicProperty("andexdbPersonalSettings:timeZone") ??
+                                                    world.getDynamicProperty("andexdbSettings:timeZone") ??
+                                                    0
+                                            ) < 0
+                                        ) ?
+                                            " UTC"
+                                        :   " UTC+") +
                                         Number(
                                             player.getDynamicProperty("andexdbPersonalSettings:timeZone") ??
                                                 world.getDynamicProperty("andexdbSettings:timeZone") ??
@@ -7581,13 +7600,15 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                                 ) *
                                                     3600000
                                         ).toLocaleString() +
-                                        (Number(
-                                            player.getDynamicProperty("andexdbPersonalSettings:timeZone") ??
-                                                world.getDynamicProperty("andexdbSettings:timeZone") ??
-                                                0
-                                        ) < 0
-                                            ? " UTC"
-                                            : " UTC+") +
+                                        ((
+                                            Number(
+                                                player.getDynamicProperty("andexdbPersonalSettings:timeZone") ??
+                                                    world.getDynamicProperty("andexdbSettings:timeZone") ??
+                                                    0
+                                            ) < 0
+                                        ) ?
+                                            " UTC"
+                                        :   " UTC+") +
                                         Number(
                                             player.getDynamicProperty("andexdbPersonalSettings:timeZone") ??
                                                 world.getDynamicProperty("andexdbSettings:timeZone") ??
@@ -7611,11 +7632,9 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                 {
                     eventData.cancel = true;
                     player.sendMessageB(
-                        (entity_scale_format_version != null
-                            ? entity_scale_format_version
-                            : !!tryget(() => new ItemStack("andexsa:furnace_minecart"))
-                            ? "Unknown Version"
-                            : "Entity Scale Not Detected") + (multipleEntityScaleVersionsDetected ? "<MULTIPLE VERSIONS WERE DETECTED!>" : "")
+                        (entity_scale_format_version != null ? entity_scale_format_version
+                        : !!tryget(() => new ItemStack("andexsa:furnace_minecart")) ? "Unknown Version"
+                        : "Entity Scale Not Detected") + (multipleEntityScaleVersionsDetected ? "<MULTIPLE VERSIONS WERE DETECTED!>" : "")
                     );
                 }
                 break;
@@ -8178,20 +8197,20 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                                 source: (args[7] ?? "").trim() == "" ? undefined : targetSelectorAllListC(args[7]!, "", vTStr(player.location), player)[0],
                             };
                             let s = d.createExplosion(l, args[3] ?? 1, options);
-                            s
-                                ? player.sendMessageB(
-                                      `Successfully created an explosion at ${vTStr(l)} with radius ${args[3]} with the options: ${JSONStringify(
-                                          options,
-                                          true
-                                      )}. `
-                                  )
-                                : player.sendError(
-                                      `§cError: Failed to create an explosion at ${vTStr(l)} with radius ${args[3]} with the options: ${JSONStringify(
-                                          options,
-                                          true
-                                      )}. `,
-                                      true
-                                  );
+                            s ?
+                                player.sendMessageB(
+                                    `Successfully created an explosion at ${vTStr(l)} with radius ${args[3]} with the options: ${JSONStringify(
+                                        options,
+                                        true
+                                    )}. `
+                                )
+                            :   player.sendError(
+                                    `§cError: Failed to create an explosion at ${vTStr(l)} with radius ${args[3]} with the options: ${JSONStringify(
+                                        options,
+                                        true
+                                    )}. `,
+                                    true
+                                );
                         } catch (e) {
                             player.sendError("§c" + e + e.stack, true);
                         }
@@ -8276,102 +8295,103 @@ stack of 16 unbreaking 3 mending 1 shields that are locked to a specific slot an
                         1;
                     let reststringaftercoordinates = switchTestB.split(" ").slice(1).join(" ").slice(firstblocknameindex);
                     let firstblockname = reststringaftercoordinates.split(" ")[0]!;
-                    let firstblockstates = reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{")
-                        ? JSONParse(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0] as string)
-                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[")
-                        ? JSONParse(
-                              extractJSONStrings(
-                                  reststringaftercoordinates
-                                      .split(" ")
-                                      .slice(1)
-                                      .join(" ")
-                                      .trimStart()
-                                      .replaceAll("=", ":")
-                                      .replaceAll("[", "{")
-                                      .replaceAll("]", "}"),
-                                  false
-                              )[0] as string
-                          )
-                        : undefined;
-                    let lastblockname = reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
-                              .trimStart()
-                              .split(" ")[0]!
-                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(
-                                  extractJSONStrings(
-                                      reststringaftercoordinates
-                                          .split(" ")
-                                          .slice(1)
-                                          .join(" ")
-                                          .trimStart()
-                                          .replaceAll("=", ":")
-                                          .replaceAll("[", "{")
-                                          .replaceAll("]", "}"),
-                                      false
-                                  )[0]!.length
-                              )
-                              .trimStart()
-                              .split(" ")[0]!
-                        : reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ")[0]!;
-                    let somethingtest = reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
-                              .trimStart()
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trim()
-                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(
-                                  extractJSONStrings(
-                                      reststringaftercoordinates
-                                          .split(" ")
-                                          .slice(1)
-                                          .join(" ")
-                                          .trimStart()
-                                          .replaceAll("=", ":")
-                                          .replaceAll("[", "{")
-                                          .replaceAll("]", "}"),
-                                      false
-                                  )[0]!.length
-                              )
-                              .trimStart()
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trim()
-                        : reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ").slice(1).join(" ").trim();
-                    let lastblockstates = somethingtest.startsWith("{")
-                        ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
-                        : somethingtest.startsWith("[")
-                        ? JSONParse(extractJSONStrings(somethingtest.replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0] as string)
-                        : undefined;
+                    let firstblockstates =
+                        reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{") ?
+                            JSONParse(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0] as string)
+                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[") ?
+                            JSONParse(
+                                extractJSONStrings(
+                                    reststringaftercoordinates
+                                        .split(" ")
+                                        .slice(1)
+                                        .join(" ")
+                                        .trimStart()
+                                        .replaceAll("=", ":")
+                                        .replaceAll("[", "{")
+                                        .replaceAll("]", "}"),
+                                    false
+                                )[0] as string
+                            )
+                        :   undefined;
+                    let lastblockname =
+                        reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
+                                .trimStart()
+                                .split(" ")[0]!
+                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(
+                                    extractJSONStrings(
+                                        reststringaftercoordinates
+                                            .split(" ")
+                                            .slice(1)
+                                            .join(" ")
+                                            .trimStart()
+                                            .replaceAll("=", ":")
+                                            .replaceAll("[", "{")
+                                            .replaceAll("]", "}"),
+                                        false
+                                    )[0]!.length
+                                )
+                                .trimStart()
+                                .split(" ")[0]!
+                        :   reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ")[0]!;
+                    let somethingtest =
+                        reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
+                                .trimStart()
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trim()
+                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(
+                                    extractJSONStrings(
+                                        reststringaftercoordinates
+                                            .split(" ")
+                                            .slice(1)
+                                            .join(" ")
+                                            .trimStart()
+                                            .replaceAll("=", ":")
+                                            .replaceAll("[", "{")
+                                            .replaceAll("]", "}"),
+                                        false
+                                    )[0]!.length
+                                )
+                                .trimStart()
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trim()
+                        :   reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ").slice(1).join(" ").trim();
+                    let lastblockstates =
+                        somethingtest.startsWith("{") ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
+                        : somethingtest.startsWith("[") ?
+                            JSONParse(extractJSONStrings(somethingtest.replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0] as string)
+                        :   undefined;
                     let matchingblock =
-                        lastblockname == ""
-                            ? undefined
-                            : lastblockname == "keep"
-                            ? BlockPermutation.resolve("air")
-                            : BlockPermutation.resolve(lastblockname, lastblockstates); /*
+                        lastblockname == "" ? undefined
+                        : lastblockname == "keep" ? BlockPermutation.resolve("air")
+                        : BlockPermutation.resolve(lastblockname, lastblockstates); /*
   console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
 
                     try {
@@ -8722,68 +8742,49 @@ ${command.dp}ifill <center: x y z> <radius: x y z> <offset: x y z> <length: floa
                         let lastblockstates = args[11];
                         let replacemode = args[12] ?? false;
                         let matchingblock = (
-                            (lastblockname ?? "") == ""
-                                ? [undefined!, undefined!]
-                                : lastblockname == "keep" || mode == "keep"
-                                ? ["air"]
-                                : [BlockTypes.get(lastblockname!)?.id!, lastblockstates]
-                        ) as [string, { [id: string]: string | number | boolean }];
+                            (lastblockname ?? "") == "" ? [undefined!, undefined!]
+                            : lastblockname == "keep" || mode == "keep" ? ["air"]
+                            : [BlockTypes.get(lastblockname!)?.id!, lastblockstates]) as [string, { [id: string]: string | number | boolean }];
                         let cmatchingblock = (
-                            (clastblockname ?? "") == "" ? [undefined!, undefined!] : clastblockname == "keep" ? ["air"] : [clastblockname, clastblockstates]
-                        ) as [string, { [id: string]: string | number | boolean }];
+                            (clastblockname ?? "") == "" ? [undefined!, undefined!]
+                            : clastblockname == "keep" ? ["air"]
+                            : [clastblockname, clastblockstates]) as [string, { [id: string]: string | number | boolean }];
                         let ccmatchingblock = (
-                            (cclastblockname ?? "") == ""
-                                ? [undefined!, undefined!]
-                                : cclastblockname == "keep"
-                                ? ["air"]
-                                : [cclastblockname, cclastblockstates]
-                        ) as [string, { [id: string]: string | number | boolean }];
+                            (cclastblockname ?? "") == "" ? [undefined!, undefined!]
+                            : cclastblockname == "keep" ? ["air"]
+                            : [cclastblockname, cclastblockstates]) as [string, { [id: string]: string | number | boolean }];
                         let hsmatchingblock = (
-                            (hslastblockname ?? "") == ""
-                                ? [undefined!, undefined!]
-                                : hslastblockname == "keep"
-                                ? ["air"]
-                                : [hslastblockname, hslastblockstates]
-                        ) as [string, { [id: string]: string | number | boolean }];
+                            (hslastblockname ?? "") == "" ? [undefined!, undefined!]
+                            : hslastblockname == "keep" ? ["air"]
+                            : [hslastblockname, hslastblockstates]) as [string, { [id: string]: string | number | boolean }];
                         let tmatchingblock = (
-                            (tlastblockname ?? "") == "" ? [undefined!, undefined!] : tlastblockname == "keep" ? ["air"] : [tlastblockname, tlastblockstates]
-                        ) as [string, { [id: string]: string | number | boolean }];
+                            (tlastblockname ?? "") == "" ? [undefined!, undefined!]
+                            : tlastblockname == "keep" ? ["air"]
+                            : [tlastblockname, tlastblockstates]) as [string, { [id: string]: string | number | boolean }];
                         let omatchingblock = (
-                            (olastblockname ?? "") == "" ? [undefined!, undefined!] : olastblockname == "keep" ? ["air"] : [olastblockname, olastblockstates]
-                        ) as [string, { [id: string]: string | number | boolean }];
+                            (olastblockname ?? "") == "" ? [undefined!, undefined!]
+                            : olastblockname == "keep" ? ["air"]
+                            : [olastblockname, olastblockstates]) as [string, { [id: string]: string | number | boolean }];
                         let homatchingblock = (
-                            (holastblockname ?? "") == ""
-                                ? [undefined!, undefined!]
-                                : holastblockname == "keep"
-                                ? ["air"]
-                                : [holastblockname, holastblockstates]
-                        ) as [string, { [id: string]: string | number | boolean }];
+                            (holastblockname ?? "") == "" ? [undefined!, undefined!]
+                            : holastblockname == "keep" ? ["air"]
+                            : [holastblockname, holastblockstates]) as [string, { [id: string]: string | number | boolean }];
                         let sgmatchingblock = (
-                            (sglastblockname ?? "") == ""
-                                ? [undefined!, undefined!]
-                                : sglastblockname == "keep"
-                                ? ["air"]
-                                : [sglastblockname, sglastblockstates]
-                        ) as [string, { [id: string]: string | number | boolean }]; /*
+                            (sglastblockname ?? "") == "" ? [undefined!, undefined!]
+                            : sglastblockname == "keep" ? ["air"]
+                            : [sglastblockname, sglastblockstates]) as [string, { [id: string]: string | number | boolean }]; /*
             console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
 
                         switch (
                             fillmodetypeenum[
-                                (skygridmode
-                                    ? sgmode
-                                    : hovoidmode
-                                    ? homode
-                                    : ovoidmode
-                                    ? omode
-                                    : tunnelmode
-                                    ? tmode
-                                    : hspheremode
-                                    ? hsmode
-                                    : circlemode
-                                    ? cmode
-                                    : ccirclemode
-                                    ? ccmode
-                                    : mode ?? "") as fillmodetypeenum
+                                (skygridmode ? sgmode
+                                : hovoidmode ? homode
+                                : ovoidmode ? omode
+                                : tunnelmode ? tmode
+                                : hspheremode ? hsmode
+                                : circlemode ? cmode
+                                : ccirclemode ? ccmode
+                                : (mode ?? "")) as fillmodetypeenum
                             ]
                         ) {
                             case "":
@@ -9039,9 +9040,9 @@ ${command.dp}ifill <center: x y z> <radius: x y z> <offset: x y z> <length: floa
                                                     } ms over ${a.completionData.endTick! - a.completionData.startTick} tick${
                                                         a.completionData.endTick! - a.completionData.startTick == 1 ? "" : "s"
                                                     }${
-                                                        a.completionData.containsUnloadedChunks
-                                                            ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                            : ""
+                                                        a.completionData.containsUnloadedChunks ?
+                                                            "; Some blocks were not generated because they were in unloaded chunks. "
+                                                        :   ""
                                                     }`
                                                 );
                                             },
@@ -9080,9 +9081,9 @@ ${command.dp}ifill <center: x y z> <radius: x y z> <offset: x y z> <length: floa
                                                     } ms over ${a.completionData.endTick! - a.completionData.startTick} tick${
                                                         a.completionData.endTick! - a.completionData.startTick == 1 ? "" : "s"
                                                     }${
-                                                        a.completionData.containsUnloadedChunks
-                                                            ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                            : ""
+                                                        a.completionData.containsUnloadedChunks ?
+                                                            "; Some blocks were not generated because they were in unloaded chunks. "
+                                                        :   ""
                                                     }`
                                                 );
                                             },
@@ -9140,9 +9141,9 @@ ${command.dp}ifill <center: x y z> <radius: x y z> <offset: x y z> <length: floa
                                                     } ms over ${a.completionData.endTick! - a.completionData.startTick} tick${
                                                         a.completionData.endTick! - a.completionData.startTick == 1 ? "" : "s"
                                                     }${
-                                                        a.completionData.containsUnloadedChunks
-                                                            ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                            : ""
+                                                        a.completionData.containsUnloadedChunks ?
+                                                            "; Some blocks were not generated because they were in unloaded chunks. "
+                                                        :   ""
                                                     }`
                                                 );
                                             },
@@ -9187,9 +9188,9 @@ ${command.dp}ifill <center: x y z> <radius: x y z> <offset: x y z> <length: floa
                                                     } ms over ${a.completionData.endTick! - a.completionData.startTick} tick${
                                                         a.completionData.endTick! - a.completionData.startTick == 1 ? "" : "s"
                                                     }${
-                                                        a.completionData.containsUnloadedChunks
-                                                            ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                            : ""
+                                                        a.completionData.containsUnloadedChunks ?
+                                                            "; Some blocks were not generated because they were in unloaded chunks. "
+                                                        :   ""
                                                     }`
                                                 );
                                             },
@@ -9228,9 +9229,9 @@ ${command.dp}ifill <center: x y z> <radius: x y z> <offset: x y z> <length: floa
                                                     } ms over ${a.completionData.endTick! - a.completionData.startTick} tick${
                                                         a.completionData.endTick! - a.completionData.startTick == 1 ? "" : "s"
                                                     }${
-                                                        a.completionData.containsUnloadedChunks
-                                                            ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                            : ""
+                                                        a.completionData.containsUnloadedChunks ?
+                                                            "; Some blocks were not generated because they were in unloaded chunks. "
+                                                        :   ""
                                                     }`
                                                 );
                                             },
@@ -9269,9 +9270,9 @@ ${command.dp}ifill <center: x y z> <radius: x y z> <offset: x y z> <length: floa
                                                     } ms over ${a.completionData.endTick! - a.completionData.startTick} tick${
                                                         a.completionData.endTick! - a.completionData.startTick == 1 ? "" : "s"
                                                     }${
-                                                        a.completionData.containsUnloadedChunks
-                                                            ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                            : ""
+                                                        a.completionData.containsUnloadedChunks ?
+                                                            "; Some blocks were not generated because they were in unloaded chunks. "
+                                                        :   ""
                                                     }`
                                                 );
                                             },
@@ -10121,80 +10122,53 @@ ${command.dp}itfill <center: x y z> <radius: x y z> <offset: x y z> <length: flo
                         let lastblockstates = args[11];
                         let replacemode = args[12] ?? false;
                         let matchingblock = (
-                            (lastblockname ?? "") == "" || [circlemode, ccirclemode, hspheremode, tunnelmode, ovoidmode, hovoidmode, skygridmode].includes(true)
-                                ? [undefined, undefined]
-                                : lastblockname == "keep" || mode == "keep"
-                                ? ["air"]
-                                : [BlockTypes.get(lastblockname!)!?.id, lastblockstates]
-                        ) as [string, { [id: string]: string | number | boolean }];
+                            (
+                                (lastblockname ?? "") == "" ||
+                                [circlemode, ccirclemode, hspheremode, tunnelmode, ovoidmode, hovoidmode, skygridmode].includes(true)
+                            ) ?
+                                [undefined, undefined]
+                            : lastblockname == "keep" || mode == "keep" ? ["air"]
+                            : [BlockTypes.get(lastblockname!)!?.id, lastblockstates]) as [string, { [id: string]: string | number | boolean }];
                         let cmatchingblock = (
-                            (clastblockname ?? "") == "" || circlemode
-                                ? [undefined!, undefined!]
-                                : clastblockname == "keep"
-                                ? ["air"]
-                                : [clastblockname, clastblockstates]
-                        ) as [string, { [id: string]: string | number | boolean }];
+                            (clastblockname ?? "") == "" || circlemode ? [undefined!, undefined!]
+                            : clastblockname == "keep" ? ["air"]
+                            : [clastblockname, clastblockstates]) as [string, { [id: string]: string | number | boolean }];
                         let ccmatchingblock = (
-                            (cclastblockname ?? "") == "" || ccirclemode
-                                ? [undefined!, undefined!]
-                                : cclastblockname == "keep"
-                                ? ["air"]
-                                : [cclastblockname, cclastblockstates]
-                        ) as [string, { [id: string]: string | number | boolean }];
+                            (cclastblockname ?? "") == "" || ccirclemode ? [undefined!, undefined!]
+                            : cclastblockname == "keep" ? ["air"]
+                            : [cclastblockname, cclastblockstates]) as [string, { [id: string]: string | number | boolean }];
                         let hsmatchingblock = (
-                            (hslastblockname ?? "") == "" || hspheremode
-                                ? [undefined!, undefined!]
-                                : hslastblockname == "keep"
-                                ? ["air"]
-                                : [hslastblockname, hslastblockstates]
-                        ) as [string, { [id: string]: string | number | boolean }];
+                            (hslastblockname ?? "") == "" || hspheremode ? [undefined!, undefined!]
+                            : hslastblockname == "keep" ? ["air"]
+                            : [hslastblockname, hslastblockstates]) as [string, { [id: string]: string | number | boolean }];
                         let tmatchingblock = (
-                            (tlastblockname ?? "") == "" || tunnelmode
-                                ? [undefined!, undefined!]
-                                : tlastblockname == "keep"
-                                ? ["air"]
-                                : [tlastblockname, tlastblockstates]
-                        ) as [string, { [id: string]: string | number | boolean }];
+                            (tlastblockname ?? "") == "" || tunnelmode ? [undefined!, undefined!]
+                            : tlastblockname == "keep" ? ["air"]
+                            : [tlastblockname, tlastblockstates]) as [string, { [id: string]: string | number | boolean }];
                         let omatchingblock = (
-                            (olastblockname ?? "") == "" || ovoidmode
-                                ? [undefined!, undefined!]
-                                : olastblockname == "keep"
-                                ? ["air"]
-                                : [olastblockname, olastblockstates]
-                        ) as [string, { [id: string]: string | number | boolean }];
+                            (olastblockname ?? "") == "" || ovoidmode ? [undefined!, undefined!]
+                            : olastblockname == "keep" ? ["air"]
+                            : [olastblockname, olastblockstates]) as [string, { [id: string]: string | number | boolean }];
                         let homatchingblock = (
-                            (holastblockname ?? "") == "" || hovoidmode
-                                ? [undefined!, undefined!]
-                                : holastblockname == "keep"
-                                ? ["air"]
-                                : [holastblockname, holastblockstates]
-                        ) as [string, { [id: string]: string | number | boolean }];
+                            (holastblockname ?? "") == "" || hovoidmode ? [undefined!, undefined!]
+                            : holastblockname == "keep" ? ["air"]
+                            : [holastblockname, holastblockstates]) as [string, { [id: string]: string | number | boolean }];
                         let sgmatchingblock = (
-                            (sglastblockname ?? "") == "" || skygridmode
-                                ? [undefined!, undefined!]
-                                : sglastblockname == "keep"
-                                ? ["air"]
-                                : [sglastblockname, sglastblockstates]
-                        ) as [string, { [id: string]: string | number | boolean }]; /*
+                            (sglastblockname ?? "") == "" || skygridmode ? [undefined!, undefined!]
+                            : sglastblockname == "keep" ? ["air"]
+                            : [sglastblockname, sglastblockstates]) as [string, { [id: string]: string | number | boolean }]; /*
             console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
 
                         switch (
                             fillmodetypeenum[
-                                (skygridmode
-                                    ? sgmode
-                                    : hovoidmode
-                                    ? homode
-                                    : ovoidmode
-                                    ? omode
-                                    : tunnelmode
-                                    ? tmode
-                                    : hspheremode
-                                    ? hsmode
-                                    : circlemode
-                                    ? cmode
-                                    : ccirclemode
-                                    ? ccmode
-                                    : mode ?? "") as fillmodetypeenum
+                                (skygridmode ? sgmode
+                                : hovoidmode ? homode
+                                : ovoidmode ? omode
+                                : tunnelmode ? tmode
+                                : hspheremode ? hsmode
+                                : circlemode ? cmode
+                                : ccirclemode ? ccmode
+                                : (mode ?? "")) as fillmodetypeenum
                             ]
                         ) {
                             case "":
@@ -10628,9 +10602,9 @@ ${command.dp}itfill <center: x y z> <radius: x y z> <offset: x y z> <length: flo
                                                             } ms over ${a.completionData.endTick! - a.completionData.startTick} tick${
                                                                 a.completionData.endTick! - a.completionData.startTick == 1 ? "" : "s"
                                                             }${
-                                                                a.completionData.containsUnloadedChunks
-                                                                    ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                                    : ""
+                                                                a.completionData.containsUnloadedChunks ?
+                                                                    "; Some blocks were not generated because they were in unloaded chunks. "
+                                                                :   ""
                                                             }`
                                                         );
                                                     },
@@ -10689,9 +10663,9 @@ ${command.dp}itfill <center: x y z> <radius: x y z> <offset: x y z> <length: flo
                                                             } ms over ${a.completionData.endTick! - a.completionData.startTick} tick${
                                                                 a.completionData.endTick! - a.completionData.startTick == 1 ? "" : "s"
                                                             }${
-                                                                a.completionData.containsUnloadedChunks
-                                                                    ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                                    : ""
+                                                                a.completionData.containsUnloadedChunks ?
+                                                                    "; Some blocks were not generated because they were in unloaded chunks. "
+                                                                :   ""
                                                             }`
                                                         );
                                                     },
@@ -10772,9 +10746,9 @@ ${command.dp}itfill <center: x y z> <radius: x y z> <offset: x y z> <length: flo
                                                             } ms over ${a.completionData.endTick! - a.completionData.startTick} tick${
                                                                 a.completionData.endTick! - a.completionData.startTick == 1 ? "" : "s"
                                                             }${
-                                                                a.completionData.containsUnloadedChunks
-                                                                    ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                                    : ""
+                                                                a.completionData.containsUnloadedChunks ?
+                                                                    "; Some blocks were not generated because they were in unloaded chunks. "
+                                                                :   ""
                                                             }`
                                                         );
                                                     },
@@ -10842,9 +10816,9 @@ ${command.dp}itfill <center: x y z> <radius: x y z> <offset: x y z> <length: flo
                                                             } ms over ${a.completionData.endTick! - a.completionData.startTick} tick${
                                                                 a.completionData.endTick! - a.completionData.startTick == 1 ? "" : "s"
                                                             }${
-                                                                a.completionData.containsUnloadedChunks
-                                                                    ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                                    : ""
+                                                                a.completionData.containsUnloadedChunks ?
+                                                                    "; Some blocks were not generated because they were in unloaded chunks. "
+                                                                :   ""
                                                             }`
                                                         );
                                                     },
@@ -10906,9 +10880,9 @@ ${command.dp}itfill <center: x y z> <radius: x y z> <offset: x y z> <length: flo
                                                             } ms over ${a.completionData.endTick! - a.completionData.startTick} tick${
                                                                 a.completionData.endTick! - a.completionData.startTick == 1 ? "" : "s"
                                                             }${
-                                                                a.completionData.containsUnloadedChunks
-                                                                    ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                                    : ""
+                                                                a.completionData.containsUnloadedChunks ?
+                                                                    "; Some blocks were not generated because they were in unloaded chunks. "
+                                                                :   ""
                                                             }`
                                                         );
                                                     },
@@ -10970,9 +10944,9 @@ ${command.dp}itfill <center: x y z> <radius: x y z> <offset: x y z> <length: flo
                                                             } ms over ${a.completionData.endTick! - a.completionData.startTick} tick${
                                                                 a.completionData.endTick! - a.completionData.startTick == 1 ? "" : "s"
                                                             }${
-                                                                a.completionData.containsUnloadedChunks
-                                                                    ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                                    : ""
+                                                                a.completionData.containsUnloadedChunks ?
+                                                                    "; Some blocks were not generated because they were in unloaded chunks. "
+                                                                :   ""
                                                             }`
                                                         );
                                                     },
@@ -12277,69 +12251,50 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         let lastblockstates = args[12];
                         let replacemode = args[13] ?? false;
                         let matchingblock = (
-                            (lastblockname ?? "") == ""
-                                ? [undefined!, undefined!]
-                                : lastblockname == "keep" || mode == "keep"
-                                ? ["air"]
-                                : [BlockTypes.get(lastblockname!)!?.id, lastblockstates]
-                        ) as [string, { [id: string]: string | number | boolean }];
+                            (lastblockname ?? "") == "" ? [undefined!, undefined!]
+                            : lastblockname == "keep" || mode == "keep" ? ["air"]
+                            : [BlockTypes.get(lastblockname!)!?.id, lastblockstates]) as [string, { [id: string]: string | number | boolean }];
                         let cmatchingblock = (
-                            (clastblockname ?? "") == "" ? [undefined!, undefined!] : clastblockname == "keep" ? ["air"] : [clastblockname, clastblockstates]
-                        ) as [string, { [id: string]: string | number | boolean }];
+                            (clastblockname ?? "") == "" ? [undefined!, undefined!]
+                            : clastblockname == "keep" ? ["air"]
+                            : [clastblockname, clastblockstates]) as [string, { [id: string]: string | number | boolean }];
                         let ccmatchingblock = (
-                            (cclastblockname ?? "") == ""
-                                ? [undefined!, undefined!]
-                                : cclastblockname == "keep"
-                                ? ["air"]
-                                : [cclastblockname, cclastblockstates]
-                        ) as [string, { [id: string]: string | number | boolean }];
+                            (cclastblockname ?? "") == "" ? [undefined!, undefined!]
+                            : cclastblockname == "keep" ? ["air"]
+                            : [cclastblockname, cclastblockstates]) as [string, { [id: string]: string | number | boolean }];
                         let hsmatchingblock = (
-                            (hslastblockname ?? "") == ""
-                                ? [undefined!, undefined!]
-                                : hslastblockname == "keep"
-                                ? ["air"]
-                                : [hslastblockname, hslastblockstates]
-                        ) as [string, { [id: string]: string | number | boolean }];
+                            (hslastblockname ?? "") == "" ? [undefined!, undefined!]
+                            : hslastblockname == "keep" ? ["air"]
+                            : [hslastblockname, hslastblockstates]) as [string, { [id: string]: string | number | boolean }];
                         let tmatchingblock = (
-                            (tlastblockname ?? "") == "" ? [undefined!, undefined!] : tlastblockname == "keep" ? ["air"] : [tlastblockname, tlastblockstates]
-                        ) as [string, { [id: string]: string | number | boolean }];
+                            (tlastblockname ?? "") == "" ? [undefined!, undefined!]
+                            : tlastblockname == "keep" ? ["air"]
+                            : [tlastblockname, tlastblockstates]) as [string, { [id: string]: string | number | boolean }];
                         let omatchingblock = (
-                            (olastblockname ?? "") == "" ? [undefined!, undefined!] : olastblockname == "keep" ? ["air"] : [olastblockname, olastblockstates]
-                        ) as [string, { [id: string]: string | number | boolean }];
+                            (olastblockname ?? "") == "" ? [undefined!, undefined!]
+                            : olastblockname == "keep" ? ["air"]
+                            : [olastblockname, olastblockstates]) as [string, { [id: string]: string | number | boolean }];
                         let homatchingblock = (
-                            (holastblockname ?? "") == ""
-                                ? [undefined!, undefined!]
-                                : holastblockname == "keep"
-                                ? ["air"]
-                                : [holastblockname, holastblockstates]
-                        ) as [string, { [id: string]: string | number | boolean }];
+                            (holastblockname ?? "") == "" ? [undefined!, undefined!]
+                            : holastblockname == "keep" ? ["air"]
+                            : [holastblockname, holastblockstates]) as [string, { [id: string]: string | number | boolean }];
                         let sgmatchingblock = (
-                            (sglastblockname ?? "") == ""
-                                ? [undefined!, undefined!]
-                                : sglastblockname == "keep"
-                                ? ["air"]
-                                : [sglastblockname, sglastblockstates]
-                        ) as [string, { [id: string]: string | number | boolean }];
+                            (sglastblockname ?? "") == "" ? [undefined!, undefined!]
+                            : sglastblockname == "keep" ? ["air"]
+                            : [sglastblockname, sglastblockstates]) as [string, { [id: string]: string | number | boolean }];
                         const blocktypes = BlockTypes.getAll(); /*
             console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
 
                         switch (
                             fillmodetypeenum[
-                                (skygridmode
-                                    ? sgmode
-                                    : hovoidmode
-                                    ? homode
-                                    : ovoidmode
-                                    ? omode
-                                    : tunnelmode
-                                    ? tmode
-                                    : hspheremode
-                                    ? hsmode
-                                    : circlemode
-                                    ? cmode
-                                    : ccirclemode
-                                    ? ccmode
-                                    : mode ?? "") as fillmodetypeenum
+                                (skygridmode ? sgmode
+                                : hovoidmode ? homode
+                                : ovoidmode ? omode
+                                : tunnelmode ? tmode
+                                : hspheremode ? hsmode
+                                : circlemode ? cmode
+                                : ccirclemode ? ccmode
+                                : (mode ?? "")) as fillmodetypeenum
                             ]
                         ) {
                             case "":
@@ -12363,9 +12318,9 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                     coordinatesa,
                                                     coordinatesb,
                                                     player.dimension,
-                                                    firstblockname == "random"
-                                                        ? () => blocktypes[Math.floor(blocktypes.length * Math.random())]!
-                                                        : firstblockname!,
+                                                    firstblockname == "random" ?
+                                                        () => blocktypes[Math.floor(blocktypes.length * Math.random())]!
+                                                    :   firstblockname!,
                                                     firstblockstates,
                                                     {
                                                         matchingBlock: matchingblock[0],
@@ -12383,9 +12338,9 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                             } ms over ${a.completionData.endTick! - a.completionData.startTick} tick${
                                                                 a.completionData.endTick! - a.completionData.startTick == 1 ? "" : "s"
                                                             }${
-                                                                a.completionData.containsUnloadedChunks
-                                                                    ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                                    : ""
+                                                                a.completionData.containsUnloadedChunks ?
+                                                                    "; Some blocks were not generated because they were in unloaded chunks. "
+                                                                :   ""
                                                             }`
                                                         );
                                                     },
@@ -12425,9 +12380,9 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                     coordinatesa,
                                                     coordinatesb,
                                                     player.dimension,
-                                                    firstblockname == "random"
-                                                        ? () => blocktypes[Math.floor(blocktypes.length * Math.random())]!
-                                                        : firstblockname!,
+                                                    firstblockname == "random" ?
+                                                        () => blocktypes[Math.floor(blocktypes.length * Math.random())]!
+                                                    :   firstblockname!,
                                                     firstblockstates,
                                                     {
                                                         matchingBlock: matchingblock[0],
@@ -12445,9 +12400,9 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                             } ms over ${a.completionData.endTick! - a.completionData.startTick} tick${
                                                                 a.completionData.endTick! - a.completionData.startTick == 1 ? "" : "s"
                                                             }${
-                                                                a.completionData.containsUnloadedChunks
-                                                                    ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                                    : ""
+                                                                a.completionData.containsUnloadedChunks ?
+                                                                    "; Some blocks were not generated because they were in unloaded chunks. "
+                                                                :   ""
                                                             }`
                                                         );
                                                     },
@@ -12556,9 +12511,9 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                     coordinatesa,
                                                     coordinatesb,
                                                     player.dimension,
-                                                    firstblockname == "random"
-                                                        ? () => blocktypes[Math.floor(blocktypes.length * Math.random())]!
-                                                        : firstblockname!,
+                                                    firstblockname == "random" ?
+                                                        () => blocktypes[Math.floor(blocktypes.length * Math.random())]!
+                                                    :   firstblockname!,
                                                     firstblockstates,
                                                     {
                                                         matchingBlock: matchingblock[0],
@@ -12576,9 +12531,9 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                             } ms over ${a.completionData.endTick! - a.completionData.startTick} tick${
                                                                 a.completionData.endTick! - a.completionData.startTick == 1 ? "" : "s"
                                                             }${
-                                                                a.completionData.containsUnloadedChunks
-                                                                    ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                                    : ""
+                                                                a.completionData.containsUnloadedChunks ?
+                                                                    "; Some blocks were not generated because they were in unloaded chunks. "
+                                                                :   ""
                                                             }`
                                                         );
                                                     },
@@ -12618,9 +12573,9 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                     coordinatesa,
                                                     coordinatesb,
                                                     player.dimension,
-                                                    firstblockname == "random"
-                                                        ? () => blocktypes[Math.floor(blocktypes.length * Math.random())]!
-                                                        : firstblockname!,
+                                                    firstblockname == "random" ?
+                                                        () => blocktypes[Math.floor(blocktypes.length * Math.random())]!
+                                                    :   firstblockname!,
                                                     firstblockstates,
                                                     {
                                                         matchingBlock: "air",
@@ -12637,9 +12592,9 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                             } ms over ${a.completionData.endTick! - a.completionData.startTick} tick${
                                                                 a.completionData.endTick! - a.completionData.startTick == 1 ? "" : "s"
                                                             }${
-                                                                a.completionData.containsUnloadedChunks
-                                                                    ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                                    : ""
+                                                                a.completionData.containsUnloadedChunks ?
+                                                                    "; Some blocks were not generated because they were in unloaded chunks. "
+                                                                :   ""
                                                             }`
                                                         );
                                                     },
@@ -12679,9 +12634,9 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                     coordinatesa,
                                                     coordinatesb,
                                                     player.dimension,
-                                                    firstblockname == "random"
-                                                        ? () => blocktypes[Math.floor(blocktypes.length * Math.random())]!
-                                                        : firstblockname!,
+                                                    firstblockname == "random" ?
+                                                        () => blocktypes[Math.floor(blocktypes.length * Math.random())]!
+                                                    :   firstblockname!,
                                                     firstblockstates,
                                                     {
                                                         matchingBlock: matchingblock[0],
@@ -12699,9 +12654,9 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                             } ms over ${a.completionData.endTick! - a.completionData.startTick} tick${
                                                                 a.completionData.endTick! - a.completionData.startTick == 1 ? "" : "s"
                                                             }${
-                                                                a.completionData.containsUnloadedChunks
-                                                                    ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                                    : ""
+                                                                a.completionData.containsUnloadedChunks ?
+                                                                    "; Some blocks were not generated because they were in unloaded chunks. "
+                                                                :   ""
                                                             }`
                                                         );
                                                     },
@@ -12741,9 +12696,9 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                     coordinatesa,
                                                     coordinatesb,
                                                     player.dimension,
-                                                    firstblockname == "random"
-                                                        ? () => blocktypes[Math.floor(blocktypes.length * Math.random())]!
-                                                        : firstblockname!,
+                                                    firstblockname == "random" ?
+                                                        () => blocktypes[Math.floor(blocktypes.length * Math.random())]!
+                                                    :   firstblockname!,
                                                     firstblockstates,
                                                     {
                                                         matchingBlock: matchingblock[0],
@@ -12761,9 +12716,9 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                             } ms over ${a.completionData.endTick! - a.completionData.startTick} tick${
                                                                 a.completionData.endTick! - a.completionData.startTick == 1 ? "" : "s"
                                                             }${
-                                                                a.completionData.containsUnloadedChunks
-                                                                    ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                                    : ""
+                                                                a.completionData.containsUnloadedChunks ?
+                                                                    "; Some blocks were not generated because they were in unloaded chunks. "
+                                                                :   ""
                                                             }`
                                                         );
                                                     },
@@ -12803,9 +12758,9 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                     coordinatesa,
                                                     coordinatesb,
                                                     player.dimension,
-                                                    firstblockname == "random"
-                                                        ? () => blocktypes[Math.floor(blocktypes.length * Math.random())]!
-                                                        : firstblockname!,
+                                                    firstblockname == "random" ?
+                                                        () => blocktypes[Math.floor(blocktypes.length * Math.random())]!
+                                                    :   firstblockname!,
                                                     firstblockstates,
                                                     {
                                                         matchingBlock: matchingblock[0],
@@ -12823,9 +12778,9 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                             } ms over ${a.completionData.endTick! - a.completionData.startTick} tick${
                                                                 a.completionData.endTick! - a.completionData.startTick == 1 ? "" : "s"
                                                             }${
-                                                                a.completionData.containsUnloadedChunks
-                                                                    ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                                    : ""
+                                                                a.completionData.containsUnloadedChunks ?
+                                                                    "; Some blocks were not generated because they were in unloaded chunks. "
+                                                                :   ""
                                                             }`
                                                         );
                                                     },
@@ -12928,9 +12883,9 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                             } ms over ${a.completionData.endTick! - a.completionData.startTick} tick${
                                                                 a.completionData.endTick! - a.completionData.startTick == 1 ? "" : "s"
                                                             }${
-                                                                a.completionData.containsUnloadedChunks
-                                                                    ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                                    : ""
+                                                                a.completionData.containsUnloadedChunks ?
+                                                                    "; Some blocks were not generated because they were in unloaded chunks. "
+                                                                :   ""
                                                             }`
                                                         );
                                                     },
@@ -12989,9 +12944,9 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                             } ms over ${a.completionData.endTick! - a.completionData.startTick} tick${
                                                                 a.completionData.endTick! - a.completionData.startTick == 1 ? "" : "s"
                                                             }${
-                                                                a.completionData.containsUnloadedChunks
-                                                                    ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                                    : ""
+                                                                a.completionData.containsUnloadedChunks ?
+                                                                    "; Some blocks were not generated because they were in unloaded chunks. "
+                                                                :   ""
                                                             }`
                                                         );
                                                     },
@@ -13060,9 +13015,9 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                             } ms over ${a.completionData.endTick! - a.completionData.startTick} tick${
                                                                 a.completionData.endTick! - a.completionData.startTick == 1 ? "" : "s"
                                                             }${
-                                                                a.completionData.containsUnloadedChunks
-                                                                    ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                                    : ""
+                                                                a.completionData.containsUnloadedChunks ?
+                                                                    "; Some blocks were not generated because they were in unloaded chunks. "
+                                                                :   ""
                                                             }`
                                                         );
                                                     },
@@ -13118,9 +13073,9 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                             } ms over ${a.completionData.endTick! - a.completionData.startTick} tick${
                                                                 a.completionData.endTick! - a.completionData.startTick == 1 ? "" : "s"
                                                             }${
-                                                                a.completionData.containsUnloadedChunks
-                                                                    ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                                    : ""
+                                                                a.completionData.containsUnloadedChunks ?
+                                                                    "; Some blocks were not generated because they were in unloaded chunks. "
+                                                                :   ""
                                                             }`
                                                         );
                                                     },
@@ -13170,9 +13125,9 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                             } ms over ${a.completionData.endTick! - a.completionData.startTick} tick${
                                                                 a.completionData.endTick! - a.completionData.startTick == 1 ? "" : "s"
                                                             }${
-                                                                a.completionData.containsUnloadedChunks
-                                                                    ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                                    : ""
+                                                                a.completionData.containsUnloadedChunks ?
+                                                                    "; Some blocks were not generated because they were in unloaded chunks. "
+                                                                :   ""
                                                             }`
                                                         );
                                                     },
@@ -13222,9 +13177,9 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                                             } ms over ${a.completionData.endTick! - a.completionData.startTick} tick${
                                                                 a.completionData.endTick! - a.completionData.startTick == 1 ? "" : "s"
                                                             }${
-                                                                a.completionData.containsUnloadedChunks
-                                                                    ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                                    : ""
+                                                                a.completionData.containsUnloadedChunks ?
+                                                                    "; Some blocks were not generated because they were in unloaded chunks. "
+                                                                :   ""
                                                             }`
                                                         );
                                                     },
@@ -14045,98 +14000,103 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         1;
                     let reststringaftercoordinates = switchTestB.split(" ").slice(1).join(" ").slice(firstblocknameindex);
                     let firstblockname = reststringaftercoordinates.split(" ")[0]!;
-                    let firstblockstates = reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{")
-                        ? JSONParse(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0] as string)
-                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[")
-                        ? JSONParse(
-                              extractJSONStrings(
-                                  reststringaftercoordinates
-                                      .split(" ")
-                                      .slice(1)
-                                      .join(" ")
-                                      .trimStart()
-                                      .replaceAll("=", ":")
-                                      .replaceAll("[", "{")
-                                      .replaceAll("]", "}"),
-                                  false
-                              )[0] as string
-                          )
-                        : undefined;
-                    let lastblockname = reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
-                              .trimStart()
-                              .split(" ")[0]!
-                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(
-                                  extractJSONStrings(
-                                      reststringaftercoordinates
-                                          .split(" ")
-                                          .slice(1)
-                                          .join(" ")
-                                          .trimStart()
-                                          .replaceAll("=", ":")
-                                          .replaceAll("[", "{")
-                                          .replaceAll("]", "}"),
-                                      false
-                                  )[0]!.length
-                              )
-                              .trimStart()
-                              .split(" ")[0]!
-                        : reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ")[0]!;
-                    let somethingtest = reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
-                              .trimStart()
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trim()
-                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(
-                                  extractJSONStrings(
-                                      reststringaftercoordinates
-                                          .split(" ")
-                                          .slice(1)
-                                          .join(" ")
-                                          .trimStart()
-                                          .replaceAll("=", ":")
-                                          .replaceAll("[", "{")
-                                          .replaceAll("]", "}"),
-                                      false
-                                  )[0]!.length
-                              )
-                              .trimStart()
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trim()
-                        : reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ").slice(1).join(" ").trim();
-                    let lastblockstates = somethingtest.startsWith("{")
-                        ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
-                        : somethingtest.startsWith("[")
-                        ? JSONParse(extractJSONStrings(somethingtest.replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0] as string)
-                        : undefined;
+                    let firstblockstates =
+                        reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{") ?
+                            JSONParse(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0] as string)
+                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[") ?
+                            JSONParse(
+                                extractJSONStrings(
+                                    reststringaftercoordinates
+                                        .split(" ")
+                                        .slice(1)
+                                        .join(" ")
+                                        .trimStart()
+                                        .replaceAll("=", ":")
+                                        .replaceAll("[", "{")
+                                        .replaceAll("]", "}"),
+                                    false
+                                )[0] as string
+                            )
+                        :   undefined;
+                    let lastblockname =
+                        reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
+                                .trimStart()
+                                .split(" ")[0]!
+                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(
+                                    extractJSONStrings(
+                                        reststringaftercoordinates
+                                            .split(" ")
+                                            .slice(1)
+                                            .join(" ")
+                                            .trimStart()
+                                            .replaceAll("=", ":")
+                                            .replaceAll("[", "{")
+                                            .replaceAll("]", "}"),
+                                        false
+                                    )[0]!.length
+                                )
+                                .trimStart()
+                                .split(" ")[0]!
+                        :   reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ")[0]!;
+                    let somethingtest =
+                        reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
+                                .trimStart()
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trim()
+                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(
+                                    extractJSONStrings(
+                                        reststringaftercoordinates
+                                            .split(" ")
+                                            .slice(1)
+                                            .join(" ")
+                                            .trimStart()
+                                            .replaceAll("=", ":")
+                                            .replaceAll("[", "{")
+                                            .replaceAll("]", "}"),
+                                        false
+                                    )[0]!.length
+                                )
+                                .trimStart()
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trim()
+                        :   reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ").slice(1).join(" ").trim();
+                    let lastblockstates =
+                        somethingtest.startsWith("{") ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
+                        : somethingtest.startsWith("[") ?
+                            JSONParse(extractJSONStrings(somethingtest.replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0] as string)
+                        :   undefined;
                     let matchingblock =
-                        lastblockname == "" ? [] : lastblockname == "keep" ? ["air"] : [BlockTypes.get(lastblockname!)!?.id, lastblockstates]; /*
+                        lastblockname == "" ? []
+                        : lastblockname == "keep" ? ["air"]
+                        : [BlockTypes.get(lastblockname!)!?.id, lastblockstates]; /*
   console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
 
                     srun(() => {
@@ -14226,98 +14186,103 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         1;
                     let reststringaftercoordinates = switchTestB.split(" ").slice(1).join(" ").slice(firstblocknameindex);
                     let firstblockname = reststringaftercoordinates.split(" ")[0]!;
-                    let firstblockstates = reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{")
-                        ? JSONParse(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0] as string)
-                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[")
-                        ? JSONParse(
-                              extractJSONStrings(
-                                  reststringaftercoordinates
-                                      .split(" ")
-                                      .slice(1)
-                                      .join(" ")
-                                      .trimStart()
-                                      .replaceAll("=", ":")
-                                      .replaceAll("[", "{")
-                                      .replaceAll("]", "}"),
-                                  false
-                              )[0] as string
-                          )
-                        : undefined;
-                    let lastblockname = reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
-                              .trimStart()
-                              .split(" ")[0]!
-                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(
-                                  extractJSONStrings(
-                                      reststringaftercoordinates
-                                          .split(" ")
-                                          .slice(1)
-                                          .join(" ")
-                                          .trimStart()
-                                          .replaceAll("=", ":")
-                                          .replaceAll("[", "{")
-                                          .replaceAll("]", "}"),
-                                      false
-                                  )[0]!.length
-                              )
-                              .trimStart()
-                              .split(" ")[0]!
-                        : reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ")[0]!;
-                    let somethingtest = reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
-                              .trimStart()
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trim()
-                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(
-                                  extractJSONStrings(
-                                      reststringaftercoordinates
-                                          .split(" ")
-                                          .slice(1)
-                                          .join(" ")
-                                          .trimStart()
-                                          .replaceAll("=", ":")
-                                          .replaceAll("[", "{")
-                                          .replaceAll("]", "}"),
-                                      false
-                                  )[0]!.length
-                              )
-                              .trimStart()
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trim()
-                        : reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ").slice(1).join(" ").trim();
-                    let lastblockstates = somethingtest.startsWith("{")
-                        ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
-                        : somethingtest.startsWith("[")
-                        ? JSONParse(extractJSONStrings(somethingtest.replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0] as string)
-                        : undefined;
+                    let firstblockstates =
+                        reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{") ?
+                            JSONParse(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0] as string)
+                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[") ?
+                            JSONParse(
+                                extractJSONStrings(
+                                    reststringaftercoordinates
+                                        .split(" ")
+                                        .slice(1)
+                                        .join(" ")
+                                        .trimStart()
+                                        .replaceAll("=", ":")
+                                        .replaceAll("[", "{")
+                                        .replaceAll("]", "}"),
+                                    false
+                                )[0] as string
+                            )
+                        :   undefined;
+                    let lastblockname =
+                        reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
+                                .trimStart()
+                                .split(" ")[0]!
+                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(
+                                    extractJSONStrings(
+                                        reststringaftercoordinates
+                                            .split(" ")
+                                            .slice(1)
+                                            .join(" ")
+                                            .trimStart()
+                                            .replaceAll("=", ":")
+                                            .replaceAll("[", "{")
+                                            .replaceAll("]", "}"),
+                                        false
+                                    )[0]!.length
+                                )
+                                .trimStart()
+                                .split(" ")[0]!
+                        :   reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ")[0]!;
+                    let somethingtest =
+                        reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
+                                .trimStart()
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trim()
+                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(
+                                    extractJSONStrings(
+                                        reststringaftercoordinates
+                                            .split(" ")
+                                            .slice(1)
+                                            .join(" ")
+                                            .trimStart()
+                                            .replaceAll("=", ":")
+                                            .replaceAll("[", "{")
+                                            .replaceAll("]", "}"),
+                                        false
+                                    )[0]!.length
+                                )
+                                .trimStart()
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trim()
+                        :   reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ").slice(1).join(" ").trim();
+                    let lastblockstates =
+                        somethingtest.startsWith("{") ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
+                        : somethingtest.startsWith("[") ?
+                            JSONParse(extractJSONStrings(somethingtest.replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0] as string)
+                        :   undefined;
                     let matchingblock =
-                        lastblockname == "" ? [] : lastblockname == "keep" ? ["air"] : [BlockTypes.get(lastblockname!)!?.id, lastblockstates]; /*
+                        lastblockname == "" ? []
+                        : lastblockname == "keep" ? ["air"]
+                        : [BlockTypes.get(lastblockname!)!?.id, lastblockstates]; /*
   console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
 
                     srun(() => {
@@ -14407,98 +14372,103 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         1;
                     let reststringaftercoordinates = switchTestB.split(" ").slice(1).join(" ").slice(firstblocknameindex);
                     let firstblockname = reststringaftercoordinates.split(" ")[0]!;
-                    let firstblockstates = reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{")
-                        ? JSONParse(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0] as string)
-                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[")
-                        ? JSONParse(
-                              extractJSONStrings(
-                                  reststringaftercoordinates
-                                      .split(" ")
-                                      .slice(1)
-                                      .join(" ")
-                                      .trimStart()
-                                      .replaceAll("=", ":")
-                                      .replaceAll("[", "{")
-                                      .replaceAll("]", "}"),
-                                  false
-                              )[0] as string
-                          )
-                        : undefined;
-                    let lastblockname = reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
-                              .trimStart()
-                              .split(" ")[0]!
-                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(
-                                  extractJSONStrings(
-                                      reststringaftercoordinates
-                                          .split(" ")
-                                          .slice(1)
-                                          .join(" ")
-                                          .trimStart()
-                                          .replaceAll("=", ":")
-                                          .replaceAll("[", "{")
-                                          .replaceAll("]", "}"),
-                                      false
-                                  )[0]!.length
-                              )
-                              .trimStart()
-                              .split(" ")[0]!
-                        : reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ")[0]!;
-                    let somethingtest = reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
-                              .trimStart()
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trim()
-                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(
-                                  extractJSONStrings(
-                                      reststringaftercoordinates
-                                          .split(" ")
-                                          .slice(1)
-                                          .join(" ")
-                                          .trimStart()
-                                          .replaceAll("=", ":")
-                                          .replaceAll("[", "{")
-                                          .replaceAll("]", "}"),
-                                      false
-                                  )[0]!.length
-                              )
-                              .trimStart()
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trim()
-                        : reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ").slice(1).join(" ").trim();
-                    let lastblockstates = somethingtest.startsWith("{")
-                        ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
-                        : somethingtest.startsWith("[")
-                        ? JSONParse(extractJSONStrings(somethingtest.replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0] as string)
-                        : undefined;
+                    let firstblockstates =
+                        reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{") ?
+                            JSONParse(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0] as string)
+                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[") ?
+                            JSONParse(
+                                extractJSONStrings(
+                                    reststringaftercoordinates
+                                        .split(" ")
+                                        .slice(1)
+                                        .join(" ")
+                                        .trimStart()
+                                        .replaceAll("=", ":")
+                                        .replaceAll("[", "{")
+                                        .replaceAll("]", "}"),
+                                    false
+                                )[0] as string
+                            )
+                        :   undefined;
+                    let lastblockname =
+                        reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
+                                .trimStart()
+                                .split(" ")[0]!
+                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(
+                                    extractJSONStrings(
+                                        reststringaftercoordinates
+                                            .split(" ")
+                                            .slice(1)
+                                            .join(" ")
+                                            .trimStart()
+                                            .replaceAll("=", ":")
+                                            .replaceAll("[", "{")
+                                            .replaceAll("]", "}"),
+                                        false
+                                    )[0]!.length
+                                )
+                                .trimStart()
+                                .split(" ")[0]!
+                        :   reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ")[0]!;
+                    let somethingtest =
+                        reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
+                                .trimStart()
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trim()
+                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(
+                                    extractJSONStrings(
+                                        reststringaftercoordinates
+                                            .split(" ")
+                                            .slice(1)
+                                            .join(" ")
+                                            .trimStart()
+                                            .replaceAll("=", ":")
+                                            .replaceAll("[", "{")
+                                            .replaceAll("]", "}"),
+                                        false
+                                    )[0]!.length
+                                )
+                                .trimStart()
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trim()
+                        :   reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ").slice(1).join(" ").trim();
+                    let lastblockstates =
+                        somethingtest.startsWith("{") ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
+                        : somethingtest.startsWith("[") ?
+                            JSONParse(extractJSONStrings(somethingtest.replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0] as string)
+                        :   undefined;
                     let matchingblock =
-                        lastblockname == "" ? [] : lastblockname == "keep" ? ["air"] : [BlockTypes.get(lastblockname!)!?.id, lastblockstates]; /*
+                        lastblockname == "" ? []
+                        : lastblockname == "keep" ? ["air"]
+                        : [BlockTypes.get(lastblockname!)!?.id, lastblockstates]; /*
   console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
 
                     system.run(() => {
@@ -14604,102 +14574,103 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         1;
                     let reststringaftercoordinates = switchTestB.split(" ").slice(1).join(" ").slice(firstblocknameindex);
                     let firstblockname = reststringaftercoordinates.split(" ")[0]!;
-                    let firstblockstates = reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{")
-                        ? JSONParse(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0] as string)
-                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[")
-                        ? JSONParse(
-                              extractJSONStrings(
-                                  reststringaftercoordinates
-                                      .split(" ")
-                                      .slice(1)
-                                      .join(" ")
-                                      .trimStart()
-                                      .replaceAll("=", ":")
-                                      .replaceAll("[", "{")
-                                      .replaceAll("]", "}"),
-                                  false
-                              )[0] as string
-                          )
-                        : undefined;
-                    let lastblockname = reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
-                              .trimStart()
-                              .split(" ")[0]!
-                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(
-                                  extractJSONStrings(
-                                      reststringaftercoordinates
-                                          .split(" ")
-                                          .slice(1)
-                                          .join(" ")
-                                          .trimStart()
-                                          .replaceAll("=", ":")
-                                          .replaceAll("[", "{")
-                                          .replaceAll("]", "}"),
-                                      false
-                                  )[0]!.length
-                              )
-                              .trimStart()
-                              .split(" ")[0]!
-                        : reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ")[0]!;
-                    let somethingtest = reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
-                              .trimStart()
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trim()
-                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(
-                                  extractJSONStrings(
-                                      reststringaftercoordinates
-                                          .split(" ")
-                                          .slice(1)
-                                          .join(" ")
-                                          .trimStart()
-                                          .replaceAll("=", ":")
-                                          .replaceAll("[", "{")
-                                          .replaceAll("]", "}"),
-                                      false
-                                  )[0]!.length
-                              )
-                              .trimStart()
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trim()
-                        : reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ").slice(1).join(" ").trim();
-                    let lastblockstates = somethingtest.startsWith("{")
-                        ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
-                        : somethingtest.startsWith("[")
-                        ? JSONParse(extractJSONStrings(somethingtest.replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0] as string)
-                        : undefined;
+                    let firstblockstates =
+                        reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{") ?
+                            JSONParse(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0] as string)
+                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[") ?
+                            JSONParse(
+                                extractJSONStrings(
+                                    reststringaftercoordinates
+                                        .split(" ")
+                                        .slice(1)
+                                        .join(" ")
+                                        .trimStart()
+                                        .replaceAll("=", ":")
+                                        .replaceAll("[", "{")
+                                        .replaceAll("]", "}"),
+                                    false
+                                )[0] as string
+                            )
+                        :   undefined;
+                    let lastblockname =
+                        reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
+                                .trimStart()
+                                .split(" ")[0]!
+                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(
+                                    extractJSONStrings(
+                                        reststringaftercoordinates
+                                            .split(" ")
+                                            .slice(1)
+                                            .join(" ")
+                                            .trimStart()
+                                            .replaceAll("=", ":")
+                                            .replaceAll("[", "{")
+                                            .replaceAll("]", "}"),
+                                        false
+                                    )[0]!.length
+                                )
+                                .trimStart()
+                                .split(" ")[0]!
+                        :   reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ")[0]!;
+                    let somethingtest =
+                        reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
+                                .trimStart()
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trim()
+                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(
+                                    extractJSONStrings(
+                                        reststringaftercoordinates
+                                            .split(" ")
+                                            .slice(1)
+                                            .join(" ")
+                                            .trimStart()
+                                            .replaceAll("=", ":")
+                                            .replaceAll("[", "{")
+                                            .replaceAll("]", "}"),
+                                        false
+                                    )[0]!.length
+                                )
+                                .trimStart()
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trim()
+                        :   reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ").slice(1).join(" ").trim();
+                    let lastblockstates =
+                        somethingtest.startsWith("{") ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
+                        : somethingtest.startsWith("[") ?
+                            JSONParse(extractJSONStrings(somethingtest.replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0] as string)
+                        :   undefined;
                     let matchingblock =
-                        lastblockname == ""
-                            ? [undefined, undefined]
-                            : lastblockname == "keep"
-                            ? ["air"]
-                            : [BlockTypes.get(lastblockname!)!?.id, lastblockstates]; /*
+                        lastblockname == "" ? [undefined, undefined]
+                        : lastblockname == "keep" ? ["air"]
+                        : [BlockTypes.get(lastblockname!)!?.id, lastblockstates]; /*
   console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
 
                     system.run(() => {
@@ -14729,56 +14700,56 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                     //let firstblocknameindex = Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1
                     //let reststringaftercoordinates = switchTestB.split(" ").slice(1).join(" ").slice(firstblocknameindex)
                     let firstblockname = args[7];
-                    let firstblockstates = argsa.extra.trimStart().startsWith("{")
-                        ? JSONParse(extractJSONStrings(argsa.extra.trimStart(), false)[0] as string)
-                        : argsa.extra.trimStart().startsWith("[")
-                        ? JSONParse(
-                              extractJSONStrings(argsa.extra.trimStart().replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0] as string
-                          )
-                        : undefined;
-                    let lastblockname = argsa.extra.trimStart().startsWith("{")
-                        ? argsa.extra.trimStart().slice(extractJSONStrings(argsa.extra.trimStart(), false)[0]!.length).trimStart().split(" ")[0]
-                        : argsa.extra.trimStart().startsWith("[")
-                        ? argsa.extra
-                              .trimStart()
-                              .slice(
-                                  extractJSONStrings(argsa.extra.trimStart().replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0]!.length
-                              )
-                              .trimStart()
-                              .split(" ")[0]
-                        : argsa.extra.trimStart().split(" ")[0]!;
-                    let somethingtest = argsa.extra.trimStart().startsWith("{")
-                        ? argsa.extra
-                              .trimStart()
-                              .slice(extractJSONStrings(argsa.extra.trimStart(), false)[0]!.length)
-                              .trimStart()
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trim()
-                        : argsa.extra.trimStart().startsWith("[")
-                        ? argsa.extra
-                              .trimStart()
-                              .slice(
-                                  extractJSONStrings(argsa.extra.trimStart().replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0]!.length
-                              )
-                              .trimStart()
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trim()
-                        : argsa.extra.trimStart().split(" ").slice(1).join(" ").trim();
-                    let lastblockstates = somethingtest.startsWith("{")
-                        ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
-                        : somethingtest.startsWith("[")
-                        ? JSONParse(extractJSONStrings(somethingtest.replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0] as string)
-                        : undefined;
+                    let firstblockstates =
+                        argsa.extra.trimStart().startsWith("{") ? JSONParse(extractJSONStrings(argsa.extra.trimStart(), false)[0] as string)
+                        : argsa.extra.trimStart().startsWith("[") ?
+                            JSONParse(
+                                extractJSONStrings(argsa.extra.trimStart().replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0] as string
+                            )
+                        :   undefined;
+                    let lastblockname =
+                        argsa.extra.trimStart().startsWith("{") ?
+                            argsa.extra.trimStart().slice(extractJSONStrings(argsa.extra.trimStart(), false)[0]!.length).trimStart().split(" ")[0]
+                        : argsa.extra.trimStart().startsWith("[") ?
+                            argsa.extra
+                                .trimStart()
+                                .slice(
+                                    extractJSONStrings(argsa.extra.trimStart().replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0]!.length
+                                )
+                                .trimStart()
+                                .split(" ")[0]
+                        :   argsa.extra.trimStart().split(" ")[0]!;
+                    let somethingtest =
+                        argsa.extra.trimStart().startsWith("{") ?
+                            argsa.extra
+                                .trimStart()
+                                .slice(extractJSONStrings(argsa.extra.trimStart(), false)[0]!.length)
+                                .trimStart()
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trim()
+                        : argsa.extra.trimStart().startsWith("[") ?
+                            argsa.extra
+                                .trimStart()
+                                .slice(
+                                    extractJSONStrings(argsa.extra.trimStart().replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0]!.length
+                                )
+                                .trimStart()
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trim()
+                        :   argsa.extra.trimStart().split(" ").slice(1).join(" ").trim();
+                    let lastblockstates =
+                        somethingtest.startsWith("{") ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
+                        : somethingtest.startsWith("[") ?
+                            JSONParse(extractJSONStrings(somethingtest.replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0] as string)
+                        :   undefined;
                     let matchingblock =
-                        lastblockname == ""
-                            ? [undefined, undefined]
-                            : lastblockname == "keep"
-                            ? ["air"]
-                            : [BlockTypes.get(lastblockname!)!?.id, lastblockstates];
+                        lastblockname == "" ? [undefined, undefined]
+                        : lastblockname == "keep" ? ["air"]
+                        : [BlockTypes.get(lastblockname!)!?.id, lastblockstates];
                     console.warn(
                         JSONStringify({
                             coordinatesa,
@@ -14896,102 +14867,103 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         1;
                     let reststringaftercoordinates = switchTestB.split(" ").slice(1).join(" ").slice(firstblocknameindex);
                     let firstblockname = reststringaftercoordinates.split(" ")[0]!;
-                    let firstblockstates = reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{")
-                        ? JSONParse(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0] as string)
-                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[")
-                        ? JSONParse(
-                              extractJSONStrings(
-                                  reststringaftercoordinates
-                                      .split(" ")
-                                      .slice(1)
-                                      .join(" ")
-                                      .trimStart()
-                                      .replaceAll("=", ":")
-                                      .replaceAll("[", "{")
-                                      .replaceAll("]", "}"),
-                                  false
-                              )[0] as string
-                          )
-                        : undefined;
-                    let lastblockname = reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
-                              .trimStart()
-                              .split(" ")[0]!
-                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(
-                                  extractJSONStrings(
-                                      reststringaftercoordinates
-                                          .split(" ")
-                                          .slice(1)
-                                          .join(" ")
-                                          .trimStart()
-                                          .replaceAll("=", ":")
-                                          .replaceAll("[", "{")
-                                          .replaceAll("]", "}"),
-                                      false
-                                  )[0]!.length
-                              )
-                              .trimStart()
-                              .split(" ")[0]!
-                        : reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ")[0]!;
-                    let somethingtest = reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
-                              .trimStart()
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trim()
-                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(
-                                  extractJSONStrings(
-                                      reststringaftercoordinates
-                                          .split(" ")
-                                          .slice(1)
-                                          .join(" ")
-                                          .trimStart()
-                                          .replaceAll("=", ":")
-                                          .replaceAll("[", "{")
-                                          .replaceAll("]", "}"),
-                                      false
-                                  )[0]!.length
-                              )
-                              .trimStart()
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trim()
-                        : reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ").slice(1).join(" ").trim();
-                    let lastblockstates = somethingtest.startsWith("{")
-                        ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
-                        : somethingtest.startsWith("[")
-                        ? JSONParse(extractJSONStrings(somethingtest.replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0] as string)
-                        : undefined;
+                    let firstblockstates =
+                        reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{") ?
+                            JSONParse(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0] as string)
+                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[") ?
+                            JSONParse(
+                                extractJSONStrings(
+                                    reststringaftercoordinates
+                                        .split(" ")
+                                        .slice(1)
+                                        .join(" ")
+                                        .trimStart()
+                                        .replaceAll("=", ":")
+                                        .replaceAll("[", "{")
+                                        .replaceAll("]", "}"),
+                                    false
+                                )[0] as string
+                            )
+                        :   undefined;
+                    let lastblockname =
+                        reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
+                                .trimStart()
+                                .split(" ")[0]!
+                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(
+                                    extractJSONStrings(
+                                        reststringaftercoordinates
+                                            .split(" ")
+                                            .slice(1)
+                                            .join(" ")
+                                            .trimStart()
+                                            .replaceAll("=", ":")
+                                            .replaceAll("[", "{")
+                                            .replaceAll("]", "}"),
+                                        false
+                                    )[0]!.length
+                                )
+                                .trimStart()
+                                .split(" ")[0]!
+                        :   reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ")[0]!;
+                    let somethingtest =
+                        reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
+                                .trimStart()
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trim()
+                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(
+                                    extractJSONStrings(
+                                        reststringaftercoordinates
+                                            .split(" ")
+                                            .slice(1)
+                                            .join(" ")
+                                            .trimStart()
+                                            .replaceAll("=", ":")
+                                            .replaceAll("[", "{")
+                                            .replaceAll("]", "}"),
+                                        false
+                                    )[0]!.length
+                                )
+                                .trimStart()
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trim()
+                        :   reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ").slice(1).join(" ").trim();
+                    let lastblockstates =
+                        somethingtest.startsWith("{") ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
+                        : somethingtest.startsWith("[") ?
+                            JSONParse(extractJSONStrings(somethingtest.replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0] as string)
+                        :   undefined;
                     let matchingblock =
-                        lastblockname == ""
-                            ? [undefined, undefined]
-                            : lastblockname == "keep"
-                            ? ["air"]
-                            : [BlockTypes.get(lastblockname!)!?.id, lastblockstates]; /*
+                        lastblockname == "" ? [undefined, undefined]
+                        : lastblockname == "keep" ? ["air"]
+                        : [BlockTypes.get(lastblockname!)!?.id, lastblockstates]; /*
   console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
 
                     system.run(() => {
@@ -15021,56 +14993,56 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                     //let firstblocknameindex = Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1
                     //let reststringaftercoordinates = switchTestB.split(" ").slice(1).join(" ").slice(firstblocknameindex)
                     let firstblockname = args[7];
-                    let firstblockstates = argsa.extra.trimStart().startsWith("{")
-                        ? JSONParse(extractJSONStrings(argsa.extra.trimStart(), false)[0] as string)
-                        : argsa.extra.trimStart().startsWith("[")
-                        ? JSONParse(
-                              extractJSONStrings(argsa.extra.trimStart().replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0] as string
-                          )
-                        : undefined;
-                    let lastblockname = argsa.extra.trimStart().startsWith("{")
-                        ? argsa.extra.trimStart().slice(extractJSONStrings(argsa.extra.trimStart(), false)[0]!.length).trimStart().split(" ")[0]
-                        : argsa.extra.trimStart().startsWith("[")
-                        ? argsa.extra
-                              .trimStart()
-                              .slice(
-                                  extractJSONStrings(argsa.extra.trimStart().replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0]!.length
-                              )
-                              .trimStart()
-                              .split(" ")[0]
-                        : argsa.extra.trimStart().split(" ")[0]!;
-                    let somethingtest = argsa.extra.trimStart().startsWith("{")
-                        ? argsa.extra
-                              .trimStart()
-                              .slice(extractJSONStrings(argsa.extra.trimStart(), false)[0]!.length)
-                              .trimStart()
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trim()
-                        : argsa.extra.trimStart().startsWith("[")
-                        ? argsa.extra
-                              .trimStart()
-                              .slice(
-                                  extractJSONStrings(argsa.extra.trimStart().replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0]!.length
-                              )
-                              .trimStart()
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trim()
-                        : argsa.extra.trimStart().split(" ").slice(1).join(" ").trim();
-                    let lastblockstates = somethingtest.startsWith("{")
-                        ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
-                        : somethingtest.startsWith("[")
-                        ? JSONParse(extractJSONStrings(somethingtest.replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0] as string)
-                        : undefined;
+                    let firstblockstates =
+                        argsa.extra.trimStart().startsWith("{") ? JSONParse(extractJSONStrings(argsa.extra.trimStart(), false)[0] as string)
+                        : argsa.extra.trimStart().startsWith("[") ?
+                            JSONParse(
+                                extractJSONStrings(argsa.extra.trimStart().replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0] as string
+                            )
+                        :   undefined;
+                    let lastblockname =
+                        argsa.extra.trimStart().startsWith("{") ?
+                            argsa.extra.trimStart().slice(extractJSONStrings(argsa.extra.trimStart(), false)[0]!.length).trimStart().split(" ")[0]
+                        : argsa.extra.trimStart().startsWith("[") ?
+                            argsa.extra
+                                .trimStart()
+                                .slice(
+                                    extractJSONStrings(argsa.extra.trimStart().replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0]!.length
+                                )
+                                .trimStart()
+                                .split(" ")[0]
+                        :   argsa.extra.trimStart().split(" ")[0]!;
+                    let somethingtest =
+                        argsa.extra.trimStart().startsWith("{") ?
+                            argsa.extra
+                                .trimStart()
+                                .slice(extractJSONStrings(argsa.extra.trimStart(), false)[0]!.length)
+                                .trimStart()
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trim()
+                        : argsa.extra.trimStart().startsWith("[") ?
+                            argsa.extra
+                                .trimStart()
+                                .slice(
+                                    extractJSONStrings(argsa.extra.trimStart().replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0]!.length
+                                )
+                                .trimStart()
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trim()
+                        :   argsa.extra.trimStart().split(" ").slice(1).join(" ").trim();
+                    let lastblockstates =
+                        somethingtest.startsWith("{") ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
+                        : somethingtest.startsWith("[") ?
+                            JSONParse(extractJSONStrings(somethingtest.replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0] as string)
+                        :   undefined;
                     let matchingblock =
-                        lastblockname == ""
-                            ? [undefined, undefined]
-                            : lastblockname == "keep"
-                            ? ["air"]
-                            : [BlockTypes.get(lastblockname!)!?.id, lastblockstates];
+                        lastblockname == "" ? [undefined, undefined]
+                        : lastblockname == "keep" ? ["air"]
+                        : [BlockTypes.get(lastblockname!)!?.id, lastblockstates];
                     // console.warn(
                     //     JSONStringify({
                     //         coordinatesa,
@@ -15188,102 +15160,103 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         1;
                     let reststringaftercoordinates = switchTestB.split(" ").slice(1).join(" ").slice(firstblocknameindex);
                     let firstblockname = reststringaftercoordinates.split(" ")[0]!;
-                    let firstblockstates = reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{")
-                        ? JSONParse(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0] as string)
-                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[")
-                        ? JSONParse(
-                              extractJSONStrings(
-                                  reststringaftercoordinates
-                                      .split(" ")
-                                      .slice(1)
-                                      .join(" ")
-                                      .trimStart()
-                                      .replaceAll("=", ":")
-                                      .replaceAll("[", "{")
-                                      .replaceAll("]", "}"),
-                                  false
-                              )[0] as string
-                          )
-                        : undefined;
-                    let lastblockname = reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
-                              .trimStart()
-                              .split(" ")[0]!
-                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(
-                                  extractJSONStrings(
-                                      reststringaftercoordinates
-                                          .split(" ")
-                                          .slice(1)
-                                          .join(" ")
-                                          .trimStart()
-                                          .replaceAll("=", ":")
-                                          .replaceAll("[", "{")
-                                          .replaceAll("]", "}"),
-                                      false
-                                  )[0]!.length
-                              )
-                              .trimStart()
-                              .split(" ")[0]!
-                        : reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ")[0]!;
-                    let somethingtest = reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
-                              .trimStart()
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trim()
-                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(
-                                  extractJSONStrings(
-                                      reststringaftercoordinates
-                                          .split(" ")
-                                          .slice(1)
-                                          .join(" ")
-                                          .trimStart()
-                                          .replaceAll("=", ":")
-                                          .replaceAll("[", "{")
-                                          .replaceAll("]", "}"),
-                                      false
-                                  )[0]!.length
-                              )
-                              .trimStart()
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trim()
-                        : reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ").slice(1).join(" ").trim();
-                    let lastblockstates = somethingtest.startsWith("{")
-                        ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
-                        : somethingtest.startsWith("[")
-                        ? JSONParse(extractJSONStrings(somethingtest.replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0] as string)
-                        : undefined;
+                    let firstblockstates =
+                        reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{") ?
+                            JSONParse(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0] as string)
+                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[") ?
+                            JSONParse(
+                                extractJSONStrings(
+                                    reststringaftercoordinates
+                                        .split(" ")
+                                        .slice(1)
+                                        .join(" ")
+                                        .trimStart()
+                                        .replaceAll("=", ":")
+                                        .replaceAll("[", "{")
+                                        .replaceAll("]", "}"),
+                                    false
+                                )[0] as string
+                            )
+                        :   undefined;
+                    let lastblockname =
+                        reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
+                                .trimStart()
+                                .split(" ")[0]!
+                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(
+                                    extractJSONStrings(
+                                        reststringaftercoordinates
+                                            .split(" ")
+                                            .slice(1)
+                                            .join(" ")
+                                            .trimStart()
+                                            .replaceAll("=", ":")
+                                            .replaceAll("[", "{")
+                                            .replaceAll("]", "}"),
+                                        false
+                                    )[0]!.length
+                                )
+                                .trimStart()
+                                .split(" ")[0]!
+                        :   reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ")[0]!;
+                    let somethingtest =
+                        reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
+                                .trimStart()
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trim()
+                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(
+                                    extractJSONStrings(
+                                        reststringaftercoordinates
+                                            .split(" ")
+                                            .slice(1)
+                                            .join(" ")
+                                            .trimStart()
+                                            .replaceAll("=", ":")
+                                            .replaceAll("[", "{")
+                                            .replaceAll("]", "}"),
+                                        false
+                                    )[0]!.length
+                                )
+                                .trimStart()
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trim()
+                        :   reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ").slice(1).join(" ").trim();
+                    let lastblockstates =
+                        somethingtest.startsWith("{") ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
+                        : somethingtest.startsWith("[") ?
+                            JSONParse(extractJSONStrings(somethingtest.replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0] as string)
+                        :   undefined;
                     let matchingblock =
-                        lastblockname == ""
-                            ? [undefined, undefined]
-                            : lastblockname == "keep"
-                            ? ["air"]
-                            : [BlockTypes.get(lastblockname!)!?.id, lastblockstates]; /*
+                        lastblockname == "" ? [undefined, undefined]
+                        : lastblockname == "keep" ? ["air"]
+                        : [BlockTypes.get(lastblockname!)!?.id, lastblockstates]; /*
   console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
 
                     system.run(() => {
@@ -15313,56 +15286,56 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                     //let firstblocknameindex = Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1
                     //let reststringaftercoordinates = switchTestB.split(" ").slice(1).join(" ").slice(firstblocknameindex)
                     let firstblockname = args[7];
-                    let firstblockstates = argsa.extra.trimStart().startsWith("{")
-                        ? JSONParse(extractJSONStrings(argsa.extra.trimStart(), false)[0] as string)
-                        : argsa.extra.trimStart().startsWith("[")
-                        ? JSONParse(
-                              extractJSONStrings(argsa.extra.trimStart().replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0] as string
-                          )
-                        : undefined;
-                    let lastblockname = argsa.extra.trimStart().startsWith("{")
-                        ? argsa.extra.trimStart().slice(extractJSONStrings(argsa.extra.trimStart(), false)[0]!.length).trimStart().split(" ")[0]
-                        : argsa.extra.trimStart().startsWith("[")
-                        ? argsa.extra
-                              .trimStart()
-                              .slice(
-                                  extractJSONStrings(argsa.extra.trimStart().replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0]!.length
-                              )
-                              .trimStart()
-                              .split(" ")[0]
-                        : argsa.extra.trimStart().split(" ")[0]!;
-                    let somethingtest = argsa.extra.trimStart().startsWith("{")
-                        ? argsa.extra
-                              .trimStart()
-                              .slice(extractJSONStrings(argsa.extra.trimStart(), false)[0]!.length)
-                              .trimStart()
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trim()
-                        : argsa.extra.trimStart().startsWith("[")
-                        ? argsa.extra
-                              .trimStart()
-                              .slice(
-                                  extractJSONStrings(argsa.extra.trimStart().replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0]!.length
-                              )
-                              .trimStart()
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trim()
-                        : argsa.extra.trimStart().split(" ").slice(1).join(" ").trim();
-                    let lastblockstates = somethingtest.startsWith("{")
-                        ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
-                        : somethingtest.startsWith("[")
-                        ? JSONParse(extractJSONStrings(somethingtest.replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0] as string)
-                        : undefined;
+                    let firstblockstates =
+                        argsa.extra.trimStart().startsWith("{") ? JSONParse(extractJSONStrings(argsa.extra.trimStart(), false)[0] as string)
+                        : argsa.extra.trimStart().startsWith("[") ?
+                            JSONParse(
+                                extractJSONStrings(argsa.extra.trimStart().replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0] as string
+                            )
+                        :   undefined;
+                    let lastblockname =
+                        argsa.extra.trimStart().startsWith("{") ?
+                            argsa.extra.trimStart().slice(extractJSONStrings(argsa.extra.trimStart(), false)[0]!.length).trimStart().split(" ")[0]
+                        : argsa.extra.trimStart().startsWith("[") ?
+                            argsa.extra
+                                .trimStart()
+                                .slice(
+                                    extractJSONStrings(argsa.extra.trimStart().replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0]!.length
+                                )
+                                .trimStart()
+                                .split(" ")[0]
+                        :   argsa.extra.trimStart().split(" ")[0]!;
+                    let somethingtest =
+                        argsa.extra.trimStart().startsWith("{") ?
+                            argsa.extra
+                                .trimStart()
+                                .slice(extractJSONStrings(argsa.extra.trimStart(), false)[0]!.length)
+                                .trimStart()
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trim()
+                        : argsa.extra.trimStart().startsWith("[") ?
+                            argsa.extra
+                                .trimStart()
+                                .slice(
+                                    extractJSONStrings(argsa.extra.trimStart().replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0]!.length
+                                )
+                                .trimStart()
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trim()
+                        :   argsa.extra.trimStart().split(" ").slice(1).join(" ").trim();
+                    let lastblockstates =
+                        somethingtest.startsWith("{") ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
+                        : somethingtest.startsWith("[") ?
+                            JSONParse(extractJSONStrings(somethingtest.replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0] as string)
+                        :   undefined;
                     let matchingblock =
-                        lastblockname == ""
-                            ? [undefined, undefined]
-                            : lastblockname == "keep"
-                            ? ["air"]
-                            : [BlockTypes.get(lastblockname!)!?.id, lastblockstates];
+                        lastblockname == "" ? [undefined, undefined]
+                        : lastblockname == "keep" ? ["air"]
+                        : [BlockTypes.get(lastblockname!)!?.id, lastblockstates];
                     console.warn(
                         JSONStringify({
                             coordinatesa,
@@ -15480,102 +15453,103 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         1;
                     let reststringaftercoordinates = switchTestB.split(" ").slice(1).join(" ").slice(firstblocknameindex);
                     let firstblockname = reststringaftercoordinates.split(" ")[0]!;
-                    let firstblockstates = reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{")
-                        ? JSONParse(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0] as string)
-                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[")
-                        ? JSONParse(
-                              extractJSONStrings(
-                                  reststringaftercoordinates
-                                      .split(" ")
-                                      .slice(1)
-                                      .join(" ")
-                                      .trimStart()
-                                      .replaceAll("=", ":")
-                                      .replaceAll("[", "{")
-                                      .replaceAll("]", "}"),
-                                  false
-                              )[0] as string
-                          )
-                        : undefined;
-                    let lastblockname = reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
-                              .trimStart()
-                              .split(" ")[0]!
-                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(
-                                  extractJSONStrings(
-                                      reststringaftercoordinates
-                                          .split(" ")
-                                          .slice(1)
-                                          .join(" ")
-                                          .trimStart()
-                                          .replaceAll("=", ":")
-                                          .replaceAll("[", "{")
-                                          .replaceAll("]", "}"),
-                                      false
-                                  )[0]!.length
-                              )
-                              .trimStart()
-                              .split(" ")[0]!
-                        : reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ")[0]!;
-                    let somethingtest = reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
-                              .trimStart()
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trim()
-                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(
-                                  extractJSONStrings(
-                                      reststringaftercoordinates
-                                          .split(" ")
-                                          .slice(1)
-                                          .join(" ")
-                                          .trimStart()
-                                          .replaceAll("=", ":")
-                                          .replaceAll("[", "{")
-                                          .replaceAll("]", "}"),
-                                      false
-                                  )[0]!.length
-                              )
-                              .trimStart()
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trim()
-                        : reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ").slice(1).join(" ").trim();
-                    let lastblockstates = somethingtest.startsWith("{")
-                        ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
-                        : somethingtest.startsWith("[")
-                        ? JSONParse(extractJSONStrings(somethingtest.replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0] as string)
-                        : undefined;
+                    let firstblockstates =
+                        reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{") ?
+                            JSONParse(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0] as string)
+                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[") ?
+                            JSONParse(
+                                extractJSONStrings(
+                                    reststringaftercoordinates
+                                        .split(" ")
+                                        .slice(1)
+                                        .join(" ")
+                                        .trimStart()
+                                        .replaceAll("=", ":")
+                                        .replaceAll("[", "{")
+                                        .replaceAll("]", "}"),
+                                    false
+                                )[0] as string
+                            )
+                        :   undefined;
+                    let lastblockname =
+                        reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
+                                .trimStart()
+                                .split(" ")[0]!
+                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(
+                                    extractJSONStrings(
+                                        reststringaftercoordinates
+                                            .split(" ")
+                                            .slice(1)
+                                            .join(" ")
+                                            .trimStart()
+                                            .replaceAll("=", ":")
+                                            .replaceAll("[", "{")
+                                            .replaceAll("]", "}"),
+                                        false
+                                    )[0]!.length
+                                )
+                                .trimStart()
+                                .split(" ")[0]!
+                        :   reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ")[0]!;
+                    let somethingtest =
+                        reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
+                                .trimStart()
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trim()
+                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(
+                                    extractJSONStrings(
+                                        reststringaftercoordinates
+                                            .split(" ")
+                                            .slice(1)
+                                            .join(" ")
+                                            .trimStart()
+                                            .replaceAll("=", ":")
+                                            .replaceAll("[", "{")
+                                            .replaceAll("]", "}"),
+                                        false
+                                    )[0]!.length
+                                )
+                                .trimStart()
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trim()
+                        :   reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ").slice(1).join(" ").trim();
+                    let lastblockstates =
+                        somethingtest.startsWith("{") ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
+                        : somethingtest.startsWith("[") ?
+                            JSONParse(extractJSONStrings(somethingtest.replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0] as string)
+                        :   undefined;
                     let matchingblock =
-                        lastblockname == ""
-                            ? [undefined, undefined]
-                            : lastblockname == "keep"
-                            ? ["air"]
-                            : [BlockTypes.get(lastblockname!)!?.id, lastblockstates]; /*
+                        lastblockname == "" ? [undefined, undefined]
+                        : lastblockname == "keep" ? ["air"]
+                        : [BlockTypes.get(lastblockname!)!?.id, lastblockstates]; /*
   console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
 
                     system.run(() => {
@@ -15605,56 +15579,56 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                     //let firstblocknameindex = Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]!.index+Array.from(switchTestB.split(" ").slice(1).join(" ").matchAll(/\s*([\^\*\~\!][\-]?\d*|(?<![\^\*\~\!\d])[\-]?\d+)\s*/gis))[5]![0].indexOf(" ")+1
                     //let reststringaftercoordinates = switchTestB.split(" ").slice(1).join(" ").slice(firstblocknameindex)
                     let firstblockname = args[7];
-                    let firstblockstates = argsa.extra.trimStart().startsWith("{")
-                        ? JSONParse(extractJSONStrings(argsa.extra.trimStart(), false)[0] as string)
-                        : argsa.extra.trimStart().startsWith("[")
-                        ? JSONParse(
-                              extractJSONStrings(argsa.extra.trimStart().replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0] as string
-                          )
-                        : undefined;
-                    let lastblockname = argsa.extra.trimStart().startsWith("{")
-                        ? argsa.extra.trimStart().slice(extractJSONStrings(argsa.extra.trimStart(), false)[0]!.length).trimStart().split(" ")[0]
-                        : argsa.extra.trimStart().startsWith("[")
-                        ? argsa.extra
-                              .trimStart()
-                              .slice(
-                                  extractJSONStrings(argsa.extra.trimStart().replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0]!.length
-                              )
-                              .trimStart()
-                              .split(" ")[0]
-                        : argsa.extra.trimStart().split(" ")[0]!;
-                    let somethingtest = argsa.extra.trimStart().startsWith("{")
-                        ? argsa.extra
-                              .trimStart()
-                              .slice(extractJSONStrings(argsa.extra.trimStart(), false)[0]!.length)
-                              .trimStart()
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trim()
-                        : argsa.extra.trimStart().startsWith("[")
-                        ? argsa.extra
-                              .trimStart()
-                              .slice(
-                                  extractJSONStrings(argsa.extra.trimStart().replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0]!.length
-                              )
-                              .trimStart()
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trim()
-                        : argsa.extra.trimStart().split(" ").slice(1).join(" ").trim();
-                    let lastblockstates = somethingtest.startsWith("{")
-                        ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
-                        : somethingtest.startsWith("[")
-                        ? JSONParse(extractJSONStrings(somethingtest.replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0] as string)
-                        : undefined;
+                    let firstblockstates =
+                        argsa.extra.trimStart().startsWith("{") ? JSONParse(extractJSONStrings(argsa.extra.trimStart(), false)[0] as string)
+                        : argsa.extra.trimStart().startsWith("[") ?
+                            JSONParse(
+                                extractJSONStrings(argsa.extra.trimStart().replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0] as string
+                            )
+                        :   undefined;
+                    let lastblockname =
+                        argsa.extra.trimStart().startsWith("{") ?
+                            argsa.extra.trimStart().slice(extractJSONStrings(argsa.extra.trimStart(), false)[0]!.length).trimStart().split(" ")[0]
+                        : argsa.extra.trimStart().startsWith("[") ?
+                            argsa.extra
+                                .trimStart()
+                                .slice(
+                                    extractJSONStrings(argsa.extra.trimStart().replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0]!.length
+                                )
+                                .trimStart()
+                                .split(" ")[0]
+                        :   argsa.extra.trimStart().split(" ")[0]!;
+                    let somethingtest =
+                        argsa.extra.trimStart().startsWith("{") ?
+                            argsa.extra
+                                .trimStart()
+                                .slice(extractJSONStrings(argsa.extra.trimStart(), false)[0]!.length)
+                                .trimStart()
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trim()
+                        : argsa.extra.trimStart().startsWith("[") ?
+                            argsa.extra
+                                .trimStart()
+                                .slice(
+                                    extractJSONStrings(argsa.extra.trimStart().replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0]!.length
+                                )
+                                .trimStart()
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trim()
+                        :   argsa.extra.trimStart().split(" ").slice(1).join(" ").trim();
+                    let lastblockstates =
+                        somethingtest.startsWith("{") ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
+                        : somethingtest.startsWith("[") ?
+                            JSONParse(extractJSONStrings(somethingtest.replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0] as string)
+                        :   undefined;
                     let matchingblock =
-                        lastblockname == ""
-                            ? [undefined, undefined]
-                            : lastblockname == "keep"
-                            ? ["air"]
-                            : [BlockTypes.get(lastblockname!)!?.id, lastblockstates];
+                        lastblockname == "" ? [undefined, undefined]
+                        : lastblockname == "keep" ? ["air"]
+                        : [BlockTypes.get(lastblockname!)!?.id, lastblockstates];
                     console.warn(
                         JSONStringify({
                             coordinatesa,
@@ -15772,98 +15746,103 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         1;
                     let reststringaftercoordinates = switchTestB.split(" ").slice(1).join(" ").slice(firstblocknameindex);
                     let firstblockname = reststringaftercoordinates.split(" ")[0]!;
-                    let firstblockstates = reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{")
-                        ? JSONParse(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0] as string)
-                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[")
-                        ? JSONParse(
-                              extractJSONStrings(
-                                  reststringaftercoordinates
-                                      .split(" ")
-                                      .slice(1)
-                                      .join(" ")
-                                      .trimStart()
-                                      .replaceAll("=", ":")
-                                      .replaceAll("[", "{")
-                                      .replaceAll("]", "}"),
-                                  false
-                              )[0] as string
-                          )
-                        : undefined;
-                    let lastblockname = reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
-                              .trimStart()
-                              .split(" ")[0]!
-                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(
-                                  extractJSONStrings(
-                                      reststringaftercoordinates
-                                          .split(" ")
-                                          .slice(1)
-                                          .join(" ")
-                                          .trimStart()
-                                          .replaceAll("=", ":")
-                                          .replaceAll("[", "{")
-                                          .replaceAll("]", "}"),
-                                      false
-                                  )[0]!.length
-                              )
-                              .trimStart()
-                              .split(" ")[0]!
-                        : reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ")[0]!;
-                    let somethingtest = reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
-                              .trimStart()
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trim()
-                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(
-                                  extractJSONStrings(
-                                      reststringaftercoordinates
-                                          .split(" ")
-                                          .slice(1)
-                                          .join(" ")
-                                          .trimStart()
-                                          .replaceAll("=", ":")
-                                          .replaceAll("[", "{")
-                                          .replaceAll("]", "}"),
-                                      false
-                                  )[0]!.length
-                              )
-                              .trimStart()
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trim()
-                        : reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ").slice(1).join(" ").trim();
-                    let lastblockstates = somethingtest.startsWith("{")
-                        ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
-                        : somethingtest.startsWith("[")
-                        ? JSONParse(extractJSONStrings(somethingtest.replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0] as string)
-                        : undefined;
+                    let firstblockstates =
+                        reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{") ?
+                            JSONParse(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0] as string)
+                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[") ?
+                            JSONParse(
+                                extractJSONStrings(
+                                    reststringaftercoordinates
+                                        .split(" ")
+                                        .slice(1)
+                                        .join(" ")
+                                        .trimStart()
+                                        .replaceAll("=", ":")
+                                        .replaceAll("[", "{")
+                                        .replaceAll("]", "}"),
+                                    false
+                                )[0] as string
+                            )
+                        :   undefined;
+                    let lastblockname =
+                        reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
+                                .trimStart()
+                                .split(" ")[0]!
+                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(
+                                    extractJSONStrings(
+                                        reststringaftercoordinates
+                                            .split(" ")
+                                            .slice(1)
+                                            .join(" ")
+                                            .trimStart()
+                                            .replaceAll("=", ":")
+                                            .replaceAll("[", "{")
+                                            .replaceAll("]", "}"),
+                                        false
+                                    )[0]!.length
+                                )
+                                .trimStart()
+                                .split(" ")[0]!
+                        :   reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ")[0]!;
+                    let somethingtest =
+                        reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
+                                .trimStart()
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trim()
+                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(
+                                    extractJSONStrings(
+                                        reststringaftercoordinates
+                                            .split(" ")
+                                            .slice(1)
+                                            .join(" ")
+                                            .trimStart()
+                                            .replaceAll("=", ":")
+                                            .replaceAll("[", "{")
+                                            .replaceAll("]", "}"),
+                                        false
+                                    )[0]!.length
+                                )
+                                .trimStart()
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trim()
+                        :   reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ").slice(1).join(" ").trim();
+                    let lastblockstates =
+                        somethingtest.startsWith("{") ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
+                        : somethingtest.startsWith("[") ?
+                            JSONParse(extractJSONStrings(somethingtest.replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0] as string)
+                        :   undefined;
                     let matchingblock =
-                        lastblockname == "" ? undefined : lastblockname == "keep" ? ["air"] : [BlockTypes.get(lastblockname!)!?.id, lastblockstates]; /*
+                        lastblockname == "" ? undefined
+                        : lastblockname == "keep" ? ["air"]
+                        : [BlockTypes.get(lastblockname!)!?.id, lastblockstates]; /*
   console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
 
                     try {
@@ -15967,98 +15946,103 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         1;
                     let reststringaftercoordinates = switchTestB.split(" ").slice(1).join(" ").slice(firstblocknameindex);
                     let firstblockname = reststringaftercoordinates.split(" ")[0]!;
-                    let firstblockstates = reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{")
-                        ? JSONParse(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0] as string)
-                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[")
-                        ? JSONParse(
-                              extractJSONStrings(
-                                  reststringaftercoordinates
-                                      .split(" ")
-                                      .slice(1)
-                                      .join(" ")
-                                      .trimStart()
-                                      .replaceAll("=", ":")
-                                      .replaceAll("[", "{")
-                                      .replaceAll("]", "}"),
-                                  false
-                              )[0] as string
-                          )
-                        : undefined;
-                    let lastblockname = reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
-                              .trimStart()
-                              .split(" ")[0]!
-                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(
-                                  extractJSONStrings(
-                                      reststringaftercoordinates
-                                          .split(" ")
-                                          .slice(1)
-                                          .join(" ")
-                                          .trimStart()
-                                          .replaceAll("=", ":")
-                                          .replaceAll("[", "{")
-                                          .replaceAll("]", "}"),
-                                      false
-                                  )[0]!.length
-                              )
-                              .trimStart()
-                              .split(" ")[0]!
-                        : reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ")[0]!;
-                    let somethingtest = reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
-                              .trimStart()
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trim()
-                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(
-                                  extractJSONStrings(
-                                      reststringaftercoordinates
-                                          .split(" ")
-                                          .slice(1)
-                                          .join(" ")
-                                          .trimStart()
-                                          .replaceAll("=", ":")
-                                          .replaceAll("[", "{")
-                                          .replaceAll("]", "}"),
-                                      false
-                                  )[0]!.length
-                              )
-                              .trimStart()
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trim()
-                        : reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ").slice(1).join(" ").trim();
-                    let lastblockstates = somethingtest.startsWith("{")
-                        ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
-                        : somethingtest.startsWith("[")
-                        ? JSONParse(extractJSONStrings(somethingtest.replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0] as string)
-                        : undefined;
+                    let firstblockstates =
+                        reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{") ?
+                            JSONParse(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0] as string)
+                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[") ?
+                            JSONParse(
+                                extractJSONStrings(
+                                    reststringaftercoordinates
+                                        .split(" ")
+                                        .slice(1)
+                                        .join(" ")
+                                        .trimStart()
+                                        .replaceAll("=", ":")
+                                        .replaceAll("[", "{")
+                                        .replaceAll("]", "}"),
+                                    false
+                                )[0] as string
+                            )
+                        :   undefined;
+                    let lastblockname =
+                        reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
+                                .trimStart()
+                                .split(" ")[0]!
+                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(
+                                    extractJSONStrings(
+                                        reststringaftercoordinates
+                                            .split(" ")
+                                            .slice(1)
+                                            .join(" ")
+                                            .trimStart()
+                                            .replaceAll("=", ":")
+                                            .replaceAll("[", "{")
+                                            .replaceAll("]", "}"),
+                                        false
+                                    )[0]!.length
+                                )
+                                .trimStart()
+                                .split(" ")[0]!
+                        :   reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ")[0]!;
+                    let somethingtest =
+                        reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
+                                .trimStart()
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trim()
+                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(
+                                    extractJSONStrings(
+                                        reststringaftercoordinates
+                                            .split(" ")
+                                            .slice(1)
+                                            .join(" ")
+                                            .trimStart()
+                                            .replaceAll("=", ":")
+                                            .replaceAll("[", "{")
+                                            .replaceAll("]", "}"),
+                                        false
+                                    )[0]!.length
+                                )
+                                .trimStart()
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trim()
+                        :   reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ").slice(1).join(" ").trim();
+                    let lastblockstates =
+                        somethingtest.startsWith("{") ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
+                        : somethingtest.startsWith("[") ?
+                            JSONParse(extractJSONStrings(somethingtest.replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0] as string)
+                        :   undefined;
                     let matchingblock =
-                        lastblockname == "" ? undefined : lastblockname == "keep" ? ["air"] : [BlockTypes.get(lastblockname!)!?.id, lastblockstates]; /*
+                        lastblockname == "" ? undefined
+                        : lastblockname == "keep" ? ["air"]
+                        : [BlockTypes.get(lastblockname!)!?.id, lastblockstates]; /*
   console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
 
                     try {
@@ -16174,98 +16158,103 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         1;
                     let reststringaftercoordinates = switchTestB.split(" ").slice(1).join(" ").slice(firstblocknameindex);
                     let firstblockname = reststringaftercoordinates.split(" ")[0]!;
-                    let firstblockstates = reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{")
-                        ? JSONParse(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0] as string)
-                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[")
-                        ? JSONParse(
-                              extractJSONStrings(
-                                  reststringaftercoordinates
-                                      .split(" ")
-                                      .slice(1)
-                                      .join(" ")
-                                      .trimStart()
-                                      .replaceAll("=", ":")
-                                      .replaceAll("[", "{")
-                                      .replaceAll("]", "}"),
-                                  false
-                              )[0] as string
-                          )
-                        : undefined;
-                    let lastblockname = reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
-                              .trimStart()
-                              .split(" ")[0]!
-                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(
-                                  extractJSONStrings(
-                                      reststringaftercoordinates
-                                          .split(" ")
-                                          .slice(1)
-                                          .join(" ")
-                                          .trimStart()
-                                          .replaceAll("=", ":")
-                                          .replaceAll("[", "{")
-                                          .replaceAll("]", "}"),
-                                      false
-                                  )[0]!.length
-                              )
-                              .trimStart()
-                              .split(" ")[0]!
-                        : reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ")[0]!;
-                    let somethingtest = reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
-                              .trimStart()
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trim()
-                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(
-                                  extractJSONStrings(
-                                      reststringaftercoordinates
-                                          .split(" ")
-                                          .slice(1)
-                                          .join(" ")
-                                          .trimStart()
-                                          .replaceAll("=", ":")
-                                          .replaceAll("[", "{")
-                                          .replaceAll("]", "}"),
-                                      false
-                                  )[0]!.length
-                              )
-                              .trimStart()
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trim()
-                        : reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ").slice(1).join(" ").trim();
-                    let lastblockstates = somethingtest.startsWith("{")
-                        ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
-                        : somethingtest.startsWith("[")
-                        ? JSONParse(extractJSONStrings(somethingtest.replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0] as string)
-                        : undefined;
+                    let firstblockstates =
+                        reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{") ?
+                            JSONParse(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0] as string)
+                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[") ?
+                            JSONParse(
+                                extractJSONStrings(
+                                    reststringaftercoordinates
+                                        .split(" ")
+                                        .slice(1)
+                                        .join(" ")
+                                        .trimStart()
+                                        .replaceAll("=", ":")
+                                        .replaceAll("[", "{")
+                                        .replaceAll("]", "}"),
+                                    false
+                                )[0] as string
+                            )
+                        :   undefined;
+                    let lastblockname =
+                        reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
+                                .trimStart()
+                                .split(" ")[0]!
+                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(
+                                    extractJSONStrings(
+                                        reststringaftercoordinates
+                                            .split(" ")
+                                            .slice(1)
+                                            .join(" ")
+                                            .trimStart()
+                                            .replaceAll("=", ":")
+                                            .replaceAll("[", "{")
+                                            .replaceAll("]", "}"),
+                                        false
+                                    )[0]!.length
+                                )
+                                .trimStart()
+                                .split(" ")[0]!
+                        :   reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ")[0]!;
+                    let somethingtest =
+                        reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
+                                .trimStart()
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trim()
+                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(
+                                    extractJSONStrings(
+                                        reststringaftercoordinates
+                                            .split(" ")
+                                            .slice(1)
+                                            .join(" ")
+                                            .trimStart()
+                                            .replaceAll("=", ":")
+                                            .replaceAll("[", "{")
+                                            .replaceAll("]", "}"),
+                                        false
+                                    )[0]!.length
+                                )
+                                .trimStart()
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trim()
+                        :   reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ").slice(1).join(" ").trim();
+                    let lastblockstates =
+                        somethingtest.startsWith("{") ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
+                        : somethingtest.startsWith("[") ?
+                            JSONParse(extractJSONStrings(somethingtest.replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0] as string)
+                        :   undefined;
                     let matchingblock =
-                        lastblockname == "" ? undefined : lastblockname == "keep" ? ["air"] : [BlockTypes.get(lastblockname!)!?.id, lastblockstates]; /*
+                        lastblockname == "" ? undefined
+                        : lastblockname == "keep" ? ["air"]
+                        : [BlockTypes.get(lastblockname!)!?.id, lastblockstates]; /*
   console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
 
                     try {
@@ -16363,98 +16352,103 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         1;
                     let reststringaftercoordinates = switchTestB.split(" ").slice(1).join(" ").slice(firstblocknameindex);
                     let firstblockname = reststringaftercoordinates.split(" ")[0]!;
-                    let firstblockstates = reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{")
-                        ? JSONParse(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0] as string)
-                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[")
-                        ? JSONParse(
-                              extractJSONStrings(
-                                  reststringaftercoordinates
-                                      .split(" ")
-                                      .slice(1)
-                                      .join(" ")
-                                      .trimStart()
-                                      .replaceAll("=", ":")
-                                      .replaceAll("[", "{")
-                                      .replaceAll("]", "}"),
-                                  false
-                              )[0] as string
-                          )
-                        : undefined;
-                    let lastblockname = reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
-                              .trimStart()
-                              .split(" ")[0]!
-                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(
-                                  extractJSONStrings(
-                                      reststringaftercoordinates
-                                          .split(" ")
-                                          .slice(1)
-                                          .join(" ")
-                                          .trimStart()
-                                          .replaceAll("=", ":")
-                                          .replaceAll("[", "{")
-                                          .replaceAll("]", "}"),
-                                      false
-                                  )[0]!.length
-                              )
-                              .trimStart()
-                              .split(" ")[0]!
-                        : reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ")[0]!;
-                    let somethingtest = reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
-                              .trimStart()
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trim()
-                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(
-                                  extractJSONStrings(
-                                      reststringaftercoordinates
-                                          .split(" ")
-                                          .slice(1)
-                                          .join(" ")
-                                          .trimStart()
-                                          .replaceAll("=", ":")
-                                          .replaceAll("[", "{")
-                                          .replaceAll("]", "}"),
-                                      false
-                                  )[0]!.length
-                              )
-                              .trimStart()
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trim()
-                        : reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ").slice(1).join(" ").trim();
-                    let lastblockstates = somethingtest.startsWith("{")
-                        ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
-                        : somethingtest.startsWith("[")
-                        ? JSONParse(extractJSONStrings(somethingtest.replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0] as string)
-                        : undefined;
+                    let firstblockstates =
+                        reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{") ?
+                            JSONParse(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0] as string)
+                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[") ?
+                            JSONParse(
+                                extractJSONStrings(
+                                    reststringaftercoordinates
+                                        .split(" ")
+                                        .slice(1)
+                                        .join(" ")
+                                        .trimStart()
+                                        .replaceAll("=", ":")
+                                        .replaceAll("[", "{")
+                                        .replaceAll("]", "}"),
+                                    false
+                                )[0] as string
+                            )
+                        :   undefined;
+                    let lastblockname =
+                        reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
+                                .trimStart()
+                                .split(" ")[0]!
+                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(
+                                    extractJSONStrings(
+                                        reststringaftercoordinates
+                                            .split(" ")
+                                            .slice(1)
+                                            .join(" ")
+                                            .trimStart()
+                                            .replaceAll("=", ":")
+                                            .replaceAll("[", "{")
+                                            .replaceAll("]", "}"),
+                                        false
+                                    )[0]!.length
+                                )
+                                .trimStart()
+                                .split(" ")[0]!
+                        :   reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ")[0]!;
+                    let somethingtest =
+                        reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
+                                .trimStart()
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trim()
+                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(
+                                    extractJSONStrings(
+                                        reststringaftercoordinates
+                                            .split(" ")
+                                            .slice(1)
+                                            .join(" ")
+                                            .trimStart()
+                                            .replaceAll("=", ":")
+                                            .replaceAll("[", "{")
+                                            .replaceAll("]", "}"),
+                                        false
+                                    )[0]!.length
+                                )
+                                .trimStart()
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trim()
+                        :   reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ").slice(1).join(" ").trim();
+                    let lastblockstates =
+                        somethingtest.startsWith("{") ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
+                        : somethingtest.startsWith("[") ?
+                            JSONParse(extractJSONStrings(somethingtest.replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0] as string)
+                        :   undefined;
                     let matchingblock =
-                        lastblockname == "" ? undefined : lastblockname == "keep" ? ["air"] : [BlockTypes.get(lastblockname!)!?.id, lastblockstates]; /*
+                        lastblockname == "" ? undefined
+                        : lastblockname == "keep" ? ["air"]
+                        : [BlockTypes.get(lastblockname!)!?.id, lastblockstates]; /*
   console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
 
                     try {
@@ -16548,102 +16542,103 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                         1;
                     let reststringaftercoordinates = switchTestB.split(" ").slice(1).join(" ").slice(firstblocknameindex);
                     let firstblockname = reststringaftercoordinates.split(" ")[0]!;
-                    let firstblockstates = reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{")
-                        ? JSONParse(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0] as string)
-                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[")
-                        ? JSONParse(
-                              extractJSONStrings(
-                                  reststringaftercoordinates
-                                      .split(" ")
-                                      .slice(1)
-                                      .join(" ")
-                                      .trimStart()
-                                      .replaceAll("=", ":")
-                                      .replaceAll("[", "{")
-                                      .replaceAll("]", "}"),
-                                  false
-                              )[0] as string
-                          )
-                        : undefined;
-                    let lastblockname = reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
-                              .trimStart()
-                              .split(" ")[0]!
-                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(
-                                  extractJSONStrings(
-                                      reststringaftercoordinates
-                                          .split(" ")
-                                          .slice(1)
-                                          .join(" ")
-                                          .trimStart()
-                                          .replaceAll("=", ":")
-                                          .replaceAll("[", "{")
-                                          .replaceAll("]", "}"),
-                                      false
-                                  )[0]!.length
-                              )
-                              .trimStart()
-                              .split(" ")[0]!
-                        : reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ")[0]!;
-                    let somethingtest = reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
-                              .trimStart()
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trim()
-                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[")
-                        ? reststringaftercoordinates
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trimStart()
-                              .slice(
-                                  extractJSONStrings(
-                                      reststringaftercoordinates
-                                          .split(" ")
-                                          .slice(1)
-                                          .join(" ")
-                                          .trimStart()
-                                          .replaceAll("=", ":")
-                                          .replaceAll("[", "{")
-                                          .replaceAll("]", "}"),
-                                      false
-                                  )[0]!.length
-                              )
-                              .trimStart()
-                              .split(" ")
-                              .slice(1)
-                              .join(" ")
-                              .trim()
-                        : reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ").slice(1).join(" ").trim();
-                    let lastblockstates = somethingtest.startsWith("{")
-                        ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
-                        : somethingtest.startsWith("[")
-                        ? JSONParse(extractJSONStrings(somethingtest.replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0] as string)
-                        : undefined;
+                    let firstblockstates =
+                        reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{") ?
+                            JSONParse(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0] as string)
+                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[") ?
+                            JSONParse(
+                                extractJSONStrings(
+                                    reststringaftercoordinates
+                                        .split(" ")
+                                        .slice(1)
+                                        .join(" ")
+                                        .trimStart()
+                                        .replaceAll("=", ":")
+                                        .replaceAll("[", "{")
+                                        .replaceAll("]", "}"),
+                                    false
+                                )[0] as string
+                            )
+                        :   undefined;
+                    let lastblockname =
+                        reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
+                                .trimStart()
+                                .split(" ")[0]!
+                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(
+                                    extractJSONStrings(
+                                        reststringaftercoordinates
+                                            .split(" ")
+                                            .slice(1)
+                                            .join(" ")
+                                            .trimStart()
+                                            .replaceAll("=", ":")
+                                            .replaceAll("[", "{")
+                                            .replaceAll("]", "}"),
+                                        false
+                                    )[0]!.length
+                                )
+                                .trimStart()
+                                .split(" ")[0]!
+                        :   reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ")[0]!;
+                    let somethingtest =
+                        reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("{") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(extractJSONStrings(reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart(), false)[0]!.length)
+                                .trimStart()
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trim()
+                        : reststringaftercoordinates.split(" ").slice(1).join(" ").trimStart().startsWith("[") ?
+                            reststringaftercoordinates
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trimStart()
+                                .slice(
+                                    extractJSONStrings(
+                                        reststringaftercoordinates
+                                            .split(" ")
+                                            .slice(1)
+                                            .join(" ")
+                                            .trimStart()
+                                            .replaceAll("=", ":")
+                                            .replaceAll("[", "{")
+                                            .replaceAll("]", "}"),
+                                        false
+                                    )[0]!.length
+                                )
+                                .trimStart()
+                                .split(" ")
+                                .slice(1)
+                                .join(" ")
+                                .trim()
+                        :   reststringaftercoordinates.trimStart().split(" ").slice(1).join(" ").trimStart().split(" ").slice(1).join(" ").trim();
+                    let lastblockstates =
+                        somethingtest.startsWith("{") ? JSONParse(extractJSONStrings(somethingtest, false)[0] as string)
+                        : somethingtest.startsWith("[") ?
+                            JSONParse(extractJSONStrings(somethingtest.replaceAll("=", ":").replaceAll("[", "{").replaceAll("]", "}"), false)[0] as string)
+                        :   undefined;
                     let matchingblock =
-                        lastblockname == ""
-                            ? undefined
-                            : lastblockname == "keep"
-                            ? BlockPermutation.resolve("air")
-                            : BlockPermutation.resolve(lastblockname, lastblockstates); /*
+                        lastblockname == "" ? undefined
+                        : lastblockname == "keep" ? BlockPermutation.resolve("air")
+                        : BlockPermutation.resolve(lastblockname, lastblockstates); /*
   console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
 
                     try {
@@ -17055,32 +17050,32 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                             const targetInventoryB = targetb.inventory;
                             if (args[1]!.toLowerCase() == "equipment" || args[2]!.toLowerCase() == "equipment") {
                                 const items =
-                                    args[1]!.toLowerCase() == "equipment"
-                                        ? equippableToItemStackArray(target.equippable, true)
-                                        : containerToItemStackArray(target.inventory.container).slice(
-                                              Math.round(args[1]!.toNumber()! * 9),
-                                              Math.round(args[1]!.toNumber()! * 9) + 6
-                                          );
+                                    args[1]!.toLowerCase() == "equipment" ?
+                                        equippableToItemStackArray(target.equippable, true)
+                                    :   containerToItemStackArray(target.inventory.container).slice(
+                                            Math.round(args[1]!.toNumber()! * 9),
+                                            Math.round(args[1]!.toNumber()! * 9) + 6
+                                        );
                                 const itemsb =
-                                    args[2]!.toLowerCase() == "equipment"
-                                        ? equippableToItemStackArray(targetb.equippable, true)
-                                        : containerToItemStackArray(targetb.inventory.container).slice(
-                                              Math.round(args[1]!.toNumber()! * 9),
-                                              Math.round(args[1]!.toNumber()! * 9) + 6
-                                          );
+                                    args[2]!.toLowerCase() == "equipment" ?
+                                        equippableToItemStackArray(targetb.equippable, true)
+                                    :   containerToItemStackArray(targetb.inventory.container).slice(
+                                            Math.round(args[1]!.toNumber()! * 9),
+                                            Math.round(args[1]!.toNumber()! * 9) + 6
+                                        );
                                 const slotsb =
-                                    args[2]!.toLowerCase() == "equipment"
-                                        ? equippableToContainerSlotArray(targetb.equippable, true)
-                                        : containerToContainerSlotArray(targetb.inventory.container).slice(
-                                              Math.round(args[2]!.toNumber()! * 9),
-                                              Math.round(args[2]!.toNumber()! * 9) + 6
-                                          );
-                                (args[1]!.toLowerCase() == "equipment"
-                                    ? equippableToContainerSlotArray(target.equippable, true)
-                                    : containerToContainerSlotArray(target.inventory.container).slice(
-                                          Math.round(args[1]!.toNumber()! * 9),
-                                          Math.round(args[1]!.toNumber()! * 9) + 6
-                                      )
+                                    args[2]!.toLowerCase() == "equipment" ?
+                                        equippableToContainerSlotArray(targetb.equippable, true)
+                                    :   containerToContainerSlotArray(targetb.inventory.container).slice(
+                                            Math.round(args[2]!.toNumber()! * 9),
+                                            Math.round(args[2]!.toNumber()! * 9) + 6
+                                        );
+                                (args[1]!.toLowerCase() == "equipment" ?
+                                    equippableToContainerSlotArray(target.equippable, true)
+                                :   containerToContainerSlotArray(target.inventory.container).slice(
+                                        Math.round(args[1]!.toNumber()! * 9),
+                                        Math.round(args[1]!.toNumber()! * 9) + 6
+                                    )
                                 ).forEach((s, i) => {
                                     slotsb[i]!.setItem(items[i]);
                                     s.setItem(itemsb[i]);
@@ -17649,18 +17644,14 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                             if ((args[1] ?? "").trim().toLowerCase() == "" || (args[1] ?? "").trim().toLowerCase() == "fill") {
                                 for (let i = 0; i < target.getComponent("inventory")!.container.size; i++) {
                                     let t = shuffle(JunkItemTypes)[0]!;
-                                    target
-                                        .getComponent("inventory")!
-                                        .container.addItem(
-                                            new ItemStack(
-                                                t,
-                                                args[2]?.trim().toLowerCase() == ""
-                                                    ? 255
-                                                    : args[2].trim().toLowerCase() == "max"
-                                                    ? new ItemStack(t).maxAmount
-                                                    : Math.max(1, Number(args[2].trim().toLowerCase().replace(/~+/, "255")))
-                                            )
-                                        );
+                                    target.getComponent("inventory")!.container.addItem(
+                                        new ItemStack(
+                                            t,
+                                            args[2]?.trim().toLowerCase() == "" ? 255
+                                            : args[2].trim().toLowerCase() == "max" ? new ItemStack(t).maxAmount
+                                            : Math.max(1, Number(args[2].trim().toLowerCase().replace(/~+/, "255")))
+                                        )
+                                    );
                                 }
                             } else if ((args[1] ?? "").trim().toLowerCase() == "replacefill" || (args[1] ?? "").trim().toLowerCase() == "replaceall") {
                                 for (let i = 0; i < target.getComponent("inventory")!.container.size; i++) {
@@ -17671,9 +17662,9 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                             i,
                                             new ItemStack(
                                                 t,
-                                                args[2]?.trim().toLowerCase() == "max"
-                                                    ? new ItemStack(t).maxAmount
-                                                    : Number(args[2].trim().toLowerCase().replace(/~+/, "255"))
+                                                args[2]?.trim().toLowerCase() == "max" ?
+                                                    new ItemStack(t).maxAmount
+                                                :   Number(args[2].trim().toLowerCase().replace(/~+/, "255"))
                                             )
                                         );
                                 }
@@ -17685,9 +17676,9 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                         .container.addItem(
                                             new ItemStack(
                                                 t,
-                                                args[2]?.trim().toLowerCase() == "max"
-                                                    ? new ItemStack(t).maxAmount
-                                                    : Number(args[2].trim().toLowerCase().replace(/~+/, "255"))
+                                                args[2]?.trim().toLowerCase() == "max" ?
+                                                    new ItemStack(t).maxAmount
+                                                :   Number(args[2].trim().toLowerCase().replace(/~+/, "255"))
                                             )
                                         );
                                 }
@@ -17713,18 +17704,14 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                             if ((args[1] ?? "").trim().toLowerCase() == "" || (args[1] ?? "").trim().toLowerCase() == "fill") {
                                 for (let i = 0; i < target.getComponent("inventory")!.container.size; i++) {
                                     let t = shuffle(ItemTypes.getAll())[0]!;
-                                    target
-                                        .getComponent("inventory")!
-                                        .container.addItem(
-                                            new ItemStack(
-                                                t,
-                                                args[2]?.trim().toLowerCase() == ""
-                                                    ? 255
-                                                    : args[2].trim().toLowerCase() == "max"
-                                                    ? new ItemStack(t).maxAmount
-                                                    : Math.max(1, Number(args[2].trim().toLowerCase().replace(/~+/, "255")))
-                                            )
-                                        );
+                                    target.getComponent("inventory")!.container.addItem(
+                                        new ItemStack(
+                                            t,
+                                            args[2]?.trim().toLowerCase() == "" ? 255
+                                            : args[2].trim().toLowerCase() == "max" ? new ItemStack(t).maxAmount
+                                            : Math.max(1, Number(args[2].trim().toLowerCase().replace(/~+/, "255")))
+                                        )
+                                    );
                                 }
                             } else if ((args[1] ?? "").trim().toLowerCase() == "replacefill" || (args[1] ?? "").trim().toLowerCase() == "replaceall") {
                                 for (let i = 0; i < target.getComponent("inventory")!.container.size; i++) {
@@ -17735,9 +17722,9 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                             i,
                                             new ItemStack(
                                                 t,
-                                                args[2]?.trim().toLowerCase() == "max"
-                                                    ? new ItemStack(t).maxAmount
-                                                    : Number(args[2].trim().toLowerCase().replace(/~+/, "255"))
+                                                args[2]?.trim().toLowerCase() == "max" ?
+                                                    new ItemStack(t).maxAmount
+                                                :   Number(args[2].trim().toLowerCase().replace(/~+/, "255"))
                                             )
                                         );
                                 }
@@ -17749,9 +17736,9 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                         .container.addItem(
                                             new ItemStack(
                                                 t,
-                                                args[2]?.trim().toLowerCase() == "max"
-                                                    ? new ItemStack(t).maxAmount
-                                                    : Number(args[2].trim().toLowerCase().replace(/~+/, "255"))
+                                                args[2]?.trim().toLowerCase() == "max" ?
+                                                    new ItemStack(t).maxAmount
+                                                :   Number(args[2].trim().toLowerCase().replace(/~+/, "255"))
                                             )
                                         );
                                 }
@@ -17777,18 +17764,14 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                             if ((args[1] ?? "").trim().toLowerCase() == "" || (args[1] ?? "").trim().toLowerCase() == "fill") {
                                 for (let i = 0; i < target.getComponent("inventory")!.container.size; i++) {
                                     let t = shuffle(OpItemTypes)[0]!;
-                                    target
-                                        .getComponent("inventory")!
-                                        .container.addItem(
-                                            new ItemStack(
-                                                t,
-                                                args[2]?.trim().toLowerCase() == ""
-                                                    ? 255
-                                                    : args[2].trim().toLowerCase() == "max"
-                                                    ? new ItemStack(t).maxAmount
-                                                    : Math.max(1, Number(args[2].trim().toLowerCase().replace(/~+/, "255")))
-                                            )
-                                        );
+                                    target.getComponent("inventory")!.container.addItem(
+                                        new ItemStack(
+                                            t,
+                                            args[2]?.trim().toLowerCase() == "" ? 255
+                                            : args[2].trim().toLowerCase() == "max" ? new ItemStack(t).maxAmount
+                                            : Math.max(1, Number(args[2].trim().toLowerCase().replace(/~+/, "255")))
+                                        )
+                                    );
                                 }
                             } else if ((args[1] ?? "").trim().toLowerCase() == "replacefill" || (args[1] ?? "").trim().toLowerCase() == "replaceall") {
                                 for (let i = 0; i < target.getComponent("inventory")!.container.size; i++) {
@@ -17799,9 +17782,9 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                             i,
                                             new ItemStack(
                                                 t,
-                                                args[2]?.trim().toLowerCase() == "max"
-                                                    ? new ItemStack(t).maxAmount
-                                                    : Number(args[2].trim().toLowerCase().replace(/~+/, "255"))
+                                                args[2]?.trim().toLowerCase() == "max" ?
+                                                    new ItemStack(t).maxAmount
+                                                :   Number(args[2].trim().toLowerCase().replace(/~+/, "255"))
                                             )
                                         );
                                 }
@@ -17813,9 +17796,9 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                         .container.addItem(
                                             new ItemStack(
                                                 t,
-                                                args[2]?.trim().toLowerCase() == "max"
-                                                    ? new ItemStack(t).maxAmount
-                                                    : Number(args[2].trim().toLowerCase().replace(/~+/, "255"))
+                                                args[2]?.trim().toLowerCase() == "max" ?
+                                                    new ItemStack(t).maxAmount
+                                                :   Number(args[2].trim().toLowerCase().replace(/~+/, "255"))
                                             )
                                         );
                                 }
@@ -17841,18 +17824,14 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                             if ((args[1] ?? "").trim().toLowerCase() == "" || (args[1] ?? "").trim().toLowerCase() == "fill") {
                                 for (let i = 0; i < target.getComponent("inventory")!.container.size; i++) {
                                     let t = shuffle(IllegalItemTypes)[0]!;
-                                    target
-                                        .getComponent("inventory")!
-                                        .container.addItem(
-                                            new ItemStack(
-                                                t,
-                                                args[2]?.trim().toLowerCase() == ""
-                                                    ? 255
-                                                    : args[2].trim().toLowerCase() == "max"
-                                                    ? new ItemStack(t).maxAmount
-                                                    : Math.max(1, Number(args[2].trim().toLowerCase().replace(/~+/, "255")))
-                                            )
-                                        );
+                                    target.getComponent("inventory")!.container.addItem(
+                                        new ItemStack(
+                                            t,
+                                            args[2]?.trim().toLowerCase() == "" ? 255
+                                            : args[2].trim().toLowerCase() == "max" ? new ItemStack(t).maxAmount
+                                            : Math.max(1, Number(args[2].trim().toLowerCase().replace(/~+/, "255")))
+                                        )
+                                    );
                                 }
                             } else if ((args[1] ?? "").trim().toLowerCase() == "replacefill" || (args[1] ?? "").trim().toLowerCase() == "replaceall") {
                                 for (let i = 0; i < target.getComponent("inventory")!.container.size; i++) {
@@ -17863,9 +17842,9 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                             i,
                                             new ItemStack(
                                                 t,
-                                                args[2]?.trim().toLowerCase() == "max"
-                                                    ? new ItemStack(t).maxAmount
-                                                    : Number(args[2].trim().toLowerCase().replace(/~+/, "255"))
+                                                args[2]?.trim().toLowerCase() == "max" ?
+                                                    new ItemStack(t).maxAmount
+                                                :   Number(args[2].trim().toLowerCase().replace(/~+/, "255"))
                                             )
                                         );
                                 }
@@ -17877,9 +17856,9 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                         .container.addItem(
                                             new ItemStack(
                                                 t,
-                                                args[2]?.trim().toLowerCase() == "max"
-                                                    ? new ItemStack(t).maxAmount
-                                                    : Number(args[2].trim().toLowerCase().replace(/~+/, "255"))
+                                                args[2]?.trim().toLowerCase() == "max" ?
+                                                    new ItemStack(t).maxAmount
+                                                :   Number(args[2].trim().toLowerCase().replace(/~+/, "255"))
                                             )
                                         );
                                 }
@@ -17917,9 +17896,10 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                             if (targets.length == 0) {
                                 player.sendError(`§cError: No players matching the specified target selector were found. `, true);
                             } else {
-                                let item = !!(args[1]?.count ?? args[1]?.amount)
-                                    ? Object.assign(itemJSONPropertiesEval(args[1])!, { count: 255 })
-                                    : itemJSONPropertiesEval(args[1])!;
+                                let item =
+                                    !!(args[1]?.count ?? args[1]?.amount) ?
+                                        Object.assign(itemJSONPropertiesEval(args[1])!, { count: 255 })
+                                    :   itemJSONPropertiesEval(args[1])!;
                                 let successes = [] as [string, number][];
                                 targets.forEach((target) => {
                                     let successcount = 0;
@@ -17985,14 +17965,16 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                 for (let ib = 0; ib < loopCount; ib++) {
                                     let block = player.dimension.getBlock(player.location)!;
                                     block.setType("shulker_box");
-                                    !!target.getComponent("inventory")!.container.getItem(slot)
-                                        ? target.getComponent("inventory")!.container.getItem(slot)!.amount <
-                                          target.getComponent("inventory")!.container.getItem(slot)!.maxAmount
-                                            ? (target.getComponent("inventory")!.container.getItem(slot)!.amount = target
-                                                  .getComponent("inventory")!
-                                                  .container.getItem(slot)!.maxAmount)
-                                            : undefined
-                                        : undefined;
+                                    !!target.getComponent("inventory")!.container.getItem(slot) ?
+                                        (
+                                            target.getComponent("inventory")!.container.getItem(slot)!.amount <
+                                            target.getComponent("inventory")!.container.getItem(slot)!.maxAmount
+                                        ) ?
+                                            (target.getComponent("inventory")!.container.getItem(slot)!.amount = target
+                                                .getComponent("inventory")!
+                                                .container.getItem(slot)!.maxAmount)
+                                        :   undefined
+                                    :   undefined;
                                     fillContainer(block.getComponent("inventory")!.container!, target.getComponent("inventory")!.container.getItem(slot)!);
                                     let item = block.getItemStack(64, true)!;
                                     item.nameTag = `§r§a${target.name}'s Items: Slots 0-26§b\n${new Date(Date.now()).toUTCString()}`;
@@ -18673,14 +18655,14 @@ ${command.dp}idtfill <center: x y z> <radius: x y z> <offset: x y z> <integrity:
                                             cb,
                                             dimensiona!,
                                             args.biome as TerrainGeneratorBiome,
-                                            args.seed ? args.seed?.toNumber() ?? Math.random() : Math.random(),
+                                            args.seed ? (args.seed?.toNumber() ?? Math.random()) : Math.random(),
                                             {
                                                 baseHeight: args.baseHeight ?? undefined,
                                                 generateBlobs: args[1]!.b,
                                                 generateOres: args[1]!.o,
                                                 generatorType: (args.generatorType as any) ?? undefined,
                                                 heightVariation: args.heightVariation ?? undefined,
-                                                waterLevel: args.waterLevel?.toLowerCase() === "false" ? false : args.waterLevel?.toNumber() ?? undefined,
+                                                waterLevel: args.waterLevel?.toLowerCase() === "false" ? false : (args.waterLevel?.toNumber() ?? undefined),
                                                 minMSBetweenTickWaits: args.minMSBetweenTickWaits ?? config.system.defaultMinMSBetweenTickWaits,
                                                 oreGenerationMode: (args.oreGenerationMode as any) ?? undefined,
                                                 offset: {
@@ -18879,9 +18861,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                 dimensiona!,
                                                 (l, i) => {
                                                     const b = firstblockpattern.generateBlock(i);
-                                                    return b.type === "random"
-                                                        ? BlockPermutation.resolve(blocktypes[Math.floor(blocktypes.length * Math.random())]!.id)
-                                                        : BlockPermutation.resolve(b.type, b.states);
+                                                    return b.type === "random" ?
+                                                            BlockPermutation.resolve(blocktypes[Math.floor(blocktypes.length * Math.random())]!.id)
+                                                        :   BlockPermutation.resolve(b.type, b.states);
                                                 },
                                                 {
                                                     blockMask: mask!,
@@ -18898,9 +18880,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                         `${a.counter == 0n ? "§c" : ""}${a.counter} blocks overlayed in ${a.endTime - a.startTime} ms over ${
                                                             a.endTick - a.startTick
                                                         } tick${a.endTick - a.startTick == 1 ? "" : "s"}${
-                                                            a.containsUnloadedChunks
-                                                                ? "; Some blocks were not generated because they were in unloaded chunks."
-                                                                : ""
+                                                            a.containsUnloadedChunks ?
+                                                                "; Some blocks were not generated because they were in unloaded chunks."
+                                                            :   ""
                                                         }`
                                                     );
                                                 },
@@ -18979,9 +18961,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                 dimensiona!,
                                                 (l, i) => {
                                                     const b = firstblockpattern.generateBlock(i);
-                                                    return b.type === "random"
-                                                        ? BlockPermutation.resolve(blocktypes[Math.floor(blocktypes.length * Math.random())]!.id)
-                                                        : BlockPermutation.resolve(b.type, b.states);
+                                                    return b.type === "random" ?
+                                                            BlockPermutation.resolve(blocktypes[Math.floor(blocktypes.length * Math.random())]!.id)
+                                                        :   BlockPermutation.resolve(b.type, b.states);
                                                 },
                                                 {
                                                     blockMask: mask!,
@@ -18996,9 +18978,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                         `${a.counter == 0n ? "§c" : ""}${a.counter} blocks replaced in ${a.endTime - a.startTime} ms over ${
                                                             a.endTick - a.startTick
                                                         } tick${a.endTick - a.startTick == 1 ? "" : "s"}${
-                                                            a.containsUnloadedChunks
-                                                                ? "; Some blocks were not generated because they were in unloaded chunks."
-                                                                : ""
+                                                            a.containsUnloadedChunks ?
+                                                                "; Some blocks were not generated because they were in unloaded chunks."
+                                                            :   ""
                                                         }`
                                                     );
                                                 },
@@ -19077,9 +19059,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                 dimensiona!,
                                                 (l, i) => {
                                                     const b = firstblockpattern.generateBlock(i);
-                                                    return b.type === "random"
-                                                        ? BlockPermutation.resolve(blocktypes[Math.floor(blocktypes.length * Math.random())]!.id)
-                                                        : BlockPermutation.resolve(b.type, b.states);
+                                                    return b.type === "random" ?
+                                                            BlockPermutation.resolve(blocktypes[Math.floor(blocktypes.length * Math.random())]!.id)
+                                                        :   BlockPermutation.resolve(b.type, b.states);
                                                 },
                                                 {
                                                     blockMask: mask!,
@@ -19094,9 +19076,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                         `${a.counter == 0n ? "§c" : ""}${a.counter} blocks replaced in ${a.endTime - a.startTime} ms over ${
                                                             a.endTick - a.startTick
                                                         } tick${a.endTick - a.startTick == 1 ? "" : "s"}${
-                                                            a.containsUnloadedChunks
-                                                                ? "; Some blocks were not generated because they were in unloaded chunks."
-                                                                : ""
+                                                            a.containsUnloadedChunks ?
+                                                                "; Some blocks were not generated because they were in unloaded chunks."
+                                                            :   ""
                                                         }`
                                                     );
                                                 },
@@ -19175,9 +19157,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                 dimensiona!,
                                                 (l, i) => {
                                                     const b = firstblockpattern.generateBlock(i);
-                                                    return b.type === "random"
-                                                        ? BlockPermutation.resolve(blocktypes[Math.floor(blocktypes.length * Math.random())]!.id)
-                                                        : BlockPermutation.resolve(b.type, b.states);
+                                                    return b.type === "random" ?
+                                                            BlockPermutation.resolve(blocktypes[Math.floor(blocktypes.length * Math.random())]!.id)
+                                                        :   BlockPermutation.resolve(b.type, b.states);
                                                 },
                                                 {
                                                     blockMask: mask!,
@@ -19192,9 +19174,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                         `${a.counter == 0n ? "§c" : ""}${a.counter} blocks replaced in ${a.endTime - a.startTime} ms over ${
                                                             a.endTick - a.startTick
                                                         } tick${a.endTick - a.startTick == 1 ? "" : "s"}${
-                                                            a.containsUnloadedChunks
-                                                                ? "; Some blocks were not generated because they were in unloaded chunks."
-                                                                : ""
+                                                            a.containsUnloadedChunks ?
+                                                                "; Some blocks were not generated because they were in unloaded chunks."
+                                                            :   ""
                                                         }`
                                                     );
                                                 },
@@ -19273,9 +19255,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                 dimensiona!,
                                                 (l, i) => {
                                                     const b = firstblockpattern.generateBlock(i);
-                                                    return b.type === "random"
-                                                        ? BlockPermutation.resolve(blocktypes[Math.floor(blocktypes.length * Math.random())]!.id)
-                                                        : BlockPermutation.resolve(b.type, b.states);
+                                                    return b.type === "random" ?
+                                                            BlockPermutation.resolve(blocktypes[Math.floor(blocktypes.length * Math.random())]!.id)
+                                                        :   BlockPermutation.resolve(b.type, b.states);
                                                 },
                                                 {
                                                     blockMask: mask!,
@@ -19290,9 +19272,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                         `${a.counter == 0n ? "§c" : ""}${a.counter} blocks replaced in ${a.endTime - a.startTime} ms over ${
                                                             a.endTick - a.startTick
                                                         } tick${a.endTick - a.startTick == 1 ? "" : "s"}${
-                                                            a.containsUnloadedChunks
-                                                                ? "; Some blocks were not generated because they were in unloaded chunks."
-                                                                : ""
+                                                            a.containsUnloadedChunks ?
+                                                                "; Some blocks were not generated because they were in unloaded chunks."
+                                                            :   ""
                                                         }`
                                                     );
                                                 },
@@ -19371,9 +19353,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                 dimensiona!,
                                                 (l, i) => {
                                                     const b = firstblockpattern.generateBlock(i);
-                                                    return b.type === "random"
-                                                        ? BlockPermutation.resolve(blocktypes[Math.floor(blocktypes.length * Math.random())]!.id)
-                                                        : BlockPermutation.resolve(b.type, b.states);
+                                                    return b.type === "random" ?
+                                                            BlockPermutation.resolve(blocktypes[Math.floor(blocktypes.length * Math.random())]!.id)
+                                                        :   BlockPermutation.resolve(b.type, b.states);
                                                 },
                                                 {
                                                     blockMask: mask!,
@@ -19388,9 +19370,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                         `${a.counter == 0n ? "§c" : ""}${a.counter} blocks replaced in ${a.endTime - a.startTime} ms over ${
                                                             a.endTick - a.startTick
                                                         } tick${a.endTick - a.startTick == 1 ? "" : "s"}${
-                                                            a.containsUnloadedChunks
-                                                                ? "; Some blocks were not generated because they were in unloaded chunks."
-                                                                : ""
+                                                            a.containsUnloadedChunks ?
+                                                                "; Some blocks were not generated because they were in unloaded chunks."
+                                                            :   ""
                                                         }`
                                                     );
                                                 },
@@ -19479,9 +19461,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                 dimensiona!,
                                                 (l, i) => {
                                                     const b = firstblockpattern.generateBlock(i);
-                                                    return b.type === "random"
-                                                        ? BlockPermutation.resolve(blocktypes[Math.floor(blocktypes.length * Math.random())]!.id)
-                                                        : BlockPermutation.resolve(b.type, b.states);
+                                                    return b.type === "random" ?
+                                                            BlockPermutation.resolve(blocktypes[Math.floor(blocktypes.length * Math.random())]!.id)
+                                                        :   BlockPermutation.resolve(b.type, b.states);
                                                 },
                                                 {
                                                     blockMask: mask!,
@@ -19496,9 +19478,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                         `${a.counter == 0n ? "§c" : ""}${a.counter} blocks replaced in ${a.endTime - a.startTime} ms over ${
                                                             a.endTick - a.startTick
                                                         } tick${a.endTick - a.startTick == 1 ? "" : "s"}${
-                                                            a.containsUnloadedChunks
-                                                                ? "; Some blocks were not generated because they were in unloaded chunks."
-                                                                : ""
+                                                            a.containsUnloadedChunks ?
+                                                                "; Some blocks were not generated because they were in unloaded chunks."
+                                                            :   ""
                                                         }`
                                                     );
                                                 },
@@ -19600,9 +19582,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                 dimensiona!,
                                                 (l, i) => {
                                                     const b = firstblockpattern.generateBlock(i);
-                                                    return b.type === "random"
-                                                        ? BlockPermutation.resolve(blocktypes[Math.floor(blocktypes.length * Math.random())]!.id)
-                                                        : BlockPermutation.resolve(b.type, b.states);
+                                                    return b.type === "random" ?
+                                                            BlockPermutation.resolve(blocktypes[Math.floor(blocktypes.length * Math.random())]!.id)
+                                                        :   BlockPermutation.resolve(b.type, b.states);
                                                 },
                                                 {
                                                     blockMask: mask!,
@@ -19617,9 +19599,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                         `${a.counter == 0n ? "§c" : ""}${a.counter} blocks replaced in ${a.endTime - a.startTime} ms over ${
                                                             a.endTick - a.startTick
                                                         } tick${a.endTick - a.startTick == 1 ? "" : "s"}${
-                                                            a.containsUnloadedChunks
-                                                                ? "; Some blocks were not generated because they were in unloaded chunks."
-                                                                : ""
+                                                            a.containsUnloadedChunks ?
+                                                                "; Some blocks were not generated because they were in unloaded chunks."
+                                                            :   ""
                                                         }`
                                                     );
                                                 },
@@ -19721,9 +19703,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                 dimensiona!,
                                                 (l, i) => {
                                                     const b = firstblockpattern.generateBlock(i);
-                                                    return b.type === "random"
-                                                        ? BlockPermutation.resolve(blocktypes[Math.floor(blocktypes.length * Math.random())]!.id)
-                                                        : BlockPermutation.resolve(b.type, b.states);
+                                                    return b.type === "random" ?
+                                                            BlockPermutation.resolve(blocktypes[Math.floor(blocktypes.length * Math.random())]!.id)
+                                                        :   BlockPermutation.resolve(b.type, b.states);
                                                 },
                                                 {
                                                     blockMask: mask!,
@@ -19738,9 +19720,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                         `${a.counter == 0n ? "§c" : ""}${a.counter} blocks replaced in ${a.endTime - a.startTime} ms over ${
                                                             a.endTick - a.startTick
                                                         } tick${a.endTick - a.startTick == 1 ? "" : "s"}${
-                                                            a.containsUnloadedChunks
-                                                                ? "; Some blocks were not generated because they were in unloaded chunks."
-                                                                : ""
+                                                            a.containsUnloadedChunks ?
+                                                                "; Some blocks were not generated because they were in unloaded chunks."
+                                                            :   ""
                                                         }`
                                                     );
                                                 },
@@ -19878,9 +19860,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                 dimensiona!,
                                                 (l, i) => {
                                                     const b = firstblockpattern.generateBlock(i);
-                                                    return b.type === "random"
-                                                        ? BlockPermutation.resolve(blocktypes[Math.floor(blocktypes.length * Math.random())]!.id)
-                                                        : BlockPermutation.resolve(b.type, b.states);
+                                                    return b.type === "random" ?
+                                                            BlockPermutation.resolve(blocktypes[Math.floor(blocktypes.length * Math.random())]!.id)
+                                                        :   BlockPermutation.resolve(b.type, b.states);
                                                 },
                                                 { minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits },
                                                 args[1]!.c,
@@ -19893,9 +19875,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                         } ms over ${a.completionData.endTick! - a.completionData.startTick} tick${
                                                             a.completionData.endTick! - a.completionData.startTick == 1 ? "" : "s"
                                                         }${
-                                                            a.completionData.containsUnloadedChunks
-                                                                ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                                : ""
+                                                            a.completionData.containsUnloadedChunks ?
+                                                                "; Some blocks were not generated because they were in unloaded chunks. "
+                                                            :   ""
                                                         }`
                                                     );
                                                 },
@@ -19974,9 +19956,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                 dimensiona!,
                                                 (l, i) => {
                                                     const b = firstblockpattern.generateBlock(i);
-                                                    return b.type === "random"
-                                                        ? BlockPermutation.resolve(blocktypes[Math.floor(blocktypes.length * Math.random())]!.id)
-                                                        : BlockPermutation.resolve(b.type, b.states);
+                                                    return b.type === "random" ?
+                                                            BlockPermutation.resolve(blocktypes[Math.floor(blocktypes.length * Math.random())]!.id)
+                                                        :   BlockPermutation.resolve(b.type, b.states);
                                                 },
                                                 { minMSBetweenYields: config.system.defaultMinMSBetweenTickWaits },
                                                 args[1]!.c,
@@ -19989,9 +19971,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                         } ms over ${a.completionData.endTick! - a.completionData.startTick} tick${
                                                             a.completionData.endTick! - a.completionData.startTick == 1 ? "" : "s"
                                                         }${
-                                                            a.completionData.containsUnloadedChunks
-                                                                ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                                : ""
+                                                            a.completionData.containsUnloadedChunks ?
+                                                                "; Some blocks were not generated because they were in unloaded chunks. "
+                                                            :   ""
                                                         }`
                                                     );
                                                 },
@@ -20074,9 +20056,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                         `${a.counter == 0n ? "§c" : ""}${a.counter} blocks replaced in ${a.endTime - a.startTime} ms over ${
                                                             a.endTick - a.startTick
                                                         } tick${a.endTick - a.startTick == 1 ? "" : "s"}${
-                                                            a.containsUnloadedChunks
-                                                                ? "; Some blocks were not generated because they were in unloaded chunks."
-                                                                : ""
+                                                            a.containsUnloadedChunks ?
+                                                                "; Some blocks were not generated because they were in unloaded chunks."
+                                                            :   ""
                                                         }`
                                                     );
                                                 },
@@ -20159,9 +20141,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                         `${a.counter == 0n ? "§c" : ""}${a.counter} blocks replaced in ${a.endTime - a.startTime} ms over ${
                                                             a.endTick - a.startTick
                                                         } tick${a.endTick - a.startTick == 1 ? "" : "s"}${
-                                                            a.containsUnloadedChunks
-                                                                ? "; Some blocks were not generated because they were in unloaded chunks."
-                                                                : ""
+                                                            a.containsUnloadedChunks ?
+                                                                "; Some blocks were not generated because they were in unloaded chunks."
+                                                            :   ""
                                                         }`
                                                     );
                                                 },
@@ -20190,12 +20172,12 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                     const lastblockname = args[2]?.id;
                     const lastblockstates = args[2]?.states;
                     const matchingblock = (
-                        (lastblockname ?? "") == ""
-                            ? [undefined, undefined]
-                            : lastblockname == "keep"
-                            ? ["air"]
-                            : [BlockTypes.get(lastblockname!)!?.id, lastblockstates]
-                    ) as [string | undefined, Record<string, string | number | boolean> | undefined];
+                        (lastblockname ?? "") == "" ? [undefined, undefined]
+                        : lastblockname == "keep" ? ["air"]
+                        : [BlockTypes.get(lastblockname!)!?.id, lastblockstates]) as [
+                        string | undefined,
+                        Record<string, string | number | boolean> | undefined,
+                    ];
                     const coordinatesa = player.getDynamicProperty("pos1") as Vector3 | undefined;
                     const coordinatesb = player.getDynamicProperty("pos2") as Vector3 | undefined;
                     const ca = {
@@ -20273,9 +20255,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                             } ms over ${a.completionData.endTick! - a.completionData.startTick} tick${
                                                                 a.completionData.endTick! - a.completionData.startTick == 1 ? "" : "s"
                                                             }${
-                                                                a.completionData.containsUnloadedChunks
-                                                                    ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                                    : ""
+                                                                a.completionData.containsUnloadedChunks ?
+                                                                    "; Some blocks were not generated because they were in unloaded chunks. "
+                                                                :   ""
                                                             }`
                                                         );
                                                     },
@@ -20357,9 +20339,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                 dimensiona!,
                                                 (l, i) => {
                                                     const b = firstblockpattern.generateBlock(i);
-                                                    return b.type === "random"
-                                                        ? BlockPermutation.resolve(blocktypes[Math.floor(blocktypes.length * Math.random())]!.id)
-                                                        : BlockPermutation.resolve(b.type, b.states);
+                                                    return b.type === "random" ?
+                                                            BlockPermutation.resolve(blocktypes[Math.floor(blocktypes.length * Math.random())]!.id)
+                                                        :   BlockPermutation.resolve(b.type, b.states);
                                                 },
                                                 {
                                                     blockMask: mask!,
@@ -20374,9 +20356,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                         `${a.counter == 0n ? "§c" : ""}${a.counter} blocks replaced in ${a.endTime - a.startTime} ms over ${
                                                             a.endTick - a.startTick
                                                         } tick${a.endTick - a.startTick == 1 ? "" : "s"}${
-                                                            a.containsUnloadedChunks
-                                                                ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                                : ""
+                                                            a.containsUnloadedChunks ?
+                                                                "; Some blocks were not generated because they were in unloaded chunks. "
+                                                            :   ""
                                                         }`
                                                     );
                                                 },
@@ -20458,9 +20440,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                 dimensiona!,
                                                 (l, i) => {
                                                     const b = firstblockpattern.generateBlock(i);
-                                                    return b.type === "random"
-                                                        ? BlockPermutation.resolve(blocktypes[Math.floor(blocktypes.length * Math.random())]!.id)
-                                                        : BlockPermutation.resolve(b.type, b.states);
+                                                    return b.type === "random" ?
+                                                            BlockPermutation.resolve(blocktypes[Math.floor(blocktypes.length * Math.random())]!.id)
+                                                        :   BlockPermutation.resolve(b.type, b.states);
                                                 },
                                                 {
                                                     blockMask: mask!,
@@ -20475,9 +20457,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                         `${a.counter == 0n ? "§c" : ""}${a.counter} blocks filled in ${a.endTime - a.startTime} ms over ${
                                                             a.endTick - a.startTick
                                                         } tick${a.endTick - a.startTick == 1 ? "" : "s"}${
-                                                            a.containsUnloadedChunks
-                                                                ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                                : ""
+                                                            a.containsUnloadedChunks ?
+                                                                "; Some blocks were not generated because they were in unloaded chunks. "
+                                                            :   ""
                                                         }`
                                                     );
                                                 },
@@ -20571,9 +20553,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                 dimensiona!,
                                                 (l, i) => {
                                                     const b = firstblockpattern.generateBlock(i);
-                                                    return b.type === "random"
-                                                        ? BlockPermutation.resolve(blocktypes[Math.floor(blocktypes.length * Math.random())]!.id)
-                                                        : BlockPermutation.resolve(b.type, b.states);
+                                                    return b.type === "random" ?
+                                                            BlockPermutation.resolve(blocktypes[Math.floor(blocktypes.length * Math.random())]!.id)
+                                                        :   BlockPermutation.resolve(b.type, b.states);
                                                 },
                                                 {
                                                     blockMask: mask!,
@@ -20588,9 +20570,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                         `${a.counter == 0n ? "§c" : ""}${a.counter} blocks filled in ${a.endTime - a.startTime} ms over ${
                                                             a.endTick - a.startTick
                                                         } tick${a.endTick - a.startTick == 1 ? "" : "s"}${
-                                                            a.containsUnloadedChunks
-                                                                ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                                : ""
+                                                            a.containsUnloadedChunks ?
+                                                                "; Some blocks were not generated because they were in unloaded chunks. "
+                                                            :   ""
                                                         }`
                                                     );
                                                 },
@@ -20674,9 +20656,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                 dimensiona!,
                                                 (l, i) => {
                                                     const b = firstblockpattern.generateBlock(i);
-                                                    return b.type === "random"
-                                                        ? BlockPermutation.resolve(blocktypes[Math.floor(blocktypes.length * Math.random())]!.id)
-                                                        : BlockPermutation.resolve(b.type, b.states);
+                                                    return b.type === "random" ?
+                                                            BlockPermutation.resolve(blocktypes[Math.floor(blocktypes.length * Math.random())]!.id)
+                                                        :   BlockPermutation.resolve(b.type, b.states);
                                                 },
                                                 {
                                                     blockMask: mask!,
@@ -20691,9 +20673,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                         `${a.counter == 0n ? "§c" : ""}${a.counter} blocks filled in ${a.endTime - a.startTime} ms over ${
                                                             a.endTick - a.startTick
                                                         } tick${a.endTick - a.startTick == 1 ? "" : "s"}${
-                                                            a.containsUnloadedChunks
-                                                                ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                                : ""
+                                                            a.containsUnloadedChunks ?
+                                                                "; Some blocks were not generated because they were in unloaded chunks. "
+                                                            :   ""
                                                         }`
                                                     );
                                                 },
@@ -20792,9 +20774,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                 dimensiona!,
                                                 (l, i) => {
                                                     const b = firstblockpattern.generateBlock(i);
-                                                    return b.type === "random"
-                                                        ? BlockPermutation.resolve(blocktypes[Math.floor(blocktypes.length * Math.random())]!.id)
-                                                        : BlockPermutation.resolve(b.type, b.states);
+                                                    return b.type === "random" ?
+                                                            BlockPermutation.resolve(blocktypes[Math.floor(blocktypes.length * Math.random())]!.id)
+                                                        :   BlockPermutation.resolve(b.type, b.states);
                                                 },
                                                 {
                                                     blockMask: mask!,
@@ -20809,9 +20791,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                         `${a.counter == 0n ? "§c" : ""}${a.counter} blocks filled in ${a.endTime - a.startTime} ms over ${
                                                             a.endTick - a.startTick
                                                         } tick${a.endTick - a.startTick == 1 ? "" : "s"}${
-                                                            a.containsUnloadedChunks
-                                                                ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                                : ""
+                                                            a.containsUnloadedChunks ?
+                                                                "; Some blocks were not generated because they were in unloaded chunks. "
+                                                            :   ""
                                                         }`
                                                     );
                                                 },
@@ -20840,8 +20822,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                     const args = [...argsa.args, argsa.extra];
                     const firstblockpattern = args[2] as BlockPattern;
                     const expression = (
-                        (args[1] as string).includes("r") ? parseExpressionR : (args[3] as string).includes("s") ? parseExpressionKE : parseExpression
-                    )(args[3] as string);
+                        (args[1] as string).includes("r") ? parseExpressionR
+                        : (args[3] as string).includes("s") ? parseExpressionKE
+                        : parseExpression)(args[3] as string);
                     const coordinatesa = player.getDynamicProperty("pos1") as Vector3 | undefined;
                     const coordinatesb = player.getDynamicProperty("pos2") as Vector3 | undefined;
                     const dimensiona = world.getDimension((player.getDynamicProperty("posD") ?? player.dimension.id) as string) as Dimension | undefined;
@@ -20874,9 +20857,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                     (l) => {
                                                         const b = firstblockpattern.generateBlock(l.count);
                                                         const t =
-                                                            b.type === "random"
-                                                                ? BlockPermutation.resolve(blocktypes[Math.floor(blocktypes.length * Math.random())]!.id)
-                                                                : BlockPermutation.resolve(b.type, b.states);
+                                                            b.type === "random" ?
+                                                                BlockPermutation.resolve(blocktypes[Math.floor(blocktypes.length * Math.random())]!.id)
+                                                            :   BlockPermutation.resolve(b.type, b.states);
                                                         dimensiona!.setBlockPermutation(l, t);
                                                     },
                                                     coordinatesa,
@@ -20914,8 +20897,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                     const args = [...argsa.args, argsa.extra];
                     const firstblockpattern = args[2] as BlockPattern;
                     const expression = (
-                        (args[1] as string).includes("r") ? parseExpressionBR : (args[3] as string).includes("s") ? parseExpressionBKE : parseExpressionB
-                    )(args[3] as string);
+                        (args[1] as string).includes("r") ? parseExpressionBR
+                        : (args[3] as string).includes("s") ? parseExpressionBKE
+                        : parseExpressionB)(args[3] as string);
                     const coordinatesa = player.getDynamicProperty("pos1") as Vector3 | undefined;
                     const coordinatesb = player.getDynamicProperty("pos2") as Vector3 | undefined;
                     const dimensiona = world.getDimension((player.getDynamicProperty("posD") ?? player.dimension.id) as string) as Dimension | undefined;
@@ -20948,9 +20932,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                     (l) => {
                                                         const b = firstblockpattern.generateBlock(l.count);
                                                         const t =
-                                                            b.type === "random"
-                                                                ? BlockPermutation.resolve(blocktypes[Math.floor(blocktypes.length * Math.random())]!.id)
-                                                                : BlockPermutation.resolve(b.type, b.states);
+                                                            b.type === "random" ?
+                                                                BlockPermutation.resolve(blocktypes[Math.floor(blocktypes.length * Math.random())]!.id)
+                                                            :   BlockPermutation.resolve(b.type, b.states);
                                                         dimensiona!.setBlockPermutation(l, t);
                                                     },
                                                     coordinatesa,
@@ -20988,8 +20972,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                     const args = [...argsa.args, argsa.extra] as [...typeof argsa.args, string];
                     const firstblockpattern = args[3] as BlockPattern;
                     const expression = (
-                        (args[2] as string).includes("r") ? parseExpressionBR : (args[4] as string).includes("s") ? parseExpressionBKE : parseExpressionB
-                    )(args[4] as string);
+                        (args[2] as string).includes("r") ? parseExpressionBR
+                        : (args[4] as string).includes("s") ? parseExpressionBKE
+                        : parseExpressionB)(args[4] as string);
                     const coordinatesa = player.getDynamicProperty("pos1") as Vector3 | undefined;
                     const coordinatesb = player.getDynamicProperty("pos2") as Vector3 | undefined;
                     const dimensiona = world.getDimension((player.getDynamicProperty("posD") ?? player.dimension.id) as string) as Dimension | undefined;
@@ -21022,9 +21007,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                                     (l) => {
                                                         const b = firstblockpattern.generateBlock(l.count);
                                                         const t =
-                                                            b.type === "random"
-                                                                ? BlockPermutation.resolve(blocktypes[Math.floor(blocktypes.length * Math.random())]!.id)
-                                                                : BlockPermutation.resolve(b.type, b.states);
+                                                            b.type === "random" ?
+                                                                BlockPermutation.resolve(blocktypes[Math.floor(blocktypes.length * Math.random())]!.id)
+                                                            :   BlockPermutation.resolve(b.type, b.states);
                                                         dimensiona!.setBlockPermutation(l, t);
                                                     },
                                                     coordinatesa,
@@ -21162,9 +21147,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                         ]).args;
                         args[1] ??= "";
                         const clipboard: typeof GlobalBlockClipboard | BlockClipboard<string> =
-                            args.clipboard === "global"
-                                ? BlockClipboard.global
-                                : BlockClipboard.getClipboard(!args.clipboard ? `player_${player.id}` : args.clipboard);
+                            args.clipboard === "global" ?
+                                BlockClipboard.global
+                            :   BlockClipboard.getClipboard(!args.clipboard ? `player_${player.id}` : args.clipboard);
                         const coordinatesa = player.getDynamicProperty("pos1") as Vector3 | undefined;
                         const coordinatesb = player.getDynamicProperty("pos2") as Vector3 | undefined;
                         const ca = {
@@ -21277,9 +21262,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                         ]).args;
                         args[1] ??= "";
                         const clipboard: typeof GlobalBlockClipboard | BlockClipboard<string> =
-                            args.clipboard === "global"
-                                ? BlockClipboard.global
-                                : BlockClipboard.getClipboard(!args.clipboard ? `player_${player.id}` : args.clipboard);
+                            args.clipboard === "global" ?
+                                BlockClipboard.global
+                            :   BlockClipboard.getClipboard(!args.clipboard ? `player_${player.id}` : args.clipboard);
                         const coordinatesa = player.getDynamicProperty("pos1") as Vector3 | undefined;
                         const coordinatesb = player.getDynamicProperty("pos2") as Vector3 | undefined;
                         const ca = {
@@ -21345,9 +21330,9 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     "number",
                                 ]).args;
                                 const clipboard: typeof GlobalBlockClipboard | BlockClipboard<string> =
-                                    args.clipboard === "global"
-                                        ? BlockClipboard.global
-                                        : BlockClipboard.getClipboard(!args.clipboard ? `player_${player.id}` : args.clipboard);
+                                    args.clipboard === "global" ?
+                                        BlockClipboard.global
+                                    :   BlockClipboard.getClipboard(!args.clipboard ? `player_${player.id}` : args.clipboard);
                                 //console.warn(JSON.stringify(args[1]))
                                 args[1] ??= "";
                                 args[2] ??= 1;
@@ -21397,31 +21382,24 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                             includeEntities: !args[1]!.includes("e"),
                                             waterlogged: args[1]!.includes("w"),
                                             animationMode:
-                                                args[5] == "blocks"
-                                                    ? StructureAnimationMode.Blocks
-                                                    : args[5] == "none"
-                                                    ? StructureAnimationMode.None
-                                                    : args[5] == "layers"
-                                                    ? StructureAnimationMode.Layers
-                                                    : undefined,
+                                                args[5] == "blocks" ? StructureAnimationMode.Blocks
+                                                : args[5] == "none" ? StructureAnimationMode.None
+                                                : args[5] == "layers" ? StructureAnimationMode.Layers
+                                                : undefined,
                                             animationSeconds: args[6]!,
-                                            mirror: args[1]!.includes("x")
-                                                ? args[1]!.includes("z")
-                                                    ? StructureMirrorAxis.XZ
-                                                    : StructureMirrorAxis.X
-                                                : args[1]!.includes("z")
-                                                ? StructureMirrorAxis.Z
+                                            mirror:
+                                                args[1]!.includes("x") ?
+                                                    args[1]!.includes("z") ?
+                                                        StructureMirrorAxis.XZ
+                                                    :   StructureMirrorAxis.X
+                                                : args[1]!.includes("z") ? StructureMirrorAxis.Z
                                                 : StructureMirrorAxis.None,
                                             rotation:
-                                                Math.round(args[4] / 90) == 0
-                                                    ? StructureRotation.None
-                                                    : Math.round(args[4] / 90) == 1
-                                                    ? StructureRotation.Rotate90
-                                                    : Math.round(args[4] / 90) == 2
-                                                    ? StructureRotation.Rotate180
-                                                    : Math.round(args[4] / 90) == 3
-                                                    ? StructureRotation.Rotate270
-                                                    : StructureRotation.None,
+                                                Math.round(args[4] / 90) == 0 ? StructureRotation.None
+                                                : Math.round(args[4] / 90) == 1 ? StructureRotation.Rotate90
+                                                : Math.round(args[4] / 90) == 2 ? StructureRotation.Rotate180
+                                                : Math.round(args[4] / 90) == 3 ? StructureRotation.Rotate270
+                                                : StructureRotation.None,
                                             integrity: args[2]!,
                                             integritySeed: args[3]!,
                                         });
@@ -21569,7 +21547,7 @@ Total Time Spent Generating: ${result.totalTimeSpentGenerating}`);
                                     areaType: string,
                                     name: string,
                                     mode: 0 | 1,
-                                    icon_path: string
+                                    icon_path: string,
                                 ];
                                 if (
                                     args[2]!.endsWith(":") &&
@@ -22010,60 +21988,49 @@ ${command.dp}\\itfill <offsetx: float> <offsety: float> <offsetz: float> <thickn
                         let lastblockstates = args[5];
                         let replacemode = args[6] ?? false;
                         let matchingblock: [string, { [id: string]: string | number | boolean }?] =
-                            (lastblockname ?? "") == ""
-                                ? [undefined!, undefined!]
-                                : lastblockname == "keep" || mode == "keep"
-                                ? ["air"]
-                                : [BlockTypes.get(lastblockname!)!?.id, lastblockstates];
+                            (lastblockname ?? "") == "" ? [undefined!, undefined!]
+                            : lastblockname == "keep" || mode == "keep" ? ["air"]
+                            : [BlockTypes.get(lastblockname!)!?.id, lastblockstates];
                         let cmatchingblock: [string, { [id: string]: string | number | boolean }?] =
-                            (clastblockname ?? "") == "" ? [undefined!, undefined!] : clastblockname == "keep" ? ["air"] : [clastblockname!, clastblockstates!];
+                            (clastblockname ?? "") == "" ? [undefined!, undefined!]
+                            : clastblockname == "keep" ? ["air"]
+                            : [clastblockname!, clastblockstates!];
                         let ccmatchingblock: [string, { [id: string]: string | number | boolean }?] =
-                            (cclastblockname ?? "") == ""
-                                ? [undefined!, undefined!]
-                                : cclastblockname == "keep"
-                                ? ["air"]
-                                : [cclastblockname!, cclastblockstates!];
+                            (cclastblockname ?? "") == "" ? [undefined!, undefined!]
+                            : cclastblockname == "keep" ? ["air"]
+                            : [cclastblockname!, cclastblockstates!];
                         let hsmatchingblock: [string, { [id: string]: string | number | boolean }?] =
-                            (hslastblockname ?? "") == ""
-                                ? [undefined!, undefined!]
-                                : hslastblockname == "keep"
-                                ? ["air"]
-                                : [hslastblockname!, hslastblockstates!];
+                            (hslastblockname ?? "") == "" ? [undefined!, undefined!]
+                            : hslastblockname == "keep" ? ["air"]
+                            : [hslastblockname!, hslastblockstates!];
                         let tmatchingblock: [string, { [id: string]: string | number | boolean }?] =
-                            (tlastblockname ?? "") == "" ? [undefined!, undefined!] : tlastblockname == "keep" ? ["air"] : [tlastblockname!, tlastblockstates!];
+                            (tlastblockname ?? "") == "" ? [undefined!, undefined!]
+                            : tlastblockname == "keep" ? ["air"]
+                            : [tlastblockname!, tlastblockstates!];
                         let omatchingblock: [string, { [id: string]: string | number | boolean }?] =
-                            (olastblockname ?? "") == "" ? [undefined!, undefined!] : olastblockname == "keep" ? ["air"] : [olastblockname!, olastblockstates!];
+                            (olastblockname ?? "") == "" ? [undefined!, undefined!]
+                            : olastblockname == "keep" ? ["air"]
+                            : [olastblockname!, olastblockstates!];
                         let homatchingblock: [string, { [id: string]: string | number | boolean }?] =
-                            (holastblockname ?? "") == ""
-                                ? [undefined!, undefined!]
-                                : holastblockname == "keep"
-                                ? ["air"]
-                                : [holastblockname!, holastblockstates!];
+                            (holastblockname ?? "") == "" ? [undefined!, undefined!]
+                            : holastblockname == "keep" ? ["air"]
+                            : [holastblockname!, holastblockstates!];
                         let sgmatchingblock: [string, { [id: string]: string | number | boolean }?] =
-                            (sglastblockname ?? "") == ""
-                                ? [undefined!, undefined!]
-                                : sglastblockname == "keep"
-                                ? ["air"]
-                                : [sglastblockname!, sglastblockstates!]; /*
+                            (sglastblockname ?? "") == "" ? [undefined!, undefined!]
+                            : sglastblockname == "keep" ? ["air"]
+                            : [sglastblockname!, sglastblockstates!]; /*
     console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
 
                         switch (
                             fillmodetypeenum[
-                                (skygridmode
-                                    ? sgmode
-                                    : hovoidmode
-                                    ? homode
-                                    : ovoidmode
-                                    ? omode
-                                    : tunnelmode
-                                    ? tmode
-                                    : hspheremode
-                                    ? hsmode
-                                    : circlemode
-                                    ? cmode
-                                    : ccirclemode
-                                    ? ccmode
-                                    : mode ?? "") as fillmodetypeenum
+                                (skygridmode ? sgmode
+                                : hovoidmode ? homode
+                                : ovoidmode ? omode
+                                : tunnelmode ? tmode
+                                : hspheremode ? hsmode
+                                : circlemode ? cmode
+                                : ccirclemode ? ccmode
+                                : (mode ?? "")) as fillmodetypeenum
                             ]
                         ) {
                             case "":
@@ -22497,9 +22464,9 @@ ${command.dp}\\itfill <offsetx: float> <offsety: float> <offsetz: float> <thickn
                                                             } ms over ${a.completionData.endTick! - a.completionData.startTick} tick${
                                                                 a.completionData.endTick! - a.completionData.startTick == 1 ? "" : "s"
                                                             }${
-                                                                a.completionData.containsUnloadedChunks
-                                                                    ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                                    : ""
+                                                                a.completionData.containsUnloadedChunks ?
+                                                                    "; Some blocks were not generated because they were in unloaded chunks. "
+                                                                :   ""
                                                             }`
                                                         );
                                                     },
@@ -22558,9 +22525,9 @@ ${command.dp}\\itfill <offsetx: float> <offsety: float> <offsetz: float> <thickn
                                                             } ms over ${a.completionData.endTick! - a.completionData.startTick} tick${
                                                                 a.completionData.endTick! - a.completionData.startTick == 1 ? "" : "s"
                                                             }${
-                                                                a.completionData.containsUnloadedChunks
-                                                                    ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                                    : ""
+                                                                a.completionData.containsUnloadedChunks ?
+                                                                    "; Some blocks were not generated because they were in unloaded chunks. "
+                                                                :   ""
                                                             }`
                                                         );
                                                     },
@@ -22641,9 +22608,9 @@ ${command.dp}\\itfill <offsetx: float> <offsety: float> <offsetz: float> <thickn
                                                             } ms over ${a.completionData.endTick! - a.completionData.startTick} tick${
                                                                 a.completionData.endTick! - a.completionData.startTick == 1 ? "" : "s"
                                                             }${
-                                                                a.completionData.containsUnloadedChunks
-                                                                    ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                                    : ""
+                                                                a.completionData.containsUnloadedChunks ?
+                                                                    "; Some blocks were not generated because they were in unloaded chunks. "
+                                                                :   ""
                                                             }`
                                                         );
                                                     },
@@ -22711,9 +22678,9 @@ ${command.dp}\\itfill <offsetx: float> <offsety: float> <offsetz: float> <thickn
                                                             } ms over ${a.completionData.endTick! - a.completionData.startTick} tick${
                                                                 a.completionData.endTick! - a.completionData.startTick == 1 ? "" : "s"
                                                             }${
-                                                                a.completionData.containsUnloadedChunks
-                                                                    ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                                    : ""
+                                                                a.completionData.containsUnloadedChunks ?
+                                                                    "; Some blocks were not generated because they were in unloaded chunks. "
+                                                                :   ""
                                                             }`
                                                         );
                                                     },
@@ -22775,9 +22742,9 @@ ${command.dp}\\itfill <offsetx: float> <offsety: float> <offsetz: float> <thickn
                                                             } ms over ${a.completionData.endTick! - a.completionData.startTick} tick${
                                                                 a.completionData.endTick! - a.completionData.startTick == 1 ? "" : "s"
                                                             }${
-                                                                a.completionData.containsUnloadedChunks
-                                                                    ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                                    : ""
+                                                                a.completionData.containsUnloadedChunks ?
+                                                                    "; Some blocks were not generated because they were in unloaded chunks. "
+                                                                :   ""
                                                             }`
                                                         );
                                                     },
@@ -22839,9 +22806,9 @@ ${command.dp}\\itfill <offsetx: float> <offsety: float> <offsetz: float> <thickn
                                                             } ms over ${a.completionData.endTick! - a.completionData.startTick} tick${
                                                                 a.completionData.endTick! - a.completionData.startTick == 1 ? "" : "s"
                                                             }${
-                                                                a.completionData.containsUnloadedChunks
-                                                                    ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                                    : ""
+                                                                a.completionData.containsUnloadedChunks ?
+                                                                    "; Some blocks were not generated because they were in unloaded chunks. "
+                                                                :   ""
                                                             }`
                                                         );
                                                     },
@@ -24107,61 +24074,50 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                         let lastblockstates = args[6];
                         let replacemode = args[7] ?? false;
                         let matchingblock: [string, { [id: string]: string | number | boolean }?] =
-                            (lastblockname ?? "") == ""
-                                ? [undefined!, undefined!]
-                                : lastblockname == "keep" || mode == "keep"
-                                ? ["air"]
-                                : [BlockTypes.get(lastblockname!)!?.id, lastblockstates];
+                            (lastblockname ?? "") == "" ? [undefined!, undefined!]
+                            : lastblockname == "keep" || mode == "keep" ? ["air"]
+                            : [BlockTypes.get(lastblockname!)!?.id, lastblockstates];
                         let cmatchingblock: [string, { [id: string]: string | number | boolean }?] =
-                            (clastblockname ?? "") == "" ? [undefined!, undefined!] : clastblockname == "keep" ? ["air"] : [clastblockname!, clastblockstates!];
+                            (clastblockname ?? "") == "" ? [undefined!, undefined!]
+                            : clastblockname == "keep" ? ["air"]
+                            : [clastblockname!, clastblockstates!];
                         let ccmatchingblock: [string, { [id: string]: string | number | boolean }?] =
-                            (cclastblockname ?? "") == ""
-                                ? [undefined!, undefined!]
-                                : cclastblockname == "keep"
-                                ? ["air"]
-                                : [cclastblockname!, cclastblockstates!];
+                            (cclastblockname ?? "") == "" ? [undefined!, undefined!]
+                            : cclastblockname == "keep" ? ["air"]
+                            : [cclastblockname!, cclastblockstates!];
                         let hsmatchingblock: [string, { [id: string]: string | number | boolean }?] =
-                            (hslastblockname ?? "") == ""
-                                ? [undefined!, undefined!]
-                                : hslastblockname == "keep"
-                                ? ["air"]
-                                : [hslastblockname!, hslastblockstates!];
+                            (hslastblockname ?? "") == "" ? [undefined!, undefined!]
+                            : hslastblockname == "keep" ? ["air"]
+                            : [hslastblockname!, hslastblockstates!];
                         let tmatchingblock: [string, { [id: string]: string | number | boolean }?] =
-                            (tlastblockname ?? "") == "" ? [undefined!, undefined!] : tlastblockname == "keep" ? ["air"] : [tlastblockname!, tlastblockstates!];
+                            (tlastblockname ?? "") == "" ? [undefined!, undefined!]
+                            : tlastblockname == "keep" ? ["air"]
+                            : [tlastblockname!, tlastblockstates!];
                         let omatchingblock: [string, { [id: string]: string | number | boolean }?] =
-                            (olastblockname ?? "") == "" ? [undefined!, undefined!] : olastblockname == "keep" ? ["air"] : [olastblockname!, olastblockstates!];
+                            (olastblockname ?? "") == "" ? [undefined!, undefined!]
+                            : olastblockname == "keep" ? ["air"]
+                            : [olastblockname!, olastblockstates!];
                         let homatchingblock: [string, { [id: string]: string | number | boolean }?] =
-                            (holastblockname ?? "") == ""
-                                ? [undefined!, undefined!]
-                                : holastblockname == "keep"
-                                ? ["air"]
-                                : [holastblockname!, holastblockstates!];
+                            (holastblockname ?? "") == "" ? [undefined!, undefined!]
+                            : holastblockname == "keep" ? ["air"]
+                            : [holastblockname!, holastblockstates!];
                         let sgmatchingblock: [string, { [id: string]: string | number | boolean }?] =
-                            (sglastblockname ?? "") == ""
-                                ? [undefined!, undefined!]
-                                : sglastblockname == "keep"
-                                ? ["air"]
-                                : [sglastblockname!, sglastblockstates!];
+                            (sglastblockname ?? "") == "" ? [undefined!, undefined!]
+                            : sglastblockname == "keep" ? ["air"]
+                            : [sglastblockname!, sglastblockstates!];
                         const blocktypes = BlockTypes.getAll(); /*
             console.warn(JSONStringify({coordinatesa, coordinatesb, firstblockname!, firstblocknameindex, reststringaftercoordinates, firstblockstates, lastblockname, somethingtest, lastblockstates, matchingblock}))*/
 
                         switch (
                             fillmodetypeenum[
-                                (skygridmode
-                                    ? sgmode
-                                    : hovoidmode
-                                    ? homode
-                                    : ovoidmode
-                                    ? omode
-                                    : tunnelmode
-                                    ? tmode
-                                    : hspheremode
-                                    ? hsmode
-                                    : circlemode
-                                    ? cmode
-                                    : ccirclemode
-                                    ? ccmode
-                                    : mode ?? "") as fillmodetypeenum
+                                (skygridmode ? sgmode
+                                : hovoidmode ? homode
+                                : ovoidmode ? omode
+                                : tunnelmode ? tmode
+                                : hspheremode ? hsmode
+                                : circlemode ? cmode
+                                : ccirclemode ? ccmode
+                                : (mode ?? "")) as fillmodetypeenum
                             ]
                         ) {
                             case "":
@@ -24185,9 +24141,9 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                     coordinatesa,
                                                     coordinatesb,
                                                     player.dimension,
-                                                    firstblockname == "random"
-                                                        ? () => blocktypes[Math.floor(blocktypes.length * Math.random())]!
-                                                        : firstblockname!,
+                                                    firstblockname == "random" ?
+                                                        () => blocktypes[Math.floor(blocktypes.length * Math.random())]!
+                                                    :   firstblockname!,
                                                     firstblockstates,
                                                     {
                                                         matchingBlock: matchingblock[0],
@@ -24205,9 +24161,9 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                             } ms over ${a.completionData.endTick! - a.completionData.startTick} tick${
                                                                 a.completionData.endTick! - a.completionData.startTick == 1 ? "" : "s"
                                                             }${
-                                                                a.completionData.containsUnloadedChunks
-                                                                    ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                                    : ""
+                                                                a.completionData.containsUnloadedChunks ?
+                                                                    "; Some blocks were not generated because they were in unloaded chunks. "
+                                                                :   ""
                                                             }`
                                                         );
                                                     },
@@ -24247,9 +24203,9 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                     coordinatesa,
                                                     coordinatesb,
                                                     player.dimension,
-                                                    firstblockname == "random"
-                                                        ? () => blocktypes[Math.floor(blocktypes.length * Math.random())]!
-                                                        : firstblockname!,
+                                                    firstblockname == "random" ?
+                                                        () => blocktypes[Math.floor(blocktypes.length * Math.random())]!
+                                                    :   firstblockname!,
                                                     firstblockstates,
                                                     {
                                                         matchingBlock: matchingblock[0],
@@ -24267,9 +24223,9 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                             } ms over ${a.completionData.endTick! - a.completionData.startTick} tick${
                                                                 a.completionData.endTick! - a.completionData.startTick == 1 ? "" : "s"
                                                             }${
-                                                                a.completionData.containsUnloadedChunks
-                                                                    ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                                    : ""
+                                                                a.completionData.containsUnloadedChunks ?
+                                                                    "; Some blocks were not generated because they were in unloaded chunks. "
+                                                                :   ""
                                                             }`
                                                         );
                                                     },
@@ -24378,9 +24334,9 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                     coordinatesa,
                                                     coordinatesb,
                                                     player.dimension,
-                                                    firstblockname == "random"
-                                                        ? () => blocktypes[Math.floor(blocktypes.length * Math.random())]!
-                                                        : firstblockname!,
+                                                    firstblockname == "random" ?
+                                                        () => blocktypes[Math.floor(blocktypes.length * Math.random())]!
+                                                    :   firstblockname!,
                                                     firstblockstates,
                                                     {
                                                         matchingBlock: matchingblock[0],
@@ -24398,9 +24354,9 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                             } ms over ${a.completionData.endTick! - a.completionData.startTick} tick${
                                                                 a.completionData.endTick! - a.completionData.startTick == 1 ? "" : "s"
                                                             }${
-                                                                a.completionData.containsUnloadedChunks
-                                                                    ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                                    : ""
+                                                                a.completionData.containsUnloadedChunks ?
+                                                                    "; Some blocks were not generated because they were in unloaded chunks. "
+                                                                :   ""
                                                             }`
                                                         );
                                                     },
@@ -24440,9 +24396,9 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                     coordinatesa,
                                                     coordinatesb,
                                                     player.dimension,
-                                                    firstblockname == "random"
-                                                        ? () => blocktypes[Math.floor(blocktypes.length * Math.random())]!
-                                                        : firstblockname!,
+                                                    firstblockname == "random" ?
+                                                        () => blocktypes[Math.floor(blocktypes.length * Math.random())]!
+                                                    :   firstblockname!,
                                                     firstblockstates,
                                                     {
                                                         matchingBlock: "air",
@@ -24459,9 +24415,9 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                             } ms over ${a.completionData.endTick! - a.completionData.startTick} tick${
                                                                 a.completionData.endTick! - a.completionData.startTick == 1 ? "" : "s"
                                                             }${
-                                                                a.completionData.containsUnloadedChunks
-                                                                    ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                                    : ""
+                                                                a.completionData.containsUnloadedChunks ?
+                                                                    "; Some blocks were not generated because they were in unloaded chunks. "
+                                                                :   ""
                                                             }`
                                                         );
                                                     },
@@ -24501,9 +24457,9 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                     coordinatesa,
                                                     coordinatesb,
                                                     player.dimension,
-                                                    firstblockname == "random"
-                                                        ? () => blocktypes[Math.floor(blocktypes.length * Math.random())]!
-                                                        : firstblockname!,
+                                                    firstblockname == "random" ?
+                                                        () => blocktypes[Math.floor(blocktypes.length * Math.random())]!
+                                                    :   firstblockname!,
                                                     firstblockstates,
                                                     {
                                                         matchingBlock: matchingblock[0],
@@ -24521,9 +24477,9 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                             } ms over ${a.completionData.endTick! - a.completionData.startTick} tick${
                                                                 a.completionData.endTick! - a.completionData.startTick == 1 ? "" : "s"
                                                             }${
-                                                                a.completionData.containsUnloadedChunks
-                                                                    ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                                    : ""
+                                                                a.completionData.containsUnloadedChunks ?
+                                                                    "; Some blocks were not generated because they were in unloaded chunks. "
+                                                                :   ""
                                                             }`
                                                         );
                                                     },
@@ -24563,9 +24519,9 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                     coordinatesa,
                                                     coordinatesb,
                                                     player.dimension,
-                                                    firstblockname == "random"
-                                                        ? () => blocktypes[Math.floor(blocktypes.length * Math.random())]!
-                                                        : firstblockname!,
+                                                    firstblockname == "random" ?
+                                                        () => blocktypes[Math.floor(blocktypes.length * Math.random())]!
+                                                    :   firstblockname!,
                                                     firstblockstates,
                                                     {
                                                         matchingBlock: matchingblock[0],
@@ -24583,9 +24539,9 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                             } ms over ${a.completionData.endTick! - a.completionData.startTick} tick${
                                                                 a.completionData.endTick! - a.completionData.startTick == 1 ? "" : "s"
                                                             }${
-                                                                a.completionData.containsUnloadedChunks
-                                                                    ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                                    : ""
+                                                                a.completionData.containsUnloadedChunks ?
+                                                                    "; Some blocks were not generated because they were in unloaded chunks. "
+                                                                :   ""
                                                             }`
                                                         );
                                                     },
@@ -24625,9 +24581,9 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                     coordinatesa,
                                                     coordinatesb,
                                                     player.dimension,
-                                                    firstblockname == "random"
-                                                        ? () => blocktypes[Math.floor(blocktypes.length * Math.random())]!
-                                                        : firstblockname!,
+                                                    firstblockname == "random" ?
+                                                        () => blocktypes[Math.floor(blocktypes.length * Math.random())]!
+                                                    :   firstblockname!,
                                                     firstblockstates,
                                                     {
                                                         matchingBlock: matchingblock[0],
@@ -24645,9 +24601,9 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                             } ms over ${a.completionData.endTick! - a.completionData.startTick} tick${
                                                                 a.completionData.endTick! - a.completionData.startTick == 1 ? "" : "s"
                                                             }${
-                                                                a.completionData.containsUnloadedChunks
-                                                                    ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                                    : ""
+                                                                a.completionData.containsUnloadedChunks ?
+                                                                    "; Some blocks were not generated because they were in unloaded chunks. "
+                                                                :   ""
                                                             }`
                                                         );
                                                     },
@@ -24750,9 +24706,9 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                             } ms over ${a.completionData.endTick! - a.completionData.startTick} tick${
                                                                 a.completionData.endTick! - a.completionData.startTick == 1 ? "" : "s"
                                                             }${
-                                                                a.completionData.containsUnloadedChunks
-                                                                    ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                                    : ""
+                                                                a.completionData.containsUnloadedChunks ?
+                                                                    "; Some blocks were not generated because they were in unloaded chunks. "
+                                                                :   ""
                                                             }`
                                                         );
                                                     },
@@ -24811,9 +24767,9 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                             } ms over ${a.completionData.endTick! - a.completionData.startTick} tick${
                                                                 a.completionData.endTick! - a.completionData.startTick == 1 ? "" : "s"
                                                             }${
-                                                                a.completionData.containsUnloadedChunks
-                                                                    ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                                    : ""
+                                                                a.completionData.containsUnloadedChunks ?
+                                                                    "; Some blocks were not generated because they were in unloaded chunks. "
+                                                                :   ""
                                                             }`
                                                         );
                                                     },
@@ -24882,9 +24838,9 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                             } ms over ${a.completionData.endTick! - a.completionData.startTick} tick${
                                                                 a.completionData.endTick! - a.completionData.startTick == 1 ? "" : "s"
                                                             }${
-                                                                a.completionData.containsUnloadedChunks
-                                                                    ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                                    : ""
+                                                                a.completionData.containsUnloadedChunks ?
+                                                                    "; Some blocks were not generated because they were in unloaded chunks. "
+                                                                :   ""
                                                             }`
                                                         );
                                                     },
@@ -24940,9 +24896,9 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                             } ms over ${a.completionData.endTick! - a.completionData.startTick} tick${
                                                                 a.completionData.endTick! - a.completionData.startTick == 1 ? "" : "s"
                                                             }${
-                                                                a.completionData.containsUnloadedChunks
-                                                                    ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                                    : ""
+                                                                a.completionData.containsUnloadedChunks ?
+                                                                    "; Some blocks were not generated because they were in unloaded chunks. "
+                                                                :   ""
                                                             }`
                                                         );
                                                     },
@@ -24992,9 +24948,9 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                             } ms over ${a.completionData.endTick! - a.completionData.startTick} tick${
                                                                 a.completionData.endTick! - a.completionData.startTick == 1 ? "" : "s"
                                                             }${
-                                                                a.completionData.containsUnloadedChunks
-                                                                    ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                                    : ""
+                                                                a.completionData.containsUnloadedChunks ?
+                                                                    "; Some blocks were not generated because they were in unloaded chunks. "
+                                                                :   ""
                                                             }`
                                                         );
                                                     },
@@ -25044,9 +25000,9 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                             } ms over ${a.completionData.endTick! - a.completionData.startTick} tick${
                                                                 a.completionData.endTick! - a.completionData.startTick == 1 ? "" : "s"
                                                             }${
-                                                                a.completionData.containsUnloadedChunks
-                                                                    ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                                    : ""
+                                                                a.completionData.containsUnloadedChunks ?
+                                                                    "; Some blocks were not generated because they were in unloaded chunks. "
+                                                                :   ""
                                                             }`
                                                         );
                                                     },
@@ -25847,7 +25803,9 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                         if (!args[1]!.l) {
                                             slot.setLore([
                                                 `§r§bBrush Type: §aRemExp${
-                                                    args[2]!.toLowerCase() === "remexpne" ? "NE" : args[2]!.toLowerCase() === "remexpe" ? "E" : ""
+                                                    args[2]!.toLowerCase() === "remexpne" ? "NE"
+                                                    : args[2]!.toLowerCase() === "remexpe" ? "E"
+                                                    : ""
                                                 }`,
                                                 `§r§bBrush Radius: ${isNaN(Number(args[3] ?? undefined)) ? 10 : args[3]}`,
                                             ]);
@@ -25894,16 +25852,16 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                         "§r§d...",
                                                     ].slice(0, (args[4] as BlockPattern).blocks.length <= 15 ? -1 : undefined),
                                                     `§r§bBrush Pattern Type: §a${(args[4] as BlockPattern).type}`,
-                                                    ...(args[6] != undefined
-                                                        ? [
-                                                              "§r§bBrush Mask: §d",
-                                                              ...args[6]!.blocks
-                                                                  .map((v) => v.rawns)
-                                                                  .slice(0, 15)
-                                                                  .map((v) => `§r§d${v}`),
-                                                              "§r§d...",
-                                                          ].slice(0, args[6]!.blocks.length <= 15 ? -1 : undefined)
-                                                        : []),
+                                                    ...(args[6] != undefined ?
+                                                        [
+                                                            "§r§bBrush Mask: §d",
+                                                            ...args[6]!.blocks
+                                                                .map((v) => v.rawns)
+                                                                .slice(0, 15)
+                                                                .map((v) => `§r§d${v}`),
+                                                            "§r§d...",
+                                                        ].slice(0, args[6]!.blocks.length <= 15 ? -1 : undefined)
+                                                    :   []),
                                                     ...(args[6] != undefined ? [`§r§bBrush Mask Type: §a${args[6]!.type}`] : []),
                                                 ])
                                             );
@@ -25950,16 +25908,16 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                         "§r§d...",
                                                     ].slice(0, (args[4] as BlockPattern).blocks.length <= 15 ? -1 : undefined),
                                                     `§r§bBrush Pattern Type: §a${(args[4] as BlockPattern).type}`,
-                                                    ...(args[6] != undefined
-                                                        ? [
-                                                              "§r§bBrush Mask: §d",
-                                                              ...args[6]!.blocks
-                                                                  .map((v) => v.rawns)
-                                                                  .slice(0, 15)
-                                                                  .map((v) => `§r§d${v}`),
-                                                              "§r§d...",
-                                                          ].slice(0, args[6]!.blocks.length <= 15 ? -1 : undefined)
-                                                        : []),
+                                                    ...(args[6] != undefined ?
+                                                        [
+                                                            "§r§bBrush Mask: §d",
+                                                            ...args[6]!.blocks
+                                                                .map((v) => v.rawns)
+                                                                .slice(0, 15)
+                                                                .map((v) => `§r§d${v}`),
+                                                            "§r§d...",
+                                                        ].slice(0, args[6]!.blocks.length <= 15 ? -1 : undefined)
+                                                    :   []),
                                                     ...(args[6] != undefined ? [`§r§bBrush Mask Type: §a${args[6]!.type}`] : []),
                                                 ])
                                             );
@@ -26006,16 +25964,16 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                         "§r§d...",
                                                     ].slice(0, (args[4] as BlockPattern).blocks.length <= 15 ? -1 : undefined),
                                                     `§r§bBrush Pattern Type: §a${(args[4] as BlockPattern).type}`,
-                                                    ...(args[6] != undefined
-                                                        ? [
-                                                              "§r§bBrush Mask: §d",
-                                                              ...args[6]!.blocks
-                                                                  .map((v) => v.rawns)
-                                                                  .slice(0, 15)
-                                                                  .map((v) => `§r§d${v}`),
-                                                              "§r§d...",
-                                                          ].slice(0, args[6]!.blocks.length <= 15 ? -1 : undefined)
-                                                        : []),
+                                                    ...(args[6] != undefined ?
+                                                        [
+                                                            "§r§bBrush Mask: §d",
+                                                            ...args[6]!.blocks
+                                                                .map((v) => v.rawns)
+                                                                .slice(0, 15)
+                                                                .map((v) => `§r§d${v}`),
+                                                            "§r§d...",
+                                                        ].slice(0, args[6]!.blocks.length <= 15 ? -1 : undefined)
+                                                    :   []),
                                                     ...(args[6] != undefined ? [`§r§bBrush Mask Type: §a${args[6]!.type}`] : []),
                                                 ])
                                             );
@@ -26067,16 +26025,16 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                         "§r§d...",
                                                     ].slice(0, (args[4] as BlockPattern).blocks.length <= 15 ? -1 : undefined),
                                                     `§r§bBrush Pattern Type: §a${(args[4] as BlockPattern).type}`,
-                                                    ...(args[7] != undefined
-                                                        ? [
-                                                              "§r§bBrush Mask: §d",
-                                                              ...args[7]!.blocks
-                                                                  .map((v) => v.rawns)
-                                                                  .slice(0, 15)
-                                                                  .map((v) => `§r§d${v}`),
-                                                              "§r§d...",
-                                                          ].slice(0, args[7]!.blocks.length <= 15 ? -1 : undefined)
-                                                        : []),
+                                                    ...(args[7] != undefined ?
+                                                        [
+                                                            "§r§bBrush Mask: §d",
+                                                            ...args[7]!.blocks
+                                                                .map((v) => v.rawns)
+                                                                .slice(0, 15)
+                                                                .map((v) => `§r§d${v}`),
+                                                            "§r§d...",
+                                                        ].slice(0, args[7]!.blocks.length <= 15 ? -1 : undefined)
+                                                    :   []),
                                                     ...(args[7] != undefined ? [`§r§bBrush Mask Type: §a${args[7]!.type}`] : []),
                                                 ])
                                             );
@@ -26126,16 +26084,16 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                         "§r§d...",
                                                     ].slice(0, (args[4] as BlockPattern).blocks.length <= 15 ? -1 : undefined),
                                                     `§r§bBrush Pattern Type: §a${(args[4] as BlockPattern).type}`,
-                                                    ...(args[7] != undefined
-                                                        ? [
-                                                              "§r§bBrush Mask: §d",
-                                                              ...args[7]!.blocks
-                                                                  .map((v) => v.rawns)
-                                                                  .slice(0, 15)
-                                                                  .map((v) => `§r§d${v}`),
-                                                              "§r§d...",
-                                                          ].slice(0, args[7]!.blocks.length <= 15 ? -1 : undefined)
-                                                        : []),
+                                                    ...(args[7] != undefined ?
+                                                        [
+                                                            "§r§bBrush Mask: §d",
+                                                            ...args[7]!.blocks
+                                                                .map((v) => v.rawns)
+                                                                .slice(0, 15)
+                                                                .map((v) => `§r§d${v}`),
+                                                            "§r§d...",
+                                                        ].slice(0, args[7]!.blocks.length <= 15 ? -1 : undefined)
+                                                    :   []),
                                                     ...(args[7] != undefined ? [`§r§bBrush Mask Type: §a${args[7]!.type}`] : []),
                                                 ])
                                             );
@@ -26185,16 +26143,16 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                         "§r§d...",
                                                     ].slice(0, (args[4] as BlockPattern).blocks.length <= 15 ? -1 : undefined),
                                                     `§r§bBrush Pattern Type: §a${(args[4] as BlockPattern).type}`,
-                                                    ...(args[7] != undefined
-                                                        ? [
-                                                              "§r§bBrush Mask: §d",
-                                                              ...args[7]!.blocks
-                                                                  .map((v) => v.rawns)
-                                                                  .slice(0, 15)
-                                                                  .map((v) => `§r§d${v}`),
-                                                              "§r§d...",
-                                                          ].slice(0, args[7]!.blocks.length <= 15 ? -1 : undefined)
-                                                        : []),
+                                                    ...(args[7] != undefined ?
+                                                        [
+                                                            "§r§bBrush Mask: §d",
+                                                            ...args[7]!.blocks
+                                                                .map((v) => v.rawns)
+                                                                .slice(0, 15)
+                                                                .map((v) => `§r§d${v}`),
+                                                            "§r§d...",
+                                                        ].slice(0, args[7]!.blocks.length <= 15 ? -1 : undefined)
+                                                    :   []),
                                                     ...(args[7] != undefined ? [`§r§bBrush Mask Type: §a${args[7]!.type}`] : []),
                                                 ])
                                             );
@@ -26244,16 +26202,16 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                         "§r§d...",
                                                     ].slice(0, (args[4] as BlockPattern).blocks.length <= 15 ? -1 : undefined),
                                                     `§r§bBrush Pattern Type: §a${(args[4] as BlockPattern).type}`,
-                                                    ...(args[7] != undefined
-                                                        ? [
-                                                              "§r§bBrush Mask: §d",
-                                                              ...args[7]!.blocks
-                                                                  .map((v) => v.rawns)
-                                                                  .slice(0, 15)
-                                                                  .map((v) => `§r§d${v}`),
-                                                              "§r§d...",
-                                                          ].slice(0, args[7]!.blocks.length <= 15 ? -1 : undefined)
-                                                        : []),
+                                                    ...(args[7] != undefined ?
+                                                        [
+                                                            "§r§bBrush Mask: §d",
+                                                            ...args[7]!.blocks
+                                                                .map((v) => v.rawns)
+                                                                .slice(0, 15)
+                                                                .map((v) => `§r§d${v}`),
+                                                            "§r§d...",
+                                                        ].slice(0, args[7]!.blocks.length <= 15 ? -1 : undefined)
+                                                    :   []),
                                                     ...(args[7] != undefined ? [`§r§bBrush Mask Type: §a${args[7]!.type}`] : []),
                                                 ])
                                             );
@@ -26303,16 +26261,16 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                         "§r§d...",
                                                     ].slice(0, (args[4] as BlockPattern).blocks.length <= 15 ? -1 : undefined),
                                                     `§r§bBrush Pattern Type: §a${(args[4] as BlockPattern).type}`,
-                                                    ...(args[7] != undefined
-                                                        ? [
-                                                              "§r§bBrush Mask: §d",
-                                                              ...args[7]!.blocks
-                                                                  .map((v) => v.rawns)
-                                                                  .slice(0, 15)
-                                                                  .map((v) => `§r§d${v}`),
-                                                              "§r§d...",
-                                                          ].slice(0, args[7]!.blocks.length <= 15 ? -1 : undefined)
-                                                        : []),
+                                                    ...(args[7] != undefined ?
+                                                        [
+                                                            "§r§bBrush Mask: §d",
+                                                            ...args[7]!.blocks
+                                                                .map((v) => v.rawns)
+                                                                .slice(0, 15)
+                                                                .map((v) => `§r§d${v}`),
+                                                            "§r§d...",
+                                                        ].slice(0, args[7]!.blocks.length <= 15 ? -1 : undefined)
+                                                    :   []),
                                                     ...(args[7] != undefined ? [`§r§bBrush Mask Type: §a${args[7]!.type}`] : []),
                                                 ])
                                             );
@@ -26362,16 +26320,16 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                         "§r§d...",
                                                     ].slice(0, (args[4] as BlockPattern).blocks.length <= 15 ? -1 : undefined),
                                                     `§r§bBrush Pattern Type: §a${(args[4] as BlockPattern).type}`,
-                                                    ...(args[7] != undefined
-                                                        ? [
-                                                              "§r§bBrush Mask: §d",
-                                                              ...args[7]!.blocks
-                                                                  .map((v) => v.rawns)
-                                                                  .slice(0, 15)
-                                                                  .map((v) => `§r§d${v}`),
-                                                              "§r§d...",
-                                                          ].slice(0, args[7]!.blocks.length <= 15 ? -1 : undefined)
-                                                        : []),
+                                                    ...(args[7] != undefined ?
+                                                        [
+                                                            "§r§bBrush Mask: §d",
+                                                            ...args[7]!.blocks
+                                                                .map((v) => v.rawns)
+                                                                .slice(0, 15)
+                                                                .map((v) => `§r§d${v}`),
+                                                            "§r§d...",
+                                                        ].slice(0, args[7]!.blocks.length <= 15 ? -1 : undefined)
+                                                    :   []),
                                                     ...(args[7] != undefined ? [`§r§bBrush Mask Type: §a${args[7]!.type}`] : []),
                                                 ])
                                             );
@@ -26426,16 +26384,16 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                         "§r§d...",
                                                     ].slice(0, (args[4] as BlockPattern).blocks.length <= 15 ? -1 : undefined),
                                                     `§r§bBrush Pattern Type: §a${(args[4] as BlockPattern).type}`,
-                                                    ...(args[7] != undefined
-                                                        ? [
-                                                              "§r§bBrush Mask: §d",
-                                                              ...args[7]!.blocks
-                                                                  .map((v) => v.rawns)
-                                                                  .slice(0, 15)
-                                                                  .map((v) => `§r§d${v}`),
-                                                              "§r§d...",
-                                                          ].slice(0, args[7]!.blocks.length <= 15 ? -1 : undefined)
-                                                        : []),
+                                                    ...(args[7] != undefined ?
+                                                        [
+                                                            "§r§bBrush Mask: §d",
+                                                            ...args[7]!.blocks
+                                                                .map((v) => v.rawns)
+                                                                .slice(0, 15)
+                                                                .map((v) => `§r§d${v}`),
+                                                            "§r§d...",
+                                                        ].slice(0, args[7]!.blocks.length <= 15 ? -1 : undefined)
+                                                    :   []),
                                                     ...(args[7] != undefined ? [`§r§bBrush Mask Type: §a${args[7]!.type}`] : []),
                                                 ])
                                             );
@@ -26487,16 +26445,16 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                     `§r§bUse Reverse Offset: ${args[3].r.toFormattedString()}`,
                                                     `§r§bWhole Mode: §c${args[3].w.toFormattedString()}`,
                                                     `§r§bMove Air: §c${args[3].a.toFormattedString()}`,
-                                                    ...(args[7] != undefined
-                                                        ? [
-                                                              "§r§bBrush Mask: §d",
-                                                              ...args[7]!.blocks
-                                                                  .map((v) => v.rawns)
-                                                                  .slice(0, 15)
-                                                                  .map((v) => `§r§d${v}`),
-                                                              "§r§d...",
-                                                          ].slice(0, args[7]!.blocks.length <= 15 ? -1 : undefined)
-                                                        : []),
+                                                    ...(args[7] != undefined ?
+                                                        [
+                                                            "§r§bBrush Mask: §d",
+                                                            ...args[7]!.blocks
+                                                                .map((v) => v.rawns)
+                                                                .slice(0, 15)
+                                                                .map((v) => `§r§d${v}`),
+                                                            "§r§d...",
+                                                        ].slice(0, args[7]!.blocks.length <= 15 ? -1 : undefined)
+                                                    :   []),
                                                     ...(args[7] != undefined ? [`§r§bBrush Mask Type: §a${args[7]!.type}`] : []),
                                                 ])
                                             );
@@ -26548,16 +26506,16 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                     `§r§bUse Reverse Offset: ${args[3].r.toFormattedString()}`,
                                                     `§r§bWhole Mode: ${args[3].w.toFormattedString()}`,
                                                     `§r§bMove Air: ${args[3].a.toFormattedString()}`,
-                                                    ...(args[7] != undefined
-                                                        ? [
-                                                              "§r§bBrush Mask: §d",
-                                                              ...args[7]!.blocks
-                                                                  .map((v) => v.rawns)
-                                                                  .slice(0, 15)
-                                                                  .map((v) => `§r§d${v}`),
-                                                              "§r§d...",
-                                                          ].slice(0, args[7]!.blocks.length <= 15 ? -1 : undefined)
-                                                        : []),
+                                                    ...(args[7] != undefined ?
+                                                        [
+                                                            "§r§bBrush Mask: §d",
+                                                            ...args[7]!.blocks
+                                                                .map((v) => v.rawns)
+                                                                .slice(0, 15)
+                                                                .map((v) => `§r§d${v}`),
+                                                            "§r§d...",
+                                                        ].slice(0, args[7]!.blocks.length <= 15 ? -1 : undefined)
+                                                    :   []),
                                                     ...(args[7] != undefined ? [`§r§bBrush Mask Type: §a${args[7]!.type}`] : []),
                                                 ])
                                             );
@@ -26616,16 +26574,16 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                         "§r§d...",
                                                     ].slice(0, (args[5] as BlockPattern).blocks.length <= 15 ? -1 : undefined),
                                                     `§r§bBrush Pattern Type: §a${(args[5] as BlockPattern).type}`,
-                                                    ...(args[8] != undefined
-                                                        ? [
-                                                              "§r§bBrush Mask: §d",
-                                                              ...args[8]!.blocks
-                                                                  .map((v) => v.rawns)
-                                                                  .slice(0, 15)
-                                                                  .map((v) => `§r§d${v}`),
-                                                              "§r§d...",
-                                                          ].slice(0, args[8]!.blocks.length <= 15 ? -1 : undefined)
-                                                        : []),
+                                                    ...(args[8] != undefined ?
+                                                        [
+                                                            "§r§bBrush Mask: §d",
+                                                            ...args[8]!.blocks
+                                                                .map((v) => v.rawns)
+                                                                .slice(0, 15)
+                                                                .map((v) => `§r§d${v}`),
+                                                            "§r§d...",
+                                                        ].slice(0, args[8]!.blocks.length <= 15 ? -1 : undefined)
+                                                    :   []),
                                                     ...(args[8] != undefined ? [`§r§bBrush Mask Type: §a${args[8]!.type}`] : []),
                                                 ])
                                             );
@@ -26684,16 +26642,16 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                         "§r§d...",
                                                     ].slice(0, (args[5] as BlockPattern).blocks.length <= 15 ? -1 : undefined),
                                                     `§r§bBrush Pattern Type: §a${(args[5] as BlockPattern).type}`,
-                                                    ...(args[8] != undefined
-                                                        ? [
-                                                              "§r§bBrush Mask: §d",
-                                                              ...args[8]!.blocks
-                                                                  .map((v) => v.rawns)
-                                                                  .slice(0, 15)
-                                                                  .map((v) => `§r§d${v}`),
-                                                              "§r§d...",
-                                                          ].slice(0, args[8]!.blocks.length <= 15 ? -1 : undefined)
-                                                        : []),
+                                                    ...(args[8] != undefined ?
+                                                        [
+                                                            "§r§bBrush Mask: §d",
+                                                            ...args[8]!.blocks
+                                                                .map((v) => v.rawns)
+                                                                .slice(0, 15)
+                                                                .map((v) => `§r§d${v}`),
+                                                            "§r§d...",
+                                                        ].slice(0, args[8]!.blocks.length <= 15 ? -1 : undefined)
+                                                    :   []),
                                                     ...(args[8] != undefined ? [`§r§bBrush Mask Type: §a${args[8]!.type}`] : []),
                                                 ])
                                             );
@@ -26745,16 +26703,16 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                     `§r§bBrush Decay: §c${isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]}`,
                                                     `§r§bNudge Direction: §a${args[4]!.toLowerCase()}`,
                                                     `§r§bTrail Mode: ${args[3].t.toFormattedString()}`,
-                                                    ...(args[7] != undefined
-                                                        ? [
-                                                              "§r§bBrush Mask: §d",
-                                                              ...args[7]!.blocks
-                                                                  .map((v) => v.rawns)
-                                                                  .slice(0, 15)
-                                                                  .map((v) => `§r§d${v}`),
-                                                              "§r§d...",
-                                                          ].slice(0, args[7]!.blocks.length <= 15 ? -1 : undefined)
-                                                        : []),
+                                                    ...(args[7] != undefined ?
+                                                        [
+                                                            "§r§bBrush Mask: §d",
+                                                            ...args[7]!.blocks
+                                                                .map((v) => v.rawns)
+                                                                .slice(0, 15)
+                                                                .map((v) => `§r§d${v}`),
+                                                            "§r§d...",
+                                                        ].slice(0, args[7]!.blocks.length <= 15 ? -1 : undefined)
+                                                    :   []),
                                                     ...(args[7] != undefined ? [`§r§bBrush Mask Type: §a${args[7]!.type}`] : []),
                                                 ])
                                             );
@@ -26807,16 +26765,16 @@ ${command.dp}\\idtfill <offsetx: float> <offsety: float> <offsetz: float> <integ
                                                     `§r§bBrush Radius: §c${isNaN(Number(args[5] ?? undefined)) ? 3 : args[5]}`,
                                                     `§r§bBrush Decay: §c${isNaN(Number(args[6] ?? undefined)) ? 0 : args[6]}`,
                                                     `§r§bCopy Air: ${args[3].a.toFormattedString()}`,
-                                                    ...(args[7] != undefined
-                                                        ? [
-                                                              "§r§bBrush Mask: §d",
-                                                              ...args[7]!.blocks
-                                                                  .map((v) => v.rawns)
-                                                                  .slice(0, 15)
-                                                                  .map((v) => `§r§d${v}`),
-                                                              "§r§d...",
-                                                          ].slice(0, args[7]!.blocks.length <= 15 ? -1 : undefined)
-                                                        : []),
+                                                    ...(args[7] != undefined ?
+                                                        [
+                                                            "§r§bBrush Mask: §d",
+                                                            ...args[7]!.blocks
+                                                                .map((v) => v.rawns)
+                                                                .slice(0, 15)
+                                                                .map((v) => `§r§d${v}`),
+                                                            "§r§d...",
+                                                        ].slice(0, args[7]!.blocks.length <= 15 ? -1 : undefined)
+                                                    :   []),
                                                     ...(args[7] != undefined ? [`§r§bBrush Mask Type: §a${args[7]!.type}`] : []),
                                                 ])
                                             );
@@ -26959,13 +26917,15 @@ ${command.dp}snapshot list`);
                                             )
                                                 .toLocaleString()
                                                 .replace(/^00:/, "12:")} UTC${
-                                                Number(
-                                                    player.getDynamicProperty("andexdbPersonalSettings:timeZone") ??
-                                                        world.getDynamicProperty("andexdbSettings:timeZone") ??
-                                                        0
-                                                ) < 0
-                                                    ? ""
-                                                    : "+"
+                                                (
+                                                    Number(
+                                                        player.getDynamicProperty("andexdbPersonalSettings:timeZone") ??
+                                                            world.getDynamicProperty("andexdbSettings:timeZone") ??
+                                                            0
+                                                    ) < 0
+                                                ) ?
+                                                    ""
+                                                :   "+"
                                             }${
                                                 Number(
                                                     player.getDynamicProperty("andexdbPersonalSettings:timeZone") ??
@@ -27035,13 +26995,15 @@ ${command.dp}snapshot list`);
                                             )
                                                 .toLocaleString()
                                                 .replace(/^00:/, "12:")} UTC${
-                                                Number(
-                                                    player.getDynamicProperty("andexdbPersonalSettings:timeZone") ??
-                                                        world.getDynamicProperty("andexdbSettings:timeZone") ??
-                                                        0
-                                                ) < 0
-                                                    ? ""
-                                                    : "+"
+                                                (
+                                                    Number(
+                                                        player.getDynamicProperty("andexdbPersonalSettings:timeZone") ??
+                                                            world.getDynamicProperty("andexdbSettings:timeZone") ??
+                                                            0
+                                                    ) < 0
+                                                ) ?
+                                                    ""
+                                                :   "+"
                                             }${
                                                 Number(
                                                     player.getDynamicProperty("andexdbPersonalSettings:timeZone") ??
@@ -27096,51 +27058,53 @@ ${command.dp}snapshot list`);
                                             return;
                                         }
                                         player.sendMessageB(
-                                            AreaBackups.get("areabackup:" + args[2]).backups.length == 0
-                                                ? `§cError: No backups have been saved for this backup area. Please back it up using §e\\snapshot backup ${JSON.stringify(
-                                                      args[2]
-                                                  )}`
-                                                : AreaBackups.get("areabackup:" + args[2])
-                                                      .backups.map(
-                                                          (v, i) =>
-                                                              `${i}. ${new Date(
-                                                                  v +
-                                                                      Number(
-                                                                          player.getDynamicProperty("andexdbPersonalSettings:timeZone") ??
-                                                                              world.getDynamicProperty("andexdbSettings:timeZone") ??
-                                                                              0
-                                                                      ) *
-                                                                          3600000
-                                                              )
-                                                                  .toLocaleString()
-                                                                  .replace(/^00:/, "12:")} UTC${
-                                                                  Number(
-                                                                      player.getDynamicProperty("andexdbPersonalSettings:timeZone") ??
-                                                                          world.getDynamicProperty("andexdbSettings:timeZone") ??
-                                                                          0
-                                                                  ) < 0
-                                                                      ? ""
-                                                                      : "+"
-                                                              }${
-                                                                  Number(
-                                                                      player.getDynamicProperty("andexdbPersonalSettings:timeZone") ??
-                                                                          world.getDynamicProperty("andexdbSettings:timeZone") ??
-                                                                          0
-                                                                  ) % 96
-                                                              }`
-                                                      )
-                                                      .join("\n")
+                                            AreaBackups.get("areabackup:" + args[2]).backups.length == 0 ?
+                                                `§cError: No backups have been saved for this backup area. Please back it up using §e\\snapshot backup ${JSON.stringify(
+                                                    args[2]
+                                                )}`
+                                            :   AreaBackups.get("areabackup:" + args[2])
+                                                    .backups.map(
+                                                        (v, i) =>
+                                                            `${i}. ${new Date(
+                                                                v +
+                                                                    Number(
+                                                                        player.getDynamicProperty("andexdbPersonalSettings:timeZone") ??
+                                                                            world.getDynamicProperty("andexdbSettings:timeZone") ??
+                                                                            0
+                                                                    ) *
+                                                                        3600000
+                                                            )
+                                                                .toLocaleString()
+                                                                .replace(/^00:/, "12:")} UTC${
+                                                                (
+                                                                    Number(
+                                                                        player.getDynamicProperty("andexdbPersonalSettings:timeZone") ??
+                                                                            world.getDynamicProperty("andexdbSettings:timeZone") ??
+                                                                            0
+                                                                    ) < 0
+                                                                ) ?
+                                                                    ""
+                                                                :   "+"
+                                                            }${
+                                                                Number(
+                                                                    player.getDynamicProperty("andexdbPersonalSettings:timeZone") ??
+                                                                        world.getDynamicProperty("andexdbSettings:timeZone") ??
+                                                                        0
+                                                                ) % 96
+                                                            }`
+                                                    )
+                                                    .join("\n")
                                         );
                                     }
                                     break;
                                 case "listareas":
                                     {
                                         player.sendMessageB(
-                                            AreaBackups.ids.length == 0
-                                                ? `§cError: No backup areas have been created. Please create a backup area by first selecting the two corners of the area that you want to back up, and then type §e\\backuparea §cfollowed by the id you want to set for the backup area.`
-                                                : AreaBackups.ids
-                                                      .map((v, i) => `${JSON.stringify(v.slice(11))}: ${JSON.stringify(AreaBackups.get(v).toJSONNoId())}`)
-                                                      .join("\n")
+                                            AreaBackups.ids.length == 0 ?
+                                                `§cError: No backup areas have been created. Please create a backup area by first selecting the two corners of the area that you want to back up, and then type §e\\backuparea §cfollowed by the id you want to set for the backup area.`
+                                            :   AreaBackups.ids
+                                                    .map((v, i) => `${JSON.stringify(v.slice(11))}: ${JSON.stringify(AreaBackups.get(v).toJSONNoId())}`)
+                                                    .join("\n")
                                         );
                                     }
                                     break;
@@ -27168,7 +27132,7 @@ ${command.dp}snapshot list`);
                             player.worldEditSelection.pos1?.z
                         }\npos2 x: ${player.worldEditSelection.pos2?.x}\npos2 y: ${player.worldEditSelection.pos2?.y}\npos2 z: ${
                             player.worldEditSelection.pos2?.z
-                        }\nNext Selection Mode: ${player.getDynamicProperty("posM") ?? false ? "pos2" : "pos1"}`
+                        }\nNext Selection Mode: ${(player.getDynamicProperty("posM") ?? false) ? "pos2" : "pos1"}`
                     );
                 }
                 break;
@@ -27584,11 +27548,9 @@ ${command.dp}snapshot list`);
                     const lastblockname = args[5];
                     const lastblockstates = args[6];
                     const matchingblock: [string, { [id: string]: string | number | boolean }?] =
-                        (lastblockname ?? "") == ""
-                            ? [undefined!, undefined!]
-                            : lastblockname == "keep"
-                            ? ["air"]
-                            : [BlockTypes.get(lastblockname!)!?.id, lastblockstates];
+                        (lastblockname ?? "") == "" ? [undefined!, undefined!]
+                        : lastblockname == "keep" ? ["air"]
+                        : [BlockTypes.get(lastblockname!)!?.id, lastblockstates];
                     const coordinatesa = Vector3Utils.add(player.location, {
                         x: -args[2]!,
                         y: -args[2]!,
@@ -27648,9 +27610,9 @@ ${command.dp}snapshot list`);
                                                 } ms over ${a.completionData.endTick! - a.completionData.startTick} tick${
                                                     a.completionData.endTick! - a.completionData.startTick == 1 ? "" : "s"
                                                 }${
-                                                    a.completionData.containsUnloadedChunks
-                                                        ? "; Some blocks were not generated because they were in unloaded chunks. "
-                                                        : ""
+                                                    a.completionData.containsUnloadedChunks ?
+                                                        "; Some blocks were not generated because they were in unloaded chunks. "
+                                                    :   ""
                                                 }`
                                             );
                                         },
@@ -27681,17 +27643,12 @@ ${command.dp}snapshot list`);
                         player.sendError("§cNo block detected to jump to.", true);
                     } else {
                         let dir =
-                            blockHit.face == "Down"
-                                ? VECTOR3_DOWN
-                                : blockHit.face == "Up"
-                                ? VECTOR3_UP
-                                : blockHit.face == "North"
-                                ? VECTOR3_SOUTH
-                                : blockHit.face == "South"
-                                ? VECTOR3_NORTH
-                                : blockHit.face == "East"
-                                ? VECTOR3_EAST
-                                : VECTOR3_WEST;
+                            blockHit.face == "Down" ? VECTOR3_DOWN
+                            : blockHit.face == "Up" ? VECTOR3_UP
+                            : blockHit.face == "North" ? VECTOR3_SOUTH
+                            : blockHit.face == "South" ? VECTOR3_NORTH
+                            : blockHit.face == "East" ? VECTOR3_EAST
+                            : VECTOR3_WEST;
                         srun(() => player.teleport(roundVector3ToMiddleOfBlockFloorY(Vector3Utils.add(blockHit.block.location, dir))));
                     }
                 }
@@ -27725,12 +27682,15 @@ ${command.dp}snapshot list`);
                     const args = evaluateParameters(switchTestB, ["presetText", "string", "number"]).args as [string, string, number];
                     !args[1]!.includes(":") ? (args[1] = "minecraft:" + args[1]) : undefined;
                     player.sendMessageB(
-                        listoftransformrecipes.findIndex((v) => v.id == args[1] && ((!!!(v as any)["data"] && !!!args[2]) || (v as any)["data"] == args[2])) ==
-                            -1
-                            ? "§cError: Could not find a suitable data value for enchantment transfer smithing template to create the specified item with the specified data value."
-                            : `Data value for enchantment transfer smithing template is ${listoftransformrecipes.findIndex(
-                                  (v) => v.id == args[1] && ((!!!(v as any)["data"] && !!!args[2]) || (v as any)["data"] == args[2])
-                              )}.`
+                        (
+                            listoftransformrecipes.findIndex(
+                                (v) => v.id == args[1] && ((!!!(v as any)["data"] && !!!args[2]) || (v as any)["data"] == args[2])
+                            ) == -1
+                        ) ?
+                            "§cError: Could not find a suitable data value for enchantment transfer smithing template to create the specified item with the specified data value."
+                        :   `Data value for enchantment transfer smithing template is ${listoftransformrecipes.findIndex(
+                                (v) => v.id == args[1] && ((!!!(v as any)["data"] && !!!args[2]) || (v as any)["data"] == args[2])
+                            )}.`
                     );
                 }
                 break;
@@ -27747,12 +27707,15 @@ ${command.dp}snapshot list`);
                         )
                     );
                     player.sendMessageB(
-                        listoftransformrecipes.findIndex((v) => v.id == args[1] && ((!!!(v as any)["data"] && !!!args[2]) || (v as any)["data"] == args[2])) ==
-                            -1
-                            ? "§cError: Could not find a suitable data value for enchantment transfer smithing template to create the specified item with the specified data value."
-                            : `You have been given an enchantment transfer smithing template with the data value ${listoftransformrecipes.findIndex(
-                                  (v) => v.id == args[1] && ((!!!(v as any)["data"] && !!!args[2]) || (v as any)["data"] == args[2])
-                              )}.`
+                        (
+                            listoftransformrecipes.findIndex(
+                                (v) => v.id == args[1] && ((!!!(v as any)["data"] && !!!args[2]) || (v as any)["data"] == args[2])
+                            ) == -1
+                        ) ?
+                            "§cError: Could not find a suitable data value for enchantment transfer smithing template to create the specified item with the specified data value."
+                        :   `You have been given an enchantment transfer smithing template with the data value ${listoftransformrecipes.findIndex(
+                                (v) => v.id == args[1] && ((!!!(v as any)["data"] && !!!args[2]) || (v as any)["data"] == args[2])
+                            )}.`
                     );
                 }
                 break;
@@ -28152,9 +28115,9 @@ ${command.dp}snapshot list`);
                                                 } ms over ${a.completionData.endTick! - a.completionData.startTick} tick${
                                                     a.completionData.endTick! - a.completionData.startTick == 1 ? "" : "s"
                                                 }${
-                                                    a.completionData.containsUnloadedChunks
-                                                        ? "; Some blocks were not drained because they were in unloaded chunks. "
-                                                        : ""
+                                                    a.completionData.containsUnloadedChunks ?
+                                                        "; Some blocks were not drained because they were in unloaded chunks. "
+                                                    :   ""
                                                 }`
                                             );
                                         },
@@ -28730,28 +28693,28 @@ ${command.dp}snapshot list`);
                                                     wl = wl.filter(
                                                         (wl) =>
                                                             !!tryget(() =>
-                                                                !!argsb.args[3]!.states
-                                                                    ? testBlockForMatch(
-                                                                          wl.dimension!.getBlock(
-                                                                              evaluateCoordinates(
-                                                                                  argsb.args[0]!,
-                                                                                  argsb.args[1]!,
-                                                                                  argsb.args[2]!,
-                                                                                  wl.location,
-                                                                                  wl.rotation
-                                                                              )
-                                                                          )!,
-                                                                          argsb.args[3] as any
-                                                                      )
-                                                                    : wl.dimension!.getBlock(
-                                                                          evaluateCoordinates(
-                                                                              argsb.args[0]!,
-                                                                              argsb.args[1]!,
-                                                                              argsb.args[2]!,
-                                                                              wl.location,
-                                                                              wl.rotation
-                                                                          )
-                                                                      )?.typeId == argsb.args[3]!.id
+                                                                !!argsb.args[3]!.states ?
+                                                                    testBlockForMatch(
+                                                                        wl.dimension!.getBlock(
+                                                                            evaluateCoordinates(
+                                                                                argsb.args[0]!,
+                                                                                argsb.args[1]!,
+                                                                                argsb.args[2]!,
+                                                                                wl.location,
+                                                                                wl.rotation
+                                                                            )
+                                                                        )!,
+                                                                        argsb.args[3] as any
+                                                                    )
+                                                                :   wl.dimension!.getBlock(
+                                                                        evaluateCoordinates(
+                                                                            argsb.args[0]!,
+                                                                            argsb.args[1]!,
+                                                                            argsb.args[2]!,
+                                                                            wl.location,
+                                                                            wl.rotation
+                                                                        )
+                                                                    )?.typeId == argsb.args[3]!.id
                                                             )
                                                     );
                                                     evalExecuteCommand(argsb.extra);
@@ -28782,7 +28745,12 @@ ${command.dp}snapshot list`);
                                     {
                                         wl.forEach((wl) =>
                                             chatCommands({
-                                                player: new executeCommandPlayerW(wl, surpressFeedback ? null : keepFeedback ? player.player : wl.sendErrorsTo),
+                                                player: new executeCommandPlayerW(
+                                                    wl,
+                                                    surpressFeedback ? null
+                                                    : keepFeedback ? player.player
+                                                    : wl.sendErrorsTo
+                                                ),
                                                 silentCMD: silentCMD,
                                                 isBultIn: builtIn,
                                                 isCustom: custom,

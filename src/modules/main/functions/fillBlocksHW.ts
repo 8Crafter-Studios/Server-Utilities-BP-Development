@@ -1,8 +1,9 @@
-import { type Vector3, Dimension, BlockVolume, CompoundBlockVolume, BlockPermutation, Block } from "@minecraft/server";
+import { type Vector3, Dimension, BlockVolume, BlockPermutation, Block } from "@minecraft/server";
 import { clearAllContainerBlocks } from "modules/main/functions/clearAllContainerBlocks";
 import { fillBlocksB } from "modules/main/functions/fillBlocksB";
 import { scanForContainerBlocks } from "modules/main/functions/scanForContainerBlocks";
-import type { fillBlocksHWG } from "./fillBlocksHWG"
+import type { fillBlocksHWG } from "./fillBlocksHWG";
+import { CompoundBlockVolume } from "CompoundBlockVolumePolyfill";
 
 /**
  * @deprecated Legacy function that may cause script hang error. Superceeded by {@link fillBlocksHWG}.
@@ -27,9 +28,7 @@ export function fillBlocksHW(
         volume: new BlockVolume(from, { x: to.x, y: from.y, z: to.z }),
         action: 0,
     });
-    if (new BlockVolume(from, { x: to.x, y: from.y, z: to.z }).getSpan().x >
-        2 &&
-        new BlockVolume(from, { x: to.x, y: from.y, z: to.z }).getSpan().z > 2) {
+    if (new BlockVolume(from, { x: to.x, y: from.y, z: to.z }).getSpan().x > 2 && new BlockVolume(from, { x: to.x, y: from.y, z: to.z }).getSpan().z > 2) {
         CBVA.pushVolume({
             volume: new BlockVolume(
                 {
@@ -53,14 +52,7 @@ export function fillBlocksHW(
     let blockb = BlockPermutation.resolve(block, blockStates);
     if (replacemode) {
         mainArray.forEach((v) => {
-            clearAllContainerBlocks(
-                scanForContainerBlocks(
-                    v.from,
-                    v.to,
-                    dimension,
-                    "Block"
-                ) as Block[]
-            );
+            clearAllContainerBlocks(scanForContainerBlocks(v.from, v.to, dimension, "Block") as Block[]);
         });
     }
     if (!!!options?.matchingBlock) {
@@ -70,45 +62,34 @@ export function fillBlocksHW(
             counter += fillBlocksB(v.from, v.to, dimension, blockb);
         });
     } else {
-        let placeholderblockb = BlockPermutation.resolve(
-            placeholderid ?? "andexdb:ifill_command_placeholder_block"
-        );
-        let matchingblockb = BlockPermutation.resolve(
-            options?.matchingBlock,
-            options?.matchingBlockStates
-        );
+        let placeholderblockb = BlockPermutation.resolve(placeholderid ?? "andexdb:ifill_command_placeholder_block");
+        let matchingblockb = BlockPermutation.resolve(options?.matchingBlock, options?.matchingBlockStates);
         mainArray.forEach((v) => {
             try {
                 counter += dimension.runCommand(
-                    `fill ${v.from.x} ${v.from.y} ${v.from.z} ${v.to.x} ${v.to.y} ${v.to.z} ${placeholderid ??
-                    "andexdb:ifill_command_placeholder_block"} ${!!options?.matchingBlock
-                        ? "replace " + (options?.matchingBlock ?? "")
-                        : ""} ${!!options?.matchingBlockStates
-                        ? "[" +
-                        Object.entries(options?.matchingBlockStates)
-                            .map(
-                                (v) => '"' +
-                                    v[0] +
-                                    '"' +
-                                    "=" +
-                                    (typeof v[1] == "string"
-                                        ? '"' + v[1] + '"'
-                                        : typeof v[1] == "number"
-                                            ? String(v[1])
-                                            : String(v[1]))
-                            )
-                            .join(",") +
-                        "]"
-                        : ""}`
+                    `fill ${v.from.x} ${v.from.y} ${v.from.z} ${v.to.x} ${v.to.y} ${v.to.z} ${placeholderid ?? "andexdb:ifill_command_placeholder_block"} ${
+                        !!options?.matchingBlock ? "replace " + (options?.matchingBlock ?? "") : ""
+                    } ${
+                        !!options?.matchingBlockStates ?
+                            "[" +
+                            Object.entries(options?.matchingBlockStates)
+                                .map(
+                                    (v) =>
+                                        '"' +
+                                        v[0] +
+                                        '"' +
+                                        "=" +
+                                        (typeof v[1] == "string" ? '"' + v[1] + '"'
+                                        : typeof v[1] == "number" ? String(v[1])
+                                        : String(v[1]))
+                                )
+                                .join(",") +
+                            "]"
+                        :   ""
+                    }`
                 ).successCount;
             } catch {
-                counter += fillBlocksB(
-                    v.from,
-                    v.to,
-                    dimension,
-                    placeholderblockb,
-                    { blockFilter: { includePermutations: [matchingblockb] } }
-                );
+                counter += fillBlocksB(v.from, v.to, dimension, placeholderblockb, { blockFilter: { includePermutations: [matchingblockb] } });
             }
             fillBlocksB(v.from, v.to, dimension, blockb, {
                 blockFilter: { includePermutations: [placeholderblockb] },

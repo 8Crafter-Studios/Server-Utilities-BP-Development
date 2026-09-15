@@ -1,4 +1,4 @@
-import { CompoundBlockVolume } from "@minecraft/server";
+import { CompoundBlockVolume } from "CompoundBlockVolumePolyfill";
 
 export function convertToCompoundBlockVolume(selection: String) {
     let compoundFullBlockVolumes = new CompoundBlockVolume({
@@ -7,39 +7,21 @@ export function convertToCompoundBlockVolume(selection: String) {
         z: 0,
     });
     let blockVolumeAllLists: {
-        from: { x: number; y: number; z: number; };
-        to: { x: number; y: number; z: number; };
+        from: { x: number; y: number; z: number };
+        to: { x: number; y: number; z: number };
     }[];
     blockVolumeAllLists = [];
     selection.split("|").forEach((selectionSection) => {
         blockVolumeAllLists.push({
             from: {
-                x: Math.min(
-                    Number(selectionSection.split(",")[0]),
-                    Number(selectionSection.split(",")[3])
-                ),
-                y: Math.min(
-                    Number(selectionSection.split(",")[1]),
-                    Number(selectionSection.split(",")[4])
-                ),
-                z: Math.min(
-                    Number(selectionSection.split(",")[2]),
-                    Number(selectionSection.split(",")[5])
-                ),
+                x: Math.min(Number(selectionSection.split(",")[0]), Number(selectionSection.split(",")[3])),
+                y: Math.min(Number(selectionSection.split(",")[1]), Number(selectionSection.split(",")[4])),
+                z: Math.min(Number(selectionSection.split(",")[2]), Number(selectionSection.split(",")[5])),
             },
             to: {
-                x: Math.max(
-                    Number(selectionSection.split(",")[0]),
-                    Number(selectionSection.split(",")[3])
-                ),
-                y: Math.max(
-                    Number(selectionSection.split(",")[1]),
-                    Number(selectionSection.split(",")[4])
-                ),
-                z: Math.max(
-                    Number(selectionSection.split(",")[2]),
-                    Number(selectionSection.split(",")[5])
-                ),
+                x: Math.max(Number(selectionSection.split(",")[0]), Number(selectionSection.split(",")[3])),
+                y: Math.max(Number(selectionSection.split(",")[1]), Number(selectionSection.split(",")[4])),
+                z: Math.max(Number(selectionSection.split(",")[2]), Number(selectionSection.split(",")[5])),
             },
         });
     });

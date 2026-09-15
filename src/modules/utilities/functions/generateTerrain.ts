@@ -20,6 +20,7 @@ export type TerrainGeneratorBlock = `${MinecraftBlockTypes}`;
 // ${ase}dcsend(await modules.utils.generateTerrainV2(player.worldEditSelection.pos1, player.worldEditSelection.pos2, overworld, "minecraft:plains", 334278, 60, {offset: {}, scale: {}, generateOres: true, generateBlobs: true, minMSBetweenTickWaits: 100, generationMode: "v2", heightVariation: 10}))
 // ${ase}dcsend(await modules.utils.generateTerrainV2(player.worldEditSelection.pos1, player.worldEditSelection.pos2, overworld, "andexdb:test_1", 334278, 60, {offset: {}, scale: {}, generateOres: true, generateBlobs: true, minMSBetweenTickWaits: 100, generationMode: "v2", heightVariation: 10, getBlockTypeFunction: (a, b, c, d, v)=>Math.random()>0.5 ? "andexsa:rtx_mirror" : "andexsa:rtx_light"}))
 // \\generateterrain minecraft:hell 123.41322
+// ${ase}const types = modules.mcServer.BlockTypes.getAll(); dcsend(await modules.utils.generateTerrainV2(player.worldEditSelection.pos1, player.worldEditSelection.pos2, player.worldEditSelection.dimension, "andexdb:test_1", 334278, {offset: {}, scale: {}, generateOres: true, generateBlobs: true, minMSBetweenTickWaits: 100, generationMode: "v2", heightVariation: 10, getBlockTypeFunction: (a, b, c, d, v)=>types[Math.floor(types.length * Math.random())].id}))
 
 export function generateTerrain(
     corner1: Vector3,

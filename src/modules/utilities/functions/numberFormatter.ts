@@ -1,5 +1,8 @@
+// Copyright (c) 2025 8Crafter <8crafteryt@gmail.com>. All Rights Reserved.
 /**
  * An array of objects representing number suffixes and their corresponding thresholds.
+ *
+ * @copyright 2025 8Crafter <8crafteryt@gmail.com>. All Rights Reserved.
  */
 export const numberFormatter_compact_map = Object.freeze([
     { suffix: "Mn", threshold: 10n ** 3003n }, // Millinillion
@@ -111,6 +114,8 @@ export const numberFormatter_compact_map = Object.freeze([
 /**
  * Formats a number into a compact string representation.
  *
+ * @copyright 2025 8Crafter <8crafteryt@gmail.com>. All Rights Reserved.
+ *
  * @param {string | number | bigint | boolean} number The number to format.
  * @param {boolean | string} isMoneyOrCurrecyPrefix If true, adds a dollar sign prefix. If a string, uses it as the prefix.
  * @param {object} compressedDigitsNumDecimalsOptions Options for decimal places.
@@ -183,6 +188,8 @@ export function numberFormatter_compact(
 
 /**
  * Options for `compressedDigitsNumDecimalsOptions` parameter of the {@link numberFormatter_compact} and {@link numberFormatter_compact_lite} functions.
+ *
+ * @copyright 2025 8Crafter <8crafteryt@gmail.com>. All Rights Reserved.
  */
 export interface NumberFormatterCompactCompressedDigitsNumDecimalsOptions {
     /**
@@ -209,6 +216,8 @@ export interface NumberFormatterCompactCompressedDigitsNumDecimalsOptions {
  * Formats a number into a compact string representation.
  *
  * This is a lightweight version of the {@link numberFormatter_compact} function, which does not use a {@link Decimal} instance.
+ *
+ * @copyright 2025 8Crafter <8crafteryt@gmail.com>. All Rights Reserved.
  *
  * @param {string | number | bigint | boolean} number The number to format.
  * @param {boolean | string} isMoneyOrCurrecyPrefix If true, adds a dollar sign prefix. If a string, uses it as the prefix.
@@ -293,6 +302,8 @@ export function numberFormatter_compact_lite(
 
 /**
  * Options for the {@link numberFormatter} function.
+ *
+ * @copyright 2025 8Crafter <8crafteryt@gmail.com>. All Rights Reserved.
  */
 export interface NumberFormatterOptions {
     /**
@@ -312,6 +323,8 @@ export interface NumberFormatterOptions {
 
 /**
  * Formats a number into a string representation with optional currency prefix and comma separators.
+ *
+ * @copyright 2025 8Crafter <8crafteryt@gmail.com>. All Rights Reserved.
  *
  * @param {string | number | bigint | boolean} number The number to format.
  * @param {NumberFormatterOptions} [options] Options for formatting.

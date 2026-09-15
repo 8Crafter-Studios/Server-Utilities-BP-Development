@@ -249,7 +249,9 @@ export function chatSendMessageEvaluator_prePlayers(
         separatorFormatting = options?.playerPersonalSettings?.defaultSeparatorFormatting ?? config.chatRanks.defaultSeparatorFormatting;
     }
     const ranksListWithDefault =
-        (options?.ranks ?? []).length > 0 ? options?.ranks! : config.chatRanks.defaultRank !== "" ? [config.chatRanks.defaultRank] : [];
+        (options?.ranks ?? []).length > 0 ? options?.ranks!
+        : config.chatRanks.defaultRank !== "" ? [config.chatRanks.defaultRank]
+        : [];
     let rank: string = "";
     switch (config.chatRanks.rankEvaluatorMode_chat) {
         case "default":
@@ -270,17 +272,17 @@ export function chatSendMessageEvaluator_prePlayers(
                     (options?.playerPersonalSettings?.rankDisplaySuffix ?? config.chatRanks.rankDisplaySuffix));
             break;
     }
-    let name: string = displayName.hidden
-        ? ""
-        : (options?.playerPersonalSettings?.nameDisplayPrefix ?? config.chatRanks.nameDisplayPrefix) +
-          nameFormatting +
-          (!!nameGradientMode ? evaluateChatColorType(displayName.value ?? "", nameGradientMode) : displayName.value ?? "") +
-          (options?.playerPersonalSettings?.nameDisplaySuffix ?? config.chatRanks.nameDisplaySuffix);
-    let nameb: string = displayName.hidden
-        ? ""
-        : !!nameGradientMode
-        ? evaluateChatColorType(displayName.value ?? "", nameGradientMode)
-        : displayName.value ?? "";
+    let name: string =
+        displayName.hidden ? "" : (
+            (options?.playerPersonalSettings?.nameDisplayPrefix ?? config.chatRanks.nameDisplayPrefix) +
+            nameFormatting +
+            (!!nameGradientMode ? evaluateChatColorType(displayName.value ?? "", nameGradientMode) : (displayName.value ?? "")) +
+            (options?.playerPersonalSettings?.nameDisplaySuffix ?? config.chatRanks.nameDisplaySuffix)
+        );
+    let nameb: string =
+        displayName.hidden ? ""
+        : !!nameGradientMode ? evaluateChatColorType(displayName.value ?? "", nameGradientMode)
+        : (displayName.value ?? "");
     name.length != 0 ? (name += options?.playerPersonalSettings?.chatNameAndMessageSeparator ?? config.chatRanks.chatNameAndMessageSeparator) : undefined; /*
         let rankMode = 0
         for (let index in player.getTags()) {
@@ -356,7 +358,7 @@ export function chatSendMessageEvaluator_players(
             (
                 Object.entries(dimensionTypeDisplayFormatting) as [
                     keyof typeof dimensionTypeDisplayFormatting,
-                    (typeof dimensionTypeDisplayFormatting)[keyof typeof dimensionTypeDisplayFormatting]
+                    (typeof dimensionTypeDisplayFormatting)[keyof typeof dimensionTypeDisplayFormatting],
                 ][]
             ).find((v) => v[1] === dimension)!?.[0]
         ];
@@ -372,6 +374,7 @@ export function chatSendMessageEvaluator_players(
             applyImpulse: () => undefined as any,
             applyKnockback: () => undefined as any,
             camera: {
+                addShake: () => undefined as any,
                 attachToEntity: () => undefined as any,
                 clear: () => undefined as any,
                 fade: () => undefined as any,
@@ -380,6 +383,7 @@ export function chatSendMessageEvaluator_players(
                 setCameraWithEase: () => undefined as any,
                 setDefaultCamera: () => undefined as any,
                 setFov: () => undefined as any,
+                stopShaking: () => undefined as any,
                 isValid: false,
             },
             chunkIndex: undefined,
@@ -389,6 +393,7 @@ export function chatSendMessageEvaluator_players(
                 maxRenderDistance: -1,
                 memoryTier: 0,
                 platformType: PlatformType.Desktop,
+                locale: "en_US",
             },
             cursorInventory: undefined,
             dimension: overworld,
@@ -627,6 +632,7 @@ export function chatSendMessageEvaluator_players(
             applyImpulse: () => undefined as any,
             applyKnockback: () => undefined as any,
             camera: {
+                addShake: () => undefined as any,
                 attachToEntity: () => undefined as any,
                 clear: () => undefined as any,
                 fade: () => undefined as any,
@@ -635,6 +641,7 @@ export function chatSendMessageEvaluator_players(
                 setCameraWithEase: () => undefined as any,
                 setDefaultCamera: () => undefined as any,
                 setFov: () => undefined as any,
+                stopShaking: () => undefined as any,
                 isValid: false,
             },
             chunkIndex: undefined,
@@ -644,6 +651,7 @@ export function chatSendMessageEvaluator_players(
                 maxRenderDistance: -1,
                 memoryTier: 0,
                 platformType: PlatformType.Desktop,
+                locale: "en_US",
             },
             cursorInventory: undefined,
             dimension: dimensionObject,
@@ -878,9 +886,10 @@ export function chatSendMessageEvaluator_players(
             !options?.playerPersonalSettings?.hideChatDisplayTimeStamp &&
             !options?.targetPlayerSettings?.hideChatDisplayTimeStamps);
     let timestampenabled = messageTimeStampEnabled;
-    let timestamp = messageTimeStampEnabled
-        ? formatTime(new Date((options?.time ?? Date.now()) + (options?.targetPlayerSettings?.timeZone ?? config.system.timeZone) * 3600000))
-        : "";
+    let timestamp =
+        messageTimeStampEnabled ?
+            formatTime(new Date((options?.time ?? Date.now()) + (options?.targetPlayerSettings?.timeZone ?? config.system.timeZone) * 3600000))
+        :   "";
     let messageOutput = "";
     if (config.chatRanks.rankMode === "custom_simple") {
         messageOutput =
@@ -1625,29 +1634,29 @@ export function chatSend_generatePartialPlayerTypeForChatSendEvaluationFunctions
     hasTag(tag: string): boolean;
     getTags(): string[];
 } {
-    return player instanceof Player
-        ? {
-              name: player.name,
-              nameTag: player.nameTag,
-              tags: player.getTags(),
-              hasTag(tag: string): boolean {
-                  return this.tags.includes(tag);
-              },
-              getTags(): string[] {
-                  return this.tags;
-              },
-          }
-        : {
-              name: player.name,
-              nameTag: player.nameTag,
-              tags: player.tags ?? [],
-              hasTag(tag: string): boolean {
-                  return this.tags.includes(tag);
-              },
-              getTags(): string[] {
-                  return this.tags;
-              },
-          };
+    return player instanceof Player ?
+            {
+                name: player.name,
+                nameTag: player.nameTag,
+                tags: player.getTags(),
+                hasTag(tag: string): boolean {
+                    return this.tags.includes(tag);
+                },
+                getTags(): string[] {
+                    return this.tags;
+                },
+            }
+        :   {
+                name: player.name,
+                nameTag: player.nameTag,
+                tags: player.tags ?? [],
+                hasTag(tag: string): boolean {
+                    return this.tags.includes(tag);
+                },
+                getTags(): string[] {
+                    return this.tags;
+                },
+            };
 }
 
 export function chatSend_getPlayerPersonalSettings(

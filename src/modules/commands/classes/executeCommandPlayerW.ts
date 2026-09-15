@@ -37,6 +37,9 @@ import {
     type AABB,
     type GetBlocksStandingOnOptions,
     type PlayerPermissionLevel,
+    type LocatorBar,
+    type PlayerSplitScreenSlot,
+    type FogSettings,
 } from "@minecraft/server";
 import { MoneySystem } from "ExtraFeatures/money";
 import { PlayerNotifications } from "init/classes/PlayerNotifications";
@@ -51,6 +54,31 @@ import type { RotationLocation } from "modules/coordinates/interfaces/RotationLo
 import { deleteStringFromEntityDynamicProperties } from "modules/utilities/functions/deleteStringFromEntityDynamicProperties";
 import { getStringFromEntityDynamicProperties } from "modules/utilities/functions/getStringFromEntityDynamicProperties";
 import { saveStringToEntityDynamicProperties } from "modules/utilities/functions/saveStringToEntityDynamicProperties";
+
+// TEMP: These types should be moved to their own file.
+/**
+ * @see https://stackoverflow.com/a/49579497/16872762
+ *
+ * @author jcalz <https://stackoverflow.com/users/2887218/jcalz>
+ */
+type IfEquals<X, Y, A = X, B = never> = (<T>() => T extends X ? 1 : 2) extends <T>() => T extends Y ? 1 : 2 ? A : B;
+/**
+ * @see https://stackoverflow.com/a/49579497/16872762
+ *
+ * @author jcalz <https://stackoverflow.com/users/2887218/jcalz>
+ */
+type WritableKeys<T> = {
+    [P in keyof T]-?: IfEquals<{ [Q in P]: T[P] }, { -readonly [Q in P]: T[P] }, P>;
+}[keyof T];
+/**
+ * @author 8Crafter
+ */
+type ExcludeReadonlyProps<T> = Pick<T, WritableKeys<T>>;
+
+{
+    // This is to show an error when executeCommandPlayerW has a property that is read-only when it is not read-only on Player.
+    const _PropsThatNeedSetters: Full<Omit<ExcludeReadonlyProps<Player>, "name" | "id" | keyof ExcludeReadonlyProps<executeCommandPlayerW>>> = {};
+}
 
 /**
  * Represents a player to be used for the `\execute` command without the `name` and `id` properties.
@@ -78,10 +106,10 @@ export class executeCommandPlayerW implements Omit<Player, "name" | "id"> {
             this.rotation = player.rotation;
             this.player = (player.entity ?? player.block) as any;
             this.sendErrorsTo =
-                sendErrorsTo === null || Number.isNaN(sendErrorsTo as number)
-                    ? null
-                    : (sendErrorsTo as Player | Player[] | Console | (() => Player | Player[] | Console)) ??
-                      (player.entity instanceof Player ? player.entity : console);
+                sendErrorsTo === null || Number.isNaN(sendErrorsTo as number) ?
+                    null
+                :   ((sendErrorsTo as Player | Player[] | Console | (() => Player | Player[] | Console)) ??
+                    (player.entity instanceof Player ? player.entity : console));
             this.block = player.block;
             this.isFromWorldPosition = true;
             this.fromPlayerWorldPosition = player.entity instanceof Player;
@@ -94,9 +122,9 @@ export class executeCommandPlayerW implements Omit<Player, "name" | "id"> {
         } else if (player instanceof Entity) {
             this.player = player as Player;
             this.sendErrorsTo =
-                sendErrorsTo === null || Number.isNaN(sendErrorsTo as number)
-                    ? null
-                    : (sendErrorsTo as Player | Player[] | Console | (() => Player | Player[] | Console)) ?? (player instanceof Player ? player : console);
+                sendErrorsTo === null || Number.isNaN(sendErrorsTo as number) ?
+                    null
+                :   ((sendErrorsTo as Player | Player[] | Console | (() => Player | Player[] | Console)) ?? (player instanceof Player ? player : console));
             this.modifiedlocation = player.location;
             this.modifieddimension = player.dimension;
             this.rotation = player.getRotation();
@@ -110,13 +138,13 @@ export class executeCommandPlayerW implements Omit<Player, "name" | "id"> {
         } else {
             throw new TypeError(
                 `Unsupported type ${JSON.stringify(
-                    typeof player == "object"
-                        ? (
-                              tryget(() => (player as object)?.constructor) ?? {
-                                  name: typeof player,
-                              }
-                          ).name
-                        : typeof player
+                    typeof player == "object" ?
+                        (
+                            tryget(() => (player as object)?.constructor) ?? {
+                                name: typeof player,
+                            }
+                        ).name
+                    :   typeof player
                 )} passed into parameter [0]. `
             );
         }
@@ -163,51 +191,37 @@ export class executeCommandPlayerW implements Omit<Player, "name" | "id"> {
             } else {
                 if (sest instanceof Player) {
                     sest.sendMessage(
-                        typeof error == "string"
-                            ? error
-                            : "rawtext" in error
-                            ? error
-                            : typeof error == "object"
-                            ? tryget(() => JSONStringify(error)) ?? tryget(() => JSON.stringify(error)) ?? String(error)
-                            : String(error)
+                        typeof error == "string" ? error
+                        : "rawtext" in error ? error
+                        : typeof error == "object" ? (tryget(() => JSONStringify(error)) ?? tryget(() => JSON.stringify(error)) ?? String(error))
+                        : String(error)
                     );
                 } else if (sest instanceof Array) {
                     sest.forEach((v) => {
                         if (v instanceof Player) {
                             v.sendMessage(
-                                typeof error == "string"
-                                    ? error
-                                    : "rawtext" in error
-                                    ? error
-                                    : typeof error == "object"
-                                    ? tryget(() => JSONStringify(error)) ?? tryget(() => JSON.stringify(error)) ?? String(error)
-                                    : String(error)
+                                typeof error == "string" ? error
+                                : "rawtext" in error ? error
+                                : typeof error == "object" ? (tryget(() => JSONStringify(error)) ?? tryget(() => JSON.stringify(error)) ?? String(error))
+                                : String(error)
                             );
                         } else if ("warn" in (v as any as Console)) {
                             (v as any as Console).error(
-                                typeof error == "string"
-                                    ? error
-                                    : "rawtext" in error
-                                    ? error
-                                    : error instanceof Array
-                                    ? error
-                                    : typeof error == "object"
-                                    ? tryget(() => JSONStringify(error)) ?? tryget(() => JSON.stringify(error)) ?? String(error)
-                                    : String(error)
+                                typeof error == "string" ? error
+                                : "rawtext" in error ? error
+                                : error instanceof Array ? error
+                                : typeof error == "object" ? (tryget(() => JSONStringify(error)) ?? tryget(() => JSON.stringify(error)) ?? String(error))
+                                : String(error)
                             );
                         }
                     });
                 } else if ("warn" in (sest as any as Console)) {
                     (sest as any as Console).error(
-                        typeof error == "string"
-                            ? error
-                            : "rawtext" in error
-                            ? error
-                            : error instanceof Array
-                            ? error
-                            : typeof error == "object"
-                            ? tryget(() => JSONStringify(error)) ?? tryget(() => JSON.stringify(error)) ?? String(error)
-                            : String(error)
+                        typeof error == "string" ? error
+                        : "rawtext" in error ? error
+                        : error instanceof Array ? error
+                        : typeof error == "object" ? (tryget(() => JSONStringify(error)) ?? tryget(() => JSON.stringify(error)) ?? String(error))
+                        : String(error)
                     );
                 } else if (typeof sest == "function") {
                     this.sendError(error as string, true, sest());
@@ -504,11 +518,83 @@ export class executeCommandPlayerW implements Omit<Player, "name" | "id"> {
     get commandPermissionLevel(): CommandPermissionLevel {
         return this.player?.commandPermissionLevel!;
     }
+    set commandPermissionLevel(value: CommandPermissionLevel) {
+        if (!this.player)
+            throw new ReferenceError(
+                "[[executeCommandPlayerW.prototype.commandPermissionLevel::set]] This setter cannot be used when the executeCommandPlayerW instance does not have a linked player."
+            );
+        this.player.commandPermissionLevel = value;
+    }
     get playerPermissionLevel(): PlayerPermissionLevel {
         return this.player?.playerPermissionLevel!;
     }
     get target(): Entity | undefined {
         return this.player?.target;
+    }
+    get chatDisplayName(): string {
+        return this.player?.chatDisplayName!;
+    }
+    get chatMessagePrefix(): string {
+        return this.player?.chatMessagePrefix!;
+    }
+    set chatMessagePrefix(value: string) {
+        if (!this.player)
+            throw new ReferenceError(
+                "[[executeCommandPlayerW.prototype.chatMessagePrefix::set]] This setter cannot be used when the executeCommandPlayerW instance does not have a linked player."
+            );
+        this.player.chatMessagePrefix = value;
+    }
+    get chatNamePrefix(): string {
+        return this.player?.chatNamePrefix!;
+    }
+    set chatNamePrefix(value: string) {
+        if (!this.player)
+            throw new ReferenceError(
+                "[[executeCommandPlayerW.prototype.chatNamePrefix::set]] This setter cannot be used when the executeCommandPlayerW instance does not have a linked player."
+            );
+        this.player.chatNamePrefix = value;
+    }
+    get chatNameSuffix(): string {
+        return this.player?.chatNameSuffix!;
+    }
+    set chatNameSuffix(value: string) {
+        if (!this.player)
+            throw new ReferenceError(
+                "[[executeCommandPlayerW.prototype.chatNameSuffix::set]] This setter cannot be used when the executeCommandPlayerW instance does not have a linked player."
+            );
+        this.player.chatNameSuffix = value;
+    }
+    get locatorBar(): LocatorBar {
+        return this.player?.locatorBar!;
+    }
+    // get playfabId(): string {
+    //     return this.player?.playfabId!;
+    // }
+    get persistentId(): string {
+        return this.player?.persistentId!;
+    }
+    get fogSettings(): FogSettings {
+        return this.player?.fogSettings!;
+    }
+    get nameplateDepthTested(): boolean {
+        return this.player?.nameplateDepthTested!;
+    }
+    set nameplateDepthTested(value: boolean) {
+        if (!this.player)
+            throw new ReferenceError(
+                "[[executeCommandPlayerW.prototype.nameplateDepthTested::set]] This setter cannot be used when the executeCommandPlayerW instance does not have a linked player."
+            );
+        this.player.nameplateDepthTested = value;
+    }
+    get nameplateRenderDistance(): number {
+        return this.player?.nameplateRenderDistance!;
+    }
+    set nameplateRenderDistance(value: number) {
+        if (!this.player)
+            throw new ReferenceError(
+                "[[executeCommandPlayerW.prototype.nameplateRenderDistance::set]] This setter cannot be used when the executeCommandPlayerW instance does not have a linked player."
+            );
+        this.player.nameplateRenderDistance = value;
     }
     addEffect(effectType: string | EffectType, duration: number, options?: EntityEffectOptions) {
         return this.player?.addEffect(effectType, duration, options);
@@ -537,6 +623,9 @@ export class executeCommandPlayerW implements Omit<Player, "name" | "id"> {
     getSpawnPoint() {
         return this.player?.getSpawnPoint()!;
     }
+    getSplitScreenSlot(): PlayerSplitScreenSlot | undefined {
+        return this.player?.getSplitScreenSlot();
+    }
     getTotalXp() {
         return this.player?.getTotalXp()!;
     } /* 
@@ -550,7 +639,7 @@ export class executeCommandPlayerW implements Omit<Player, "name" | "id"> {
         return this.player?.playMusic(trackId, musicOptions);
     }
     playSound(soundId: string, soundOptions?: PlayerSoundOptions) {
-        return this.player?.playSound(soundId, soundOptions);
+        return this.player?.playSound(soundId, soundOptions)!;
     }
     postClientMessage(id: string, value: string) {
         return this.player?.postClientMessage(id, value);
@@ -614,17 +703,14 @@ export class executeCommandPlayerW implements Omit<Player, "name" | "id"> {
     getComponent<T extends string>(componentId: T): EntityComponentReturnType<T> | undefined;
     getComponent<T extends keyof EntityComponentTypeMap | keyof BlockComponentTypeMap>(
         componentId: T
-    ): T extends keyof EntityComponentTypeMap
-        ? EntityComponentTypeMap[T] | undefined
-        : T extends keyof BlockComponentTypeMap
-        ? BlockComponentTypeMap[T] | undefined
-        : undefined {
+    ): T extends keyof EntityComponentTypeMap ? EntityComponentTypeMap[T] | undefined
+    : T extends keyof BlockComponentTypeMap ? BlockComponentTypeMap[T] | undefined
+    : undefined {
         return (tryget(() => this.player?.getComponent(componentId as keyof EntityComponentTypeMap)) ??
-            tryget(() => this.block?.getComponent(componentId as keyof BlockComponentTypeMap))) as T extends keyof EntityComponentTypeMap
-            ? EntityComponentTypeMap[T] | undefined
-            : T extends keyof BlockComponentTypeMap
-            ? BlockComponentTypeMap[T] | undefined
-            : undefined;
+            tryget(() => this.block?.getComponent(componentId as keyof BlockComponentTypeMap))) as T extends keyof EntityComponentTypeMap ?
+            EntityComponentTypeMap[T] | undefined
+        : T extends keyof BlockComponentTypeMap ? BlockComponentTypeMap[T] | undefined
+        : undefined;
     }
     getComponents() {
         return this.player?.getComponents()!;
@@ -751,5 +837,11 @@ export class executeCommandPlayerW implements Omit<Player, "name" | "id"> {
     }
     setControlScheme(controlScheme?: ControlScheme): void {
         this.player?.setControlScheme(controlScheme);
+    }
+    getPing(): number {
+        return this.player?.getPing()!;
+    }
+    addItem(itemStack: ItemStack): ItemStack | undefined {
+        return this.player?.addItem(itemStack);
     }
 }
