@@ -187,7 +187,7 @@
          "path" : "entities/tickingarea_6.json"
       },
       {
-         "path" : "fixUnresolvableDependencies.js"
+         "path" : "fixUnresolvableDependencies.ts"
       },
       {
          "path" : "functions/andexdbaddonsystemrun.mcfunction"
@@ -466,15 +466,6 @@
          "path" : "node_modules/.package-lock.json"
       },
       {
-         "path" : "node_modules/@esbuild/linux-x64/README.md"
-      },
-      {
-         "path" : "node_modules/@esbuild/linux-x64/bin/esbuild"
-      },
-      {
-         "path" : "node_modules/@esbuild/linux-x64/package.json"
-      },
-      {
          "path" : "node_modules/@esbuild/win32-x64/README.md"
       },
       {
@@ -628,6 +619,15 @@
          "path" : "node_modules/@minecraft/server-gametest/package.json"
       },
       {
+         "path" : "node_modules/@minecraft/server-graphics/README.md"
+      },
+      {
+         "path" : "node_modules/@minecraft/server-graphics/index.d.ts"
+      },
+      {
+         "path" : "node_modules/@minecraft/server-graphics/package.json"
+      },
+      {
          "path" : "node_modules/@minecraft/server-net/README.md"
       },
       {
@@ -701,6 +701,54 @@
       },
       {
          "path" : "node_modules/@minecraft/vanilla-data.js/package.json"
+      },
+      {
+         "path" : "node_modules/@minecraft/vanilla-data/README.md"
+      },
+      {
+         "path" : "node_modules/@minecraft/vanilla-data/lib/index.d.ts"
+      },
+      {
+         "path" : "node_modules/@minecraft/vanilla-data/lib/index.js"
+      },
+      {
+         "path" : "node_modules/@minecraft/vanilla-data/lib/mojang-biome.d.ts"
+      },
+      {
+         "path" : "node_modules/@minecraft/vanilla-data/lib/mojang-block.d.ts"
+      },
+      {
+         "path" : "node_modules/@minecraft/vanilla-data/lib/mojang-cameraPresets.d.ts"
+      },
+      {
+         "path" : "node_modules/@minecraft/vanilla-data/lib/mojang-cooldownCategory.d.ts"
+      },
+      {
+         "path" : "node_modules/@minecraft/vanilla-data/lib/mojang-dimension.d.ts"
+      },
+      {
+         "path" : "node_modules/@minecraft/vanilla-data/lib/mojang-effect.d.ts"
+      },
+      {
+         "path" : "node_modules/@minecraft/vanilla-data/lib/mojang-enchantment.d.ts"
+      },
+      {
+         "path" : "node_modules/@minecraft/vanilla-data/lib/mojang-entity.d.ts"
+      },
+      {
+         "path" : "node_modules/@minecraft/vanilla-data/lib/mojang-feature.d.ts"
+      },
+      {
+         "path" : "node_modules/@minecraft/vanilla-data/lib/mojang-item.d.ts"
+      },
+      {
+         "path" : "node_modules/@minecraft/vanilla-data/lib/mojang-potionDelivery.d.ts"
+      },
+      {
+         "path" : "node_modules/@minecraft/vanilla-data/lib/mojang-potionEffect.d.ts"
+      },
+      {
+         "path" : "node_modules/@minecraft/vanilla-data/package.json"
       },
       {
          "path" : "node_modules/@types/semver/LICENSE"
@@ -12139,6 +12187,15 @@
          "path" : "scripts/color-core.js"
       },
       {
+         "path" : "scripts/CompoundBlockVolumePolyfill.d.ts"
+      },
+      {
+         "path" : "scripts/CompoundBlockVolumePolyfill.js"
+      },
+      {
+         "path" : "scripts/CompoundBlockVolumePolyfill.js.map"
+      },
+      {
          "path" : "scripts/decimal.js"
       },
       {
@@ -19006,6 +19063,9 @@
          "path" : "src/Assets/constants/transformrecipes.ts"
       },
       {
+         "path" : "src/CompoundBlockVolumePolyfill.ts"
+      },
+      {
          "path" : "src/ExtraFeatures/money.ts"
       },
       {
@@ -19114,7 +19174,7 @@
          "path" : "src/GameTestScripts/SculkTests.js"
       },
       {
-         "path" : "src/GameTestScripts/SimulatedPlayerTests.js"
+         "path" : "src/GameTestScripts/SimulatedPlayerTests.ts"
       },
       {
          "path" : "src/GameTestScripts/SmallMobTests.js"
@@ -21439,10 +21499,16 @@
          "path" : "src/security/ultraSecurityModeUtils.ts"
       },
       {
+         "path" : "src/server-bindings@2.5.0-beta.d.ts"
+      },
+      {
          "path" : "src/server-editor-bindings@0.1.0-beta.d.ts"
       },
       {
          "path" : "src/server-editor-private-bindings@0.1.0-internal.d.ts"
+      },
+      {
+         "path" : "src/server-ui-bindings@2.1.0-beta.d.ts"
       },
       {
          "path" : "src/typeDocGlobalsFixer.ts"

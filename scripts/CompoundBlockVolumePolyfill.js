@@ -1,3 +1,5 @@
+// TEST: Make sure this actually works properly.
+// XXX: This polyfill was AI-generated and may be very buggy.
 import { BlockVolume } from "@minecraft/server";
 export var CompoundBlockVolumeAction;
 (function (CompoundBlockVolumeAction) {
